@@ -175,8 +175,9 @@ end
 
 get '/a/:gxt/:service/*.*' do
   
-   # settings.set :app, settings.apps[params[:gxt]]
-   # settings.set :name, params[:gxt]
+  
+   settings.set :app, settings.apps[params[:gxt]]
+   settings.set :name, params[:gxt]
    
    
    root = File.dirname(__FILE__)
@@ -252,8 +253,8 @@ get '/a/:gxt/:service/:operation' do
 
   
    if !request.websocket?
-   # settings.set  :app, settings.apps[params[:gxt]]
-   # settings.set  :name, params[:gxt]
+   settings.set  :app, settings.apps[params[:gxt]]
+   settings.set  :name, params[:gxt]
    
    root = File.dirname(__FILE__)
    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
@@ -295,8 +296,8 @@ post '/a/:gxt/:service/:operation' do
 
   
    if !request.websocket?
-   # settings.set  :app, settings.apps[params[:gxt]]
-   # settings.set  :name, params[:gxt]
+   settings.set  :app, settings.apps[params[:gxt]]
+   settings.set  :name, params[:gxt]
    
    root = File.dirname(__FILE__)
    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
