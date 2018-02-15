@@ -25,4 +25,4 @@
 	
    	send_all "order.update?id=#{order.id}&queue=#{order.queue_number}"
 %>
-<%= redirect_to 'index' %>
+<%= redirect_to "index?device_id=#{params[:device_id]}" %>

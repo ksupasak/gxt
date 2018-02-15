@@ -32,7 +32,7 @@
 	<% for i in Order.where(:status=>'Pending').all %>
   	<div class="row">
 	<div class="col-sm-12  line-queue" >
-		<%=link_to  i.queue_number, 'processing?id='+i.id,:class=>"btn btn-default",:style=>"width:100%;font-size:1.1em"%>
+		<%=link_to  i.queue_number, "processing?device_id=#{params[:device_id]}&id=#{i.id}",:class=>"btn btn-default",:style=>"width:100%;font-size:1.1em"%>
 	</div >
 	</div>
 	<% end %>
@@ -42,11 +42,11 @@
   <div class="row">
 	
 	<%
-		device = Device.find session[:device]
+		device = Device.find params[:device_id]
 		
 		orders = Order.where(:status=>'Processing', :station=>device.name).all
 	
-	%>
+	%>.
 	
 	<% orders.each_with_index do |i,index| 
 		
@@ -62,7 +62,7 @@
 		<li><%=p.name %> :  <%=j.quantity%></li>
 		<% end %>
 		</ul>
-		<%=link_to 'Finish', "complete?id=#{i.id}",:class=>'btn btn-danger' %>
+		<%=link_to 'Finish', "complete?device_id=#{params[:device_id]}&id=#{i.id}",:class=>'btn btn-danger' %>
 	</div>
 	<% end %>
   </div>

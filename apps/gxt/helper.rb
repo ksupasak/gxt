@@ -12,6 +12,13 @@ def register_app name, prefix, extended=nil
   settings.apps_ws[prefix] = []
 end
 
+def add_module name
+  
+  
+  
+end
+
+
 helpers do
   def username
     session[:identity] ? session[:identity] : 'Hello stranger'

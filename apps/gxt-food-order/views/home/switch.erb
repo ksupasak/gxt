@@ -7,7 +7,7 @@
 		
 	link = '.'
 	link = "../Terminal/wizard?device_id=#{params[:id]}" if i.type=='Terminal'
-	link = "../Kitchen/index" if i.type=='Kitchen'
+	link = "../Kitchen/index?device_id=#{params[:id]}" if i.type=='Kitchen'
 	link = "../Printer/index" if i.type=='Printer'
 	link = "../Vending/index?device_id=#{params[:id]}" if i.type=='Vending'
 	

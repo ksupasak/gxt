@@ -1,7 +1,7 @@
 <%
 	device_name = "NA"
-	if session[:device]
-		device = Device.find(session[:device])
+	if params[:device_id]
+		device = Device.find(params[:device_id])
 		device_name = device.name
 	end
 
@@ -10,4 +10,4 @@
 	order.update_attributes :status=>'Processing', :station=>device_name
 
 %>
-<%= redirect_to 'index' %>
+<%= redirect_to "index?device_id=#{params[:device_id]}" %>
