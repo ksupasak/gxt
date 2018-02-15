@@ -1,0 +1,13 @@
+<%
+	device_name = "NA"
+	if session[:device]
+		device = Device.find(session[:device])
+		device_name = device.name
+	end
+
+	order = Order.find params[:id]
+	
+	order.update_attributes :status=>'Processing', :station=>device_name
+
+%>
+<%= redirect_to 'index' %>

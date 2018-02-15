@@ -1,0 +1,9 @@
+<h1><%=params[:service]%> Show</h1>
+<%
+   record =  this.model.find params[:id]
+if record  
+%>
+<%= record.inspect %>
+
+<% end %><hr/>
+<%=link_to 'Back', 'index',:class=>'btn'%>

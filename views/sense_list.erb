@@ -1,0 +1,15 @@
+<%
+
+	stations = Station.all
+	
+	senses = Sense.sort(:stamp.desc).all :limit=>100
+	
+%>
+Stations : <%=stations.size%> / Senses : <%=Sense.count%>
+<table class="table">
+<% for i in senses%>
+<tr>
+<td><%= i.stamp %></td><td><%= i.name %></td><td><%= i.ref %></td><td><%= i.data %></td>
+</tr>
+<% end %>
+</table>

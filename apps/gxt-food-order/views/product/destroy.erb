@@ -1,0 +1,7 @@
+<h1>Product</h1>
+<%
+	p = Product.find params[:id]
+	p.destroy
+%>
+
+<%= redirect_to 'index' %>
