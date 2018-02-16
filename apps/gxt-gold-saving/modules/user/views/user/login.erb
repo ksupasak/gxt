@@ -1,0 +1,46 @@
+<h1>Login</h1>
+<%= params.inspect %>
+
+<% 
+
+	if request.post?
+
+
+	    user = User.login params[:login], params[:pass]		
+	
+		if user
+			
+			session[:identity] = user.id
+			
+			%>
+			<meta http-equiv="refresh" content="0; url=show?id=<%=user.id%>" />
+			<%
+			
+			
+		else
+			
+		%>
+			<meta http-equiv="refresh" content="0; url=login" />
+	    <%	
+		end
+
+		
+	else
+
+
+%>
+
+<form action="login" method="post" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="product-name">Login</label>
+    <input type="text" class="form-control" id="record-login" name="login" value="" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="product-name">Password</label>
+    <input type="password" class="form-control" id="record-password" name="pass" value="" placeholder="">
+  </div>
+<button type="submit" class="btn btn-primary">Login</button>
+</form>
+<%
+end
+%>

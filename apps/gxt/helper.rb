@@ -12,17 +12,21 @@ def register_app name, prefix, extended=nil
   settings.apps_ws[prefix] = []
 end
 
-def add_module name
-  
-  
-  
-end
 
 
 helpers do
   def username
-    session[:identity] ? session[:identity] : 'Hello stranger'
+    session[:identity] ? session[:identity] : '-'
   end
+  
+  def current_user
+    settings.current_user ? settings.current_user : '-'
+  end
+  
+  def current_role
+    settings.current_role ? settings.current_role : '-'
+  end
+  
   
   def link_to name, url, options=nil
     
@@ -120,36 +124,58 @@ end
 
 end
 
+def add_module path, name, mname
+  
+  require_relative "#{path}/modules/#{name}/controller"
+  
+  include eval(mname)
+    
+end
+
 class GXTDocument < GXT
+  
+  
+  class_attribute :module_name
+  
   def controller
-    "#{self.class.name.gsub("Controller","").downcase}"
+    "#{self.class.name.gsub("Controller","").downcase.split(':')[-1]}"
   end
+  
+  
   def model
     eval "#{self.class.name.gsub("Controller","")}"
   end
   
+  def self.views
+    # "../modules/user/views"
+    nil
+  end
   
   def method_missing(m, *args, &block)
+       ctrl = controller
+       
+     puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
+   
      
+     if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")
+        
+        path = File.join(ctrl,m.to_s)
+        
+     elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "#{m}.erb")
      
-     puts File.join(@settings.views,controller,"#{m}.erb").inspect 
-     unless FileTest.exist? File.join(@settings.views,controller,"#{m}.erb")
-        
-        #old path
-        # tmp = @settings.views
-        # @settings.set :views, File.join(@settings.root.to_s) 
-        controller = 'document'
-        path = File.join("..","..", "gxt" ,"views", controller.to_s, m.to_s) 
-        content = @context.erb :"#{path}",{:locals=>{:this=>self},:layout=>:"/layout"}
-        # @settings.set :views, tmp
-        
-        
-        content
+        path = File.join(self.class.views,ctrl,m.to_s)
         
      else
-       puts "Controller : #{self.controller}"
-        @context.erb :"#{self.controller}/#{m}", :locals=>{:this=>self}
+        
+        ctrl = 'document'
+        path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s) 
+     
      end
+     
+     puts "path = #{path}"
+     
+        @context.erb :"#{path}", :locals=>{:this=>self}
+    
   end
 end
 

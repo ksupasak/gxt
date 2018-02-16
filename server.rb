@@ -84,6 +84,26 @@ before do
       settings.set :app, @app
     end
   
+   # params[:request]  = request
+          settings.set :current_user, 'x'
+          settings.set :current_role, 'y'
+     if session[:identity] 
+       
+       u  = User.find session[:identity] 
+       
+       if u
+         @current_user = u.login
+         role = Role.find u.role
+         @current_role = role.name if role
+         settings.set :current_user, @current_user
+         settings.set :current_role, @current_role
+         
+       end
+       
+     end
+     
+  
+
 end
 
 configure do
@@ -354,8 +374,8 @@ get '/:gxt/:service/:operation' do
    switch params[:gxt]
   
    if !request.websocket?
-   settings.set  :app, settings.apps[params[:gxt]]
-   settings.set  :name, params[:gxt]
+   # settings.set  :app, settings.apps[params[:gxt]]
+   # settings.set  :name, params[:gxt]
    
    root = File.dirname(__FILE__)
    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
@@ -398,9 +418,9 @@ post '/:gxt/:service/:operation' do
    switch params[:gxt]
    
    if !request.websocket?
-   settings.set  :app, settings.apps[params[:gxt]]
-   settings.set  :name, params[:gxt]
-   
+   # settings.set  :app, settings.apps[params[:gxt]]
+   # settings.set  :name, params[:gxt]
+   # 
    root = File.dirname(__FILE__)
    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
    settings.set :public_folder, File.dirname(__FILE__)+"/public"

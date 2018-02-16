@@ -7,7 +7,7 @@ require_relative 'controller'
 require_relative 'modules/user/controller'
 require_relative 'modules/member/controller'
 
-add_module 'user'
+add_module __dir__, 'user', 'UserAuth'
 
 
 
@@ -16,7 +16,7 @@ class HomeController < GXT
 
 def index params
   
-  User.create :name=>"Soup", :age=>3
+  # User.create :name=>"Soup", :age=>3
   
   @context.erb :home, :locals=>{:a=>User.count}
 end

@@ -4,18 +4,13 @@ register_app 'gold', 'gxt-food-order'
 
 
 
-module Sinatra
-  module FoodOrder
-    
-  end
-  register FoodOrder
-end
 
-class User
-  include MongoMapper::Document
-  key :name, String
-  key :age,  Integer
-end
+
+# class User
+#   include MongoMapper::Document
+#   # key :name, String
+#   # key :age,  Integer
+# end
 
 class Order
   include MongoMapper::Document
@@ -129,7 +124,7 @@ class HomeController < GXT
 
 def index params
   
-  User.create :name=>"Soup", :age=>3
+  # User.create :name=>"Soup", :age=>3
   
   @context.erb :home, :locals=>{:a=>User.count}
 end
