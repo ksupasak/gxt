@@ -2,15 +2,17 @@
 register_app 'gold', 'gxt-gold-saving'
 
 
-
-require_relative 'controller'
-require_relative 'modules/user/controller'
-require_relative 'modules/member/controller'
-
-add_module __dir__, 'user', 'UserAuth'
+module GxtGoldSaving
 
 
+# require_relative 'modules/user/controller'
+# require_relative 'modules/cms/controller'
 
+add_module __dir__, 'user', 'GXTUserAuth'
+add_module __dir__, 'cms', 'GXTCMS'
+
+include GXTUserAuth
+include GXTCMS
 
 class HomeController < GXT
 
@@ -18,7 +20,7 @@ def index params
   
   # User.create :name=>"Soup", :age=>3
   
-  @context.erb :home, :locals=>{:a=>User.count}
+  @context.erb :home, :locals=>{:a=>GXTUserAuth::User.count}
 end
 
 def test params
@@ -38,7 +40,7 @@ class Branch
   key :address, String
   
   key :bank_acc, String
-  
+    timestamps!
 end
 
 
@@ -58,7 +60,24 @@ class Account
   key :sale, String
   key :sale_id, ObjectId
   key :member_id, ObjectId
-  
+    timestamps!
+end
+
+class Member
+  include MongoMapper::Document
+  key :name, String
+  key :code, String
+  key :first_name, String
+  key :last_name, String
+  key :tel, String
+  key :address, String
+  timestamps!
+ 
+
+end
+
+class MemberController < GXTDocument
+
 end
 
 class AccountController < GXTDocument
@@ -72,5 +91,5 @@ class BranchController < GXTDocument
 
 end
 
-
+end
 

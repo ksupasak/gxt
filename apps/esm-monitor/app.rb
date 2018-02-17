@@ -1,10 +1,23 @@
 
 register_app 'monitor', 'esm-monitor'
 
-
+module EsmMonitor
 class Station
   include MongoMapper::Document
   key :name, String
+  
+end
+
+class User
+  include MongoMapper::Document
+  
+  key :login, String
+  key :salt,  String
+  key :hashed_password,  String
+  key :last_login, DateTime
+  key :role, ObjectId
+  key :email, String
+  timestamps!
   
 end
 
@@ -18,12 +31,99 @@ class Sense
   key :data,  String
 end
 
+class HomeController < GXT
+
+end
+
+class SenseController < GXTDocument
+
+  def sense params
+    
+      # user = User.create :name=>'Soup'
+
+      # key :stamp, DateTime
+      #   key :station_id, ObjectId
+      #   key :ip, String
+      #   key :ref, String
+      #   key :data,  String
+     puts params
+
+      stamp = Time.now
+      stamp = params['stamp'] if params['stamp']
+
+      ip = @context.request.ip
+      ip = params['ip'] if params['ip']
+
+
+      # station_name
+      # 1. monitor ip
+      # 2. bed index
+
+      station_name = ip
+      station_name = params['station'] if params['station'] 
+      # puts "Name = #{params.inspect }"
+      ref = "-"
+      ref = params['ref'] if params['ref']
+
+      data = "{}"
+      data = params['data'] if params['data']
+
+      station_id = nil
+
+      station = nil
+
+      unless station = @context.settings.stations[station_name]
+
+        station = Station.where(:name=>station_name).first
+
+        unless station
+
+        station = Station.create(:name=>station_name)
+
+        end
+
+        @context.settings.stations[station_name] = station
+
+      end
+
+
+      if station
+          station_id = station['_id']
+      end  
+
+      data = JSON.parse(data)
+      data['ref'] = ref
+       @context.settings.senses[station_name] = data
+
+
+
+      records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
+      # puts station_name
+      #  puts app.settings.stations.inspect 
+      #  puts Station.count
+
+
+
+       "200 OK\nSense " + Sense.collection.count.to_s + "\nId "+records[0].inspect
+    
+    
+  end
+
+end
+
+end
 
 module Sinatra
-  module Monitor
+ 
+  module SenseMonitor
     
+  include EsmMonitor
     
 def self.registered(app)
+  
+  
+  
+  
 app.get '/monitor' do
   # user = User.create :name=>'Soup'
   # user = User.collection.insert([{:name=>'Soup'}])
@@ -57,18 +157,30 @@ app.get '/monitor' do
   
 end
 
+# before do
+#   
+#   if request.path =="/sense"
+#     puts 'sidofjd'
+#     switch 'monitor'
+#       
+#   end
+#   
+#   
+# end
 
 
 
-app.post "/a/monitor/sense" do 
+
+
+app.post "/sense" do 
     # user = User.create :name=>'Soup'
-
+  
     # key :stamp, DateTime
     #   key :station_id, ObjectId
     #   key :ip, String
     #   key :ref, String
     #   key :data,  String
-
+  puts params
 
     stamp = Time.now
     stamp = params['stamp'] if params['stamp']
@@ -154,11 +266,13 @@ end
 
 end
 
-  end
-  register Monitor
+
+end
+
+
+  
+  register SenseMonitor
 end
 
 
-class SenseController < GXTDocument
 
-end

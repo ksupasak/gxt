@@ -1,8 +1,48 @@
+# 
+# module Utilities
+#  
+#   module ClassMethods
+#     def views
+#       File.join("..","modules","cms","views")
+#     end
+#   end
+#   
+#   def self.included(base)
+#     base.extend(ClassMethods)
+#   end
+#   
+# end
+
+
+module GXTCMS
+  
+def init
+    
+    "init GXTCMS"
+    
+    
+end  
+  
+def views
+    File.join("..","modules","cms","views")
+end  
+  
+
 class Setting
   include MongoMapper::Document
   
   key :name, String
   key :value, String
+  
+  def self.get name
+      setting = self.where(:name=>name).first
+      if setting
+        return setting.value
+      else
+        return nil
+      end  
+    
+  end
 end
 
 
@@ -41,6 +81,11 @@ end
 
 class SettingController < GXTDocument
 
+  # include Utilities
+   def self.version
+     "1.2.3"
+   end
+  
 end
 
 class AdvController < GXTDocument
@@ -109,6 +154,8 @@ class AttachmentController <GXT
   end
 end
 
+
+end
 
 
 

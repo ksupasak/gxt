@@ -14,6 +14,22 @@ end
 
 
 
+def add_module path, name, mname=nil
+  
+  require_relative "#{path}/modules/#{name}/controller"
+  if mname
+    m =  eval(mname)
+    # include m 
+    
+    # init
+    
+  end
+  
+    
+end
+
+
+
 helpers do
   def username
     session[:identity] ? session[:identity] : '-'
@@ -112,24 +128,56 @@ end
 
 class GXT
   
+attr_accessor :request  
+  
+def setRequest request
+  puts request
+   @request
+end  
+
+def request 
+   return @request
+end
+  
 def initialize context, settings
     @context = context
     @settings = settings
 end  
 
+def controller
+  "#{self.class.name.gsub("Controller","").downcase.split(':')[-1]}"
+end
 
 def method_missing(m, *args, &block)
-   @context.erb :"#{self.class.name.gsub("Controller","").downcase}/#{m}"
+  
+  ctrl = controller
+     
+   # puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
+ 
+   
+   if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")
+      
+      path = File.join(ctrl,m.to_s)
+      
+   elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "#{m}.erb")
+   
+      path = File.join(self.class.views,ctrl,m.to_s)
+      
+   else
+      
+      ctrl = 'document'
+      path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s) 
+   
+   end
+   
+   puts "path = #{path}"
+   
+      @context.erb :"#{path}", :locals=>{:this=>self}
+  
+  
+   # @context.erb :"#{self.class.name.gsub("Controller","").downcase}/#{m}"
 end
 
-end
-
-def add_module path, name, mname
-  
-  require_relative "#{path}/modules/#{name}/controller"
-  
-  include eval(mname)
-    
 end
 
 class GXTDocument < GXT
@@ -137,9 +185,6 @@ class GXTDocument < GXT
   
   class_attribute :module_name
   
-  def controller
-    "#{self.class.name.gsub("Controller","").downcase.split(':')[-1]}"
-  end
   
   
   def model
@@ -152,9 +197,11 @@ class GXTDocument < GXT
   end
   
   def method_missing(m, *args, &block)
-       ctrl = controller
+     
+     
+     ctrl = controller
        
-     puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
+     # puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
    
      
      if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")

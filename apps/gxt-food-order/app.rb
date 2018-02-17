@@ -4,13 +4,13 @@ register_app 'gold', 'gxt-food-order'
 
 
 
+module GxtFoodOrder
 
-
-# class User
-#   include MongoMapper::Document
-#   # key :name, String
-#   # key :age,  Integer
-# end
+class User
+  include MongoMapper::Document
+  # key :name, String
+  # key :age,  Integer
+end
 
 class Order
   include MongoMapper::Document
@@ -201,6 +201,10 @@ class AttachmentController <GXT
   end
 end
 
+class UserController < GXTDocument
+
+end
+
 # Object.send(:remove_const, :Home2) if   Object.const_defined?('Home2')
 class ProductController < GXTDocument
 
@@ -258,6 +262,6 @@ end
 
 
 
-
+end
 
 

@@ -2,6 +2,8 @@ require 'rubygems'
 require 'sinatra'
 require "sinatra/reloader" if development?
 require 'sinatra/partial'
+# require 'sinatra/calculations'
+
 require 'sinatra-websocket'
 require 'active_support/all'
 
@@ -40,6 +42,8 @@ require_relative 'apps/gxt/helper'
 require_relative 'apps/gxt-food-order/app'
 # require_relative 'apps/gxt-food-order2/app'
 require_relative 'apps/gxt-food-extended/app'
+
+
 require_relative 'apps/gxt-cash-deposit/app'
 require_relative 'apps/gxt-gold-saving/app'
 
@@ -67,33 +71,62 @@ def switch name
   
 end
 
+# m = GxtFoodOrder
+
+# include GxtFoodOrder
+# include GxtGoldSaving
+
+# context = GxtGoldSaving
+
+ 
 before do 
    
    # settings.set :app, 'gxt-food-order'
   
   if t = request.host.split(".") and t.size>2  and t.size!=4   # detect sub domain 
     solution_name = t[0]  # solution_name
-    settings.set :name, solution_name
-    MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   end
   
-    @app = settings.apps[settings.name]
-    settings.apps_ws[settings.name] = [] unless settings.apps_ws[settings.name] 
+  paths = request.path.split("/")
+  puts paths.inspect 
+  if paths.size==4 and paths[0]==""
+    solution_name = paths[1]
+  end
   
-    if @app
-      settings.set :app, @app
-    end
+  
+  if solution_name and app = settings.apps[solution_name]
+      settings.set :name, solution_name
+      settings.set :app, app
+      settings.set :context, eval("#{app.gsub('-','_').camelize}")
+      settings.apps_ws[solution_name] = [] unless settings.apps_ws[solution_name]  
+      
+  end 
+
+  
+  puts "Set link = #{solution_name}"
+  puts "Set name = #{settings.name}"
+  puts "Set context = #{settings.context}" if settings.context
+  puts "Set app = #{settings.apps[settings.name]}"
+  
+  MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  
+  
+  
   
    # params[:request]  = request
-          settings.set :current_user, 'x'
-          settings.set :current_role, 'y'
+    settings.set :current_user, 'x'
+    settings.set :current_role, 'y'
+    
+    context = settings.context
+    
+    
      if session[:identity] 
        
-       u  = User.find session[:identity] 
+       u  = context::User.find session[:identity] 
        
        if u
          @current_user = u.login
-         role = Role.find u.role
+         role = context::Role.find u.role
          @current_role = role.name if role
          settings.set :current_user, @current_user
          settings.set :current_role, @current_role
@@ -120,88 +153,7 @@ set :layout, 'layout'
 set :public_folder, File.dirname(__FILE__)+"/public"
 # set :views, File.dirname(__FILE__)+"/views"
 
-get '/barcode' do
-  
- 
-       mode = 'code_128'
-       mode = params[:type] if params[:type]
-       barcode = nil
-       case mode
-       when 'code_128'
-         barcode = Barby::Code128B.new(params[:code])
-       when 'code_39'
-         barcode = Barby::Code39.new(params[:code])
-       when 'ean_13'
-         barcode = Barby::Ean13.new(params[:code])
-       when 'qr_code'
-         barcode = Barby::QrCode.new(params[:code])
-       end
-       code = params[:code].split("/").join("-")
-       xdim = 2
-       xdim = params[:xdim].to_i if params[:xdim]
-       xdim = 1 if xdim <1
-       height = 50
-       height = params[:height].to_i if params[:height]
-       height = 30 if height < 30
-       margin = 5
-       margin = params[:margin].to_i
-       # name = File.join("tmp","#{Time.now.to_i}.#{code}.#{mode}.png")
-       # File.open(name, 'w'){|f| f.write  }
-       content = barcode.to_png :xdim => xdim, :height => height, :margin =>margin
-       headers('Content-Type' => "image/jpeg")
-       return content
-  
-end
-
-
-get '/promptpay' do
-  
-       total = params[:total]
-       
-       head = "00020101021129370016A000000677010111"
-       acc = params[:acc]
-       acc_value = "02#{format('%02d',acc.size)}#{acc}"
-       acc_origin = "5802TH"
-       total_value = "54#{format('%02d',total.to_s.size)}#{total}"
-       tail = "53037646304"
-       tag = "#{head}#{acc_value}#{acc_origin}#{total_value}#{tail}".upcase
-       sum = CRC.crc('CRC-16-XMODEM', tag ,0xFFFF).to_s(16)
-      
-       mode = 'qr_code'
-       params[:xdim] = 5
-       params[:code] = tag+sum
-       
-       mode = params[:type] if params[:type]
-       barcode = nil
-       case mode
-       when 'code_128'
-         barcode = Barby::Code128B.new(params[:code])
-       when 'code_39'
-         barcode = Barby::Code39.new(params[:code])
-       when 'ean_13'
-         barcode = Barby::Ean13.new(params[:code])
-       when 'qr_code'
-         barcode = Barby::QrCode.new(params[:code])
-       end
-       code = params[:code].split("/").join("-")
-       xdim = 2
-       xdim = params[:xdim].to_i if params[:xdim]
-       xdim = 1 if xdim <1
-       height = 50
-       height = params[:height].to_i if params[:height]
-       height = 30 if height < 30
-       margin = 5
-       margin = params[:margin].to_i
-       # name = File.join("tmp","#{Time.now.to_i}.#{code}.#{mode}.png")
-       # File.open(name, 'w'){|f| f.write  }
-       content = barcode.to_png :xdim => xdim, :height => height, :margin =>margin
-       headers('Content-Type' => "image/jpeg")
-       return content
-
-  
-  
-end
-
+# =========================================
 
 get '/a/:gxt/:service/*.*' do
   
@@ -276,100 +228,105 @@ end
 
 
 
-
-get '/a/:gxt/:service/:operation' do
-  
-   switch params[:gxt]
-  
-   if !request.websocket?
-   settings.set  :app, settings.apps[params[:gxt]]
-   settings.set  :name, params[:gxt]
-   
-   root = File.dirname(__FILE__)
-   settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-   settings.set :public_folder, File.dirname(__FILE__)+"/public"
-   
-   require_relative "apps/#{settings.app}/app"
-   
-   @context = self
-   @this = eval "#{params[:service]}Controller.new @context, settings"
-   # puts @this
-   content = eval "@this.#{params[:operation]} params"
-   return content
-   
-   else
-       request.websocket do |ws|
-         ws.onopen do
-           # ws.send("Hello World!")
-           settings.apps_ws[settings.name] << ws
-         end
-         ws.onmessage do |msg|
-           puts msg
-           # 10.times do |i|
-           EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-           # sleep(1)
-           # end
-         end
-         ws.onclose do
-           warn("websocket closed")
-            settings.apps_ws[settings.name].delete(ws)
-         end
-       end
-     end
-   
- 
-end
-
-post '/a/:gxt/:service/:operation' do
-  
-
-   switch params[:gxt]
-   
-   if !request.websocket?
-   settings.set  :app, settings.apps[params[:gxt]]
-   settings.set  :name, params[:gxt]
-   
-   root = File.dirname(__FILE__)
-   settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-   settings.set :public_folder, File.dirname(__FILE__)+"/public"
-   puts 
-   puts params
-   require_relative "apps/#{settings.app}/app"
-   
-   @context = self
-   @this = eval "#{params[:service]}Controller.new @context, settings"
-   # puts @this
-   content = eval "@this.#{params[:operation]} params"
-   return content
-   
-   else
-       request.websocket do |ws|
-         ws.onopen do
-           # ws.send("Hello World!")
-           settings.apps_ws[settings.name] << ws
-         end
-         ws.onmessage do |msg|
-           puts msg
-           # 10.times do |i|
-           EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-           # sleep(1)
-           # end
-         end
-         ws.onclose do
-           warn("websocket closed")
-            settings.apps_ws[settings.name].delete(ws)
-         end
-       end
-     end
-   
- 
-end
-
-
+# 
+# get '/a/:gxt/:service/:operation' do
+#   
+#    switch params[:gxt]
+#   
+#    if !request.websocket?
+#    settings.set  :app, settings.apps[params[:gxt]]
+#    settings.set  :name, params[:gxt]
+#    
+#    root = File.dirname(__FILE__)
+#    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
+#    settings.set :public_folder, File.dirname(__FILE__)+"/public"
+#    
+#    require_relative "apps/#{settings.app}/app"
+#    
+#    @context = self
+#    @this = eval "#{params[:service]}Controller.new @context, settings"
+#    # puts @this
+#    content = eval "@this.#{params[:operation]} params"
+#    return content
+#    
+#    else
+#        request.websocket do |ws|
+#          ws.onopen do
+#            # ws.send("Hello World!")
+#            settings.apps_ws[settings.name] << ws
+#          end
+#          ws.onmessage do |msg|
+#            puts msg
+#            # 10.times do |i|
+#            EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
+#            # sleep(1)
+#            # end
+#          end
+#          ws.onclose do
+#            warn("websocket closed")
+#             settings.apps_ws[settings.name].delete(ws)
+#          end
+#        end
+#      end
+#    
+#  
+# end
+# 
+# post '/a/:gxt/:service/:operation' do
+#   
+# 
+#    switch params[:gxt]
+#    
+#    if !request.websocket?
+#    settings.set  :app, settings.apps[params[:gxt]]
+#    settings.set  :name, params[:gxt]
+#    
+#    root = File.dirname(__FILE__)
+#    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
+#    settings.set :public_folder, File.dirname(__FILE__)+"/public"
+#    puts 
+#    puts params
+#    require_relative "apps/#{settings.app}/app"
+#    
+#    @context = self
+#    @this = eval "#{params[:service]}Controller.new @context, settings"
+#    # puts @this
+#    content = eval "@this.#{params[:operation]} params"
+#    return content
+#    
+#    else
+#        request.websocket do |ws|
+#          ws.onopen do
+#            # ws.send("Hello World!")
+#            settings.apps_ws[settings.name] << ws
+#          end
+#          ws.onmessage do |msg|
+#            puts msg
+#            # 10.times do |i|
+#            EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
+#            # sleep(1)
+#            # end
+#          end
+#          ws.onclose do
+#            warn("websocket closed")
+#             settings.apps_ws[settings.name].delete(ws)
+#          end
+#        end
+#      end
+#    
+#  
+# end
 
 
 
+# include GxtFoodOrder
+   # self.class.send :include, GxtFoodOrder
 get '/:gxt/:service/:operation' do
+  
+   # self.class.send :include,context
+   # 
+   self.class.send :include, settings.context
+   
   
    switch params[:gxt]
   
@@ -384,7 +341,14 @@ get '/:gxt/:service/:operation' do
    require_relative "apps/#{settings.app}/app"
    
    @context = self
+   
+   params[:service] = "#{settings.context}::#{params[:service]}"
+   
+   puts    params[:service]
+  
+   
    @this = eval "#{params[:service]}Controller.new @context, settings"
+    @this.setRequest request
    # puts @this
    content = eval "@this.#{params[:operation]} params"
    return content
@@ -409,12 +373,13 @@ get '/:gxt/:service/:operation' do
        end
      end
    
- 
+  
 end
 
 post '/:gxt/:service/:operation' do
   
-
+   self.class.send :include, settings.context
+   
    switch params[:gxt]
    
    if !request.websocket?
@@ -426,10 +391,17 @@ post '/:gxt/:service/:operation' do
    settings.set :public_folder, File.dirname(__FILE__)+"/public"
    puts 
    puts params
+   puts
    require_relative "apps/#{settings.app}/app"
    
    @context = self
+   # @this = eval "#{params[:service]}Controller.new @context, settings"
+   # params[:service] = "GXTCMS::Setting"
+   params[:service] = "#{settings.context}::#{params[:service]}"
+   
    @this = eval "#{params[:service]}Controller.new @context, settings"
+   
+   @this.setRequest request
    # puts @this
    content = eval "@this.#{params[:operation]} params"
    return content
@@ -544,6 +516,87 @@ post '/:service/:operation' do
 end
 
 
+get '/barcode' do
+  
+ 
+       mode = 'code_128'
+       mode = params[:type] if params[:type]
+       barcode = nil
+       case mode
+       when 'code_128'
+         barcode = Barby::Code128B.new(params[:code])
+       when 'code_39'
+         barcode = Barby::Code39.new(params[:code])
+       when 'ean_13'
+         barcode = Barby::Ean13.new(params[:code])
+       when 'qr_code'
+         barcode = Barby::QrCode.new(params[:code])
+       end
+       code = params[:code].split("/").join("-")
+       xdim = 2
+       xdim = params[:xdim].to_i if params[:xdim]
+       xdim = 1 if xdim <1
+       height = 50
+       height = params[:height].to_i if params[:height]
+       height = 30 if height < 30
+       margin = 5
+       margin = params[:margin].to_i
+       # name = File.join("tmp","#{Time.now.to_i}.#{code}.#{mode}.png")
+       # File.open(name, 'w'){|f| f.write  }
+       content = barcode.to_png :xdim => xdim, :height => height, :margin =>margin
+       headers('Content-Type' => "image/jpeg")
+       return content
+  
+end
+
+
+get '/promptpay' do
+  
+       total = params[:total]
+       
+       head = "00020101021129370016A000000677010111"
+       acc = params[:acc]
+       acc_value = "02#{format('%02d',acc.size)}#{acc}"
+       acc_origin = "5802TH"
+       total_value = "54#{format('%02d',total.to_s.size)}#{total}"
+       tail = "53037646304"
+       tag = "#{head}#{acc_value}#{acc_origin}#{total_value}#{tail}".upcase
+       sum = CRC.crc('CRC-16-XMODEM', tag ,0xFFFF).to_s(16)
+      
+       mode = 'qr_code'
+       params[:xdim] = 5
+       params[:code] = tag+sum
+       
+       mode = params[:type] if params[:type]
+       barcode = nil
+       case mode
+       when 'code_128'
+         barcode = Barby::Code128B.new(params[:code])
+       when 'code_39'
+         barcode = Barby::Code39.new(params[:code])
+       when 'ean_13'
+         barcode = Barby::Ean13.new(params[:code])
+       when 'qr_code'
+         barcode = Barby::QrCode.new(params[:code])
+       end
+       code = params[:code].split("/").join("-")
+       xdim = 2
+       xdim = params[:xdim].to_i if params[:xdim]
+       xdim = 1 if xdim <1
+       height = 50
+       height = params[:height].to_i if params[:height]
+       height = 30 if height < 30
+       margin = 5
+       margin = params[:margin].to_i
+       # name = File.join("tmp","#{Time.now.to_i}.#{code}.#{mode}.png")
+       # File.open(name, 'w'){|f| f.write  }
+       content = barcode.to_png :xdim => xdim, :height => height, :margin =>margin
+       headers('Content-Type' => "image/jpeg")
+       return content
+
+  
+  
+end
 
 
 

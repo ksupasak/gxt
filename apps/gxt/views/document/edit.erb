@@ -1,6 +1,11 @@
 <h1><%=params[:service]%> Edit</h1>
 <% 
 
+   return_url = "index"
+
+   return_url = params[:return] if params[:return]
+
+
 @record = this.model.find params[:id]
 
 	if request.post?
@@ -41,6 +46,6 @@
 	
 <%= inline(this,:'_form') %>
 <button type="submit" class="btn btn-primary">Submit</button>
-
+<%=link_to 'Back', return_url ,:class=>'btn'%>
 </form>
 <% end %>

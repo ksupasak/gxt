@@ -13,8 +13,14 @@ module Utilities
   
 end
 
-module UserAuth
+module GXTUserAuth
 
+
+
+  def views
+    File.join("..","modules","user","views")
+  end
+  
 class User
   include MongoMapper::Document
   
@@ -23,7 +29,9 @@ class User
   key :hashed_password,  String
   key :last_login, DateTime
   key :role, ObjectId
-  
+  key :email, String
+  timestamps!
+    
   def self.login login, pass
         u = User.where(:login=>login).first
         if u 
@@ -77,7 +85,7 @@ class Role
   include MongoMapper::Document
   
   key :name, String
-
+  timestamps!
 end
 
 
