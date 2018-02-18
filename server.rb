@@ -65,9 +65,12 @@ set :name, 'monitor'
 
 def switch name
   
+  puts "call swtich #{name}"
+  if name.index('.')==nil  
   settings.set :name, name 
   settings.set :app, settings.apps[name]
   MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  end
   
 end
 
@@ -89,10 +92,12 @@ before do
   
   paths = request.path.split("/")
   puts paths.inspect 
-  if paths.size==4 and paths[0]==""
+  if paths.size==4 and paths[0]=="" and paths[1].index(".") ==nil 
     solution_name = paths[1]
   end
   
+  
+  settings.set :context, nil
   
   if solution_name and app = settings.apps[solution_name]
       settings.set :name, solution_name
@@ -102,11 +107,14 @@ before do
       
   end 
 
-  
+ 
+    
   puts "Set link = #{solution_name}"
   puts "Set name = #{settings.name}"
-  puts "Set context = #{settings.context}" if settings.context
-  puts "Set app = #{settings.apps[settings.name]}"
+    puts "Set app = #{settings.app}"
+  settings.set :context, eval("#{settings.app.gsub('-','_').camelize}")
+  puts "Set context = #{settings.context}" 
+
   
   MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   
@@ -114,13 +122,13 @@ before do
   
   
    # params[:request]  = request
-    settings.set :current_user, 'x'
-    settings.set :current_role, 'y'
+    settings.set :current_user, nil
+    settings.set :current_role, nil
     
     context = settings.context
     
     
-     if session[:identity] 
+     if settings.context and  session[:identity] 
        
        u  = context::User.find session[:identity] 
        
@@ -596,6 +604,10 @@ get '/promptpay' do
 
   
   
+end
+
+get '/:gxt' do
+   redirect to "/#{params[:gxt]}/Home/index"
 end
 
 

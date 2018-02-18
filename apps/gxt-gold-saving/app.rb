@@ -30,6 +30,26 @@ end
 end
 
 
+class UserBranch
+  include MongoMapper::Document
+  
+  key :user_id, ObjectId
+  key :branch_id, ObjectId
+  
+end
+
+class GoldPrice
+  
+  include MongoMapper::Document
+
+ 
+   key :buying_price, Float
+   key :salling_price, Float
+   key :buying_price_2, Float
+   key :salling_price_2, Float
+   timestamps!
+   
+end
 
 
 class Branch
@@ -40,6 +60,9 @@ class Branch
   key :address, String
   
   key :bank_acc, String
+  
+  key :prompt_pay_acc, String
+  
     timestamps!
 end
 
@@ -47,11 +70,12 @@ end
 class Account
   include MongoMapper::Document
   
+  key :code, String
   key :gold_price, Float
   key :weight, Float
   key :total_amount, Float
+  key :balance, Float
   
-  key :code, Integer
   
   key :open_date, Date
   key :open_time, Time
@@ -60,31 +84,62 @@ class Account
   key :sale, String
   key :sale_id, ObjectId
   key :member_id, ObjectId
+  key :branch_id, ObjectId
+  
+    timestamps!
+end
+
+class Transaction
+  include MongoMapper::Document
+  
+  key :code, String
+  key :amount, Float
+  key :payment_type, String
+  key :status, String
+  key :sale, String
+  key :sale_id, ObjectId
+  key :account_id, ObjectId
+  
     timestamps!
 end
 
 class Member
   include MongoMapper::Document
-  key :name, String
   key :code, String
+  key :name, String
   key :first_name, String
   key :last_name, String
+  key :personal_id, String
+  
   key :tel, String
   key :address, String
+  key :branch_id, ObjectId
+  
   timestamps!
  
 
 end
 
+
 class MemberController < GXTDocument
 
 end
 
-class AccountController < GXTDocument
+class GoldPriceController < GXTDocument
 
 end
 
+class AccountController < GXTDocument
+  
+  def print params
+    @context.erb :"#{self.class.views}/account/print",:layout=>:"print", :locals=>{:this=>self}
+    
+  end
+end
 
+class TransactionController < GXTDocument
+
+end
 
 
 class BranchController < GXTDocument

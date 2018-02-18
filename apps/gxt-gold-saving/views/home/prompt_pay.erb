@@ -1,0 +1,23 @@
+<%
+
+branch = Branch.find(session[:branch])
+if branch
+	
+acc = branch.prompt_pay_acc
+
+end
+%>
+
+<center>
+<img src = "img/gold.png" width="200"><br/>
+<br/>
+สาขา <%=branch.name%> โทร <%=branch.tel%>
+<br/>
+<br/>
+	
+<img src = "/promptpay?total=0&acc=#{acc}" width="300"><br/>
+<br/>
+
+Acc : <%=acc%>
+</center>
+

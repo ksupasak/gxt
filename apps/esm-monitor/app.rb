@@ -122,41 +122,41 @@ module Sinatra
 def self.registered(app)
   
   
+  # 
+  #   
+  # app.get '/monitor' do
+  #   # user = User.create :name=>'Soup'
+  #   # user = User.collection.insert([{:name=>'Soup'}])
+  #   # erb 'Can you handle a <a href="/secure/place">secret</a>? '+User.collection.count.to_s
+  #   
+  #   
+  #   if !request.websocket?
+  #      # erb 'This is a secret place that only <%=session[:identity]%> has access to!'
+  # 
+  #      erb :monitor
+  #      
+  #    else
+  #       request.websocket do |ws|
+  #         ws.onopen do
+  #           # ws.send("Hello World!")
+  #           app.settings.sockets << ws
+  #         end
+  #         ws.onmessage do |msg|
+  #           puts msg
+  #           # 10.times do |i|
+  #           EM.next_tick { app.settings.sockets.each{|s| s.send(msg) } }
+  #           # sleep(1)
+  #           # end
+  #         end
+  #         ws.onclose do
+  #           warn("websocket closed")
+  #           app.settings.sockets.delete(ws)
+  #         end
+  #       end
+  #     end
+  #   
+  # end
   
-  
-app.get '/monitor' do
-  # user = User.create :name=>'Soup'
-  # user = User.collection.insert([{:name=>'Soup'}])
-  # erb 'Can you handle a <a href="/secure/place">secret</a>? '+User.collection.count.to_s
-  
-  
-  if !request.websocket?
-     # erb 'This is a secret place that only <%=session[:identity]%> has access to!'
-
-     erb :monitor
-     
-   else
-      request.websocket do |ws|
-        ws.onopen do
-          # ws.send("Hello World!")
-          app.settings.sockets << ws
-        end
-        ws.onmessage do |msg|
-          puts msg
-          # 10.times do |i|
-          EM.next_tick { app.settings.sockets.each{|s| s.send(msg) } }
-          # sleep(1)
-          # end
-        end
-        ws.onclose do
-          warn("websocket closed")
-          app.settings.sockets.delete(ws)
-        end
-      end
-    end
-  
-end
-
 # before do
 #   
 #   if request.path =="/sense"

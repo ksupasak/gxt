@@ -1,11 +1,145 @@
+<h1><%=name params[:service]%> Show</h1>
+
+
 <%
+   record =  this.model.find params[:id]
+
+
+if record  
+%>
+<div class="row">
+	
+
 	
 	
-	acc = Account.find params[:id]
+</div >
+<div class="row">
+  <div class="col-md-8">
+		<div class="row">
+
+	  <h4> Transaction </h4>
+
+	  <%
+
+		transactions = Transaction.where(:account_id=> record.id).all
+		# accounts = Account.all
+
+	  %>
+	<table class="table">
+		<thead>
+			<tr><th>ครั้งที่</th><th>ว/ด/ป</th><th>จำนวนเงิน</th><th>คงเหลือ</th><th>พนักงานที่รับเงิน</th><th>หมายเลข</th>
+			</tr>
+		</thead>
+	   <%
+		    closable = false
+		    
+			balance = 0
+			
+	 		transactions.each_with_index do |i,index| 
+		
+			balance += i.amount if i.amount
+		 %>
+		<tr>
+			<td><%=index+1%></td>
+			<td><%=i.created_at.strftime("%d/%m/%Y")%></td>
+			<td><%=i.amount%></td>
+			<td><%=record.total_amount - balance%></td>
+			<td><%=i.sale%></td>
+			<td><%=i.code%></td>
+			<td><%=link_to 'Show', "../Transaction/show?id=#{i.id}", :class=>'btn btn-default'%></td>
+
+			</tr>
+	   <% end %>
+	
+	<%
+		closable = true if  record.total_amount - balance <= 0 
+		record.update_attributes :balance=> record.total_amount - balance
+	%>
+	</table>
+<%
+# key :code, String
+# key :amount, Float
+# key :payment_type, String
+# key :status, String
+# key :sale, String
+# key :sale_id, ObjectId
+# key :account_id, ObjectId
+
+
+  if  record.status!='COMPLETED'
 
 %>
+    <form action="../Transaction/create"  class="form-inline" method="post" >
+	<div class="form-group">
+	<input type="hidden" value="<%=record.id%>" name="record[account_id]" class=" form-control" placeholder="">
+		
+	<input type="hidden" value="COMPLETED" name="record[status]" class=" form-control" placeholder="">
+	<input type="hidden" value="CASH" name="record[payment_type]" class=" form-control" placeholder="CASH">
+	<input type="hidden" value="<%=settings.current_user%>" name="record[sale]" class=" form-control" placeholder="พนักงานที่รับเงิน">
+	<input type="hidden" value="<%=session[:identity]%>" name="record[sale_id]" class=" form-control" placeholder="จำนวนเงิน">
 
-<%= acc.gold_price %>
+	<input type="text" value="" name="record[amount]" class=" form-control" placeholder="จำนวนเงิน" <%='disabled' if closable %>>
+		
+	<button type="submit" class="btn btn-success" <%='disabled' if closable %>>ชำระเงิน</button>
+	</div>
+	
+	</form>
+	
+	<% end %>
 
 
-<%=link_to 'Back', "../Member/show?id=#{acc.id}" , :class=>'btn btn-info'%>
+	</div>
+
+
+  </div>
+
+  <div class="col-md-4">
+	
+<%
+	if record.member_id
+		
+		member= Member.find record.member_id
+		if member 
+%>
+<div class="row">
+  	<div class="alert alert-info">
+		<h4>รหัสสมาชิก : <span class=""><%=link_to member.code, "../Member/show?id=#{member.id}" %></span>  </h4>
+		<h4>ชื่อ : <span class=""><%=member.name%></span>  </h4>
+		<h4>ชื่อ-นามสกุล : <span class=""><%=member.first_name%> <%=member.last_name%></span>  </h4>
+		<h4>โทร : <span class=""><%=member.tel%></span>  </h4>
+	
+	</div>
+
+  </div>
+
+<% end %>
+<% end %>
+<%
+    status = 'warning'
+    status = 'success' if record.status=='COMPLETED'
+%>
+<div class="row">
+	<div class="alert alert-<%=status%>">
+		<h4>รหัส : <span class=""><%=record.code%></span>  </h4>
+		<h4>สถานะ : <span class=""><%=record.status%></span>  </h4>
+		<h4>ราคาทอง: <span class=""><%=record.gold_price%></span>  </h4>
+		<h4>น.น. : <span class=""><%=record.weight%></span>  </h4>
+		<h4>ยอดรวม : <span class=""><%=record.total_amount%></span>  </h4>
+		<h4>คงเหลือ : <span class=""><%=record.balance%></span>  </h4>
+	
+	</div>
+
+</div>
+</div>
+
+</div>
+
+
+<% end %><hr/>
+<%=link_to 'Print', "print?id=#{params[:id]}&return=#{request.fullpath}",:class=>'btn btn-default', :target=>"_blank"%>
+
+<% unless record.status=='COMPLETED' %>
+<%=link_to 'ปิดบัญชี', "status?id=#{params[:id]}&status=COMPLETED&return=#{request.fullpath}",:class=>'btn btn-danger' if closable%>
+<%=link_to 'Edit', "edit?id=#{params[:id]}&return=#{request.fullpath}",:class=>'btn btn-info'%>
+<% end %>
+<%=link_to 'Back', '../Home/index',:class=>'btn'%>

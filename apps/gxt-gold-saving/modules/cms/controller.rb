@@ -43,6 +43,17 @@ class Setting
       end  
     
   end
+  
+  def self.set name, value
+      setting = self.where(:name=>name).first
+      
+      if setting
+         setting.update_attributes :value=>value
+      else 
+        self.create :name=>name, :value=>value
+      end  
+    
+  end
 end
 
 

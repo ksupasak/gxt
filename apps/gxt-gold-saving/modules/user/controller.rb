@@ -101,12 +101,12 @@ class UserController < GXTDocument
   def create params
     
     
-    @context.erb :"#{self.class.views}/user/create",:layout=>:"user/layout", :locals=>{:this=>self}
+    @context.erb :"#{self.class.views}/user/create",:layout=>:"layout", :locals=>{:this=>self}
     
   end
   def login params
     
-    @context.erb :"#{self.class.views}/user/login",:layout=>:"user/layout", :locals=>{:this=>self}
+    @context.erb :"#{self.class.views}/user/login",:layout=>:"layout", :locals=>{:this=>self}
   
   end
   

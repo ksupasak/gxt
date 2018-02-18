@@ -31,3 +31,9 @@ return_url = params[:return] if params[:return]
 
 </form>
 <% end %>
+
+<script>
+<% if session[:branch] %>
+$('#record-branch_id').val('<%=session[:branch]%>')
+<% end %>
+</script>

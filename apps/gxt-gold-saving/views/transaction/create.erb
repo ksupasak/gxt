@@ -15,7 +15,7 @@ return_url = params[:return] if params[:return]
 		
 		
 	%>
-	<%=redirect_to "show?id=#{record.id}"%>
+	<%=redirect_to "../Account/show?id=#{record.account_id}"%>
 	<%	
 	end
 	

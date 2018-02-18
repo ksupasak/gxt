@@ -1,0 +1,12 @@
+<%
+
+	branch = Branch.find params[:id]
+	
+	if branch 
+		session[:branch]  = branch.id
+
+
+%>
+	<%=redirect_to "../Home/index"%>
+	
+<% end %>

@@ -91,10 +91,21 @@ helpers do
       settings.app
   end
   
+  def data_field model
+      
+      
+      keys = model.keys
+      res = keys
+      res = keys.collect{|k| k if k[0].!='created_at' and k[0].!='updated_at' and k[0][0]!='_'}.compact
+    
+      return res
+    
+  end
+  
   def solve this, p
     
     
-    path = :"#{params[:service].downcase}/#{p}"
+    path = :"#{params[:service].split(':').underscore}/#{p}"
     # puts "test #{File.join("#{path}.erb")}"
     unless FileTest.exist? File.join(settings.views,"#{path}.erb")
       path = File.join("..","..", "gxt" ,"views", "document", p.to_s) 
@@ -110,7 +121,7 @@ helpers do
   def inline this, p
     
     
-    path = :"#{params[:service].downcase}/#{p}"
+    path = :"#{params[:service].split(':')[-1].underscore}/#{p}"
     # puts "test #{File.join("#{path}.erb")}"
     unless FileTest.exist? File.join(settings.views,"#{path}.erb")
       path = File.join("..","..", "gxt" ,"views", "document", p.to_s) 
@@ -145,7 +156,7 @@ def initialize context, settings
 end  
 
 def controller
-  "#{self.class.name.gsub("Controller","").downcase.split(':')[-1]}"
+  "#{self.class.name.gsub("Controller","").split(':')[-1].underscore}"
 end
 
 def method_missing(m, *args, &block)
@@ -178,6 +189,10 @@ def method_missing(m, *args, &block)
    # @context.erb :"#{self.class.name.gsub("Controller","").downcase}/#{m}"
 end
 
+end
+
+def name service
+    return service.split(":")[-1]
 end
 
 class GXTDocument < GXT
