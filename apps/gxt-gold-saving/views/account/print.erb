@@ -200,8 +200,6 @@ Tel. <%=branch.tel %>
 
 <% end %><hr/>
 <% unless record.status=='COMPLETED' %>
-<%=link_to 'ปิดบัญชี', "status?id=#{params[:id]}&status=COMPLETED&return=#{request.fullpath}",:class=>'btn btn-danger' if closable%>
-<%=link_to 'Edit', "edit?id=#{params[:id]}&return=#{request.fullpath}",:class=>'btn btn-info'%>
 <% end %>
 <%#link_to 'Back', '../Home/index',:class=>'btn'%>
 <script>
