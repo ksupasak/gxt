@@ -8,8 +8,8 @@ network_addr = "192.168.1.255"
 host = "192.168.1.146"
 port = 1792
 
-host = ARGS[0] if ARGS[0]
-network_addr = ARGS[1] if ARGS[1]
+host = ARGV[0] if ARGV[0]
+network_addr = ARGV[1] if ARGV[1]
 
 @config = {:network=>network_addr, :gw=>true, :host=>host, :port=>port}
 
