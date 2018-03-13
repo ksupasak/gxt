@@ -5,7 +5,8 @@ require 'json'
 
 server = TCPServer.new  5510
 
-host = 'gexintec.com'
+# host = 'gexintec.com'
+host = '127.0.0.1'
 port = 1792
 
 
@@ -28,12 +29,20 @@ list = [{:n1=>6},
         hn = '-'
         
 loop do 
-        puts 'start accept'
-        client = server.accept
+        # puts 'start accept'
+        #       client = server.accept
+        
+        
+        
+        Thread.fork(server.accept) do |client|
+        # hn = '-'
+        # puts 'start accept'
+        #               client = server.accept
+        
         puts client
         puts client.peeraddr.inspect 
         
-        station = "bed"+client.peeraddr[-1].split(".")[-1]
+        station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
         # puts client.methods.sort 
@@ -43,7 +52,7 @@ loop do
         
         # puts "#{line.size} #{'='*30}"
         
-        puts '====================================================='+line.size.to_s
+        # puts '====================================================='+line.size.to_s
         # puts line
       
         
@@ -61,9 +70,9 @@ loop do
           # puts "xxxx "+line.index('00123456').to_s
             
           l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
-          puts l.join("\t")
+          # puts l.join("\t")
           
-          puts 'xxx  '+ l.index(34).to_s
+          # puts 'xxx  '+ l.index(34).to_s
           
           l.each_with_index do |i,id| 
             if i=='9'
@@ -112,7 +121,7 @@ loop do
            stamp = Time.now.to_json
            
            
-           res = Net::HTTP.post_form(uri, 'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+           res = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
            
            
         
@@ -130,6 +139,9 @@ loop do
                
         end
         
+        
+      end
+        
          # sim.send line,1000
          #          line2 = client.recv(1000)
          #          puts "REC2 : #{line2}"
@@ -137,7 +149,10 @@ loop do
          # puts msg
          # client.flush  
          
-               
+            # th.join   
+            
+            
+        puts 'next'    
  
         # client.close
 end

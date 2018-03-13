@@ -5,7 +5,10 @@ module EsmMonitor
 class Station
   include MongoMapper::Document
   key :name, String
-  
+  key :ip, String
+  key :type, String
+  key :serial_number, String
+  key :zone_id, ObjectId
 end
 
 class User
@@ -20,7 +23,10 @@ class User
   timestamps!
   
 end
-
+class Zone
+  include MongoMapper::Document
+  key :name, String
+end
 class Sense
   include MongoMapper::Document
   key :stamp, Time
@@ -34,6 +40,13 @@ end
 class HomeController < GXT
 
 end
+class ZoneController < GXTDocument
+  
+end
+
+class StationController < GXTDocument
+  
+end
 
 class SenseController < GXTDocument
 
@@ -46,7 +59,7 @@ class SenseController < GXTDocument
       #   key :ip, String
       #   key :ref, String
       #   key :data,  String
-     puts params
+       puts params
 
       stamp = Time.now
       stamp = params['stamp'] if params['stamp']
@@ -78,7 +91,7 @@ class SenseController < GXTDocument
 
         unless station
 
-        station = Station.create(:name=>station_name)
+        station = Station.create(:name=>station_name,:ip=>ip)
 
         end
 
@@ -247,7 +260,7 @@ $sum = 0
 
 Thread.new do # trivial example work thread
   while true do
-     sleep 0.5
+     sleep 1
      EM.next_tick { 
      begin
        if  app.settings.apps_ws[app.settings.name]

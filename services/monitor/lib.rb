@@ -19,6 +19,7 @@ def send_to_gateway data
            sense[:so2] = data[:so2]
            sense[:pr] = data[:pr]
            sense[:bp] = data[:bp]
+           sense[:bp_stamp] = data[:bp_stamp]
            
            
       
@@ -28,7 +29,7 @@ def send_to_gateway data
            
            stamp = Time.parse("#{data[:hour]}:#{data[:min]}", Time.now).to_json if data[:hour]
            
-           res = Net::HTTP.post_form(uri, 'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>sense.to_json)
+           res = Net::HTTP.post_form(uri,'ip'=>data[:ip], 'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>sense.to_json)
           
           rescue Exception=>e 
               puts e.inspect 
@@ -40,7 +41,7 @@ def send_to_gateway data
 end
 
 
-def get_vital_sign tip
+def get_vital_sign tip, station_name="-"
   hn = "-"
   puts @config.inspect 
   t = Thread.new do
@@ -102,15 +103,16 @@ def get_vital_sign tip
   
   sense = {}
   
-  
+  sense[:ip]  = tip
   sense[:so2] = so2
   sense[:pr] = pr
   sense[:hr] = pr
   sense[:ref] = hn
-  sense[:name] = "bed"
+  sense[:name] = station_name
   sense[:bp] = "#{sys}/#{dia}"
   sense[:hour] = hour
   sense[:min] = min
+  sense[:bp_stamp]  = "#{hour}:#{min}"
   #  
   # 
   # 

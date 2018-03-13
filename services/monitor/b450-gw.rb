@@ -1,11 +1,25 @@
 require 'socket'
 require 'timeout'
 
+puts "-- Start B450 Service"
+# Services 
+# username biomed
+# password Change Me
+# Tab Configure > Network 
+# Wired Interfaces
+# MC Network
+# Static Ip : 126.1.138.200 -> monitor
+# Netmask : 255.255.0.0
+# Save
+
+
 require_relative 'lib'
 
 # network address
-network_addr = "192.168.1.255"
-host = "192.168.1.146"
+network_addr = "202.114.4.255"
+# host = "192.168.1.146"
+
+host = "127.0.0.1"
 port = 1792
 
 host = ARGV[0] if ARGV[0]
@@ -44,21 +58,21 @@ patient_name = msg[28..42].to_s
 
 n = Time.now
 
-name = "#{bed_name}"
+name = "#{bed_name.strip.split("|").join("-")}"
 
 if monitors[ip] 
 
 puts "#{n - now} Monitor #{name} at #{ip} alive."
 monitors[ip][:update]=n
 if monitors[ip][:vital].status == nil
-  monitors[ip][:vital] = get_vital_sign(ip) 
+  monitors[ip][:vital] = get_vital_sign(ip, name) 
 end
 
 
 else
   
 puts "#{n - now} Monitor #{name} at #{ip} register."
-t = get_vital_sign(ip) 
+t = get_vital_sign(ip,name) 
 monitors[ip] = {:name => name, :ip=> ip, :update=>n, :vital=>t}
 
 
