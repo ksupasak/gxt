@@ -61,6 +61,7 @@ set :mongo_prefix, Proc.new {'gxt'}
 
 # default ap
 set :name, 'monitor'
+set :app, settings.apps[settings.name]
 
 
 def switch name
