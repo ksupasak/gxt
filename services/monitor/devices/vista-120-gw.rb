@@ -1,25 +1,25 @@
 require 'socket'
-
 require 'net/http'
 require 'json'
 
+module Device
 
 
 
+def self.monitor_vista_120_v2
+
+puts "-- Start Vista120 v2 Service"
 
 boardcast = Thread.new {
   
   msg_c = "~\x000\x02\x00\x00j\xF9\xE2\a\x04\a\x01\x05\f\x06CMS\x00\x00\x00\x00\x00HOSPITAL\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00x\e\xDA\x03\xF0\x17\xDA\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1C%\x00\x00\x00\x00\xC0\xA8d\v\xC0\xA8\x02\x9F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-  tip = "192.168.2.255"
-  puts "Server Start UDP"
+  tip = HOST_NETWORK_BOARDCAST
+  puts "Server Start UDP for Vista 120"
   socket = UDPSocket.new
   socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) 
   
-  # socket.bind("127.0.0.1", 9610)
   loop do 
   socket.send msg_c, 0, tip, 9610
-  
-  # x = socket.recvfrom(1000)
   # puts "Server UDP send "
   sleep 1
   end
@@ -30,37 +30,16 @@ boardcast.run
 
 
 
-# rboardcast = Thread.new {
-# server = TCPServer.new  9500
-# 
-#  Thread.fork(server.accept) do |client|
-#   puts "Server Start rTCP"
-#  while true
-#   line = client.recv(40960)
-#   puts line.inspect 
-#  end
-# 
-# end
-# }
-# rboardcast.run
+# puts "Server Start"
 
 
 
-
-puts "Server Start"
-
+server = TCPServer.new  VISTA_120_v2_port
 
 
-server = TCPServer.new  9500
-
-# host = 'gexintec.com'
-host = '127.0.0.1'
-port = 1792
-
-
-  uri = URI("http://#{host}:#{port}/monitor/Sense/sense")
-
-# sim = TCPSocket.new '191.1.1.101', 2250
+host = GW_IP
+port = GW_PORT
+uri = GW_URI
 
 
 list = [{:n1=>6},
@@ -107,7 +86,8 @@ loop do
             bp = ''
             bp_hr = 0
             pr = 0 
-        
+        bp_stamp = ''
+        check_stamp = nil
         
         while true
         line = client.recv(40960)
@@ -192,19 +172,38 @@ loop do
               bp_hr = res[136]/2
               pr = res[142]/2
               
+       
+              
+              new_check_stamp = "#{bp}-#{pr}-#{bp_hr}"
+              
+              if check_stamp!=new_check_stamp
+                now = Time.now 
+                bp_stamp  = format("%02d%02d%02d", now.hour, now.min, now.sec)
+                check_stamp = new_check_stamp
+              end
+              
+              
               # puts "HN #{hn}"
               # puts "NIBP #{bp}"
               # puts "SO2 #{so2}"
               # puts "PR #{pr}"
               # 
-              
+                       if bp=='61/61' 
+                          bp= '-/-'
+                          # pr= 0
+                          # bp_stamp = nil
+                          # so2 = 0
+
+                        end 
               data = {}
               
               data[:hr] = pr
-              data[:rr] = 20
+              data[:rr] = '-'
               data[:so2] = so2
               data[:pr] = pr
               data[:bp] = bp
+              
+              data[:bp_stamp] = bp_stamp
 
               ref = hn
               bed = station
@@ -248,4 +247,9 @@ loop do
         
         puts 'next'    
  
+end
+
+
+end
+
 end

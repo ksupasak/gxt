@@ -9,7 +9,8 @@ def send_to_gateway data
           port = @config[:port]
 
             
-          uri = URI("http://#{host}:#{port}/monitor/Sense/sense")
+          uri = GW_URI
+          # URI("http://#{host}:#{port}/monitor/Sense/sense")
   
            
            sense = {}
@@ -28,7 +29,7 @@ def send_to_gateway data
            stamp = Time.now.to_json
            
            stamp = Time.parse("#{data[:hour]}:#{data[:min]}", Time.now).to_json if data[:hour]
-           
+           puts "#{stamp}\t#{name}\t#{sense.inspect}"
            res = Net::HTTP.post_form(uri,'ip'=>data[:ip], 'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>sense.to_json)
           
           rescue Exception=>e 
@@ -112,7 +113,8 @@ def get_vital_sign tip, station_name="-"
   sense[:bp] = "#{sys}/#{dia}"
   sense[:hour] = hour
   sense[:min] = min
-  sense[:bp_stamp]  = "#{hour}:#{min}"
+  sec = Time.now.sec
+  sense[:bp_stamp]  = format("%02d%02d%02d",hour,min,0)
   #  
   # 
   # 
@@ -121,7 +123,7 @@ def get_vital_sign tip, station_name="-"
   # 
   
 
-  puts "#{Time.now - last} #{msg.size}. SO2 : #{so2}, PR : #{pr}, BP : #{sys}/#{dia}, Time : #{hour}:#{min}"
+  # puts "#{Time.now - last} #{msg.size}. SO2 : #{so2}, PR : #{pr}, BP : #{sys}/#{dia}, Time : #{hour}:#{min}"
 
 
   end

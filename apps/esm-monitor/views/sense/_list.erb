@@ -1,4 +1,4 @@
-
+<i>Number of records : <%=this.model.count%></i>
 <table class="table table-striped">
 <% 
 	
@@ -13,7 +13,7 @@
 </thead>
 <tbody>
 <%	
-	for i in this.model.all :limit=>50,:sort=>'created_at desc'
+	for i in this.model.all :limit=>1000,:sort=>'created_at desc'
 %>
 <tr>
 	<% for j in keys %>

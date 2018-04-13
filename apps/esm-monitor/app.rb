@@ -83,7 +83,10 @@ class SenseController < GXTDocument
 
       data = "{}"
       data = params['data'] if params['data']
-
+      
+      
+      puts data
+      
       station_id = nil
 
       station = nil
@@ -113,7 +116,7 @@ class SenseController < GXTDocument
 
         old = @context.settings.senses[station_name]
         @context.settings.senses[station_name] = data
-        @context.settings.live[station_name] = 5
+        @context.settings.live[station_name] = 10
         
        
                   if true or data['bp_stamp']
@@ -127,8 +130,13 @@ class SenseController < GXTDocument
                   
                          urix = URI("http://#{his_host}:#{his_port}/his/test_send_anpacurec")
                   
+                        begin
                          res = Net::HTTP.post_form(urix, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
-                  
+                        rescue Exception => e
+                          
+                          puts e.message
+                          
+                        end
                   
                        end
                   
@@ -137,14 +145,16 @@ class SenseController < GXTDocument
 
 
 
-      records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
+      # records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
+      
+      
       # puts station_name
       #  puts app.settings.stations.inspect 
       #  puts Station.count
 
 
 
-       "200 OK\nSense " + Sense.collection.count.to_s + "\nId "+records[0].inspect
+       "200 OK\nSense " + Sense.collection.count.to_s + "\nId "
     
     
   end
@@ -241,7 +251,7 @@ app.post "/sense" do
 
     data = "{}"
     data = params['data'] if params['data']
-
+    puts data.inspect 
     station_id = nil
 
     station = nil
@@ -308,8 +318,13 @@ $sum = 0
 Thread.new do # trivial example work thread
   while true do
      sleep 1
+     if Sense.count > 500
+       
+       Sense.sort(:created_at).limit(400).destroy_all
+       
+     end
      EM.next_tick { 
-         puts   app.settings.live.inspect 
+        # puts   app.settings.live.inspect 
          app.settings.live.keys.each do |k|
             app.settings.live[k] -=1
             if app.settings.live[k]<0

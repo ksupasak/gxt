@@ -1,6 +1,11 @@
 require 'socket'
 require 'timeout'
 
+module Device
+  
+  
+def self.monitor_b450_v1()
+
 puts "-- Start B450 Service"
 # Services 
 # username biomed
@@ -18,10 +23,14 @@ require_relative 'lib'
 # network address
 network_addr = "202.114.4.255"
 network_addr = "192.168.2.255"
+network_addr = HOST_NETWORK_BOARDCAST
+
+
 # host = "192.168.1.146"
 
-host = "127.0.0.1"
-port = 1792
+host = GW_IP
+port = GW_PORT
+
 
 host = ARGV[0] if ARGV[0]
 network_addr = ARGV[1] if ARGV[1]
@@ -109,7 +118,7 @@ rescue Exception=>e
   puts e.inspect 
   puts e.backtrace.join("\n") 
 end
-  puts "check.."
+  # puts "check.."
   sleep(1)
 
 end
@@ -124,4 +133,8 @@ threads.each { |thr| thr.join }
 
 # end
 
-puts 'ok'
+end
+
+end
+
+
