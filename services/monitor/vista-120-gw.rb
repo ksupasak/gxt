@@ -41,7 +41,7 @@ loop do
         
         puts client
         puts client.peeraddr.inspect 
-        
+        ip = client.peeraddr[-1]
         station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
@@ -49,11 +49,12 @@ loop do
         
         while true
         line = client.recv(40960)
-        
+   
+     if true or ip=="202.114.4.12"
         # puts "#{line.size} #{'='*30}"
         
         # puts '====================================================='+line.size.to_s
-        # puts line
+        # puts client.peeraddr[-1]+" : "+line.size
       
         
         if line.size==252 or line.size==242 or line.size==268 or line.size==255
@@ -66,22 +67,28 @@ loop do
         
         
         
-        elsif line.size==1448
+        elsif line.size>=1448
           # puts "xxxx "+line.index('00123456').to_s
             
           l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
-          # puts l.join("\t")
+          
           
           # puts 'xxx  '+ l.index(34).to_s
           
           l.each_with_index do |i,id| 
-            if i=='9'
-              # puts "dd#{i}\t#{id}"
+            
+		
+	   if false and  i=='60'
+               puts "dd#{i}\t#{id}"
             end
           end
           pr = l[-4]
-          so2 = l[-6]      
-          puts Time.now
+	  lc = l
+          so2 = l[1442]      
+          puts Time.now.to_s
+
+	  puts ip
+	  
            # puts line
            # puts
            # 
@@ -105,24 +112,28 @@ loop do
                 end
                 ac+=l     
            end
+           hr=lc[1444]
+	  #puts lc[646]
+          #puts lc[1444]
+
            puts "SO2 #{so2}"
-           puts "PR #{pr}" 
+           #puts "PR #{pr}" 
            
            data = {}
            
            data[:hr] = hr
            data[:rr] = rr
            data[:so2] = so2
-           data[:pr] = pr
+           data[:pr] = hr
            data[:bp] = "#{high}/#{low}"
            ref = hn
            bed = station
            name = bed
            stamp = Time.now.to_json
-           
+           if true or  high!=128 and low!=128
            
            res = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
-           
+           end
            
         
         elsif line.size ==162
@@ -141,6 +152,8 @@ loop do
         
         
       end
+
+end
         
          # sim.send line,1000
          #          line2 = client.recv(1000)
