@@ -33,6 +33,7 @@ set :sockets, []
 
 set :stations, {}
 set :senses, {}
+set :live, {}
 
 set :apps, {}
 set :apps_ws, {}
@@ -110,11 +111,12 @@ before do
 
  
     
-  puts "Set link = #{solution_name}"
-  puts "Set name = #{settings.name}"
-    puts "Set app = #{settings.app}"
+  # puts "Set link = #{solution_name}"
+  # puts "Set name = #{settings.name}"
+  # puts "Set app = #{settings.app}"
+  
   settings.set :context, eval("#{settings.app.gsub('-','_').camelize}")
-  puts "Set context = #{settings.context}" 
+  # puts "Set context = #{settings.context}" 
 
   
   MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
@@ -353,7 +355,7 @@ get '/:gxt/:service/:operation' do
    
    params[:service] = "#{settings.context}::#{params[:service]}"
    
-   puts    params[:service]
+   puts  params[:service]
   
    
    @this = eval "#{params[:service]}Controller.new @context, settings"
@@ -398,9 +400,9 @@ post '/:gxt/:service/:operation' do
    root = File.dirname(__FILE__)
    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
    settings.set :public_folder, File.dirname(__FILE__)+"/public"
-   puts 
-   puts params
-   puts
+   # puts 
+   # puts params
+   # puts
    require_relative "apps/#{settings.app}/app"
    
    @context = self

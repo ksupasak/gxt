@@ -17,6 +17,7 @@ require_relative 'lib'
 
 # network address
 network_addr = "202.114.4.255"
+network_addr = "192.168.2.255"
 # host = "192.168.1.146"
 
 host = "127.0.0.1"

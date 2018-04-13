@@ -61,7 +61,7 @@ div.clear {
 	<div id="panel" class="panel">
 		
 		<% for i in settings.stations.keys.sort %>
-		<div id="<%=i%>" class="station">
+		<div id="<%=i%>" class="station active-station">
 			ID : <span class="id"><%=i%></span><br/>
 			HN : <span class="hn"></span><br/>
 			BP : <span class="bp">-/-</span><br/>
@@ -118,13 +118,19 @@ $(document).ready(function(){
 
       }
       ws.onmessage = function(m) { 
+	
+		active = $('.active-station').size()
+	
 		show(''+m.data)
 		data = JSON.parse(m.data)
+		if(data['list'].length!=active)
+		  window.location.href = "monitor"; 
+			
 		$('#timer').html(data['time'])
 		for(var id in data['list']){
 			i = data['list'][id]
 			
-			if($('#'+i).length > 0 ){ 
+			if($('#'+i).length > 0){ 
 			obj = data['data'][i]
 			
 			// console.log(obj)
