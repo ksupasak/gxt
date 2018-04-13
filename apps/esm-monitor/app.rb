@@ -1,4 +1,7 @@
 
+require 'net/http'
+
+
 register_app 'monitor', 'esm-monitor'
 
 module EsmMonitor
@@ -59,7 +62,7 @@ class SenseController < GXTDocument
       #   key :ip, String
       #   key :ref, String
       #   key :data,  String
-       puts params
+      # puts params
 
       stamp = Time.now
       stamp = params['stamp'] if params['stamp']
@@ -80,7 +83,10 @@ class SenseController < GXTDocument
 
       data = "{}"
       data = params['data'] if params['data']
-
+      
+      
+      puts data
+      
       station_id = nil
 
       station = nil
@@ -106,18 +112,49 @@ class SenseController < GXTDocument
 
       data = JSON.parse(data)
       data['ref'] = ref
-       @context.settings.senses[station_name] = data
+       # @context.settings.senses[station_name] = data
+
+        old = @context.settings.senses[station_name]
+        @context.settings.senses[station_name] = data
+        @context.settings.live[station_name] = 10
+        
+       
+                  if true or data['bp_stamp']
+                  
+                       bp_stamp = data['bp_stamp']
+                       old_bp_stamp = old['bp_stamp'] 
+                        # puts "$$$$$ #{data['bp_stamp']}  #{old['bp_stamp']}  "
+                       if bp_stamp!=old_bp_stamp
+                        his_host = '127.0.0.1'
+                        his_port = "9292"
+                  
+                         urix = URI("http://#{his_host}:#{his_port}/his/test_send_anpacurec")
+                  
+                        begin
+                         res = Net::HTTP.post_form(urix, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
+                        rescue Exception => e
+                          
+                          puts e.message
+                          
+                        end
+                  
+                       end
+                  
+                       end
+         
 
 
 
-      records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
+      # records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
+      
+      
       # puts station_name
       #  puts app.settings.stations.inspect 
       #  puts Station.count
 
 
 
-       "200 OK\nSense " + Sense.collection.count.to_s + "\nId "+records[0].inspect
+       "200 OK\nSense " + Sense.collection.count.to_s + "\nId "
     
     
   end
@@ -193,7 +230,7 @@ app.post "/sense" do
     #   key :ip, String
     #   key :ref, String
     #   key :data,  String
-  puts params
+    # puts params
 
     stamp = Time.now
     stamp = params['stamp'] if params['stamp']
@@ -214,7 +251,7 @@ app.post "/sense" do
 
     data = "{}"
     data = params['data'] if params['data']
-
+    puts data.inspect 
     station_id = nil
 
     station = nil
@@ -240,7 +277,27 @@ app.post "/sense" do
 
     data = JSON.parse(data)
     data['ref'] = ref
+    old = app.settings.senses[station_name]
     app.settings.senses[station_name] = data
+    
+    
+     "$$$$$ #{data['bp_stamp']}"
+    if data['bp_stamp']
+  
+    bp_stamp = data['bp_stamp']
+    old_bp_stamp = old['bp_stamp'] 
+  
+    if bp_stamp!=old_bp_stamp
+      
+      
+      uri = URI("http://#{his_host}:#{his_port}/his/test_send_anpacurec")
+      
+      res = Net::HTTP.post_form(uri, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
+      
+      
+    end
+    
+    end
 
 
 
@@ -261,7 +318,23 @@ $sum = 0
 Thread.new do # trivial example work thread
   while true do
      sleep 1
+     if Sense.count > 500
+       
+       Sense.sort(:created_at).limit(400).destroy_all
+       
+     end
      EM.next_tick { 
+        # puts   app.settings.live.inspect 
+         app.settings.live.keys.each do |k|
+            app.settings.live[k] -=1
+            if app.settings.live[k]<0
+              
+              app.settings.live.delete k
+              app.settings.stations.delete k
+              app.settings.senses.delete k
+            end
+         end
+       
      begin
        if  app.settings.apps_ws[app.settings.name]
        app.settings.apps_ws[app.settings.name].each{|s|  s.send({:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json) } 

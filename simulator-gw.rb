@@ -17,6 +17,7 @@ count = 0
 ls = 10
 
 bp = '90/120'
+bp_stamp = Time.now
 while true do 
   
   begin
@@ -39,6 +40,8 @@ while true do
     
     bp = "#{70+rand(20)}/#{100+rand(20)}"
     ls = 10+rand(5)
+    bp_stamp = Time.now
+    
     puts "Data sent #{count} times + BP : #{bp}"
   
   end

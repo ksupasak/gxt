@@ -11,7 +11,7 @@ gem 'puma'
 gem 'parallel'
 
 gem 'activesupport', require: 'active_support/all'
-gem 'mysql2' , '0.3.17'
+#gem 'mysql2' , '0.3.17'
 
 
 

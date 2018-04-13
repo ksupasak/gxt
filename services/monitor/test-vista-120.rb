@@ -3,7 +3,55 @@ require 'socket'
 require 'net/http'
 require 'json'
 
-server = TCPServer.new  5510
+
+
+
+
+boardcast = Thread.new {
+  
+  msg_c = "~\x000\x02\x00\x00j\xF9\xE2\a\x04\a\x01\x05\f\x06CMS\x00\x00\x00\x00\x00HOSPITAL\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00x\e\xDA\x03\xF0\x17\xDA\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1C%\x00\x00\x00\x00\xC0\xA8d\v\xC0\xA8\x02\x9F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+  tip = "192.168.2.255"
+  puts "Server Start UDP"
+  socket = UDPSocket.new
+  socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) 
+  
+  # socket.bind("127.0.0.1", 9610)
+  loop do 
+  socket.send msg_c, 0, tip, 9610
+  
+  # x = socket.recvfrom(1000)
+  # puts "Server UDP send "
+  sleep 1
+  end
+  
+}
+
+boardcast.run
+
+
+
+# rboardcast = Thread.new {
+# server = TCPServer.new  9500
+# 
+#  Thread.fork(server.accept) do |client|
+#   puts "Server Start rTCP"
+#  while true
+#   line = client.recv(40960)
+#   puts line.inspect 
+#  end
+# 
+# end
+# }
+# rboardcast.run
+
+
+
+
+puts "Server Start"
+
+
+
+server = TCPServer.new  9500
 
 # host = 'gexintec.com'
 host = '127.0.0.1'
@@ -36,124 +84,250 @@ loop do
         
         Thread.fork(server.accept) do |client|
         # hn = '-'
-        # puts 'start accept'
+        puts 'start accept'
+        
+        
+        begin
         #               client = server.accept
         
         puts client
         puts client.peeraddr.inspect 
-        ip = client.peeraddr[-1]
+        
         station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
         # puts client.methods.sort 
         
+        buff = []
+        index = 0 
+        left = nil
+        
+            hn = ''
+            so2 = 0
+            bp = ''
+            bp_hr = 0
+            pr = 0 
+        
+        
         while true
         line = client.recv(40960)
-   
-     if true or ip=="202.114.4.12"
-        # puts "#{line.size} #{'='*30}"
+        
+        #puts "#{line.size} #{'='*30}"
         
         # puts '====================================================='+line.size.to_s
-        # puts client.peeraddr[-1]+" : "+line.size
-      
-        
-        if line.size==252 or line.size==242 or line.size==268 or line.size==255
-         b = line[55..100] 
-          # puts "HN : " + b.strip
-          hn = b.strip
-            # l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
-            # puts l.join("\n")
-          
+        #puts line
+        # puts
+        buff+= line.each_byte.to_a
         
         
+        l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
+        # l.each_with_index do |i,id| 
+        #       if i=='119'
+        #         puts "xx #{l.size} #{i}\t#{id}"
+        #       end
+        #     end
         
-        elsif line.size>=1448
-          # puts "xxxx "+line.index('00123456').to_s
-            
-          l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
-          
-          
-          # puts 'xxx  '+ l.index(34).to_s
-          
-          l.each_with_index do |i,id| 
-            
-		
-	   if false and  i=='60'
-               puts "dd#{i}\t#{id}"
-            end
+        # puts l.join("\t") if l.size==258 or l.size==1448
+        
+        # left = line.size
+        
+          if left
+            buff = buff[left..-1]
+            left = nil
           end
-          pr = l[-4]
-	  lc = l
-          so2 = l[1442]      
-          puts Time.now.to_s
-
-	  puts ip
-	  
-           # puts line
-           # puts
-           # 
-           ac = 0 
-           for i in list
-                name = i.keys[0]
-                l = i[name]
-                s = line[ac...ac+l]
-                a = s.each_byte.to_a.collect{|i| (i.to_i)}
-                case name
-                when :n5
-                  hr = a[0]
-                  rr = a[2]
-                  puts "HR #{hr} RR #{rr}"
-                when :n7
-                  high = a[8]
-                  low = a[10]
-                  puts "NIBP #{high}/#{low}"
-                
-                else
-                end
-                ac+=l     
-           end
-           hr=lc[1444]
-	  #puts lc[646]
-          #puts lc[1444]
-
-           puts "SO2 #{so2}"
-           #puts "PR #{pr}" 
-           
-           data = {}
-           
-           data[:hr] = hr
-           data[:rr] = rr
-           data[:so2] = so2
-           data[:pr] = hr
-           data[:bp] = "#{high}/#{low}"
-           ref = hn
-           bed = station
-           name = bed
-           stamp = Time.now.to_json
-           if true or  high!=128 and low!=128
-           
-           res = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
-           end
-           
         
-        elsif line.size ==162
-          # puts "xxxxxx"+ line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
+    
+        while index<buff.size
+          res = nil
+          type = buff[index]
+          
+          case type
+          when 20 
+          
+          read = 20 + 256
+          
+          #puts "Found Peak 255" 
+          
+          else
+          if type != 0
+          read = type
+          #puts "Found #{read} #{'msg'}" 
+          
+          end
+          end
+          
+          if index+read <= buff.size
+          
+          res = buff[index..index+read]
+          if type==176 or type==162
+            
+            
+            if type==176
+              
+              hn = res[40..60].collect{|i| i.chr}.join.strip
+              puts "HN #{hn} new"
+              
+            end
+            
+            if type==162
+              
+              so2 = res[106]/2
+              bp = "#{res[124]/2}/#{res[130]/2}"
+              bp_hr = res[136]/2
+              pr = res[142]/2
+              
+              # puts "HN #{hn}"
+              #         puts "NIBP #{bp}"
+              #         puts "SO2 #{so2}"
+              #         puts "PR #{pr}"
+              #         
+              
+              
+              
+              
+              data = {}
+              
+              data[:hr] = pr
+              data[:rr] = 20
+              data[:so2] = so2
+              data[:pr] = pr
+              data[:bp] = bp
+
+              ref = hn
+              bed = station
+              name = bed
+              stamp = Time.now.to_json
+                          
+              puts "#{station} #{data.inspect}"            
+              res = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+              
+            end
+            
+            
+            # puts line
+            # puts
+            # 
+            # res.each_with_index do |i,ix|
+            #   
+            #   print "#{ix}\t" if ix%10==0 
+            #   print "#{i.to_i.to_s}\t"
+            #   puts if ix%10==9 and ix!=0
+            #   
+            # end
+            # 
+            # puts 
+          end
         
-        elsif line.size ==10
-                # puts "yyyyy"+line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
-        elsif line.size ==13
-             # puts "kkkkk"+ line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
-        elsif line.size ==480
-               # puts "zzzz"+line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
-               end
-               
-               
+          else
+          # buff = buff[index..-1]
+          # left = index+read - buff.size
+          end
+          index+=read
+          
         end
         
+        if index==buff.size
+          index = 0 
+          buff=[]
+        end
+              # 
+              # 
+              # if line.size==258 or line.size==242 or line.size==268 or line.size==255
+              #  b = line[55..100] 
+              #   # puts "HN : " + b.strip
+              #   hn = b.strip
+              #     # l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
+              #     # puts l.join("\n")
+              #   
+              # elsif line.size==76
+              #   
+              #    l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
+              #     # puts l.join("\t")
+              # 
+              # 
+              # elsif line.size==1448 
+              #   # puts "xxxx "+line.index('00123456').to_s
+              #     puts line
+              #   l = line.each_byte.to_a.collect{|i| i.to_i.to_s} 
+              #   # lt = l[0..20] 
+              #   # puts lt.join("\t")
+              #   
+              #   # puts 'xxx  '+ l.index(34).to_s
+              #   
+              #   # l.each_with_index do |i,id| 
+              #   #    if i=='119'
+              #   #      puts "dd#{i}\t#{id}"
+              #   #    end
+              #   #  end
+              #   pr = l[-4]
+              #   so2 = l[-6]      
+              #   # puts Time.now
+              #    # puts line
+              #    # puts
+              #    # 
+              #    ac = 0 
+              #    for i in list
+              #         name = i.keys[0]
+              #         l = i[name]
+              #         s = line[ac...ac+l]
+              #         a = s.each_byte.to_a.collect{|i| (i.to_i)}
+              #         case name
+              #         when :n5
+              #           hr = a[0]
+              #           rr = a[2]
+              #           # puts "HR #{hr} RR #{rr}"
+              #         when :n7
+              #           high = a[8]
+              #           low = a[10]
+              #           # puts "NIBP #{high}/#{low}"
+              #         
+              #         else
+              #         end
+              #         ac+=l     
+              #    end
+              #    # puts "SO2 #{so2}"
+              #    # puts "PR #{pr}" 
+              #    
+              #    data = {}
+              #    
+              #    data[:hr] = hr
+              #    data[:rr] = rr
+              #    data[:so2] = so2
+              #    data[:pr] = pr
+              #    data[:bp] = "#{high}/#{low}"
+              #    ref = hn
+              #    bed = station
+              #    name = bed
+              #    stamp = Time.now.to_json
+              #    
+              #    
+              #    # res = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+              #    
+              #    
+              # 
+              # elsif line.size ==162
+              #   # puts "xxxxxx"+ line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
+              # 
+              # elsif line.size ==10
+              #         # puts "yyyyy"+line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
+              # elsif line.size ==13
+              #      # puts "kkkkk"+ line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
+              # elsif line.size ==480
+              #        # puts "zzzz"+line.each_byte.to_a.collect{|i| i.to_i.to_s}.join("\t")
+              #        end
+              #        
+              #          # sleep 0.1    
+              # end
+              #   
         
       end
-
-end
+      
+    rescue Exception=>e
+      puts e
+      
+    end
+      
+    end
         
          # sim.send line,1000
          #          line2 = client.recv(1000)
