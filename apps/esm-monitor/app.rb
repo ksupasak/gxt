@@ -1,5 +1,6 @@
 
 require 'net/http'
+require_relative '../../services/monitor/conf'
 
 
 register_app 'monitor', 'esm-monitor'
