@@ -9,8 +9,8 @@ class Station
   include MongoMapper::Document
   key :name, String
   key :ip, String
-  key :type, String
   key :serial_number, String
+  key :type, String
   key :zone_id, ObjectId
 end
 

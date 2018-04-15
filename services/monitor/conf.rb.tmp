@@ -1,4 +1,4 @@
-# Raspberry PI GW Monitor test test
+# Raspberry PI GW Monitor
 GW_IP = '127.0.0.1'
 GW_PORT = 1792
 GW_URI = URI("http://#{GW_IP}:#{GW_PORT}/monitor/Sense/sense")
