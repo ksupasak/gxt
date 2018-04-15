@@ -125,8 +125,8 @@ class SenseController < GXTDocument
                        old_bp_stamp = old['bp_stamp'] 
                         # puts "$$$$$ #{data['bp_stamp']}  #{old['bp_stamp']}  "
                        if bp_stamp!=old_bp_stamp
-                        his_host = '127.0.0.1'
-                        his_port = "9292"
+                        his_host = GW_HIS_IP
+                        his_port = GW_HIS_PORT
                   
                          urix = URI("http://#{his_host}:#{his_port}/his/test_send_anpacurec")
                   
