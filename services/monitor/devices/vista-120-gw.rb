@@ -152,28 +152,37 @@ loop do
               puts "HN #{hn} new"
               
             end
-               # puts line
-                # puts
-                # 
-                #    res.each_with_index do |i,ix|
-                # 
-                #      print "#{ix}\t" if ix%10==0 
-                #      print "#{i.to_i.to_s}\t"
-                #      puts if ix%10==9 and ix!=0
-                # 
-                #    end
-                # 
-                #    puts
+            
             
             if type==162
               
               so2 = res[106]/2
-              bp = "#{res[124]/2}/#{res[130]/2}"
+              
+              high = "#{res[124]/2}"
+              high = "#{res[124]+128}" if res[125]==67
+              
+              
+              bp = "#{high}/#{res[130]/2}"
+              
+              
               bp_hr = res[136]/2
-              pr = res[142]/2
+              # pr = res[142]/2
+              pr = res[118]/2
               
-       
               
+                 # puts line
+                 #                 puts
+                 #                 
+                 #                    res.each_with_index do |i,ix|
+                 #                 
+                 #                      print "#{ix}\t" if ix%10==0 
+                 #                      print "#{i.to_i.to_s}\t"
+                 #                      puts if ix%10==9 and ix!=0
+                 #                 
+                 #                    end
+                 #                 
+                 #                    puts
+                 #    
               new_check_stamp = "#{bp}-#{pr}-#{bp_hr}"
               
               if check_stamp!=new_check_stamp
