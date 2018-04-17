@@ -120,7 +120,7 @@ class SenseController < GXTDocument
         @context.settings.live[station_name] = 10
         
        
-                  if  data['bp_stamp']
+                  if data['bp']!= "-/-"
                   
                        bp_stamp = data['bp_stamp']
                        old_bp_stamp = old['bp_stamp'] 

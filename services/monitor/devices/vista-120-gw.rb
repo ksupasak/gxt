@@ -169,21 +169,21 @@ loop do
               # pr = res[142]/2
               pr = res[118]/2
               
+                         #       
+                         # puts line
+                         #           puts
+                         #           
+                         #              res.each_with_index do |i,ix|
+                         #           
+                         #                print "#{ix}\t" if ix%10==0 
+                         #                print "#{i.to_i.to_s}\t"
+                         #                puts if ix%10==9 and ix!=0
+                         #           
+                         #              end
+                         #           
+                         #              puts
               
-                 # puts line
-                 #                 puts
-                 #                 
-                 #                    res.each_with_index do |i,ix|
-                 #                 
-                 #                      print "#{ix}\t" if ix%10==0 
-                 #                      print "#{i.to_i.to_s}\t"
-                 #                      puts if ix%10==9 and ix!=0
-                 #                 
-                 #                    end
-                 #                 
-                 #                    puts
-                 #    
-              new_check_stamp = "#{bp}-#{pr}-#{bp_hr}"
+              new_check_stamp = "#{bp}-#{bp_hr}"
               
               if check_stamp!=new_check_stamp
                 now = Time.now 
