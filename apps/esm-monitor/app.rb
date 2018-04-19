@@ -130,6 +130,31 @@ class SenseController < GXTDocument
                         his_port = GW_HIS_PORT
                   
                          urix = URI("http://#{his_host}:#{his_port}/his/test_send_anpacurec")
+                         
+                         # 4546/56 ok
+                         # 03444456 ok
+                         # 344456
+                         
+                         # 56003444
+                         hn = data['ref']
+                         
+                         prefix = hn[0..5].to_i
+                         
+                         if hn.index('/')
+                           
+                           hn = "#{hn[-2..-1]}#{format("%06d",hn[0..hn.index('/')-1])}"
+                           
+                         elsif hn.size==8 and prefix < 300000
+                           
+                           hn = "#{hn[6..-1]}#{format("%06d",prefix)}"
+                           
+                         elsif hn.size<8 
+                           
+                           hn = "#{hn[-2..-1]}#{format("%06d",hn[0..-3].to_i)}"
+                         end
+                         
+                        data['ref'] = hn 
+                         
                   
                         begin
                          res = Net::HTTP.post_form(urix, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
