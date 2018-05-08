@@ -18,7 +18,7 @@ require 'barby/barcode/qr_code'
 require 'barby/outputter/png_outputter'
 require 'crc'
 
-register Sinatra::Reloader
+# register Sinatra::Reloader
 
 set :server, 'thin'
 set :socket, 'tmp/sockets/thin.sock'

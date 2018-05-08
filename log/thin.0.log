@@ -1,0 +1,130 @@
+Writing PID to tmp/pids/thin.0.pid
+Changing process privilege to root:root
+Exiting!
+/Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `getgrnam': can't find group for root (ArgumentError)
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `change_privilege'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:67:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:200:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:156:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Changing process privilege to root:root
+Exiting!
+/Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `getgrnam': can't find group for root (ArgumentError)
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `change_privilege'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:67:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:200:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:156:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Changing process privilege to root:root
+Exiting!
+/Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `getgrnam': can't find group for root (ArgumentError)
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `change_privilege'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:67:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:200:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:156:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Changing process privilege to root:root
+Exiting!
+/Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `getgrnam': can't find group for root (ArgumentError)
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/daemonizing.rb:71:in `change_privilege'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:67:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:200:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:156:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Exiting!
+/Users/soup/Desktop/new_project/git/gxt/server.rb:21:in `<top (required)>': uninitialized constant Sinatra::Reloader (NameError)
+	from config.ru:1:in `require'
+	from config.ru:1:in `block in <main>'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-1.6.0/lib/rack/builder.rb:55:in `instance_eval'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-1.6.0/lib/rack/builder.rb:55:in `initialize'
+	from config.ru:1:in `new'
+	from config.ru:1:in `<main>'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/rack/adapter/loader.rb:33:in `eval'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/rack/adapter/loader.rb:33:in `load'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:182:in `load_rackup_config'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/controllers/controller.rb:72:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:200:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/lib/thin/runner.rb:156:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.0/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Thin web server (v1.7.0 codename Dunder Mifflin)
+Maximum connections set to 1024
+Listening on tmp/sockets/thin.0.sock, CTRL+C to stop
+Exiting!
+Writing PID to tmp/pids/thin.0.pid
+Using rack adapter
+Exiting!
+/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/specification.rb:2285:in `raise_if_conflicts': Unable to activate mongo_mapper-0.14.0, because mongo-2.5.1 conflicts with mongo (~> 1.8) (Gem::ConflictError)
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/specification.rb:1408:in `activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems.rb:196:in `rescue in try_activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems.rb:193:in `try_activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:125:in `rescue in require'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:40:in `require'
+	from /Users/soup/Desktop/new_project/git/gxt/server.rb:11:in `<top (required)>'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `block in <main>'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-2.0.4/lib/rack/builder.rb:55:in `instance_eval'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-2.0.4/lib/rack/builder.rb:55:in `initialize'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `new'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `<main>'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:33:in `eval'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:33:in `load'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:42:in `for'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/controllers/controller.rb:170:in `load_adapter'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/controllers/controller.rb:74:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/runner.rb:203:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/runner.rb:159:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Using rack adapter
+Exiting!
+/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/specification.rb:2285:in `raise_if_conflicts': Unable to activate mongo_mapper-0.14.0, because mongo-2.5.1 conflicts with mongo (~> 1.8) (Gem::ConflictError)
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/specification.rb:1408:in `activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems.rb:196:in `rescue in try_activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems.rb:193:in `try_activate'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:125:in `rescue in require'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:40:in `require'
+	from /Users/soup/Desktop/new_project/git/gxt/server.rb:11:in `<top (required)>'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require'
+	from /System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/lib/ruby/2.3.0/rubygems/core_ext/kernel_require.rb:55:in `require'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `block in <main>'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-2.0.4/lib/rack/builder.rb:55:in `instance_eval'
+	from /Library/Ruby/Gems/2.3.0/gems/rack-2.0.4/lib/rack/builder.rb:55:in `initialize'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `new'
+	from /Users/soup/Desktop/new_project/git/gxt/config.ru:1:in `<main>'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:33:in `eval'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:33:in `load'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/rack/adapter/loader.rb:42:in `for'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/controllers/controller.rb:170:in `load_adapter'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/controllers/controller.rb:74:in `start'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/runner.rb:203:in `run_command'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/lib/thin/runner.rb:159:in `run!'
+	from /Library/Ruby/Gems/2.3.0/gems/thin-1.7.2/bin/thin:6:in `<top (required)>'
+	from /usr/local/bin/thin:22:in `load'
+	from /usr/local/bin/thin:22:in `<main>'
+Writing PID to tmp/pids/thin.0.pid
+Thin web server (v1.7.0 codename Dunder Mifflin)
+Maximum connections set to 1024
+Listening on tmp/sockets/thin.0.sock, CTRL+C to stop
+Exiting!
+Writing PID to tmp/pids/thin.0.pid
+Thin web server (v1.7.0 codename Dunder Mifflin)
+Maximum connections set to 1024
+Listening on tmp/sockets/thin.0.sock, CTRL+C to stop

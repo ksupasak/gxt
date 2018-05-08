@@ -344,6 +344,7 @@ $sum = 0
 Thread.new do # trivial example work thread
   while true do
      sleep 1
+    
      if Sense.count > 500
        
        Sense.sort(:created_at).limit(400).destroy_all
