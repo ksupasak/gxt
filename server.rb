@@ -21,6 +21,7 @@ require 'crc'
 register Sinatra::Reloader
 
 set :server, 'thin'
+set :socket, 'tmp/sockets/thin.sock'
 # set :public_folder, File.dirname(__FILE__)+"/public"
 # set :bind, '192.168.100.8'
 # set :bind, '192.168.100.8'
@@ -41,13 +42,13 @@ set :extended, {}
 
 require_relative 'apps/gxt/helper'
 require_relative 'apps/gxt-food-order/app'
-# require_relative 'apps/gxt-food-order2/app'
 require_relative 'apps/gxt-food-extended/app'
 
 
 require_relative 'apps/gxt-cash-deposit/app'
 require_relative 'apps/gxt-gold-saving/app'
 
+require_relative 'apps/esm-media-stream/app'
 require_relative 'apps/esm-monitor/app'
 
 register Sinatra::Partial
