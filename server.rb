@@ -1,10 +1,13 @@
 require 'rubygems'
 require 'sinatra'
-require "sinatra/reloader" if development?
+require 'sinatra/reloader' if development?
 require 'sinatra/partial'
+require 'sinatra-websocket'
+
+
+require_relative 'config/init'
 # require 'sinatra/calculations'
 
-require 'sinatra-websocket'
 require 'active_support/all'
 
 require 'mongo'
@@ -21,7 +24,6 @@ require 'crc'
 # register Sinatra::Reloader
 
 set :server, 'thin'
-set :socket, 'tmp/sockets/thin.sock'
 # set :public_folder, File.dirname(__FILE__)+"/public"
 # set :bind, '192.168.100.8'
 # set :bind, '192.168.100.8'
@@ -62,7 +64,7 @@ set :mongo_prefix, Proc.new {'gxt'}
 
 
 # default ap
-set :name, 'monitor'
+set :name, @default_app
 set :app, settings.apps[settings.name]
 
 
