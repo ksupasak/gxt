@@ -6,6 +6,23 @@ module EsmMediaStream
   
   include EsmMediaStreamIndex
   
+  class Setting
+    include MongoMapper::Document
+      key :name, String
+      key :value, String
+      
+      
+      def self.get_value key
+         v = self.where(:name=>key).first
+         if v 
+           v.value
+          else
+            nil
+          end
+      end
+      
+  end
+  
   class Session
     include MongoMapper::Document
     key :datetime, Time
@@ -14,6 +31,8 @@ module EsmMediaStream
     key :key, String
     key :ref, String
     key :op, String
+    key :favorite, Integer
+    key :note, String
     
   end
 
@@ -40,6 +59,10 @@ module EsmMediaStream
   end
   
   # a = {:solution=>t[2],:key=>key,:op=>op,:id=>id,:name=>name,:track=>track_name, :path=>i, :raw_size=> File.size(i)}
+  class SettingController < GXTDocument
+
+  end
+  
   
   class SessionController < GXTDocument
 

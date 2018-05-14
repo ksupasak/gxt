@@ -13,7 +13,7 @@ gem 'parallel'
 gem 'activesupport', require: 'active_support/all'
 #gem 'mysql2' , '0.3.17'
 
-
+gem 'rerun'
 
 gem 'mongo'
 gem 'mongo_mapper'
