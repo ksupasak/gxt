@@ -1,3 +1,4 @@
+<%  @default_media_server = 'http://192.168.1.6:8080'%>
 <%
 
 	content_path = "#{@default_media_server}/content"
@@ -8,9 +9,9 @@
 	
 	
 	name = 'out.mp4'
-  	name = params[:path] if params[:path]
+  	#name = params[:path] if params[:path]
 	name = list[0].path if list.size> 0
-  
+	name = params[:path] if params[:path]  
 
 %>
 <div class="row" style="background-color:#333">
