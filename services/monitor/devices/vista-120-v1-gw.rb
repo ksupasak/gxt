@@ -161,6 +161,7 @@ loop do
               stamp = Time.now.to_json
               
               
+              if data[:rr]<50 and data[:so2]>50
                           
               puts "#{stamp}\t#{station}\t#{data.inspect}\t#{hn}"            
               begin            
@@ -168,8 +169,7 @@ loop do
               rescue Exception=>e
               puts e.message
               end
-                      
-                              
+              end              
               
               #     
               #   
