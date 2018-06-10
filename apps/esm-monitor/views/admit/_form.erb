@@ -1,0 +1,85 @@
+<%
+	# patient = Patient.new
+	
+	# @record.patient = patient
+	
+	@record.admit_stamp = Time.now 
+
+
+%>
+<div class="form-group">
+  <label for="product-name">Patient</label>
+  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=%>" placeholder="HN" style="width:200px">
+  <input type="text" class="form-control" id="patient-hn" name="patient[name]" value="<%=%>" placeholder="Patient Name : Optional" style="width:400px">
+
+</div>
+
+
+
+<%
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	
+	keys.collect!{|i| i if i[0]!='discharge_stamp'    }.compact!
+	
+	stations = Station.all
+	
+	
+	for i in keys
+		
+%>
+<%		
+	if i[0]=='patient_id'	
+%>
+<div class="form-group hide" >
+  <label for="product-name"><%=i[0].humanize%></label>
+  <input type="hidden" class="form-control" id="patient-hn" name="patient[id]" value="" placeholder="HN" style="width:200px">
+</div>
+<%		
+	elsif i[0]=='score'	
+%>
+<div class="form-group">
+  <label for="product-name"><%=i[0].humanize%></label>
+
+<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
+<% for j in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] %>
+  <option value="<%=j%>" <%="selected" if @record[i[0]]==j %>><%=j%></option>
+<% end %>
+</select>
+
+</div>
+<%		
+	elsif i[0]=='status'	
+%>
+<div class="form-group">
+  <label for="product-name"><%=i[0].humanize%></label>
+
+<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
+<% for j in [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Cancelled']] %>
+  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+
+</div>
+	
+<%		
+	elsif i[0]=='station_id'	
+%>
+<div class="form-group">
+  <label for="product-name"><%=i[0].humanize%></label>
+
+<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
+<% for j in stations.collect{|k| [k.id,"#{k.name} (#{k.ip}) #{k.zone.name if k.zone}"]} %>
+  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+
+</div>
+
+
+<% else %>	
+  <div class="form-group">
+    <label for="product-name"><%=i[0].humanize%></label>
+    <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
+  </div>
+<% end %>
+<% end %>

@@ -3,7 +3,7 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'sinatra/partial'
 require 'sinatra-websocket'
-
+require 'sinatra/form_helpers'
 
 require_relative 'config/init'
 # require 'sinatra/calculations'
@@ -54,6 +54,8 @@ require_relative 'apps/esm-media-stream/app'
 require_relative 'apps/esm-monitor/app'
 
 register Sinatra::Partial
+
+
 set :partial_template_engine, :erb
 
 set :mongo_prefix, Proc.new {'gxt'}

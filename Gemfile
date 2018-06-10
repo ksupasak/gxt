@@ -6,6 +6,9 @@ gem 'sinatra'
 gem 'sinatra-websocket'
 gem 'sinatra-reloader'
 gem 'sinatra-partial'
+
+gem 'sinatra-formhelpers-ng'
+
 gem 'puma'
 
 gem 'parallel'

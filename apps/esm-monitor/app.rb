@@ -6,14 +6,6 @@ require_relative '../../services/monitor/conf'
 register_app 'monitor', 'esm-monitor'
 
 module EsmMonitor
-class Station
-  include MongoMapper::Document
-  key :name, String
-  key :ip, String
-  key :serial_number, String
-  key :type, String
-  key :zone_id, ObjectId
-end
 
 class User
   include MongoMapper::Document
@@ -27,10 +19,27 @@ class User
   timestamps!
   
 end
+
 class Zone
   include MongoMapper::Document
   key :name, String
 end
+
+class Station
+  include MongoMapper::Document
+  belongs_to :zone, :class_name=>'EsmMonitor::Zone'
+  key :name, String
+  key :ip, String
+  key :serial_number, String
+  key :type, String
+  key :zone_id, ObjectId
+  
+  def to_s
+    self.name
+    
+  end
+end
+
 class Sense
   include MongoMapper::Document
   key :stamp, Time
@@ -41,6 +50,69 @@ class Sense
   key :data,  String
 end
 
+class Patient
+  include MongoMapper::Document
+  key :hn, String 
+  key :name, String 
+  
+  def to_s
+    self.name
+  end
+end
+
+
+class Admit
+  include MongoMapper::Document
+  belongs_to :station, :class_name=>'EsmMonitor::Station'
+  belongs_to :patient, :class_name=>'EsmMonitor::Patient'
+  has_many :records, :class_name=>'EsmMonitor::DataRecord'
+  key :patient_id, ObjectId
+  key :admit_stamp, Time
+  key :discharge_stamp, Time
+  key :status, String
+  key :score, Integer
+  key :note, String
+  key :bed_no, String
+  key :station_id, ObjectId
+  
+end
+ 
+class DataRecord
+  include MongoMapper::Document
+  
+  key :admit_id, ObjectId
+  
+  key :data, String
+  
+  key :bp_sys, Integer
+  key :bp_dia, Integer
+  key :pr, Integer
+  key :so2, Integer
+  key :rr, Integer
+  key :temp, Float
+  
+  key :question_1, String
+  key :question_2, String
+  key :question_3, String
+  key :question_4, String
+  key :question_5, String
+  key :question_5, String
+  key :question_6, String
+  key :stamp, Time
+  
+  key :status, String
+  
+  key :score, Integer
+  
+end
+
+
+
+
+
+
+
+
 class HomeController < GXT
 
 end
@@ -50,6 +122,63 @@ end
 
 class StationController < GXTDocument
   
+end
+
+
+class PatientController < GXTDocument
+  
+end
+
+
+class AdmitController < GXTDocument
+  def data params
+      admit=model.find params[:id]
+header = ['date']
+
+records = admit.records
+
+header << "BPSYS(#{records[-1].bp_sys})"
+header << "BPDIA(#{records[-1].bp_dia})"
+header << "PR(#{records[-1].pr})"
+header << "SO2(#{records[-1].so2})"
+header << "Score"
+
+      
+# result = [%w{date BPSYS BPDIA PR SO2 Score}.join("\t")]      
+result = [header.join("\t")]      
+
+    
+      
+      records.each do |i|
+      
+      score = 0 
+      
+      6.times.each do |j|
+          score += i["question_#{j+1}"].to_i if i["question_#{j+1}"]
+      end
+      
+        
+          result << [i.stamp.strftime("%H%M"), i.bp_sys, i.bp_dia, i.pr, i.so2, score].join("\t") if i.stamp
+          
+      end
+
+      # 
+      # result = <<DATA
+      # date  BPSYS#{"\t"}BPDIA#{"\t"}PR
+      # 0830  63.4  62.7  72.2
+      # 0833  58.0  159.9 167.7
+      # 0839  53.3  159.1 69.4
+      # 0930  55.7  158.8 68.0
+      # DATA
+  
+    return result.join("\n")
+
+  end
+end
+
+
+class DataRecordController < GXTDocument
+
 end
 
 class SenseController < GXTDocument
@@ -119,8 +248,8 @@ class SenseController < GXTDocument
         @context.settings.senses[station_name] = data
         @context.settings.live[station_name] = 10
         
-       
-                  if data['bp']!= "-/-"
+       # send to gw his
+                  if false and data['bp']!= "-/-"
                   
                        bp_stamp = data['bp_stamp']
                        old_bp_stamp = old['bp_stamp'] 
@@ -169,7 +298,32 @@ class SenseController < GXTDocument
                        end
          
 
-
+       admit = Admit.where(:status=>'Admitted',:station_id=>station.id).first     
+       if admit
+         # {"hr":60,"rr":20,"so2":99,"pr":60,"bp":"122/71","bp_stamp":"215613"}
+         bp = data['bp'].split("/")
+         last = admit.records.last
+          t = Time.strptime(data['bp_stamp'],"%H%M%S")
+         
+         if last and last.stamp
+        
+           time =  t.utc.strftime("%H%M%S")
+           
+           last_time = last.stamp.strftime("%H%M%S")
+           
+           puts "compare #{time} #{last_time}"
+           
+           if time!=last_time 
+             
+             DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :so2=>data['so2'], :stamp =>t
+             
+           end
+           
+           
+         else
+           DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :so2=>data['so2'], :stamp =>t
+         end
+       end     
 
       # records = Sense.collection.insert([{:station_id=>station_id, :name=>station_name,:stamp=>stamp,:ip=>ip,:ref=>ref,:data=>data}])
       

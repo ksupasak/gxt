@@ -56,7 +56,7 @@ helpers do
     class_opt = ''
     class_opt = "class='#{options[:class]}'" if options and options[:class]
     
-    "<a href='#{url}' #{class_opt} #{opt}>#{name}</a>"
+    "<a href=#{url.to_json.html_safe} #{class_opt} #{opt}>#{name}</a>"
   end
   
   def fn num
@@ -80,7 +80,17 @@ helpers do
      end
   end
   
- 
+  def form_for name, url, &block
+    
+      return block
+      
+      
+  end
+  
+  def text_field_tag name, value, options={}
+      
+      "<input name='#{name}' type='text' value='#{value}' #{options.collect{|k,v| "#{k}='#{v}'" }.join(" ")} />"
+  end
   
   
   def redirect_to url, delay=0
@@ -137,7 +147,8 @@ helpers do
 end
 
 
-class GXT
+class GXT 
+
   
 attr_accessor :request  
   
