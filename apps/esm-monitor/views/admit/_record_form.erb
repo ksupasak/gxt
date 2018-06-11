@@ -1,4 +1,6 @@
-
+<style>
+	table label {width:300px; padding:5px;}
+</style>
 <div class="row" id="r#{record.id}">
 <div class="col-sm-12 alert alert-info" >	
 <%
@@ -23,41 +25,33 @@
 <label>RR : </label> <value><%=f.input(:bp_rr,:value=> record.rr ,:style=>"width:50px") %></value>
 <label>SO<sub>2</sub> : </label> <value><%=f.input(:so2,:value=> record.so2 ,:style=>"width:50px") %></value><br/>
 </p>
+<table>
+	<tr>
+		<td><strong>Conscious :</strong>  </td><td> <value> <%= f.radio(:question_1, [['2','Wake up'], ['1','Sleep wake up'], ['0','Non-responsive']]) %></value></td>
+	</tr>
+	<tr>
+		<td> <strong>Respiration :</strong> </td><td> <value> <%= f.radio(:question_2, [['2','Normal breathing'], ['1','Bad breath'], ['0','Do not breath']]) %></value></td>
+	</tr>
+	<tr>
+		<td> <strong>Nausea/Vomiting :</strong> </td><td> <value> <%= f.radio(:question_3, [['2','No symptoms'], ['1','Symptoms'], ['0','Symptoms of the drug has not lost.
+		Pain']]) %></value></td>
+	</tr>
+	<tr>
+		<td> <strong>Pain :</strong> </td><td> <value> <%= f.radio(:question_4, [['2','No pain in the chest'], ['1','Have pain in the chest'], ['0','Have pain very painful chest
+		Bleeding']]) %></value></td>
+	</tr>
+	<tr>
+		<td> <strong>Bleeding :</strong> </td><td> <value> <%= f.radio(:question_5, [['2','No bleeding'], ['0','Bleeding'] ]) %></value></td>
+	</tr>
+	<tr>
+		<td> <strong>Ambulation :</strong> </td><td> <value> <%= f.radio(:question_6, [['2','Can sit up not dizziness'], ['1','Need a helper to sit or walk'], ['0','Can not sit down']]) %></value></td>
+	</tr>
+	<tr>
+		<td> </td><td> </td>
+	</tr>
+	
+</table>
 
-<p>
-<label>Conscious : </label>
-<value> <%= f.radio(:question_1, [['2','Wake up'], ['1','Sleep wake up'], ['0','Non-responsive']]) %></value>
-</p>
-
-
-<p>
-<label>Respiration : </label>
-<value> <%= f.radio(:question_2, [['2','Normal breathing'], ['1','Bad breath'], ['0','Do not breath']]) %></value>
-</p>
-
-<p>
-<label>Nausea/Vomiting : </label>
-<value> <%= f.radio(:question_3, [['2','No symptoms'], ['1','Symptoms'], ['0','Symptoms of the drug has not lost.
-Pain']]) %></value>
-</p>
-
-
-<p>
-<label>Pain : </label>
-<value> <%= f.radio(:question_4, [['2','No pain in the chest'], ['1','Have pain in the chest'], ['0','Have pain very painful chest
-Bleeding']]) %></value>
-</p>
-
-<p>
-<label>Bleeding : </label>
-<value> <%= f.radio(:question_5, [['2','No bleeding'], ['0','Bleeding'] ]) %></value>
-</p>
-
-
-<p>
-<label>Ambulation : </label>
-<value> <%= f.radio(:question_6, [['2','Can sit up not dizziness'], ['1','Need a helper to sit or walk'], ['0','Can not sit down']]) %></value>
-</p>
 
 <%= record.stamp%>
 

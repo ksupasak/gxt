@@ -30,6 +30,10 @@ patient = i.patient
 		
 		
 		<%
+		
+		last = i.records.last
+		
+		
 		score = '-'
 		score = i.score if i.score
 		%>
@@ -40,7 +44,7 @@ patient = i.patient
 	<br/>
 	
 	<span style="color:blue"><%= Time.now.strftime("%H:%M") %></span>
-	
+	<span style=""><%=last.bp_sys if last%>/<%=last.bp_dia if last%></span>
 	</center>
 	</div>
    </div>
