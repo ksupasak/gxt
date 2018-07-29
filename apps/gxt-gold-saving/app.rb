@@ -1,5 +1,6 @@
 
 register_app 'gold', 'gxt-gold-saving'
+register_app 'gold2', 'gxt-gold-saving'
 
 
 module GxtGoldSaving

@@ -1,0 +1,451 @@
+
+
+<style>
+.station{
+
+	width:24%;
+ 	border-radius: 5px;
+	display:block;
+	color:#aaa;	
+	background-color:black;
+	float:left;
+	margin:0.5%;
+	padding:10px;
+}
+div.clear {
+    clear:both;
+}
+
+.msg{
+	font-size:0.5em;
+}
+
+.bp_alert{
+	background-color:#005;
+}
+.bp_alert_2{
+	background-color:#900;
+}
+.panel{
+	background:#444;
+}
+
+.station .id{
+	color:#aaa;
+
+}
+
+.station .pr{color:#01bf02;
+
+}
+
+.station .bp{color:#5990b7;
+
+}
+
+.station .so2{color:#bcaf06;
+
+}
+
+.station .rr{color:#b7851d;
+
+}
+
+
+.station .cc{
+	color:#00b3b7;
+
+}
+.station .uc{
+	color:#f937e2;
+
+}
+
+.pr-label{
+	color:#01bf02;
+}
+
+.bp-label{
+	color:#5990b7;
+
+}
+.so2-label{
+	color:#bcaf06;
+
+}
+.rr-label{
+	color:#b7851d;
+
+}
+
+.cc-label{
+	color:#00b3b7;
+
+}
+.uc-label{
+	color:#f937e2;
+
+}
+.msg{
+	font-size:0.7em;
+}
+
+
+.ctlx{
+		line-height: 3em;
+
+}
+.boxx{
+	height:3em;
+	line-height: 3em;
+	border:1px solid #333;
+	text-align: center;
+	 border-radius: 5px;
+	background:black;
+}
+.pid{
+background:black;
+border-radius: 5px;
+
+}
+.x-label{
+	font-size:0.5em;float:left;margin-left:-10px;margin-top:-15px;
+}
+.sos{
+	line-height:2em;font-size:1.5em;text-align: center;
+}
+
+</style>
+   <form id="form">
+     <!--
+     <input type="text" id="input" value="send a message"></input>
+     -->
+    
+     
+   </form>
+
+	<div class="clear"></div>
+	<div id="panel" class="panel">
+		
+		<% for i in settings.stations.keys.sort %>
+		<div id="<%=i%>" class="station active-station">
+			<div class="row">
+				<div class="col-sm-1">
+					<div class="row">
+						<div class="col-sm-12 ctlx">
+							P
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 ctlx">
+							M
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 ctlx">
+							S
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-7">
+					<div class="row">
+					<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
+					<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
+					<div class="col-sm-6 boxx"><span class="so2-label x-label" >SO<sub>2</sub></span><span class="so2">-</span></div>
+					<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
+					<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
+					<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
+					</div>
+					
+				</div>
+				<div class="col-sm-3 pid" >
+						<div class="row">
+						<div class="col-sm-12" style="font-size:0.8em;text-align:center"><span class="id  "><%=i%></span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=i%></span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12 sos" ><span class="sos">10</span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12" style="border:0px solid gray;">
+						<%=link_to 'show', "station?name=#{i}",:class=>'btn' %>
+						
+						<canvas class="plot" id="plot-<%=i%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
+						</canvas>
+						</div></div>
+				</div>
+				
+			</div>
+			<div class="row" style="height:1em">
+					<span class="col-sm-12 msg" style="margin-left:20px">-</span>	
+			</div>
+		
+		
+			
+		</div>
+		
+		<% end %>
+		<script>
+		
+		
+		</script>
+	
+		
+		<div class="clear"></div>
+	</div>
+	
+		<div id="template" class="station" style="display:none">
+				<div class="row">
+					<div class="col-sm-1">
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								P
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								M
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								S
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-7">
+						<div class="row">
+						<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
+						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
+						<div class="col-sm-6 boxx"><span class="so2-label x-label" >SO<sub>2</sub></span><span class="so2">-</span></div>
+						<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
+						<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
+						<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
+						</div>
+
+					</div>
+					<div class="col-sm-3 pid" >
+							<div class="row">
+							<div class="col-sm-12" style="font-size:0.8em"><span class="id  "><%=i%></span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=i%></span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12 sos" ><span class="sos">10</span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12">
+							<canvas class="plot" id="plot-<%=i%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
+							</canvas>
+							</div></div>
+					</div>
+
+				</div>
+				<div class="row">
+						<span class="col-sm-12 msg"></span>	
+				</div>
+
+		
+		</div> 
+	
+	 <%=session%>
+	
+<script>
+
+$(document).ready(function(){
+	
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
+	
+	
+	  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+	
+	  var plot_pos = {};
+	
+      ws.onopen    = function()  { show('websocket opened'); 
+
+	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*"]')
+
+	  };
+      ws.onclose   = function()  { show('websocket closed'); 
+		
+	 	setTimeout(function () {
+	       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	    }, 2000); //will call the function after 2 secs.
+	
+
+      }
+      ws.onmessage = function(m) { 
+	
+		active = $('.active-station').size()
+	
+		show(''+m.data)
+		
+		lines = m.data.split("\n")
+		
+		console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Alert'){
+			data = JSON.parse(lines[1])
+			
+			// alert(data['alert'])
+			
+			$('#'+data['station']).addClass('bp_alert_2');
+			$('#'+data['station']+' .msg').html(data['alert']);
+			
+			// play sound
+			ion.sound.play("bell_ring");
+			
+		}else
+		
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+	
+		data = JSON.parse(lines[1])
+	
+		if(data['list'].length!=active)
+		window.location.href = "index"; 
+			
+		$('#timer').html(data['time'])
+		for(var id in data['list']){
+			i = data['list'][id]
+			
+			if($('#'+i).length > 0){ 
+			obj = data['data'][i]
+			
+			// console.log(obj)
+			$('#'+i+' .hn').html(obj['ref'])
+			
+			if($('#'+i+' .bp').html()!=obj['bp']){
+				$('#'+i).addClass('bp_alert');
+				$('#'+i).removeClass('bp_alert_2');
+				$('#'+i+' .msg').html("-");
+			}else{
+				$('#'+i).removeClass('bp_alert');
+				// $('#'+i).removeClass('bp_alert_2');
+				// $('#'+i+' .msg').html("-");
+			}
+			
+			$('#'+i+' .bp').html(obj['bp'])
+			
+			$('#'+i+' .so2').html(obj['so2'])
+			
+			
+			
+			$('#'+i+' .pr').html(obj['pr'])
+			$('#'+i+' .rr').html(obj['rr'])
+			$('#'+i+' .so2').html(obj['so2'])
+			
+			plot = $('#'+i+' .plot').attr("id");
+			pos = 0;
+			if(plot_pos.hasOwnProperty(plot)==false){
+				plot_pos[plot] = 0;
+			}else
+			{
+				pos = plot_pos[plot];
+			}
+			
+			
+			var c = document.getElementById(plot);
+		
+			y = 100-parseInt(obj['pr'])/2
+			var ctx = c.getContext("2d");
+			
+			ctx.beginPath();
+				
+			ctx.strokeStyle="#cccccc";
+			ctx.moveTo(pos,0);
+			ctx.lineTo(pos,100);
+			ctx.stroke();
+			ctx.moveTo(pos,0);
+			ctx.lineTo(pos,100);
+			ctx.stroke();
+			
+			ctx.beginPath();
+			ctx.strokeStyle="#006666ff";
+			ctx.moveTo(pos,100);
+			ctx.lineTo(pos,y);
+			ctx.stroke();
+			
+			
+			pos+=5
+			if(pos>200){
+				pos = 0 
+				// var w = c.width;
+				// 		ctx.clearRect(0, 0, c.width, c.height);
+				// 		c.width = 1;
+				// 		c.width = w;
+				
+			}
+			
+			plot_pos[plot] = pos;
+			
+			ctx.stroke();
+			
+			
+			}else{
+					// setTimeout(function () {
+				       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+				    // }, 1000); //will call the function after 2 secs.
+				
+			}
+			
+		}
+		 }
+	 };
+
+      // var sender = function(f){
+      //      var input     = document.getElementById('input');
+      //      input.onclick = function(){ input.value = "" };
+      //      f.onsubmit    = function(){
+      //        ws.send(input.value);
+      //        input.value = "send a message";
+      //        return false;
+      //      }
+      //    }(document.getElementById('form'));
+      // 	
+	
+	
+	$('.ctl').each(function(){
+		
+		obj = $(this)
+		
+		obj.click(function(){
+			o = $(this)
+			 ws.send(o.attr('id'));
+		})
+		
+	})
+
+	})
+   
+
+	// init bunch of sounds
+	ion.sound({
+	    sounds: [
+	        {name: "beer_can_opening"},
+	        {name: "bell_ring"},
+	        {name: "branch_break"},
+	        {name: "button_click"}
+	    ],
+
+	    // main config
+	    path: "/sounds/",
+	    preload: true,
+	    multiplay: true,
+	    volume: 0.9
+	});
+
+
+
+   </script>
+<div style="font-size:0.8em">
+  	<div style="float:right" id="timer">
+	00:00
+	</div>
+By E.S.M.Solution Co.,Ltd.
+</div>
+<i style="color:#aaa">  <div id="msgs" style="font-size:0.8em"></div></i>

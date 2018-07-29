@@ -30,6 +30,8 @@ set :server, 'thin'
 # set :bind, '202.114.4.119'
 # set :bind, '192.168.100.7'
 set :bind, '0.0.0.0'
+# set :bind, '127.0.0.1'
+
 
 set :port, 1792
 set :sockets, []
@@ -40,18 +42,21 @@ set :live, {}
 
 set :apps, {}
 set :apps_ws, {}
+set :apps_rv, {}
+set :apps_ws_rv, {}
+
 set :extended, {}
 
 require_relative 'apps/gxt/helper'
-require_relative 'apps/gxt-food-order/app'
-require_relative 'apps/gxt-food-extended/app'
 
+# require_relative 'apps/gxt-food-order/app'
+# require_relative 'apps/gxt-food-extended/app'
+# require_relative 'apps/gxt-cash-deposit/app'
+# require_relative 'apps/gxt-gold-saving/app'
+# require_relative 'apps/esm-media-stream/app'
+# require_relative 'apps/esm-monitor/app'
 
-require_relative 'apps/gxt-cash-deposit/app'
-require_relative 'apps/gxt-gold-saving/app'
-
-require_relative 'apps/esm-media-stream/app'
-require_relative 'apps/esm-monitor/app'
+require_relative 'apps/esm-miot-monitor/app'
 
 register Sinatra::Partial
 
@@ -72,10 +77,10 @@ set :app, settings.apps[settings.name]
 
 def switch name
   
-  puts "call swtich #{name}"
   if name.index('.')==nil  
   settings.set :name, name 
   settings.set :app, settings.apps[name]
+  settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
   MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   end
   
@@ -93,10 +98,12 @@ before do
    
    # settings.set :app, 'gxt-food-order'
   
+  solution_name = @default_app
+  
   if t = request.host.split(".") and t.size>2  and t.size!=4   # detect sub domain 
     solution_name = t[0]  # solution_name
   end
-  
+  puts "solution_name #{solution_name}"
   paths = request.path.split("/")
   puts paths.inspect 
   if paths.size==4 and paths[0]=="" and paths[1].index(".") ==nil 
@@ -106,21 +113,13 @@ before do
   
   settings.set :context, nil
   
-  if solution_name and app = settings.apps[solution_name]
-      settings.set :name, solution_name
-      settings.set :app, app
-      settings.set :context, eval("#{app.gsub('-','_').camelize}")
-      settings.apps_ws[solution_name] = [] unless settings.apps_ws[solution_name]  
-      
-  end 
-
- 
+  
+  switch solution_name
     
   # puts "Set link = #{solution_name}"
   # puts "Set name = #{settings.name}"
   # puts "Set app = #{settings.app}"
   
-  settings.set :context, eval("#{settings.app.gsub('-','_').camelize}")
   # puts "Set context = #{settings.context}" 
 
   
@@ -244,133 +243,57 @@ end
 
 
 
-# 
-# get '/a/:gxt/:service/:operation' do
-#   
-#    switch params[:gxt]
-#   
-#    if !request.websocket?
-#    settings.set  :app, settings.apps[params[:gxt]]
-#    settings.set  :name, params[:gxt]
-#    
-#    root = File.dirname(__FILE__)
-#    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-#    settings.set :public_folder, File.dirname(__FILE__)+"/public"
-#    
-#    require_relative "apps/#{settings.app}/app"
-#    
-#    @context = self
-#    @this = eval "#{params[:service]}Controller.new @context, settings"
-#    # puts @this
-#    content = eval "@this.#{params[:operation]} params"
-#    return content
-#    
-#    else
-#        request.websocket do |ws|
-#          ws.onopen do
-#            # ws.send("Hello World!")
-#            settings.apps_ws[settings.name] << ws
-#          end
-#          ws.onmessage do |msg|
-#            puts msg
-#            # 10.times do |i|
-#            EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-#            # sleep(1)
-#            # end
-#          end
-#          ws.onclose do
-#            warn("websocket closed")
-#             settings.apps_ws[settings.name].delete(ws)
-#          end
-#        end
-#      end
-#    
-#  
-# end
-# 
-# post '/a/:gxt/:service/:operation' do
-#   
-# 
-#    switch params[:gxt]
-#    
-#    if !request.websocket?
-#    settings.set  :app, settings.apps[params[:gxt]]
-#    settings.set  :name, params[:gxt]
-#    
-#    root = File.dirname(__FILE__)
-#    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-#    settings.set :public_folder, File.dirname(__FILE__)+"/public"
-#    puts 
-#    puts params
-#    require_relative "apps/#{settings.app}/app"
-#    
-#    @context = self
-#    @this = eval "#{params[:service]}Controller.new @context, settings"
-#    # puts @this
-#    content = eval "@this.#{params[:operation]} params"
-#    return content
-#    
-#    else
-#        request.websocket do |ws|
-#          ws.onopen do
-#            # ws.send("Hello World!")
-#            settings.apps_ws[settings.name] << ws
-#          end
-#          ws.onmessage do |msg|
-#            puts msg
-#            # 10.times do |i|
-#            EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-#            # sleep(1)
-#            # end
-#          end
-#          ws.onclose do
-#            warn("websocket closed")
-#             settings.apps_ws[settings.name].delete(ws)
-#          end
-#        end
-#      end
-#    
-#  
-# end
-
-
-
-# include GxtFoodOrder
    # self.class.send :include, GxtFoodOrder
-get '/:gxt/:service/:operation' do
+   
+   # routing pattern :     /{solution}/Controller/Operation
+   
+   
+def process_request
   
-   # self.class.send :include,context
-   # 
+  puts "Access : #{1}"
+  
+
    self.class.send :include, settings.context
    
+   
   
-   switch params[:gxt]
-  
-   if !request.websocket?
-   # settings.set  :app, settings.apps[params[:gxt]]
-   # settings.set  :name, params[:gxt]
-   
-   root = File.dirname(__FILE__)
-   settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-   settings.set :public_folder, File.dirname(__FILE__)+"/public"
-   
-   require_relative "apps/#{settings.app}/app"
-   
-   @context = self
-   
-   params[:service] = "#{settings.context}::#{params[:service]}"
-   
-   puts  params[:service]
-  
-   
+    root = File.dirname(__FILE__)
+    settings.set :views, File.join(root, "apps", settings.app  ,"views") 
+    settings.set :public_folder, File.dirname(__FILE__)+"/public"
+
+    # load context solution
+    require_relative "apps/#{settings.app}/app"
+
+    @context = self
+
+    # Service's class name
+    params[:service] = "#{settings.context}::#{params[:service]}"
+
+    puts  params[:service]
+
    @this = eval "#{params[:service]}Controller.new @context, settings"
-    @this.setRequest request
-   # puts @this
+   # eval "@this.init"
+   @this.setRequest request
+  
+   # normal web http request
+   if !request.websocket?
+   
+   
+  
+   
+   # get content of service
    content = eval "@this.#{params[:operation]} params"
+   
+   
    return content
    
    else
-       request.websocket do |ws|
+     
+   # web socket request
+    
+   eval "@this.websocket request"   
+      
+   request.websocket do |ws|
          ws.onopen do
            # ws.send("Hello World!")
            settings.apps_ws[settings.name] << ws
@@ -388,60 +311,70 @@ get '/:gxt/:service/:operation' do
          end
        end
      end
+  
+end
+   
+   
+   
+get '/:gxt/:service/:operation' do
+  
+ process_request
    
   
 end
 
 post '/:gxt/:service/:operation' do
   
-   self.class.send :include, settings.context
-   
-   switch params[:gxt]
-   
-   if !request.websocket?
-   # settings.set  :app, settings.apps[params[:gxt]]
-   # settings.set  :name, params[:gxt]
-   # 
-   root = File.dirname(__FILE__)
-   settings.set :views, File.join(root, "apps", settings.app  ,"views") 
-   settings.set :public_folder, File.dirname(__FILE__)+"/public"
-   # puts 
-   # puts params
-   # puts
-   require_relative "apps/#{settings.app}/app"
-   
-   @context = self
-   # @this = eval "#{params[:service]}Controller.new @context, settings"
-   # params[:service] = "GXTCMS::Setting"
-   params[:service] = "#{settings.context}::#{params[:service]}"
-   
-   @this = eval "#{params[:service]}Controller.new @context, settings"
-   
-   @this.setRequest request
-   # puts @this
-   content = eval "@this.#{params[:operation]} params"
-   return content
-   
-   else
-       request.websocket do |ws|
-         ws.onopen do
-           # ws.send("Hello World!")
-           settings.apps_ws[settings.name] << ws
-         end
-         ws.onmessage do |msg|
-           puts msg
-           # 10.times do |i|
-           EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-           # sleep(1)
-           # end
-         end
-         ws.onclose do
-           warn("websocket closed")
-            settings.apps_ws[settings.name].delete(ws)
-         end
-       end
-     end
-   
+  process_request
+     # 
+     # self.class.send :include, settings.context
+     # 
+     # switch params[:gxt]
+     # 
+     # if !request.websocket?
+     # # settings.set  :app, settings.apps[params[:gxt]]
+     # # settings.set  :name, params[:gxt]
+     # # 
+     # root = File.dirname(__FILE__)
+     # settings.set :views, File.join(root, "apps", settings.app  ,"views") 
+     # settings.set :public_folder, File.dirname(__FILE__)+"/public"
+     # # puts 
+     # # puts params
+     # # puts
+     # require_relative "apps/#{settings.app}/app"
+     # 
+     # @context = self
+     # # @this = eval "#{params[:service]}Controller.new @context, settings"
+     # # params[:service] = "GXTCMS::Setting"
+     # params[:service] = "#{settings.context}::#{params[:service]}"
+     # 
+     # @this = eval "#{params[:service]}Controller.new @context, settings"
+     # 
+     # @this.setRequest request
+     # # puts @this
+     # content = eval "@this.#{params[:operation]} params"
+     # return content
+     # 
+     # else
+     #     request.websocket do |ws|
+     #       ws.onopen do
+     #         # ws.send("Hello World!")
+     #         settings.apps_ws[settings.name] << ws
+     #       end
+     #       ws.onmessage do |msg|
+     #         puts msg
+     #         # 10.times do |i|
+     #         EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
+     #         # sleep(1)
+     #         # end
+     #       end
+     #       ws.onclose do
+     #         warn("websocket closed")
+     #          settings.apps_ws[settings.name].delete(ws)
+     #       end
+     #     end
+     #   end
+     # 
  
 end
 
@@ -450,55 +383,8 @@ end
 
 get '/:service/:operation' do
 
-  if !request.websocket?
-      # erb 'This is a secret place that only <%=session[:identity]%> has access to!'
-
-    
-
-      root = File.dirname(__FILE__)
-      extended = settings.extended[settings.app]
-      unless extended
-      settings.set :views, File.join(root, "apps", settings.app ,"views") 
-      else
-      settings.set :views, File.join(root, "apps", extended ,"views") 
-      end
-
-      settings.set :public_folder, File.dirname(__FILE__)+"/public"
-
-      require_relative "apps/#{settings.app}/app"
-
-      @context = self
-      unless extended
-      @this = eval "#{params[:service]}Controller.new @context, settings"
-      else
-      @this = eval "Food2::#{params[:service]}Controller.new @context, settings"
-
-      end
-      # puts @this
-      content = eval "@this.#{params[:operation]} params"
-      return content
-      
-
-    else
-       request.websocket do |ws|
-         ws.onopen do
-           # ws.send("Hello World!")
-           settings.apps_ws[settings.name]<< ws
-         end
-         ws.onmessage do |msg|
-           puts msg
-           # 10.times do |i|
-           EM.next_tick {  settings.apps_ws[settings.name].each{|s| s.send(msg) } }
-           # sleep(1)
-           # end
-         end
-         ws.onclose do
-           warn("websocket closed")
-            settings.apps_ws[settings.name].delete(ws)
-         end
-       end
-     end
-
+  
+  process_request
 
 
 end

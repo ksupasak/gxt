@@ -495,6 +495,9 @@ end
 
 $sum = 0
 
+if false
+
+
 Thread.new do # trivial example work thread
   while true do
      sleep 1
@@ -518,7 +521,7 @@ Thread.new do # trivial example work thread
        
      begin
        if  app.settings.apps_ws[app.settings.name]
-       app.settings.apps_ws[app.settings.name].each{|s|  s.send({:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json) } 
+       app.settings.apps_ws[app.settings.name].each{|s|  s.send({:m=>'monitor',:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json) } 
       end
        # app.settings.sockets.each{|s| s.send({:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json) } 
     rescue Exception=>e
@@ -528,7 +531,12 @@ Thread.new do # trivial example work thread
       end   
        
        }
-  end
+       
+  end  # while true
+  
+  
+end # thread run
+
 end
 
 end

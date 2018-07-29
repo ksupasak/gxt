@@ -6,10 +6,13 @@ require 'barby/barcode/qr_code'
 require 'barby/outputter/png_outputter'
 
 
-def register_app name, prefix, extended=nil
-  settings.apps[name] = prefix
-  settings.extended[prefix] = extended if extended
-  settings.apps_ws[prefix] = []
+def register_app name, application, extended=nil
+  settings.apps[name] = application
+  settings.apps_ws[name] = []
+  settings.apps_rv[application] = [] unless  settings.apps_rv[application]
+  settings.apps_rv[application] << name
+  # settings.extended[application] = extended if extended
+
 end
 
 
@@ -56,7 +59,7 @@ helpers do
     class_opt = ''
     class_opt = "class='#{options[:class]}'" if options and options[:class]
     
-    "<a href=#{url.to_json.html_safe} #{class_opt} #{opt}>#{name}</a>"
+    "<a href='#{url.html_safe}' #{class_opt} #{opt}>#{name}</a>"
   end
   
   def fn num
@@ -163,11 +166,23 @@ end
   
 def initialize context, settings
     @context = context
-    @settings = settings
+    @settings =  @context.settings
 end  
 
 def controller
   "#{self.class.name.gsub("Controller","").split(':')[-1].underscore}"
+end
+
+def settings
+    return @settings
+end
+
+def switch name
+    
+    settings.set :name, name 
+    settings.set :app, settings.apps[name]
+    MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+    
 end
 
 def method_missing(m, *args, &block)
