@@ -5,7 +5,9 @@ require 'websocket-client-simple'
 require 'eventmachine'
 require 'em-http-server'
 def connect solution, host, port
-  WebSocket::Client::Simple.connect "ws://#{host}:#{port}/#{solution}/Home/index"
+  connect_url = "ws://#{host}:#{port}/#{solution}/Home/index"
+  puts connect_url
+  WebSocket::Client::Simple.connect connect_url
 end
 
 
