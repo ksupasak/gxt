@@ -135,6 +135,7 @@ MSG
 
                   
                    data['ref'] = ref
+                   data['sos'] = rand(3)
                     # @context.settings.senses[station_name] = data
 
                      old = @context.settings.senses[station_name]
@@ -147,7 +148,7 @@ MSG
                  puts "****** Alert *****"
                  
                  EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'Pule rate is Over..!! at '+data['pr'].to_s+' rpm'}
-                 
+                 data['sos'] = 10
                  
                  
                end
