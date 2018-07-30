@@ -26,9 +26,7 @@ div.clear {
 .bp_alert_2{
 	background-color:#900;
 }
-.panel{
-	background:#444;
-}
+
 
 .station .id{
 	color:#aaa;
@@ -116,15 +114,7 @@ border-radius: 5px;
 }
 
 </style>
-   <form id="form">
-     <!--
-     <input type="text" id="input" value="send a message"></input>
-     -->
-    
-     
-   </form>
 
-	<div class="clear"></div>
 	<div id="panel" class="panel">
 		
 		<% for i in settings.stations.keys.sort %>
@@ -251,7 +241,6 @@ border-radius: 5px;
 		
 		</div> 
 	
-	 <%=session%>
 	
 <script>
 
@@ -426,14 +415,11 @@ $(document).ready(function(){
 	// init bunch of sounds
 	ion.sound({
 	    sounds: [
-	        {name: "beer_can_opening"},
-	        {name: "bell_ring"},
-	        {name: "branch_break"},
-	        {name: "button_click"}
+	        {name: "bell_ring"}
 	    ],
 
 	    // main config
-	    path: "/sounds/",
+	    path: "<%=url_for 'sounds/'%>",
 	    preload: true,
 	    multiplay: true,
 	    volume: 0.9

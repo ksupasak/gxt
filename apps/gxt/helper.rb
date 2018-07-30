@@ -100,6 +100,10 @@ helpers do
     '<meta http-equiv="refresh" content="'+delay.to_s+'; url='+url+'" />'
   end
   
+  def url_for url
+    "/#{settings.name}/#{url}"
+  end
+  
   def view v
       settings.app
   end
