@@ -24,7 +24,7 @@ module EsmMiotMonitor
               ws = settings.ws_map[i]
 msg = <<MSG
 #{cmd} #{path}
-#{data.to_json}
+#{data}
 MSG
               
               ws.send msg
@@ -64,7 +64,13 @@ MSG
              name =  @context.settings.apps_ws_rv[ws]
              switch name
              # puts  "msg from #{@context.settings.name} #{msg}"
-             t = msg.split("\n")
+             # t = msg.encode('utf-8').split("\n")
+             t = []
+             msg.each_line do |line|
+               t<<line
+             end
+             
+             
              headers = t[0].split()
              body = t[1..-1].join("\n")
              cmd = headers[0]
@@ -93,7 +99,7 @@ MSG
              when 'Data.Sensing'
                
                pdata =  ActiveSupport::JSON.decode(body)
-               EsmMiotMonitor::dispatch cmd, path, pdata
+               EsmMiotMonitor::dispatch cmd, path, pdata.to_json
                
                
                ##########################################################
@@ -147,18 +153,19 @@ MSG
                if data['pr']>117
                  puts "****** Alert *****"
                  
-                 EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'Pule rate is Over..!! at '+data['pr'].to_s+' rpm'}
+                 EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'Pule rate is Over..!! at '+data['pr'].to_s+' rpm'}.to_json
                  data['sos'] = 10
                  
                  
                end
                
+                 when 'Data.Image'
                
-               
+                   EsmMiotMonitor::dispatch cmd, path, t[1..-1].join
               
              else
              
-             
+               EsmMiotMonitor::dispatch cmd, path, body.to_json
              
                
              end
@@ -205,7 +212,7 @@ def self.registered(app)
           
           if app.settings.apps_ws[app.settings.name]
         
-            dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}
+            dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json
       
             
           end

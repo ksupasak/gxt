@@ -121,7 +121,7 @@ border-radius: 5px;
 </style>
 
 	<div id="panel" class="panel">
-		
+	<center>	<img id="image" width="400" alt="image"/></center>
 		<% for i in settings.stations.keys.sort %>
 		<div id="<%=i%>" class="station active-station">
 			<div class="row">
@@ -263,7 +263,7 @@ $(document).ready(function(){
 	
       ws.onopen    = function()  { show('websocket opened'); 
 
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
       ws.onclose   = function()  { show('websocket closed'); 
@@ -295,7 +295,17 @@ $(document).ready(function(){
 			ion.sound.play("bell_ring");
 			
 		}else
+		if(lines[0].split(" ")[0]=='Data.Image'){
 		
+			lines.shift()
+			img = lines.join("")
+			// alert('image '+m.data.length)
+			
+			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+		}
+		else
 		if(lines[0].split(" ")[0]=='ZoneUpdate'){
 		
 	
@@ -442,4 +452,6 @@ $(document).ready(function(){
 	</div>
 By E.S.M.Solution Co.,Ltd.
 </div>
+
+
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
