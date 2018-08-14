@@ -2,13 +2,33 @@ require 'socket'
 require 'net/http'
 require 'json'
 
+
+
+
+
+
+def tabular data, cols = 20
+  
+  data.each_with_index do |i,index|
+    
+    print "#{index}.\t" if index % cols == 0
+    
+    print "#{i}\t"
+    
+    puts if index % cols == cols -1
+    
+  end
+  puts
+  
+end
+
 module Device
 
 
 
-def self.monitor_vista_120_v2
+def self.monitor_vista_120_s ws
 
-puts "-- Start Vista120 v2 Service"
+puts "-- Start Vista120 S Service"
 
 boardcast = Thread.new {
   
@@ -72,6 +92,13 @@ loop do
         puts client
         puts client.peeraddr.inspect 
         
+         token = "\x10\x00\x02\x00\x00\x00\xD5\xA9\xD9\a\b\x0E\x11;&\x05"
+           client.write token
+           client.flush
+
+        
+        
+        
         station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
@@ -120,13 +147,13 @@ loop do
         while index<buff.size
           res = nil
           type = buff[index]
-          
+          # puts "cmd #{type}"
           case type
           when 20 
           
           read = 20 + 256
           
-          #puts "Found Peak 255" 
+          
           
           else
           if type != 0
@@ -139,35 +166,26 @@ loop do
           if index+read <= buff.size
           
           res = buff[index..index+read]
-          if type==176 or type==162
+          
+          if type==252
             
+            puts "Found Peak 252" 
             
-            if type==176
-              s = ''
-              for i in res[40..60]
-                break if i==0
-                s+=i.chr 
-              end
-              hn = s.strip
-              puts "HN #{hn} new"
-              
-            end
-            
-            
-            if type==162
+            tabular res
               
               so2 = res[106]/2
               
-              high = "#{res[124]/2}"
-              high = "#{res[124]+128}" if res[125]==67
+              high = "#{res[118]/2}"
+              # high = "#{res[124]+128}" if res[125]==67
               
               
-              bp = "#{high}/#{res[130]/2}"
+              bp = "#{high}/#{res[124]/2}"
               
               
               bp_hr = res[136]/2
               # pr = res[142]/2
-              pr = res[118]/2
+              pr = res[136]/2
+               pr = res[118]/2
               
                          #       
                          # puts line
@@ -207,7 +225,7 @@ loop do
               data = {}
               
               data[:hr] = pr
-              data[:rr] = '-'
+              data[:rr] = res[-5].to_i
               data[:so2] = so2
               data[:pr] = pr
               data[:bp] = bp
@@ -220,12 +238,32 @@ loop do
               stamp = Time.now.to_json
                           
               puts "#{stamp}\t#{station}\t#{data.inspect}"            
-              begin            
-                result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+begin            
+
+
+# result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+          
+          
+                     # data[:bp] = bp
+                     # data[:pr] = 60 + rand(60)
+                     # data[:hr] = data[:pr]
+                     # data[:rr] = 18 + rand(4)
+                     # data[:so2] = 90+rand(10)
+                     # data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+                     
+msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+
+             ws.send(msg)
+                     
+                     
+          
               rescue Exception=>e
                 puts e.message
               end
-            end
+          
             
           
             
@@ -262,3 +300,6 @@ end
 end
 
 end
+
+
+# Device::monitor_vista_120_s()

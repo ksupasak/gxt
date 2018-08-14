@@ -1,38 +1,20 @@
 require 'socket'
 require 'net/http'
 require 'json'
-require_relative '../conf'
-
-def tabular data, cols = 20
-  
-  data.each_with_index do |i,index|
-    
-    print "#{index}.\t" if index % cols == 0
-    
-    print "#{i}\t"
-    
-    puts if index % cols == cols -1
-    
-  end
-  
-end
-
-
 
 module Device
 
 
 
-def self.monitor_vista_120s_v1
+def self.monitor_vista_120_v2
 
-puts "-- Start Vista120 S Service"
+puts "-- Start Vista120 v2 Service"
 
 boardcast = Thread.new {
   
   msg_c = "~\x000\x02\x00\x00j\xF9\xE2\a\x04\a\x01\x05\f\x06CMS\x00\x00\x00\x00\x00HOSPITAL\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00x\e\xDA\x03\xF0\x17\xDA\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1C%\x00\x00\x00\x00\xC0\xA8d\v\xC0\xA8\x02\x9F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
   tip = HOST_NETWORK_BOARDCAST
-  
-  puts "Server Start UDP for Vista 120S at #{tip}"
+  puts "Server Start UDP for Vista 120"
   socket = UDPSocket.new
   socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) 
   
@@ -90,6 +72,13 @@ loop do
         puts client
         puts client.peeraddr.inspect 
         
+         token = "\x10\x00\x02\x00\x00\x00\xD5\xA9\xD9\a\b\x0E\x11;&\x05"
+           client.write token
+           client.flush
+
+        
+        
+        
         station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
@@ -109,16 +98,14 @@ loop do
         
         while true
         line = client.recv(40960)
-        if line.size==0
-        client.close
-        else
-        puts "#{line.size} #{'='*30}"
+        
+        #puts "#{line.size} #{'='*30}"
         
         # puts '====================================================='+line.size.to_s
         #puts line
         # puts
         buff+= line.each_byte.to_a
-        puts line
+        
         
         l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
         # l.each_with_index do |i,id| 
@@ -126,8 +113,7 @@ loop do
         #         puts "xx #{l.size} #{i}\t#{id}"
         #       end
         #     end
-        tabular l
-        puts
+        
         # puts l.join("\t") if l.size==258 or l.size==1448
         
         # left = line.size
@@ -141,13 +127,14 @@ loop do
         while index<buff.size
           res = nil
           type = buff[index]
-          
+          puts "cmd #{type}"
           case type
           when 20 
           
           read = 20 + 256
           
-          #puts "Found Peak 255" 
+          puts "Found Peak 255" 
+          
           
           else
           if type != 0
@@ -160,6 +147,7 @@ loop do
           if index+read <= buff.size
           
           res = buff[index..index+read]
+          
           if type==176 or type==162
             
             
@@ -267,12 +255,11 @@ loop do
       
         
       end
-      end
+      
     rescue Exception=>e
       puts e
       
     end
-  
       
     end
         
@@ -284,10 +271,3 @@ end
 end
 
 end
-
-
-
-# threads << Thread.new {
-Device::monitor_vista_120s_v1()
-# }
-
