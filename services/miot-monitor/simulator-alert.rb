@@ -2,6 +2,7 @@ require 'rubygems'
 require 'websocket-client-simple'
 require 'json'
 require 'eventmachine'
+require 'active_support'
 
 def connect solution
   WebSocket::Client::Simple.connect "ws://localhost:1792/#{solution}/Home/index"
@@ -11,6 +12,23 @@ def bind_event ws
 
 ws.on :message do |msg|
   puts msg.data
+  cmd = `python /home/pi/camera.py`
+  
+  begin  
+  img = Base64.encode64(open("/home/pi/Desktop/image.jpg"){|io|io.read})
+  puts img.size
+msg = <<MSG
+Data.Image station_id=*
+#{img.encode('utf-8').to_json}
+MSG
+  
+  ws.send(msg)
+ puts 'send'
+  rescue Exception=>e
+  
+	puts e
+end
+
 end
 
 ws.on :open do
