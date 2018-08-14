@@ -81,10 +81,52 @@ bp_stamp = Time.now
 
 bind_event ws
 
+period = 0
 
 EventMachine.run {
   
   puts 'start em'
+  
+  EM.add_periodic_timer(0.5) do
+  
+  
+  
+  
+    
+     now = Time.now
+     stamp = now.to_json
+
+     
+data = {}
+wave = []
+
+w = 2
+rps =32
+
+rps.times do |i|
+  y = Math.sin(300*w/rps*period*Math::PI/180)*50+50
+  wave << format("%.3f",y) 
+  
+  period += rand(10)
+end
+
+# puts wave
+
+data[:wave] = wave
+ 
+msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+    # puts msg
+ ws.send(msg)
+     
+    
+  
+  
+  
+  end
+  
   # timer method
   EM.add_periodic_timer(1) do
     

@@ -139,18 +139,39 @@ MSG
                        station_id = station['_id']
                    end  
 
-                  
-                   data['ref'] = ref
-                   data['sos'] = rand(3)
+                   if data['pr'] 
+                     data['ref'] = ref
+                     data['sos'] = rand(3)
+                   end
+                   
+                   # ZoneUpdate zone_id=* {"time":"2018-08-10T09:17:33.653+07:00","list":["Bed01"],"data":
+                   
+                   # {"Bed01":{"bp":"102/83","pr":95,"hr":95,"rr":18,"so2":91,"bp_stamp":"091732","ref":"1234","sos":1}}}
+                   
+                   # puts data['wave'] if data['wave']
                     # @context.settings.senses[station_name] = data
+                    
+                    odata = @context.settings.senses[station_name]
+                    odata = {} unless odata
+                    
+                 
+                    
+                    if data['wave']
+                       odata['wave'] = [] unless odata['wave']
+                       odata['wave'] += data['wave']
+                       puts odata['wave'].size
+                       puts odata['wave'][0..-1].join(" ")
+                    else
+                       odata.merge! data
+                    end
 
                      old = @context.settings.senses[station_name]
-                     @context.settings.senses[station_name] = data
+                     @context.settings.senses[station_name] = odata
                      @context.settings.live[station_name] = 10
                
                  ##########################################################
                
-               if data['pr']>117
+               if data['pr'] and data['pr']>117
                  puts "****** Alert *****"
                  
                  EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'Pule rate is Over..!! at '+data['pr'].to_s+' rpm'}.to_json
@@ -213,7 +234,12 @@ def self.registered(app)
           if app.settings.apps_ws[app.settings.name]
         
             dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json
-      
+            
+            app.settings.senses.each_pair do |k,v|
+                
+              v['wave'] = []
+              
+            end
             
           end
           
