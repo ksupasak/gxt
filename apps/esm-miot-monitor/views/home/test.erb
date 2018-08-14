@@ -1,0 +1,145 @@
+<h1>Vital Sign</h1>
+<style type="text/css">
+  #line{
+    width: 100%;
+    margin: 20px 0;
+  }
+  .old {
+    stroke: lightgrey;
+    stroke-dasharray: 5;
+    stroke-dashoffset: 5;
+  }
+​</style>
+<div id="line1"></div>
+<div id="line2"></div>
+<div id="line3"></div>
+<div id="line4"></div>
+
+
+	<script type="text/javascript">
+	    
+		
+		function genData(data){
+			
+			scale = 50;
+			
+			for(var i=0;i<20;i++){
+				r = Math.random();
+				v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
+				data.push(v);
+			}
+			
+		}
+	    
+	
+		function aniLine(idx, rawdata, last){
+	
+		var w = 800;
+	    var h = 100;
+		$("#"+idx).html("");
+		var svg;
+
+
+	    svg = d3.select("#"+idx)
+	      .append("svg")
+	      .attr("width", w)
+	      .attr("height", h)
+	      .attr("id", "visualization");
+
+	    
+		// svgo.selectAll("path.old").remove();
+		// svgo.selectAll("path").attr("class", "old");
+
+
+	    var x = d3.scaleLinear().domain([0, 100]).range([0, w]);
+	    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
+
+	    var line = d3.line()
+	      .x(function(d,i) {return x(i);})
+	      .y(function(d) {return y(d);})
+	      .curve(d3.curveNatural)
+
+	    // data is created inside the function so it is always unique
+	    let repeat = () => {
+	      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
+
+	      // Uncomment following line to clear the previously drawn line
+	      //svg.selectAll("path").remove();
+
+	      // Set a light grey class on old paths
+	     
+	      // svg.selectAll("path").remove();
+		   var last_path = svg.append("path")
+		        .attr("d", line(last))
+		        .attr("stroke", "gray")
+		        .attr("stroke-width", "2")
+		        .attr("fill", "none")
+				.attr("class", "old");
+			// last_path.add
+
+	      var path = svg.append("path")
+	        .attr("d", line(data))
+	        .attr("stroke", "green")
+	        .attr("stroke-width", "2")
+	        .attr("fill", "none");
+
+	      var totalLength = path.node().getTotalLength();
+
+	      path
+	        .attr("stroke-dasharray", totalLength + " " + totalLength)
+	        .attr("stroke-dashoffset", totalLength)
+	        .transition()
+	          .duration(5000)
+	          .ease(d3.easeLinear)
+	          .attr("stroke-dashoffset", 10)
+	          // .on("end", repeat);
+	    };
+	    repeat();
+		}
+		
+		// aniLine('line1')
+		// aniLine('line2')
+		// aniLine('line3')
+		// aniLine('line4')
+	
+		
+		
+		function showWave(div,data){
+		var n = 20;
+	    var cut = 5;
+		var second = 0;
+		var lastdata = [];
+		
+		var intervalID = setInterval(function(){
+			
+				genData(data);
+				console.log(data.length)
+			    if(second%cut==cut-1&&second<1000){
+					
+					rawdata = data.splice(0,cut*n);
+				
+					console.log(second)
+		
+					aniLine(div,rawdata,lastdata);
+					lastdata = rawdata;
+					// second = 0 ;
+				}
+				second+=1;
+		}, 1000);
+		
+		
+	   }
+		
+		
+		showWave('line1',[]);
+		showWave('line2',[]);
+		showWave('line3',[]);
+		showWave('line4',[]);
+		
+		
+		
+		
+		
+	  </script>
+<br/>
+...
