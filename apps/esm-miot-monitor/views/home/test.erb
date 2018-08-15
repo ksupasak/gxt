@@ -34,9 +34,8 @@
 	
 		function aniLine(idx, rawdata, last){
 	
-		var w = 800;
+		var w = 100;
 	    var h = 100;
-		$("#"+idx).html("");
 		var svg;
 
 
@@ -51,7 +50,7 @@
 		// svgo.selectAll("path").attr("class", "old");
 
 
-	    var x = d3.scaleLinear().domain([0, 100]).range([0, w]);
+	    var x = d3.scaleLinear().domain([0, 20]).range([0, w]);
 	    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
 
 	    var line = d3.line()
@@ -69,12 +68,12 @@
 	      // Set a light grey class on old paths
 	     
 	      // svg.selectAll("path").remove();
-		   var last_path = svg.append("path")
-		        .attr("d", line(last))
-		        .attr("stroke", "gray")
-		        .attr("stroke-width", "2")
-		        .attr("fill", "none")
-				.attr("class", "old");
+				// 		   var last_path = svg.append("path")
+				// 		        .attr("d", line(last))
+				// 		        .attr("stroke", "gray")
+				// 		        .attr("stroke-width", "2")
+				// 		        .attr("fill", "none")
+				// .attr("class", "old");
 			// last_path.add
 
 	      var path = svg.append("path")
@@ -89,9 +88,9 @@
 	        .attr("stroke-dasharray", totalLength + " " + totalLength)
 	        .attr("stroke-dashoffset", totalLength)
 	        .transition()
-	          .duration(5000)
+	          .duration(1000)
 	          .ease(d3.easeLinear)
-	          .attr("stroke-dashoffset", 10)
+	          .attr("stroke-dashoffset", 0)
 	          // .on("end", repeat);
 	    };
 	    repeat();
@@ -106,7 +105,7 @@
 		
 		function showWave(div,data){
 		var n = 20;
-	    var cut = 5;
+	    var cut = 1;
 		var second = 0;
 		var lastdata = [];
 		
@@ -116,8 +115,10 @@
 				console.log(data.length)
 			    if(second%cut==cut-1&&second<1000){
 					
-					rawdata = data.splice(0,cut*n);
-				
+					rawdata = data.splice(0,cut*n+1);
+					console.log('raw '+rawdata.length);
+				    data.unshift(rawdata[rawdata.length-1]);
+					console.log('dat '+data.length);
 					console.log(second)
 		
 					aniLine(div,rawdata,lastdata);
@@ -132,10 +133,10 @@
 		
 		
 		showWave('line1',[]);
-		showWave('line2',[]);
-		showWave('line3',[]);
-		showWave('line4',[]);
-		
+		// showWave('line2',[]);
+		// showWave('line3',[]);
+		// showWave('line4',[]);
+		//
 		
 		
 		

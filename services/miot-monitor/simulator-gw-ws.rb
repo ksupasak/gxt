@@ -87,7 +87,7 @@ EventMachine.run {
   
   puts 'start em'
   
-  EM.add_periodic_timer(0.5) do
+  EM.add_periodic_timer(1) do
   
   
   
@@ -104,10 +104,10 @@ w = 2
 rps =32
 
 rps.times do |i|
-  y = Math.sin(300*w/rps*period*Math::PI/180)*50+50
+  y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
   wave << format("%.3f",y) 
   
-  period += rand(10)
+  # period += rand(10)
 end
 
 # puts wave
