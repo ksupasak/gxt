@@ -19,7 +19,10 @@ require_relative 'devices/vista-120-v1-gw'
 require_relative 'devices/vista-120-S-gw'
 require_relative 'devices/b450-gw'
 
+unless HOST_IP
 HOST_IP = IPSocket.getaddress(Socket.gethostname)
+end
+
 t = HOST_IP.split('.')
 HOST_NETWORK = t[0..2].join(".")+".1"
 HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"

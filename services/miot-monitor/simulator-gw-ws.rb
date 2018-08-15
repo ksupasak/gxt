@@ -78,7 +78,7 @@ puts "Start"
 count = 0
 ls = 10
 
-bp = '90/120'
+bp = '119/80'
 bp_stamp = Time.now
 
 
@@ -108,7 +108,7 @@ rps =32
 
 rps.times do |i|
   y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
-  wave << format("%.3f",y) 
+  wave << format("%.3f",y).to_f 
   
   # period += rand(10)
 end
@@ -160,7 +160,7 @@ MSG
      if count%ls==0
        bp_stamp = Time.now
 
-       bp = "#{100+rand(20)}/#{70+rand(20)}"
+       bp = "#{100+rand(22)}/#{70+rand(20)}"
        ls = 20+rand(10)
        puts "Data sent #{count} times + BP : #{bp}"
        
