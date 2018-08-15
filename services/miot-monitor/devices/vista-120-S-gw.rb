@@ -57,9 +57,9 @@ boardcast.run
 server = TCPServer.new  VISTA_120_v2_port
 
 
-host = GW_IP
-port = GW_PORT
-uri = GW_URI
+host = CMS_IP
+port = CMS_PORT
+uri = CMS_URI
 
 
 list = [{:n1=>6},
