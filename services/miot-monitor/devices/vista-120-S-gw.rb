@@ -186,6 +186,9 @@ loop do
               # pr = res[142]/2
               pr = res[136]/2
                pr = res[118]/2
+               
+               pr = 60 
+               
                rr = res[186]/2
               
                          #       
