@@ -159,8 +159,8 @@ MSG
                     if data['wave']
                        odata['wave'] = [] unless odata['wave']
                        odata['wave'] += data['wave']
-                       puts odata['wave'].size
-                       puts odata['wave'][0..-1].join(" ")
+                       # puts odata['wave'].size
+                       # puts odata['wave'][0..-1].join(" ")
                     else
                        odata.merge! data
                     end

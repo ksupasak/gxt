@@ -21,15 +21,15 @@ puts "-- Start B450 Service"
 require_relative 'lib'
 
 # network address
-network_addr = "202.114.4.255"
-network_addr = "192.168.2.255"
+# network_addr = "202.114.4.255"
+# network_addr = "192.168.2.255"
 network_addr = HOST_NETWORK_BOARDCAST
 
 
 # host = "192.168.1.146"
 
-host = GW_IP
-port = GW_PORT
+host = CMS_IP
+port = CMS_PORT
 
 
 host = ARGV[0] if ARGV[0]

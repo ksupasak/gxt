@@ -6,7 +6,7 @@ body{
 }
 .station{
 
-	width:850px;
+	width:38em;
  	border-radius: 5px;
 	display:block;
 	color:#aaa;	
@@ -115,17 +115,22 @@ border-radius: 5px;
 	font-size:0.5em;float:left;margin-left:-10px;margin-top:-2em;
 }
 .sos{
-	line-height:1em;font-size:8em;text-align: center;
+	line-height:1em;font-size:5em;text-align: center;
+}
+.hide{
+	display:none;
 }
 
 </style>
 
-	<div id="panel" class="panel">
-	<center>	<img id="image" width="400" alt="image"/></center>
+	<div id="panel" class="panel" style="border:0px solid blue">
+
+		
 		<% for i in settings.stations.keys.sort %>
 		<div id="<%=i%>" class="station active-station">
 			<div class="row">
-				<div class="col-sm-1">
+				<!--	<div class="col-sm-1 ">
+				
 					<div class="row">
 						<div class="col-12 ctlx">
 							P
@@ -141,19 +146,19 @@ border-radius: 5px;
 							S
 						</div>
 					</div>
-				</div>
+				</div>-->
 				<div class="col-sm-6">
 					<div class="row">
 					<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
 					<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
-					<div class="col-sm-6 boxx"><span class="so2-label x-label" >SO<sub>2</sub></span><span class="so2">-</span></div>
+					<div class="col-sm-6 boxx"><span class="so2-label x-label" >SpO<sub>2</sub></span><span class="so2">-</span></div>
 					<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
 					<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
 					<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
 					</div>
 					
 				</div>
-				<div class="col-sm-4 pid" >
+				<div class="col-sm-6 pid" >
 						<div class="row">
 						<div class="col-sm-12" style="font-size:1em;text-align:center"><span class="id  "><%=i%></span></div>
 						</div>
@@ -165,18 +170,21 @@ border-radius: 5px;
 						</div>
 						<div class="row">
 						<div class="col-sm-12" style="border:0px solid gray;">
-						<%=link_to 'show', "station?name=#{i}",:class=>'btn' %>
+						<div class="line"></div>
+						<div class="col-sm-12 msg" style="">-</div>	
+						 
+						<%#link_to 'show', "station?name=#{i}",:class=>'btn' %>
+						<center>
+							<img id="image" class="col-sm-12" alt="" style=""/>
+						</center>
 						 </div>
 						<div class='row'>
-						<div class="col-sm-12 msg" style="margin-left:20px">-</div>	
 						
-						<canvas class="plot" id="plot-<%=i%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
-						</canvas>
+					
 						</div></div>
 				</div>
 				
 			</div>
-		
 		
 		
 			
@@ -215,7 +223,7 @@ border-radius: 5px;
 						<div class="row">
 						<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
 						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
-						<div class="col-sm-6 boxx"><span class="so2-label x-label" >SO<sub>2</sub></span><span class="so2">-</span></div>
+						<div class="col-sm-6 boxx"><span class="so2-label x-label" >SpO<sub>2</sub></span><span class="so2">-</span></div>
 						<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
 						<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
 						<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
@@ -278,7 +286,7 @@ $(document).ready(function(){
 	
 		active = $('.active-station').size()
 	
-		show(''+m.data)
+		// show(''+m.data)
 		
 		lines = m.data.split("\n")
 		
@@ -299,8 +307,6 @@ $(document).ready(function(){
 		
 			lines.shift()
 			img = lines.join("")
-			// alert('image '+m.data.length)
-			
 			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
 			
 			
@@ -346,52 +352,52 @@ $(document).ready(function(){
 			
 			
 			
-			plot = $('#'+i+' .plot').attr("id");
-			pos = 0;
-			if(plot_pos.hasOwnProperty(plot)==false){
-				plot_pos[plot] = 0;
-			}else
-			{
-				pos = plot_pos[plot];
-			}
-			
-			
-			var c = document.getElementById(plot);
-		
-			y = 100-parseInt(obj['pr'])/2
-			var ctx = c.getContext("2d");
-			
-			ctx.beginPath();
-				
-			ctx.strokeStyle="#cccccc";
-			ctx.moveTo(pos,0);
-			ctx.lineTo(pos,100);
-			ctx.stroke();
-			ctx.moveTo(pos,0);
-			ctx.lineTo(pos,100);
-			ctx.stroke();
-			
-			ctx.beginPath();
-			ctx.strokeStyle="#006666ff";
-			ctx.moveTo(pos,100);
-			ctx.lineTo(pos,y);
-			ctx.stroke();
-			
-			
-			pos+=5
-			if(pos>200){
-				pos = 0 
-				// var w = c.width;
-				// 		ctx.clearRect(0, 0, c.width, c.height);
-				// 		c.width = 1;
-				// 		c.width = w;
-				
-			}
-			
-			plot_pos[plot] = pos;
-			
-			ctx.stroke();
-			
+			// plot = $('#'+i+' .plot').attr("id");
+			// 	pos = 0;
+			// 	if(plot_pos.hasOwnProperty(plot)==false){
+			// 		plot_pos[plot] = 0;
+			// 	}else
+			// 	{
+			// 		pos = plot_pos[plot];
+			// 	}
+			// 	
+			// 	
+			// 	var c = document.getElementById(plot);
+			// 
+			// 	y = 100-parseInt(obj['pr'])/2
+			// 	var ctx = c.getContext("2d");
+			// 	
+			// 	ctx.beginPath();
+			// 		
+			// 	ctx.strokeStyle="#cccccc";
+			// 	ctx.moveTo(pos,0);
+			// 	ctx.lineTo(pos,100);
+			// 	ctx.stroke();
+			// 	ctx.moveTo(pos,0);
+			// 	ctx.lineTo(pos,100);
+			// 	ctx.stroke();
+			// 	
+			// 	ctx.beginPath();
+			// 	ctx.strokeStyle="#006666ff";
+			// 	ctx.moveTo(pos,100);
+			// 	ctx.lineTo(pos,y);
+			// 	ctx.stroke();
+			// 	
+			// 	
+			// 	pos+=5
+			// 	if(pos>200){
+			// 		pos = 0 
+			// 		// var w = c.width;
+			// 		// 		ctx.clearRect(0, 0, c.width, c.height);
+			// 		// 		c.width = 1;
+			// 		// 		c.width = w;
+			// 		
+			// 	}
+			// 	
+			// 	plot_pos[plot] = pos;
+			// 	
+			// 	ctx.stroke();
+			// 	
 			
 			}else{
 					// setTimeout(function () {
