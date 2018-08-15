@@ -171,11 +171,16 @@ MSG
                
                  ##########################################################
                  high = data['bp'].split("/")[0].to_i
+                 
                if high>120
+                 
                  puts "****** Alert *****"
                  
                  EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'BP Sys is Over..!! at '+data['pr'].to_s+' rpm'}.to_json
                  data['sos'] = 10
+                 
+               else
+                 
                  
                  
                end
