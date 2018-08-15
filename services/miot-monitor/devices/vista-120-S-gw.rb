@@ -167,11 +167,11 @@ loop do
           
           res = buff[index..index+read]
           
+          tabular res
           if type==252
             
             puts "Found Peak 252" 
             
-            tabular res
               
               so2 = res[106]/2
               
@@ -186,6 +186,7 @@ loop do
               # pr = res[142]/2
               pr = res[136]/2
                pr = res[118]/2
+               rr = res[186]/2
               
                          #       
                          # puts line
@@ -225,7 +226,7 @@ loop do
               data = {}
               
               data[:hr] = pr
-              data[:rr] = res[-5].to_i
+              data[:rr] = rr
               data[:so2] = so2
               data[:pr] = pr
               data[:bp] = bp
