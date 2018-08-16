@@ -167,7 +167,7 @@ loop do
           
           res = buff[index..index+read]
           
-          tabular res
+          # tabular res
           if type==252
             
             puts "Found Peak 252" 

@@ -170,20 +170,28 @@ MSG
                      @context.settings.live[station_name] = 10
                
                  ##########################################################
+                 
+                if data['bp']
+                  
                  high = data['bp'].split("/")[0].to_i
+                 
                  
                if high>120
                  
+                 
                  puts "****** Alert *****"
                  
-                 EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'BP Sys is Over..!! at '+data['pr'].to_s+' rpm'}.to_json
+                 EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
+                 
                  data['sos'] = 10
+                 
                  
                else
                  
                  
                  
                end
+             end
                
                  when 'Data.Image'
                
