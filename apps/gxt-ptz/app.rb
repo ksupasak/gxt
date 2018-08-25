@@ -88,8 +88,14 @@ module GxtPtz
 
               elsif ts[0]=='gpio'
                 
-                `ruby ~/gpio.rb #{p} #{t}`
-                
+                # `ruby ~/gpio.rb #{p} #{t}`
+                 # ws.send(msg.data)
+                 
+                for i in @context.settings.apps_ws[@context.settings.name]
+                    if ws!=i
+                      i.send(msg.data)
+                    end
+                 end
               end
 
      
