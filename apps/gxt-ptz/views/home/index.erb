@@ -31,6 +31,9 @@
       <input type="button" class="ctl" id="right" value=">"></input>
       </td>
       </tr>
+
+      <input type="button" class="ctl" id="on" value="ON"></input>
+      <input type="button" class="ctl" id="off" value="OFF"></input>
      
      
      </table>
@@ -83,8 +86,22 @@ $(document).ready(function(){
           if(mo=='up')tilt+=10
           if(mo=='down')tilt-=10
 
+          if(mo=='on'||mo=='off'){
+			 if(mo=='on'){
+				ws.send("gpio,13,1");
+			  
+			}else{
+				ws.send("gpio,13,0");
+			  
+			}
+	
+		  }else{
+			
+	          ws.send("servo,"+pan+","+tilt);
+		}
 
-          ws.send("servo,"+pan+","+tilt);
+
+
 		});
 			
           });

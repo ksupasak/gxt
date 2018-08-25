@@ -2,10 +2,16 @@
 register_app 'ptz', 'gxt-ptz'
 
 require 'serialport'
-require 'rpi_gpio'
+
 
 
 # require_relative 'models'
+# begin
+#   require 'rpi_gpio'
+#   @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
+# rescue
+#   
+# end
 
 
 module GxtPtz
@@ -26,8 +32,8 @@ module GxtPtz
                 @context.settings.apps_ws[@context.settings.name] << ws
                 @context.settings.apps_ws_rv[ws] = @context.settings.name
                 
-                @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
                 
+              
                 
               end
               
@@ -66,13 +72,25 @@ module GxtPtz
               t = ts[2].to_i
 
               if ts[0]=='servo'
-              ptz ser, 1, p
-              ptz ser, 0 , t
-              else
-              ptz ser, 2, p
-              ptz ser, 3 , t
-              end
+                
+                ptz ser, 1, p
+                ptz ser, 0 , t
+              
+              elsif ts[0]=='servo2'
+                
+                ptz ser, 2, p
+                ptz ser, 3 , t
+                
+              elsif ts[0]=='servo3'
 
+                ptz ser, 4, p
+                ptz ser, 5, t
+
+              elsif ts[0]=='gpio'
+                
+                `ruby ~/gpio.rb #{p} #{t}`
+                
+              end
 
      
              end
