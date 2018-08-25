@@ -5,12 +5,6 @@ require 'serialport'
 
 
 
-begin
-  require 'rpi_gpio'
-  @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
-rescue
-  
-end
 
 
 module GxtPtz
@@ -24,6 +18,15 @@ module GxtPtz
            request.websocket do |ws|
 
              puts 'init websocket '
+             
+             begin
+               require 'rpi_gpio'
+               @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
+             rescue
+
+             end
+             
+             
 
               ws.onopen do
                 puts 'init websocket '
