@@ -93,7 +93,7 @@ module GxtPtz
                  
                 for i in @context.settings.apps_ws[@context.settings.name]
                     if ws!=i
-                      i.send(msg.data)
+                      i.send(msg)
                     end
                  end
               end
