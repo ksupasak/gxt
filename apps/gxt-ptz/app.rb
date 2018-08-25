@@ -5,13 +5,12 @@ require 'serialport'
 
 
 
-# require_relative 'models'
-# begin
-#   require 'rpi_gpio'
-#   @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
-# rescue
-#   
-# end
+begin
+  require 'rpi_gpio'
+  @serial_port = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
+rescue
+  
+end
 
 
 module GxtPtz
@@ -31,9 +30,6 @@ module GxtPtz
                 # ws.send("websocket opened")
                 @context.settings.apps_ws[@context.settings.name] << ws
                 @context.settings.apps_ws_rv[ws] = @context.settings.name
-                
-                
-              
                 
               end
               
