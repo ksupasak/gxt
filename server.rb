@@ -57,6 +57,8 @@ require_relative 'apps/gxt/helper'
 # require_relative 'apps/esm-monitor/app'
 
 require_relative 'apps/esm-miot-monitor/app'
+require_relative 'apps/gxt-ptz/app'
+
 
 register Sinatra::Partial
 
@@ -100,16 +102,33 @@ before do
   
   solution_name = @default_app
   
-  if t = request.host.split(".") and t.size>2  and t.size!=4   # detect sub domain 
-    solution_name = t[0]  # solution_name
-  end
-  puts "solution_name #{solution_name}"
+  # only   [solution].domain.com
+  t = request.host.split(".")
   paths = request.path.split("/")
-  puts paths.inspect 
-  if paths.size==4 and paths[0]=="" and paths[1].index(".") ==nil 
+  
+  puts "Host : #{t.inspect } Path : #{request.path}" 
+  
+  if  t.size>2  and t[-1].to_i ==0  # detect sub domain 
+    solution_name = t[0]  # solution_name
+  elsif t.size==4 and t[-1].to_i!=0 or request.host=='localhost' # when using ip
+    
+   
+    
     solution_name = paths[1]
+    
   end
   
+  if paths[1]!='__sinatra__'
+  
+  
+  puts "Solution Name : #{solution_name}"
+  
+  # paths = request.path.split("/")
+  #   puts paths.inspect 
+  #   if paths.size==4 and paths[0]=="" and paths[1].index(".") ==nil 
+  #     solution_name = paths[1]
+  #   end
+  #   
   
   settings.set :context, nil
   
@@ -150,6 +169,8 @@ before do
        
      end
      
+     
+   end
   
 
 end
@@ -252,7 +273,7 @@ def process_request
   
   puts "Access : #{1}"
   
-
+   puts "Process Context : #{ settings.context.inspect }"
    self.class.send :include, settings.context
    
    

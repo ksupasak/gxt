@@ -37,3 +37,7 @@ gem 'faye-websocket'
 gem 'barby'
 gem 'chunky_png'
 gem 'rqrcode'
+
+
+gem 'serialport'
+# gem 'rpi_gpio'

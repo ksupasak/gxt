@@ -1,0 +1,156 @@
+
+  <h1>PTZ Server</h1>
+   <form id="form">
+     
+     <input type="text" id="input" value="send a message"></input>
+     
+     <div id="ptz" style="float:left;width:400px;height:400px;border:1px solid">
+      
+     </div>
+      <div id="ptz2" style="float:left;width:400px;height:400px;border:1px solid">
+
+     </div>
+
+     <table>
+     
+     <tr>
+     <td>&nbsp;</td>
+     <td>
+     <input type="button" class="ctl" id="up" value="^"></input>
+     </td>
+     <td>&nbsp;</td>
+     </tr>
+      <tr>
+      <td>
+      <input type="button" class="ctl" id="left" value="<"></input>
+      </td>
+      <td>
+      <input type="button" class="ctl" id="down" value="v"></input>
+      </td>
+      <td>
+      <input type="button" class="ctl" id="right" value=">"></input>
+      </td>
+      </tr>
+     
+     
+     </table>
+     
+   </form>
+   <script>
+
+$(document).ready(function(){
+	
+	var pan = 6000
+	var tilt = 6000
+
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+      }(document.getElementById('msgs'));
+	
+	
+      var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+      ws.onopen    = function()  { show('websocket opened'); };
+      ws.onclose   = function()  { show('websocket closed'); }
+      ws.onmessage = function(m) { //show('websocket message: ' +  m.data);
+ };
+
+      var sender = function(f){
+        var input     = document.getElementById('input');
+        input.onclick = function(){ input.value = "" };
+        f.onsubmit    = function(){
+         
+         
+
+          ws.send(input.value);
+          input.value = "send a message";
+          return false;
+        }
+      }(document.getElementById('form'));
+	
+	
+	
+	$('.ctl').each(function(){
+		
+		obj = $(this)
+		
+		obj.click(function(){
+			o = $(this)
+
+	  mo = o.attr('id');
+
+          if(mo=='right')pan+=10
+          if(mo=='left')pan-=10
+          if(mo=='up')tilt+=10
+          if(mo=='down')tilt-=10
+
+
+          ws.send("servo,"+pan+","+tilt);
+		});
+			
+          });
+
+	var down  = false;
+        var down2 = false;
+
+	$('#ptz').mousedown(function(event){
+	
+	    down = true;
+	});
+
+    $('#ptz').mouseup(function(event){
+
+            down = false;
+        });
+        $('#ptz2').mousedown(function(event){
+
+            down2 = true;
+        });
+
+    $('#ptz2').mouseup(function(event){
+
+            down2 = false;
+        });		
+	$('#ptz').mousemove(function(event){
+	if(down){
+	 console.log(event.offsetX);
+	 w=400
+         npan = 6000-(event.offsetX*1.0-200)/400*4000
+	 ntilt = 6000-(event.offsetY*1.0-200)/400*4000
+	 
+	 if(npan!=pan||ntilt!=tilt){
+	 pan = npan
+	 tilt = ntilt
+	 ws.send("servo,"+pan+","+tilt);
+
+	}
+       }
+
+	});
+
+
+
+        $('#ptz2').mousemove(function(event){
+        if(down2){
+         console.log(event.offsetX);
+         w=400
+         npan = 6000+(event.offsetX*1.0-200)/400*4000
+         ntilt = 6000-(event.offsetY*1.0-200)/400*4000
+
+         if(npan!=pan||ntilt!=tilt){
+         pan = npan
+         tilt = ntilt
+         ws.send("servo2,"+tilt+","+pan);
+
+        }}
+
+        });
+
+   
+
+});
+
+   
+   </script>
+   
+   <div id="msgs"></div>
+
