@@ -30,7 +30,7 @@ require 'websocket-client-simple'
 require 'json'
 require 'eventmachine'
 require 'active_support'
-
+require 'serialport'
 
 
 
@@ -40,6 +40,10 @@ end
 
 def bind_event ws
 
+
+ser = SerialPort.new("/dev/serial0", 9600, 8, 1, SerialPort::NONE)
+
+
 ws.on :message do |msg|
   puts msg.data
   
@@ -47,19 +51,48 @@ ws.on :message do |msg|
   
   
     t = msg.data.split(",")
-    
-    pin = t[1].to_i
-    status = t[2]
-    
-    
-    RPi::GPIO.setup pin, :as => :output
+    cmd = t[0]
+  
+    if cmd=='gpio'
+        pin = t[1].to_i
+        status = t[2]
+        RPi::GPIO.setup pin, :as => :output
+        if status=='1'
+          RPi::GPIO.set_high pin
+        else
+          RPi::GPIO.set_low pin
+        end
+    elsif cmd=='servo12' or cmd=='servo34' or cmd=='servo56'
+        
+        p = t[1].to_i
+        t = t[2].to_i
+        
+        def ptz ser, ch, target
 
-    if status=='1'
-    RPi::GPIO.set_high pin
-    else
-    RPi::GPIO.set_low pin
+        v = target
+        ch = ch
+
+        v1 = v&127
+        v2 = (v>>7)&127
+        c = [170,12,4,ch,v1,v2]
+
+        for i in c
+        ser.write i.chr
+        end
+        ser.flush
+
+        end
+        
+        a = cmd[-2].to_i-1
+        b = cmd[-1].to_i-1
+        
+        ptz ser, a, p
+        ptz ser, b, t
+        
+        
+        
+        
     end
-
   
   rescue Exception=>e
   
