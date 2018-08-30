@@ -47,6 +47,7 @@ set :apps_ws_rv, {}
 
 set :extended, {}
 
+require_relative 'config/init'
 require_relative 'apps/gxt/helper'
 
 # require_relative 'apps/gxt-food-order/app'
@@ -73,7 +74,7 @@ set :mongo_prefix, Proc.new {'gxt'}
 
 
 # default ap
-set :name, @default_app
+set :name, DEFAULT_APP
 set :app, settings.apps[settings.name]
 
 
@@ -100,25 +101,24 @@ before do
    
    # settings.set :app, 'gxt-food-order'
   
-  solution_name = @default_app
+  solution_name = DEFAULT_APP
   
   # only   [solution].domain.com
   t = request.host.split(".")
   paths = request.path.split("/")
   
-  puts "Host : #{t.inspect } Path : #{request.path}" 
+  puts "Host : #{t.inspect } Path : #{paths.inspect} #{ @default_app.inspect }" 
   
   if  t.size>2  and t[-1].to_i ==0  # detect sub domain 
     solution_name = t[0]  # solution_name
   elsif t.size==4 and t[-1].to_i!=0 or request.host=='localhost' # when using ip
     
+   solution_name = paths[1] if paths[1]
    
-    
-    solution_name = paths[1]
     
   end
   
-  if paths[1]!='__sinatra__'
+  if paths[1]!='__sinatra__' and paths[1]!='favicon.ico'
   
   
   puts "Solution Name : #{solution_name}"

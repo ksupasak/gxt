@@ -1,8 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" >
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
@@ -18,10 +20,18 @@
     <!-- Custom styles for this template -->
     <link href="" rel="stylesheet">
 	<script src="/vendor/jquery-1.9.1.min.js"></script>
-
+    <script>
+	$(window).bind(
+	  'touchmove',
+	   function(e) {
+	    e.preventDefault();
+	  }
+	);
+	</script>
+	
   </head>
 
-  <body>
+  <body style="">
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 	    <a class="navbar-brand" href="/"><!--<image src="<%=url_for 'img/logow.png' %>" height="30">-->Smart Control PTZ</a>
@@ -36,13 +46,12 @@
             <a class="nav-link" href="../Home/index">Home </a>
           </li>
 
- <!--
+
           <li class="nav-item">
-            <a class="nav-link" href="../Sense/monitor">View</a>
-		
+            <a class="nav-link" href="../CameraSetting/index">Setting</a>
 
           </li>
-
+ <!--
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Models</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
