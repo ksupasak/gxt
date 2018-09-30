@@ -28,6 +28,7 @@ class Station
   key :name, String # bed name
   key :serial_number, String
   key :type, String
+  key :ip, String
   key :zone_id, ObjectId  
   def to_s
     self.name
