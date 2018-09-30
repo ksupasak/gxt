@@ -18,21 +18,13 @@ class Zone
   key :name, String
 end
 
-class Device
-  include MongoMapper::Document
-  belongs_to :station, :class_name=>'EsmMonitor::Station'
-  key :name, String
-  key :ip, String
-  key :serial_number, String
-  key :type, String
-  def to_s
-    self.name
-  end
-end
+
 
 class Station
   include MongoMapper::Document
-  belongs_to :zone, :class_name=>'EsmMonitor::Zone'
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
+  has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
+  
   key :name, String # bed name
   key :serial_number, String
   key :type, String
@@ -41,6 +33,7 @@ class Station
     self.name
   end
 end
+
 
 class Sense
   include MongoMapper::Document
@@ -56,29 +49,111 @@ class Patient
   include MongoMapper::Document
   key :hn, String 
   key :name, String 
+  def to_s
+    self.name
+  end
+end
+
+class Admit
+  include MongoMapper::Document
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
+  belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
+  belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
+  has_many :records, :class_name=>'EsmMiotMonitor::DataRecord'
   
+  key :patient_id, ObjectId
+  key :station_id, ObjectId
+  key :score_id, ObjectId
+  
+  
+  key :admit_stamp, Time
+  key :discharge_stamp, Time
+  
+  key :status, String
+  
+  
+  key :current_score, Integer
+  
+  key :note, String
+  
+  key :bed_no, String
+ timestamps!
+  
+  def discharge
+    self.discharge_stamp = Time.now
+    self.status='Discharged'
+    self.save
+  end
+end
+
+class Score
+  include MongoMapper::Document
+  
+  has_many :items, :class_name=>'EsmMiotMonitor::ScoreItem'
+  
+  key :name, String
+  key :version, String
+  key :description, String
+  def to_s
+      self.name
+    end
+end
+
+class ScoreItem
+  include MongoMapper::Document
+  
+  belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
+  has_many :conditions, :class_name=>'EsmMiotMonitor::ScoreCondition'
+  
+  
+  key :name, String # key value
+  key :sort_order, Integer
+  key :score_id, ObjectId
+  
+end
+
+class ScoreCondition
+  include MongoMapper::Document
+  
+  belongs_to :score_item, :class_name=>'EsmMiotMonitor::ScoreItem'
+  
+  key :sort_order, Integer
+  
+  key :score_item_id, ObjectId
+  
+  key :min, Float # key value
+  key :max, Float # key value
+  
+  key :option, String # key value
+  
+  key :score, Integer # key value
+  
+  key :alert_msg, String
+  key :alert_tag, String
+  
+end
+
+
+
+
+
+
+class Device
+  include MongoMapper::Document
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
+  key :name, String
+  key :ip, String
+  key :serial_number, String
+  key :type, String
   def to_s
     self.name
   end
 end
 
 
-class Admit
-  include MongoMapper::Document
-  belongs_to :station, :class_name=>'EsmMonitor::Station'
-  belongs_to :patient, :class_name=>'EsmMonitor::Patient'
-  has_many :records, :class_name=>'EsmMonitor::DataRecord'
-  key :patient_id, ObjectId
-  key :admit_stamp, Time
-  key :discharge_stamp, Time
-  key :status, String
-  key :score, Integer
-  key :note, String
-  key :bed_no, String
-  key :station_id, ObjectId
-  
-end
- 
+
+
+
 class DataRecord
   include MongoMapper::Document
   
@@ -89,7 +164,7 @@ class DataRecord
   key :bp_sys, Integer
   key :bp_dia, Integer
   key :pr, Integer
-  key :so2, Integer
+  key :spo2, Integer
   key :rr, Integer
   key :temp, Float
   
@@ -100,12 +175,13 @@ class DataRecord
   key :question_5, String
   key :question_5, String
   key :question_6, String
+  
   key :stamp, Time
   
   key :status, String
   
   key :score, Integer
-  
+  timestamps!
 end
 
 
@@ -128,6 +204,18 @@ class StationController < GXTDocument
   
 end
 
+class ScoreController < GXTDocument
+  
+end
+
+class ScoreItemController < GXTDocument
+  
+end
+
+class ScoreConditionController < GXTDocument
+  
+end
+
 class DeviceController < GXTDocument
   
 end
@@ -139,6 +227,29 @@ end
 
 class AdmitController < GXTDocument
   
+  def submit_data params
+    
+       admit = model.find params[:id]
+      
+       if admit
+         
+          admit.update_attributes :current_score=>params[:data][:score]
+          
+          params[:option].each_pair do |k,v|
+            
+            params[:data]["#{k}_opt".to_sym] = v
+            
+          end
+         
+          record = admit.records.create params[:data]
+          
+          record.update_attributes :data=>params[:data].to_json, :stamp=>Time.now
+         
+       end
+    
+     @context.redirect  "#{settings.name}/Admit/show?id=#{params[:id]}"
+  end
+  
   
   def data params
       admit=model.find params[:id]
@@ -146,11 +257,11 @@ class AdmitController < GXTDocument
 header = ['date']
 
 records = admit.records
-
+# 
 header << "BPSYS(#{records[-1].bp_sys})"
 header << "BPDIA(#{records[-1].bp_dia})"
 header << "PR(#{records[-1].pr})"
-header << "SO2(#{records[-1].so2})"
+header << "SPO2(#{records[-1].spo2})"
 header << "Score"
 
       
@@ -168,7 +279,7 @@ result = [header.join("\t")]
       end
       
         
-          result << [i.stamp.strftime("%H%M"), i.bp_sys, i.bp_dia, i.pr, i.so2, score].join("\t") if i.stamp
+          result << [i.stamp.strftime("%H%M"), i.bp_sys, i.bp_dia, i.pr, i.spo2, score].join("\t") if i.stamp
           
       end
 
@@ -325,13 +436,13 @@ class SenseController < GXTDocument
            
            if time!=last_time 
              
-             DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :so2=>data['so2'], :stamp =>t
+             DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :spo2=>data['spo2'], :stamp =>t
              
            end
            
            
          else
-           DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :so2=>data['so2'], :stamp =>t
+           DataRecord.create :admit_id=>admit.id, :bp_sys=>bp[0],  :bp_dia=>bp[1], :pr=>data['pr'],  :rr=>data['rr'], :spo2=>data['spo2'], :stamp =>t
          end
        end     
 

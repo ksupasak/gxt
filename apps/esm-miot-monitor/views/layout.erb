@@ -10,7 +10,7 @@
     <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
     <script src="/vendor/d3/d3.min.cus.js"></script>
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Medical IOT Solution</title>
 
     <!-- Bootstrap core CSS -->
     <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
@@ -18,7 +18,20 @@
     <!-- Custom styles for this template -->
     <link href="" rel="stylesheet">
 	<script src="/vendor/jquery-1.9.1.min.js"></script>
-
+<style>
+body{
+	background:#444;
+	color:#111;
+}
+.card{
+	color:black;
+}
+.container{
+	background:#fff;
+	box-shadow: 0px 0px 15px #111;
+	border-radius:5px;	
+}
+</style>
   </head>
 
   <body>
@@ -36,10 +49,13 @@
             <a class="nav-link" href="../Home/index">Home </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../Sense/monitor">View</a>
-		
-
+            <a class="nav-link" href="../Home/admit">Patient Admit</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../Score/index">Scoring</a>
+          </li>
+
+
  
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Models</a>
@@ -49,7 +65,10 @@
               <a class="dropdown-item" href="../Zone/index">Zone</a>
 		  	  <a class="dropdown-item" href="../Patient/index">Patient</a>
 			  <a class="dropdown-item" href="../Admit/index">Admit</a>
-              <a class="dropdown-item" href="../Record/index">Record</a>
+              <a class="dropdown-item" href="../DataRecord/index">Record</a>
+              <a class="dropdown-item" href="../Score/index">Score</a>
+              <a class="dropdown-item" href="../ScoreItem/index">Score-Item</a>
+              <a class="dropdown-item" href="../ScoreCondition/index">Score-Condition</a>
      
             </div>
           </li>
@@ -58,21 +77,25 @@
 	            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
 	              <a class="dropdown-item" href="../Home/admin">Admin</a>
+	              <a class="dropdown-item" href="../Home/rpd">Responsive Design</a>
+	              <a class="dropdown-item" href="../Home/rpd2">Responsive Design 2</a>
+	
 	            </div>
 	          </li>
 		
         </ul>
-        <form class="form-inline my-2 my-lg-0 " style="display:none">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0 " style="" action="../Home/search">
+          <input class="form-control mr-sm-2" name='query' type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
     </nav>
 
-    <main role="main" class="" style="border:0px solid red;">
-
+    <main role="main" class="main" style="border:0px solid red;">
+   <div id="main-container" class="container">
    <%=yield :content%>
-
+<br/><br/>
+	</div>
     </main><!-- /.container -->
 
     <!-- Bootstrap core JavaScript

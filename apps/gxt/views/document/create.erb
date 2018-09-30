@@ -5,7 +5,7 @@ return_url = "javascript:history.back();"
 return_url = params[:return] if params[:return]
 
 
-	@record =  this.model.new
+	@record =  this.model.new  params[:record]
 	if request.post?
 		
 	if params[:record]

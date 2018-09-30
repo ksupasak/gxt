@@ -1,42 +1,58 @@
 
+
+
 <style>
 body{
 	background:black;
 }
+.station{
 
-.station .label{
-	font-size:0.8em;
+	width:45em;
+ 	border-radius: 5px;
+	display:block;
+	color:#aaa;	
+	background-color:black;
+	float:left;
+	margin:0.5%;
+	padding:10px;
+}
+div.clear {
+    clear:both;
+}
+
+.msg{
+	font-size:0.5em;
+}
+
+.bp_alert{
+	background-color:#005;
+}
+.bp_alert_2{
+	background-color:#900;
+}
+
+
+.station .id{
+	color:#aaa;
 
 }
-.station .value{
-	font-size:1.5em;
-	margin-top:0px;
-	padding-top:0px;
-	text-align:center;
-}
+
 .station .pr{color:#01bf02;
 
 }
 
-.station .bp{color:#5990b7;;
+.station .bp{color:#5990b7;
 
 }
 
-.station .spo2{color:#bcaf06;
-
-}
-
-.station .temp{color:#2F50E2;
+.station .so2{color:#bcaf06;
 
 }
 
 .station .rr{color:#b7851d;
 
 }
-.station .col-6{
-		border:1px solid #333;
-		border-radius: 5px;
-}
+
 
 .station .cc{
 	color:#00b3b7;
@@ -46,156 +62,144 @@ body{
 	color:#f937e2;
 
 }
-.btn {
-	color:#eee; 
-	//text-decoration: underline;
+
+.pr-label{
+	color:#01bf02;
 }
+
+.bp-label{
+	color:#5990b7;
+
+}
+.so2-label{
+	color:#bcaf06;
+
+}
+.rr-label{
+	color:#b7851d;
+
+}
+
+.cc-label{
+	color:#00b3b7;
+
+}
+.uc-label{
+	color:#f937e2;
+
+}
+.msg{
+	font-size:1em;
+	color:red;
+}
+
+
+.ctlx{
+	font-size:2em;
+	line-height: 3em;
+
+}
+.boxx{
+	line-height: 3em;
+	font-size:2em;
+	border:1px solid #333;
+	text-align: center;
+	 border-radius: 5px;
+	background:black;
+}
+.pid{
+background:black;
+border-radius: 5px;
+
+}
+.x-label{
+	font-size:0.5em;float:left;margin-left:-10px;margin-top:-2em;
+}
+.sos{
+	line-height:1em;font-size:5em;text-align: center;
+}
+.hide{
+	display:none;
+}
+
 </style>
 
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
+	<div id="panel" class="panel" style="border:0px solid blue">
 
-<% for i in settings.stations.keys.sort 
-	
-		station = Station.where(:name=>i).first
 		
-		admit = station.admits.last
-		
-		admit = nil if admit and admit.status=='Discharged'
-		 
-
-%>
-
-<div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
-	<div class="row" style="background:#666">
-		
-		<div class="col-2 text-left ">
-		<%= link_to i,"../Station/show?id=#{station.id}",:class=>'btn' %>
-		</div>
-		<div class="col-7 text-center">
-			<%
-			
-			if admit
-				patient = admit.patient
-			
-			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
-			<% end %> 	
-	
-		</div>
-		<div class="col-3">
-			
-		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' %>
-		
-		</div>
-		
-			
-	</div>
-	<div  class="row align-items-start">
-		<div class="col-lg-6 order-lg-2 order-6">
+		<% for i in settings.stations.keys.sort %>
+		<div id="<%=i%>" class="station active-station">
 			<div class="row">
-						<div class="col-6 pr">
-							<span class="label">PR</span>
-							<div class="value">-</div>
+				<!--	<div class="col-sm-1 ">
+				
+					<div class="row">
+						<div class="col-12 ctlx">
+							P
 						</div>
-						<div class="col-6 bp">
-							<span class="label">BP</span>
-							<div class="value">-</div>
+					</div>
+					<div class="row">
+						<div class="col-12 ctlx">
+							M
 						</div>
-			</div>
-			<div class="row">
-							<div class="col-6 temp">
-								<span class="label">Temp</span>
-								<div class="value">-</div>
-							</div>
-							<div class="col-6 rr">
-								<span class="label">RR</span>
-								<div class="value">-</div>
-							</div>
-			</div>
-		
-			<div class="row">
-						<div class="col-6 spo2">
-							<span class="label">SpO2</span>
-							<div class="value">-</div>
+					</div>
+					<div class="row">
+						<div class="col-12 ctlx">
+							S
 						</div>
-						<div class="col-6 rr">
-						
-						</div>				
-			</div>
-		
-			<div class="row">
-						<div class="col-6 cc">
-						    <span class="label">LC</span>
-							<div class="value">-</div> 
-						</div>
-						<div class="col-6 uc">
-							<span class="label">UO</span>
-							<div class="value">-</div>
-						</div>
-			</div>
-		</div>
-		<div class="col-lg-6 order-lg-3 order-1 " style="border:1px solid #333;border-radius: 5px;">
-			<div class="row">
-					<div class="col-6 score" style="border:0px solid blue;text-align:center">
-							<%
-
-							if admit
-								patient = admit.patient
-
-							%>
-							<span><%=admit.score%></span>
-							<%else %><span>&nbsp;</span>
-							<% end %>
-						<div class="value" style='font-size:4em;'>
-						- 
-						</div>
-						
+					</div>
+				</div>-->
+				<div class="col-sm-6">
+					<div class="row">
+					<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
+					<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
+					<div class="col-sm-6 boxx"><span class="so2-label x-label" >SpO<sub>2</sub></span><span class="so2">-</span></div>
+					<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
+					<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
+					<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
 					</div>
 					
-					<div class="col-6" style="border:0px solid blue;">
-
+				</div>
+				<div class="col-sm-6 pid" >
+						<div class="row">
+						<div class="col-sm-12" style="font-size:1em;text-align:center"><span class="id  "><%=i%></span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12" style="font-size:1em"><span class="hn  "><%=i%></span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12 sos" ><span class="sos"></span></div>
+						</div>
+						<div class="row">
+						<div class="col-sm-12" style="border:0px solid gray;">
+						<div class="line"></div>
+						<div class="col-sm-12 msg" style="">-</div>	
+						 
+						<%#link_to 'show', "station?name=#{i}",:class=>'btn' %>
+						<center>
+							<%=link_to "Show", "../Station/show?name=#{i}" %>
+							
+							<img id="image" class="col-sm-12" alt="" style=""/>
+						</center>
+						 </div>
+						<div class='row'>
 						
-					</div>
-			</div>
-			<div class="row text-center">
-				<div class="col-6">
-					<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
+					
+						</div></div>
 				</div>
-				<div class="col-6">
-					<%
-					if admit
-						patient = admit.patient
-					%>
-					<script>
-					$('#<%=admit.id%>').click(function(){
-						call_submit($(this).attr("id"))
-					});
-					</script>
-					<%=link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
-					<% else %>
-					<%=link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
-					<% end %>
-				</div>
+				
 			</div>
+		
+		
+			
 		</div>
 		
-		<div id="wave-<%=i%>" class="col-lg-12 order-lg-1 order-2" style="min-height:5em;background:#111">
+		<% end %>
+		<script>
 		
-		</div>
-	</div>
-
-</div>
-
-<% end %>
-
-</div>
-<script>
-$('#main-container').removeClass('container')
-</script>
-
-
-
-	<div id="panel" class="panel" style="border:0px solid blue">
+		
+		</script>
+	
+		
 		<div class="clear"></div>
 	</div>
 	
@@ -222,7 +226,7 @@ $('#main-container').removeClass('container')
 						<div class="row">
 						<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
 						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
-						<div class="col-sm-6 boxx"><span class="spo2-label x-label" >SpO<sub>2</sub></span><span class="spo2">-</span></div>
+						<div class="col-sm-6 boxx"><span class="so2-label x-label" >SpO<sub>2</sub></span><span class="so2">-</span></div>
 						<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
 						<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
 						<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
@@ -254,6 +258,7 @@ $('#main-container').removeClass('container')
 		
 		</div> 
 	
+	<div id="line"></div>
 
 		<script type="text/javascript">
 	    
@@ -277,8 +282,8 @@ $('#main-container').removeClass('container')
 	
 			function aniLine(idx, sampling, rawdata, last){
 	
-			var w = 50;
-		    var h = 80;
+			var w = 100;
+		    var h = 100;
 			var svg;
 
 
@@ -310,14 +315,14 @@ $('#main-container').removeClass('container')
 
 		      // Set a light grey class on old paths
 	     
-		      svg.selectAll("path").remove();
-		      // var last_path = svg.append("path")
-		      // 		      .attr("d", line(last))
-		      // 		      .attr("stroke", "#131")
-		      // 		      .attr("stroke-width", "2")
-		      // 		      .attr("fill", "none")
-		      // 		      .attr("class", "old");
-		      // 		      last_path.add
+		      // svg.selectAll("path").remove();
+					// 		   var last_path = svg.append("path")
+					// 		        .attr("d", line(last))
+					// 		        .attr("stroke", "gray")
+					// 		        .attr("stroke-width", "2")
+					// 		        .attr("fill", "none")
+					// .attr("class", "old");
+				// last_path.add
 
 		      var path = svg.append("path")
 		        .attr("d", line(data))
@@ -349,7 +354,7 @@ $('#main-container').removeClass('container')
 			function showWave(div,data){
 			var n = 32; // sample for a second
 		    var cut = 1;
-			var show = 8; //second
+			var show = 6; //second
 			var second = 0;
 			var lastdata = [];
 		
@@ -380,10 +385,10 @@ $('#main-container').removeClass('container')
    
 		   var wave_data = [];
 			
-		<% for i in settings.stations.keys.sort %>
-		  showWave('wave-<%=i%>',wave_data);
 		
-	    <% end %>
+	showWave('line',wave_data);
+		
+	
 	
 	
 			// showWave('line2',[]);
@@ -399,7 +404,7 @@ $('#main-container').removeClass('container')
 	var show = function(el){
         return function(msg){ el.innerHTML = msg  }
       }(document.getElementById('msgs'));
-
+	
 	
 	  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
 	
@@ -426,7 +431,7 @@ $('#main-container').removeClass('container')
 		
 		lines = m.data.split("\n")
 		
-		// console.log(lines[0].split(" ")[0])
+		console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Alert'){
 			data = JSON.parse(lines[1])
 			
@@ -473,12 +478,12 @@ $('#main-container').removeClass('container')
 				for(var j=0;j<obj['wave'].length;j++){
 					wave_data.push(obj['wave'][j]);
 				}
-   				// console.log(wave_data);
+   				console.log(wave_data);
 				// wave_data = obj['wave'];
 		   }
 		    			
 			
-			 // console.log(obj)
+			// console.log(obj)
 			$('#'+i+' .hn').html(obj['ref'])
 			
 			if($('#'+i+' .bp').html()!=obj['bp']){
@@ -491,18 +496,65 @@ $('#main-container').removeClass('container')
 				// $('#'+i+' .msg').html("-");
 			}
 			
-			$('#'+i+' .bp .value').html(obj['bp'])
-			
-			$('#'+i+' .temp .value').html(obj['temp'])
-			
-			$('#'+i+' .pr .value').html(obj['pr'])
-			$('#'+i+' .rr .value').html(obj['rr'])
-			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			$('#'+i+' .bp').html(obj['bp'])
 			
 			
-			$('#'+i+' .score .value').html(obj['score'])
+			$('#'+i+' .pr').html(obj['pr'])
+			$('#'+i+' .rr').html(obj['rr'])
+			$('#'+i+' .so2').html(obj['so2'])
 			
 			
+			$('#'+i+' .sos').html(obj['sos'])
+			
+			
+			
+			
+			
+			// plot = $('#'+i+' .plot').attr("id");
+// 			pos = 0;
+// 			if(plot_pos.hasOwnProperty(plot)==false){
+// 				plot_pos[plot] = 0;
+// 			}else
+// 			{
+// 				pos = plot_pos[plot];
+// 			}
+			
+			
+			// var c = document.getElementById(plot);
+//
+// 			y = 100-parseInt(obj['pr'])/2
+// 			var ctx = c.getContext("2d");
+//
+// 			ctx.beginPath();
+//
+// 			ctx.strokeStyle="#cccccc";
+// 			ctx.moveTo(pos,0);
+// 			ctx.lineTo(pos,100);
+// 			ctx.stroke();
+// 			ctx.moveTo(pos,0);
+// 			ctx.lineTo(pos,100);
+// 			ctx.stroke();
+//
+// 			ctx.beginPath();
+// 			ctx.strokeStyle="#006666ff";
+// 			ctx.moveTo(pos,100);
+// 			ctx.lineTo(pos,y);
+// 			ctx.stroke();
+//
+//
+// 			pos+=5
+// 			if(pos>200){
+// 				pos = 0
+// 				// var w = c.width;
+// 				// 		ctx.clearRect(0, 0, c.width, c.height);
+// 				// 		c.width = 1;
+// 				// 		c.width = w;
+//
+// 			}
+//
+// 			plot_pos[plot] = pos;
+//
+// 			ctx.stroke();
 			
 			
 			}else{
@@ -565,6 +617,5 @@ $('#main-container').removeClass('container')
 By E.S.M.Solution Co.,Ltd.
 </div>
 
-<%= inline(this,:'_scoring') %>
 
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>

@@ -8,10 +8,14 @@
 
 %>
 <div class="form-group">
-  <label for="product-name">Patient</label>
-  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=%>" placeholder="HN" style="width:200px">
-  <input type="text" class="form-control" id="patient-hn" name="patient[name]" value="<%=%>" placeholder="Patient Name : Optional" style="width:400px">
-
+ <label for="product-name">Patient</label>
+<div class="row">
+<div class="col-5">
+  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=%>" placeholder="HN" style="">
+</div>
+<div class="col-7">
+  <input type="text" class="form-control" id="patient-hn" name="patient[name]" value="<%=%>" placeholder="Name" style="">
+</div></div>
 </div>
 
 
@@ -31,17 +35,27 @@
 	if i[0]=='patient_id'	
 %>
 <div class="form-group hide" >
-  <label for="product-name"><%=i[0].humanize%></label>
   <input type="hidden" class="form-control" id="patient-hn" name="patient[id]" value="" placeholder="HN" style="width:200px">
 </div>
 <%		
-	elsif i[0]=='score'	
+	elsif i[0]=='score_id'	
+%>
+<div class="form-group" >
+  <label for="product-name"><%=i[0].humanize%></label>
+ <select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
+<% for j in Score.all.collect{|s| [s.id,"#{s.name} - #{s.version}"]} %>
+  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+<%		
+	elsif i[0]=='current_score'	
 %>
 <div class="form-group">
   <label for="product-name"><%=i[0].humanize%></label>
 
 <select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] %>
+<% for j in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] %>
   <option value="<%=j%>" <%="selected" if @record[i[0]]==j %>><%=j%></option>
 <% end %>
 </select>
@@ -60,7 +74,16 @@
 </select>
 
 </div>
-	
+<%		
+	elsif i[0]=='created_at' or i[0]=='updated_at' or i[0]==''	
+%>
+<%		
+	elsif i[0]=='admit_stamp'
+%>
+<label for="product-name"><%=i[0].humanize%></label>
+<div>
+	<%=@record.admit_stamp%>
+</div>	
 <%		
 	elsif i[0]=='station_id'	
 %>
@@ -83,3 +106,4 @@
   </div>
 <% end %>
 <% end %>
+

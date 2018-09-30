@@ -1,10 +1,28 @@
+<style>
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #report, #report * {
+    visibility: visible;
+  }
+  #report {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+</style>
 <%
 	@record = Admit.find(params[:id])
 	patient = @record.patient
 	records = @record.records
 
+	start = @record.created_at
+	start = @record.admit_stamp if @record.admit_stamp
 %>
-<h1>PACU : <%=patient.hn%> / Bed : <%=@record.bed_no %> <%#link_to '+Record', "../DataRecord/create?admit_id=#{params[:id]}",:class=>'btn btn-success'%>
+<div id="report">
+<h1>Patient Admit <%#link_to '+Record', "../DataRecord/create?admit_id=#{params[:id]}",:class=>'btn btn-success'%>
 </h1>
 
 
@@ -15,9 +33,12 @@
 		<div class="col-sm-12 alert alert-warning" style="font-size:1.2em" >
 			HN : <%=patient.hn%><br/>
 			Name : <%=patient.name%><br/>
-			Admit at : <%=@record.admit_stamp%><br/>
-			Time : <%=((Time.now -  @record.admit_stamp)/3600).to_i  %> hours
-			
+			Admit at : <%=start.getlocal.strftime('%D - %H:%M') %><br/>
+			Bed No: <%=@record.bed_no %><br/>
+			Score : <%=@record.score %><br/>
+			<% if @record.admit_stamp %>
+			Total Time : <%=((Time.now -  @record.admit_stamp)/60).to_i  %> mins
+			<% end %>
 		</div>
 	</div>
 </div>
@@ -30,7 +51,7 @@
 
 <div class="row">
 <div class="col-sm-12" >
-<%=link_to "New", "javascript:$('#new-record').slideDown('slow')" %>
+<%#link_to "New", "javascript:$('#new-record').slideDown('slow')" %>
 <div id="new-record">
 <%
 	new_record = DataRecord.new :admit_id=>params[:id]
@@ -45,22 +66,39 @@
 
 <% if records.size>0 %>
 
+<table class="table">
+<thead>
+	<tr><th>No.</th>
+		<th>DateTime</th><th>BP</th><th>PR</th><th>TEMP</th><th>RR</th><th>SpO2</th><th>Score</th>
+	</tr>
+</thead>
 <% records.each_with_index do |i, index |  %>
-<% if i.status=='Completed' %>
-<%= partial :'admit/_record', :locals=>{:record=>i, :index=>index}%>
-<% else %>
-<%= partial :'admit/_record_form', :locals=>{:record=>i, :mode=>'edit'}%>
-<% end %>
-<% end %>
+<tr><td>
+	<%=index+1%>.
+</td>
+<td>
+	<%=i.stamp%>
+</td>
+<td><%=i.bp%></td><td><%=i.pr%></td><td><%=i.temp%></td><td><%=i.rr%></td><td><%=i.spo2%></td><td><%=i.score%></td>
 
+</tr>
+<% end %>
+</table>
 <% else %>
 <span>There is no Record</span>
 <% end %>
 </div>
-</div>
+</div></div>
 <hr/>
+<%=link_to 'Discharge', "discharge?id=#{params[:id]}",:class=>'btn btn-danger' ,:style=>'float:right' if @record.status=='Admitted'%>
+
+<%=link_to 'Print', "javascript:window.print()",:class=>'btn ' ,:style=>'float:right'%>
+
+
+<%=link_to 'Submit', "\#",:id=>params[:id], :class=>'btn btn-success' if @record.status=='Admitted' %>
+
 <%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
-<%=link_to 'Back', 'index',:class=>'btn'%>
+<%=link_to 'Back', '../Home/admit',:class=>'btn'%>
 
 
 <!DOCTYPE html>
@@ -80,7 +118,9 @@
 </style>
 
 <script>
-
+	$('#<%=params[:id]%>').click(function(){
+		call_submit($(this).attr("id"))
+	});
 var svg = d3.select("svg"),
     margin = {top: 20, right: 80, bottom: 30, left: 50},
     width = svg.attr("width") - margin.left - margin.right,
@@ -160,3 +200,5 @@ function type(d, _, columns) {
 }
 $('#new-record').toggle()
 </script>
+
+<%= inline(this,:'../home/_scoring') %>

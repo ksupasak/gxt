@@ -6,7 +6,7 @@ module Device
 
 
 
-def self.monitor_vista_120_v1
+def self.monitor_vista_120_v1 ws
 
 puts "-- Start Vista120 v2 Service"
 
@@ -36,10 +36,9 @@ puts "-- Start Vista120 v2 Service"
 
 server = TCPServer.new  VISTA_120_v1_port
 
-
-host = GW_IP
-port = GW_PORT
-uri = GW_URI
+host = CMS_IP
+port = CMS_PORT
+uri = CMS_URI
 
 
 list = [{:n1=>6},
@@ -163,12 +162,43 @@ loop do
               
               if data[:rr]<50 and data[:so2]>50
                           
-              puts "#{stamp}\t#{station}\t#{data.inspect}\t#{hn}"            
+              # puts "#{stamp}\t#{station}\t#{data.inspect}\t#{hn}"            
+              # begin            
+              # result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+              # rescue Exception=>e
+              # puts e.message
+              # end
+              
+              
               begin            
-              result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
-              rescue Exception=>e
-              puts e.message
-              end
+
+
+              # result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+
+
+                                   # data[:bp] = bp
+                                   # data[:pr] = 60 + rand(60)
+                                   # data[:hr] = data[:pr]
+                                   # data[:rr] = 18 + rand(4)
+                                   # data[:so2] = 90+rand(10)
+                                   # data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+
+              msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+
+                           ws.send(msg)
+
+
+
+                            rescue Exception=>e
+                              puts e.message
+                            end
+              
+              
+              
+              
               end              
               
               #     

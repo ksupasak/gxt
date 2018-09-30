@@ -1,0 +1,78 @@
+<%
+	
+	admits = Admit.where().sort('status').all
+	
+%>
+
+<h1>Patient Admit</h1>
+
+<% 
+
+%w{Admitted Discharged}.each do |type|
+	admits = Admit.where(:status=>type).sort('status').all
+%>
+<h3><%=type%></h3>
+<table class="table">
+<thead>
+	<tr>
+		<th>No.</th>
+		<th>Bed.</th>
+		<th>Patient</th>
+		<th class="hidden-xs hidden-sm">Admit</th>
+		<th class="hidden-xs hidden-sm">Discharge</th>
+		<th class="hidden-xs hidden-sm">Duration</th>
+		
+		<th>Score</th>
+		<th>Current</th>
+	
+		<th>Record</th>	<th></th>	<th></th>
+	</tr>
+</thead>
+<tbody>
+	<% admits.each_with_index do |i,index| 
+		
+		patient = i.patient
+		if i.bed_no==''
+			i.update_attributes :bed_no=> i.station.name
+		end
+		
+	 %>
+	<tr>
+		
+		<td><%= index+1 %>.
+			
+			
+			
+		</td>
+		<td><%= i.bed_no %></td>
+		<td><%= patient.name %> (<%= patient.hn %>)</td>
+		<td class="hidden-xs hidden-sm"><%= i.created_at.getlocal.strftime('%H:%M') +" ~ #{(Time.now-i.created_at).to_i/60}m" if i.created_at %></td>
+		<td class="hidden-xs hidden-sm"><%= i.discharge_stamp.getlocal.strftime('%H:%M') +" ~ #{(Time.now-i.discharge_stamp).to_i/60}m" if i.discharge_stamp %></td>
+		<td class="hidden-xs hidden-sm">
+			<%= "#{(i.discharge_stamp - i.created_at).to_i/60 } m" if i.created_at and i.discharge_stamp  %> 
+		</td>
+		<td><%= i.score %></td>
+		<td><%= i.current_score %></td>
+	
+	
+		<td><%= link_to 'Submit',"\#",:id=>i.id, :class=>'btn btn-success' if i.status == 'Admitted' %>
+			
+				<script>
+				$('#<%=i.id%>').click(function(){
+					call_submit($(this).attr("id"))
+				});
+				</script>	
+		</td>
+		<td><%= link_to 'Show',"../Admit/show?id=#{i.id}"%></td>
+		<td><%= link_to 'Edit',"../Admit/edit?id=#{i.id}", :confirm=>'Are you sure?'%></td>
+		
+	</tr>
+	<% end %>
+</tbody>
+</table>
+<% end %>
+
+<%= link_to 'Admit',"../Admit/create", :class=>'btn btn-primary' %>
+
+
+<%= inline(this,:'_scoring') %>

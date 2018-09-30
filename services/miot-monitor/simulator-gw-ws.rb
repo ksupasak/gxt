@@ -142,7 +142,8 @@ MSG
      data[:pr] = 60 + rand(60)
      data[:hr] = data[:pr]
      data[:rr] = 18 + rand(4)
-     data[:so2] = 90+rand(10)
+     data[:temp] = 36 + rand(4) 
+     data[:spo2] = 90+rand(10)
      data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
 msg = <<MSG
 Data.Sensing device_id=#{name}

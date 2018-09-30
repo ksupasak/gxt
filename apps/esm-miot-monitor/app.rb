@@ -43,6 +43,48 @@ MSG
   class HomeController < GXT
 
     
+  def get_stations params
+      
+     stations = nil
+     
+     if params[:zone]
+    
+     zone = Zone.where(:name=>params[:zone]).first
+     if zone
+       puts 'from zone'
+       stations = Station.where(:zone_id=>zone.id).all
+       return stations.to_json
+       
+     end
+     
+     end
+      
+       
+     stations = Station.all unless stations
+     
+     
+     return stations.to_json
+     
+     
+    
+  end
+
+  def get_data params
+     
+     if params[:id]
+       station = Station.find(params[:id])
+     else
+       station = Station.where(:name=>params[:name]).first
+     end
+     if station
+        data = settings.senses[station.name]
+        return data.to_json
+     else
+        return {:result=>404,:msg=>'Not found'}
+     end
+     
+  end   
+    
 
   def websocket request
       
@@ -95,17 +137,25 @@ MSG
                   @context.settings.cmd_map[icmd][ipath] << name unless @context.settings.cmd_map[icmd][ipath].index(name)
                end
                puts "#---- #{  @context.settings.cmd_map.inspect}"
-              
+            
+             when 'Zone.Data'
+             puts msg
+            
+            
              when 'Data.Sensing'
                
                pdata =  ActiveSupport::JSON.decode(body)
-               EsmMiotMonitor::dispatch cmd, path, pdata.to_json
+               
                
                
                ##########################################################
                    # {"station":"Bed01","stamp":"\"2018-07-29 00:58:14 +0700\"","ref":"-","data":{"bp":"82/118","pr":112,"hr":112,"rr":18,"bp_stamp":"005812"}}
                    station_name = "Untitled"
                    station_name = pdata['station'] if pdata['station'] 
+               
+                 
+                   EsmMiotMonitor::dispatch cmd, path, pdata.to_json
+               
                   
                    # puts "Name = #{params.inspect }"
                    ref = "-"
@@ -141,15 +191,20 @@ MSG
 
                    if data['pr'] 
                      data['ref'] = ref
-                     data['sos'] = rand(3)
                    end
                    
-                   # ZoneUpdate zone_id=* {"time":"2018-08-10T09:17:33.653+07:00","list":["Bed01"],"data":
                    
-                   # {"Bed01":{"bp":"102/83","pr":95,"hr":95,"rr":18,"so2":91,"bp_stamp":"091732","ref":"1234","sos":1}}}
+                   data['score'] = 0
                    
-                   # puts data['wave'] if data['wave']
-                    # @context.settings.senses[station_name] = data
+                   if admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
+                     
+                     data['score'] = admit.current_score
+                     
+                     
+                     
+                   end
+                   
+                   
                     
                     odata = @context.settings.senses[station_name]
                     odata = {} unless odata
@@ -176,7 +231,7 @@ MSG
                  high = data['bp'].split("/")[0].to_i
                  
                  
-               if high>120
+               if high>140
                  
                  
                  puts "****** Alert *****"
@@ -191,6 +246,8 @@ MSG
                  
                  
                end
+               
+               
              end
                
                  when 'Data.Image'

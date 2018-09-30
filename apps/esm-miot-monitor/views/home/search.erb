@@ -1,0 +1,39 @@
+<%
+
+	query = params[:query]
+	
+	patients = Patient.where(:hn=>query).all
+%>
+<%= patients.inspect %>
+<%	
+	list = []
+	
+	for i in patients
+		
+		admit = Admit.where(:patient_id=>i.id, :status=>'Admitted').first
+		list << admit if admit
+		
+
+	
+	%>
+	<%= list.inspect %>f
+	<%
+	
+	if list.size == 0 
+		
+		admit = Admit.where(:patient_id=>i.id).last
+		list << admit if admit
+		
+	end
+	end
+	%>
+	<%= list.inspect %>x
+	<%
+	if list.size > 0 
+		admit = list[-1]
+	if admit
+%>
+<%=redirect_to "../Admit/show?id=#{admit.id}"%>
+<% end %><% else %>
+<%=redirect_to "../Home/index"%>
+<% end %>
