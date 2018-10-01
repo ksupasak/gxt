@@ -63,10 +63,20 @@
 </div>
 <div class="row">
 <div class="col-sm-12" >
+<br/>
+	<%=link_to 'Discharge', "discharge?id=#{params[:id]}",:class=>'btn btn-danger' ,:style=>'float:right' if @record.status=='Admitted'%>
 
+	<%=link_to 'Print', "javascript:window.print()",:class=>'btn ' ,:style=>'float:right'%>
+
+
+	<%=link_to 'Submit', "\#",:id=>params[:id], :class=>'btn btn-success' if @record.status=='Admitted' %>
+
+	<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
+	<%=link_to 'Back', '../Home/admit',:class=>'btn'%>
+<br/><br/>
 <% if records.size>0 %>
 
-<table class="table">
+<table class="table" style="font-size:0.8em">
 <thead>
 	<tr><th>No.</th>
 		<th>DateTime</th><th>BP</th><th>PR</th><th>TEMP</th><th>RR</th><th>SpO2</th><th>Score</th>
@@ -77,7 +87,7 @@
 	<%=index+1%>.
 </td>
 <td>
-	<%=i.stamp%>
+	<%=i.stamp.getlocal.strftime("%d/%m/%y %H:%M")%>
 </td>
 <td><%=i.bp%></td><td><%=i.pr%></td><td><%=i.temp%></td><td><%=i.rr%></td><td><%=i.spo2%></td><td><%=i.score%></td>
 
@@ -90,15 +100,7 @@
 </div>
 </div></div>
 <hr/>
-<%=link_to 'Discharge', "discharge?id=#{params[:id]}",:class=>'btn btn-danger' ,:style=>'float:right' if @record.status=='Admitted'%>
 
-<%=link_to 'Print', "javascript:window.print()",:class=>'btn ' ,:style=>'float:right'%>
-
-
-<%=link_to 'Submit', "\#",:id=>params[:id], :class=>'btn btn-success' if @record.status=='Admitted' %>
-
-<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
-<%=link_to 'Back', '../Home/admit',:class=>'btn'%>
 
 
 <!DOCTYPE html>

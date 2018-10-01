@@ -22,7 +22,11 @@ body{
 
 }
 
-.station .so2{color:#bcaf06;
+.station .spo2{color:#bcaf06;
+
+}
+
+.station .temp{color:#2F50E2;
 
 }
 
@@ -43,53 +47,86 @@ body{
 
 }
 .btn {
-	color:#eee; text-decoration: underline;
+	color:#eee; 
 }
 </style>
+
+<%
+	station = Station.find params[:id]
+	
+	admit = station.admits.last
+		
+	admit = nil if admit and admit.status=='Discharged'
+	
+	
+%>
 <div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
 
-<% 1.times do |i| %>
+<% 1.times do |i| 
+	i = station.name
+	%>
 
-<div class="col-sm-12" style="border-right:1px solid #888">
+<div id="<%=station%>"  class=" col-12 station active-station " style="border-right:1px solid #888">
 	<div class="row" style="background:#666">
 		
-		<div class="col-4 ">
-		<%= link_to "Back  ","../Home/index", :class=>'btn' %> Bed01
+		<div class="col-2 text-left ">
+		<%= link_to station.name,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
-		<div class="col-4 text-center">
-		1234/56
+		<div class="col-7 text-center">
+			<%
+			
+			if admit
+				patient = admit.patient
+			
+			%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<% end %> 	
+	
 		</div>
-		<div class="col-4 text-right">
-		00:00
+		<div class="col-3">
+			
+		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' %>
+		
 		</div>
 		
 			
 	</div>
-	<div class="row station ">
-		<div class="col-lg-6 order-lg-1 order-6">
+	<div  class="row align-items-start">
+		<div class="col-lg-6 order-lg-2 order-2">
 			<div class="row">
-				<div class="col-6 pr">
-					<span class="label">PR</span>
-					<div class="value">100</div>
-				</div>
-				<div class="col-6 bp">
-					<span class="label">BP</span>
-					<div class="value">114/56</div>
-				</div>
+						<div class="col-6 pr">
+							<span class="label">PR</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-6 bp">
+							<span class="label">BP</span>
+							<div class="value">-</div>
+						</div>
 			</div>
 			<div class="row">
-						<div class="col-6 so2">
+							<div class="col-6 temp">
+								<span class="label">Temp</span>
+								<div class="value">-</div>
+							</div>
+							<div class="col-6 rr">
+								<span class="label">RR</span>
+								<div class="value">-</div>
+							</div>
+			</div>
+		
+			<div class="row">
+						<div class="col-6 spo2">
 							<span class="label">SpO2</span>
-							<div class="value">95</div>
+							<div class="value">-</div>
 						</div>
 						<div class="col-6 rr">
-								<span class="label">RR</span>
-								<div class="value">18</div>
+						
 						</div>				
 			</div>
+		
 			<div class="row">
 						<div class="col-6 cc">
-						    <span class="label">CC</span>
+						    <span class="label">LC</span>
 							<div class="value">-</div> 
 						</div>
 						<div class="col-6 uc">
@@ -97,38 +134,63 @@ body{
 							<div class="value">-</div>
 						</div>
 			</div>
-			<div class="row">
-					<div class="col-lg-12 order-lg-12 order-2" style="min-height:100px;background:#333">
-						<span>#1</span>
-					</div>
-					<div class="col-lg-12 order-lg-12 order-2" style="min-height:100px;background:#333">
-						<span>#2</span>
-					</div>
-					<div class="col-lg-12 order-lg-12 order-2" style="min-height:100px;background:#333">
-						<span>#3</span>
-					</div>
-					<div class="col-lg-12 order-lg-12 order-2" style="min-height:100px;background:#333">
-						<span>#4</span>
-					</div>
-			</div>
 		</div>
-		<div class="col-lg-6 order-lg-6 order-1 ">
+		<div class="col-lg-6 order-lg-1 order-1 " style="border:1px solid #333;border-radius: 5px;">
 			<div class="row">
-					<div class="col-6 " style="border:0px solid blue;font-size:4em;text-align:center">
-						1
+					<div class="col-6 score" style="border:0px solid blue;text-align:center">
+							<%
+
+							if admit
+								patient = admit.patient
+
+							%>
+							<span><%=admit.score%></span>
+							<%else %><span>&nbsp;</span>
+							<% end %>
+						<div class="value" style='font-size:4em;'>
+						- 
+						</div>
+						
 					</div>
+					
 					<div class="col-6" style="border:0px solid blue;">
-						func
+
+						
 					</div>
 			</div>
-			<div class="row">
-				<div class="col-12">
-					<%=link_to "Submit","",:class=>'btn', :style=>'width:100%'%>
+			<div class="row text-center">
+				<div class="col-6">
+					<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
+				</div>
+				<div class="col-6">
+					<%
+					if admit
+						patient = admit.patient
+					%>
+					<script>
+					$('#<%=admit.id%>').click(function(){
+						call_submit($(this).attr("id"))
+					});
+					</script>
+					<%=link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
+					<% else %>
+					<%=link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
+					<% end %>
 				</div>
 			</div>
 		</div>
 		
-	
+		<div id="wave-<%=i%>" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
+		L1
+		</div>
+		
+		<div id="wave-<%=i%>-2" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
+		L2
+		</div>
+		
+		<div id="wave-<%=i%>-3" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
+		L3
+		</div>
 	</div>
 
 </div>
@@ -259,7 +321,7 @@ if record
 						rawdata = data.splice(0,cut*n+1);
 						data.unshift(rawdata[rawdata.length-1]);
 						
-						// aniLine(div,n ,rawdata,lastdata);
+						aniLine(div,n ,rawdata,lastdata);
 						lastdata = rawdata;
 						// second = 0 ;
 					}
@@ -301,7 +363,7 @@ if record
 	
    ws.onopen    = function()  { show('websocket opened'); 
 	
-	  	ws.send('WS.Select name=<%=session.id%>\n["Data.Sensing device_id=<%=record.name%>","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
    ws.onclose   = function()  { show('websocket closed'); 
@@ -316,7 +378,7 @@ if record
 	
 		active = $('.active-station').size()
 	
-		// show(''+m.data)
+		show(''+m.data)
 		
 		lines = m.data.split("\n")
 		
@@ -400,9 +462,9 @@ if record
 			
 			
 			}else{
-					// setTimeout(function () {
-				       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-				    // }, 1000); //will call the function after 2 secs.
+					setTimeout(function () {
+				       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+				    }, 1000); //will call the function after 2 secs.
 				
 			}
 			
@@ -452,3 +514,4 @@ if record
 
 
 </script>	<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
+<%= inline(this,:'../home/_scoring') %>
