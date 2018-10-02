@@ -230,7 +230,7 @@ loop do
               
               data[:hr] = pr
               data[:rr] = rr
-              data[:so2] = so2
+              data[:spo2] = so2
               data[:pr] = pr
               data[:bp] = bp
               

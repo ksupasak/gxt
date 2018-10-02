@@ -3,7 +3,9 @@
 body{
 	background:black;
 }
-
+.container{
+	background:black;
+}
 .station .label{
 	font-size:0.8em;
 
@@ -54,13 +56,12 @@ body{
 <%
 	station = Station.find params[:id]
 	
-	admit = station.admits.last
+	admit = station.admits.where(:status=>'Admitted').last
 		
-	admit = nil if admit and admit.status=='Discharged'
-	
+
 	
 %>
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
+<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#eee">
 
 <% 1.times do |i| 
 	i = station.name
@@ -92,7 +93,7 @@ body{
 			
 	</div>
 	<div  class="row align-items-start">
-		<div class="col-lg-6 order-lg-2 order-2">
+		<div class="col-lg-6 order-lg-1 order-1">
 			<div class="row">
 						<div class="col-6 pr">
 							<span class="label">PR</span>
@@ -135,7 +136,7 @@ body{
 						</div>
 			</div>
 		</div>
-		<div class="col-lg-6 order-lg-1 order-1 " style="border:1px solid #333;border-radius: 5px;">
+		<div class="col-lg-6 order-lg-2 order-2 " style="border:1px solid #333;border-radius: 5px;">
 			<div class="row">
 					<div class="col-6 score" style="border:0px solid blue;text-align:center">
 							<%
@@ -157,40 +158,38 @@ body{
 
 						
 					</div>
+					
+					
 			</div>
 			<div class="row text-center">
-				<div class="col-6">
-					<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
-				</div>
-				<div class="col-6">
-					<%
-					if admit
-						patient = admit.patient
-					%>
-					<script>
-					$('#<%=admit.id%>').click(function(){
-						call_submit($(this).attr("id"))
-					});
-					</script>
-					<%=link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
-					<% else %>
-					<%=link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
-					<% end %>
+				
+			</div>
+			
+			<div class="row">
+				<div id="result" class= "col-lg-12 order-lg-4 order-4">
+
 				</div>
 			</div>
 		</div>
 		
-		<div id="wave-<%=i%>" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
-		L1
+		<div class="col-lg-6 order-lg-3 order-3">
+		
+		<% 4.times do |w| %>
+		<div class="row">
+		<div class="col-sm-1 ">
+		L<%=w+1%>
 		</div>
 		
-		<div id="wave-<%=i%>-2" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
-		L2
+		<div id="wave-<%=i%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:#111">
+		
 		</div>
 		
-		<div id="wave-<%=i%>-3" class="col-lg-12 order-lg-3 order-3" style="min-height:5em;background:#111">
-		L3
 		</div>
+		
+		<% end %>
+		</div>
+		
+
 	</div>
 
 </div>
@@ -206,6 +205,7 @@ if record
 %>
 
 <% end %><hr/>
+
 <%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
 <%=link_to 'Back', 'index',:class=>'btn'%>
 
@@ -238,7 +238,7 @@ if record
 			var svg;
 
 
-		    svg = d3.select("#"+idx)
+		      svg = d3.select("#"+idx)
 		      .append("svg")
 		      .attr("width", w)
 		      .attr("height", h)
@@ -378,7 +378,7 @@ if record
 	
 		active = $('.active-station').size()
 	
-		show(''+m.data)
+		// show(''+m.data)
 		
 		lines = m.data.split("\n")
 		
@@ -456,14 +456,14 @@ if record
 			$('#'+i+' .spo2 .value').html(obj['spo2'])
 			
 			
-			$('#'+i+' .score .value').html(obj['sos'])
+			$('#'+i+' .score .value').html(obj['score'])
 			
 			
 			
 			
 			}else{
 					setTimeout(function () {
-				       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+				       window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
 				    }, 1000); //will call the function after 2 secs.
 				
 			}
@@ -511,7 +511,61 @@ if record
 	    volume: 0.9
 	});
 
-
+	$('#search-form').submit(function(event){
+		
+		hn = $('#search').val()
+		
+		
+		$.ajax({
+		  url: "patient?station_id=<%=station.id%>&hn="+hn,
+		  context: document.body
+		}).done(function(data) {
+		  
+		$('#result').html(data)
+		
+		
+		});
+		
+		$('#search').val("");
+		event.preventDefault();
+	})	
+	
 
 </script>	<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
 <%= inline(this,:'../home/_scoring') %>
+
+
+
+<div class="modal fade" id="admit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="color:black">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      
+    </div>
+  </div>
+</div>
+<script>
+
+function call_admit(){
+	$.ajax({
+	  url: "../Admit/admiting?id=<%=station.name%>",
+	  context: document.body
+	}).done(function(data) {
+	  $('.modal-content').html(data);
+	  $('#admit-modal').modal({
+	    backdrop: 'static',
+	    keyboard: false
+	})
+	});
+}
+<% if admit %>		
+		$.ajax({
+		  url: "patient?station_id=<%=station.id%>&hn=<%=admit.patient.hn%>",
+		  context: document.body
+		}).done(function(data) {
+				$('#result').html(data)
+
+
+				});
+				<% end %>
+			
+</script>

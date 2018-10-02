@@ -84,8 +84,8 @@ body{
 	          </li>
 		
         </ul>
-        <form class="form-inline my-2 my-lg-0 " style="" action="../Home/search">
-          <input class="form-control mr-sm-2" name='query' type="text" placeholder="Search" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0 " style="" action="../Home/search" id="search-form">
+          <input class="form-control mr-sm-2" name='query' id="search" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
@@ -106,6 +106,9 @@ body{
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     -->
     <script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
+<script>
+		 $('#search').focus();
+</script>
   </body>
 </html>
 

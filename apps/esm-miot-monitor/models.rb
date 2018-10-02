@@ -48,6 +48,8 @@ end
 
 class Patient
   include MongoMapper::Document
+  has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
+  
   key :hn, String 
   key :name, String 
   def to_s
@@ -247,8 +249,9 @@ class AdmitController < GXTDocument
           record.update_attributes :data=>params[:data].to_json, :stamp=>Time.now
          
        end
+       
     
-     @context.redirect  "#{settings.name}/Admit/show?id=#{params[:id]}"
+     @context.redirect  "#{settings.name}/Station/show?id=#{admit.station.id}"
   end
   
   

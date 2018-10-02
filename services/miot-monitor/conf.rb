@@ -17,7 +17,7 @@ require 'socket'
 # HOST_NETWORK_BOARDCAST = '192.168.88.255'
 
 
-HOST_IP = '202.114.4.10'
+HOST_IP = '192.168.1.10'
 
 
 

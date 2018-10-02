@@ -1,0 +1,91 @@
+<%
+
+	patient = nil
+		
+	admits = Admit.where(:status=>'Admitted').all
+	
+	for i in admits
+	
+	 if i.patient.hn==params[:hn]
+		patient = i.patient
+		admit = i
+	end
+		# patient = nil	
+	
+	end	
+	
+	unless admit 
+		
+		patient = Patient.create :hn=> params[:hn]
+		admit = Admit.create(:station_id=> params[:station_id], :patient_id=>patient.id, :status=>'Admitted', :score_id=> Score.first.id, :admit_stamp=>Time.now)
+		%>
+		<script>alert("New patient <%=params[:hn]%> has been created.")</script>
+		<%
+	end
+	
+	
+	
+	if patient and admit
+		
+    station = Station.find(params[:station_id])
+
+    admit.update_attributes :station_id=>station.id
+%>
+<div class="row">
+<div class="col-12">
+Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn%></span>
+</div><br/><br/>
+<div class="col-12">
+	<div class="row">
+	<div class="col-6 text-center">
+		<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
+	</div>
+	<div class="col-6 text-center">
+		<%
+		if admit
+			patient = admit.patient
+		%>
+		<script>
+		$('#<%=admit.id%>').click(function(){
+			call_submit($(this).attr("id"))
+		});
+		</script>
+		<%=link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
+		<% else %>
+		<%=link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
+		<% end %>
+	</div>	</div>
+</div>
+</div><br/>
+<div class="row">
+<div class="col-12">
+
+<% if admit.records.size>0 %>
+
+<table class="table" style="font-size:0.8em">
+<thead>
+	<tr><th>No.</th>
+		<th>DateTime</th><th>BP</th><th>PR</th><th>TEMP</th><th>RR</th><th>SpO2</th><th>Score</th>
+	</tr>
+</thead>
+<% admit.records.each_with_index do |i, index |  %>
+<tr><td>
+	<%=index+1%>.
+</td>
+<td>
+	<%=i.stamp.getlocal.strftime("%d/%m/%y %H:%M")%>
+</td>
+<td><%=i.bp%></td><td><%=i.pr%></td><td><%=i.temp%></td><td><%=i.rr%></td><td><%=i.spo2%></td><td><%=i.score%></td>
+
+</tr>
+<% end %>
+</table>
+<% else %>
+<span><center>There is no Record</center></span>
+<% end %>
+</div>
+</div>
+
+<% end %>
+<script>
+</script>
