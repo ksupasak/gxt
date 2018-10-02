@@ -378,7 +378,7 @@ if record
 	
 		active = $('.active-station').size()
 	
-		// show(''+m.data)
+		show(''+m.data)
 		
 		lines = m.data.split("\n")
 		
@@ -463,8 +463,8 @@ if record
 			
 			}else{
 					setTimeout(function () {
-				       window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
-				    }, 5000); //will call the function after 2 secs.
+				       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+				    }, 2000); //will call the function after 2 secs.
 				
 			}
 			
