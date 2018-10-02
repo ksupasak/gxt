@@ -6,7 +6,7 @@ module Device
 
 
 
-def self.monitor_vista_120_v2
+def self.monitor_vista_120_v2 ws
 
 puts "-- Start Vista120 v2 Service"
 
@@ -99,7 +99,7 @@ loop do
         while true
         line = client.recv(40960)
         
-        #puts "#{line.size} #{'='*30}"
+        puts "#{line.size} #{'='*30}"
         
         # puts '====================================================='+line.size.to_s
         #puts line
@@ -228,12 +228,43 @@ loop do
               name = bed
               stamp = Time.now.to_json
                           
-              puts "#{stamp}\t#{station}\t#{data.inspect}"            
+              puts "#{stamp}\t#{station}\t#{data.inspect}"      
+              
+              
               begin            
-                result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
-              rescue Exception=>e
-                puts e.message
-              end
+
+
+              # result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+
+
+                                   # data[:bp] = bp
+                                   # data[:pr] = 60 + rand(60)
+                                   # data[:hr] = data[:pr]
+                                   # data[:rr] = 18 + rand(4)
+                                   # data[:so2] = 90+rand(10)
+                                   # data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+
+              msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+
+                           ws.send(msg)
+
+
+
+                            rescue Exception=>e
+                              puts e.message
+                            end
+
+              
+              
+                    
+              # begin            
+              #   result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
+              # rescue Exception=>e
+              #   puts e.message
+              # end
             end
             
           

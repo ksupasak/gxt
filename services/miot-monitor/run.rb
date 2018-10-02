@@ -42,18 +42,18 @@ ws = MIOT::connect
 # Device::monitor_b450_v1(ws)
 # }
 
-threads << Thread.new {
-Device::monitor_vista_120_v1(ws)
-}
-# 
 # threads << Thread.new {
-# Device::monitor_vista_120_v2()
+# Device::monitor_vista_120_v1(ws)
 # }
-#
- 
+# 
 threads << Thread.new {
-Device::monitor_vista_120_s(ws)
+Device::monitor_vista_120_v2(ws)
 }
+#
+#  
+# threads << Thread.new {
+# Device::monitor_vista_120_s(ws)
+# }
 
 
 

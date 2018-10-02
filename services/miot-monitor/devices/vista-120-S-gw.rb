@@ -119,7 +119,7 @@ loop do
         while true
         line = client.recv(40960)
         
-        #puts "#{line.size} #{'='*30}"
+        puts "#{line.size} #{'='*30}"
         
         # puts '====================================================='+line.size.to_s
         #puts line
@@ -133,8 +133,11 @@ loop do
         #         puts "xx #{l.size} #{i}\t#{id}"
         #       end
         #     end
-        
-        # puts l.join("\t") if l.size==258 or l.size==1448
+        puts l.join("\t") if l.size==290
+        # if l.size==76
+        #        
+        #      end
+        #      # puts l.join("\t") if l.size==258 or l.size==1448
         
         # left = line.size
         
@@ -168,7 +171,7 @@ loop do
           res = buff[index..index+read]
           
           # tabular res
-          if type==252
+          if type==290#252 
             
             puts "Found Peak 252" 
             
