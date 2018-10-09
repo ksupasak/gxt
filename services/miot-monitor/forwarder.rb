@@ -93,11 +93,10 @@ begin
   
   
 
-sleep(1)
-protocols = ['ZoneUpdate zone_id=*']
-# protocols << 'Data.Sensing device_id=Bed01'
-# protocols << 'ZoneUpdate zone_id=*'
- 
+ sleep(1)
+
+
+ protocols = ['ZoneUpdate zone_id=*']
  msg = "WS.Select name=1234\n#{protocols.to_json}"
  puts msg
  ws_in.send msg

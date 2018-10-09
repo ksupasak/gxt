@@ -71,11 +71,25 @@ MSG
 
   def get_data params
      
+     if params[:zone]
+        
+        
+        if params[:name]
+          name = "#{params[:zone]}_#{params[:name]}"
+          station = Station.where(:name=>name).first
+        end
+        
+          
+     else
+     
      if params[:id]
        station = Station.find(params[:id])
      else
        station = Station.where(:name=>params[:name]).first
      end
+    end
+     
+     
      if station
         data = settings.senses[station.name]
         return data.to_json
@@ -139,7 +153,34 @@ MSG
                puts "#---- #{  @context.settings.cmd_map.inspect}"
             
              when 'Zone.Data'
-             puts msg
+             
+             zone = path.split("=")[-1]
+             
+             data = ActiveSupport::JSON.decode(body)
+             
+             for i in data['list']
+               
+               record = data['data'][i]
+               station_name = "#{zone}_#{i}"
+               station = Station.where(:name=>station_name).first
+               
+               station = Station.create :name=>station_name unless station
+               
+               @context.settings.senses[station_name] = record
+               
+               
+             end
+             
+             # {"time":"2018-10-06T11:03:16.553+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,53.019,73.148,56.248,78.506,98.788,67.635,86.21,56.356,62.532,50.0,36.054,25.703,27.55,32.556,36.806,24.42,29.648,31.871,44.944,50.0,54.19,65.011,56.434,66.463,70.153,54.559,50.698,77.467,61.396,50.0,34.561],"bp":"103/77","pr":61,"hr":61,"rr":20,"temp":36,"spo2":94,"bp_stamp":"110306","ref":"1234","score":0}}}
+             #           Zone.Data zone=default
+             #           {"time":"2018-10-06T11:03:17.556+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,52.055,74.277,50.522,58.206,86.871,65.056,79.33,58.069,60.698,50.0,40.014,32.638,37.855,15.308,13.686,48.782,43.266,21.606,49.848,50.0,60.881,54.627,88.895,94.782,75.335,63.213,77.756,57.158,58.528,50.0,41.512],"bp":"103/77","pr":111,"hr":111,"rr":21,"temp":38,"spo2":98,"bp_stamp":"110306","ref":"1234","score":0}}}
+             #           Zone.Data zone=default
+             #           {"time":"2018-10-06T11:03:18.560+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,62.77,61.322,86.735,52.421,51.338,85.782,63.661,56.805,58.753,50.0,44.766,47.564,34.598,30.85,19.487,8.76,14.219,48.997,35.242,50.0,65.193,71.212,71.016,68.019,62.961,50.162,88.853,53.984,61.817,50.0,41.322],"bp":"103/77","pr":79,"hr":79,"rr":20,"temp":37,"spo2":90,"bp_stamp":"110306","ref":"1234","score":0}}}
+              
+              # @context.settings.senses[station_name]
+              
+              
+              
             
             
              when 'Data.Sensing'
