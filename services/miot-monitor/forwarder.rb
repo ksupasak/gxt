@@ -22,11 +22,11 @@ ws_in.on :message do |msg|
 Zone.Data zone=default
 #{msg.data.split("\n")[-1]}
 MSG
-  begin
+  # begin
   ws_out.send msg
-  rescue Exception=>e
-  puts e
-  end
+  # rescue Exception=>e
+  # puts e
+  # end
 #   cmd = `python /home/pi/camera.py`
 #   
 #   begin  
@@ -55,6 +55,22 @@ ws_in.on :close do |e|
   exit 1
 end
 
+ws_out.on :close do |e|
+  puts '** out close'
+  
+  exit 1
+end
+
+ws_out.on :error do |e|d
+  p "ERROR #{e}"
+   puts 'will retry connect ..'
+   sleep 1
+   puts 'retry connect ..'
+   ws_in = incomming 'miot' 
+   bind_event ws_in, ws_out
+   puts 'retry connect ..'
+end
+
 ws_in.on :error do |e|d
   p "ERROR #{e}"
    puts 'will retry connect ..'
@@ -75,34 +91,39 @@ begin
 
 
   solution = 'miot'
+  
   solution = ARGV[0] if ARGV[0] 
+  
+  outgoing = 'localhost:1793'
+  
+  outgoing = ARGV[1] if ARGV[1]
+  
+  outgoing_host, outgoing_port = outgoing.split(':')
+  
 
   ws_in = incomming(solution)
   
-  ws_out = outgoing(solution, 'localhost', 1793)
+  ws_out = outgoing(solution, outgoing_host, outgoing_port)
   
   puts 'connect'
 
   ws_out.on :open do
     
-  puts 'conncxxxx'  
+  puts 'connect...'  
 
   end
   
   bind_event ws_in , ws_out
-  
-  
 
  sleep(1)
 
 
  protocols = ['ZoneUpdate zone_id=*']
- msg = "WS.Select name=1234\n#{protocols.to_json}"
+ msg = "WS.Select name=*\n#{protocols.to_json}"
  puts msg
  ws_in.send msg
  
  
-
 
  EventMachine.run {
    

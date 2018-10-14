@@ -53,6 +53,7 @@ MSG
      if zone
        puts 'from zone'
        stations = Station.where(:zone_id=>zone.id).all
+       stations.collect!{|i| i.name=i.name.split("_")[-1]; i } if params[:zone]
        return stations.to_json
        
      end
@@ -154,17 +155,22 @@ MSG
             
              when 'Zone.Data'
              
-             zone = path.split("=")[-1]
+             zone_name = path.split("=")[-1]
              
+             zone = Zone.where(:name=>zone_name).first
+             
+             zone = Zone.create(:name=>zone_name) unless zone
+              
              data = ActiveSupport::JSON.decode(body)
              
              for i in data['list']
                
                record = data['data'][i]
-               station_name = "#{zone}_#{i}"
-               station = Station.where(:name=>station_name).first
+               station_name = "#{zone_name}_#{i}"
                
-               station = Station.create :name=>station_name unless station
+               station = Station.where(:name=>station_name, :zone_id=>zone.id).first
+               
+               station = Station.create :name=>station_name, :zone_id=>zone.id unless station
                
                @context.settings.senses[station_name] = record
                
