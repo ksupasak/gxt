@@ -251,6 +251,7 @@ MSG
                      
                    end
                    
+                   puts data.inspect
                    
                     
                     odata = @context.settings.senses[station_name]
@@ -261,6 +262,8 @@ MSG
                     if data['wave']
                        odata['wave'] = [] unless odata['wave']
                        odata['wave'] += data['wave']
+                       data.delete 'wave'
+                       odata.merge! data
                        # puts odata['wave'].size
                        # puts odata['wave'][0..-1].join(" ")
                     else

@@ -8,7 +8,7 @@ module Device
 
 def self.monitor_vista_120_v1 ws
 
-puts "-- Start Vista120 v2 Service"
+puts "-- Start Vista120 v1 Service"
 
 # boardcast = Thread.new {
 #   
@@ -106,6 +106,27 @@ loop do
         #                end
         #              end
         # puts l.join("\t")
+        
+        x = 10 
+        xi = 0 
+        
+        
+        # if l.size==1610
+        #           
+        #           l.size.times do |xi|
+        #                
+        #                print ""+xi.to_s+".\t" if xi % x == 0 
+        #                
+        #                print ""+l[xi].to_s+"\t"
+        #                
+        #                puts if xi % x == x-1 
+        #                
+        #                
+        #              end
+        #              puts 
+        #              
+        #            end
+        #   
       
         # puts l.join("\t") if l.size==258 or l.size==1448
         
@@ -122,7 +143,7 @@ loop do
            hn = line[55..70].strip
            puts "#{hn} #{hn.size}"
         end    
-        if type==1448
+        if type==1448 or type==1610
           
               # puts l[-10..-1]
               sys = l[1158]
@@ -133,14 +154,23 @@ loop do
 
               data = {}
 
-              data[:hr] = l[646]
+             # = l[646]
 
               data[:rr] = l[648]
-              data[:spo2] = l[-6]
-              data[:pr] = l[646]
+              data[:spo2] = l[1442]
+              data[:pr] = l[1444]
+              puts 'pr = '+l[1444].to_s
+              data[:hr] = data[:pr]
               data[:bp] = bp
+              puts data.inspect
+              wave = l[1186..1186+255]
+              # puts wave.join("\t")
+              wave_data = []
+              32.times do |s|
+                wave_data << 100-wave[s*8]
+              end
               
-              
+              data[:wave] = wave_data
               
              new_check_stamp = "#{bp}-#{data[:pr]}"
              
@@ -188,6 +218,8 @@ Data.Sensing device_id=#{name}
 #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
 MSG
 
+
+                        
                            ws.send(msg)
 
 
