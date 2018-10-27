@@ -136,7 +136,7 @@ loop do
               data[:hr] = l[646]
 
               data[:rr] = l[648]
-              data[:so2] = l[-6]
+              data[:spo2] = l[-6]
               data[:pr] = l[646]
               data[:bp] = bp
               
@@ -160,7 +160,7 @@ loop do
               stamp = Time.now.to_json
               
               
-              if data[:rr]<50 and data[:so2]>50
+              if data[:rr]<50 and data[:spo2]>50
                           
               # puts "#{stamp}\t#{station}\t#{data.inspect}\t#{hn}"            
               # begin            
