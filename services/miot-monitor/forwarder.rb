@@ -100,8 +100,13 @@ begin
   
   outgoing_host, outgoing_port = outgoing.split(':')
   
+  incoming = 'localhost:1793'
+  
+  incoming = ARGV[2] if ARGV[2]
+  
+  incoming_host, incoming_port = incoming.split(':')
 
-  ws_in = incomming(solution)
+  ws_in = incomming(solution, incoming_host, incoming_port)
   
   ws_out = outgoing(solution, outgoing_host, outgoing_port)
   

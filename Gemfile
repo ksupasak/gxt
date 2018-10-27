@@ -26,7 +26,7 @@ gem 'bson_ext'
 
 
 gem 'redis'
-gem 'redis-rails'
+# gem 'redis-rails'
 gem 'resque', :require => "resque/server"
 gem 'xmpp4r'
 
