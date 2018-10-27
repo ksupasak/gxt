@@ -251,7 +251,7 @@ MSG
                      
                    end
                    
-                   puts data.inspect
+                   # puts data.inspect
                    
                     
                     odata = @context.settings.senses[station_name]
