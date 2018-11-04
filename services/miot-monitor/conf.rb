@@ -24,5 +24,5 @@ HOST_IP = '192.168.1.10'
 
 
 # HIS Data GW
-GW_HIS_IP = '192.168.1.160'
+GW_HIS_IP = 'his.gw'
 GW_HIS_PORT = 9292

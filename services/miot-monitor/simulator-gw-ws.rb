@@ -3,7 +3,7 @@ require 'net/http'
 require 'json'
 require 'websocket-client-simple'
 require 'eventmachine'
-require 'em-http-server'
+# require 'em-http-server'
 
 
 def connect solution, host, port

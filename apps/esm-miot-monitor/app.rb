@@ -177,26 +177,12 @@ MSG
                
              end
              
-             # {"time":"2018-10-06T11:03:16.553+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,53.019,73.148,56.248,78.506,98.788,67.635,86.21,56.356,62.532,50.0,36.054,25.703,27.55,32.556,36.806,24.42,29.648,31.871,44.944,50.0,54.19,65.011,56.434,66.463,70.153,54.559,50.698,77.467,61.396,50.0,34.561],"bp":"103/77","pr":61,"hr":61,"rr":20,"temp":36,"spo2":94,"bp_stamp":"110306","ref":"1234","score":0}}}
-             #           Zone.Data zone=default
-             #           {"time":"2018-10-06T11:03:17.556+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,52.055,74.277,50.522,58.206,86.871,65.056,79.33,58.069,60.698,50.0,40.014,32.638,37.855,15.308,13.686,48.782,43.266,21.606,49.848,50.0,60.881,54.627,88.895,94.782,75.335,63.213,77.756,57.158,58.528,50.0,41.512],"bp":"103/77","pr":111,"hr":111,"rr":21,"temp":38,"spo2":98,"bp_stamp":"110306","ref":"1234","score":0}}}
-             #           Zone.Data zone=default
-             #           {"time":"2018-10-06T11:03:18.560+07:00","list":["Bed01"],"data":{"Bed01":{"wave":[50.0,62.77,61.322,86.735,52.421,51.338,85.782,63.661,56.805,58.753,50.0,44.766,47.564,34.598,30.85,19.487,8.76,14.219,48.997,35.242,50.0,65.193,71.212,71.016,68.019,62.961,50.162,88.853,53.984,61.817,50.0,41.322],"bp":"103/77","pr":79,"hr":79,"rr":20,"temp":37,"spo2":90,"bp_stamp":"110306","ref":"1234","score":0}}}
-              
-              # @context.settings.senses[station_name]
-              
-              
-              
             
             
              when 'Data.Sensing'
                
-               pdata =  ActiveSupport::JSON.decode(body)
+                   pdata =  ActiveSupport::JSON.decode(body)
                
-               
-               
-               ##########################################################
-                   # {"station":"Bed01","stamp":"\"2018-07-29 00:58:14 +0700\"","ref":"-","data":{"bp":"82/118","pr":112,"hr":112,"rr":18,"bp_stamp":"005812"}}
                    station_name = "Untitled"
                    station_name = pdata['station'] if pdata['station'] 
                
@@ -214,19 +200,15 @@ MSG
                     
 
                    station_id = nil
-
                    station = nil
-
+                   
+## create station
+                   
                    unless station = @context.settings.stations[station_name]
-
                      station = Station.where(:name=>station_name).first
-
                      unless station
-
-                     station = Station.create(:name=>station_name)
-
+                         station = Station.create(:name=>station_name)
                      end
-
                      @context.settings.stations[station_name] = station
 
                    end
@@ -237,89 +219,122 @@ MSG
                    end  
 
                    if data['pr'] 
-                     data['ref'] = ref
+                       data['ref'] = ref
                    end
-                   
                    
                    data['score'] = 0
-                   
                    if admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
-                     
                      data['score'] = admit.current_score
-                     
-                     
-                     
                    end
                    
-                   # puts data.inspect
-                   
-                    
+                    old = @context.settings.senses[station_name]
+                    old = old.clone if old
                     odata = @context.settings.senses[station_name]
                     odata = {} unless odata
                     
+## merge wave 
                  
                     
                     if data['wave']
                        odata['wave'] = [] unless odata['wave']
                        odata['wave'] += data['wave']
                        data.delete 'wave'
-                       odata.merge! data
-                       # puts odata['wave'].size
-                       # puts odata['wave'][0..-1].join(" ")
-                    else
-                       odata.merge! data
                     end
+                    
+                     odata.merge! data
+                     
+                     
 
-                     old = @context.settings.senses[station_name]
                      @context.settings.senses[station_name] = odata
                      @context.settings.live[station_name] = 10
                
-                 ##########################################################
-                 
-                if data['bp']
-                  
-                 high = data['bp'].split("/")[0].to_i
-                 
-                 
-               if high>140
-                 
-                 
-                 puts "****** Alert *****"
-                 
-                 EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
-                 
-                 data['sos'] = 10
-                 
-                 
-               else
-                 
-                 
-                 
-               end
-               
-               
-             end
-               
-                 when 'Data.Image'
-               
-                   EsmMiotMonitor::dispatch cmd, path, t[1..-1].join
+                     data = odata
+                     
               
-             else
-             
-               EsmMiotMonitor::dispatch cmd, path, body.to_json
-             
+## internal alert
+              
+              if data['bp']
+                   high = data['bp'].split("/")[0].to_i
+                   
+                   if high>140
+                     puts "****** Alert *****"
+                     EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
+                     data['sos'] = 10
+                   else
+                 
+                   end
+              end
                
-             end
+              # puts 'dispatch bp stamp '+ " #{data['bp_stamp']}"
              
-             # 10.times do |i|
-             # EM.next_tick {  @context.settings.apps_ws[@context.settings.name].each{|s| s.send(msg) } }
-             # sleep(1)
-             # end
+              if data['bp']!= "-/-"
+              
+                old = {} unless old
+              
+                   bp_stamp = data['bp_stamp']
+                   old_bp_stamp = old['bp_stamp'] 
+                    # puts "$$$$$ #{data['bp_stamp']}  #{old['bp_stamp']} #{data['ref']} "
+                   if bp_stamp!=old_bp_stamp or old['ref']!=data['ref']
+                      
+                     # puts 'change'
+                     
+                     record = {:ref=>data['ref'],:bp=>data['bp'],:hr=>data['hr'],:bp_stamp=>data['bp_stamp']}
+                     
+                     puts "Record #{record.inspect }"
+             
+                     # hn = data['ref']
+              #
+              #        prefix = hn[0..5].to_i
+              #
+              #        if hn.index('/')
+              #
+              #          hn = "#{hn[-2..-1]}#{format("%06d",hn[0..hn.index('/')-1])}"
+              #
+              #        elsif hn.size==8 and prefix < 300000
+              #
+              #          hn = "#{hn[6..-1]}#{format("%06d",prefix)}"
+              #
+              #        elsif hn.size<8
+              #
+              #          hn = "#{hn[-2..-1]}#{format("%06d",hn[0..-3].to_i)}"
+              #        end
+              #
+              #       data['ref'] = hn
+             
+                     EsmMiotMonitor::dispatch "Record", "station_id=*", record.to_json
+                     
+                     
+                     # res = Net::HTTP.post_form(urix, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
+             
+             
+                   end
+                   
+              end
+             
+             
+             
+             
+             
+             
+             when 'Data.Image'
+                   EsmMiotMonitor::dispatch cmd, path, t[1..-1].join
+             else
+                   EsmMiotMonitor::dispatch cmd, path, body.to_json
+             end
+           
+           
            end
+           
+           
+           
+           
            ws.onclose do
              warn("websocket closed")
               @context.settings.apps_ws[@context.settings.name].delete(ws)
            end
+           
+           
+           
          end
     
   end
