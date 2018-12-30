@@ -169,9 +169,12 @@ MSG
                station_name = "#{zone_name}_#{i}"
                
                station = Station.where(:name=>station_name, :zone_id=>zone.id).first
-               
-               station = Station.create :name=>station_name, :zone_id=>zone.id unless station
-               
+              
+               unless  station
+                  title = station_name
+                  title = record['title'] if record['title'] and record['title'].size > 0 
+                  station = Station.create :name=>station_name,:title=>title, :zone_id=>zone.id unless station
+                end
                @context.settings.senses[station_name] = record
                
                
@@ -207,7 +210,7 @@ MSG
                    unless station = @context.settings.stations[station_name]
                      station = Station.where(:name=>station_name).first
                      unless station
-                         station = Station.create(:name=>station_name)
+                         station = Station.create(:name=>station_name, :title=>station_name)
                      end
                      @context.settings.stations[station_name] = station
 
@@ -216,6 +219,7 @@ MSG
 
                    if station
                        station_id = station['_id']
+                       data['title'] = station.title if station.title and station.title.size>0 
                    end  
 
                    if data['pr'] 
@@ -258,7 +262,7 @@ MSG
                    
                    if high>140
                      puts "****** Alert *****"
-                     EsmMiotMonitor::dispatch "Alert", "station_id=*", {:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
+                     EsmMiotMonitor::dispatch "Alert", "station_id=*", {:title=>pdata['title'],:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
                      data['sos'] = 10
                    else
                  

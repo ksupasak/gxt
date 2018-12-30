@@ -58,18 +58,22 @@ body{
 	
 		station = Station.where(:name=>i).first
 		
+		if station
+		 
+		 
 		admit = station.admits.last
 		
 		admit = nil if admit and admit.status=='Discharged'
 		 
-
+		title = i
+		title = station.title if station.title and station.title.size>0 
 %>
 
 <div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
 	<div class="row" style="background:#666">
 		
 		<div class="col-2 text-left ">
-		<%= link_to i,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		<%= link_to title,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
 		<div class="col-7 text-center">
 			<%
@@ -185,7 +189,7 @@ body{
 	</div>
 
 </div>
-
+<% end %>
 <% end %>
 
 </div>

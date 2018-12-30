@@ -26,6 +26,7 @@ class Station
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   
   key :name, String # bed name
+  key :title, String
   key :serial_number, String
   key :type, String
   key :ip, String

@@ -71,7 +71,7 @@ loop do
         puts client
         puts client.peeraddr.inspect 
         
-        station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
+        station = "VISTA120-"+format("%02d",client.peeraddr[-1].split(".")[-1])
         
         puts 'start accepted'
         # puts client.methods.sort 
