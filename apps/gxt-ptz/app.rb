@@ -38,6 +38,8 @@ module GxtPtz
     key :power_schedule_6, String
     key :power_schedule_7, String
     
+    key :servo12, String
+    
     
  
   end
@@ -51,7 +53,8 @@ module GxtPtz
      
      
      def websocket request
-
+       
+      
            request.websocket do |ws|
 
              puts 'init websocket '
@@ -74,6 +77,21 @@ module GxtPtz
                 switch name
                 puts  "msg from #{@context.settings.name} #{msg}"
 
+                t = msg.split(",")
+                if t[0]=='servo12'
+                  
+                      
+                  # puts @context.settings.settings.methods.inspect
+                  
+                      @context.settings.last = msg
+                  
+                     # setting = CameraSetting.first
+ #                     if setting
+ #                       setting.update_attributes :servo12=>msg
+ #                     end
+                     
+                     
+                end
                  
                 for i in @context.settings.apps_ws[@context.settings.name]
                     # if ws!=i
@@ -114,7 +132,7 @@ def self.registered(app)
      
      settings.set :ws_map, {}
      settings.set :cmd_map, {}
-     
+     settings.set :last, nil
      
      gpio_stage = 1
      flush = true
@@ -125,7 +143,7 @@ def self.registered(app)
           if app.settings.apps_rv
             
           
-          
+      
             
             
           for name in app.settings.apps_rv['gxt-ptz']
@@ -142,7 +160,10 @@ def self.registered(app)
               # gpio,13,0
               
               day = Time.now.wday
+              day = 7 if day == 0 
               period = setting["power_schedule_#{day}"]
+              # puts "power_schedule_#{day}"
+              # puts setting["power_schedule_#{day}"].inspect 
               if period and period.size > 0 and t = period.split("-") and t.size==2
                 puts "Today Power Schdule : #{period} - Now : #{Time.now.strftime('%H:%M')} #{gpio_stage}"
              
@@ -164,6 +185,7 @@ def self.registered(app)
                 end
                 
                 if flush
+                  
                 if gpio_stage == 1
                   for ws in app.settings.apps_ws[app.settings.name]
                     puts "Power On"
@@ -183,6 +205,15 @@ def self.registered(app)
                 # for ws in app.settings.apps_ws[app.settings.name]
                 #                  ws.send "alive now #{now} : start #{start} - stop #{stop}"
                 #  end
+                if Time.now.to_i%10==0
+                for ws in app.settings.apps_ws[app.settings.name]
+                  # ws.send setting.servo12
+                  app.settings.last = setting.servo12 if setting.servo12 and  app.settings.last ==nil
+                  setting.update_attributes :servo12=>app.settings.last if setting.servo12 != app.settings.last
+                  ws.send app.settings.last if app.settings.last
+                  
+                end
+                end
                 
               else
                 puts "Schedule is not Set"

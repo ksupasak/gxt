@@ -7,7 +7,14 @@
 }
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
-
+<%
+	
+ setting = CameraSetting.first	
+ if setting
+	 
+%>
+<h1><%=setting.name %></h1>
+<% end %>
 <div class="row main">
 	<div class="col-sm-6">
 		Pan-Tilt Control : <span id="ptz-12-msg"></span>
@@ -245,4 +252,5 @@ $(document).ready(function(){
    </script>
    
    <div id="msgs"></div>
+
 

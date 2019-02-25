@@ -4,7 +4,7 @@ require 'json'
 
 
 u1 = UDPSocket.new
-u1.bind("224.0.1.111", 2050)
+u1.bind("224.0.1.3", 2050)
 
 p u1.recvfrom(1000) #=> ["message-to", ["AF_INET", 4913, "localhost", "127.0.0.1"]]
 

@@ -152,17 +152,20 @@ loop do
               
               bp = "#{sys}/#{dia}"
 
+	      bp = "-/-" if bp=="24/24" or bp=="128/28" or bp=="128/128"
+
               data = {}
 
              # = l[646]
 
-              data[:rr] = l[648]
+              #data[:rr] = l[648]
+              
               data[:spo2] = l[1442]
               data[:pr] = l[1444]
-              puts 'pr = '+l[1444].to_s
+    #          puts 'pr = '+l[1444].to_s
               data[:hr] = data[:pr]
               data[:bp] = bp
-              puts data.inspect
+     #         puts data.inspect
               wave = l[1186..1186+255]
               # puts wave.join("\t")
               wave_data = []
@@ -172,12 +175,12 @@ loop do
               
               data[:wave] = wave_data
               
-             new_check_stamp = "#{bp}-#{data[:pr]}"
+             new_check_stamp = "#{bp}"
              
-             if check_stamp!=new_check_stamp
+             if bp!="-/-" and check_stamp!=new_check_stamp
                now = Time.now 
                bp_stamp  = format("%02d%02d%02d", now.hour, now.min, now.sec)
-               
+               puts "#{station}\t#{bp}\t#{bp_stamp}"
                check_stamp = new_check_stamp
              end
               
@@ -190,7 +193,7 @@ loop do
               stamp = Time.now.to_json
               
               
-              if data[:rr]<50 and data[:spo2]>50
+              if  data[:spo2]>50
                           
               # puts "#{stamp}\t#{station}\t#{data.inspect}\t#{hn}"            
               # begin            

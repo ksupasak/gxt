@@ -58,7 +58,7 @@ require_relative 'apps/gxt/helper'
 # require_relative 'apps/esm-monitor/app'
 
 require_relative 'apps/esm-miot-monitor/app'
-# require_relative 'apps/gxt-ptz/app'
+require_relative 'apps/gxt-ptz/app'
 
 
 register Sinatra::Partial
