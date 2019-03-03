@@ -10,7 +10,7 @@
 	station_name = station.name if station.name
 	
 	
-	data = settings.senses[station_name]
+	data = settings.senses[settings.name][station_name]
 	if data['bp'] and t = data['bp'].split("/")
 		data['bp_sys'] = t[0].to_i
 		data['bp_dia'] = t[1].to_i
