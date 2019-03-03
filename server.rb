@@ -105,7 +105,13 @@ before do
   puts "Host : #{t.inspect } Path : #{paths.inspect} #{ @default_app.inspect }" 
   
   if  t.size>2  and t[-1].to_i ==0  # detect sub domain 
+    
     solution_name = t[0]  # solution_name
+    
+  elsif t.size==2 and app = settings.apps[paths[1]]
+    
+    solution_name =  paths[1] if paths[1]
+    
   elsif t.size==4 and t[-1].to_i!=0 or request.host=='localhost' # when using ip
     
    solution_name = paths[1] if paths[1]
