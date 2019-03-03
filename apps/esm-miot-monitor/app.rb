@@ -3,7 +3,6 @@ require 'net/http'
 require_relative '../../services/monitor/conf'
 
 
-register_app 'miot', 'esm-miot-monitor'
 
 
 require_relative 'models'
@@ -14,10 +13,14 @@ module EsmMiotMonitor
 
   def self.dispatch cmd, path, data
     
-    
+     
+    name = settings.name
     #---- {"ZoneUpdate"=>{"zone_id=*"=>"66dd17be5164100f13fd1ee9d742df188c4a1ba793b9defe312838d77066690a"}}
-    
-    if m = settings.cmd_map[cmd]
+    # puts 'event for '+name
+    # puts "#{settings.cmd_map.inspect  }"
+    # puts
+    if settings.cmd_map[name]
+    if m = settings.cmd_map[name][cmd]
         m.each_pair do |k,line|
           if k==path
             for i in line
@@ -27,7 +30,7 @@ msg = <<MSG
 #{data}
 MSG
               
-              ws.send msg
+             ws.send msg
               
             end
           end
@@ -35,6 +38,8 @@ MSG
         end
         
     end
+    
+  end
     
     
   end
@@ -51,7 +56,7 @@ MSG
     
      zone = Zone.where(:name=>params[:zone]).first
      if zone
-       puts 'from zone'
+       # puts 'from zone'
        stations = Station.where(:zone_id=>zone.id).all
        stations.collect!{|i| i.name=i.name.split("_")[-1]; i } if params[:zone]
        return stations.to_json
@@ -109,16 +114,18 @@ MSG
       
         request.websocket do |ws|
           
-                puts 'init websocket '
+           # puts 'init websocket '
       
            ws.onopen do
-             puts 'init websocket '
+             puts "open websocket for #{@context.settings.name} on #{ws.hash}"
              # ws.send("websocket opened")
              @context.settings.apps_ws[@context.settings.name] << ws
-             @context.settings.apps_ws_rv[ws] = @context.settings.name
+             @context.settings.apps_ws_rv[ws.hash] = @context.settings.name
            end
            ws.onmessage do |msg|
-             name =  @context.settings.apps_ws_rv[ws]
+             
+             
+             name =  @context.settings.apps_ws_rv[ws.hash]
              switch name
              # puts  "msg from #{@context.settings.name} #{msg}"
              # t = msg.encode('utf-8').split("\n")
@@ -137,8 +144,9 @@ MSG
                
              when 'WS.Select'
                puts  "msg from #{@context.settings.name} #{msg}"
-               name = path.split("=")[-1]
-               @context.settings.ws_map[name]=ws
+               wsname = path.split("=")[-1]
+               wsname = ws.hash
+               @context.settings.ws_map[wsname]=ws
                puts body.inspect
                data =  ActiveSupport::JSON.decode(body)
                puts "#{cmd} #{path} #{data.inspect}"
@@ -147,13 +155,21 @@ MSG
                   t = i.split()
                   icmd = t[0]
                   ipath = t[1]
-                  @context.settings.cmd_map[icmd] = {} unless @context.settings.cmd_map[icmd]
-                  @context.settings.cmd_map[icmd][ipath] = [] unless @context.settings.cmd_map[icmd][ipath]
-                  @context.settings.cmd_map[icmd][ipath] << name unless @context.settings.cmd_map[icmd][ipath].index(name)
+                  
+                  @context.settings.cmd_map[name] = {} unless @context.settings.cmd_map[name]
+                  @context.settings.cmd_map[name][icmd] = {} unless @context.settings.cmd_map[name][icmd]
+                  @context.settings.cmd_map[name][icmd][ipath] = [] unless @context.settings.cmd_map[name][icmd][ipath]
+                  @context.settings.cmd_map[name][icmd][ipath] << wsname unless @context.settings.cmd_map[name][icmd][ipath].index(wsname)
+                  
                end
+               
+               
                puts "#---- #{  @context.settings.cmd_map.inspect}"
             
              when 'Zone.Data'
+               
+               
+            station_id = "#{name}|#{station_name}"   
              
              zone_name = path.split("=")[-1]
              
@@ -175,7 +191,7 @@ MSG
                   title = record['title'] if record['title'] and record['title'].size > 0 
                   station = Station.create :name=>station_name,:title=>title, :zone_id=>zone.id unless station
                 end
-               @context.settings.senses[station_name] = record
+               @context.settings.senses[station_id] = record
                
                
              end
@@ -188,8 +204,8 @@ MSG
                
                    station_name = "Untitled"
                    station_name = pdata['station'] if pdata['station'] 
-               
-                 
+                   station_idx = "#{name}|#{station_name}"
+                   
                    EsmMiotMonitor::dispatch cmd, path, pdata.to_json
                
                   
@@ -205,16 +221,31 @@ MSG
                    station_id = nil
                    station = nil
                    
-## create station
-                   
-                   unless station = @context.settings.stations[station_name]
-                     station = Station.where(:name=>station_name).first
-                     unless station
-                         station = Station.create(:name=>station_name, :title=>station_name)
-                     end
-                     @context.settings.stations[station_name] = station
+## create station. 
 
+                  # puts @context.settings.stations.inspect 
+                  
+                  @context.settings.stations[name] = {} unless @context.settings.stations[name]
+       #
+       #            unless station = @context.settings.stations[name][station_name]
+       #
+       #               station = Station.where(:name=>station_name).first
+       #               unless station
+       #                   station = Station.create(:name=>station_name, :title=>station_name)
+       #               end
+       #                @context.settings.stations[name] = {} unless  @context.settings.stations[name]
+       #               @context.settings.stations[name][station_name] = station
+       #
+       #             end
+                   
+                  
+                   station = Station.where(:name=>station_name).first
+                   unless station
+                          station = Station.create(:name=>station_name, :title=>station_name)
                    end
+                   @context.settings.stations[name][station.name] = station
+                   
+                   
 
 
                    if station
@@ -231,9 +262,10 @@ MSG
                      data['score'] = admit.current_score
                    end
                    
-                    old = @context.settings.senses[station_name]
+                   @context.settings.senses[name] = {} unless  @context.settings.senses[name] 
+                    old = @context.settings.senses[name][station_name]
                     old = old.clone if old
-                    odata = @context.settings.senses[station_name]
+                    odata = @context.settings.senses[name][station_name]
                     odata = {} unless odata
                     
 ## merge wave 
@@ -244,13 +276,14 @@ MSG
                        odata['wave'] += data['wave']
                        data.delete 'wave'
                     end
-                    
+                  
                      odata.merge! data
                      
+                     # puts odata.inspect 
                      
-
-                     @context.settings.senses[station_name] = odata
-                     @context.settings.live[station_name] = 10
+                     @context.settings.live[name] = {} unless  @context.settings.live[name]
+                     @context.settings.senses[name][station_name] = odata
+                     @context.settings.live[name][station_name] = 10
                
                      data = odata
                      
@@ -260,7 +293,7 @@ MSG
               if data['bp']
                    high = data['bp'].split("/")[0].to_i
                    
-                   if high>140
+                   if high > 200
                      puts "****** Alert *****"
                      EsmMiotMonitor::dispatch "Alert", "station_id=*", {:title=>pdata['title'],:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
                      data['sos'] = 10
@@ -285,31 +318,10 @@ MSG
                      record = {:ref=>data['ref'],:bp=>data['bp'],:hr=>data['hr'],:bp_stamp=>data['bp_stamp']}
                      
                      puts "Record #{record.inspect }"
-             
-                     # hn = data['ref']
-              #
-              #        prefix = hn[0..5].to_i
-              #
-              #        if hn.index('/')
-              #
-              #          hn = "#{hn[-2..-1]}#{format("%06d",hn[0..hn.index('/')-1])}"
-              #
-              #        elsif hn.size==8 and prefix < 300000
-              #
-              #          hn = "#{hn[6..-1]}#{format("%06d",prefix)}"
-              #
-              #        elsif hn.size<8
-              #
-              #          hn = "#{hn[-2..-1]}#{format("%06d",hn[0..-3].to_i)}"
-              #        end
-              #
-              #       data['ref'] = hn
+                    
              
                      EsmMiotMonitor::dispatch "Record", "station_id=*", record.to_json
-                     
-                     
-                     # res = Net::HTTP.post_form(urix, :hn=>data['ref'], :bp=>data['bp'],:hr=>data['hr'], :bp_stamp=>data['bp_stamp'])
-             
+                    
              
                    end
                    
@@ -333,8 +345,34 @@ MSG
            
            
            ws.onclose do
-             warn("websocket closed")
+              
+             
+              
+              name = @context.settings.apps_ws_rv[ws.hash]
+              
+              
+              warn("websocket closed #{name} #{ws.hash}")
+             
               @context.settings.apps_ws[@context.settings.name].delete(ws)
+              @context.settings.apps_ws_rv.delete ws.hash
+             
+              if  @context.settings.cmd_map[name]
+              
+              @context.settings.cmd_map[name].each_pair do |icmd,v|
+              
+                v.each_pair do |ipath,v2|
+             
+             
+                  warn("websocket closed #{ws.hash} from #{icmd} #{ipath}")
+                  v2.delete ws.hash
+                  
+                end
+              
+              end
+              
+               
+              end
+               
            end
            
            
@@ -370,11 +408,13 @@ def self.registered(app)
           for name in app.settings.apps_rv['esm-miot-monitor']
           switch name
           
-          if app.settings.apps_ws[app.settings.name]
+          if app.settings.apps_ws[app.settings.name] and app.settings.stations[name] and app.settings.senses[name]
         
-            dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations.keys.sort,:data=>app.settings.senses}.to_json
+            dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations[name].keys.sort,:data=>app.settings.senses[name]}.to_json
             
-            app.settings.senses.each_pair do |k,v|
+            # reset all wave data after sent
+            
+            app.settings.senses[name].each_pair do |k,v|
                 
               v['wave'] = []
               

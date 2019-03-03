@@ -6,7 +6,6 @@ require 'sinatra-websocket'
 require 'sinatra/form_helpers'
 
 require_relative 'config/init'
-# require 'sinatra/calculations'
 
 require 'active_support/all'
 
@@ -24,14 +23,7 @@ require 'crc'
 # register Sinatra::Reloader
 
 set :server, 'thin'
-# set :public_folder, File.dirname(__FILE__)+"/public"
-# set :bind, '192.168.100.8'
-# set :bind, '192.168.100.8'
-# set :bind, '202.114.4.119'
-# set :bind, '192.168.100.7'
 set :bind, '0.0.0.0'
-# set :bind, '127.0.0.1'
-
 
 set :port, 1792
 set :sockets, []
@@ -56,9 +48,12 @@ require_relative 'apps/gxt/helper'
 # require_relative 'apps/gxt-gold-saving/app'
 # require_relative 'apps/esm-media-stream/app'
 # require_relative 'apps/esm-monitor/app'
-
+require_relative 'apps/gxt-console/app'
+# require_relative 'apps/gxt-ptz/app'
 require_relative 'apps/esm-miot-monitor/app'
-require_relative 'apps/gxt-ptz/app'
+
+require_relative 'config/deploy'
+
 
 
 register Sinatra::Partial
@@ -300,7 +295,7 @@ def process_request
    if !request.websocket?
    
    
-  
+     puts 'xxxx '+ params[:operation]
    
    # get content of service
    content = eval "@this.#{params[:operation]} params"
