@@ -471,8 +471,11 @@ $('#main-container').removeClass('container')
 	
 		data = JSON.parse(lines[1])
 	
-		if(data['list'].length!=active)
-		window.location.href = "index";
+		if(data['list'].length!=active){
+			// window.location.href = "index";
+			console.log(data['list'])
+			console.log('active '+active);
+		}
 			
 		$('#timer').html(data['time'])
 		for(var id in data['list']){
