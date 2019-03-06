@@ -66,6 +66,11 @@ end
 
 end
 
+
+
+lead_idx = 0 
+leads = [0,0,0,0,0,0]
+
 while true
 
 
@@ -103,19 +108,65 @@ EventMachine.run {
 data = {}
 wave = []
 
+
+lead_template = [700, 876, 880, 588, 304, 40, -168, -216, -204, -120, -76, -96, -92, -76, -76, -88, -84, -76, -84, -72, -72, -72, -80, -68, -76, -80, -68, -64, -72, -64, -60, -68, -72, -60, -60, -48, -16, 16, 52, 80, 124, 160, 196, 220, 240, 260, 284, 300, 312, 316, 320, 320, 320, 312, 300, 276, 264, 236, 200, 152, 108, 68, 20, -32, -68, -96, -124, -132, -144, -148, -136, -128, -124, -120, -120, -124, -116, -116, -112, -112, -112, -112, -112, -108, -104, -104, -104, -104, -100, -84, -80, -72, -68, -64, -60, -52, -48, -44, -40, -36, -36, -36, -36, -20, 8, 48, 88, 116, 128, 140, 152, 148, 144, 128, 112, 84, 60, 24, -20, -48, -56, -60, -52, -48, -48, -48, -48, -48, -48, -44, -44, -44, -44, -44, -44, -44, -64, -108, -140, -100, 80, 340, 604, 824]
+
 w = 2
 rps =32
+s = 4
+
+max = 1024
+min = -1024
 
 rps.times do |i|
-  y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
-  wave << format("%.3f",y).to_f 
   
+  # y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
+#   wave << format("%.3f",y).to_f
+#
+ wave <<  50-(lead_template[lead_idx*s].to_f / 1024) *50
+ lead_idx += 1
+ lead_idx = 0 if lead_idx*s > lead_template.size
+ 
   # period += rand(10)
 end
+
+
+rps2 = 64
+s2 = 2
 
 # puts wave
 
 data[:wave] = wave
+ 
+
+data[:leads] = {} unless data[:leads]
+
+
+6.times do |x|
+  
+  # data[:leads][x] = [] unless data[:leads][x] 
+  
+  id = leads[x]
+  wave = []
+  
+  rps2.times do |i|
+  
+    # y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
+  #   wave << format("%.3f",y).to_f
+  #
+   # wave <<  50-(lead_template[id*s2].to_f / 1024) *50
+   wave << lead_template[id*s2] if lead_template[id*s2] 
+   id += 1
+   id = 0 if id*s2 > lead_template.size
+ 
+    # period += rand(10)
+  end
+  data[:leads][x] = wave
+  
+  leads[x] = id
+  
+end 
+ 
  
 msg = <<MSG
 Data.Sensing device_id=#{name}
@@ -178,6 +229,8 @@ MSG
 
 rescue Exception=>e
   puts "Try to connect in 5 seconds due to : #{e}"
+  puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
+  
   sleep(5)
 end
   

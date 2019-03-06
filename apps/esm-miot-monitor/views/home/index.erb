@@ -86,7 +86,7 @@ body{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Station/show?id=#{station.id}", :class=>'btn'%>
 			<% end %> 	
 	
 		</div>
@@ -101,42 +101,37 @@ body{
 	<div  class="row align-items-start">
 		<div class="col-lg-6 order-lg-2 order-6">
 			<div class="row">
-						<div class="col-6 pr">
+						<div class="col-6 col-lg-6 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6 bp">
+						<div class="col-6 col-lg-6 col-sm-3  bp">
 							<span class="label">BP</span>
 							<div class="value">-</div>
 						</div>
-			</div>
-			<div class="row">
-							<div class="col-6 temp">
+			
+							<div class="col-6 col-lg-6 col-sm-3  temp">
 								<span class="label">Temp</span>
 								<div class="value">-</div>
 							</div>
-							<div class="col-6 rr">
+							<div class="col-6 col-lg-6 col-sm-3  rr">
 								<span class="label">RR</span>
 								<div class="value">-</div>
 							</div>
-			</div>
-		
-			<div class="row">
-						<div class="col-6 spo2">
+			
+						<div class="col-6 col-lg-6 col-sm-3  spo2">
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6 rr">
+						<div class="col-6  col-lg-6 col-sm-3 rr">
 						
 						</div>				
-			</div>
 		
-			<div class="row">
-						<div class="col-6 cc">
+						<div class="col-6 col-lg-6 col-sm-3  cc">
 						    <span class="label">LC</span>
 							<div class="value">-</div> 
 						</div>
-						<div class="col-6 uc">
+						<div class="col-6  col-lg-6 col-sm-3 uc">
 							<span class="label">UO</span>
 							<div class="value">-</div>
 						</div>
@@ -151,9 +146,7 @@ body{
 								patient = admit.patient
 
 							%>
-							<span><%=admit.score%></span>
-							<%else %><span>&nbsp;</span>
-							<% end %>
+							<span><%=admit.score%></span><%else %><span></span><% end %>
 						<div class="value" style='font-size:4em;'>
 						- 
 						</div>
@@ -331,7 +324,7 @@ $('#main-container').removeClass('container')
 		      var path = svg.append("path")
 		        .attr("d", line(data))
 		        .attr("stroke", "green")
-		        .attr("stroke-width", "2")
+		        .attr("stroke-width", "1")
 		        .attr("fill", "none");
 
 		      var totalLength = path.node().getTotalLength();

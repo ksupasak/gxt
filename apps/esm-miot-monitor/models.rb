@@ -39,12 +39,21 @@ end
 
 class Sense
   include MongoMapper::Document
-  key :stamp, Time
-  key :name, String
+  
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :admit_id, ObjectId
   key :station_id, ObjectId
-  key :ip, String
-  key :ref, String
   key :data,  String
+  
+  key :start_time, Time
+  key :stop_time, Time
+    
+  key :tag, String
+  
+  key :note, String
+  
 end
 
 class Patient

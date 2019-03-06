@@ -1,7 +1,9 @@
 
+
 <style>
 body{
 	background:black;
+	
 }
 .container{
 	background:black;
@@ -51,6 +53,14 @@ body{
 .btn {
 	color:#eee; 
 }
+.nav-itemx{
+	background-color:#666;
+	
+}
+a.nav-link{
+	color:white;
+}
+	
 </style>
 
 <%
@@ -61,13 +71,13 @@ body{
 
 	
 %>
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#eee">
+<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#eee;">
 
 <% 1.times do |i| 
 	i = station.name
 	%>
 
-<div id="<%=station%>"  class=" col-12 station active-station " style="border-right:1px solid #888">
+<div id="<%=station%>"  class=" col-12 station active-station " style="border-right:0px solid #888">
 	<div class="row" style="background:#666">
 		
 		<div class="col-2 text-left ">
@@ -93,50 +103,50 @@ body{
 			
 	</div>
 	<div  class="row align-items-start">
-		<div class="col-lg-6 order-lg-1 order-1">
+		<div class="col-lg-12 order-lg-1order-1">
 			<div class="row">
-						<div class="col-6 pr">
+						<div class="col-6  col-lg-3 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6 bp">
+						<div class="col-6  col-lg-3 col-sm-3 bp">
 							<span class="label">BP</span>
 							<div class="value">-</div>
 						</div>
-			</div>
-			<div class="row">
-							<div class="col-6 temp">
+			
+							<div class="col-6  col-lg-3 col-sm-3 temp">
 								<span class="label">Temp</span>
 								<div class="value">-</div>
 							</div>
-							<div class="col-6 rr">
+							<div class="col-6  col-lg-3  col-sm-3 rr">
 								<span class="label">RR</span>
 								<div class="value">-</div>
 							</div>
-			</div>
-		
-			<div class="row">
-						<div class="col-6 spo2">
+			
+						<div class="col-6  col-lg-3 col-sm-3 spo2">
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6 rr">
-						
-						</div>				
-			</div>
-		
-			<div class="row">
-						<div class="col-6 cc">
+								
+			
+						<div class="col-6 col-lg-3 col-sm-3 cc">
 						    <span class="label">LC</span>
 							<div class="value">-</div> 
 						</div>
-						<div class="col-6 uc">
+						<div class="col-6 col-lg-3  col-sm-3 uc">
 							<span class="label">UO</span>
 							<div class="value">-</div>
 						</div>
+						
+						<div class="col-6 col-lg-3  col-sm-3 score">
+							<span class="label">Sc</span>
+							<div class="value"><%=admit.score%></div>
+						</div>
+						
+						
 			</div>
 		</div>
-		<div class="col-lg-6 order-lg-2 order-2 " style="border:1px solid #333;border-radius: 5px;">
+		<div class="col-lg-6 order-lg-2 order-2 " style="display:none;border:1px solid #333;border-radius: 5px;">
 			<div class="row">
 					<div class="col-6 score" style="border:0px solid blue;text-align:center">
 							<%
@@ -145,7 +155,7 @@ body{
 								patient = admit.patient
 
 							%>
-							<span><%=admit.score%></span>
+							<span></span>
 							<%else %><span>&nbsp;</span>
 							<% end %>
 						<div class="value" style='font-size:4em;'>
@@ -166,27 +176,135 @@ body{
 			</div>
 			
 			<div class="row">
-				<div id="result" class= "col-lg-12 order-lg-4 order-4">
-
-				</div>
+			
 			</div>
 		</div>
+		<br/><br/><br/>
+		<div style=""  class="col-lg-12 order-lg-12 order-3">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs">
+  		  <li class="nav-item nav-itemx">
+  		    <a class="nav-link " data-toggle="tab" id="menu1-link" href="#menu1">ECG Monitor</a>
+  		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link " data-toggle="tab" href="#menu2">Scoring System</a>
+		  </li>
+	
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" id="menu3-link" href="#menu3">Flow Sheet</a>
+		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" href="#menu4">Medication</a>
+		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" href="#menu5">Video & Image</a>
+		  </li>
 		
-		<div class="col-lg-6 order-lg-3 order-3">
+		  
+		</ul>
+
+		<!-- Tab panes -->
+
+
+		<div class="tab-content">
+		 
+		  <div id="menu1" class="tab-pane fade ">
+			<p>
+		    <h3 style="padding-left:20px">ECG Monitor
+			<div style="float:right;padding-right:20px">
+		    <span><%=link_to 'History', '#',:class=>'btn btn-info' %></span>
+		    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+			</div>
+			</h3>
+			<% 6.times do |w| %>
+			<div class="row">
+			<div class="col-lg-12">
+			L<%=w+1%>
+			</div>
 		
-		<% 4.times do |w| %>
-		<div class="row">
-		<div class="col-sm-1 ">
-		L<%=w+1%>
+			<div id="wave-<%=w%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:#111">
+		
+			</div>
+		
+			</div>
+		
+			<% end %>
+			
+			
+			</p>
+		  </div>
+		  
+  		  <div id="menu2" class="tab-pane fade  ">
+  			    	<p>
+  	    <h3><center>Scoring System</center></h3>
+		 
+		<div id="result" class= "col-lg-12 order-lg-4 order-4">
+
 		</div>
 		
-		<div id="wave-<%=i%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:#111">
+  		</p>
+  		  </div>
+		  
+		  
+		  <div id="menu3" class="tab-pane fade">
+		    <p><h3 style="padding-left:20px">Flow Sheet</h3>
+
+		<style>
+		        .viewport {
+		            top: 0px;
+		            left: 0px;
+		            overflow-y: auto;
+		            right: 0px;
+		            height: 800px;
+					width:100%;
+					font-size:0.8em;
+					
+		            background-color: white;
+		            border: 0px solid #000;
+		/*            border-radius: 4px;*/
+		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
+		        }
+				svg text {
+				    -webkit-user-select: none;
+				       -moz-user-select: none;
+				        -ms-user-select: none;
+				            user-select: none;
+				}
+				svg text::selection {
+				    background: none;
+				}
+		        .info-svg {
+		            fill: #2968AA;
+		            overflow: visible;
+		        }
 		
+	
+		
+		</style>
+	
+
+		<%= inline(this,:'_flowsheet') %>
+		
+		    
+			</p>
+		  </div>
+		  
+		  <div id="menu4" class="tab-pane fade">
+		    <p><h3><center>Medication</center></h3>
+		    Some content in menu 2.</p>
+		  </div>
+		  
+		  <div id="menu5" class="tab-pane fade">
+		    <p><h3><center>Video & Image</center></h3>
+		    Some content in menu 2.</p>
+		  </div>
+		  
 		</div>
+	  </div>
 		
-		</div>
+		<div>
 		
-		<% end %>
+		
 		</div>
 		
 
@@ -206,10 +324,10 @@ if record
 
 <% end %><hr/>
 
-<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
-<%=link_to 'Back', 'index',:class=>'btn'%>
+<%#link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn'%>
+<%#link_to 'Back', 'index',:class=>'btn'%>
 
-	<span class="col-sm-12 msg"></span>	
+	<span class="col-sm-12 msg " style="color:gray;font-size:0.7em;<%='display:none' if params[:debug]!='1' %>" ></span>	
 
 		<script type="text/javascript">
 	    
@@ -217,144 +335,108 @@ if record
 			$(document).ready(function(){
 				
 				
-					
-			function genData(data){
-			
-				scale = 50;
-			
-				for(var i=0;i<20;i++){
-					r = Math.random();
-					v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
-					data.push(v);
-				}
-			
-			}
-	    
+				
+				
+ 			   var lead_data = {};
+		  	 var wave_data = [];
+			 var gfx = null;
+		
+			var data = [100,200,100,200];
+
+			var settings = {version:'1.0'};
+
+		    var components = [];
 	
-			function aniLine(idx, sampling, rawdata, last){
-
-			var w = 50;
-		    var h = 80;
-			var svg;
-
-
-		      svg = d3.select("#"+idx)
-		      .append("svg")
-		      .attr("width", w)
-		      .attr("height", h)
-		      .attr("id", "visualization");
-
-	    
-			// svgo.selectAll("path.old").remove();
-			// svgo.selectAll("path").attr("class", "old");
-
-
-		    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
-		    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
-
-		    var line = d3.line()
-		      .x(function(d,i) {return x(i);})
-		      .y(function(d) {return y(d);})
-		      .curve(d3.curveNatural)
-
-		    // data is created inside the function so it is always unique
-		    let repeat = () => {
-		      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
-
-		      // Uncomment following line to clear the previously drawn line
-		      //svg.selectAll("path").remove();
-
-		      // Set a light grey class on old paths
-	     
-		      svg.selectAll("path").remove();
-		      // var last_path = svg.append("path")
-		      // 		      .attr("d", line(last))
-		      // 		      .attr("stroke", "#131")
-		      // 		      .attr("stroke-width", "2")
-		      // 		      .attr("fill", "none")
-		      // 		      .attr("class", "old");
-		      // 		      last_path.add
-
-		      var path = svg.append("path")
-		        .attr("d", line(data))
-		        .attr("stroke", "green")
-		        .attr("stroke-width", "2")
-		        .attr("fill", "none");
-
-		      var totalLength = path.node().getTotalLength();
-
-		      path
-		        .attr("stroke-dasharray", totalLength + " " + totalLength)
-		        .attr("stroke-dashoffset", totalLength)
-		        .transition()
-		          .duration(1000)
-		          .ease(d3.easeLinear)
-		          .attr("stroke-dashoffset", 0)
-		          // .on("end", repeat);
-		    };
-		    repeat();
-			}
-		
-			// aniLine('line1')
-			// aniLine('line2')
-			// aniLine('line3')
-			// aniLine('line4')
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','rr','bp_sys','bp_dia'],records:null};
+			records = [];
 	
-		
-		
-			function showWave(div,data){
-			var n = 32; // sample for a second
-		    var cut = 1;
-			var show = 8; //second
-			var second = 0;
-			var lastdata = [];
-		
-			var intervalID = setInterval(function(){
-				if(second%show==show-1){
-					
-					$('#'+div).html("");
-					
-				}
-					// genData(data);
-					if(second%cut==cut-1&&second<1000){
-					
-						rawdata = data.splice(0,cut*n+1);
-						data.unshift(rawdata[rawdata.length-1]);
+			now = Date.now();
+			
+			<%
+			senses = Sense.where(:admit_id=>admit.id).limit(100).sort(:start_time.desc).all
+		    list =[]
+			
+			for i in senses
+			
+				o = ActiveSupport::JSON.decode(i.data)
+				
+				if o['vs']
+					for j in o['vs']
 						
-						aniLine(div,n ,rawdata,lastdata);
-						lastdata = rawdata;
-						// second = 0 ;
-					}
+						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+						bp = j['bp'].split("/")
+						list.push({time:Time.parse(j['stamp']),hr:j['pr'],rr:j['rr'],bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+					end
 					
-					second+=1;
-			}, 1000);
-		
-		
-		   }
-		   
-
-
-		   var wave_data = [];
+				end
+				
+			end
 			
-		<% for i in settings.stations.keys.sort %>
-		  showWave('wave-<%=i%>',wave_data);
+			
+			for j in list 	
+			%>
+			j = <%=j.to_json.html_safe%>
+			records.push({time:Date.parse(j['time']),hr:j['hr'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
+			
+			<% end %>
+			
+			//records = <%= list.to_json.html_safe %>
 		
-	    <% end %>
+			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
+			// records.push({time:now+200000,hr:110,rr:20,bp_sys:163,bp_dia:120});
+			// records.push({time:now+300000,hr:90,rr:20,bp_sys:100,bp_dia:60});
+			// records.push({time:now+400000,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			
+			
+			vs['records'] = records;
 	
 	
-			// showWave('line2',[]);
-			// showWave('line3',[]);
-			// showWave('line4',[]);
-			//
-		
-		
-		
+	
+			med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl'],records:null};
+			records = [];
+			// records.push({time:now+130000,stop_time:now+200000,domicum:{r:3,v:300}});
+			// records.push({time:now+200000,stop_time:now+300000,fentanyl:{r:3,v:300}});
+			// records.push({time:now+300000,stop_time:now+320000,domicum:{r:3,v:300}});
+	//
+			med['records'] = records;
+	
+			components.push(vs);
+			components.push(med);
+
+	
+	
+			settings['components'] = components
+	
+			console.log(settings);
+	
+	
+			 var viewport = d3.select(".viewport").append("svg")
+    		 .attr("class", "info-svg")
+
+	     var g = viewport.append("g")
+		    .attr("transform", "translate(0,0)");
+		 gfx = GFX()
+		 .svg(g)
+		 .startTime(Date.now())
+		 .endTime(Date.now()+1000*3600)
+		 .viewport(d3.select(".viewport"));
+		 gfx.data(settings);
+		 d3.select("svg").call(gfx);
+
+		 window.addEventListener("resize", gfx.render);
 		
 
 	
-	var show = function(el){
-     return function(msg){ el.innerHTML = msg  }
-   }(document.getElementById('msgs'));
+	// var show = function(el){
+	//      	return function(msg){ el.innerHTML = msg  }
+	//     }
+   
+	function show(text){
+		// console.log(text)
+		$('.msg').html(text)
+	}
+   
 	
 	
 	  var ws       = new WebSocket('ws://' + window.location.host + "<%='/miot/Home/index'%>");
@@ -379,6 +461,8 @@ if record
 		active = $('.active-station').size()
 	
 		show(''+m.data)
+		
+		
 		
 		lines = m.data.split("\n")
 		
@@ -432,6 +516,18 @@ if record
 				// console.log(wave_data);
 				// wave_data = obj['wave'];
 		   }
+		   
+		   if(obj['leads']){
+		   	
+			   for(var j=0;j<6;j++){
+				jid = ''+j
+			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
+			
+			   // console.log(lead_data[jid].length)
+				   
+			   }
+			
+		   }
 		    			
 			
 			 // console.log(obj)
@@ -457,6 +553,13 @@ if record
 			
 			
 			$('#'+i+' .score .value').html(obj['score'])
+			
+			bp = obj['bp'].split('/')
+			
+			
+		    vs = [{time:Date.now(),hr:parseInt(obj['pr']),rr:parseInt(obj['rr']),bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+			
+			gfx.tick({update:[{name:'vitalsign',append:vs}]});
 			
 			
 			
@@ -495,7 +598,165 @@ if record
 		
 	})
 
-	})
+
+     
+		function genData(data){
+
+			scale = 50;
+
+			for(var i=0;i<2000;i++){
+				r = Math.random();
+				v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
+				data.push(v);
+			}
+
+		}
+
+	
+	function aniLine(idx,rdx, sampling, rawdata, last){
+	var w = 50;
+    var h = 80;
+	var svg;
+
+	// console.log(""+idx+" "+rawdata.length)
+    osvg = d3.select("#"+idx+"-"+rdx);
+	
+	if(osvg.size()==1){
+		osvg.selectAll("path").remove();
+		svg = osvg
+	}else{
+      svg = d3.select("#"+idx)
+        .append("svg")
+	
+        .attr("width", w)
+        .attr("height", h)
+        .attr("id", "visualization");
+    
+	
+  		svg.attr('id',""+idx+"-"+rdx);
+		
+	}
+	
+	
+
+	
+	
+   
+
+	// svgo.selectAll("path.old").remove();
+	// svg.selectAll("path").attr("class", "old");
+
+    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
+    var y = d3.scaleLinear().domain([1000,-500]).range([10, h - 10]);
+
+    var line = d3.line()
+      .x(function(d,i) {return x(i);})
+      .y(function(d) {return y(d);})
+      .curve(d3.curveNatural)
+
+    // data is created inside the function so it is always unique
+    let repeat = () => {
+      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
+
+      // Uncomment following line to clear the previously drawn line
+      //svg.selectAll("path").remove();
+
+      // Set a light grey class on old paths
+
+      // svg.selectAll("path").remove();
+      // var last_path = svg.append("path")
+      // 		      .attr("d", line(last))
+      // 		      .attr("stroke", "#131")
+      // 		      .attr("stroke-width", "2")
+      // 		      .attr("fill", "none")
+      // 		      .attr("class", "old");
+      // 		      last_path.add
+
+      var path = svg.append("path")
+        .attr("d", line(data))
+        .attr("stroke", "green")
+        .attr("stroke-width", "1")
+        .attr("fill", "none");
+	  	
+      var totalLength = path.node().getTotalLength();
+
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+          .duration(1000)
+          .ease(d3.easeLinear)
+	  .attr("stroke-dashoffset", 0);
+          // .on("end", repeat);
+    };
+	
+    repeat();
+	
+	};
+
+	// aniLine('line1')
+	// aniLine('line2')
+	// aniLine('line3')
+	// aniLine('line4')
+
+
+
+	function showWave(div,data,id){
+		// console.log(div+" "+data.length);
+	var n = 64; // sample for a second
+    var cut = 1;
+	var show = 17; //second
+	var second = 0;
+	var lastdata = [];
+
+	var intervalID = setInterval(function(){
+		if(second%show==show-1){
+		
+			// $('#'+div).html("");
+		
+		}
+			// genData(data);
+			data = lead_data[id];
+			// console.log('all '+id+' = '+data.length);
+			
+			if(second%cut==cut-1&&second<1000){
+				
+				rawdata = data.splice(0,cut*n+1);
+				
+				data.unshift(rawdata[rawdata.length-1]);
+				if(rawdata.length>=n){
+					aniLine(div,second%show,n ,rawdata,lastdata);
+					lastdata = rawdata;
+				}
+				// second = 0 ;
+			}
+		
+			second+=1;
+	}, 1000);
+
+	
+   }
+
+
+
+   // var wave_data = [];
+
+<% 6.times do |i|  %>
+
+   i = "<%=i%>"
+
+   lead_data[i] = [];
+  // genData(lead_data[i]) 
+  
+  showWave('wave-<%=i%>',lead_data[i],i);
+ 
+<% end %>				
+
+
+
+
+
+	});
 
 
 	// init bunch of sounds
@@ -543,7 +804,14 @@ if record
     </div>
   </div>
 </div>
+
+
+
+
 <script>
+	
+	
+	
 
 function call_admit(){
 	$.ajax({
@@ -569,3 +837,12 @@ function call_admit(){
 				<% end %>
 			
 </script>
+				<script>
+				$('#main-container').removeClass('container')
+					$(document).ready(function(){
+						$('#menu1-link').click();
+						
+					})
+				
+				</script>
+			

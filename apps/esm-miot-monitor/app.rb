@@ -113,8 +113,9 @@ MSG
  
       
         request.websocket do |ws|
-          
-           # puts 'init websocket '
+
+
+# puts 'init websocket '
       
            ws.onopen do
              puts "open websocket for #{@context.settings.name} on #{ws.hash}"
@@ -122,11 +123,18 @@ MSG
              @context.settings.apps_ws[@context.settings.name] << ws
              @context.settings.apps_ws_rv[ws.hash] = @context.settings.name
            end
+
+
+# puts 'on websocket '
+           
+           
            ws.onmessage do |msg|
              
              
              name =  @context.settings.apps_ws_rv[ws.hash]
              switch name
+             
+             
              # puts  "msg from #{@context.settings.name} #{msg}"
              # t = msg.encode('utf-8').split("\n")
              t = []
@@ -142,7 +150,11 @@ MSG
              
              case cmd 
                
+               
+      # register message receiver 
+               
              when 'WS.Select'
+               
                puts  "msg from #{@context.settings.name} #{msg}"
                wsname = path.split("=")[-1]
                wsname = ws.hash
@@ -165,6 +177,8 @@ MSG
                
                
                puts "#---- #{  @context.settings.cmd_map.inspect}"
+               
+      # store remote sensing 
             
              when 'Zone.Data'
                
@@ -191,12 +205,12 @@ MSG
                   title = record['title'] if record['title'] and record['title'].size > 0 
                   station = Station.create :name=>station_name,:title=>title, :zone_id=>zone.id unless station
                 end
-               @context.settings.senses[station_id] = record
+               @context.settings.senses[name][station_id] = record
                
                
              end
              
-            
+         # store local sensing     
             
              when 'Data.Sensing'
                
@@ -216,27 +230,14 @@ MSG
                    data = "{}"
                    data = pdata['data'] if pdata['data']
 
-                    
+                   
 
                    station_id = nil
                    station = nil
                    
-## create station. 
-
-                  # puts @context.settings.stations.inspect 
                   
                   @context.settings.stations[name] = {} unless @context.settings.stations[name]
-       #
-       #            unless station = @context.settings.stations[name][station_name]
-       #
-       #               station = Station.where(:name=>station_name).first
-       #               unless station
-       #                   station = Station.create(:name=>station_name, :title=>station_name)
-       #               end
-       #                @context.settings.stations[name] = {} unless  @context.settings.stations[name]
-       #               @context.settings.stations[name][station_name] = station
-       #
-       #             end
+
                    
                   
                    station = Station.where(:name=>station_name).first
@@ -246,7 +247,7 @@ MSG
                    @context.settings.stations[name][station.name] = station
                    
                    
-
+                   data['station_id'] = station.id
 
                    if station
                        station_id = station['_id']
@@ -258,6 +259,7 @@ MSG
                    end
                    
                    data['score'] = 0
+                   admit = nil
                    if admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
                      data['score'] = admit.current_score
                    end
@@ -268,14 +270,51 @@ MSG
                     odata = @context.settings.senses[name][station_name]
                     odata = {} unless odata
                     
-## merge wave 
-                 
+                    
+                    # mark history
+                    if admit!=nil and (data['bp'] or data['pr'] or data['spo2'])
+                      
+                      odata['admit_id'] = admit.id
+                      
+                      now = Time.now
+                      # core":0,"bp":"113/87","pr":114,"hr":114,"rr":18,"temp":37,"spo2":90,"bp_stamp":"133737","ref":"1234"}}}
+                      record = {:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'], :rr=>data['rr'],:spo2=>data['spo2']}
+                      
+                      odata['vs'] = [] unless odata['vs']
+                      
+                      odata['vs'] << record 
+                      
+                      
+                    end
+                    
+                    
+                    
+## merge wave data
                     
                     if data['wave']
                        odata['wave'] = [] unless odata['wave']
                        odata['wave'] += data['wave']
                        data.delete 'wave'
                     end
+                    
+                   
+                    
+                    if data['leads']
+                      
+                       odata['leads'] = {} unless odata['leads']
+                       
+                       data['leads'].each_pair do |l,lv|
+                         
+                         odata['leads'][l] = [] unless odata['leads'][l]
+                         odata['leads'][l] += data['leads'][l]
+                         # data['leads'].delete l
+                         
+                       end
+                     
+                    end
+                    
+                     # puts odata['leads'].inspect 
+                    
                   
                      odata.merge! data
                      
@@ -409,16 +448,57 @@ def self.registered(app)
           switch name
           
           if app.settings.apps_ws[app.settings.name] and app.settings.stations[name] and app.settings.senses[name]
-        
+            # puts app.settings.senses[name].inspect 
             dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations[name].keys.sort,:data=>app.settings.senses[name]}.to_json
             
             # reset all wave data after sent
             
+            now = Time.now
+            
             app.settings.senses[name].each_pair do |k,v|
+              
+              # store to sense
+                
+               if v['station_id'] and v['admit_id'] 
+                 
+                 # key :admit_id, ObjectId
+   #               key :station_id, ObjectId
+   #               key :data,  String
+   #
+   #               key :start_time, Time
+   #               key :stop_time, Time
+   #
+   #               key :tag, String
+   #
+   #               key :note, String
+                 start_time = now
+                 
+                 start_time = v['current_time'] if v['current_time']
+                 v['current_time'] = now
+                  
+                 # start_time = v['vs'][0] if   v['vs'] and v['vs'].size>0
+                 
+                 
+                 
+   
+                 Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
+                 
+                 v.delete 'vs'
+                 
+               end 
+              
+              
                 
               v['wave'] = []
               
+              v['leads'].each_pair do |l,lv|
+                
+                v['leads'][l] = []
+                
+              end
+              
             end
+            
             
           end
           

@@ -1,4 +1,4 @@
-<i>Number of records : <%=this.model.count%></i>
+<i>Number of records : <%=this.model.count%> <%=link_to 'Reset',"reset",:class=>'btn btn-danger btn-small' %></i>
 <table class="table table-striped">
 <% 
 	
@@ -7,13 +7,13 @@
 <thead>
 	<tr>
 	<% for j in keys %>
-		<th><%=j[0] %></th>
+		<th><%=j[0].humanize %></th>
 	<% end %>
 	</tr>
 </thead>
 <tbody>
 <%	
-	for i in this.model.all :limit=>1000,:sort=>'created_at desc'
+	for i in this.model.all :limit=>20,:sort=>'start_time desc'
 %>
 <tr>
 	<% for j in keys %>
@@ -28,3 +28,6 @@
 <% end %>
 </tbody>
 </table>
+<script>
+// $('#main-container').removeClass('container')
+</script>
