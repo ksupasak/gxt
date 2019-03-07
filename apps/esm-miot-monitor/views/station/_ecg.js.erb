@@ -1,0 +1,139 @@
+		function genData(data){
+
+			scale = 50;
+
+			for(var i=0;i<2000;i++){
+				r = Math.random();
+				v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
+				data.push(v);
+			}
+
+		}
+
+	
+	function aniLine(idx,rdx, sampling, rawdata, last){
+	var w = 50;
+    var h = 80;
+	var svg;
+
+	// console.log(""+idx+" "+rawdata.length)
+    osvg = d3.select("#"+idx+"-"+rdx);
+	
+	if(osvg.size()==1){
+		osvg.selectAll("path").remove();
+		svg = osvg
+	}else{
+      svg = d3.select("#"+idx)
+        .append("svg")
+	
+        .attr("width", w)
+        .attr("height", h)
+        .attr("id", "visualization");
+    
+	
+  		svg.attr('id',""+idx+"-"+rdx);
+		
+	}
+	
+	
+
+	
+	
+   
+
+	// svgo.selectAll("path.old").remove();
+	// svg.selectAll("path").attr("class", "old");
+
+    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
+    var y = d3.scaleLinear().domain([1000,-500]).range([10, h - 10]);
+
+    var line = d3.line()
+      .x(function(d,i) {return x(i);})
+      .y(function(d) {return y(d);})
+      .curve(d3.curveNatural)
+
+    // data is created inside the function so it is always unique
+    let repeat = () => {
+      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
+
+      // Uncomment following line to clear the previously drawn line
+      //svg.selectAll("path").remove();
+
+      // Set a light grey class on old paths
+
+      // svg.selectAll("path").remove();
+      // var last_path = svg.append("path")
+      // 		      .attr("d", line(last))
+      // 		      .attr("stroke", "#131")
+      // 		      .attr("stroke-width", "2")
+      // 		      .attr("fill", "none")
+      // 		      .attr("class", "old");
+      // 		      last_path.add
+
+      var path = svg.append("path")
+        .attr("d", line(data))
+        .attr("stroke", "green")
+        .attr("stroke-width", "1")
+        .attr("fill", "none");
+	  	
+      var totalLength = path.node().getTotalLength();
+
+      path
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .transition()
+          .duration(1000)
+          .ease(d3.easeLinear)
+	  .attr("stroke-dashoffset", 0);
+          // .on("end", repeat);
+    };
+	
+    repeat();
+	
+	};
+
+
+
+
+	// aniLine('line1')
+	// aniLine('line2')
+	// aniLine('line3')
+	// aniLine('line4')
+
+
+
+	function showWave(div,data,id){
+		// console.log(div+" "+data.length);
+	var n = 64; // sample for a second
+    var cut = 1;
+	var show = 16; //second
+	var second = 0;
+	var lastdata = [];
+
+	var intervalID = setInterval(function(){
+		if(second%show==show-1){
+		
+			// $('#'+div).html("");
+		
+		}
+			// genData(data);
+			data = lead_data[id];
+			// console.log('all '+id+' = '+data.length);
+			
+			if(second%cut==cut-1&&second<1000){
+				
+				rawdata = data.splice(0,cut*n+1);
+				
+				data.unshift(rawdata[rawdata.length-1]);
+				if(rawdata.length>=n){
+					aniLine(div,second%show,n ,rawdata,lastdata);
+					lastdata = rawdata;
+				}
+				// second = 0 ;
+			}
+		
+			second+=1;
+	}, 1000);
+
+	
+   }

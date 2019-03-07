@@ -461,23 +461,15 @@ def self.registered(app)
                 
                if v['station_id'] and v['admit_id'] 
                  
-                 # key :admit_id, ObjectId
-   #               key :station_id, ObjectId
-   #               key :data,  String
-   #
-   #               key :start_time, Time
-   #               key :stop_time, Time
-   #
-   #               key :tag, String
-   #
-   #               key :note, String
-                 start_time = now
+                 admit = Admit.find v['admit_id'] 
                  
+                 
+                 if admit and admit.status == 'Admitted'
+                 
+               
+                 start_time = now
                  start_time = v['current_time'] if v['current_time']
                  v['current_time'] = now
-                  
-                 # start_time = v['vs'][0] if   v['vs'] and v['vs'].size>0
-                 
                  
                  
    
@@ -485,18 +477,24 @@ def self.registered(app)
                  
                  v.delete 'vs'
                  
+               else
+                 
+                 v.delete 'admit_id'
+                 
+               end
+                 
                end 
               
               
                 
               v['wave'] = []
-              
+              if v['leads']
               v['leads'].each_pair do |l,lv|
                 
                 v['leads'][l] = []
                 
               end
-              
+            end
             end
             
             

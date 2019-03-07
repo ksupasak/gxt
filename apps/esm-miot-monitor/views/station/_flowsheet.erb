@@ -18,9 +18,9 @@
 			startTime=Date.now(),
 			endTime=null,
 			drag=false,
+			active=false,
 			cmap= null;
 		
-			
 			
 		    function gfx(container) {
 					
@@ -29,6 +29,9 @@
 					
 					
 		        function render(resize) {
+					
+					if (active){
+					// console.log(viewport.style("width"))
 		            if (true) { 
 		                
 						viewportWidth = parseInt(viewport.style("width"));
@@ -651,7 +654,7 @@
 					
 					
 					
-				
+			}
 					 
 				  gfx.render = render;     	 	
 		                                                  // call render on scrolling event
@@ -743,13 +746,26 @@
 		        context = _;
 		        return gfx;
 		    };
-			
+
+		    gfx.active = function(_) {
+		        if (!arguments.length) return context;
+		        active = _;
+		        return gfx;
+		    };
 			
 		    gfx.startTime = function(_) {
 		        if (!arguments.length) return context;
 		        startTime = _;
 		        return gfx;
 		    };
+			
+		
+		 	gfx.resize = function(e){
+				width = document.body.clientWidth;
+				$('.viewport').css('width',width);
+			
+
+		 	}
 			
 		    gfx.endTime = function(_) {
 		        if (!arguments.length) return context;

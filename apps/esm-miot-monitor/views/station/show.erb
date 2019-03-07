@@ -140,7 +140,7 @@ a.nav-link{
 						
 						<div class="col-6 col-lg-3  col-sm-3 score">
 							<span class="label">Sc</span>
-							<div class="value"><%=admit.score%></div>
+							<div class="value"><%=admit.score if admit%></div>
 						</div>
 						
 						
@@ -236,7 +236,12 @@ a.nav-link{
 		  
   		  <div id="menu2" class="tab-pane fade  ">
   			    	<p>
-  	    <h3><center>Scoring System</center></h3>
+  	    <h3 style="padding-left:20px">Scoring System
+		<div style="float:right;padding-right:20px">
+	    <span><%#link_to 'History', '#',:class=>'btn btn-info' %></span>
+	    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+		</div>
+		</h3>
 		 
 		<div id="result" class= "col-lg-12 order-lg-4 order-4">
 
@@ -247,7 +252,12 @@ a.nav-link{
 		  
 		  
 		  <div id="menu3" class="tab-pane fade">
-		    <p><h3 style="padding-left:20px">Flow Sheet</h3>
+		    <p><h3 style="padding-left:20px">Flow Sheet
+			<div style="float:right;padding-right:20px">
+		    <span><%=link_to 'History', '#',:class=>'btn btn-info' %></span>
+		    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+			</div>
+			</h3>
 
 		<style>
 		        .viewport {
@@ -256,7 +266,7 @@ a.nav-link{
 		            overflow-y: auto;
 		            right: 0px;
 		            height: 800px;
-					width:100%;
+					width:800px;
 					font-size:0.8em;
 					
 		            background-color: white;
@@ -290,12 +300,12 @@ a.nav-link{
 		  </div>
 		  
 		  <div id="menu4" class="tab-pane fade">
-		    <p><h3><center>Medication</center></h3>
+		    <p><h3  style="padding-left:20px">Medication</h3>
 		    Some content in menu 2.</p>
 		  </div>
 		  
 		  <div id="menu5" class="tab-pane fade">
-		    <p><h3><center>Video & Image</center></h3>
+		    <p><h3  style="padding-left:20px">Video & Image</h3>
 		    Some content in menu 2.</p>
 		  </div>
 		  
@@ -353,8 +363,11 @@ if record
 			now = Date.now();
 			
 			<%
-			senses = Sense.where(:admit_id=>admit.id).limit(100).sort(:start_time.desc).all
-		    list =[]
+			if admit
+			senses = Sense.where(:admit_id=>admit.id).limit(100).sort(:start_time.desc).all.reverse
+		    
+			
+			list =[]
 			
 			for i in senses
 			
@@ -379,7 +392,7 @@ if record
 			records.push({time:Date.parse(j['time']),hr:j['hr'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
 			
 			<% end %>
-			
+				<% end %>
 			//records = <%= list.to_json.html_safe %>
 		
 			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
@@ -424,7 +437,7 @@ if record
 		 gfx.data(settings);
 		 d3.select("svg").call(gfx);
 
-		 window.addEventListener("resize", gfx.render);
+		 window.addEventListener("resize", gfx.resize);
 		
 
 	
@@ -575,16 +588,7 @@ if record
 		 }
 	 };
 
-   // var sender = function(f){
-   //      var input     = document.getElementById('input');
-   //      input.onclick = function(){ input.value = "" };
-   //      f.onsubmit    = function(){
-   //        ws.send(input.value);
-   //        input.value = "send a message";
-   //        return false;
-   //      }
-   //    }(document.getElementById('form'));
-   // 	
+
 	
 	
 	$('.ctl').each(function(){
@@ -600,142 +604,8 @@ if record
 
 
      
-		function genData(data){
-
-			scale = 50;
-
-			for(var i=0;i<2000;i++){
-				r = Math.random();
-				v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
-				data.push(v);
-			}
-
-		}
-
+<%= inline(this,:'_ecg.js') %>
 	
-	function aniLine(idx,rdx, sampling, rawdata, last){
-	var w = 50;
-    var h = 80;
-	var svg;
-
-	// console.log(""+idx+" "+rawdata.length)
-    osvg = d3.select("#"+idx+"-"+rdx);
-	
-	if(osvg.size()==1){
-		osvg.selectAll("path").remove();
-		svg = osvg
-	}else{
-      svg = d3.select("#"+idx)
-        .append("svg")
-	
-        .attr("width", w)
-        .attr("height", h)
-        .attr("id", "visualization");
-    
-	
-  		svg.attr('id',""+idx+"-"+rdx);
-		
-	}
-	
-	
-
-	
-	
-   
-
-	// svgo.selectAll("path.old").remove();
-	// svg.selectAll("path").attr("class", "old");
-
-    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
-    var y = d3.scaleLinear().domain([1000,-500]).range([10, h - 10]);
-
-    var line = d3.line()
-      .x(function(d,i) {return x(i);})
-      .y(function(d) {return y(d);})
-      .curve(d3.curveNatural)
-
-    // data is created inside the function so it is always unique
-    let repeat = () => {
-      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
-
-      // Uncomment following line to clear the previously drawn line
-      //svg.selectAll("path").remove();
-
-      // Set a light grey class on old paths
-
-      // svg.selectAll("path").remove();
-      // var last_path = svg.append("path")
-      // 		      .attr("d", line(last))
-      // 		      .attr("stroke", "#131")
-      // 		      .attr("stroke-width", "2")
-      // 		      .attr("fill", "none")
-      // 		      .attr("class", "old");
-      // 		      last_path.add
-
-      var path = svg.append("path")
-        .attr("d", line(data))
-        .attr("stroke", "green")
-        .attr("stroke-width", "1")
-        .attr("fill", "none");
-	  	
-      var totalLength = path.node().getTotalLength();
-
-      path
-        .attr("stroke-dasharray", totalLength + " " + totalLength)
-        .attr("stroke-dashoffset", totalLength)
-        .transition()
-          .duration(1000)
-          .ease(d3.easeLinear)
-	  .attr("stroke-dashoffset", 0);
-          // .on("end", repeat);
-    };
-	
-    repeat();
-	
-	};
-
-	// aniLine('line1')
-	// aniLine('line2')
-	// aniLine('line3')
-	// aniLine('line4')
-
-
-
-	function showWave(div,data,id){
-		// console.log(div+" "+data.length);
-	var n = 64; // sample for a second
-    var cut = 1;
-	var show = 17; //second
-	var second = 0;
-	var lastdata = [];
-
-	var intervalID = setInterval(function(){
-		if(second%show==show-1){
-		
-			// $('#'+div).html("");
-		
-		}
-			// genData(data);
-			data = lead_data[id];
-			// console.log('all '+id+' = '+data.length);
-			
-			if(second%cut==cut-1&&second<1000){
-				
-				rawdata = data.splice(0,cut*n+1);
-				
-				data.unshift(rawdata[rawdata.length-1]);
-				if(rawdata.length>=n){
-					aniLine(div,second%show,n ,rawdata,lastdata);
-					lastdata = rawdata;
-				}
-				// second = 0 ;
-			}
-		
-			second+=1;
-	}, 1000);
-
-	
-   }
 
 
 
@@ -753,7 +623,13 @@ if record
 <% end %>				
 
 
-
+  $('#menu1-link').click();
+  $('#menu3-link').click(function(){
+  	gfx.active(true);
+	width = document.body.clientWidth;
+	$('.viewport').css('width',width);
+  	gfx.render(true);
+  });
 
 
 	});
@@ -840,9 +716,10 @@ function call_admit(){
 				<script>
 				$('#main-container').removeClass('container')
 					$(document).ready(function(){
-						$('#menu1-link').click();
+						
 						
 					})
-				
+					
+					
 				</script>
 			

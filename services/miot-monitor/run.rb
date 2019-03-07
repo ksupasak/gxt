@@ -6,7 +6,7 @@ require 'net/http'
 require 'json'
 require 'websocket-client-simple'
 require 'eventmachine'
-require 'em-http-server'
+# require 'em-http-server'
 
 
 
@@ -17,6 +17,7 @@ require_relative 'conf'
 require_relative 'devices/vista-120-v2-gw'
 require_relative 'devices/vista-120-v1-gw'
 require_relative 'devices/vista-120-S-gw'
+require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
 unless HOST_IP
@@ -44,6 +45,10 @@ ws = MIOT::connect
 
 threads << Thread.new {
 Device::monitor_vista_120_v1(ws)
+}
+
+threads << Thread.new {
+Device::monitor_iacs_m540(ws)
 }
 # 
 # threads << Thread.new {
