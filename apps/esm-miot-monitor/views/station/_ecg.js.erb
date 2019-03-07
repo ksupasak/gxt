@@ -10,9 +10,26 @@
 
 		}
 
+		function preset(idx,rdx){
+			
+			var svg;
+	var w = 80;
+	var h = 80;
+			// console.log(""+idx+" "+rawdata.length)
+		    osvg = d3.select("#"+idx+"-"+rdx);
+	
+		      svg = d3.select("#"+idx)
+		        .append("svg")
+				.attr("width", w)
+			    .attr("height", h)
+			    .attr('id',""+idx+"-"+rdx);
+	
+			
+		}
+	
 	
 	function aniLine(idx,rdx, sampling, rawdata, last){
-	var w = 50;
+	var w = 80;
     var h = 80;
 	var svg;
 
@@ -99,14 +116,22 @@
 	// aniLine('line2')
 	// aniLine('line3')
 	// aniLine('line4')
+    
+function presetWave(div){
+	var show = 12; //second
+	for(var i=0;i<show;i++){
+		
+		preset(div,i);
+		
+	}
+	
 
-
-
+}
 	function showWave(div,data,id){
 		// console.log(div+" "+data.length);
-	var n = 64; // sample for a second
+	var n = 200; // sample for a second
     var cut = 1;
-	var show = 16; //second
+	var show = 12; //second
 	var second = 0;
 	var lastdata = [];
 
@@ -118,15 +143,23 @@
 		}
 			// genData(data);
 			data = lead_data[id];
-			// console.log('all '+id+' = '+data.length);
+			// console.log('all '+id+" "+second%show+' = '+data.length);
 			
-			if(second%cut==cut-1&&second<1000){
+			if(second%cut==cut-1){
 				
 				rawdata = data.splice(0,cut*n+1);
+//
 				
 				data.unshift(rawdata[rawdata.length-1]);
-				if(rawdata.length>=n){
-					aniLine(div,second%show,n ,rawdata,lastdata);
+				
+				
+				rawdata = rawdata.filter(function(v, i) {
+  				  	return i % 4 == 0;
+				});
+				// rawdata = data
+				
+				if(true|| rawdata.length>=n){
+					aniLine(div,second%show,rawdata.length ,rawdata,lastdata);
 					lastdata = rawdata;
 				}
 				// second = 0 ;

@@ -1,21 +1,22 @@
 require 'socket'
 require 'net/http'
 require 'json'
+require "ipaddr"
+require_relative 'config/m540_cfg'
 
 
 
-MULTICAST_ADDR = "224.0.1.4"  # to receive data
-
-BIND_ADDR = "0.0.0.0"
 
 
 # BIND_ADDR_LOCAL = "191.1.1.5"
 
-BIND_ADDR_LOCAL = "172.28.5.151"
+# BIND_ADDR_LOCAL = "172.28.5.151"
+
+# BIND_ADDR_LOCAL = "10.50.0.193"
 
 
 # M540 data on this port
-PORT = 2050
+
 
 module Device
 
@@ -184,7 +185,7 @@ MSG
  
 end
 
-self.demo ws
+# self.demo ws
   
      puts 'Start Sent Data'
      
@@ -192,17 +193,20 @@ self.demo ws
 
     socket = UDPSocket.new
 
-    membership = IPAddr.new(MULTICAST_ADDR).hton + IPAddr.new(BIND_ADDR_LOCAL).hton
+    membership = IPAddr.new(M540_MULTICAST_ADDR).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+    
+ 
+    puts 'Start Sent Data'
     socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
     # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
 
     # open port
-    socket.bind(BIND_ADDR, PORT)
+    socket.bind('0.0.0.0', M540_PORT)
 
 
-    host = GW_IP
-    port = GW_PORT
-    uri = GW_URI
+    # host = GW_IP
+    # port = GW_PORT
+    # uri = GW_URI
 
   
     puts 'Start Receive Data'
@@ -210,60 +214,120 @@ self.demo ws
     tmp = []
     stmp = {}
     sk = {}
+    
+    lbuff = {}
 
-    n = 1000
 
     loop do
   
       begin
   
-        message, info = socket.recvfrom(1024)
+        message, info = socket.recvfrom(4096)
         l = message.each_byte.to_a.collect{|i| i.to_i.to_s}  
-  
-        if n>0
-          # lead data package
+   
     
+          # lead data package
+          
     
           #====================================================
           
           if  l[33].to_i ==  12 #and l[49].to_i != 110# and l[19].to_i != 174
      
-     
-            40.times do |i|
-              print "#{i}\t"
-              6.times do |j|
-         
+                 #
+            # 40.times do |i|
+    #           print "#{i}\t"
+    #           6.times do |j|
+    #
+    #             v = 58+(j*94)+i*2
+    #             v -= 6 if j>1
+    #
+    #             a = l[v].to_i
+    #             b = l[v+1].to_i
+    #
+    #             # puts a
+    #             x = a*256+b
+    #             x = -(256-b) if a==255
+    #
+    #             print "#{x}\t"
+    #
+    #
+    #           end
+    #
+    #           puts
+    #         end
+
+            #========================================
+          
+            
+            begin
+              now = Time.now 
+            stamp = now.to_json
+            bp_stamp = now
+            ref = '1235'
+            6.times do |j|
+              
+              wave = []
+              40.times do |i|
+                
                 v = 58+(j*94)+i*2
                 v -= 6 if j>1
-         
                 a = l[v].to_i
-                b = l[v+1].to_ik
-         
-                # puts a
+                b = l[v+1].to_i
                 x = a*256+b
                 x = -(256-b) if a==255
-         
-                print "#{x}\t"
-         
-         
+                
+                wave << x
+                
               end
               
-              puts
-       
-       
+              lbuff[j] = [] unless lbuff[j]
+              lbuff[j] += wave
+              
+            
+              
+              
             end
+              
+                # puts "#{lbuff[0].size} #{Time.now}"
+                
+                
+      if lbuff[0].size>=200        
+            
+            
+            data = {}
+            data[:leads] = {}
+            6.times do |j|
+              
+               data[:leads][j] = lbuff[j].shift(200)
+              
+            end
+
+            data[:bp] = '120/90'
+            data[:pr] = 60 + rand(60)
+            data[:hr] = data[:pr]
+            data[:rr] = 18 + rand(4)
+            data[:temp] = 36 + rand(4)
+            data[:spo2] = 90+rand(10)
+            data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+       msg = <<MSG
+Data.Sensing device_id=#{name}
+ #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+puts "Send #{now}"
+      ws.send(msg)
+      
+      
+    end
+
+          rescue Exception=>e
+            puts e.inspect
+          end
+            
+            
      
       
           end
           
-    
-          #====================================================
-          
-    
-         n -=1 
-       else
-         exit
-       end 
     
   
   
