@@ -131,7 +131,7 @@ rps.times do |i|
 end
 
 
-rps2 = 64
+rps2 = 200
 s2 = 2
 
 # puts wave

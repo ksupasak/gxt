@@ -210,28 +210,31 @@ a.nav-link{
 		 
 		  <div id="menu1" class="tab-pane fade ">
 			<p>
-		    <h3 style="padding-left:20px">ECG Monitor</h3>
+		    <h3 style="padding-left:20px">ECG Monitor
 			<div style="float:right;padding-right:20px">
-		    <span><%=link_to 'History', '#',:class=>'btn btn-info', :id=>'ecg-history-btn' %></span>
+		     <span><%=link_to 'History', '#',:class=>'btn btn-info', :id=>'ecg-history-btn' %></span>
 		    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
 			</div>
-			<script>
-				$('#ecg-history-btn').click(function(){
-					$.ajax({
-					  url: "ecg_history?admit_id=<%=admit.id%>",
-					  context: document.body
-					}).done(function(content) {
-					  $( '#ecg-history' ).html( content);
-					});
-				})
-			</script>
-			<div id="ecg-history">
-			</div>
-			
-			
-			<div id="ecg-result">
-			</div>
 			</h3>
+			
+			
+			<script>
+						$('#ecg-history-btn').click(function(){
+							$.ajax({
+							  url: "ecg_history?admit_id=<%=admit.id%>",
+							  context: document.body
+							}).done(function(content) {
+							  $( '#ecg-history' ).html( content);
+							});
+						})
+					</script>
+					<div id="ecg-history">
+					</div>
+			
+			
+					<div id="ecg-result">
+					</div>
+			
 			<% 6.times do |w| %>
 			<div class="row">
 			<div class="col-lg-12">
@@ -636,7 +639,7 @@ if record
    lead_data[i] = [];
   // genData(lead_data[i]) 
   
-  showWave('gfx<%=i%>',lead_data[i],i);
+  showWave('wave-<%=i%>',lead_data[i],i);
  
 <% end %>				
 
