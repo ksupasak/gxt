@@ -28,7 +28,7 @@
 		}
 	
 	
-	function aniLine(idx,rdx, sampling, rawdata, last){
+	function aniLine(idx,rdx, sampling, rawdata, last, print){
 	var w = 80;
     var h = 80;
 	var svg;
@@ -92,16 +92,23 @@
         .attr("stroke", "green")
         .attr("stroke-width", "1")
         .attr("fill", "none");
+		
+		if(print){
+			path.attr("stroke", "black")
+		}
 	  	
       var totalLength = path.node().getTotalLength();
 
-      path
+      
+	  path
         .attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
         .transition()
           .duration(1000)
           .ease(d3.easeLinear)
 	  .attr("stroke-dashoffset", 0);
+	  
+	  
           // .on("end", repeat);
     };
 	
@@ -159,7 +166,7 @@ function presetWave(div){
 				// rawdata = data
 				
 				if(true|| rawdata.length>=n){
-					aniLine(div,second%show,rawdata.length ,rawdata,lastdata);
+					aniLine(div,second%show,rawdata.length ,rawdata,lastdata,false);
 					lastdata = rawdata;
 				}
 				// second = 0 ;
@@ -168,5 +175,47 @@ function presetWave(div){
 			second+=1;
 	}, 1000);
 
+	
+   }
+
+
+	function printWave(div,data,id){
+		// console.log(div+" "+data.length);
+	var n = 200; // sample for a second
+    var cut = 1;
+	var show = 20; //second
+	var second = 0;
+	var lastdata = [];
+
+		
+		
+	for(var j=0;j<show;j++){
+			// genData(data);
+			data = lead_data[id];
+			// console.log('all '+id+" "+second%show+' = '+data.length);
+			
+			if(second%cut==cut-1){
+				
+				rawdata = data.splice(0,cut*n+1);
+//
+				
+				data.unshift(rawdata[rawdata.length-1]);
+				
+				
+				rawdata = rawdata.filter(function(v, i) {
+  				  	return i % 4 == 0;
+				});
+				// rawdata = data
+				
+				if(true|| rawdata.length>=n){
+					aniLine(div,second%show,rawdata.length ,rawdata,lastdata,true);
+					lastdata = rawdata;
+				}
+				// second = 0 ;
+			}
+		
+			second+=1;
+			
+		}	
 	
    }
