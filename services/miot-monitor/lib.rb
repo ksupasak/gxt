@@ -1,5 +1,5 @@
 
-CMS_IP   = '127.0.0.1'
+CMS_IP   = 'gexintec.local'
 CMS_PORT = 1792  
 CMS_SOLUTION = 'miot'
 
