@@ -2,11 +2,13 @@
 
 	patient = nil
 		
-	admits = Admit.where(:status=>'Admitted').all
+	admits = Admit.where(:status=>'Admitted', :station_id=>params[:station_id]).all
 	
-	for i in admits
+	if admits.size>0
 	
-	 if i.patient.hn==params[:hn]
+		i = admits[0]
+	
+	if i.patient.hn==params[:hn]
 		patient = i.patient
 		admit = i
 	end

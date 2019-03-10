@@ -292,7 +292,7 @@ class AdmitController < GXTDocument
        end
        
     
-     @context.redirect  "#{settings.name}/Station/show?id=#{admit.station.id}"
+     @context.redirect  "#{settings.name}/Station/show?id=#{admit.station.id}&score=1"
   end
   
   

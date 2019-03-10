@@ -194,7 +194,7 @@ a.nav-link{
   		    <a class="nav-link " data-toggle="tab" id="menu1-link" href="#menu1">ECG Monitor</a>
   		  </li>
 		  <li class="nav-item nav-itemx">
-		    <a class="nav-link " data-toggle="tab" href="#menu2">Scoring System</a>
+		    <a class="nav-link " data-toggle="tab" id="menu2-link" href="#menu2">Scoring System</a>
 		  </li>
 	
 		  <li class="nav-item nav-itemx">
@@ -685,7 +685,12 @@ if record
 <% end %>				
 
 
+  <% if params[:score] == '1' %>
+  $('#menu2-link').click();
+  <% else %>
   $('#menu1-link').click();
+  <% end %>
+  
   $('#menu3-link').click(function(){
   	gfx.active(true);
 	width = document.body.clientWidth;
