@@ -35,8 +35,8 @@
 	<% admits.each_with_index do |i,index| 
 		
 		patient = i.patient
-		if i.bed_no==''
-			i.update_attributes :bed_no=> i.station.name
+		if i.bed_no=='' and i.station
+			i.update_attributes :bed_no=> i.station.name 
 		end
 		
 	 %>

@@ -455,6 +455,8 @@ def self.registered(app)
             
             now = Time.now
             
+         
+            
             app.settings.senses[name].each_pair do |k,v|
               
               # store to sense

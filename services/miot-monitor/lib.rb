@@ -26,7 +26,20 @@ def self.connect
   
   connect_url = "ws://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}"
   puts connect_url
-  WebSocket::Client::Simple.connect connect_url
+  loop do 
+  begin
+    
+    return   WebSocket::Client::Simple.connect connect_url
+  
+  rescue Exception => e
+    sleep 5
+      
+    puts 'Reconnect in 5 seconds'
+    
+  end
+  
+end
+  
   
 end
 

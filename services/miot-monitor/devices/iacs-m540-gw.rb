@@ -216,20 +216,58 @@ end
     sk = {}
     
     lbuff = {}
+    
+    vs =  {}
+    
+    response = true
 
 
-    loop do
+    while true do
   
       begin
   
         message, info = socket.recvfrom(4096)
-        l = message.each_byte.to_a.collect{|i| i.to_i.to_s}  
+        l = message.each_byte.to_a.collect{|i| i.to_i}  
    
     
           # lead data package
           
     
           #====================================================
+          
+          if l[33].to_i == 14 and message.size==1298
+
+            puts "SPO2-HR #{l[291]}"
+            puts "SPO2-% #{l[255]}"
+
+            puts "HR #{l[39]}"
+      
+            puts "BP-SYS #{l[326]*256+l[327]}"
+      
+            puts "BP-DIA #{l[362]*256+l[363]}"
+      
+            vs[:hr] = l[39]
+            
+            vs[:pr] = l[291]
+            vs[:spo2] = l[255]
+            
+            if l[291]=4 and l[255] == 4
+               vs[:pr] = vs[:spo2] = '-'
+            end
+            
+            bp_sys = l[326]*256+l[327]
+            bp_dia = l[362]*256+l[363]
+            
+            vs[:bp] = "#{bp_sys/10}/#{bp_dia/10}"
+            
+      
+             #
+             # tabular l
+             # puts
+             # variant_detection tmp, l
+             puts
+           end
+          
           
           if  l[33].to_i ==  12 #and l[49].to_i != 110# and l[19].to_i != 174
      
@@ -259,7 +297,7 @@ end
             #========================================
           
             
-            begin
+           
               now = Time.now 
             stamp = now.to_json
             bp_stamp = now
@@ -271,11 +309,12 @@ end
                 
                 v = 58+(j*94)+i*2
                 v -= 6 if j>1
-                a = l[v].to_i
-                b = l[v+1].to_i
-                x = a*256+b
-                x = -(256-b) if a==255
+                a = l[v]
+                b = l[v+1]
                 
+                x = a*256+b
+                x = -256*(256-a)+b if a>200
+       
                 wave << x
                 
               end
@@ -295,6 +334,9 @@ end
             
             
             data = {}
+            
+            
+            
             data[:leads] = {}
             6.times do |j|
               
@@ -302,31 +344,47 @@ end
               
             end
 
-            data[:bp] = '120/90'
-            data[:pr] = 60 + rand(60)
-            data[:hr] = data[:pr]
-            data[:rr] = 18 + rand(4)
-            data[:temp] = 36 + rand(4)
-            data[:spo2] = 90+rand(10)
-            data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+            # data[:bp] = '120/90'
+        #     data[:pr] = 60 + rand(60)
+        #     data[:hr] = data[:pr]
+        #     data[:rr] = 18 + rand(4)
+        #     data[:temp] = 36 + rand(4)
+        #     data[:spo2] = 90+rand(10)
+            
+        # data[:bp] = '120/90'
+        # data[:pr] = 60 + rand(60)
+        # data[:hr] = data[:pr]
+        # data[:rr] = 18 + rand(4)
+        # data[:spo2] = 90+rand(10)
+
+        data.merge! vs
+
+        # data[:temp] = 36 + rand(4)
+    #     data[:rr] = 18 + rand(4)
+        data[:temp] = 37 
+        data[:rr] = 20 
+        
+        data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+         
+           
        msg = <<MSG
 Data.Sensing device_id=#{name}
  #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
 MSG
-puts "Send #{now}"
-      ws.send(msg)
+
+      response = ws.send(msg)
+      puts "Send #{now} #{response}"
       
+      if response == nil
+        
+       ws = MIOT::connect 
+        
+        
+      end
+ 
       
     end
-
-          rescue Exception=>e
-            puts e.inspect
-          end
-            
-            
-     
-      
-          end
+    end
           
     
   

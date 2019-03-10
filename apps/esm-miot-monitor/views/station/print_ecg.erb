@@ -1,10 +1,28 @@
 <%
 require 'json'
 	
+	senses = nil
+first = nil
+last =nil
+senses_data = nil
+	
+if params[:id]
+	
+	station = Station.find(params[:id])
+	
+	senses = Sense.where(:station_id=>station.id).all(:limit=>20,:order=>'start_time desc').reverse
+	first = senses[0]
+	last = senses[-1]
+	senses_data = senses.collect{|i| JSON.parse(i.data) }
+	
+else 
+	
 senses = Sense.find(params[:ids].split(","))
 first = senses[0]
 last = senses[-1]
-	senses_data = senses.collect{|i| JSON.parse(i.data) }
+senses_data = senses.collect{|i| JSON.parse(i.data) }
+	
+end
 	
 %>
 
@@ -25,10 +43,13 @@ last = senses[-1]
 </h1>
 <hr/>
 
-			<% 6.times do |w| %>
+			<% 
+			labels = %w{ECGII SPO2 ECGIII CH4 CH5 CH6}
+			
+			6.times do |w| %>
 			<div class="row">
 			<div class="col-lg-12">
-			L<%=w+1%>
+			<%=labels[w]%> :
 			</div>
 		
 			<div id="wave-<%=w%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:white">

@@ -17,6 +17,9 @@ body{
 .station .pr{color:#01bf02;
 
 }
+.station .hr{color:#bf6162;
+
+}
 
 .station .bp{color:#5990b7;;
 
@@ -123,9 +126,10 @@ body{
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6  col-lg-6 col-sm-3 rr">
-						
-						</div>				
+					<div class="col-6 col-lg-6 col-sm-3  hr">
+						<span class="label">HR</span>
+						<div class="value">-</div>
+					</div>			
 		
 						<div class="col-6 col-lg-6 col-sm-3  cc">
 						    <span class="label">LC</span>
@@ -507,6 +511,7 @@ $('#main-container').removeClass('container')
 			
 			$('#'+i+' .temp .value').html(obj['temp'])
 			
+			$('#'+i+' .hr .value').html(obj['hr'])
 			$('#'+i+' .pr .value').html(obj['pr'])
 			$('#'+i+' .rr .value').html(obj['rr'])
 			$('#'+i+' .spo2 .value').html(obj['spo2'])

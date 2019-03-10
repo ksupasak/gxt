@@ -17,7 +17,7 @@
 	unless admit 
 		
 		patient = Patient.create :hn=> params[:hn]
-		admit = Admit.create(:station_id=> params[:station_id], :patient_id=>patient.id, :status=>'Admitted', :score_id=> Score.first.id, :admit_stamp=>Time.now)
+		admit = Admit.create(:station_id=> params[:station_id], :patient_id=>patient.id, :status=>'Admitted', :score_id=> Score.first.id, :admit_stamp=>Time.now) 
 		%>
 		<script>alert("New patient <%=params[:hn]%> has been created.")</script>
 		<%
@@ -33,7 +33,7 @@
 %>
 <div class="row">
 <div class="col-12">
-Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn%></span>
+Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn if patient%></span>
 </div><br/><br/>
 <div class="col-12">
 	<div class="row">

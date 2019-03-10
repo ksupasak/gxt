@@ -56,6 +56,30 @@ class Sense
   
 end
 
+class Medication
+  include MongoMapper::Document
+  
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :admit_id, ObjectId
+  key :station_id, ObjectId
+  
+  key :name,  String
+  
+  key :start_time, Time
+  key :stop_time, Time
+  
+  key :rate, Float
+  key :volumn, Float
+  key :dulation, Float # second
+    
+  key :tag, String
+  
+  key :note, String
+  
+end
+
 class Patient
   include MongoMapper::Document
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
@@ -98,6 +122,9 @@ class Admit
     self.save
   end
 end
+
+
+
 
 class Score
   include MongoMapper::Document
@@ -210,6 +237,10 @@ end
 
 
 class ZoneController < GXTDocument
+  
+end
+
+class MedicationController < GXTDocument
   
 end
 

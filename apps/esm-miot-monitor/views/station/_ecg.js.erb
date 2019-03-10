@@ -141,7 +141,7 @@ function presetWave(div){
 	var show = 12; //second
 	var second = 0;
 	var lastdata = [];
-
+console.log(data.length)
 	var intervalID = setInterval(function(){
 		if(second%show==show-1){
 		
@@ -154,15 +154,32 @@ function presetWave(div){
 			
 			if(second%cut==cut-1){
 				
-				rawdata = data.splice(0,cut*n+1);
+				rawdata = data.splice(0,cut*n);
 //
+				// last insert
+				// data.unshift(rawdata[rawdata.length-1]);
 				
-				data.unshift(rawdata[rawdata.length-1]);
-				
+				if(id!=1){
 				
 				rawdata = rawdata.filter(function(v, i) {
-  				  	return i % 4 == 0;
+	  				  	return i % 2 == 0;
 				});
+				
+				
+				}else{
+					
+					spo2 = []
+					
+					for(j = 0 ;j<5;j++){
+						spo2 = spo2.concat(rawdata.splice(0,19))
+						rawdata.splice(0,40-19)
+					}
+					rawdata = spo2
+					
+				}
+				
+				
+				
 				// rawdata = data
 				
 				if(true|| rawdata.length>=n){
@@ -187,7 +204,7 @@ function presetWave(div){
 	var second = 0;
 	var lastdata = [];
 
-		
+	console.log(data.length)
 		
 	for(var j=0;j<show;j++){
 			// genData(data);
@@ -196,15 +213,38 @@ function presetWave(div){
 			
 			if(second%cut==cut-1){
 				
-				rawdata = data.splice(0,cut*n+1);
-//
+				rawdata = data.splice(0,cut*n);
+//				
+				// data.unshift(rawdata[rawdata.length]);
 				
-				data.unshift(rawdata[rawdata.length-1]);
 				
+				if(id!=1){
 				
 				rawdata = rawdata.filter(function(v, i) {
-  				  	return i % 4 == 0;
+	  				  	return i % 1 == 0;
 				});
+				
+				
+				}else{
+					
+					spo2 = []
+	//
+					for(k = 0 ;k<5;k++){
+						spo2 = spo2.concat(rawdata.splice(0,19))
+						rawdata.splice(0,40-19)
+					}
+					rawdata = spo2
+					
+				}
+				
+				
+							//
+				// data.unshift(rawdata[rawdata.length-1]);
+				//
+				//
+				// rawdata = rawdata.filter(function(v, i) {
+				//   				  	return i % 4 == 0;
+				// });
 				// rawdata = data
 				
 				if(true|| rawdata.length>=n){

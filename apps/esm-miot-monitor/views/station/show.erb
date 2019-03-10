@@ -22,6 +22,10 @@ body{
 
 }
 
+.station .hr{color:#bf6162;
+
+}
+
 .station .bp{color:#5990b7;;
 
 }
@@ -90,7 +94,7 @@ a.nav-link{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %>
 			<% end %> 	
 	
 		</div>
@@ -127,7 +131,10 @@ a.nav-link{
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
-								
+							<div class="col-6  col-lg-3 col-sm-3 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>	
 			
 						<div class="col-6 col-lg-3 col-sm-3 cc">
 						    <span class="label">LC</span>
@@ -213,32 +220,42 @@ a.nav-link{
 		    <h3 style="padding-left:20px">ECG Monitor
 			<div style="float:right;padding-right:20px">
 		     <span><%=link_to 'History', '#',:class=>'btn btn-info', :id=>'ecg-history-btn' %></span>
-		    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+		    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-info',:target=>'_blank' %></span>
 			</div>
 			</h3>
 			
 			
 			<script>
+				<% if admit %>
 						$('#ecg-history-btn').click(function(){
+							
 							$.ajax({
-							  url: "ecg_history?admit_id=<%=admit.id%>",
+							  url: "ecg_history?admit_id=<%=admit.id %>",
 							  context: document.body
 							}).done(function(content) {
+							
 							  $( '#ecg-history' ).html( content);
+							
+							  	$('#ecg-history').slideToggle();
 							});
 						})
+				<% end %>
 					</script>
-					<div id="ecg-history">
+					<div id="ecg-history" style="display:none">
 					</div>
 			
 			
 					<div id="ecg-result">
 					</div>
 			
-			<% 6.times do |w| %>
+			<% 
+			
+			labels = %w{ECGII SPO2 ECGIII CH4 CH5 CH6}
+				
+			6.times do |w| %>
 			<div class="row">
 			<div class="col-lg-12">
-			L<%=w+1%>
+			<%=labels[w]%>
 			</div>
 		
 			<div id="wave-<%=w%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:#111">
@@ -263,7 +280,7 @@ a.nav-link{
 		</h3>
 		 
 		<div id="result" class= "col-lg-12 order-lg-4 order-4">
-
+        <%=link_to 'Admit', "../Admit/create?record[station_id]=#{params[:id]}"%>
 		</div>
 		
   		</p>
@@ -325,7 +342,10 @@ a.nav-link{
 		  
 		  <div id="menu5" class="tab-pane fade">
 		    <p><h3  style="padding-left:20px">Video & Image</h3>
-		    Some content in menu 2.</p>
+		    <div style="padding:40px">
+			<img src='/miot/img/video-placeholder.jpg' width="100%">
+		</div>
+			</p>
 		  </div>
 		  
 		</div>
@@ -376,7 +396,7 @@ if record
 
 		    var components = [];
 	
-			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','rr','bp_sys','bp_dia'],records:null};
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','rr','temp','bp_sys','bp_dia'],records:null};
 			records = [];
 	
 			now = Date.now();
@@ -397,18 +417,20 @@ if record
 						
 						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
 						bp = j['bp'].split("/")
-						list.push({time:Time.parse(j['stamp']),hr:j['pr'],rr:j['rr'],bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
 					end
 					
 				end
 				
 			end
+			%>
 			
 			
+			<%
 			for j in list 	
 			%>
 			j = <%=j.to_json.html_safe%>
-			records.push({time:Date.parse(j['time']),hr:j['hr'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
+			records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
 			
 			<% end %>
 				<% end %>
@@ -425,12 +447,13 @@ if record
 	
 	
 	
-			med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl'],records:null};
+			med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl','0.9%NSS'],records:null};
 			records = [];
-			// records.push({time:now+130000,stop_time:now+200000,domicum:{r:3,v:300}});
-			// records.push({time:now+200000,stop_time:now+300000,fentanyl:{r:3,v:300}});
-			// records.push({time:now+300000,stop_time:now+320000,domicum:{r:3,v:300}});
-	//
+			
+			records.push({time:now,stop_time:now+20000,domicum:{r:3,v:300}});
+			records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
+			records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
+
 			med['records'] = records;
 	
 			components.push(vs);
@@ -580,6 +603,10 @@ if record
 			$('#'+i+' .temp .value').html(obj['temp'])
 			
 			$('#'+i+' .pr .value').html(obj['pr'])
+			$('#'+i+' .hr .value').html(obj['hr'])
+			
+			
+			
 			$('#'+i+' .rr .value').html(obj['rr'])
 			$('#'+i+' .spo2 .value').html(obj['spo2'])
 			
@@ -588,8 +615,22 @@ if record
 			
 			bp = obj['bp'].split('/')
 			
+			hr = parseInt(obj['hr'])
+			pr = parseInt(obj['pr'])
+			spo2 = parseInt(obj['spo2'])
+			rr = parseInt(obj['rr'])
+			temp = parseInt(obj['temp'])
 			
-		    vs = [{time:Date.now(),hr:parseInt(obj['pr']),rr:parseInt(obj['rr']),bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+			
+			if(isNaN(hr))hr=0;
+			if(isNaN(pr))pr=0;
+			if(isNaN(spo2))spo2=0;
+			if(isNaN(rr))rr=0;
+			
+			if(isNaN(temp))rr=0;
+			
+			
+		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
 			
 			gfx.tick({update:[{name:'vitalsign',append:vs}]});
 			
@@ -731,7 +772,7 @@ function call_admit(){
 
 
 				});
-				<% end %>
+<% end %>
 			
 </script>
 				<script>

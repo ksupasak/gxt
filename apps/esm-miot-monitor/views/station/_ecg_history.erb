@@ -6,7 +6,7 @@
 n = 200
 m = 10
 
-senses = Sense.where(:admit_id=>params[:admit_id]).all :limit=>n
+senses = Sense.where(:admit_id=>params[:admit_id]).all :limit=>n, :order=>'start_time desc'
 
 list = []
 
