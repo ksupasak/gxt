@@ -345,7 +345,7 @@ a.nav-link{
 			<script>
 		
 				$.ajax({
-				  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id%>",
+				  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id if admit%>",
 				  context: document.body
 				}).done(function(data) {
 		  
