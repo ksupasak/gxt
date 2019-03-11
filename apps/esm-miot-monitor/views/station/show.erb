@@ -70,7 +70,7 @@ a.nav-link{
 <%
 	station = Station.find params[:id]
 	
-	admit = station.admits.where(:status=>'Admitted').last
+	admit = station.admits.where(:status=>'Admitted', :station_id=>station.id).last
 		
 
 	
@@ -223,8 +223,12 @@ a.nav-link{
 		    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-info',:target=>'_blank' %></span>
 			</div>
 			</h3>
-			
-			
+			<% if admit %>
+			<div class="col-12">
+			<% patient = admit.patient %>
+			Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn if patient%></span>
+			</div>
+			<% end %>
 			<script>
 				<% if admit %>
 						$('#ecg-history-btn').click(function(){
@@ -336,8 +340,21 @@ a.nav-link{
 		  </div>
 		  
 		  <div id="menu4" class="tab-pane fade">
-		    <p><h3  style="padding-left:20px">Medication</h3>
-		    Some content in menu 2.</p>
+		    <p>
+		    <div id="medication-panel"></div>
+			<script>
+		
+				$.ajax({
+				  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id%>",
+				  context: document.body
+				}).done(function(data) {
+		  
+				$('#medication-panel').html(data)
+		        });
+				
+			</script>
+			
+		   </p>
 		  </div>
 		  
 		  <div id="menu5" class="tab-pane fade">

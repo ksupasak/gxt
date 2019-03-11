@@ -24,6 +24,8 @@ senses_data = senses.collect{|i| JSON.parse(i.data) }
 	
 end
 	
+admit = Admit.find first.admit_id	
+	
 %>
 
 <div class="report" >
@@ -36,11 +38,18 @@ end
 		        #printable { display: block; }
 		    }
 	</style>
-<h1>ECG.  <%=first.start_time.strftime("%d/%m/%Y %H:%M:%S") if first %>  - <%=last.stop_time.strftime("%H:%M:%S") if last %>  
+<h1>ECG.  <%=first.start_time.localtime.strftime("%d/%m/%Y %H:%M:%S") if first %>  - <%=last.stop_time.localtime.strftime("%H:%M:%S") if last %> 
+	
 <span style="float:right" id="non-printable">
 	<%=link_to 'Close' ,"javascript:window.close();", :class=>'btn'%>
 	<%=link_to 'Print' ,"javascript:ecg_print();", :class=>'btn btn-info'%></span>
 </h1>
+	<% if admit %>
+	<div class="col-12">
+	<% patient = admit.patient %>
+	Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn if patient%></span>
+	</div>
+	<% end %> 
 <hr/>
 
 			<% 

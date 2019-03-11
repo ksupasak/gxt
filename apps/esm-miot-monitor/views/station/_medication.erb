@@ -1,0 +1,52 @@
+<h3  style="padding-left:20px">Medication
+	<div style="float:right;padding-right:20px">
+		    <span><%=link_to 'History', '#',:class=>'btn btn-info' %></span>
+		    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+	</div>
+</h3>
+<%
+	
+admit = Admit.find params[:admit_id]
+	
+%>
+<div class="col-12">
+<% patient = admit.patient %>
+Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn if patient%></span>
+</div><br/><br/>
+
+<%
+	
+medications = Medication.where(:admit_id=>admit.id).all :order=>'start_time'
+
+
+# belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+# belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
+#
+# key :admit_id, ObjectId
+# key :station_id, ObjectId
+#
+# key :name,  String
+#
+# key :start_time, Time
+# key :stop_time, Time
+#
+# key :rate, Float
+# key :volumn, Float
+# key :dulation, Float # second
+#
+# key :tag, String
+#
+# key :note, String
+%>
+
+<table class='table'>
+<thead>
+</thead>
+<tbody>
+	<% for i in medications %>
+	<tr>
+		<td><%= i.name%></td>
+	</tr>
+	<% end %>
+</tbody>
+</table>
