@@ -353,7 +353,7 @@ class AdmitController < GXTDocument
           score = admit.score
           
           
-          admit.nurse_records.create :description=>"#{score.name} v.#{score.version} = #{params[:data][:score]} : #{score.description}"
+          admit.nurse_records.create :start_time=> Time.now , :description=>"#{score.name} v.#{score.version} = #{params[:data][:score]} : #{score.description}"
           
          
        end
