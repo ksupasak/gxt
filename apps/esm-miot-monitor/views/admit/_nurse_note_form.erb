@@ -31,7 +31,8 @@
 	
 
 %>
-
+<div class="form-group">
+	
 <input type="hidden" name="admit_id" value="<%=record.admit_id %>">
 <div class="field">
 <label>Time</label>
@@ -40,7 +41,7 @@
 		<option value="1">1</option>
 	</select > -->
 	
-	<%=text_field_tag  "record[start_time]", "#{record.start_time}", :id=>"datetimepicker3" %>
+	<%=text_field_tag  "record[start_time]", "#{record.start_time}", :id=>"datetimepicker3",:class=>'form-control'%>
 	
 </div>
 </div>
@@ -49,6 +50,7 @@
  <div class="field">
  <label>Note</label>
  <div class="value">
-<textarea name="record[description]"  style="width:100%"><%=record.description%></textarea>
+<textarea name="record[description]" class="form-control" style="width:100%"><%=record.description%></textarea>
+ </div>
  </div>
  </div>

@@ -33,8 +33,11 @@
 	
 
 %>
-
+<div class="form-group">
+	
+	
 <input type="hidden" name="admit_id" value="<%=record.admit_id %>">
+
 <div class="field">
 <label>Time</label>
 <div class="value">
@@ -42,7 +45,7 @@
 		<option value="1">1</option>
 	</select > -->
 	
-	<%=text_field_tag  "record[start_time]", "#{record.start_time}"%>
+	<%=text_field_tag  "record[start_time]", "#{record.start_time}", :class=>'form-control'%>
 	
 </div>
 </div>
@@ -50,7 +53,7 @@
  <div class="field">
  <label>Medication</label>
  <div class="value">
-	<%=select  "record","medication_id", [['','']]+ Medication.all.collect{|i| [i.id,i.name] }, :value=>record.medication_id, :class=>'record_medication_id' %>
+	<%=select  "record","medication_id", [['','']]+ Medication.all.collect{|i| [i.id,i.name] }, :value=>record.medication_id, :class=>'record_medication_id form-control' %>
  </div>
  </div>
 <script>
@@ -65,34 +68,36 @@
  <div class="field">
  <label>Medication Name</label>
  <div class="value">
-	<%=text_field_tag  "record[name]", "#{record.name}", :class=>'record_name' %>
+	<%=text_field_tag  "record[name]", "#{record.name}", :class=>'record_name form-control' %>
  </div>
  </div>
  
  <div class="field">
  <label>Concentration</label>
  <div class="value">
-	<%=text_field_tag  "record[concentration]", "#{record.concentration}" %>
+	<%=text_field_tag  "record[concentration]", "#{record.concentration}", :class=>'form-control' %>
  </div>
  </div>
  
  <div class="field">
  <label>Rate (ml/min)</label>
  <div class="value">
-	<%=text_field_tag  "record[rate]", "#{record.rate}" %>
+	<%=text_field_tag  "record[rate]", "#{record.rate}",:class=>'form-control' %>
  </div>
  </div>
  
  <div class="field">
  <label>Volume (ml)</label>
  <div class="value">
-	<%=text_field_tag  "record[volume]", "#{record.volume}" %>
+	<%=text_field_tag  "record[volume]", "#{record.volume}",:class=>'form-control' %>
  </div>
  </div>
  
  <div class="field">
  <label>Status</label>
  <div class="value">
-	<%=select  "record","status", [['',''],['ON','ON'],['OFF','OFF']], :value=>record.status %>
+	<%=select  "record","status", [['',''],['ON','ON'],['OFF','OFF']], :value=>record.status, :class=>'form-control'%>
  </div>
  </div>
+ 
+</div>
