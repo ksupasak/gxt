@@ -1,206 +1,930 @@
+
+
 <style>
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #report, #report * {
-    visibility: visible;
-  }
-  #report {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
+body{
+	background:black;
+	
+}
+.container{
+	background:black;
+}
+.station .label{
+	font-size:0.8em;
+
+}
+.station .value{
+	font-size:1.5em;
+	text-align:center;
+	
+}
+.station .col-sm-3{
+	border:1px solid #333;border-radius: 4px;
+	min-height:4em;
+	
+}
+.station .pr{color:#01bf02;
+
+}
+
+.station .hr{color:#bf6162;
+
+}
+
+.station .bp{color:#5990b7;;
+
+}
+
+.station .spo2{color:#bcaf06;
+
+}
+
+.station .temp{color:#2F50E2;
+
+}
+
+.station .rr{color:#b7851d;
+
+}
+.station .col-6{
+		border:1px solid #333;
+		border-radius: 5px;
+}
+
+.station .cc{
+	color:#00b3b7;
+
+}
+.station .uc{
+	color:#f937e2;
+
+}
+.btn {
+	color:#eee; 
+}
+.nav-itemx{
+	background-color:#666;
+	
+}
+a.nav-link{
+	color:#ddd;
+}
+
+td,th, thead{
+	border:1px solid #0c5758;
+}
+.table td, .table th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #0c5758
+}
+ .table thead th{
+    padding: .75rem;
+	background:#0c2728;
+    vertical-align: top;
+    border-bottom: 0px solid #0c5758
+}
+
+a.link:link{
+	border:1px solid #0c5758;
+	color:#ddd;
+	padding:10px;margin:10px;
+	border-radius: 4px;
+	text-decoration: none;
+}
+a.link-info:link{
+	background:#0c5758;
+}
+a.link-info:hover{
+	background:#2c7778;
 }
 </style>
+
 <%
-	@record = Admit.find(params[:id])
-	patient = @record.patient
-	records = @record.records
+	# station = Station.find params[:id]
+	
+	admit = Admit.find params[:id]
+	
+	
+	# .admits.where(:status=>'Admitted', :station_id=>station.id).last
+		
+    station = nil
+    station_id = 'NA'
 
-	start = @record.created_at
-	start = @record.admit_stamp if @record.admit_stamp
+	if admit.station
+		
+		station = admit.station
+	
+		station_id = station.name
+
+	end
+	
 %>
-<div id="report">
-<h1>Patient Admit <%#link_to '+Record', "../DataRecord/create?admit_id=#{params[:id]}",:class=>'btn btn-success'%>
-</h1>
 
-
-<div class="row">
-
-<div class="col-sm-3">
-	<div class="row">
-		<div class="col-sm-12 alert alert-warning" style="font-size:1.2em" >
-			HN : <%=patient.hn%><br/>
-			Name : <%=patient.name%><br/>
-			Admit at : <%=start.getlocal.strftime('%D - %H:%M') %><br/>
-			Bed No: <%=@record.bed_no %><br/>
-			Score : <%=@record.score %><br/>
-			<% if @record.admit_stamp %>
-			Total Time : <%=((Time.now -  @record.admit_stamp)/60).to_i  %> mins
-			<% end %>
+	<div class="row" style="background:#666">
+		
+		<div class="col-2 text-left ">
+		<%= link_to station_id,"../Station/show?id=#{station_id}",:class=>'btn' %>
 		</div>
+		<div class="col-7 text-center">
+			<%
+			
+				patient = admit.patient
+			
+			%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %>
+			
+	
+		</div>
+		<div class="col-3">
+			
+		<%= link_to "","../Station/show?id=#{station_id}",:class=>'btn hn' if station %>
+		
+		</div>
+		
+
+	</div>		
+
+<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#ddd;">
+
+
+<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-8 order-lg-1  " style="">
+
+
+		<style>
+		        .viewport {
+		            top: 0px;
+		            left: 0px;
+		            overflow-y: auto;
+		            right: 0px;
+		            height: 400px;
+					width: 600px;
+					font-size:0.8em;
+					padding:0px;
+					
+		            background-color: white;
+		            border: 0px solid #000;
+		           border-radius: 4px;
+		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
+		        }
+				svg text {
+				    -webkit-user-select: none;
+				       -moz-user-select: none;
+				        -ms-user-select: none;
+				            user-select: none;
+				}
+				svg text::selection {
+				    background: none;
+				}
+		        .info-svg {
+		            fill: #2968AA;
+		            overflow: visible;
+		        }
+				.gxt-box{
+					border:0px solid #265d5c;
+					min-height:300px;
+					color:#ccc;
+					margin-bottom:1em
+				}
+				h5{
+					border :1px solid #265d5c;padding:10px;
+/*		            border: 0px solid #000;*/
+		           border-radius: 4px;
+				}
+		</style>
+	
+		<div class="row">
+		<div class="col-12 "  >
+		<div class="row" style="padding:15px">
+			<div class="col-12 viewport">
+			<%= inline(this,:'_flowsheet') %>
+			</div>
 	</div>
+		</div>
+		<div class="col-xl-4 col-lg-6 gxt-box">
+			
+	<%= inline(this,:'_nurse_note_page') %>
+	
+	
+		
+		
+		
+		</div>
+		
+		<div class="col-xl-4 col-lg-6  gxt-box">
+	<%= inline(this,:'_medication_page') %>
+	
+		
+		
+		
+		</div>
+		
+		<div class=" col-xl-4 col-lg-6  gxt-box">
+	<%= inline(this,:'_record_page') %>
+	
+		
+		
+		
+		</div>
+		
+		</div>
+		
 </div>
-<div class="col-sm-9">
-	<svg width="500" height="150"></svg>
+
+<div id="<%=station_id%>"  class="col-12 order-2 col-sm-12  order-sm-2 col-lg-4 order-lg-2 station " style="border-right:0px solid #f00">
+	<div  class="row align-items-start">
+		<div class="col-lg-12 order-lg-1 ">
+			<div class="row">
+						<div class="col-3  col-lg-3 col-sm-3 pr">
+							<span class="label">PR</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-3  col-lg-3 col-sm-3 bp">
+							<span class="label">BP</span>
+							<div class="value">-</div>
+						</div>
+			
+							<div class="col-3  col-lg-3 col-sm-3 temp">
+								<span class="label">Temp</span>
+								<div class="value">-</div>
+							</div>
+							<div class="col-3  col-lg-3  col-sm-3 rr">
+								<span class="label">RR</span>
+								<div class="value">-</div>
+							</div>
+			
+						<div class="col-3  col-lg-3 col-sm-3 spo2">
+							<span class="label">SpO2</span>
+							<div class="value">-</div>
+						</div>
+							<div class="col-3  col-lg-3 col-sm-3 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>	
+			
+						<div class="col-3 col-lg-3 col-sm-3 cc">
+						    <span class="label">LC</span>
+							<div class="value">-</div> 
+						</div>
+						<div class="col-3 col-lg-3  col-sm-3 uc">
+							<span class="label">UO</span>
+							<div class="value">-</div>
+						</div>
+						
+						<div class="col-3 col-lg-3  col-sm-3 score">
+							<span class="label">Sc</span>
+							<div class="value">&nbsp;</div>
+						</div>
+						
+						
+			</div>
+		</div>
+		
+		
+		<div id="menu1" class="col-12 order-3">
+					<p>
+				    <div style="float:right;padding-right:20px">
+				     <span><%=link_to 'History', '#',:class=>'btn btn-info', :id=>'ecg-history-btn' %></span>
+				    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-info',:target=>'_blank' %></span>
+					</div>
+			
+					<script>
+						<% if admit %>
+								$('#ecg-history-btn').click(function(){
+							
+									$.ajax({
+									  url: "ecg_history?admit_id=<%=admit.id %>",
+									  context: document.body
+									}).done(function(content) {
+							
+									  $( '#ecg-history' ).html( content);
+							
+									  	$('#ecg-history').slideToggle();
+									});
+								})
+						<% end %>
+							</script>
+							<div id="ecg-history" style="display:none">
+							</div>
+			
+			
+							<div id="ecg-result">
+							</div>
+			
+					<% 
+			
+					labels = %w{ECGII SPO2 ECGIII CH4 CH5 CH6}
+				
+					6.times do |w| %>
+					<div class="row">
+					<div class="col-lg-12">
+					<%=labels[w]%>
+					</div>
+		
+					<div id="wave-<%=w%>" class="col-lg-11 order-lg-3 order-3" style="min-height:5em;background:#111;border:1px solid #333">
+		
+					</div>
+		
+					</div>
+		
+					<% end %>
+			
+			
+					</p>
+		</div>
+		
+		
+	</div>	
+		
 </div>
+
 
 </div>
 
 
 <div class="row">
-<div class="col-sm-12" >
-<%#link_to "New", "javascript:$('#new-record').slideDown('slow')" %>
-<div id="new-record">
+		
+		
+		<div style=""  class="col-lg-12 order-lg-12 order-3">
+			
+			
+			
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs">
+  	
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link " data-toggle="tab" id="menu2-link" href="#menu2">Scoring System</a>
+		  </li>
+	
+	
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" href="#menu5">Video & Image</a>
+		  </li>
+		
+		  
+		</ul>
+
+		<!-- Tab panes -->
+
+
+		<div class="tab-content">
+		 
+		 
+		  
+  		  <div id="menu2" class="tab-pane fade  ">
+  			    	<p>
+  	    <h3 style="padding-left:20px">Scoring System
+		<div style="float:right;padding-right:20px">
+	    <span><%#link_to 'History', '#',:class=>'btn btn-info' %></span>
+	    <span><%=link_to 'Print', '#',:class=>'btn btn-info' %></span>
+		</div>
+		</h3>
+		 
+		<div id="result" class= "col-lg-12 order-lg-4 order-4">
+        <%=link_to 'Admit', "../Admit/create?record[station_id]=#{params[:id]}"%>
+		</div>
+		
+  		</p>
+  		  </div>
+		  
+		  
+	
+		  
+		  <div id="menu4" class="tab-pane fade">
+		    <p>
+		    <div id="medication-panel"></div>
+			<script>
+		
+				// $.ajax({
+	// 			  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id if admit%>",
+	// 			  context: document.body
+	// 			}).done(function(data) {
+	//
+	// 			$('#medication-panel').html(data)
+	// 	        });
+				
+			</script>
+			
+		   </p>
+		  </div>
+		  
+		  <div id="menu5" class="tab-pane fade">
+		    <p><h3  style="padding-left:20px">Video & Image</h3>
+		    <div style="padding:40px">
+			<img src='/miot/img/video-placeholder.jpg' width="100%">
+		</div>
+			</p>
+		  </div>
+		  
+		</div>
+	  </div>
+		
+		<div>
+		
+		
+		</div>
+		
+
+	</div>
+
+</div>
+
+
+</div>
+
+
 <%
-	new_record = DataRecord.new :admit_id=>params[:id]
+   record =  this.model.find params[:id]
+if record  
 %>
-<%= partial :'admit/_record_form', :locals=>{:record=>new_record}%>
-</div>
 
-</div>
-</div>
-<div class="row">
-<div class="col-sm-12" >
-<br/>
-	<%=link_to 'Discharge', "discharge?id=#{params[:id]}",:class=>'btn btn-danger' ,:style=>'float:right' if @record.status=='Admitted'%>
+<% end %><hr/>
 
-	<%=link_to 'Print', "javascript:window.print()",:class=>'btn ' ,:style=>'float:right'%>
+<%#link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn'%>
+<%#link_to 'Back', 'index',:class=>'btn'%>
+
+	<span class="col-sm-12 msg " style="color:gray;font-size:0.7em;<%='display:none' if params[:debug]!='1' %>" ></span>	
+
+		<script type="text/javascript">
+	    
+
+			$(document).ready(function(){
+				
+				
+				
+				
+ 			   var lead_data = {};
+		  	 var wave_data = [];
+			 var gfx = null;
+		
+			var data = [100,200,100,200];
+
+			var settings = {version:'1.0'};
+
+		    var components = [];
+	
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','rr','temp','bp_sys','bp_dia'],records:null};
+			records = [];
+	
+			now = Date.now();
+			
+			<%
+			if admit
+			senses = Sense.where(:admit_id=>admit.id).limit(100).sort(:start_time.desc).all.reverse
+		    
+			
+			
+			list =[]
+			
+			if true
+			
+			for i in senses
+			
+				o = ActiveSupport::JSON.decode(i.data)
+				
+				if o['vs']
+					for j in o['vs']
+						
+						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+						bp = j['bp'].split("/")
+						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+					end
+					
+				end
+				
+			end
+			
+			
+			else
+			
+				for i in DataRecord.where(:admit_id=>params[:id]).all
+			
+					# o = ActiveSupport::JSON.decode(i.data)
+					
+				list.push :time=>i.stamp,:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia
+				
+				
+					# if o['vs']
+					# 	for j in o['vs']
+					#
+					# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+					# 		bp = j['bp'].split("/")
+					# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+					# 	end
+					#
+					# end
+				
+				end
+			
+			end
+			
+			
+			for j in list 	
+			%>
+			j = <%=j.to_json.html_safe%>
+			records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
+			<% end %>
+				<% end %>
+			//records = <%= list.to_json.html_safe %>
+		
+			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
+			// records.push({time:now+200000,hr:110,rr:20,bp_sys:163,bp_dia:120});
+			// records.push({time:now+300000,hr:90,rr:20,bp_sys:100,bp_dia:60});
+			// records.push({time:now+400000,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			
+			
+			vs['records'] = records;
+			
+			<%
+				
+				meds = admit.medication_records
+				med_map = {}
+				for i in meds
+					
+					k = i.name
+					
+					med_map[k] = [] unless med_map[k]
+					med_map[k] << i
+				
+				end
+				
+				
+			%>
+	
+		
+	
+			// med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl','0.9%NSS'],records:null};
+			
+			med = {name:'medication',type:'med',show:true,params:<%=med_map.keys.to_json.html_safe%>,records:null};
+			
+			records = [];
+			<% for i in meds 
+			
+				stop_time = Time.now
+				stop_time = i.stop_time if i.stop_time
+			%>
+			
+			records.push({time:new Date(<%=i.start_time.localtime.to_json%>),stop_time: new Date(<%=stop_time.localtime.to_json%>),<%=i.name%>:{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
+			
+			<% end %>
+			
+			// records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
+		// 	records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
+
+			med['records'] = records;
+	
+			components.push(vs);
+			components.push(med);
+
+	
+	
+			settings['components'] = components
+	
+			console.log(settings);
+	
+	
+			 var viewport = d3.select(".viewport").append("svg")
+    		 .attr("class", "info-svg")
+
+	     var g = viewport.append("g")
+		    .attr("transform", "translate(0,0)");
+		 gfx = GFX()
+		 .svg(g)
+		 .startTime(Date.now())
+		 .endTime(Date.now())
+		 .viewport(d3.select(".viewport"));
+		 gfx.data(settings);
+		 d3.select("svg").call(gfx);
+
+		 window.addEventListener("resize", gfx.resize);
+		
+
+	
+	// var show = function(el){
+	//      	return function(msg){ el.innerHTML = msg  }
+	//     }
+   
+	function show(text){
+		// console.log(text)
+		$('.msg').html(text)
+	}
+   
+	
+	
+	  var ws       = new WebSocket('ws://' + window.location.host + "<%='/miot/Home/index'%>");
+	
+	  var plot_pos = {};
+	
+   ws.onopen    = function()  { show('websocket opened'); 
+	
+	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+	  };
+   ws.onclose   = function()  { show('websocket closed'); 
+		
+	 	setTimeout(function () {
+	 		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	 		    }, 2000); //will call the function after 2 secs.
+	 		
+
+   }
+   ws.onmessage = function(m) { 
+	
+		active = $('.active-station').size()
+	
+		show(''+m.data)
+		
+		
+		
+		lines = m.data.split("\n")
+		
+		// console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Alert'){
+			data = JSON.parse(lines[1])
+			
+			// alert(data['alert'])
+			
+			$('#'+data['station']).addClass('bp_alert_2');
+			$('#'+data['station']+' .msg').html(data['alert']);
+			
+			// play sound
+			ion.sound.play("bell_ring");
+			
+		}else
+		if(lines[0].split(" ")[0]=='Data.Image'){
+		
+			lines.shift()
+			img = lines.join("")
+			// alert('image '+m.data.length)
+			
+			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+		}
+		else
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+	
+		data = JSON.parse(lines[1])
+			// 
+			// if(data['list'].length!=active)
+			// window.location.href = "index"; 
+			
+		$('#timer').html(data['time'])
+		for(var id in data['list']){
+			i = data['list'][id]
+			
+			if($('#'+i).length > 0){ 
+			obj = data['data'][i]
+				
+			
+		  if(obj['wave']){	
+			  
+			    // wave_data.push(obj['wave']);
+		   		// wave_data = wave_data.concat(obj['wave']);
+				for(var j=0;j<obj['wave'].length;j++){
+					wave_data.push(obj['wave'][j]);
+				}
+				// console.log(wave_data);
+				// wave_data = obj['wave'];
+		   }
+		   
+		   if(obj['leads']){
+		   	
+			   for(var j=0;j<6;j++){
+				jid = ''+j
+			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
+			
+			   // console.log(lead_data[jid].length)
+				   
+			   }
+			
+		   }
+		    			
+			
+			 // console.log(obj)
+			$('#'+i+' .hn').html(obj['ref'])
+			
+			if($('#'+i+' .bp').html()!=obj['bp']){
+				$('#'+i).addClass('bp_alert');
+				$('#'+i).removeClass('bp_alert_2');
+				$('#'+i+' .msg').html("-");
+			}else{
+				$('#'+i).removeClass('bp_alert');
+				// $('#'+i).removeClass('bp_alert_2');
+				// $('#'+i+' .msg').html("-");
+			}
+			
+			$('#'+i+' .bp .value').html(obj['bp'])
+			
+			$('#'+i+' .temp .value').html(obj['temp'])
+			
+			$('#'+i+' .pr .value').html(obj['pr'])
+			$('#'+i+' .hr .value').html(obj['hr'])
+			
+			
+			
+			$('#'+i+' .rr .value').html(obj['rr'])
+			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			
+			
+			$('#'+i+' .score .value').html(obj['score'])
+			
+			bp = obj['bp'].split('/')
+			
+			hr = parseInt(obj['hr'])
+			pr = parseInt(obj['pr'])
+			spo2 = parseInt(obj['spo2'])
+			rr = parseInt(obj['rr'])
+			temp = parseInt(obj['temp'])
+			
+			
+			if(isNaN(hr))hr=0;
+			if(isNaN(pr))pr=0;
+			if(isNaN(spo2))spo2=0;
+			if(isNaN(rr))rr=0;
+			
+			if(isNaN(temp))rr=0;
+			
+			
+		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+	
+			gfx.tick({update:[{name:'vitalsign',append:vs}]});
+			
+			
+			
+			
+			}else{
+					setTimeout(function () {
+				       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+				    }, 2000); //will call the function after 2 secs.
+				
+			}
+			
+		}
+		 }
+	 };
 
 
-	<%=link_to 'Submit', "\#",:id=>params[:id], :class=>'btn btn-success' if @record.status=='Admitted' %>
+	
+	
+	$('.ctl').each(function(){
+		
+		obj = $(this)
+		
+		obj.click(function(){
+			o = $(this)
+			 ws.send(o.attr('id'));
+		})
+		
+	})
 
-	<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
-	<%=link_to 'Back', '../Home/admit',:class=>'btn'%>
-<br/><br/>
-<% if records.size>0 %>
 
-<table class="table" style="font-size:0.8em">
-<thead>
-	<tr><th>No.</th>
-		<th>DateTime</th><th>BP</th><th>PR</th><th>TEMP</th><th>RR</th><th>SpO2</th><th>Score</th>
-	</tr>
-</thead>
-<% records.each_with_index do |i, index |  %>
-<tr><td>
-	<%=index+1%>.
-</td>
-<td>
-	<%=i.stamp.getlocal.strftime("%d/%m/%y %H:%M")%>
-</td>
-<td><%=i.bp%></td><td><%=i.pr%></td><td><%=i.temp%></td><td><%=i.rr%></td><td><%=i.spo2%></td><td><%=i.score%></td>
-
-</tr>
-<% end %>
-</table>
-<% else %>
-<span>There is no Record</span>
-<% end %>
-</div>
-</div></div>
-<hr/>
+     
+<%= inline(this,:'_ecg.js') %>
+	
 
 
 
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+   // var wave_data = [];
 
-.axis--x path {
-  display: none;
-}
+<% 6.times do |i|  %>
+   
+   presetWave('wave-<%=i%>')
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
+   i = "<%=i%>"
 
-</style>
+   lead_data[i] = [];
+  // genData(lead_data[i]) 
+  
+  showWave('wave-<%=i%>',lead_data[i],i);
+ 
+<% end %>				
 
-<script>
-	$('#<%=params[:id]%>').click(function(){
-		call_submit($(this).attr("id"))
-	});
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 80, bottom: 30, left: 50},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var parseTime = d3.timeParse("%H%M");
-
-var x = d3.scaleTime().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
-    z = d3.scaleOrdinal(d3.schemeCategory10);
-
-var line = d3.line()
-    .curve(d3.curveBasis)
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.temperature); });
-
-d3.tsv("data?id=<%=params[:id]%>", type, function(error, data) {
-  if (error) throw error;
-
-  var cities = data.columns.slice(1).map(function(id) {
-    return {
-      id: id,
-      values: data.map(function(d) {
-        return {date: d.date, temperature: d[id]};
-      })
-    };
+  <% if params[:score] == '1' %>
+  $('#menu2-link').click();
+  <% else %>
+  $('#menu1-link').click();
+  <% end %>
+  
+  $('#menu3-link').click(function(){
+  	gfx.active(true);
+    width = document.body.clientWidth;
+      // $('.viewport').css('width',width);
+  	gfx.render(true);
   });
 
-  x.domain(d3.extent(data, function(d) { return d.date; }));
 
-  y.domain([
-    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
-    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
-  ]);
+	gfx.active(true);
+    width = document.body.clientWidth;
+    // $('.viewport').css('width',width);
+	gfx.render(true);
 
-  z.domain(cities.map(function(c) { return c.id; }));
 
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
 
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("fill", "#000")
-      .text("");
+	});
 
-  var city = g.selectAll(".city")
-    .data(cities)
-    .enter().append("g")
-      .attr("class", "city");
 
-  city.append("path")
-      .attr("class", "line")
-      .attr("d", function(d) { return line(d.values); })
-      .style("stroke", function(d) { return z(d.id); });
+	// init bunch of sounds
+	ion.sound({
+	    sounds: [
+	        {name: "bell_ring"}
+	    ],
 
-  city.append("text")
-      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
-      .attr("x", 3)
-      .attr("dy", "0.35em")
-      .style("font", "10px sans-serif")
-      .text(function(d) { return d.id; });
-});
+	    // main config
+	    path: "<%=url_for 'sounds/'%>",
+	    preload: true,
+	    multiplay: true,
+	    volume: 0.9
+	});
 
-function type(d, _, columns) {
-  d.date = parseTime(d.date);
-  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
-  return d;
-}
-$('#new-record').toggle()
-</script>
+	$('#search-form').submit(function(event){
+		
+		hn = $('#search').val()
+		
+		
+		$.ajax({
+		  url: "patient?station_id=<%=station.id%>&hn="+hn,
+		  context: document.body
+		}).done(function(data) {
+		  
+		$('#result').html(data)
+		
+		
+		});
+		
+		$('#search').val("");
+		event.preventDefault();
+	})	
+	
 
+</script>	<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
 <%= inline(this,:'../home/_scoring') %>
+
+
+
+<div class="modal fade" id="admit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="color:black">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      
+    </div>
+  </div>
+</div>
+
+					
+					
+
+				
+				
+
+	<!-- <div class="modal fade" id="nurse_note-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" style="color:black">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="nurse_note_form-content" style="background:#fff">
+          Loading..
+	    </div>
+	  </div>
+	</div> -->
+
+
+
+<script>
+	
+
+	
+
+function call_admit(){
+	$.ajax({
+	  url: "../Admit/admiting?id=<%=station.name%>",
+	  context: document.body
+	}).done(function(data) {
+	  $('.modal-content').html(data);
+	  $('#admit-modal').modal({
+	    backdrop: 'static',
+	    keyboard: false
+	})
+	});
+}
+<% if admit %>		
+		$.ajax({
+		  url: "patient?station_id=<%=station.id%>&hn=<%=admit.patient.hn%>",
+		  context: document.body
+		}).done(function(data) {
+				$('#result').html(data)
+		 });
+<% end %>
+			
+</script>
+				<script>
+				$('#main-container').removeClass('container')
+					$(document).ready(function(){
+						
+						
+					})
+					
+					
+				</script>
+					
+	
+
+	

@@ -57,9 +57,18 @@ body{
 
 <div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
 
+
 <% 	  
 
-	  stations = Station.all
+      @current_zone = Zone.first
+		
+	  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+
+	  # @current_zone = get_zone
+
+      # admits = @current_zone.admits.where(:status=>'Admitted').all
+
+	  stations = @current_zone.stations.all
 
       for station in stations
 	
@@ -76,6 +85,7 @@ body{
 		title = station.title if station.title and station.title.size>0 
 %>
 
+
 <div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
 	<div class="row" style="background:#666">
 		
@@ -89,7 +99,7 @@ body{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Station/show?id=#{station.id}", :class=>'btn'%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
 			<% end %> 	
 	
 		</div>
@@ -102,7 +112,7 @@ body{
 			
 	</div>
 	<div  class="row align-items-start">
-		<div class="col-lg-6 order-lg-2 order-6">
+		<div class="col-lg-12 order-lg-2 order-12">
 			<div class="row">
 						<div class="col-6 col-lg-6 col-sm-3 pr">
 							<span class="label">PR</span>
@@ -141,7 +151,7 @@ body{
 						</div>
 			</div>
 		</div>
-		<div class="col-lg-6 order-lg-3 order-1 " style="border:1px solid #333;border-radius: 5px;">
+		<div class="col-lg-6 order-lg-3 order-1 " style="border:1px solid #333;border-radius: 5px;display:none">
 			<div class="row">
 					<div class="col-6 score" style="border:0px solid blue;text-align:center">
 							<%
@@ -176,9 +186,9 @@ body{
 						call_submit($(this).attr("id"))
 					});
 					</script>
-					<%=link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
+					<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
 					<% else %>
-					<%=link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
+					<%#link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
 					<% end %>
 				</div>
 			</div>
@@ -242,7 +252,7 @@ $('#main-container').removeClass('container')
 							<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=i%></span></div>
 							</div>
 							<div class="row">
-							<div class="col-sm-12 " ><span class="sos">10</span></div>
+							<div class="col-sm-12 " ><span class="sos">-</span></div>
 							</div>
 							<div class="row">
 							<div class="col-sm-12">
@@ -282,7 +292,7 @@ $('#main-container').removeClass('container')
 	
 			function aniLine(idx, sampling, rawdata, last){
 	
-			var w = 50;
+			var w = 40;
 		    var h = 80;
 			var svg;
 			

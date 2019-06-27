@@ -1,0 +1,30 @@
+version: '3'
+services:
+  # db:
+  #   image: mysql
+  #   build: ./seed
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: minadadmin
+  redis:
+    image: redis
+    restart: always
+  mongo:
+    image: mongo:3.2
+    restart: always
+  gxt:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec ruby server.rb"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1792:1792"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      DEFAULT_APP: miot

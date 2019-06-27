@@ -21,11 +21,266 @@ require_relative 'config/m540_cfg'
 module Device
 
 
+  def self.add_monitor socket, ip
+  
+ 
+ # M540_MULTICAST_ADDR = "224.0.1.10"  # to receive data
+ #
+ # M540_BIND_ADDR_LOCAL = "10.50.0.5"
+ 
+ mip = "224.0.1.#{ip.split(".")[-1]}"
+
+
+
+ membership = IPAddr.new(mip).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+ 
+
+ puts 'Start Sent Data : ' + ip
+ socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
+ # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
+
+
+end
+
+     def self.start_monitor socket, ws
+     
+    #========================================================================================
+    #========================================================================================
+    #========================================================================================
+    
+    # M540_MULTICAST_ADDR = "224.0.1.10"  # to receive data
+    #
+    # M540_BIND_ADDR_LOCAL = "10.50.0.5"
+    
+  # mip = "224.0.1.#{ip.split(".")[-1]}"
+
+   
+
+    # membership = IPAddr.new(mip).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+    #
+    #
+    # puts 'Start Sent Data : ' + ip
+    # socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
+    # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
+
+    # open port
+    socket.bind('0.0.0.0', M540_PORT)
+
+
+    # host = GW_IP
+    # port = GW_PORT
+    # uri = GW_URI
+
+  
+
+    station_msg = nil
+    
+    tmp = []
+    stmp = {}
+    sk = {}
+    
+    lbuff = {}
+    
+    vs =  {}
+    
+    response = true
+
+    while true do
+  
+      begin
+  
+        message, info = socket.recvfrom(4096)
+        l = message.each_byte.to_a.collect{|i| i.to_i}  
+   
+    
+          # lead data package
+          
+          
+           if message.size==302
+             
+             # tabular l
+             
+             tags = []
+             8.times do |i|
+                tags << l[97+i*2]
+             end
+             station_name = tags.collect{|i| i.chr}.join.strip
+             
+             tags = []
+             
+             30.times do |i|
+               
+               break if l[133+i*2]==0
+               tags << l[133+i*2]
+                
+             end
+             msg = tags.collect{|i| i.chr}.join.strip
+             
+             name = station_name
+             station_msg = msg
+             # puts station_name
+             #
+             # puts msg
+             
+             
+           end
+#==================================================== Normal Data
+          
+          if l[33].to_i == 14 and message.size==1298
+
+            puts "SPO2-HR #{l[291]}"
+            puts "SPO2-% #{l[255]}"
+
+            puts "HR #{l[39]}"
+      
+            puts "BP-SYS #{l[326]*256+l[327]}"
+      
+            puts "BP-DIA #{l[362]*256+l[363]}"
+      
+            vs[:hr] = l[39]
+            
+            vs[:pr] = l[291]
+            vs[:spo2] = l[255]
+            
+            if l[291]=4 and l[255] == 4
+               vs[:pr] = vs[:spo2] = '-'
+            end
+            
+            bp_sys = l[326]*256+l[327]
+            bp_dia = l[362]*256+l[363]
+            
+            vs[:bp] = "#{bp_sys/10}/#{bp_dia/10}"
+            
+      
+             puts
+           end
+          
+#=========================================================== # Lead Data
+           
+          if  l[33].to_i ==  12 #and l[49].to_i != 110# and l[19].to_i != 174
+     
+                 #
+            # 40.times do |i|
+    #           print "#{i}\t"
+    #           6.times do |j|
+    #
+    #             v = 58+(j*94)+i*2
+    #             v -= 6 if j>1
+    #
+    #             a = l[v].to_i
+    #             b = l[v+1].to_i
+    #
+    #             # puts a
+    #             x = a*256+b
+    #             x = -(256-b) if a==255
+    #
+    #             print "#{x}\t"
+    #
+    #
+    #           end
+    #
+    #           puts
+    #         end
+
+            #========================================
+          
+            
+           
+            now = Time.now 
+            stamp = now.to_json
+            bp_stamp = now
+            
+            ref = '-'
+            
+            
+            6.times do |j|
+              
+              wave = []
+              40.times do |i|
+                
+                v = 58+(j*94)+i*2
+                v -= 6 if j>1
+                a = l[v]
+                b = l[v+1]
+                
+                x = a*256+b
+                x = -256*(256-a)+b if a>200
+       
+                wave << x
+                
+              end
+              
+              lbuff[j] = [] unless lbuff[j]
+              lbuff[j] += wave
+              
+              
+            end
+              
+                
+                
+      if lbuff[0].size>=200        
+            
+            
+            data = {}
+            
+            
+            
+            data[:leads] = {}
+            6.times do |j|
+              
+               data[:leads][j] = lbuff[j].shift(200)
+              
+            end
+
+
+
+        data.merge! vs
+
+        
+        data[:temp] = '-'
+        data[:rr] = '-' 
+        
+        data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+         
+           
+       msg = <<MSG
+Data.Sensing device_id=#{name}
+ #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'msg'=>station_msg, 'data'=>data}.to_json}
+MSG
+
+      response = ws.send(msg)
+      puts "Send #{now} #{response.inspect} #{name}"
+      
+      if response == nil
+        
+       ws = MIOT::connect 
+        
+        
+      end
+ 
+      
+    end
+    end
+          
+    
+  
+  
+  rescue Exception=>e
+        puts e.inspect
+      
+  end
+  
+    end
+  
+end
+
 
   def self.monitor_iacs_m540 ws
 
     puts "-- Start IACS M540 Service"
 
+
+    name = 'Bed01'
 
     def tabular data, cols = 20
   
@@ -187,214 +442,128 @@ end
 
 # self.demo ws
   
-     puts 'Start Sent Data'
+
+  
      
-
-
-    socket = UDPSocket.new
-
-    membership = IPAddr.new(M540_MULTICAST_ADDR).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+     #========================================================================================
+     #========================================================================================
+     #========================================================================================
+     
+     
     
- 
+     socket = UDPSocket.new
+      
+     
+   thread =  Thread.new {
+      
+     
+     dis_socket = UDPSocket.new
+
+     membership = IPAddr.new(M540_DIS_MULTICAST_ADDR).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+
+
     puts 'Start Sent Data'
-    socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
-    # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
+    dis_socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
+
 
     # open port
-    socket.bind('0.0.0.0', M540_PORT)
-
-
-    # host = GW_IP
-    # port = GW_PORT
-    # uri = GW_URI
-
-  
-    puts 'Start Receive Data'
-
-    tmp = []
-    stmp = {}
-    sk = {}
+    dis_socket.bind('0.0.0.0', M540_DIS_PORT)
     
-    lbuff = {}
     
-    vs =  {}
     
-    response = true
 
-
+    puts 'Start Monitor Discovery'
+    
+      
+    ip_map = {}
+    
+    
     while true do
-  
+
       begin
-  
-        message, info = socket.recvfrom(4096)
+
+        message, info = dis_socket.recvfrom(4096)
         l = message.each_byte.to_a.collect{|i| i.to_i}  
-   
-    
-          # lead data package
-          
-    
-          #====================================================
-          
-          if l[33].to_i == 14 and message.size==1298
-
-            puts "SPO2-HR #{l[291]}"
-            puts "SPO2-% #{l[255]}"
-
-            puts "HR #{l[39]}"
-      
-            puts "BP-SYS #{l[326]*256+l[327]}"
-      
-            puts "BP-DIA #{l[362]*256+l[363]}"
-      
-            vs[:hr] = l[39]
-            
-            vs[:pr] = l[291]
-            vs[:spo2] = l[255]
-            
-            if l[291]=4 and l[255] == 4
-               vs[:pr] = vs[:spo2] = '-'
-            end
-            
-            bp_sys = l[326]*256+l[327]
-            bp_dia = l[362]*256+l[363]
-            
-            vs[:bp] = "#{bp_sys/10}/#{bp_dia/10}"
-            
-      
-             #
-             # tabular l
-             # puts
-             # variant_detection tmp, l
-             puts
-           end
-          
-          
-          if  l[33].to_i ==  12 #and l[49].to_i != 110# and l[19].to_i != 174
-     
-                 #
-            # 40.times do |i|
-    #           print "#{i}\t"
-    #           6.times do |j|
-    #
-    #             v = 58+(j*94)+i*2
-    #             v -= 6 if j>1
-    #
-    #             a = l[v].to_i
-    #             b = l[v+1].to_i
-    #
-    #             # puts a
-    #             x = a*256+b
-    #             x = -(256-b) if a==255
-    #
-    #             print "#{x}\t"
-    #
-    #
-    #           end
-    #
-    #           puts
-    #         end
-
-            #========================================
-          
-            
-           
-              now = Time.now 
-            stamp = now.to_json
-            bp_stamp = now
-            ref = '1235'
-            6.times do |j|
-              
-              wave = []
-              40.times do |i|
-                
-                v = 58+(j*94)+i*2
-                v -= 6 if j>1
-                a = l[v]
-                b = l[v+1]
-                
-                x = a*256+b
-                x = -256*(256-a)+b if a>200
        
-                wave << x
-                
-              end
-              
-              lbuff[j] = [] unless lbuff[j]
-              lbuff[j] += wave
-              
-            
-              
-              
-            end
-              
-                # puts "#{lbuff[0].size} #{Time.now}"
-                
-                
-      if lbuff[0].size>=200        
-            
-            
-            data = {}
-            
-            
-            
-            data[:leads] = {}
-            6.times do |j|
-              
-               data[:leads][j] = lbuff[j].shift(200)
-              
-            end
-
-            # data[:bp] = '120/90'
-        #     data[:pr] = 60 + rand(60)
-        #     data[:hr] = data[:pr]
-        #     data[:rr] = 18 + rand(4)
-        #     data[:temp] = 36 + rand(4)
-        #     data[:spo2] = 90+rand(10)
-            
-        # data[:bp] = '120/90'
-        # data[:pr] = 60 + rand(60)
-        # data[:hr] = data[:pr]
-        # data[:rr] = 18 + rand(4)
-        # data[:spo2] = 90+rand(10)
-
-        data.merge! vs
-
-        # data[:temp] = 36 + rand(4)
-    #     data[:rr] = 18 + rand(4)
-        data[:temp] = 37 
-        data[:rr] = 20 
-        
-        data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+  
+       
+        ip = info[2]
+       
          
-           
-       msg = <<MSG
-Data.Sensing device_id=#{name}
- #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
-MSG
-
-      response = ws.send(msg)
-      puts "Send #{now} #{response}"
-      
-      if response == nil
-        
-       ws = MIOT::connect 
-        
-        
-      end
- 
-      
-    end
-    end
+        unless ip_map[ip]
           
+          # k = fork{
+          puts "add new monitor #{ip}"
+            add_monitor socket, ip
+          
+               
+          # }
+          
+          ip_map[ip] = true
+          
+        
+        end
+
+      rescue Exception=>e
+        puts e.inspect
     
+      end
   
-  
-  rescue Exception=>e
-        puts e
+    end
+     
+       }
+       
+       thread.run
+       
+       
+       pt_thread =  Thread.new {
+         
+         
+     
+         dis_socket = UDPSocket.new
+
+         membership = IPAddr.new(M540_PT_MULTICAST_ADDR).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+
+
+        puts 'Start Sent Data'
+        dis_socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
+
+
+        # open port
+        dis_socket.bind('0.0.0.0', M540_PT_PORT)
+        
+         
       
-  end
+        ip_map = {}
+    
+    
+        while true do
+
+          begin
+
+            message, info = dis_socket.recvfrom(4096)
+            l = message.each_byte.to_a.collect{|i| i.to_i}  
+       
+            # tabular l, 20
+           
+
+          rescue Exception=>e
+            puts e.inspect
+    
+          end
   
-end
+        end
+     
+           }
+       
+           pt_thread.run
+       
+       
+       
+       
+     start_monitor socket, ws 
+     thread.join
+   
 end
 end
   

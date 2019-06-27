@@ -3,9 +3,10 @@ require 'net/http'
 require_relative '../../services/monitor/conf'
 
 
-
+require 'active_support'
 
 require_relative 'models'
+
 
 
 module EsmMiotMonitor
@@ -45,7 +46,7 @@ MSG
   end
 
 
-  class HomeController < GXT
+class HomeController < GXT
 
     
   def get_stations params
@@ -108,14 +109,10 @@ MSG
 
   def websocket request
       
-   
-      
- 
-      
         request.websocket do |ws|
 
 
-# puts 'init websocket '
+
       
            ws.onopen do
              puts "open websocket for #{@context.settings.name} on #{ws.hash}"
@@ -125,7 +122,6 @@ MSG
            end
 
 
-# puts 'on websocket '
            
            
            ws.onmessage do |msg|
@@ -134,9 +130,7 @@ MSG
              name =  @context.settings.apps_ws_rv[ws.hash]
              switch name
              
-             
-             # puts  "msg from #{@context.settings.name} #{msg}"
-             # t = msg.encode('utf-8').split("\n")
+
              t = []
              msg.each_line do |line|
                t<<line
@@ -220,10 +214,10 @@ MSG
                    station_name = pdata['station'] if pdata['station'] 
                    station_idx = "#{name}|#{station_name}"
                    
+                   # fw : data sensing for direct receiver
                    EsmMiotMonitor::dispatch cmd, path, pdata.to_json
                
                   
-                   # puts "Name = #{params.inspect }"
                    ref = "-"
                    ref = pdata['ref'] if pdata['ref']
 
@@ -236,35 +230,45 @@ MSG
                    station = nil
                    
                   
-                  @context.settings.stations[name] = {} unless @context.settings.stations[name]
+                   @context.settings.stations[name] = {} unless @context.settings.stations[name]
 
                    
-                  
+                   # register or retrieve station 
+                   
                    station = Station.where(:name=>station_name).first
                    unless station
                           station = Station.create(:name=>station_name, :title=>station_name)
                    end
+                   
+                   
                    @context.settings.stations[name][station.name] = station
                    
                    
                    data['station_id'] = station.id
-
+                    
+                   # insert title data  
+                   
                    if station
                        station_id = station['_id']
                        data['title'] = station.title if station.title and station.title.size>0 
                    end  
 
-                   if data['pr'] 
+                   # if data['pr'] 
                        data['ref'] = ref
-                   end
+                   # end
                    
                    data['score'] = 0
+                   
                    admit = nil
+                   
+                   # inject last score
+                   
                    if admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
                      data['score'] = admit.current_score
                    end
                    
-                   @context.settings.senses[name] = {} unless  @context.settings.senses[name] 
+                    @context.settings.senses[name] = {} unless  @context.settings.senses[name] 
+                    
                     old = @context.settings.senses[name][station_name]
                     old = old.clone if old
                     odata = @context.settings.senses[name][station_name]
@@ -272,6 +276,7 @@ MSG
                     
                     
                     # mark history
+                    
                     if admit!=nil and (data['bp'] or data['pr'] or data['spo2'])
                       
                       odata['admit_id'] = admit.id
@@ -289,7 +294,7 @@ MSG
                     
                     
                     
-## merge wave data
+                    ## merge wave data
                     
                     if data['wave']
                        odata['wave'] = [] unless odata['wave']
@@ -313,9 +318,6 @@ MSG
                      
                     end
                     
-                     # puts odata['leads'].inspect 
-                    
-                  
                      odata.merge! data
                      
                      # puts odata.inspect 
@@ -327,25 +329,26 @@ MSG
                      data = odata
                      
               
-## internal alert
+                     ## internal alert
               
-              if data['bp']
-                   high = data['bp'].split("/")[0].to_i
+                    if data['bp']
+                         high = data['bp'].split("/")[0].to_i
                    
-                   if high > 200
-                     puts "****** Alert *****"
-                     EsmMiotMonitor::dispatch "Alert", "station_id=*", {:title=>pdata['title'],:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
-                     data['sos'] = 10
-                   else
+                         if high > 200
+                           puts "****** Alert *****"
+                           EsmMiotMonitor::dispatch "Alert", "station_id=*", {:title=>pdata['title'],:station=>pdata['station'],:alert=>'High BP Sys at '+data['bp'].to_s+' '}.to_json
+                           data['sos'] = 10
+                         else
                  
-                   end
-              end
+                         end
+                    end
                
-              # puts 'dispatch bp stamp '+ " #{data['bp_stamp']}"
+             
+              # detect new bp stamp or new patient admit
              
               if data['bp']!= "-/-"
               
-                old = {} unless old
+                   old = {} unless old
               
                    bp_stamp = data['bp_stamp']
                    old_bp_stamp = old['bp_stamp'] 
@@ -369,13 +372,16 @@ MSG
              
              
              
+            when 'Data.Image'
+                  EsmMiotMonitor::dispatch cmd, path, t[1..-1].join
+            else
+                  EsmMiotMonitor::dispatch cmd, path, body.to_json
+            end
              
              
-             when 'Data.Image'
-                   EsmMiotMonitor::dispatch cmd, path, t[1..-1].join
-             else
-                   EsmMiotMonitor::dispatch cmd, path, body.to_json
-             end
+             
+             
+
            
            
            end

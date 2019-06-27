@@ -261,7 +261,7 @@ def switch name
     
     settings.set :name, name 
     settings.set :app, settings.apps[name]
-    MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+    MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
     
 end
 

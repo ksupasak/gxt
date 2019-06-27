@@ -1,0 +1,588 @@
+
+<style>
+body{
+	background:black;
+}
+
+.station .label{
+	font-size:0.8em;
+
+}
+.station .value{
+	font-size:1.5em;
+	margin-top:0px;
+	padding-top:0px;
+	text-align:center;
+}
+.station .pr{color:#01bf02;
+
+}
+.station .hr{color:#bf6162;
+
+}
+
+.station .bp{color:#5990b7;;
+
+}
+
+.station .spo2{color:#bcaf06;
+
+}
+
+.station .temp{color:#2F50E2;
+
+}
+
+.station .rr{color:#b7851d;
+
+}
+.station .col-6{
+		border:1px solid #333;
+		border-radius: 5px;
+}
+
+.station .cc{
+	color:#00b3b7;
+
+}
+.station .uc{
+	color:#f937e2;
+
+}
+.btn {
+	color:#eee; 
+	//text-decoration: underline;
+}
+</style>
+
+<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
+
+<% 	  
+
+	  stations = Station.all
+
+      for station in stations
+	
+		# station = Station.where(:name=>i).first
+		
+		if station
+		 
+		 
+		admit = station.admits.last
+		
+		admit = nil if admit and admit.status=='Discharged'
+		 
+		i = station.title
+		title = station.title if station.title and station.title.size>0 
+%>
+
+<div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
+	<div class="row" style="background:#666">
+		
+		<div class="col-2 text-left ">
+		<%= link_to title,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		</div>
+		<div class="col-7 text-center">
+			<%
+			
+			if admit
+				patient = admit.patient
+			
+			%>
+			<%= link_to "#{patient.name} (#{patient.hn})","../Station/show?id=#{station.id}", :class=>'btn'%>
+			<% end %> 	
+	
+		</div>
+		<div class="col-3">
+			
+		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' %>
+		
+		</div>
+		
+			
+	</div>
+	<div  class="row align-items-start">
+		<div class="col-lg-12 order-lg-2 order-12">
+			<div class="row">
+						<div class="col-6 col-lg-6 col-sm-3 pr">
+							<span class="label">PR</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-6 col-lg-6 col-sm-3  bp">
+							<span class="label">BP</span>
+							<div class="value">-</div>
+						</div>
+			
+							<div class="col-6 col-lg-6 col-sm-3  temp">
+								<span class="label">Temp</span>
+								<div class="value">-</div>
+							</div>
+							<div class="col-6 col-lg-6 col-sm-3  rr">
+								<span class="label">RR</span>
+								<div class="value">-</div>
+							</div>
+			
+						<div class="col-6 col-lg-6 col-sm-3  spo2">
+							<span class="label">SpO2</span>
+							<div class="value">-</div>
+						</div>
+					<div class="col-6 col-lg-6 col-sm-3  hr">
+						<span class="label">HR</span>
+						<div class="value">-</div>
+					</div>			
+		
+						<div class="col-6 col-lg-6 col-sm-3  cc">
+						    <span class="label">LC</span>
+							<div class="value">-</div> 
+						</div>
+						<div class="col-6  col-lg-6 col-sm-3 uc">
+							<span class="label">UO</span>
+							<div class="value">-</div>
+						</div>
+			</div>
+		</div>
+		<div class="col-lg-6 order-lg-3 order-1 " style="border:1px solid #333;border-radius: 5px;display:none">
+			<div class="row">
+					<div class="col-6 score" style="border:0px solid blue;text-align:center">
+							<%
+
+							if admit
+								patient = admit.patient
+
+							%>
+							<span><%=admit.score%></span><%else %><span></span><% end %>
+						<div class="value" style='font-size:4em;'>
+						- 
+						</div>
+						
+					</div>
+					
+					<div class="col-6" style="border:0px solid blue;">
+
+						
+					</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-6">
+					<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
+				</div>
+				<div class="col-6">
+					<%
+					if admit
+						patient = admit.patient
+					%>
+					<script>
+					$('#<%=admit.id%>').click(function(){
+						call_submit($(this).attr("id"))
+					});
+					</script>
+					<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
+					<% else %>
+					<%#link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
+					<% end %>
+				</div>
+			</div>
+		</div>
+		
+		<div id="wave-<%=i%>" class="col-lg-12 order-lg-1 order-2" style="min-height:5em;background:#111">
+		
+		</div>
+	</div>
+
+</div>
+<% end %>
+<% end %>
+
+</div>
+<script>
+$('#main-container').removeClass('container')
+</script>
+
+
+
+	<div id="panel" class="panel" style="border:0px solid blue">
+		<div class="clear"></div>
+	</div>
+	
+		<div id="template" class="station" style="display:none">
+				<div class="row">
+					<div class="col-sm-1">
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								P
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								M
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 ctlx">
+								S
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-7">
+						<div class="row">
+						<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
+						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
+						<div class="col-sm-6 boxx"><span class="spo2-label x-label" >SpO<sub>2</sub></span><span class="spo2">-</span></div>
+						<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
+						<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
+						<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
+						</div>
+
+					</div>
+					<div class="col-sm-3 pid" >
+							<div class="row">
+							<div class="col-sm-12" style="font-size:0.8em"><span class="id  "><%=i%></span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=i%></span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12 " ><span class="sos">-</span></div>
+							</div>
+							<div class="row">
+							<div class="col-sm-12">
+							<canvas class="plot" id="plot-<%=i%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
+							</canvas>
+							</div></div>
+					</div>
+
+				</div>
+				<div class="row">
+						<span class="col-sm-12 msg"></span>	
+				</div>
+
+		
+		</div> 
+	
+
+		<script type="text/javascript">
+	    
+
+			$(document).ready(function(){
+				
+				
+					
+			function genData(data){
+			
+				scale = 50;
+			
+				for(var i=0;i<20;i++){
+					r = Math.random();
+					v = Math.sin(360/20*i*Math.PI/180)*(scale*r)+50;
+					data.push(v);
+				}
+			
+			}
+	    
+	
+			function aniLine(idx, sampling, rawdata, last){
+	
+			var w = 40;
+		    var h = 80;
+			var svg;
+			
+			// console.log(""+idx+" "+rawdata.length)
+
+		    svg = d3.select("#"+idx)
+		      .append("svg")
+		      .attr("width", w)
+		      .attr("height", h)
+		      .attr("id", "visualization");
+
+	    
+			// svgo.selectAll("path.old").remove();
+			// svgo.selectAll("path").attr("class", "old");
+
+
+		    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
+		    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
+
+		    var line = d3.line()
+		      .x(function(d,i) {return x(i);})
+		      .y(function(d) {return y(d);})
+		      .curve(d3.curveNatural)
+
+		    // data is created inside the function so it is always unique
+		    let repeat = () => {
+		      var data = rawdata //d3.range(101).map(function(){return Math.random()*100})
+
+		      // Uncomment following line to clear the previously drawn line
+		      //svg.selectAll("path").remove();
+
+		      // Set a light grey class on old paths
+	     
+		      svg.selectAll("path").remove();
+		      // var last_path = svg.append("path")
+		      // 		      .attr("d", line(last))
+		      // 		      .attr("stroke", "#131")
+		      // 		      .attr("stroke-width", "2")
+		      // 		      .attr("fill", "none")
+		      // 		      .attr("class", "old");
+		      // 		      last_path.add
+
+		      var path = svg.append("path")
+		        .attr("d", line(data))
+		        .attr("stroke", "green")
+		        .attr("stroke-width", "1")
+		        .attr("fill", "none");
+
+		      var totalLength = path.node().getTotalLength();
+
+		      path
+		        .attr("stroke-dasharray", totalLength + " " + totalLength)
+		        .attr("stroke-dashoffset", totalLength)
+		        .transition()
+		          .duration(1000)
+		          .ease(d3.easeLinear)
+		          .attr("stroke-dashoffset", 0)
+		          // .on("end", repeat);
+		    };
+		    repeat();
+			}
+		
+			// aniLine('line1')
+			// aniLine('line2')
+			// aniLine('line3')
+			// aniLine('line4')
+	
+		
+		
+			function showWave(div,data){
+			var n = 32; // sample for a second
+		    var cut = 1;
+			var show = 8; //second
+			var second = 0;
+			var lastdata = [];
+		
+			var intervalID = setInterval(function(){
+				if(second%show==show-1){
+					
+					$('#'+div).html("");
+					
+				}
+					// genData(data);
+					if(second%cut==cut-1&&second<1000){
+					
+						rawdata = data.splice(0,cut*n+1);
+						data.unshift(rawdata[rawdata.length-1]);
+						if(rawdata.length>=n){
+							aniLine(div,n ,rawdata,lastdata);
+							lastdata = rawdata;
+						}
+						// second = 0 ;
+					}
+					
+					second+=1;
+			}, 1000);
+		
+		
+		   }
+		   
+   
+   
+		   // var wave_data = [];
+		   var wave_data = {};
+
+		<% for i in stations.collect{|i| i.name}.sort %>
+		   
+		   i = "<%=i%>"
+		   
+		   wave_data[i] = [];
+		   
+		  showWave('wave-<%=i%>',wave_data[i]);
+		
+	    <% end %>
+	
+	
+			// showWave('line2',[]);
+			// showWave('line3',[]);
+			// showWave('line4',[]);
+			//
+		
+		
+		
+		
+
+	
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
+
+	
+	  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+	
+	  var plot_pos = {};
+	
+      ws.onopen    = function()  { show('websocket opened'); 
+
+	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+	  };
+      ws.onclose   = function()  { show('websocket closed'); 
+		
+	 	setTimeout(function () {
+	       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	    }, 2000); //will call the function after 2 secs.
+	
+
+      }
+      ws.onmessage = function(m) { 
+	
+		active = $('.active-station').size()
+	
+		// show(''+m.data)
+		
+		lines = m.data.split("\n")
+		
+		// console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Alert'){
+			data = JSON.parse(lines[1])
+			
+			// alert(data['alert'])
+			
+			$('#'+data['station']).addClass('bp_alert_2');
+			$('#'+data['station']+' .msg').html(data['alert']);
+			
+			// play sound
+			ion.sound.play("bell_ring");
+			
+		}else
+		if(lines[0].split(" ")[0]=='Data.Image'){
+		
+			lines.shift()
+			img = lines.join("")
+			// alert('image '+m.data.length)
+			
+			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+		}
+		else
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		// console.log(lines)
+	
+		data = JSON.parse(lines[1])
+	
+		if(data['list'].length!=active){
+			// window.location.href = "index";
+			console.log(data['list'])
+			console.log('active '+active);
+		}
+			
+		$('#timer').html(data['time'])
+		for(var id in data['list']){
+			i = data['list'][id]
+			
+			if($('#'+i).length > 0){ 
+			obj = data['data'][i]
+				
+			
+		  if(obj['wave']){	
+			  
+			    // wave_data.push(obj['wave']);
+		   		// wave_data = wave_data.concat(obj['wave']);
+				for(var j=0;j<obj['wave'].length;j++){
+					wave_data[i].push(obj['wave'][j]);
+				}
+   				// console.log("v"+i+" "+wave_data[i].length);
+				// wave_data = obj['wave'];
+		   }
+		    			
+			
+			 // console.log(obj)
+			$('#'+i+' .hn').html(obj['ref'])
+			
+			if($('#'+i+' .bp').html()!=obj['bp']){
+				$('#'+i).addClass('bp_alert');
+				$('#'+i).removeClass('bp_alert_2');
+				$('#'+i+' .msg').html("-");
+			}else{
+				$('#'+i).removeClass('bp_alert');
+				// $('#'+i).removeClass('bp_alert_2');
+				// $('#'+i+' .msg').html("-");
+			}
+			
+			$('#'+i+' .bp .value').html(obj['bp'])
+			
+			$('#'+i+' .temp .value').html(obj['temp'])
+			
+			$('#'+i+' .hr .value').html(obj['hr'])
+			$('#'+i+' .pr .value').html(obj['pr'])
+			$('#'+i+' .rr .value').html(obj['rr'])
+			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			
+			
+			$('#'+i+' .score .value').html(obj['score'])
+			
+			
+			
+			
+			}else{
+					// console.log(lines)
+					setTimeout(function () {
+				       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+				    }, 2000); //will call the function after 2 secs.
+				
+			}
+			
+		}
+		 }
+	 };
+
+      // var sender = function(f){
+      //      var input     = document.getElementById('input');
+      //      input.onclick = function(){ input.value = "" };
+      //      f.onsubmit    = function(){
+      //        ws.send(input.value);
+      //        input.value = "send a message";
+      //        return false;
+      //      }
+      //    }(document.getElementById('form'));
+      // 	
+	
+	
+	$('.ctl').each(function(){
+		
+		obj = $(this)
+		
+		obj.click(function(){
+			o = $(this)
+			 ws.send(o.attr('id'));
+		})
+		
+	})
+
+	})
+   
+
+	// init bunch of sounds
+	ion.sound({
+	    sounds: [
+	        {name: "bell_ring"}
+	    ],
+
+	    // main config
+	    path: "<%=url_for 'sounds/'%>",
+	    preload: true,
+	    multiplay: true,
+	    volume: 0.9
+	});
+
+
+
+   </script>
+<div style="font-size:0.8em">
+  	<div style="float:right" id="timer">
+	00:00
+	</div>
+By E.S.M.Solution Co.,Ltd.
+</div>
+
+<%= inline(this,:'_scoring') %>
+
+<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>

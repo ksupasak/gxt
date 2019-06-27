@@ -4,26 +4,165 @@
 	# @record.patient = patient
 	
 	@record.admit_stamp = Time.now 
-
+	
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	
+	keys.collect!{|i| i if i[0]!='discharge_stamp' }.compact!
+	
+	
+	cols = %w{ }
+	
+	hn = ''
+	patient_name = ''
+	
+	if p = @record.patient
+		hn = p.hn
+		patient_name = p.name
+	end
+	
+	@current_zone = nil
+	
+	if session[:current_zone]
+		
+		@current_zone = Zone.find session[:current_zone] 
+		
+		
+	end
+	
 
 %>
+
 <div class="form-group">
+
  <label for="product-name">Patient</label>
 <div class="row">
-<div class="col-5">
-  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=%>" placeholder="HN" style="">
+<div class="col-3">
+  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=hn%>" placeholder="HN" style="">
 </div>
-<div class="col-7">
-  <input type="text" class="form-control" id="patient-hn" name="patient[name]" value="<%=%>" placeholder="Name" style="">
+<div class="col-9">
+  <input type="text" class="form-control" id="patient-name" name="patient[name]" value="<%=patient_name%>" placeholder="Name" style="">
 </div></div>
 </div>
+
+<div class="form-group">
+
+<div class="row">
+
+
+<%
+	
+name = 'station_id'
+
+if @current_zone 
+stations = @current_zone.stations.all	
+else
+stations = Station.all	
+end
+%>
+<div class="col-3">
+<label for="product-name">Station</label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in stations.collect{|k| [k.id,"#{k.name} #{k.ip} #{k.zone.name if k.zone}"]} %>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+
+<%
+	
+name = 'zone_id'
+options = Zone.all.collect{|i| [i.name,i.id]}
+
+zone_id = Zone.first.id
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
 
 
 
 <%
-	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
 	
-	keys.collect!{|i| i if i[0]!='discharge_stamp'    }.compact!
+name = 'score_id'
+options = Score.all.collect{|i| [i.name,i.id]}
+	
+%>
+<div class="col-6">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+ <option></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if @record[name]==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<%
+	
+name = 'status'
+options = [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Cancelled']]
+	
+%>
+<div class="form-group">
+
+<div class="row">
+
+<div class="col-6">
+<label for="product-name">Status</label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in options%>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+
+<%
+	
+name = 'admit_stamp'
+	
+%>
+<div class="col-6">
+<label for="product-name"><%=name.humanize%></label>
+<div>
+	<%=@record.admit_stamp%>
+</div>	
+</div>
+
+
+</div>
+</div>
+
+<%
 	
 	stations = Station.all
 	
@@ -34,69 +173,34 @@
 <%		
 	if i[0]=='patient_id'	
 %>
-<div class="form-group hide" >
-  <input type="hidden" class="form-control" id="patient-hn" name="patient[id]" value="" placeholder="HN" style="width:200px">
-</div>
+
 <%		
-	elsif i[0]=='score_id'	
+	elsif i[0]=='score_id'
 %>
-<div class="form-group" >
-  <label for="product-name"><%=i[0].humanize%></label>
- <select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in Score.all.collect{|s| [s.id,"#{s.name} - #{s.version}"]} %>
-  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
-<% end %>
-</select>
-</div>
+<%		
+	elsif i[0]=='zone_id'
+%>
+
 <%		
 	elsif i[0]=='current_score'	
+	
 %>
-<div class="form-group">
-  <label for="product-name"><%=i[0].humanize%></label>
 
-<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] %>
-  <option value="<%=j%>" <%="selected" if @record[i[0]]==j %>><%=j%></option>
-<% end %>
-</select>
-
-</div>
 <%		
 	elsif i[0]=='status'	
 %>
-<div class="form-group">
-  <label for="product-name"><%=i[0].humanize%></label>
 
-<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Cancelled']] %>
-  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
-<% end %>
-</select>
-
-</div>
 <%		
 	elsif i[0]=='created_at' or i[0]=='updated_at' or i[0]==''	
 %>
 <%		
 	elsif i[0]=='admit_stamp'
 %>
-<label for="product-name"><%=i[0].humanize%></label>
-<div>
-	<%=@record.admit_stamp%>
-</div>	
+
 <%		
 	elsif i[0]=='station_id'	
 %>
-<div class="form-group">
-  <label for="product-name"><%=i[0].humanize%></label>
 
-<select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in stations.collect{|k| [k.id,"#{k.name} (#{k.ip}) #{k.zone.name if k.zone}"]} %>
-  <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
-<% end %>
-</select>
-
-</div>
 
 
 <% else %>	

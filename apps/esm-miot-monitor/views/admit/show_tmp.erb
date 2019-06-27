@@ -1,0 +1,206 @@
+<style>
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #report, #report * {
+    visibility: visible;
+  }
+  #report {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+</style>
+<%
+	@record = Admit.find(params[:id])
+	patient = @record.patient
+	records = @record.records
+
+	start = @record.created_at
+	start = @record.admit_stamp if @record.admit_stamp
+%>
+<div id="report">
+<h1>Patient Admit <%#link_to '+Record', "../DataRecord/create?admit_id=#{params[:id]}",:class=>'btn btn-success'%>
+</h1>
+
+
+<div class="row">
+
+<div class="col-sm-3">
+	<div class="row">
+		<div class="col-sm-12 alert alert-warning" style="font-size:1.2em" >
+			HN : <%=patient.hn%><br/>
+			Name : <%=patient.name%><br/>
+			Admit at : <%=start.getlocal.strftime('%D - %H:%M') %><br/>
+			Bed No: <%=@record.bed_no %><br/>
+			Score : <%=@record.score %><br/>
+			<% if @record.admit_stamp %>
+			Total Time : <%=((Time.now -  @record.admit_stamp)/60).to_i  %> mins
+			<% end %>
+		</div>
+	</div>
+</div>
+<div class="col-sm-9">
+	<svg width="500" height="150"></svg>
+</div>
+
+</div>
+
+
+<div class="row">
+<div class="col-sm-12" >
+<%#link_to "New", "javascript:$('#new-record').slideDown('slow')" %>
+<div id="new-record">
+<%
+	new_record = DataRecord.new :admit_id=>params[:id]
+%>
+<%= partial :'admit/_record_form', :locals=>{:record=>new_record}%>
+</div>
+
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12" >
+<br/>
+	<%=link_to 'Discharge', "discharge?id=#{params[:id]}",:class=>'btn btn-danger' ,:style=>'float:right' if @record.status=='Admitted'%>
+
+	<%=link_to 'Print', "javascript:window.print()",:class=>'btn ' ,:style=>'float:right'%>
+
+
+	<%=link_to 'Submit', "\#",:id=>params[:id], :class=>'btn btn-success' if @record.status=='Admitted' %>
+
+	<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
+	<%=link_to 'Back', '../Home/admit',:class=>'btn'%>
+<br/><br/>
+<% if records.size>0 %>
+
+<table class="table" style="font-size:0.8em">
+<thead>
+	<tr><th>No.</th>
+		<th>DateTime</th><th>BP</th><th>PR</th><th>TEMP</th><th>RR</th><th>SpO2</th><th>Score</th>
+	</tr>
+</thead>
+<% records.each_with_index do |i, index |  %>
+<tr><td>
+	<%=index+1%>.
+</td>
+<td>
+	<%=i.stamp.getlocal.strftime("%d/%m/%y %H:%M")%>
+</td>
+<td><%=i.bp%></td><td><%=i.pr%></td><td><%=i.temp%></td><td><%=i.rr%></td><td><%=i.spo2%></td><td><%=i.score%></td>
+
+</tr>
+<% end %>
+</table>
+<% else %>
+<span>There is no Record</span>
+<% end %>
+</div>
+</div></div>
+<hr/>
+
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.axis--x path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+</style>
+
+<script>
+	$('#<%=params[:id]%>').click(function(){
+		call_submit($(this).attr("id"))
+	});
+var svg = d3.select("svg"),
+    margin = {top: 20, right: 80, bottom: 30, left: 50},
+    width = svg.attr("width") - margin.left - margin.right,
+    height = svg.attr("height") - margin.top - margin.bottom,
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var parseTime = d3.timeParse("%H%M");
+
+var x = d3.scaleTime().range([0, width]),
+    y = d3.scaleLinear().range([height, 0]),
+    z = d3.scaleOrdinal(d3.schemeCategory10);
+
+var line = d3.line()
+    .curve(d3.curveBasis)
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.temperature); });
+
+d3.tsv("data?id=<%=params[:id]%>", type, function(error, data) {
+  if (error) throw error;
+
+  var cities = data.columns.slice(1).map(function(id) {
+    return {
+      id: id,
+      values: data.map(function(d) {
+        return {date: d.date, temperature: d[id]};
+      })
+    };
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.date; }));
+
+  y.domain([
+    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
+    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
+  ]);
+
+  z.domain(cities.map(function(c) { return c.id; }));
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("fill", "#000")
+      .text("");
+
+  var city = g.selectAll(".city")
+    .data(cities)
+    .enter().append("g")
+      .attr("class", "city");
+
+  city.append("path")
+      .attr("class", "line")
+      .attr("d", function(d) { return line(d.values); })
+      .style("stroke", function(d) { return z(d.id); });
+
+  city.append("text")
+      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
+      .attr("x", 3)
+      .attr("dy", "0.35em")
+      .style("font", "10px sans-serif")
+      .text(function(d) { return d.id; });
+});
+
+function type(d, _, columns) {
+  d.date = parseTime(d.date);
+  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
+  return d;
+}
+$('#new-record').toggle()
+</script>
+
+<%= inline(this,:'../home/_scoring') %>

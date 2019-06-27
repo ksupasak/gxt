@@ -15,6 +15,9 @@ end
 
 class Zone
   include MongoMapper::Document
+  has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
+  has_many :stations, :class_name=>'EsmMiotMonitor::Station'
+  
   key :name, String
 end
 
@@ -56,52 +59,26 @@ class Sense
   
 end
 
-class Medication
-  include MongoMapper::Document
-  
-  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
-  belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
-  
-  key :admit_id, ObjectId
-  key :station_id, ObjectId
-  
-  key :name,  String
-  
-  key :start_time, Time
-  key :stop_time, Time
-  
-  key :rate, Float
-  key :volumn, Float
-  key :dulation, Float # second
-    
-  key :tag, String
-  
-  key :note, String
-  
-end
-
-class Patient
-  include MongoMapper::Document
-  has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
-  
-  key :hn, String 
-  key :name, String 
-  def to_s
-    self.name
-  end
-end
 
 class Admit
   include MongoMapper::Document
+  
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
   belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
+  
   has_many :records, :class_name=>'EsmMiotMonitor::DataRecord'
+  
+  has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord'
+  has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord'
+  
+  
   
   key :patient_id, ObjectId
   key :station_id, ObjectId
   key :score_id, ObjectId
-  
+  key :zone_id, ObjectId
   
   key :admit_stamp, Time
   key :discharge_stamp, Time
@@ -122,6 +99,81 @@ class Admit
     self.save
   end
 end
+
+class NurseRecord
+  
+  include MongoMapper::Document
+  
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :name,  String
+  
+  key :description, String
+  
+  key :admit_id, ObjectId
+  
+  key :start_time, Time
+  key :stop_time, Time
+  
+  key :status, String
+  
+  key :note, String
+  
+  key :tag, String
+  
+end
+
+class Medication
+  include MongoMapper::Document
+  
+  key :name,  String
+  key :concentration, String
+  
+    
+end
+
+class MedicationRecord
+  include MongoMapper::Document
+  
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :medication, :class_name=>'EsmMiotMonitor::Medication'
+  
+  key :name,  String
+  
+  key :admit_id, ObjectId
+  key :medication_id, ObjectId
+  
+  key :start_time, Time
+  key :stop_time, Time
+  
+  key :status, String
+  
+  key :rate, Float
+  key :concentration, String # second
+  key :volume, Float
+  
+  key :est_intake, Float
+  key :actual_intake, Float
+  
+  key :note, String
+  
+  key :tag, String
+  
+  
+  
+end
+
+class Patient
+  include MongoMapper::Document
+  has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :hn, String 
+  key :name, String 
+  def to_s
+    self.name
+  end
+end
+
 
 
 
@@ -197,24 +249,19 @@ end
 class DataRecord
   include MongoMapper::Document
   
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
   key :admit_id, ObjectId
   
   key :data, String
-  
+  key :bp, String
   key :bp_sys, Integer
   key :bp_dia, Integer
   key :pr, Integer
+  key :hr, Integer
   key :spo2, Integer
   key :rr, Integer
   key :temp, Float
-  
-  key :question_1, String
-  key :question_2, String
-  key :question_3, String
-  key :question_4, String
-  key :question_5, String
-  key :question_5, String
-  key :question_6, String
   
   key :stamp, Time
   
@@ -253,6 +300,20 @@ class ScoreController < GXTDocument
 end
 
 class ScoreItemController < GXTDocument
+  
+end
+
+
+class NurseRecordController < GXTDocument
+  
+end
+
+class MedicationController < GXTDocument
+  
+end
+
+
+class MedicationRecordController < GXTDocument
   
 end
 

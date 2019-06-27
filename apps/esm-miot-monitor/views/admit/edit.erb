@@ -28,8 +28,15 @@
 		end
 		
 	 @record.update_attributes params[:record]
+	 puts params.inspect
+	 if params[:patient]
 		
+		 patient = @record.patient
+		 
+		 patient.update_attributes params[:patient]
 		
+		 
+	 end	
 		
 	%>
 	<%=redirect_to "../Home/admit?id=#{@record.id}"%>

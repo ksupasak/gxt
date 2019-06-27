@@ -1,294 +1,398 @@
 require 'socket'
 require 'net/http'
 require 'json'
-
-
-u1 = UDPSocket.new
-u1.bind("224.0.1.3", 2050)
-
-p u1.recvfrom(1000) #=> ["message-to", ["AF_INET", 4913, "localhost", "127.0.0.1"]]
+require "ipaddr"
+require_relative 'config/m540_cfg'
 
 
 
-# 
-# network_addr = "224.127.1.255"
-# central = UDPSocket.new
-# central.bind(network_addr, 2150)
-# 
-# puts "Start to recev"
-# 
-# while true
-# data =  central.recvfrom(100) 
-# puts data
-# 
-# end
-# 
+
+
+# BIND_ADDR_LOCAL = "191.1.1.5"
+
+# BIND_ADDR_LOCAL = "172.28.5.151"
+
+# BIND_ADDR_LOCAL = "10.50.0.193"
+
+
+# M540 data on this port
+
 
 module Device
 
 
 
-# 
-# 
-# def self.monitor_vista_120_v2
-# 
-# puts "-- Start Vista120 v2 Service"
-# 
-# boardcast = Thread.new {
-#   
-#   msg_c = "~\x000\x02\x00\x00j\xF9\xE2\a\x04\a\x01\x05\f\x06CMS\x00\x00\x00\x00\x00HOSPITAL\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x00\x00\x0F\x00\x00\x00\x00\x00\x00\x00x\e\xDA\x03\xF0\x17\xDA\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x1C%\x00\x00\x00\x00\xC0\xA8d\v\xC0\xA8\x02\x9F\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-#   tip = HOST_NETWORK_BOARDCAST
-#   puts "Server Start UDP for Vista 120"
-#   socket = UDPSocket.new
-#   socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true) 
-#   
-#   loop do 
-#   socket.send msg_c, 0, tip, 9610
-#   # puts "Server UDP send "
-#   sleep 1
-#   end
-#   
-# }
-# 
-# boardcast.run
-# 
-# 
-# 
-# # puts "Server Start"
-# 
-# 
-# 
-# server = TCPServer.new  VISTA_120_v2_port
-# 
-# 
-# host = GW_IP
-# port = GW_PORT
-# uri = GW_URI
-# 
-# 
-# list = [{:n1=>6},
-#         {:n2=>256},
-#         {:n3=>256},
-#         {:n4=>128},
-#         {:n5=>248},
-#         {:n6=>256},
-#         {:n7=>36},
-#         {:n8=>256},
-#         {:n9=>6},
-#         ]
-# 
-#         hn = '-'
-#         
-# loop do 
-#         # puts 'start accept'
-#         #       client = server.accept
-#         
-#         
-#         
-#         Thread.fork(server.accept) do |client|
-#         # hn = '-'
-#         puts 'start accept'
-#         
-#         
-#         begin
-#         #               client = server.accept
-#         
-#         puts client
-#         puts client.peeraddr.inspect 
-#         
-#         station = "BED"+format("%02d",client.peeraddr[-1].split(".")[-1])
-#         
-#         puts 'start accepted'
-#         # puts client.methods.sort 
-#         
-#         buff = []
-#         index = 0 
-#         left = nil
-#         
-#             hn = ''
-#             so2 = 0
-#             bp = ''
-#             bp_hr = 0
-#             pr = 0 
-#         bp_stamp = ''
-#         check_stamp = nil
-#         
-#         while true
-#         line = client.recv(40960)
-#         
-#         #puts "#{line.size} #{'='*30}"
-#         
-#         # puts '====================================================='+line.size.to_s
-#         #puts line
-#         # puts
-#         buff+= line.each_byte.to_a
-#         
-#         
-#         l = line.each_byte.to_a.collect{|i| i.to_i.to_s}  
-#         # l.each_with_index do |i,id| 
-#         #       if i=='119'
-#         #         puts "xx #{l.size} #{i}\t#{id}"
-#         #       end
-#         #     end
-#         
-#         # puts l.join("\t") if l.size==258 or l.size==1448
-#         
-#         # left = line.size
-#         
-#           if left
-#             buff = buff[left..-1]
-#             left = nil
-#           end
-#         
-#     
-#         while index<buff.size
-#           res = nil
-#           type = buff[index]
-#           
-#           case type
-#           when 20 
-#           
-#           read = 20 + 256
-#           
-#           #puts "Found Peak 255" 
-#           
-#           else
-#           if type != 0
-#           read = type
-#           #puts "Found #{read} #{'msg'}" 
-#           
-#           end
-#           end
-#           
-#           if index+read <= buff.size
-#           
-#           res = buff[index..index+read]
-#           if type==176 or type==162
-#             
-#             
-#             if type==176
-#               s = ''
-#               for i in res[40..60]
-#                 break if i==0
-#                 s+=i.chr 
-#               end
-#               hn = s.strip
-#               puts "HN #{hn} new"
-#               
-#             end
-#             
-#             
-#             if type==162
-#               
-#               so2 = res[106]/2
-#               
-#               high = "#{res[124]/2}"
-#               high = "#{res[124]+128}" if res[125]==67
-#               
-#               
-#               bp = "#{high}/#{res[130]/2}"
-#               
-#               
-#               bp_hr = res[136]/2
-#               # pr = res[142]/2
-#               pr = res[118]/2
-#               
-#                          #       
-#                          # puts line
-#                          #           puts
-#                          #           
-#                          #              res.each_with_index do |i,ix|
-#                          #           
-#                          #                print "#{ix}\t" if ix%10==0 
-#                          #                print "#{i.to_i.to_s}\t"
-#                          #                puts if ix%10==9 and ix!=0
-#                          #           
-#                          #              end
-#                          #           
-#                          #              puts
-#               
-#               new_check_stamp = "#{bp}-#{bp_hr}"
-#               
-#               if check_stamp!=new_check_stamp
-#                 now = Time.now 
-#                 bp_stamp  = format("%02d%02d%02d", now.hour, now.min, now.sec)
-#                 check_stamp = new_check_stamp
-#               end
-#               
-#               
-#               # puts "HN #{hn}"
-#               # puts "NIBP #{bp}"
-#               # puts "SO2 #{so2}"
-#               # puts "PR #{pr}"
-#               # 
-#                        if bp=='61/61' 
-#                           bp= '-/-'
-#                           # pr= 0
-#                           # bp_stamp = nil
-#                           # so2 = 0
-# 
-#                         end 
-#               data = {}
-#               
-#               data[:hr] = pr
-#               data[:rr] = '-'
-#               data[:so2] = so2
-#               data[:pr] = pr
-#               data[:bp] = bp
-#               
-#               data[:bp_stamp] = bp_stamp
-# 
-#               ref = hn
-#               bed = station
-#               name = bed
-#               stamp = Time.now.to_json
-#                           
-#               puts "#{stamp}\t#{station}\t#{data.inspect}"            
-#               begin            
-#                 result = Net::HTTP.post_form(uri, 'ip'=>client.peeraddr[-1],'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data.to_json)
-#               rescue Exception=>e
-#                 puts e.message
-#               end
-#             end
-#             
-#           
-#             
-# 
-#           end
-#         
-#           else
-# 
-#           end
-#           index+=read
-#           
-#         end
-#         
-#         if index==buff.size
-#           index = 0 
-#           buff=[]
-#         end
-#       
-#         
-#       end
-#       
-#     rescue Exception=>e
-#       puts e
-#       
-#     end
-#       
-#     end
-#         
-#         puts 'next'    
-#  
-# end
-# 
-# 
-# end
+  def self.monitor_iacs_m540 ws
 
+    puts "-- Start IACS M540 Service"
+
+
+    name = 'Bed01'
+
+    def tabular data, cols = 20
+  
+      data.each_with_index do |i,index|
+    
+        print "#{index}.\t" if index % cols == 0
+    
+        print "#{i}\t"
+    
+        puts if index % cols == cols -1
+    
+      end
+  
+    end
+
+    def variant_detection tmp, data
+  
+  
+  # tmp = stmp[k]
+  
+  result = []
+  
+  
+  
+  data.each_with_index do |i,index|
+     
+     count = 0 
+     list = []
+     
+     for j in tmp
+        if j[index]!=data[index]
+          count +=1
+          
+        end
+        list << j[index]
+     end
+     
+     if count > 1
+       list << data[index]
+       u = list.uniq
+        puts "variant\t#{index}\t#{u.size}\t#{u.join(",")}#{}\t"
+     end
+
+   end
+  
+   tmp << data
+  
+   # tmp.delete_at(0) if tmp.size==20
+   # puts
+    end
+ 
+ 
+    def self.demo ws
+
+
+lead_idx = 0
+leads =  [0,0,0,0,0,0]
+
+  100.times do |x|
+    begin
+    puts 'Start Receive Dataf'
+
+    ref = '1234'
+    name = 'Bed04'
+     now = Time.now
+     stamp = now.to_json
+
+     bp_stamp = now
+     data = {}
+
+     wave = []
+
+
+     lead_template = [700, 876, 880, 588, 304, 40, -168, -216, -204, -120, -76, -96, -92, -76, -76, -88, -84, -76, -84, -72, -72, -72, -80, -68, -76, -80, -68, -64, -72, -64, -60, -68, -72, -60, -60, -48, -16, 16, 52, 80, 124, 160, 196, 220, 240, 260, 284, 300, 312, 316, 320, 320, 320, 312, 300, 276, 264, 236, 200, 152, 108, 68, 20, -32, -68, -96, -124, -132, -144, -148, -136, -128, -124, -120, -120, -124, -116, -116, -112, -112, -112, -112, -112, -108, -104, -104, -104, -104, -100, -84, -80, -72, -68, -64, -60, -52, -48, -44, -40, -36, -36, -36, -36, -20, 8, 48, 88, 116, 128, 140, 152, 148, 144, 128, 112, 84, 60, 24, -20, -48, -56, -60, -52, -48, -48, -48, -48, -48, -48, -44, -44, -44, -44, -44, -44, -44, -64, -108, -140, -100, 80, 340, 604, 824]
+
+     w = 2
+     rps =32
+     s = 4
+
+     max = 1024
+     min = -1024
+
+     rps.times do |i|
+  
+       # y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
+     #   wave << format("%.3f",y).to_f
+     #
+      wave <<  50-(lead_template[lead_idx*s].to_f / 1024) *50
+      lead_idx += 1
+      lead_idx = 0 if lead_idx*s > lead_template.size
+ 
+       # period += rand(10)
+     end
+
+
+     rps2 = 64
+     s2 = 2
+
+     # puts wave
+
+     data[:wave] = wave
+ 
+
+     data[:leads] = {} unless data[:leads]
+
+
+     6.times do |x|
+  
+       # data[:leads][x] = [] unless data[:leads][x] 
+  
+       id = leads[x]
+       wave = []
+  
+       rps2.times do |i|
+  
+
+        # wave <<  50-(lead_template[id*s2].to_f / 1024) *50
+        wave << lead_template[id*s2] if lead_template[id*s2] 
+        id += 1
+        id = 0 if id*s2 > lead_template.size
+ 
+         # period += rand(10)
+       end
+       data[:leads][x] = wave
+  
+       leads[x] = id
+  
+     end 
+ 
+
+
+     data[:bp] = '120/90'
+     data[:pr] = 60 + rand(60)
+     data[:hr] = data[:pr]
+     data[:rr] = 18 + rand(4)
+     data[:temp] = 36 + rand(4)
+     data[:spo2] = 90+rand(10)
+     data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+    # puts msg
+
+    puts 'Start Sent Data '+msg
+
+     ws.send(msg)
+
+   rescue Exception=>e
+     puts e.inspect
+   end
+
+   sleep(1)
+
+ end
+ 
+ 
 end
 
+# self.demo ws
+  
+     puts 'Start Sent Data'
+  
+     
+
+
+    socket = UDPSocket.new
+
+    membership = IPAddr.new(M540_MULTICAST_ADDR).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
+    
+ 
+    puts 'Start Sent Data'
+    socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
+    # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
+
+    # open port
+    socket.bind('0.0.0.0', M540_PORT)
+
+
+    # host = GW_IP
+    # port = GW_PORT
+    # uri = GW_URI
+
+  
+    puts 'Start Receive Data'
+
+    tmp = []
+    stmp = {}
+    sk = {}
+    
+    lbuff = {}
+    
+    vs =  {}
+    
+    response = true
+
+    while true do
+  
+      begin
+  
+        message, info = socket.recvfrom(4096)
+        l = message.each_byte.to_a.collect{|i| i.to_i}  
+   
+    
+          # lead data package
+          
+          puts  message.size
+          
+           if message.size==302
+             
+             tabular l
+             
+             station_name = ""
+             
+             
+             
+             
+           end
+#==================================================== Normal Data
+          
+          if l[33].to_i == 14 and message.size==1298
+
+            puts "SPO2-HR #{l[291]}"
+            puts "SPO2-% #{l[255]}"
+
+            puts "HR #{l[39]}"
+      
+            puts "BP-SYS #{l[326]*256+l[327]}"
+      
+            puts "BP-DIA #{l[362]*256+l[363]}"
+      
+            vs[:hr] = l[39]
+            
+            vs[:pr] = l[291]
+            vs[:spo2] = l[255]
+            
+            if l[291]=4 and l[255] == 4
+               vs[:pr] = vs[:spo2] = '-'
+            end
+            
+            bp_sys = l[326]*256+l[327]
+            bp_dia = l[362]*256+l[363]
+            
+            vs[:bp] = "#{bp_sys/10}/#{bp_dia/10}"
+            
+      
+             puts
+           end
+          
+#=========================================================== # Lead Data
+           
+          if  l[33].to_i ==  12 #and l[49].to_i != 110# and l[19].to_i != 174
+     
+                 #
+            # 40.times do |i|
+    #           print "#{i}\t"
+    #           6.times do |j|
+    #
+    #             v = 58+(j*94)+i*2
+    #             v -= 6 if j>1
+    #
+    #             a = l[v].to_i
+    #             b = l[v+1].to_i
+    #
+    #             # puts a
+    #             x = a*256+b
+    #             x = -(256-b) if a==255
+    #
+    #             print "#{x}\t"
+    #
+    #
+    #           end
+    #
+    #           puts
+    #         end
+
+            #========================================
+          
+            
+           
+            now = Time.now 
+            stamp = now.to_json
+            bp_stamp = now
+            
+            ref = '1235'
+            
+            
+            6.times do |j|
+              
+              wave = []
+              40.times do |i|
+                
+                v = 58+(j*94)+i*2
+                v -= 6 if j>1
+                a = l[v]
+                b = l[v+1]
+                
+                x = a*256+b
+                x = -256*(256-a)+b if a>200
+       
+                wave << x
+                
+              end
+              
+              lbuff[j] = [] unless lbuff[j]
+              lbuff[j] += wave
+              
+              
+            end
+              
+                
+                
+      if lbuff[0].size>=200        
+            
+            
+            data = {}
+            
+            
+            
+            data[:leads] = {}
+            6.times do |j|
+              
+               data[:leads][j] = lbuff[j].shift(200)
+              
+            end
 
 
 
+        data.merge! vs
 
+        
+        data[:temp] = '-'
+        data[:rr] = '-' 
+        
+        data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+         
+           
+       msg = <<MSG
+Data.Sensing device_id=#{name}
+ #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
 
+      response = ws.send(msg)
+      puts "Send #{now} #{response} #{name}"
+      
+      if response == nil
+        
+       ws = MIOT::connect 
+        
+        
+      end
+ 
+      
+    end
+    end
+          
+    
+  
+  
+  rescue Exception=>e
+        puts e
+      
+  end
+  
+end
+end
+end
+  

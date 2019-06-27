@@ -5,6 +5,7 @@ require 'sinatra/partial'
 require 'sinatra-websocket'
 require 'sinatra/form_helpers'
 
+
 require_relative 'config/init'
 
 require 'active_support/all'
@@ -46,7 +47,7 @@ require_relative 'apps/gxt/helper'
 # require_relative 'apps/gxt-food-extended/app'
 # require_relative 'apps/gxt-cash-deposit/app'
 # require_relative 'apps/gxt-gold-saving/app'
-# require_relative 'apps/esm-media-stream/app'
+require_relative 'apps/esm-media-stream/app'
 # require_relative 'apps/esm-monitor/app'
 require_relative 'apps/gxt-console/app'
 # require_relative 'apps/gxt-ptz/app'
@@ -79,7 +80,7 @@ def switch name
   settings.set :name, name 
   settings.set :app, settings.apps[name]
   settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
-  MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   end
   
 end
@@ -143,7 +144,7 @@ before do
   # puts "Set context = #{settings.context}" 
 
   
-  MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   
   
   
@@ -178,7 +179,7 @@ end
 
 configure do
   enable :sessions
-  MongoMapper.setup({'production' => {'uri' => "mongodb://localhost/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   
 end
 

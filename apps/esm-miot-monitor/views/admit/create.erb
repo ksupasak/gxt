@@ -1,3 +1,4 @@
+
 <h1><%=name params[:service]%> Create</h1>
 <% 
 return_url = "javascript:history.back();"
@@ -5,10 +6,17 @@ return_url = "javascript:history.back();"
 return_url = params[:return] if params[:return]
 
 
+
+
+
 	@record =  this.model.new params[:record]
+	
+	
 	if request.post?
 		
+		
 	if params[:record]
+		
 		
 		
 		patient = Patient.create params[:patient]
@@ -19,7 +27,9 @@ return_url = params[:return] if params[:return]
 		
 		
 	%>
-	<%=redirect_to "../Station/show?id=#{record.station_id}"%>
+	<%#redirect_to "../Admit/show?id=#{record.id}"%>
+	
+	<%=redirect_to "../Home/nurse?id=#{record.id}"%>
 	<%	
 	end
 	

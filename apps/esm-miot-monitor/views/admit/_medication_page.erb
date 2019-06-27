@@ -1,0 +1,60 @@
+<h5>Medication</h5>
+
+<div id="medication-partial" style="overflow:auto">
+</div>
+
+<br/>
+<div style="float:right" >
+	
+<%=link_to "+Medication", '#', :id=>'medication_add',:class=>'link link-info'%>
+
+</div>
+
+<script>
+	
+	function create_medication(event){
+		event.preventDefault();
+		
+		$.get( "medication_create?admit_id=<%=params[:id]%>",function(data,status){
+		  $('.modal-content').html(data);
+		});
+		
+  	  	$('#admit-modal').modal({
+  	    	backdrop: 'static',
+  	    	keyboard: false
+  	 	})
+	
+	}
+	
+	function edit_medication(event){
+		event.preventDefault();
+		
+		id = $(this).attr('id') 
+		
+		$.get( "medication_edit?admit_id=<%=params[:id]%>&id="+id,function(data,status){
+		  $('.modal-content').html(data);
+		});
+		
+  	  	$('#admit-modal').modal({
+  	    	backdrop: 'static',
+  	    	keyboard: false
+  	 	})
+	}
+	
+	function reload_medication(){
+	
+	$.ajax({
+	  url: "medication_partial?admit_id=<%=params[:id]%>",
+	  context: document.body
+	}).done(function(data) {
+	  $( '#medication-partial' ).html(data);
+	});
+	
+	}
+	
+	$('#medication_add').click(create_medication);
+	
+	reload_medication();
+	
+	
+</script>
