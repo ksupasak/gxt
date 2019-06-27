@@ -349,11 +349,17 @@ class AdmitController < GXTDocument
           record = admit.records.create params[:data]
           
           record.update_attributes :data=>params[:data].to_json, :stamp=>Time.now
+          
+          score = admit.score
+          
+          
+          admit.nurse_records.create :description=>"#{score.name} v.#{score.version} = #{params[:data][:score]} : #{score.description}"
+          
          
        end
        
     
-     @context.redirect  "#{settings.name}/Station/show?id=#{admit.station.id}&score=1"
+     @context.redirect  "#{settings.name}/Admit/show?id=#{admit.id}"
   end
   
   

@@ -330,7 +330,7 @@ def process_request
          end
          ws.onclose do
            warn("websocket closed")
-            settings.apps_ws[settings.name].delete(ws)
+            settings.apps_ws[settings.name].delete(ws) 
          end
        end
      end
