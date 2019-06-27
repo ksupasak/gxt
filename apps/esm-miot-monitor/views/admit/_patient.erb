@@ -1,5 +1,5 @@
 <%
-
+if false
 	patient = nil
 		
 	admits = Admit.where(:status=>'Admitted', :station_id=>params[:station_id]).all
@@ -92,3 +92,4 @@ Patient Name : <%=patient.name%>  <span style="float:right">HN : <%=patient.hn i
 <% end %>
 <script>
 </script>
+	<% end %>
