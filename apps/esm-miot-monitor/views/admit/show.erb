@@ -131,13 +131,18 @@ a.link-info:hover{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %>
-			
+			<%= link_to "#{patient.name} (#{patient.hn}) : #{admit.status} ","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %> 
 	
 		</div>
-		<div class="col-3">
-			
-		<%= link_to "","../Station/show?id=#{station_id}",:class=>'btn hn' if station %>
+		<div class="col-3 right">
+		<% if admit.status!='Discharged'%>
+		<%= link_to "Discharge","discharge?id=#{admit.id}",:class=>'btn hn btn-danger'  %>
+		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-info '  %>
+		
+		<% else %>
+		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-success'  %>
+		
+		<% end %>
 		
 		</div>
 		
@@ -156,7 +161,7 @@ a.link-info:hover{
 		            left: 0px;
 		            overflow-y: auto;
 		            right: 0px;
-		            height: 400px;
+		            height: 500px;
 					width: 600px;
 					font-size:0.8em;
 					padding:0px;

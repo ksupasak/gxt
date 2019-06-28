@@ -1,0 +1,134 @@
+<% 
+admit = Admit.find params[:id]
+patient = admit.patient
+
+
+
+%>
+
+<script type="text/javascript">
+        
+    function codespeedy(){
+      var print_div = document.getElementById("printout");
+var print_area = window.open();
+print_area.document.write(print_div.innerHTML);
+print_area.document.close();
+print_area.focus();
+print_area.print();
+print_area.close();
+// This is the code print a particular div element
+    }
+  </script>
+	<br/>
+<form>
+	<div style="float:right">
+    <input type="button" value="Print" onclick="window.print()" class="btn btn-info">
+</div>
+  </form>
+<style>
+	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+	   background-color: #a3efef;
+	}
+	
+	@media print {
+		.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+		   background-color: #a3efef !important;
+        -webkit-print-color-adjust: exact; 
+		}
+		.navbar{
+			display:none;
+			 -webkit-print-color-adjust: exact; 
+		}
+	}
+</style>
+<div id="printout">
+<h2>Patient Summary : <%=patient.name%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name%></h2>
+<hr/>
+<strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
+<strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
+<%
+u = 'mins'
+	total  = (admit.discharge_stamp - admit.admit_stamp)/60
+	
+	if total > 1
+		u = 'hours'
+		total  = (admit.discharge_stamp - admit.admit_stamp)/3600 
+	end
+	
+	if total > 24
+		u = 'days'
+		total  = (admit.discharge_stamp - admit.admit_stamp)/3600/24 if total > 24
+	
+	end
+%>
+<strong>Total time</strong> : <%=format("%0.2f",total) %> <%=u %> <br/>
+
+
+<%
+	
+		
+notes = admit.nurse_records
+
+medications = admit.medication_records
+
+records = admit.records
+
+tmap = {}
+
+for i in notes
+
+	k = i.start_time.localtime.strftime("%H:%M:%S")
+	tmap[k] = [] unless tmap[k]
+	tmap[k] << ['Note',i.description]
+	
+	
+end
+
+for i in medications
+
+	k = i.start_time.localtime.strftime("%H:%M:%S")
+	tmap[k] = [] unless tmap[k]
+	tmap[k] << ['Med',"#{i.name} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
+	
+	
+	k = i.stop_time.localtime.strftime("%H:%M:%S")
+	tmap[k] = [] unless tmap[k]
+	tmap[k] << ['Med',"#{i.name} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+	
+end	
+
+for i in records
+
+	k = i.stamp.localtime.strftime("%H:%M:%S")
+	tmap[k] = [] unless tmap[k]
+	tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
+
+end	
+	
+	
+%>
+<title>Summary of activities</title>
+<table class='table table-striped '>
+	<caption></caption>
+	<thead>
+		<tr>
+			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% for t in tmap.keys.sort 
+		lines = tmap[t]
+		for i in lines
+			
+			type =i[0]
+			des = i[1]
+			
+		%>
+		<tr>
+			<td><%=t%></td><td><%=type%></td><td><%=des%></td>
+		</tr>
+		<% end %>
+		<% end %>
+	</tbody>
+</table>
+</div>
