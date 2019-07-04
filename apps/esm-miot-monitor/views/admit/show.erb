@@ -400,7 +400,7 @@ a.link-info:hover{
 			<script>
 		
 				// $.ajax({
-	// 			  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id if admit%>",
+	// 			  url: "medication?station_id=<%=station.id if station%>&admit_id=<%=admit.id if admit%>",
 	// 			  context: document.body
 	// 			}).done(function(data) {
 	//
@@ -850,7 +850,7 @@ if record
 		
 		
 		$.ajax({
-		  url: "patient?station_id=<%=station.id%>&hn="+hn,
+		  url: "patient?station_id=<%=station.id if station%>&hn="+hn,
 		  context: document.body
 		}).done(function(data) {
 		  
@@ -900,7 +900,7 @@ if record
 
 function call_admit(){
 	$.ajax({
-	  url: "../Admit/admiting?id=<%=station.name%>",
+	  url: "../Admit/admiting?id=<%=station.name if station%>",
 	  context: document.body
 	}).done(function(data) {
 	  $('.modal-content').html(data);
@@ -912,7 +912,7 @@ function call_admit(){
 }
 <% if admit %>		
 		$.ajax({
-		  url: "patient?station_id=<%=station.id%>&hn=<%=admit.patient.hn%>",
+		  url: "patient?station_id=<%=station.id if station%>&hn=<%=admit.patient.hn%>",
 		  context: document.body
 		}).done(function(data) {
 				$('#result').html(data)
