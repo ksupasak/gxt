@@ -13,6 +13,8 @@ RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 1792
 
+RUN echo "OKay"
+
 # Start the main process.
 CMD ["bundle", "exec", "ruby", "server.rb"]
 

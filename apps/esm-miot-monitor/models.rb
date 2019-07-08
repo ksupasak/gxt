@@ -13,6 +13,25 @@ class User
 end
 
 
+class Provider
+  include MongoMapper::Document
+   key :name, String
+  
+end
+
+class Procedure
+  include MongoMapper::Document
+   key :name, String
+  
+end
+
+class Diagnosis
+  include MongoMapper::Document
+   key :name, String
+  
+end
+
+
 class Zone
   include MongoMapper::Document
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
@@ -73,12 +92,20 @@ class Admit
   has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord'
   has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord'
   
+  belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
+  belongs_to :procedure, :class_name=>'EsmMiotMonitor::Procedure'
+  belongs_to :diagnosis, :class_name=>'EsmMiotMonitor::Diagnosis'
+  
   
   
   key :patient_id, ObjectId
   key :station_id, ObjectId
   key :score_id, ObjectId
   key :zone_id, ObjectId
+  
+  key :provider_id, ObjectId
+  key :procedure_id, ObjectId
+  key :diagnosis_id, ObjectId
   
   key :admit_stamp, Time
   key :discharge_stamp, Time
@@ -286,6 +313,19 @@ end
 class ZoneController < GXTDocument
   
 end
+
+class ProviderController < GXTDocument
+  
+end
+
+class DiagnosisController < GXTDocument
+  
+end
+
+class ProcedureController < GXTDocument
+  
+end
+
 
 class MedicationController < GXTDocument
   

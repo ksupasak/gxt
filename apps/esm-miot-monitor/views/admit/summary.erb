@@ -42,11 +42,14 @@ print_area.close();
 	}
 </style>
 <div id="printout">
-<h2>Patient Summary : <%=patient.name%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name%></h2>
+<h2>Patient Summary : <%=patient.name if patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
 <hr/>
 <strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
 <strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
 <%
+
+admit.discharge_stamp = Time.now unless admit.discharge_stamp
+
 u = 'mins'
 	total  = (admit.discharge_stamp - admit.admit_stamp)/60
 	
@@ -88,12 +91,12 @@ for i in medications
 
 	k = i.start_time.localtime.strftime("%H:%M:%S")
 	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['Med',"#{i.name} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
+	tmap[k] << ['Med',"#{i.name if i} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
 	
 	
 	k = i.stop_time.localtime.strftime("%H:%M:%S")
 	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['Med',"#{i.name} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+	tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
 	
 end	
 

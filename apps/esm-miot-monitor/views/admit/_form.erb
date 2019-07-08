@@ -97,9 +97,6 @@ zone_id = @record.zone_id if @record.zone_id
 </div>
 
 
-
-
-
 <%
 	
 name = 'score_id'
@@ -121,6 +118,93 @@ options = Score.all.collect{|i| [i.name,i.id]}
 </div>
 
 </div>
+
+</div>
+
+
+
+<div class="row">
+<%
+	
+name = 'provider_id'
+
+options = Provider.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
+<%
+	
+name = 'diagnosis_id'
+options = Diagnosis.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+<%
+	
+name = 'procedure_id'
+options = Procedure.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
+
+
+
+
+
+
 
 </div>
 
