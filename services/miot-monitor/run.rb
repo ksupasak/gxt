@@ -49,9 +49,9 @@ ws = MIOT::connect
 # Device::monitor_vista_120_v1(ws)
 # }
 
-# threads << Thread.new {
-# Device::monitor_iacs_m540(ws)
-# }
+threads << Thread.new {
+Device::monitor_iacs_m540(ws)
+}
 # 
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
@@ -61,10 +61,10 @@ ws = MIOT::connect
 # threads << Thread.new {
 # Device::monitor_vista_120_s(ws)
 # }
-
-threads << Thread.new {
-Device::monitor_vista_120_s_v2(ws)
-}
+# 
+# threads << Thread.new {
+# Device::monitor_vista_120_s_v2(ws)
+# }
 
 
 for i in threads

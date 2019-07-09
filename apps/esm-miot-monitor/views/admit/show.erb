@@ -131,7 +131,7 @@ a.link-info:hover{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn}) : #{admit.status} ","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %> 
+			<%= link_to "#{patient.name if patient} (#{patient.hn}) : #{admit.status} ","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %> 
 	
 		</div>
 		<div class="col-3 right">
@@ -161,7 +161,7 @@ a.link-info:hover{
 		            left: 0px;
 		            overflow-y: auto;
 		            right: 0px;
-		            height: 500px;
+		            height: 400px;
 					width: 600px;
 					font-size:0.8em;
 					padding:0px;
@@ -231,11 +231,79 @@ a.link-info:hover{
 		
 		</div>
 		
+		
+		
+		
+		
+		
 		</div>
+	
+	
 		
 </div>
 
 <div id="<%=station_id%>"  class="col-12 order-2 col-sm-12  order-sm-2 col-lg-4 order-lg-2 station " style="border-right:0px solid #f00">
+		<div class="row">
+			<div class="col-12" style="padding-top:15px;padding-left:0px">
+			<style>
+			       /* Set the size of the div element that contains the map */
+			      #map {
+			        height: 400px;  /* The height is 400 pixels */
+			        width: 100%;  /* The width is the width of the web page */
+			       }
+			    </style>
+
+			    <!--The div element for the map -->
+			    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
+			    <script>
+			// Initialize and add the map
+			var marker = null;
+			var map = null;
+			
+			function initMap() {
+			  // The location of Uluru
+			  var uluru = {lat: 15.8700, lng: 100.9925};
+			  // The map, centered at Uluru
+			  map = new google.maps.Map(
+			      document.getElementById('map'), {zoom: 16, center: uluru});
+			  // The marker, positioned at Uluru
+			  marker = new google.maps.Marker({position: uluru, map: map});
+			
+			// var image="https://example.com/images/carnew.svg";
+
+			 // marker = new google.maps.Marker({
+			 // 			    position: uluru,
+			 // 			    icon: image,
+			 // 			    map: map
+			 // 			});
+			}
+			
+			function goPosition(){
+					setPosition(53.345735,-6.259548)
+			}
+			
+			function setPosition(lat,lng){
+				
+				// lat = 53.345735;
+				// 			lng = -6.259548;
+				
+				var new_marker_position = new google.maps.LatLng(lat, lng);
+
+			   marker.setPosition(new_marker_position);
+			   map.setCenter(new google.maps.LatLng( lat, lng ) );
+			
+			}
+			    </script>
+			    <!--Load the API from the specified URL
+			    * The async attribute allows the browser to render the page while the API loads
+			    * The key parameter will contain your own API key (which is not needed for this tutorial)
+			    * The callback parameter executes the initMap() function
+			    -->
+			    <script async defer
+			    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
+			    </script>
+			</div>
+		</div>
 	<div  class="row align-items-start">
 		<div class="col-lg-12 order-lg-1 ">
 			<div class="row" style="padding:15px" >
@@ -569,7 +637,7 @@ if record
 				stop_time = i.stop_time if i.stop_time
 			%>
 			
-			records.push({time:new Date(<%=i.start_time.localtime.to_json%>),stop_time: new Date(<%=stop_time.localtime.to_json%>),<%=i.name%>:{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
+			records.push({time:new Date(<%=i.start_time.localtime.to_json%>),stop_time: new Date(<%=stop_time.localtime.to_json%>),<%=i.name %>:{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
 			
 			<% end %>
 			
@@ -734,6 +802,15 @@ if record
 			
 			
 			$('#'+i+' .score .value').html(obj['score'])
+			
+			if(obj['lat']!=''){
+			
+			lat = parseFloat(obj['lat'])
+			lng = parseFloat(obj['lng'])
+				
+				setPosition(lat,lng)
+			
+			}
 			
 			bp = obj['bp'].split('/')
 			

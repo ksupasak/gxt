@@ -195,6 +195,12 @@ MSG
      data[:rr] = 18 + rand(4)
      data[:temp] = 36 + rand(4) 
      data[:spo2] = 90+rand(10)
+     
+     data[:lat] = 15.8700+0.01*Math.cos(Time.now.to_i*Math::PI/180)
+     data[:lng] = 100.9925+0.01*Math.sin(Time.now.to_i*Math::PI/180)
+     
+     # puts data.inspect 
+     
      data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
 msg = <<MSG
 Data.Sensing device_id=#{name}
