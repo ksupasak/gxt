@@ -62,16 +62,24 @@ boardcast = Thread.new {
   puts 'start sv2'
   
   Thread.fork(server.accept) do |client|
+     puts 'monitor connected'
       puts client
       puts client.peeraddr.inspect 
       
-       token = "\x10\x00\x02\x00\x00\x00\xD5\xA9\xD9\a\b\x0E\x11;&\x05"
-          line = client.recv(40960)
-          puts line
-         client.write line
+      line = client.recv(40960)
+          puts line.inspect
+      
+       # token = "\x10\x00\x02\x00\x00\x00\xD5\xA9\xD9\a\b\x0E\x11;&\x05"
+       
+       
+        token = "\xF8\x8F\x02\r\x00\xA4\xA5\xA5\xA5\xA4\xA5\xA1\xED"
+       # client_send  = "\xF8\x8F\x01\r\x00\xA4\xA5\xA5\xA5\xA4\xA5\xA1\xEE"
+     
+         client.write token
          client.flush  
          
-      
+           line2 = client.recv(40960)
+          puts line2.inspect
          
          
   end
