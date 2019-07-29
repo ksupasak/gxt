@@ -94,11 +94,11 @@ end
    
     
           # lead data package
-          
+          puts "#{info.inspect }\t#{l[30..35].collect{|i| i.to_s}.join("\t")}\t#{message.size}" 
           
            if message.size==302
              
-             # tabular l
+             # tabular l 
              
              tags = []
              8.times do |i|
@@ -126,17 +126,20 @@ end
            end
 #==================================================== Normal Data
           
-          if l[33].to_i == 14 and message.size==1298
-
+          if l[33].to_i == 14 and l[35].to_i >= 210 #or message.size==1298
+            puts message.size
+            # tabular l
+            
+            # 
             puts "SPO2-HR #{l[291]}"
-            puts "SPO2-% #{l[255]}"
-
-            puts "HR #{l[39]}"
-      
-            puts "BP-SYS #{l[326]*256+l[327]}"
-      
-            puts "BP-DIA #{l[362]*256+l[363]}"
-      
+                       puts "SPO2-% #{l[255]}"
+                                
+                       puts "HR #{l[39]}"
+                          
+                       puts "BP-SYS #{l[326]*256+l[327]}"
+                          
+                       puts "BP-DIA #{l[362]*256+l[363]}"
+                 
             vs[:hr] = l[39]
             
             vs[:pr] = l[291]
@@ -152,8 +155,19 @@ end
             vs[:bp] = "#{bp_sys/10}/#{bp_dia/10}"
             
       
-             puts
+             # puts
            end
+          
+          if l[33].to_i == 12# and message.size==1190 
+              
+              # tabular l 
+           end 
+                  #   
+                  # if l[33].to_i == 14 and l[35].to_i == 134
+                  #   
+                  #   tabular l 
+                  #   
+                  # end
           
 #=========================================================== # Lead Data
            
@@ -184,7 +198,7 @@ end
 
             #========================================
           
-            
+            # tabular l
            
             now = Time.now 
             stamp = now.to_json
@@ -200,6 +214,7 @@ end
                 
                 v = 58+(j*94)+i*2
                 v -= 6 if j>1
+                
                 a = l[v]
                 b = l[v+1]
                 
@@ -249,7 +264,7 @@ Data.Sensing device_id=#{name}
 MSG
 
       response = ws.send(msg)
-      puts "Send #{now} #{response.inspect} #{name}"
+      # puts "Send #{now} #{response.inspect} #{name}"
       
       if response == nil
         
