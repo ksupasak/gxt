@@ -35,7 +35,7 @@ module Device
  membership = IPAddr.new(mip).hton + IPAddr.new(M540_BIND_ADDR_LOCAL).hton
  
 
- puts 'Start Sent Data : ' + ip
+ puts 'Start Receive Data : ' + ip
  socket.setsockopt(:IPPROTO_IP, :IP_ADD_MEMBERSHIP, membership)
  # socket.setsockopt(:SOL_SOCKET, :SO_REUSEPORT, 1)
 
@@ -75,13 +75,13 @@ end
 
     station_msg = nil
     
-    tmp = []
-    stmp = {}
-    sk = {}
+  
     
     lbuff = {}
-    
     vs =  {}
+    
+    devices = {}
+    
     
     response = true
 
@@ -91,10 +91,17 @@ end
   
         message, info = socket.recvfrom(4096)
         l = message.each_byte.to_a.collect{|i| i.to_i}  
-   
+          
+          device_id = info[2]
+          
+          devices[device_id] = {:id=>device_id,:vs=>{},:lbuff=>{}} unless devices[device_id] 
+          device = devices[device_id]
+          vs = device[:vs]
+          lbuff = device[:lbuff]
     
           # lead data package
-          puts "#{info.inspect }\t#{l[30..35].collect{|i| i.to_s}.join("\t")}\t#{message.size}" 
+          
+          # puts "#{info.inspect }\t#{l[30..35].collect{|i| i.to_s}.join("\t")}\t#{message.size}" 
           
            if message.size==302
              
@@ -117,6 +124,9 @@ end
              msg = tags.collect{|i| i.chr}.join.strip
              
              name = station_name
+             device[:name] = name
+             
+             
              station_msg = msg
              # puts station_name
              #
@@ -127,21 +137,17 @@ end
 #==================================================== Normal Data
           
           if l[33].to_i == 14 and l[35].to_i >= 210 #or message.size==1298
-            puts message.size
+            # puts message.size
             # tabular l
             
             # 
-            puts "SPO2-HR #{l[291]}"
-                       puts "SPO2-% #{l[255]}"
-                                
-                       puts "HR #{l[39]}"
-                          
-                       puts "BP-SYS #{l[326]*256+l[327]}"
-                          
-                       puts "BP-DIA #{l[362]*256+l[363]}"
+            # puts "SPO2-HR #{l[291]}"
+            #       puts "SPO2-% #{l[255]}"
+            #       puts "HR #{l[39]}"
+            #       puts "BP-SYS #{l[326]*256+l[327]}"
+            #       puts "BP-DIA #{l[362]*256+l[363]}"
                  
-            vs[:hr] = l[39]
-            
+            vs[:hr] = l[39] if l[39]!=4
             vs[:pr] = l[291]
             vs[:spo2] = l[255]
             
@@ -256,7 +262,9 @@ end
         data[:rr] = '-' 
         
         data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+        name = device[:name]
          
+        puts "#{device_id} #{name} PR=#{data[:pr]} SpO2=#{data[:spo2]} BP=#{data[:bp]} HR=#{data[:hr]}"
            
        msg = <<MSG
 Data.Sensing device_id=#{name}
@@ -529,6 +537,9 @@ end
        }
        
        thread.run
+       
+       
+       # puts 'xxxxxxxx'
        
        
        pt_thread =  Thread.new {

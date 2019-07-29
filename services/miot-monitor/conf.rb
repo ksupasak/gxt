@@ -17,9 +17,16 @@ require 'socket'
 # HOST_NETWORK_BOARDCAST = '192.168.88.255'
 
 
-HOST_IP = '192.168.1.10'
+# HOST_IP = 'localhost'
 
+host_ip = ARGV[1]
 
+unless host_ip
+  host_ip = IPSocket.getaddress(Socket.gethostname)
+end
+HOST_IP = host_ip
+
+ puts HOST_IP
 
 
 

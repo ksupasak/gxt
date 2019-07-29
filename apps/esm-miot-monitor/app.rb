@@ -237,7 +237,10 @@ class HomeController < GXT
                    
                    station = Station.where(:name=>station_name).first
                    unless station
-                          station = Station.create(:name=>station_name, :title=>station_name)
+                          zone = Zone.first 
+                          zone_id = nil
+                          zone_id = zone.id if zone
+                          station = Station.create(:name=>station_name, :title=>station_name,:zone_id=>zone_id)
                    end
                    
                    

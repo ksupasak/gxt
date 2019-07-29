@@ -14,10 +14,11 @@ body{
 	padding-top:0px;
 	text-align:center;
 }
-.station .pr{color:#01bf02;
+.station .pr{color:#00b3b7;
 
 }
-.station .hr{color:#bf6162;
+
+.station .hr{color:#01bf02;
 
 }
 
@@ -25,7 +26,7 @@ body{
 
 }
 
-.station .spo2{color:#bcaf06;
+.station .spo2{color:#00b3b7;
 
 }
 
@@ -42,7 +43,7 @@ body{
 }
 
 .station .cc{
-	color:#00b3b7;
+	color:#bcaf06;
 
 }
 .station .uc{
@@ -60,14 +61,17 @@ body{
 
 <% 	  
 
-      @current_zone = Zone.first
+      
 		
 	  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
 
 	  # @current_zone = get_zone
 
       # admits = @current_zone.admits.where(:status=>'Admitted').all
-
+	  unless @current_zone
+	  	@current_zone = Zone.first 
+      end
+	
 	  stations = @current_zone.stations.all
 
       for station in stations
@@ -118,10 +122,18 @@ body{
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
+							<div class="col-6 col-lg-6 col-sm-3  spo2">
+								<span class="label">SpO2</span>
+								<div class="value">-</div>
+							</div>
 						<div class="col-6 col-lg-6 col-sm-3  bp">
 							<span class="label">BP</span>
 							<div class="value">-</div>
 						</div>
+							<div class="col-6 col-lg-6 col-sm-3  hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>
 			
 							<div class="col-6 col-lg-6 col-sm-3  temp">
 								<span class="label">Temp</span>
@@ -132,14 +144,8 @@ body{
 								<div class="value">-</div>
 							</div>
 			
-						<div class="col-6 col-lg-6 col-sm-3  spo2">
-							<span class="label">SpO2</span>
-							<div class="value">-</div>
-						</div>
-					<div class="col-6 col-lg-6 col-sm-3  hr">
-						<span class="label">HR</span>
-						<div class="value">-</div>
-					</div>			
+					
+				
 		
 						<div class="col-6 col-lg-6 col-sm-3  cc">
 						    <span class="label">LC</span>
