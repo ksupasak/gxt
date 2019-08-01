@@ -255,10 +255,10 @@ a.nav-link{
 			<% 
 			
 			labels = %w{ECGII SPO2 ECGIII CH4 CH5 CH6}
-			labels = %w{CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10}
+			labels = %w{CH1 CH2 CH3 CH4 CH5 CH6 CH7 CH8 CH9 CH10 CH11 CH12 CH13 CH14}
 			
 				
-			10.times do |w| %>
+			14.times do |w| %>
 			<div class="row">
 			<div class="col-lg-12">
 			<%=labels[w]%>
@@ -593,7 +593,7 @@ if record
 		   
 		   if(obj['leads']){
 		   	
-			   for(var j=0;j<10;j++){
+			   for(var j=0;j<14;j++){
 				jid = ''+j
 			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
 			
@@ -690,7 +690,7 @@ if record
 
    // var wave_data = [];
 
-<% 10.times do |i|  %>
+<% 14.times do |i|  %>
    
    presetWave('wave-<%=i%>')
 
