@@ -69,7 +69,7 @@ end
 
 
 lead_idx = 0 
-leads = [0,0,0,0,0,0]
+leads = [0,0,0,0,0,0,0,0,0,0]
 
 while true
 
@@ -142,7 +142,7 @@ data[:wave] = wave
 data[:leads] = {} unless data[:leads]
 
 
-6.times do |x|
+10.times do |x|
   
   # data[:leads][x] = [] unless data[:leads][x] 
   
