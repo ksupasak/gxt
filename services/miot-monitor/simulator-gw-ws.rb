@@ -173,6 +173,7 @@ Data.Sensing device_id=#{name}
 #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
 MSG
     # puts msg
+    puts "send #{Time.now}"
  ws.send(msg)
      
   
