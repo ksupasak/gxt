@@ -8,7 +8,7 @@ require "ipaddr"
  
  M540_MULTICAST_ADDR = "224.0.1.11"  # to receive data
 
- M540_BIND_ADDR_LOCAL = "10.50.0.5"
+ M540_BIND_ADDR_LOCAL = "10.50.0.7"
  
 
  M540_PORT = 2050
