@@ -141,7 +141,7 @@ function presetWave(div){
 }
 	function showWave(div,data,id){
 		// console.log(div+" "+data.length);
-	var n = 200; // sample for a second
+	var n = 150; // sample for a second
     var cut = 1;
 	var show = 12; //second
 	var second = 0;
@@ -155,7 +155,7 @@ console.log(data.length)
 		}
 			// genData(data);
 			data = lead_data[id];
-			// console.log('all '+id+" "+second%show+' = '+data.length);
+			console.log('all '+id+" "+second%show+' = '+data.length);
 			
 			if(second%cut==cut-1){
 				
