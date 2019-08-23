@@ -270,11 +270,9 @@ MSG
 	 
 	            queue << msg
             	#  response = ws.send(msg)
-<<<<<<< HEAD
+
   #puts "#{device_id} #{name} PR=#{data[:pr]} SpO2=#{data[:spo2]} BP=#{data[:bp]} HR=#{data[:hr]} at #{(Time.now.to_f-t)*1000}"
-=======
-  puts "#{device_id} #{name} PR=#{data[:pr]} SpO2=#{data[:spo2]} BP=#{data[:bp]} HR=#{data[:hr]} at #{(Time.now.to_f-t)*1000}"
->>>>>>> c1773bca8dd81f1035f0f64da73568123e748e4c
+
 
               # puts "Send #{now} #{response.inspect} #{name}"
 
@@ -497,11 +495,9 @@ MSG
         data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
         name = device[:name]
          
-<<<<<<< HEAD
+
        # puts "#{device_id} #{name} PR=#{data[:pr]} SpO2=#{data[:spo2]} BP=#{data[:bp]} HR=#{data[:hr]}"
-=======
-        puts "#{device_id} #{name} PR=#{data[:pr]} SpO2=#{data[:spo2]} BP=#{data[:bp]} HR=#{data[:hr]}"
->>>>>>> c1773bca8dd81f1035f0f64da73568123e748e4c
+
      #   puts data.inspect  if device_id=='191.1.2.2'      
        msg = <<MSG
 Data.Sensing device_id=#{name}
