@@ -411,7 +411,7 @@ class HomeController < GXT
               
               
               warn("websocket closed #{name} #{ws.hash}")
-             
+              if   @context.settings.apps_ws[@context.settings.name]
               @context.settings.apps_ws[@context.settings.name].delete(ws)
               @context.settings.apps_ws_rv.delete ws.hash
              
@@ -429,7 +429,7 @@ class HomeController < GXT
               
               end
               
-               
+                end
               end
                
            end
