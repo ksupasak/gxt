@@ -189,9 +189,12 @@ console.log(data.length)
 				
 				// rawdata = data
 				
-				if(true|| rawdata.length>=n){
+				if(rawdata.length>0){
 					aniLine(div,second%show,rawdata.length ,rawdata,lastdata,false);
 					lastdata = rawdata;
+				}
+				else{
+					second-=1;
 				}
 				// second = 0 ;
 			}
