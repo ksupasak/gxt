@@ -834,7 +834,7 @@ end
         
         
         EventMachine.run {
-<<<<<<< HEAD
+
        
          xv = Time.now.to_f
 
@@ -877,18 +877,8 @@ end
             
           end
         
-=======
-         
 
-          EM.add_periodic_timer(1) do
-            puts "Queue = #{queue.size}"
-            for i in queue
-              ws.send i
-            end
-            
-          end
-         
->>>>>>> c1773bca8dd81f1035f0f64da73568123e748e4c
+
         } 
         
       } 
