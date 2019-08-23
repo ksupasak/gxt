@@ -220,7 +220,7 @@ console.log(data.length)
 			// genData(data);
 			data = lead_data[id];
 			// console.log('all '+id+" "+second%show+' = '+data.length);
-			
+			$('#wave-note-'+id).html(data.length);
 			if(second%cut==cut-1){
 				
 				rawdata = data.splice(0,cut*n);
