@@ -124,13 +124,17 @@ class HomeController < GXT
 
            
            
-           ws.onmessage do |msg|
-             
+           ws.onmessage do |msg_data|
+             begin 
              
              name =  @context.settings.apps_ws_rv[ws.hash]
              switch name
              
-
+             
+             msgs = msg_data.split("EOL\n")             
+             
+             for msg in msgs 
+             
              t = []
              msg.each_line do |line|
                t<<line
@@ -384,7 +388,14 @@ class HomeController < GXT
              
              
              
+            end
+           
+           
+           rescue Exception=>e
+              puts e.inspect 
 
+           end
+           
            
            
            end
@@ -400,7 +411,7 @@ class HomeController < GXT
               
               
               warn("websocket closed #{name} #{ws.hash}")
-             
+              if   @context.settings.apps_ws[@context.settings.name]
               @context.settings.apps_ws[@context.settings.name].delete(ws)
               @context.settings.apps_ws_rv.delete ws.hash
              
@@ -418,7 +429,7 @@ class HomeController < GXT
               
               end
               
-               
+                end
               end
                
            end
