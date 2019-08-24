@@ -606,9 +606,21 @@ MSG
               sleep 5
               ws = MIOT::connect
             end
-
+            
+            if thread_pool.keys.size > 5
+              
+              puts 'clear thread pool'
+              
+              thread_pool.each_pair do |k,v|
+                v.terminal!
+              end
+              
+              thread_pool.clear
+              
+            end
+            
             send_thread = Thread.new {
-
+                
               t = Time.now.to_f
 
               qtemp = queue.shift queue.size
