@@ -628,11 +628,12 @@ MSG
               msg = qtemp.join("\nEOL\n")
               
               if qtemp.size <= 32 
-
+                
+              
 
                 ws.send msg
 
-                puts "TP = #{ thread_pool.keys.size } Queue = #{qtemp.size} #{msg.size/1000}KB #{(Time.now.to_f-t)*1000}ms #{Time.now.to_f-xv}"
+                puts "WS = #{ws.open?} TP = #{ thread_pool.keys.size } Queue = #{qtemp.size} #{msg.size/1000}KB #{(Time.now.to_f-t)*1000}ms #{Time.now.to_f-xv}"
                 
               end
               
