@@ -612,7 +612,7 @@ MSG
               puts 'clear thread pool'
               
               thread_pool.each_pair do |k,v|
-                v.terminate!
+                v.terminate
               end
               
               thread_pool.clear
