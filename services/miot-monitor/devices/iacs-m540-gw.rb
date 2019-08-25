@@ -614,7 +614,7 @@ MSG
               thread_pool.each_pair do |k,v|
                 v.terminate
               end
-              
+              ws = MIOT::connect
               thread_pool.clear
               
             end

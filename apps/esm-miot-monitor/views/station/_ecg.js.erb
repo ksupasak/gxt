@@ -156,7 +156,7 @@ function presetWave(div){
 			// genData(data);
 			data = lead_data[id];
 			console.log('all '+id+" "+second%show+' = '+data.length);
-			$('#wave-'+id+"-note").html(data.length);
+			$('#wave-'+id+"-note").html('x');
 			if(second%cut==cut-1){
 				
 				rawdata = data.splice(0,cut*n);
