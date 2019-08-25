@@ -378,14 +378,14 @@ a.nav-link{
 		    <div id="medication-panel"></div>
 			<script>
 		
-				$.ajax({
-				  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id if admit%>",
-				  context: document.body
-				}).done(function(data) {
-		  
-				$('#medication-panel').html(data)
-		        });
-				
+				// $.ajax({
+				// 	  url: "medication?station_id=<%=station.id%>&admit_id=<%=admit.id if admit%>",
+				// 	  context: document.body
+				// 	}).done(function(data) {
+				// 		  
+				// 	$('#medication-panel').html(data)
+				// 		        });
+				// 	
 			</script>
 			
 		   </p>
