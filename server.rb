@@ -55,6 +55,8 @@ require_relative 'apps/esm-miot-monitor/app'
 
 require_relative 'config/deploy'
 
+# require_relative 'apps/esm-planto/app'
+
 
 
 register Sinatra::Partial

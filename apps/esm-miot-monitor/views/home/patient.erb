@@ -1,100 +1,89 @@
-
+<%= inline(this,:'_monitor') %>
+<% if false %>
 <style>
-body{
-	background:black;
-}
-
-.station .label{
-	font-size:0.8em;
-
-}
-.station .value{
-	font-size:1.5em;
-	margin-top:0px;
-	padding-top:0px;
-	text-align:center;
-}
-.station .pr{color:#00b3b7;
-
-}
-
-.station .hr{color:#01bf02;
-
-}
-
-.station .bp{color:#5990b7;;
-
-}
-
-.station .spo2{color:#00b3b7;
-
-}
-
-.station .temp{color:#2F50E2;
-
-}
-
-.station .rr{color:#b7851d;
-
-}
-.station .col-6{
-		border:1px solid #333;
-		border-radius: 5px;
-}
-
-.station .cc{
-	color:#bcaf06;
-
-}
-.station .uc{
-	color:#f937e2;
-
-}
-.btn {
-	color:#eee; 
-	//text-decoration: underline;
+@media screen and (min-width: 1024px) {
+    .mobile {
+        display: none !important;
+    }
 }
 </style>
+<div class="mobile row" style="padding:10px;background:#111;color:#fff">
+<div id="" class="col-4" style="font-size:1em;color:#ddd"> 
+<center>
+<%=Time.now.strftime("%d/%m/%Y")%><br/>
+<%=Time.now.strftime("%H:%M:%S")%>
+</center>
+</div>
+<div id="" class="col-6" style=""> 
 
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff">
+<input type="text" id="search-mobile" name="search" placeholder="Search" style="padding:10px;width:100%;background:#ddd">
 
+</div>
+<div class="col-2">
+	<center><%=link_to "+", "../Admit/create",:class=>'btn btn-success', :style=>'padding:10px;width:100%' %></center>
+</div>
+
+</div>
+<script>
+$(document).ready(function(){
+	
+	$('#search-mobile').focus();
+
+	
+})
+<% end %>
+
+</script>
+
+
+
+
+<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff;">
 
 <% 	  
 
-      
-		
 	  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+	  @current_zone = Zone.first unless @current_zone
+		
+	  admits = @current_zone.admits.where(:status=>'Admitted').all
+	 # admits =  Admit.where(:status=>'Admitted').all
+	  
+	  
+	  stations = Station.find(admits.collect{|i| i.station_id})
+	  
+	  
 
-	  # @current_zone = get_zone
-
-      # admits = @current_zone.admits.where(:status=>'Admitted').all
-	  unless @current_zone
-	  	@current_zone = Zone.first 
-      end
-	
-	  stations = @current_zone.stations.all
-
-      for station in stations
+      for admit in admits
+		  
+		  
+		station = admit.station
 	
 		# station = Station.where(:name=>i).first
 		
-		if station
+		# if station
 		 
 		 
-		admit = station.admits.last
+		# admit = station.admits.last
+	#
+	# 	admit = nil if admit and admit.status=='Discharged'
+		 
+		id = admit.id
 		
-		admit = nil if admit and admit.status=='Discharged'
-		 
-		i = station.title
-		title = station.title if station.title and station.title.size>0 
+		
+		title = '-'
+		
+		title = station.title if station and  station.title and station.title.size>0 
+
+		station_id = title
+		
+		
+		
 %>
-
-
-<div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
+<div id="<%=station_id%>" admit="<%=id%>" class=" col-lg-6 col-xl-3  active-station " style="border-right:1px solid #888">
 	<div class="row" style="background:#666">
 		
 		<div class="col-2 text-left ">
-		<%= link_to title,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		<%= link_to title,"../Admit/show?id=#{admit.id}",:class=>'btn'%>
 		</div>
 		<div class="col-7 text-center">
 			<%
@@ -103,73 +92,66 @@ body{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'  %>
 			<% end %> 	
 	
 		</div>
 		<div class="col-3">
 			
-		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' %>
+		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' if station%>
 		
 		</div>
 		
 			
 	</div>
-	<div  class="row align-items-start">
-		<div class="col-lg-12 order-lg-2 order-12">
+	<div  class=" station row align-items-start">
+		<div class="col-lg-8 order-lg-2 order-">
 			<div class="row">
-						<div class="col-6 col-lg-6 col-sm-3 pr">
+						<div class="col-2 col-lg-2 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-							<div class="col-6 col-lg-6 col-sm-3  spo2">
-								<span class="label">SpO2</span>
-								<div class="value">-</div>
-							</div>
-						<div class="col-6 col-lg-6 col-sm-3  bp">
+						<div class="col-4 col-lg-4 col-sm-3  bp">
 							<span class="label">BP</span>
 							<div class="value">-</div>
 						</div>
-							<div class="col-6 col-lg-6 col-sm-3  hr">
-								<span class="label">HR</span>
-								<div class="value">-</div>
-							</div>
 			
-							<div class="col-6 col-lg-6 col-sm-3  temp">
+							<div class="col-2 col-lg-2 col-sm-3  temp">
 								<span class="label">Temp</span>
 								<div class="value">-</div>
 							</div>
-							<div class="col-6 col-lg-6 col-sm-3  rr">
+							<div class="col-2 col-lg-2 col-sm-3  rr">
 								<span class="label">RR</span>
 								<div class="value">-</div>
 							</div>
 			
-					
-				
+						<div class="col-2 col-lg-2 col-sm-3  spo2">
+							<span class="label">SpO2</span>
+							<div class="value">-</div>
+						</div>
+						
+					<div class="col-2 col-lg-2 col-sm-3  hr">
+						<span class="label">HR</span>
+						<div class="value">-</div>
+					</div>			
 		
-						<div class="col-6 col-lg-6 col-sm-3  cc">
+						<div class="col-2 col-lg-2 col-sm-3  cc">
 						    <span class="label">LC</span>
 							<div class="value">-</div> 
 						</div>
-						<div class="col-6  col-lg-6 col-sm-3 uc">
+						<div class="col-2  col-lg-2 col-sm-3 uc">
 							<span class="label">UO</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-2  col-lg-2 col-sm-3 score">
+							<span class="label">SOS</span>
 							<div class="value">-</div>
 						</div>
 			</div>
 		</div>
-		<div class="col-lg-6 order-lg-3 order-1 " style="border:1px solid #333;border-radius: 5px;display:none">
+		<div class="col-lg-4 order-lg-3 order-3 " style="border:1px solid #333;border-radius: 5px;">
 			<div class="row">
 					<div class="col-6 score" style="border:0px solid blue;text-align:center">
-							<%
-
-							if admit
-								patient = admit.patient
-
-							%>
-							<span><%=admit.score%></span><%else %><span></span><% end %>
-						<div class="value" style='font-size:4em;'>
-						- 
-						</div>
 						
 					</div>
 					
@@ -179,10 +161,8 @@ body{
 					</div>
 			</div>
 			<div class="row text-center">
-				<div class="col-6">
-					<%=link_to "Submit","\#",:id=>admit.id, :class=>'btn btn-success', :style=>'' if admit %>
-				</div>
-				<div class="col-6">
+					
+					<%#link_to "Quick","\#",:id=>admit.id, :class=>'btn', :style=>'' if admit %>
 					<%
 					if admit
 						patient = admit.patient
@@ -192,22 +172,51 @@ body{
 						call_submit($(this).attr("id"))
 					});
 					</script>
-					<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn', :style=>''%>
-					<% else %>
-					<%#link_to "Admit","../Admit/create?record[station_id]=#{station.id}",:class=>'btn ', :style=>''%>
+					
+					<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn btn-danger col-4 col-lg-12', :style=>''%>
+					<%#link_to "Detail","../Admit/show?id=#{admit.id}", :class=>'btn btn-primary col-8 col-lg-12' , :style=>'' if admit %>
+					
 					<% end %>
-				</div>
 			</div>
 		</div>
 		
-		<div id="wave-<%=i%>" class="col-lg-12 order-lg-1 order-2" style="min-height:5em;background:#111">
+		<div id="wave-<%=station_id%>" class="col-lg-12 order-lg-1 order-1" style="min-height:5em;background:#111">
 		
 		</div>
+		
+		<div class="col-12 col-lg-12 order-lg-2 order-2" style="border:1px solid #333;border-radius: 5px;">
+		<%
+		
+		notes = admit.nurse_records
+		
+		
+		if notes and notes.size>0
+			note = notes[-1]
+		
+		%>
+		 
+		   <span class="label">Note : (<%=note.start_time.localtime.strftime("%H:%M:%S")%>) </span>
+		   
+		<div class="value" style="color:#999">
+			
+			<%=note.description%>
+			
+		</div>
+		   
+		
+		
+		<% end %>
+		
+		</div>
+		
 	</div>
 
 </div>
 <% end %>
-<% end %>
+
+<div id="<%=station_id%>" admit="<%=id%>" class=" col-lg-6 col-xl-3  active-station " style="border-right:1px solid #888;padding-top:50px">
+<center><%=link_to "+Admit", "../Admit/create",:class=>'btn btn-success' %></center>
+</div>
 
 </div>
 <script>
@@ -222,7 +231,7 @@ $('#main-container').removeClass('container')
 	
 		<div id="template" class="station" style="display:none">
 				<div class="row">
-					<div class="col-sm-1">
+					<!-- <div class="col-sm-1">
 						<div class="row">
 							<div class="col-sm-12 ctlx">
 								P
@@ -238,8 +247,8 @@ $('#main-container').removeClass('container')
 								S
 							</div>
 						</div>
-					</div>
-					<div class="col-sm-7">
+					</div> -->
+					<div class="col-sm-12">
 						<div class="row">
 						<div class="col-sm-6 boxx"><span class="pr-label x-label" >PR</span><span class="pr" >-</span></div>
 						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
@@ -250,22 +259,22 @@ $('#main-container').removeClass('container')
 						</div>
 
 					</div>
-					<div class="col-sm-3 pid" >
+					<!-- <div class="col-sm-3 pid"  >
 							<div class="row">
-							<div class="col-sm-12" style="font-size:0.8em"><span class="id  "><%=i%></span></div>
+							<div class="col-sm-12" style="font-size:0.8em"><span class="id  "><%=station_id%></span></div>
 							</div>
 							<div class="row">
-							<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=i%></span></div>
+							<div class="col-sm-12" style="font-size:0.8em"><span class="hn  "><%=station_id%></span></div>
 							</div>
 							<div class="row">
-							<div class="col-sm-12 " ><span class="sos">-</span></div>
+							<div class="col-sm-12 " ><span class="sos">10</span></div>
 							</div>
 							<div class="row">
 							<div class="col-sm-12">
-							<canvas class="plot" id="plot-<%=i%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
+							<canvas class="plot" id="plot-<%=station_id%>"  style="border:1px solid #000000;background:#ccc;height:100%;width:100%;display:none">
 							</canvas>
 							</div></div>
-					</div>
+					</div> -->
 
 				</div>
 				<div class="row">
@@ -298,7 +307,7 @@ $('#main-container').removeClass('container')
 	
 			function aniLine(idx, sampling, rawdata, last){
 	
-			var w = 40;
+			var w = 20;
 		    var h = 80;
 			var svg;
 			
@@ -494,57 +503,59 @@ $('#main-container').removeClass('container')
 		for(var id in data['list']){
 			i = data['list'][id]
 			
-			if($('#'+i).length > 0){ 
-			obj = data['data'][i]
+			// if($('#'+i).length > 0){ 
+			
+			
+			  obj = data['data'][i]
 				
 			
-		  if(obj['wave']){	
-			  
-			    // wave_data.push(obj['wave']);
-		   		// wave_data = wave_data.concat(obj['wave']);
-				for(var j=0;j<obj['wave'].length;j++){
-					wave_data[i].push(obj['wave'][j]);
-				}
-   				// console.log("v"+i+" "+wave_data[i].length);
-				// wave_data = obj['wave'];
-		   }
+			  if(obj['wave']){	
+		  
+				    // wave_data.push(obj['wave']);
+			   		// wave_data = wave_data.concat(obj['wave']);
+					for(var j=0;j<obj['wave'].length;j++){
+						wave_data[i].push(obj['wave'][j]);
+					}
+	   				// console.log("v"+i+" "+wave_data[i].length);
+					// wave_data = obj['wave'];
+			   }
 		    			
 			
-			 // console.log(obj)
-			$('#'+i+' .hn').html(obj['ref'])
+			 	// console.log(obj)
+				$('#'+i+' .hn').html(obj['ref'])
 			
-			if($('#'+i+' .bp').html()!=obj['bp']){
-				$('#'+i).addClass('bp_alert');
-				$('#'+i).removeClass('bp_alert_2');
-				$('#'+i+' .msg').html("-");
-			}else{
-				$('#'+i).removeClass('bp_alert');
-				// $('#'+i).removeClass('bp_alert_2');
-				// $('#'+i+' .msg').html("-");
-			}
+				if($('#'+i+' .bp').html()!=obj['bp']){
+					$('#'+i).addClass('bp_alert');
+					$('#'+i).removeClass('bp_alert_2');
+					$('#'+i+' .msg').html("-");
+				}else{
+					$('#'+i).removeClass('bp_alert');
+					// $('#'+i).removeClass('bp_alert_2');
+					// $('#'+i+' .msg').html("-");
+				}
 			
-			$('#'+i+' .bp .value').html(obj['bp'])
+				$('#'+i+' .bp .value').html(obj['bp'])
 			
-			$('#'+i+' .temp .value').html(obj['temp'])
+				$('#'+i+' .temp .value').html(obj['temp'])
 			
-			$('#'+i+' .hr .value').html(obj['hr'])
-			$('#'+i+' .pr .value').html(obj['pr'])
-			$('#'+i+' .rr .value').html(obj['rr'])
-			$('#'+i+' .spo2 .value').html(obj['spo2'])
-			
-			
-			$('#'+i+' .score .value').html(obj['score'])
+				$('#'+i+' .hr .value').html(obj['hr'])
+				$('#'+i+' .pr .value').html(obj['pr'])
+				$('#'+i+' .rr .value').html(obj['rr'])
+				$('#'+i+' .spo2 .value').html(obj['spo2'])
 			
 			
+				$('#'+i+' .score .value').html(obj['score'])
 			
 			
-			}else{
-					// console.log(lines)
-					setTimeout(function () {
-				       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-				    }, 2000); //will call the function after 2 secs.
-				
-			}
+			
+			
+			// }else{
+			// 		// console.log(lines)
+			// 		setTimeout(function () {
+			// 	       window.location.href = "nurse"; //will redirect to your blog page (an ex: blog.html)
+			// 	    }, 2000); //will call the function after 2 secs.
+			//
+			// }
 			
 		}
 		 }

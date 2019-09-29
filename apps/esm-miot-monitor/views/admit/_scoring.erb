@@ -67,7 +67,7 @@ No score selected.
 
 
 <div class="form-group row">
-<label for="" class="col-10 col-form-label">	Patient : <%= patient.name %> (<%=patient.hn%>)</label>
+<label for="" class="col-10 col-form-label">	Patient : <%= patient %> (<%=patient.hn%>)</label>
 <div class="col-2">
      <input type="text" readonly class="form-control-plaintext " name="data[score]" id="score-total" style="font-size:1.2em;background:#eee;text-align:center" value="-">
 </div>
@@ -114,9 +114,9 @@ No score selected.
 %>
 
 <div class="form-group row">
-	 <label for="" class="col-4 col-form-label">	<%= i.name %></label>
+	 <label for="" class="col-3 col-form-label"><%= i.name.humanize unless i.title  %>	<%= i.title if i.title  %></label>
 	
-	 <div class="col-3">
+	 <div class="col-4">
 		   <% if options_map.keys.size>0 %>
 		   <select class="form-control" id="option-<%=i.name%>"  name="option[<%=i.name%>]">
 			<option></option>

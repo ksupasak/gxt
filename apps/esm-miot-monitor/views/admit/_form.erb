@@ -13,11 +13,20 @@
 	cols = %w{ }
 	
 	hn = ''
+	
+	hn = params[:hn] if params[:hn]
+	
 	patient_name = ''
+	patient_first_name = ''
+	patient_last_name = ''
+	
 	
 	if p = @record.patient
 		hn = p.hn
 		patient_name = p.name
+		patient_first_name = p.first_name
+		patient_last_name = p.last_name
+		
 	end
 	
 	@current_zone = nil
@@ -33,16 +42,34 @@
 %>
 
 <div class="form-group">
-
  <label for="product-name">Patient</label>
 <div class="row">
-<div class="col-3">
+	
+	<div class="col-6">
+	<center><image src="<%=url_for 'img/patient.png' %>" height="120"></center>
+	</div>
+
+<div class="col-6 ">
+<div class="row">
+<div class="col-12 col-sm-2">
   <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=hn%>" placeholder="HN" style="">
 </div>
-<div class="col-9">
-  <input type="text" class="form-control" id="patient-name" name="patient[name]" value="<%=patient_name%>" placeholder="Name" style="">
-</div></div>
+
+<div class="col-12 col-sm-5">
+  <input type="text" class="form-control" id="patient-name" name="patient[first_name]" value="<%=patient_first_name%>" placeholder="First Name" style="">
 </div>
+
+<div class="col-12 col-sm-5">
+<input type="text" class="form-control" id="patient-name" name="patient[last_name]" value="<%=patient_last_name%>" placeholder="Last Name" style="">
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
 
 <div class="form-group">
 
@@ -58,8 +85,51 @@ stations = @current_zone.stations.all
 else
 stations = Station.all	
 end
+stations_map = stations.clone
+stations_map.collect!{|i| 
+	
+	[i.serial_number, i.id, i.zone_id]
+}
+
 %>
-<div class="col-3">
+<div class="col-6 col-sm-3">
+<label for="product-name">Station SN</label>
+
+<input type="text" id="station-sn" name="station_sn" class="form-control" value="" style="background-color:#23a488">
+<script>
+var map = <%=stations_map.to_json.html_safe%>
+
+$(document).ready(function(){
+	
+$('#station-sn').focus()
+$('#station-sn').keypress(function(event) {
+    if (event.keyCode == 13) {
+	    sn = $(this).val()
+	    event.preventDefault();
+		$('#station-sn').val(sn.trim())
+		for(var ix in map){
+			i = map[ix];
+			
+			if(i[0]==sn){
+				
+				$('#record-station_id').val(i[1])
+				$('#record-zone_id').val(i[2])
+				
+				
+			}
+			
+		}
+		
+		
+    }
+});
+
+})
+</script>
+
+</div>
+
+<div class="col-6 col-sm-3">
 <label for="product-name">Station</label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -84,7 +154,7 @@ zone_id = @record.zone_id if @record.zone_id
 	
 	
 %>
-<div class="col-3">
+<div class="col-6 col-sm-3">
 <label for="product-name"><%=name.humanize%></label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -100,10 +170,11 @@ zone_id = @record.zone_id if @record.zone_id
 <%
 	
 name = 'score_id'
+
 options = Score.all.collect{|i| [i.name,i.id]}
-	
+@record[name] = options[0][1] if options.size>0
 %>
-<div class="col-6">
+<div class="col-6 col-sm-3">
 <label for="product-name"><%=name.humanize%></label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -137,7 +208,7 @@ zone_id = @record.zone_id if @record.zone_id
 	
 	
 %>
-<div class="col-3">
+<div class="col-6 col-sm-3">
 <label for="product-name"><%=name.humanize%></label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -162,7 +233,7 @@ zone_id = @record.zone_id if @record.zone_id
 	
 	
 %>
-<div class="col-3">
+<div class="col-12 col-sm-3">
 <label for="product-name"><%=name.humanize%></label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -186,7 +257,7 @@ zone_id = @record.zone_id if @record.zone_id
 	
 	
 %>
-<div class="col-3">
+<div class="col-12 col-sm-3">
 <label for="product-name"><%=name.humanize%></label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -299,11 +370,14 @@ name = 'admit_stamp'
 
 
 
-<% else %>	
+<% else 
+
+	if false or i[0] =='note'
+%>	
   <div class="form-group">
     <label for="product-name"><%=i[0].humanize%></label>
     <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
-  </div>
+  </div><% end %>
 <% end %>
 <% end %>
 

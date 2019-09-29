@@ -42,7 +42,7 @@ print_area.close();
 	}
 </style>
 <div id="printout">
-<h2>Patient Summary : <%=patient.name if patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
+<h2>Patient Summary : <%=patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
 <hr/>
 <strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
 <strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>

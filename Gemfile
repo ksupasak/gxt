@@ -10,6 +10,7 @@ gem 'sinatra-partial'
 gem 'sinatra-formhelpers-ng'
 
 gem 'puma'
+gem 'mqtt'
 
 gem 'parallel'
 

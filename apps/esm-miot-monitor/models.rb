@@ -96,6 +96,7 @@ class Admit
   belongs_to :procedure, :class_name=>'EsmMiotMonitor::Procedure'
   belongs_to :diagnosis, :class_name=>'EsmMiotMonitor::Diagnosis'
   
+  belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance'
   
   
   key :patient_id, ObjectId
@@ -106,6 +107,8 @@ class Admit
   key :provider_id, ObjectId
   key :procedure_id, ObjectId
   key :diagnosis_id, ObjectId
+  
+  key :ambulance_id, ObjectId
   
   key :admit_stamp, Time
   key :discharge_stamp, Time
@@ -196,8 +199,15 @@ class Patient
   
   key :hn, String 
   key :name, String 
+  key :public_id, String
+  key :prefix_name, String 
+  key :first_name, String 
+  key :last_name, String 
+  key :dob, Time 
+  key :gender, String 
+  
   def to_s
-    self.name
+    "#{self.prefix_name}#{self.first_name} #{self.last_name}"
   end
 end
 
@@ -226,6 +236,8 @@ class ScoreItem
   
   
   key :name, String # key value
+  key :title, String # key value
+  
   key :sort_order, Integer
   key :score_id, ObjectId
   
@@ -269,6 +281,42 @@ class Device
   end
 end
 
+
+class Ambulance
+  include MongoMapper::Document
+  has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
+  key :status, String
+  key :name, String
+  key :phone, String
+  key :station_id, ObjectId
+  key :driver_id, ObjectId
+  
+end
+
+class AmbulanceDriver
+  include MongoMapper::Document
+  key :name, String
+  key :mobile, String
+  key :phone, String
+  key :address, String
+  key :public_id, String
+end
+
+
+
+class Setting
+  include MongoMapper::Document
+  key :name, String
+  key :value, String
+  
+  def self.get name, default=nil
+      record = self.where(:name=>name).first
+      unless record
+        record = self.create :name=>'', :value=>default
+      end
+      return record.value
+  end
+end
 
 
 
@@ -369,6 +417,18 @@ class PatientController < GXTDocument
   
 end
 
+
+class AmbulanceController < GXTDocument
+  
+end
+
+class AmbulanceDriverController < GXTDocument
+  
+end
+
+class SettingController < GXTDocument
+  
+end
 
 class AdmitController < GXTDocument
   

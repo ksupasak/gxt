@@ -4,7 +4,7 @@ require 'timeout'
 module Device
   
   
-def self.monitor_b450_v1()
+def self.monitor_b450_v1(ws)
 
 puts "-- Start B450 Service"
 # Services 
@@ -23,9 +23,9 @@ require_relative 'lib'
 # network address
 # network_addr = "202.114.4.255"
 # network_addr = "192.168.2.255"
-network_addr = HOST_NETWORK_BOARDCAST
+network_addr = "172.16.255.255" # HOST_NETWORK_BOARDCAST
 
-
+ 
 # host = "192.168.1.146"
 
 host = CMS_IP
