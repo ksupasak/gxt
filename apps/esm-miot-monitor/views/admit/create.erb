@@ -45,3 +45,26 @@ return_url = params[:return] if params[:return]
 
 </form>
 <% end %>
+<script>
+<% 
+
+	his = Setting.get :his 
+	if his!= nil and params[:hn]
+%>
+$.ajax({
+  url: "get_patient_data?hn=<%=params[:hn]%>",
+  context: document.body
+}).done(function(data) {
+ var obj = JSON.parse(data);
+
+ $('#patient-first_name').val(obj['first_name'])
+ $('#patient-last_name').val(obj['last_name'])
+
+ $('#patient-image').attr('src',"data:image/png;base64,"+obj['picture'])
+
+
+});
+<% else %>
+console.log('no his configure')
+<% end %>
+</script>

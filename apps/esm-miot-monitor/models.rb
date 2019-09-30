@@ -312,7 +312,7 @@ class Setting
   def self.get name, default=nil
       record = self.where(:name=>name).first
       unless record
-        record = self.create :name=>'', :value=>default
+        record = self.create :name=>name, :value=>default
       end
       return record.value
   end

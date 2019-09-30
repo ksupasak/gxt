@@ -46,8 +46,9 @@
 <div class="row">
 	
 	<div class="col-6">
-	<center><image src="<%=url_for 'img/patient.png' %>" height="120"></center>
+	<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
 	</div>
+
 
 <div class="col-6 ">
 <div class="row">
@@ -56,11 +57,11 @@
 </div>
 
 <div class="col-12 col-sm-5">
-  <input type="text" class="form-control" id="patient-name" name="patient[first_name]" value="<%=patient_first_name%>" placeholder="First Name" style="">
+  <input type="text" class="form-control" id="patient-first_name" name="patient[first_name]" value="<%=patient_first_name%>" placeholder="First Name" style="">
 </div>
 
 <div class="col-12 col-sm-5">
-<input type="text" class="form-control" id="patient-name" name="patient[last_name]" value="<%=patient_last_name%>" placeholder="Last Name" style="">
+<input type="text" class="form-control" id="patient-last_name" name="patient[last_name]" value="<%=patient_last_name%>" placeholder="Last Name" style="">
 </div>
 </div>
 </div>
@@ -148,10 +149,7 @@ options = Zone.all.collect{|i| [i.name,i.id]}
 
 zone_id = Zone.first.id
 zone_id = @current_zone if @current_zone
-zone_id = @record.zone_id if @record.zone_id
-
-
-	
+zone_id = @record.zone_id if @record.zone_id	
 	
 %>
 <div class="col-6 col-sm-3">
