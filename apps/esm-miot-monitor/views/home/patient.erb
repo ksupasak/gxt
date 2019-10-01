@@ -105,61 +105,59 @@ $(document).ready(function(){
 			
 	</div>
 	<div  class=" station row align-items-start">
-		<div class="col-lg-8 order-lg-2 order-">
+		<div class="col-lg-12 order-lg-3 order-3">
 			<div class="row">
-						<div class="col-2 col-lg-2 col-sm-3 pr">
+					<div class="col-8" style="border:0px solid">
+						<div class="row">
+						<div class="col-6 col-lg-2 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-4 col-lg-4 col-sm-3  bp">
+						<div class="col-6 col-lg-4 col-sm-3  bp">
 							<span class="label">BP</span>
 							<div class="value">-</div>
 						</div>
 			
-							<div class="col-2 col-lg-2 col-sm-3  temp">
+							<div class="col-6 col-lg-2 col-sm-3  temp">
 								<span class="label">Temp</span>
 								<div class="value">-</div>
 							</div>
-							<div class="col-2 col-lg-2 col-sm-3  rr">
+							<div class="col-6 col-lg-2 col-sm-3  rr">
 								<span class="label">RR</span>
 								<div class="value">-</div>
 							</div>
 			
-						<div class="col-2 col-lg-2 col-sm-3  spo2">
+						<div class="col-6 col-lg-2 col-sm-3  spo2">
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
 						
-					<div class="col-2 col-lg-2 col-sm-3  hr">
+					<div class="col-6 col-lg-2 col-sm-3  hr">
 						<span class="label">HR</span>
 						<div class="value">-</div>
 					</div>			
 		
-						<div class="col-2 col-lg-2 col-sm-3  cc">
+						<div class="col-6 col-lg-2 col-sm-3  cc">
 						    <span class="label">LC</span>
 							<div class="value">-</div> 
 						</div>
-						<div class="col-2  col-lg-2 col-sm-3 uc">
+						<div class="col-6  col-lg-2 col-sm-3 uc">
 							<span class="label">UO</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-2  col-lg-2 col-sm-3 score">
-							<span class="label">SOS</span>
-							<div class="value">-</div>
-						</div>
+					 
+					</div>
+					</div>
+					<div class="col-4 score  " >
+						<div class="row">
+							<div class="col-12 note-panel-<%=station_id%>" style="font-size:2.5em;  border-radius: 5px;">
+								<div class="value">-</div>
+								</div>
+					</div></div>
 			</div>
 		</div>
 		<div class="col-lg-4 order-lg-3 order-3 " style="border:1px solid #333;border-radius: 5px;">
-			<div class="row">
-					<div class="col-6 score" style="border:0px solid blue;text-align:center">
-						
-					</div>
-					
-					<div class="col-6" style="border:0px solid blue;">
-
-						
-					</div>
-			</div>
+	
 			<div class="row text-center">
 					
 					<%#link_to "Quick","\#",:id=>admit.id, :class=>'btn', :style=>'' if admit %>
@@ -180,11 +178,11 @@ $(document).ready(function(){
 			</div>
 		</div>
 		
-		<div id="wave-<%=station_id%>" class="col-lg-12 order-lg-1 order-1" style="min-height:5em;background:#111">
+		<div id="wave-<%=station_id%>" class="col-lg-12  order-1" style="min-height:5em;background:#111">
 		
 		</div>
 		
-		<div class="col-12 col-lg-12 order-lg-2 order-2" style="border:1px solid #333;border-radius: 5px;">
+		<div  class="note-spanel-<%=station_id%> col-12 col-lg-12 order-lg-3 order-3" style="border:1px solid #333;border-radius: 5px;background:none">
 		<%
 		
 		notes = admit.nurse_records
@@ -197,7 +195,7 @@ $(document).ready(function(){
 		 
 		   <span class="label">Note : (<%=note.start_time.localtime.strftime("%H:%M:%S")%>) </span>
 		   
-		<div class="value" style="color:#999">
+		<div class="value" style="color:#fff;">
 			
 			<%=note.description%>
 			
@@ -307,7 +305,7 @@ $('#main-container').removeClass('container')
 	
 			function aniLine(idx, sampling, rawdata, last){
 	
-			var w = 20;
+			var w = 70;
 		    var h = 80;
 			var svg;
 			
@@ -324,13 +322,14 @@ $('#main-container').removeClass('container')
 			// svgo.selectAll("path").attr("class", "old");
 
 
-		    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
-		    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
+		 var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
+		    var y = d3.scaleLinear().domain([1000,-500]).range([10, h - 10]);
 
 		    var line = d3.line()
 		      .x(function(d,i) {return x(i);})
 		      .y(function(d) {return y(d);})
 		      .curve(d3.curveNatural)
+		 
 
 		    // data is created inside the function so it is always unique
 		    let repeat = () => {
@@ -377,25 +376,29 @@ $('#main-container').removeClass('container')
 	
 		
 		
-			function showWave(div,data){
-			var n = 32; // sample for a second
+			function showWave(div,data,id){
+			var n = 200; // sample for a second
 		    var cut = 1;
 			var show = 8; //second
 			var second = 0;
 			var lastdata = [];
 		
 			var intervalID = setInterval(function(){
+				
+				
 				if(second%show==show-1){
 					
 					$('#'+div).html("");
 					
 				}
+			
 					// genData(data);
 					if(second%cut==cut-1&&second<1000){
 					
-						rawdata = data.splice(0,cut*n+1);
-						data.unshift(rawdata[rawdata.length-1]);
-						if(rawdata.length>=n){
+						rawdata = wave_data[id].splice(0,cut*n+1);
+						// data.unshift(rawdata[rawdata.length-1]);
+						if(rawdata.length>0){
+						
 							aniLine(div,n ,rawdata,lastdata);
 							lastdata = rawdata;
 						}
@@ -418,8 +421,8 @@ $('#main-container').removeClass('container')
 		   i = "<%=i%>"
 		   
 		   wave_data[i] = [];
-		   
-		  showWave('wave-<%=i%>',wave_data[i]);
+	
+		  showWave('wave-<%=i%>',wave_data[i],i);
 		
 	    <% end %>
 	
@@ -508,17 +511,31 @@ $('#main-container').removeClass('container')
 			
 			  obj = data['data'][i]
 				
+			 console.log(obj)
+			  // if(obj['wave']){	
+			  // 
+			  // 				    // wave_data.push(obj['wave']);
+			  // 			   		// wave_data = wave_data.concat(obj['wave']);
+			  // 					for(var j=0;j<obj['wave'].length;j++){
+			  // 						wave_data[i].push(obj['wave'][j]);
+			  // 					}
+			  // 	   				// console.log("v"+i+" "+wave_data[i].length);
+			  // 					// wave_data = obj['wave'];
+			  // 			   }
 			
-			  if(obj['wave']){	
-		  
+			  if(true){	
+
 				    // wave_data.push(obj['wave']);
 			   		// wave_data = wave_data.concat(obj['wave']);
-					for(var j=0;j<obj['wave'].length;j++){
-						wave_data[i].push(obj['wave'][j]);
-					}
+					// for(var j=0;j<obj['leads'].length;j++){
+					// 	wave_data[i].push(obj['wave'][j]);
+					// }
+					wave_data[i] = 	wave_data[i].concat(obj['leads'][2])
+				   	 console.log(wave_data[i])
 	   				// console.log("v"+i+" "+wave_data[i].length);
 					// wave_data = obj['wave'];
 			   }
+			
 		    			
 			
 			 	// console.log(obj)
@@ -546,7 +563,16 @@ $('#main-container').removeClass('container')
 			
 				$('#'+i+' .score .value').html(obj['score'])
 			
-			
+			    sos = parseInt(obj['score']);
+				color = 'none'
+				
+				if(sos<2)color='#262'
+				if(sos<4)color='#662'
+				if(sos>=4)color='#622'
+				
+				
+				
+				$('.note-panel-'+i).css('background',color);
 			
 			
 			// }else{

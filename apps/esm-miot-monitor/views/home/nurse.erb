@@ -1,71 +1,5 @@
-<style>
-	
-	.iconic-audio * {
-	  fill: red;
-	  stroke: red;
-	}
-		
-body{
-	background:black;
-}
+<%= inline(this,:'../home/_monitor') %>
 
-.station .label{
-	font-size:0.6em;
-	margin-left:-5px;
-
-}
-.station .value{
-	font-size:1em;
-	margin-top:0px;
-	padding-top:0px;
-	text-align:center;
-}
-.station .pr{color:#01bf02;
-
-}
-.station .hr{color:#bf6162;
-
-}
-
-.station .bp{color:#5990b7;;
-
-}
-
-.station .spo2{color:#bcaf06;
-
-}
-
-.station .temp{color:#2F50E2;
-
-}
-
-.station .rr{color:#b7851d;
-
-}
-.station .col-2{
-		border:1px solid #333;
-		border-radius: 5px;
-}
-.station .col-4{
-		border:1px solid #333;
-		border-radius: 5px;
-}
-.station .cc{
-	color:#00b3b7;
-
-}
-.station .uc{
-	color:#f937e2;
-
-}
-.btn {
-	color:#eee; 
-	//text-decoration: underline;
-}
-</style>
-<% 
-
-%>
 
 <div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff;">
 
@@ -120,7 +54,7 @@ body{
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient.name} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'  %>
+			<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'  %>
 			<% end %> 	
 	
 		</div>
