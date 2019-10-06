@@ -13,7 +13,7 @@ class SasController < GXT
             ws.onopen do
               puts "open websocket for #{@context.settings.name} on #{ws.hash}"
               # ws.send("websocket opened")
-              @context.settings.redis.ping
+              # @context.settings.redis.ping
               @context.settings.apps_ws[@context.settings.name] << ws
               @context.settings.apps_ws_rv[ws.hash] = @context.settings.name
             end
