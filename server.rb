@@ -4,7 +4,9 @@ require 'sinatra/reloader' if development?
 require 'sinatra/partial'
 require 'sinatra-websocket'
 require 'sinatra/form_helpers'
-
+require 'redis'
+require 'json'
+require "hiredis"
 
 require_relative 'config/init'
 
@@ -20,6 +22,7 @@ require 'barby/barcode/code_39'
 require 'barby/barcode/qr_code'
 require 'barby/outputter/png_outputter'
 require 'crc'
+
 
 # register Sinatra::Reloader
 
@@ -39,6 +42,10 @@ set :apps_rv, {}
 set :apps_ws_rv, {}
 
 set :extended, {}
+
+redis = Redis.new(url: "redis://127.0.0.1:6379/15",:driver => :hiredis)
+set :redis, redis
+
 
 require_relative 'config/init'
 require_relative 'apps/gxt/helper'
@@ -74,6 +81,8 @@ set :mongo_prefix, Proc.new {'gxt'}
 # default ap
 set :name, DEFAULT_APP
 set :app, settings.apps[settings.name]
+
+
 
 
 def switch name

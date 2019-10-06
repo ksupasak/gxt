@@ -3,16 +3,23 @@ module EsmMiotMonitor
 
 class User
   include MongoMapper::Document
+  belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
+  
   key :login, String
   key :salt,  String
   key :hashed_password,  String
   key :last_login, DateTime
-  key :role, ObjectId
+  key :role_id, ObjectId
   key :email, String
   timestamps!
 end
 
-
+class Role
+  include MongoMapper::Document
+  key :name, String
+ 
+  timestamps!
+end
 class Provider
   include MongoMapper::Document
    key :name, String
@@ -287,9 +294,11 @@ class Ambulance
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
   key :status, String
   key :name, String
+  key :plat_license, String
   key :phone, String
   key :station_id, ObjectId
   key :driver_id, ObjectId
+
   
 end
 
@@ -300,6 +309,7 @@ class AmbulanceDriver
   key :phone, String
   key :address, String
   key :public_id, String
+  key :user_id, ObjectId
 end
 
 
@@ -354,6 +364,16 @@ end
 
 
 class HomeController < GXT
+
+end
+
+
+class UserController < GXTDocument
+
+end
+
+
+class RoleController < GXTDocument
 
 end
 
@@ -429,6 +449,7 @@ end
 class SettingController < GXTDocument
   
 end
+
 
 class AdmitController < GXTDocument
   

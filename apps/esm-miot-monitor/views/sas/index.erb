@@ -1,222 +1,374 @@
-<%= inline(this,:'_monitor') %>
-<% if false %>
+
+<%= inline(this,:'../home/_monitor') %>
+
 <style>
-@media screen and (min-width: 1024px) {
-    .mobile {
-        display: none !important;
-    }
+.header{
+	height:80px;
+	background-color: rgb(19, 38, 58);
+}
+.conference{
+	height:500px;
+	background-color: black;
+}
+.map{
+	height:500px;
+		background:#aaa;
 }
 </style>
-<div class="mobile row" style="padding:10px;background:#111;color:#fff">
-<div id="" class="col-4" style="font-size:1em;color:#ddd"> 
-<center>
-<%=Time.now.strftime("%d/%m/%Y")%><br/>
-<%=Time.now.strftime("%H:%M:%S")%>
-</center>
-</div>
-<div id="" class="col-6" style=""> 
 
-<input type="text" id="search-mobile" name="search" placeholder="Search" style="padding:10px;width:100%;background:#ddd">
-
-</div>
-<div class="col-2">
-	<center><%=link_to "+", "../Admit/create",:class=>'btn btn-success', :style=>'padding:10px;width:100%' %></center>
-</div>
-
-</div>
-<script>
-$(document).ready(function(){
+<div class="row">
 	
-	$('#search-mobile').focus();
-
+	<div class="col-12 header" >
 	
-})
-<% end %>
-
-</script>
-
-
-
-
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff;">
-
-<% 	  
-
-	  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
-	  @current_zone = Zone.first unless @current_zone
-		
-	  admits = @current_zone.admits.where(:status=>'Admitted').all
-	 # admits =  Admit.where(:status=>'Admitted').all
-	  
-	  
-	  stations = Station.find(admits.collect{|i| i.station_id})
-	  
-	  
-
-      for admit in admits
-		  
-		  
-		station = admit.station
-	
-		# station = Station.where(:name=>i).first
-		
-		# if station
-		 
-		 
-		# admit = station.admits.last
-	#
-	# 	admit = nil if admit and admit.status=='Discharged'
-		 
-		id = admit.id
-		
-		
-		title = '-'
-		
-		title = station.title if station and  station.title and station.title.size>0 
-
-		station_id = title
-		
-		
-		
-%>
-<div id="<%=station_id%>" admit="<%=id%>" class=" col-lg-6 col-xl-3  active-station " style="border-right:1px solid #888">
-	<div class="row" style="background:#666">
-		
-		<div class="col-2 text-left ">
-		<%= link_to title,"../Admit/show?id=#{admit.id}",:class=>'btn'%>
-		</div>
-		<div class="col-7 text-center">
-			<%
-			
-			if admit
-				patient = admit.patient
-			
-			%>
-			<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'  %>
-			<% end %> 	
-	
-		</div>
-		<div class="col-3">
-			
-		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' if station%>
-		
-		</div>
-		
-			
 	</div>
-	<div  class=" station row align-items-start">
-		<div class="col-lg-12 order-lg-3 order-3">
-			<div class="row">
-					<div class="col-8" style="border:0px solid">
-						<div class="row">
-						<div class="col-6 col-lg-2 col-sm-3 pr">
-							<span class="label">PR</span>
-							<div class="value">-</div>
-						</div>
-						<div class="col-6 col-lg-4 col-sm-3  bp">
-							<span class="label">BP</span>
-							<div class="value">-</div>
-						</div>
-			
-							<div class="col-6 col-lg-2 col-sm-3  temp">
-								<span class="label">Temp</span>
-								<div class="value">-</div>
-							</div>
-							<div class="col-6 col-lg-2 col-sm-3  rr">
-								<span class="label">RR</span>
-								<div class="value">-</div>
-							</div>
-			
-						<div class="col-6 col-lg-2 col-sm-3  spo2">
-							<span class="label">SpO2</span>
-							<div class="value">-</div>
-						</div>
-						
-					<div class="col-6 col-lg-2 col-sm-3  hr">
-						<span class="label">HR</span>
-						<div class="value">-</div>
-					</div>			
+	
+	
+</div>
+
+
+
+<div class="row" style="color:white">
+	
+	<div class="col-8">
 		
-						<div class="col-6 col-lg-2 col-sm-3  cc">
-						    <span class="label">LC</span>
-							<div class="value">-</div> 
-						</div>
-						<div class="col-6  col-lg-2 col-sm-3 uc">
-							<span class="label">UO</span>
-							<div class="value">-</div>
-						</div>
-					 
-					</div>
-					</div>
-					<div class="col-4 score  " >
-						<div class="row">
-							<div class="col-12 note-panel-<%=station_id%>" style="font-size:2.5em;  border-radius: 5px;">
-								<div class="value">-</div>
-								</div>
-					</div></div>
+		<div class="row" style="height:300px;border:0px solid #ccc">
+			<div class="col-4">
+				A
+			</div >
+			<div class="col-4">
+					B
+			</div >
+			<div class="col-4">
+					C
+			</div >
+		</div>
+		<div class="row">
+			<div class="col-12" style="background-color: rgb(19, 38, 58);height:100px">
+				
 			</div>
 		</div>
-		<div class="col-lg-4 order-lg-3 order-3 " style="border:1px solid #333;border-radius: 5px;">
-	
-			<div class="row text-center">
+		<div class="row">
+			<div class="col-12">
+			
+				
+				<div id="panel-ambulance" class="row" style="border:0px solid blue;background:#111;color:#fff;">
 					
-					<%#link_to "Quick","\#",:id=>admit.id, :class=>'btn', :style=>'' if admit %>
 					<%
-					if admit
-						patient = admit.patient
+
+						host = 'prod.vidyo.io'
+
+						ambulances = Ambulance.all
+
+						display_name = 'demoUser47569'
+
+						out = `node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --app #{Setting.get :vidyo_app_id} --userName Soup2 --expiresInSecs 3000`
+						out = out.split("\n")
+						token = out[-1]
+						@token = token
+
+
+
+
+						for i in ambulances 
+
+
+							resource_id = i.name
 					%>
+					<div class="col-12" style="height:100px">
+					<a href="#" id="<%=i.id%>">Call</a>	
+					<a href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=token%>'>Call <%=i.name%></a>
+					</div>
 					<script>
-					$('#<%=admit.id%>').click(function(){
-						call_submit($(this).attr("id"))
-					});
+					$('#<%=i.id%>').click(function(){
+						$('.callEnd').click();
+						setTimeout(function(){ 
+							
+								$('#resourceId').val("<%=i.name%>")
+								$('.callStart').click();
+								
+							}, 3000);
+					
+					})
 					</script>
-					
-					<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn btn-danger col-4 col-lg-12', :style=>''%>
-					<%#link_to "Detail","../Admit/show?id=#{admit.id}", :class=>'btn btn-primary col-8 col-lg-12' , :style=>'' if admit %>
-					
+
 					<% end %>
+					
+					
+				</div>
+			
+			
+			
+				<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#fff;">
+
+				<% 	  
+ 					  @current_zone = Zone.first
+					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+					  
+					  admits = @current_zone.admits.where(:status=>'Admitted').all
+					 # admits =  Admit.where(:status=>'Admitted').all
+
+
+					  stations = Station.find(admits.collect{|i| i.station_id})
+
+
+
+				      for admit in admits
+
+
+						station = admit.station
+
+						# station = Station.where(:name=>i).first
+
+						# if station
+
+
+						# admit = station.admits.last
+					#
+					# 	admit = nil if admit and admit.status=='Discharged'
+
+						id = admit.id
+
+
+						title = '-'
+
+						title = station.title if station and  station.title and station.title.size>0 
+
+						station_id = title
+
+
+
+				%>
+				<div id="<%=station_id%>" admit="<%=id%>" class=" col-6  active-station " style="border-right:1px solid #888">
+					<div class="row" style="background:#666">
+
+						<div class="col-2 text-left ">
+						<%= link_to title,"../Admit/show?id=#{admit.id}",:class=>'btn'%>
+						</div>
+						<div class="col-7 text-center">
+							<%
+
+							if admit
+								patient = admit.patient
+
+							%>
+							<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'  %>
+							<% end %> 	
+
+						</div>
+						<div class="col-3">
+
+						<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' if station%>
+
+						</div>
+
+
+					</div>
+					<div  class=" station row align-items-start">
+						<div class="col-lg-12 order-lg-3 order-3">
+							<div class="row">
+									<div class="col-8" style="border:0px solid">
+										<div class="row">
+										<div class="col-6 col-lg-2 col-sm-3 pr">
+											<span class="label">PR</span>
+											<div class="value">-</div>
+										</div>
+										<div class="col-6 col-lg-4 col-sm-3  bp">
+											<span class="label">BP</span>
+											<div class="value">-</div>
+										</div>
+
+											<div class="col-6 col-lg-2 col-sm-3  temp">
+												<span class="label">Temp</span>
+												<div class="value">-</div>
+											</div>
+											<div class="col-6 col-lg-2 col-sm-3  rr">
+												<span class="label">RR</span>
+												<div class="value">-</div>
+											</div>
+
+										<div class="col-6 col-lg-2 col-sm-3  spo2">
+											<span class="label">SpO2</span>
+											<div class="value">-</div>
+										</div>
+
+									<div class="col-6 col-lg-2 col-sm-3  hr">
+										<span class="label">HR</span>
+										<div class="value">-</div>
+									</div>			
+
+										<div class="col-6 col-lg-2 col-sm-3  cc">
+										    <span class="label">LC</span>
+											<div class="value">-</div> 
+										</div>
+										<div class="col-6  col-lg-2 col-sm-3 uc">
+											<span class="label">UO</span>
+											<div class="value">-</div>
+										</div>
+
+									</div>
+									</div>
+									<div class="col-4 score  " >
+										<div class="row">
+											<div class="col-12 note-panel-<%=station_id%>" style="font-size:2.5em;  border-radius: 5px;">
+												<div class="value">-</div>
+												</div>
+									</div></div>
+							</div>
+						</div>
+						<div class="col-lg-4 order-lg-3 order-3 " style="border:1px solid #333;border-radius: 5px;">
+
+							<div class="row text-center">
+
+									<%#link_to "Quick","\#",:id=>admit.id, :class=>'btn', :style=>'' if admit %>
+									<%
+									if admit
+										patient = admit.patient
+									%>
+									<script>
+									$('#<%=admit.id%>').click(function(){
+										call_submit($(this).attr("id"))
+									});
+									</script>
+
+									<%#link_to "Discharge","../Admit/discharge?id=#{admit.id}",:class=>'btn btn-danger col-4 col-lg-12', :style=>''%>
+									<%#link_to "Detail","../Admit/show?id=#{admit.id}", :class=>'btn btn-primary col-8 col-lg-12' , :style=>'' if admit %>
+
+									<% end %>
+							</div>
+						</div>
+
+						<div id="wave-<%=station_id%>" class="col-lg-12  order-1" style="min-height:5em;background:#111">
+
+						</div>
+
+						<div  class="note-spanel-<%=station_id%> col-12 col-lg-12 order-lg-3 order-3" style="border:1px solid #333;border-radius: 5px;background:none">
+						<%
+
+						notes = admit.nurse_records
+
+
+						if notes and notes.size>0
+							note = notes[-1]
+
+						%>
+
+						   <span class="label">Note : (<%=note.start_time.localtime.strftime("%H:%M:%S")%>) </span>
+
+						<div class="value" style="color:#fff;">
+
+							<%=note.description%>
+
+						</div>
+
+
+
+						<% end %>
+
+						</div>
+
+					</div>
+
+				</div>
+				<% end %>
+
+				<div id="<%=station_id%>" admit="<%=id%>" class=" col-6  active-station " style="border-right:1px solid #888;padding-top:50px">
+				<center><%=link_to "+Admit", "../Admit/create",:class=>'btn btn-success' %></center>
+				</div>
+
+				</div>
+			
+			
+			
+			
+			
 			</div>
-		</div>
-		
-		<div id="wave-<%=station_id%>" class="col-lg-12  order-1" style="min-height:5em;background:#111">
-		
-		</div>
-		
-		<div  class="note-spanel-<%=station_id%> col-12 col-lg-12 order-lg-3 order-3" style="border:1px solid #333;border-radius: 5px;background:none">
-		<%
-		
-		notes = admit.nurse_records
-		
-		
-		if notes and notes.size>0
-			note = notes[-1]
-		
-		%>
-		 
-		   <span class="label">Note : (<%=note.start_time.localtime.strftime("%H:%M:%S")%>) </span>
-		   
-		<div class="value" style="color:#fff;">
-			
-			<%=note.description%>
 			
 		</div>
-		   
 		
 		
-		<% end %>
+	</div>
+	<div class="col-4">
 		
+		<div class="conference">
+			<%=inline(this,:'_vidyo')%>
+		</div>
+		
+		<div class="map">
+				<div class="row">
+					<div class="col-12  my-2" >
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #map {
+					        height: 400px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+					    <!--The div element for the map -->
+					    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <script>
+					// Initialize and add the map
+					var marker = null;
+					var map = null;
+
+					function initMap() {
+					  // The location of Uluru
+					  var uluru = {lat: 15.8700, lng: 100.9925};
+					  // The map, centered at Uluru
+					  map = new google.maps.Map(
+					      document.getElementById('map'), {zoom: 16, center: uluru});
+					  // The marker, positioned at Uluru
+					  marker = new google.maps.Marker({position: uluru, map: map});
+
+					// var image="https://example.com/images/carnew.svg";
+
+					 // marker = new google.maps.Marker({
+					 // 			    position: uluru,
+					 // 			    icon: image,
+					 // 			    map: map
+					 // 			});
+					}
+
+					function goPosition(){
+							setPosition(53.345735,-6.259548)
+					}
+
+					function setPosition(lat,lng){
+
+						// lat = 53.345735;
+						// 			lng = -6.259548;
+
+						var new_marker_position = new google.maps.LatLng(lat, lng);
+
+					   marker.setPosition(new_marker_position);
+					   map.setCenter(new google.maps.LatLng( lat, lng ) );
+
+					}
+					    </script>
+					    <!--Load the API from the specified URL
+					    * The async attribute allows the browser to render the page while the API loads
+					    * The key parameter will contain your own API key (which is not needed for this tutorial)
+					    * The callback parameter executes the initMap() function
+					    -->
+					    <script async defer
+					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
+					    </script>
+					</div>
+
+				</div>
+
 		</div>
 		
 	</div>
-
-</div>
-<% end %>
-
-<div id="<%=station_id%>" admit="<%=id%>" class=" col-lg-6 col-xl-3  active-station " style="border-right:1px solid #888;padding-top:50px">
-<center><%=link_to "+Admit", "../Admit/create",:class=>'btn btn-success' %></center>
+	
+	
 </div>
 
-</div>
+
+
+
+
+
 <script>
 $('#main-container').removeClass('container')
 </script>
@@ -454,7 +606,7 @@ $('#main-container').removeClass('container')
       ws.onclose   = function()  { show('websocket closed'); 
 		
 	 	setTimeout(function () {
-	       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
 	    }, 2000); //will call the function after 2 secs.
 	
 
@@ -530,9 +682,11 @@ $('#main-container').removeClass('container')
 					// for(var j=0;j<obj['leads'].length;j++){
 					// 	wave_data[i].push(obj['wave'][j]);
 					// }
-						if(wave_data[i]==null){
-							wave_data[i] = []
-						}
+					console.log(wave_data)
+					console.log(i)
+					if(wave_data[i]==null){
+						wave_data[i] = []
+					}
 					wave_data[i] = 	wave_data[i].concat(obj['leads'][2])
 				   	 console.log(wave_data[i])
 	   				// console.log("v"+i+" "+wave_data[i].length);
@@ -639,6 +793,6 @@ $('#main-container').removeClass('container')
 By E.S.M.Solution Co.,Ltd.
 </div>
 
-<%= inline(this,:'_scoring') %>
+<%= inline(this,:'../home/_scoring') %>
 
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>

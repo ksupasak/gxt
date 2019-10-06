@@ -1,7 +1,7 @@
 require 'eventmachine'
 require 'net/http'
 require_relative '../../services/monitor/conf'
-
+require_relative 'sas'
 
 require 'active_support'
 
@@ -44,6 +44,11 @@ MSG
     
     
   end
+  
+class TestController < GXT
+
+end
+
 
 
 class HomeController < GXT
@@ -453,11 +458,38 @@ end
 
 def self.registered(app)
   
+  
+  
+  
      puts 'Start MIOT Solution '
      @@settings = app.settings
      
      settings.set :ws_map, {}
      settings.set :cmd_map, {}
+     
+  # redis = app.settings.redis
+  # 
+  # begin
+  #   redis.psubscribe('chula.sas.*' ) do |on|
+  #     on.psubscribe do |channel, subscriptions|
+  #       puts "Subscribed to ##{channel} (#{subscriptions} subscriptions)"
+  #     end
+  # 
+  #     on.pmessage do |channel, tag, message|
+  #       puts "##{channel}: #{tag}: #{message}"
+  #       redis.punsubscribe if message == "exit"
+  #     end
+  # 
+  #     on.punsubscribe do |channel, subscriptions|
+  #       puts "Unsubscribed from ##{channel} (#{subscriptions} subscriptions)"
+  #     end
+  #   end
+  # rescue Redis::BaseConnectionError => error
+  #   puts "#{error}, retrying in 1s"
+  #   sleep 1
+  #   retry
+  # end
+  # 
      
      EM.next_tick { 
         EM.add_periodic_timer(1) do

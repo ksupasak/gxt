@@ -1,0 +1,425 @@
+{
+   "geocoded_waypoints" : [
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJXdMyDymf4jARZA3UnnmVqXk",
+         "types" : [
+            "bus_station",
+            "establishment",
+            "point_of_interest",
+            "transit_station"
+         ]
+      },
+      {
+         "geocoder_status" : "OK",
+         "place_id" : "ChIJB63oElteHTERGde4uax1oZ0",
+         "types" : [ "establishment", "point_of_interest", "shopping_mall" ]
+      }
+   ],
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 13.731445,
+               "lng" : 100.6829547
+            },
+            "southwest" : {
+               "lat" : 13.6458117,
+               "lng" : 100.5368046
+            }
+         },
+         "copyrights" : "Map data ©2019",
+         "legs" : [
+            {
+               "distance" : {
+                  "text" : "20.6 km",
+                  "value" : 20559
+               },
+               "duration" : {
+                  "text" : "25 mins",
+                  "value" : 1479
+               },
+               "end_address" : "39 หมู่ที่ 6 ถนน บางนา-ตราด Tambon Bang Kaeo, Amphoe Bang Phli, Chang Wat Samut Prakan 10540, Thailand",
+               "end_location" : {
+                  "lat" : 13.6459134,
+                  "lng" : 100.6814612
+               },
+               "start_address" : "Chulalongkorn Hospital, Khwaeng Pathum Wan, Khet Pathum Wan, Krung Thep Maha Nakhon 10330, Thailand",
+               "start_location" : {
+                  "lat" : 13.7309213,
+                  "lng" : 100.5371008
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "63 m",
+                        "value" : 63
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 8
+                     },
+                     "end_location" : {
+                        "lat" : 13.731445,
+                        "lng" : 100.5373207
+                     },
+                     "html_instructions" : "Head \u003cb\u003enortheast\u003c/b\u003e on \u003cb\u003eถนน ราชดำริ\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "gyxrA{csdRaA[e@O"
+                     },
+                     "start_location" : {
+                        "lat" : 13.7309213,
+                        "lng" : 100.5371008
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.2 km",
+                        "value" : 208
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 74
+                     },
+                     "end_location" : {
+                        "lat" : 13.7297648,
+                        "lng" : 100.5367995
+                     },
+                     "html_instructions" : "Make a \u003cb\u003eU-turn\u003c/b\u003e",
+                     "maneuver" : "uturn-right",
+                     "polyline" : {
+                        "points" : "o|xrAgesdRDMBItA^n@RTF`@LhBl@XFB?"
+                     },
+                     "start_location" : {
+                        "lat" : 13.731445,
+                        "lng" : 100.5373207
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.6 km",
+                        "value" : 644
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 69
+                     },
+                     "end_location" : {
+                        "lat" : 13.7273459,
+                        "lng" : 100.5421484
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eถนนพระรามที่ ๔\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "_rxrA_bsdRDELGTG@E~@_DHYRq@`@oAlBaGHUBIFKP]V_Ap@}BHWJ]~@uC"
+                     },
+                     "start_location" : {
+                        "lat" : 13.7297648,
+                        "lng" : 100.5367995
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "1.1 km",
+                        "value" : 1108
+                     },
+                     "duration" : {
+                        "text" : "2 mins",
+                        "value" : 109
+                     },
+                     "end_location" : {
+                        "lat" : 13.7233733,
+                        "lng" : 100.5515411
+                     },
+                     "html_instructions" : "Slight \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eถนนพระรามที่ ๔\u003c/b\u003e/\u003cwbr/\u003e\u003cb\u003eสะพานไทย-เบลเยี่ยม\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eContinue to follow ถนนพระรามที่ ๔\u003c/div\u003e",
+                     "maneuver" : "turn-slight-right",
+                     "polyline" : {
+                        "points" : "}bxrAmctdRVYj@gBPm@~@uCDMDM^mANa@La@BGBG@ELWDKFS@EdAiDZcAXgARo@DM`@uAl@qBFODORo@Ne@HUHUFSJ]BMDK?AFOPi@L_@J[BKDMBIJ]J_@La@X}@La@l@mBJY"
+                     },
+                     "start_location" : {
+                        "lat" : 13.7273459,
+                        "lng" : 100.5421484
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.1 km",
+                        "value" : 148
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 48
+                     },
+                     "end_location" : {
+                        "lat" : 13.7228211,
+                        "lng" : 100.5527822
+                     },
+                     "html_instructions" : "Keep \u003cb\u003eright\u003c/b\u003e",
+                     "maneuver" : "keep-right",
+                     "polyline" : {
+                        "points" : "ajwrAc~udRPYDGDIDQLc@\\wANa@L["
+                     },
+                     "start_location" : {
+                        "lat" : 13.7233733,
+                        "lng" : 100.5515411
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.7 km",
+                        "value" : 721
+                     },
+                     "duration" : {
+                        "text" : "2 mins",
+                        "value" : 94
+                     },
+                     "end_location" : {
+                        "lat" : 13.7171697,
+                        "lng" : 100.5551388
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e to merge onto \u003cb\u003eทางพิเศษเฉลิมมหานคร\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eToll road\u003c/div\u003e",
+                     "maneuver" : "ramp-right",
+                     "polyline" : {
+                        "points" : "sfwrA{evdRDCB?BADALEH?HAH?H?RANAr@ERCr@Cr@EzBMjAELAb@CdAE@?B?@?z@IBA`AGJCJAFCFAFCFCHCB?BCDANKDCfA}@b@g@z@oAd@o@`A{ADCDG"
+                     },
+                     "start_location" : {
+                        "lat" : 13.7228211,
+                        "lng" : 100.5527822
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "9.0 km",
+                        "value" : 9000
+                     },
+                     "duration" : {
+                        "text" : "8 mins",
+                        "value" : 498
+                     },
+                     "end_location" : {
+                        "lat" : 13.6721865,
+                        "lng" : 100.6125113
+                     },
+                     "html_instructions" : "Keep \u003cb\u003eleft\u003c/b\u003e to stay on \u003cb\u003eทางพิเศษเฉลิมมหานคร\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eToll road\u003c/div\u003e",
+                     "maneuver" : "keep-left",
+                     "polyline" : {
+                        "points" : "icvrAstvdRx@iBXo@|@qBP_@@G@C@?@EDI@EDKBG@CBGBE@E@CHUHOTa@n@y@n@y@nAeB?AtHwK^k@@AT_@\\c@JOPWJQLOvAuBxAyBZm@DKN_@Pu@BIJi@?A?A@GBS?ABU?SBe@?aACy@QmB}A}KQ}AWmB]kBEYYaBEYCOAE?AEWOcAQmAg@sDa@mC?CW_D?OEo@?MCq@?g@@M@_@Fk@F_@DSP_ABEj@_CTs@Tu@Pi@rDqLnByFHWLa@FSDQDKFSFSxAmEL[DQN]DKDMVu@N_@Zu@Xk@P_@@C`@{@DI@AN[lF}KrAuC^s@n@aA`@i@NQ\\[HIPQ?Ax@w@NOHIt@m@hAw@`@Sp@_@FERKXMHERIRINEfAa@jGsBRIBAVKbCy@RIrDiAb@OFC@?DCFAJERGREZIHC@?r@SXIDCLEFCVK\\O@?DCDAv@_@x@g@ZUHEr@g@p@i@JI|@}@lAsA`AkAXc@jAiBR_@LSLSx@uA@AFMR[|@}A|@}Az@wA^i@x@sAj@_AT[`C_ELSz@uAFKFK?AJOp@gAd@o@b@g@v@y@@Al@g@x@i@z@i@`Ag@VMDAz@]d@MNENEnAWxDa@j@GxAOF?DARCpEe@f@E`AK~Eg@NCB?VC`J_AzBUB?DAD?DAtBUTCFAdBQ`BQD?BA^E\\C|@K~@IvC[~BUHAlBSbAI`AGB?n@M`ASf@OLE|Am@VIXMb@S~AcAXS`@[VYDEv@{@`AmA`@q@l@mA\\}@DI?ABG@CTeA@CDY?AD[^oCd@cDBSD]@KD_@BYBWb@_F^cEB["
+                     },
+                     "start_location" : {
+                        "lat" : 13.7171697,
+                        "lng" : 100.5551388
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "7.4 km",
+                        "value" : 7427
+                     },
+                     "duration" : {
+                        "text" : "6 mins",
+                        "value" : 360
+                     },
+                     "end_location" : {
+                        "lat" : 13.6525951,
+                        "lng" : 100.6774852
+                     },
+                     "html_instructions" : "Continue onto \u003cb\u003eRoute 34\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "ejmrAe{aeRD_@B]Ba@Da@NuAPaBD_@J}@Jy@Jy@Da@Fc@Hq@Fo@bAqIBWTmBhAsJFk@Fk@R_BDa@Fk@@GFc@ReB@MD]@KD]LcAJcAFa@D_@Fm@Hm@Fo@@AN_BZwC~@uIJ_AXiCNoA^aDRyAlC}S@E@EFo@ZqCBWJcA^oCDc@@?Hu@DYf@uE?CDc@Fe@VeCLeAJcAb@{DD]Fc@TwBFg@Fg@d@{D?A?CR{ARgBFm@Hm@ZiCDY@Od@uDFk@LcA\\oCD[RcBPiBNkAD_@ReBF_@NaABYDYDa@Dc@h@oENqABS@OP{A@I@I@G@G?C?CTkBP{ABQb@sDX}BR{AFc@Fc@h@eEBO@K?CDMLi@?A@CLo@DMBIBM@GRy@Nk@J]ZcAZaA`@cAf@iAN_@|@wBrBsEFO@AFK@Ex@oBFK\\{@v@gBtAaD|AsDFM\\{@nAmCf@gA\\s@t@cBTc@@C^w@h@mABE@C@Ev@cB|B_FVi@l@qAJWXo@LWrAyChB{DRc@P_@zBaFr@_BJS?A@Af@iA~CcHZq@Xq@~@uB"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6721865,
+                        "lng" : 100.6125113
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "63 m",
+                        "value" : 63
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 9
+                     },
+                     "end_location" : {
+                        "lat" : 13.6524357,
+                        "lng" : 100.6780432
+                     },
+                     "html_instructions" : "Take the exit toward \u003cb\u003eMegabangna &amp; IKEA\u003c/b\u003e",
+                     "maneuver" : "ramp-left",
+                     "polyline" : {
+                        "points" : "woirAiqneRVkAFa@"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6525951,
+                        "lng" : 100.6774852
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "25 m",
+                        "value" : 25
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 3
+                     },
+                     "end_location" : {
+                        "lat" : 13.652322,
+                        "lng" : 100.6782441
+                     },
+                     "html_instructions" : "Merge onto \u003cb\u003eทางคู่ขนาน ถนนบางนา-ตราด\u003c/b\u003e",
+                     "maneuver" : "merge",
+                     "polyline" : {
+                        "points" : "wnirAwtneRVg@"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6524357,
+                        "lng" : 100.6780432
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.4 km",
+                        "value" : 395
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 41
+                     },
+                     "end_location" : {
+                        "lat" : 13.6504856,
+                        "lng" : 100.6813191
+                     },
+                     "html_instructions" : "Slight \u003cb\u003eright\u003c/b\u003e",
+                     "maneuver" : "turn-slight-right",
+                     "polyline" : {
+                        "points" : "_nirA_vneRNOl@qAp@{AdAaCv@eBL[LWLYVk@HSLYBGBC@A@A@A@?BA@ADA@?@?@A@?@?"
+                     },
+                     "start_location" : {
+                        "lat" : 13.652322,
+                        "lng" : 100.6782441
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "64 m",
+                        "value" : 64
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 8
+                     },
+                     "end_location" : {
+                        "lat" : 13.6499505,
+                        "lng" : 100.6811277
+                     },
+                     "html_instructions" : "Continue straight",
+                     "maneuver" : "straight",
+                     "polyline" : {
+                        "points" : "qbirAgioeRD?@?D?D?@?@?@?@?@@@?B@@?B@B?B@B@D@DBB@d@R"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6504856,
+                        "lng" : 100.6813191
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.6 km",
+                        "value" : 568
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 88
+                     },
+                     "end_location" : {
+                        "lat" : 13.6458117,
+                        "lng" : 100.682505
+                     },
+                     "html_instructions" : "Slight \u003cb\u003eleft\u003c/b\u003e",
+                     "maneuver" : "turn-slight-left",
+                     "polyline" : {
+                        "points" : "e_irAahoeRP@@?@?@?@?@A@?B?@AB?@A@?BA@?JILOP[Pa@Vg@\\s@b@{@N]LYJSFGHIHGHEJCFALCL?f@?v@@L@T@J@R@VBJ@RBl@Hj@FTDTBb@FXDH@JBF@RFLBLDB@"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6499505,
+                        "lng" : 100.6811277
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.1 km",
+                        "value" : 117
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 54
+                     },
+                     "end_location" : {
+                        "lat" : 13.6459726,
+                        "lng" : 100.6814975
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "iehrAspoeRCHa@z@EP?FBLFPDR?J?LCLAJ"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6458117,
+                        "lng" : 100.682505
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "8 m",
+                        "value" : 8
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 16
+                     },
+                     "end_location" : {
+                        "lat" : 13.6459134,
+                        "lng" : 100.6814612
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eDestination will be on the right\u003c/div\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "ifhrAkjoeRDB@@B@"
+                     },
+                     "start_location" : {
+                        "lat" : 13.6459726,
+                        "lng" : 100.6814975
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "traffic_speed_entry" : [],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "gyxrA{csdRgBk@HW|DhAbCt@HEb@O`AeDlD}Kf@iA~AsF~@uCVY|@uCjB_Gd@sA\\}@|B{HzC{Jx@iCpAgEbBoFJYPYJQRu@l@yBL[DCFARGRAv@ChLm@jAE`AK`BQ`@M\\QDCfA}@b@g@`B_CfA_B~@qBvAaDVk@HUVo@Re@Ta@n@y@~B_DtHyKtAqBv@iApDoF`@y@`@uANs@@KF_ABgBCy@QmBoB{NWmB]kB_@{BIi@WcB{AsK]mFAgBHkALs@TeA`AsDf@_BrDqLnByFVy@Le@nBaGh@wA\\cAj@uAnAkCdGeMrBiEpAkBhAiArAsA~BeBrAs@~@e@~B{@zHkCvCcAvEyAVIr@SzAa@t@W|@_@|@a@tA}@zBaBjCqCzAoBzBqDvAaCzB{DzAaC|FoJxAaCbBiCzAaBn@i@tBsAxAu@vBs@~A]dFi@zBUzO_BxO_BjJcAzD_@nKgAdCQr@MhBc@jBs@p@Wb@S~AcAz@o@\\_@xBiCnA_Cb@iA\\uAj@gEp@aFp@qHl@}Gj@{FhAyJpEe`@xBkRvBmSh@yEr@{FxCyUjA}JlAwK`CmTdFsb@z@uHXeCVaBTyB~@eIn@sF`DiWh@mCNm@b@eBf@aB|@eCv@iBzD}ItIgShG_N~GcOfVei@xAgD^mBVg@NO~AmDxC{G|@sBJOHEVCV@ZHHDd@RP@B?B?FAHCPK^k@h@iA~AgDR[RQTITEt@?dABlAHxBVhBVp@NZHB@CHg@lABTLd@?XEXFDB@"
+         },
+         "summary" : "ทางพิเศษเฉลิมมหานคร and Route 34",
+         "warnings" : [],
+         "waypoint_order" : []
+      }
+   ],
+   "status" : "OK"
+}

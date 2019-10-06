@@ -1,0 +1,136 @@
+<%
+	key = Setting.get :google_map_key
+	
+
+%>
+<div class="" style="display:block;position:absolute;top:50px;z-index:99;left:300px;right:300px;color:#fff;	background-color: rgb(119, 138, 158);margin-left:auto;margin-right:auto;padding:20px;border:1px solid #ccc;border-radius: 5px;">
+	Search : <input type="text" name="address" id="address" value="" placeholder="Address">
+</div>
+
+	<div class="map">
+			<div class="row" >
+				<div class="col-12  my-2" >
+				<style>
+				       /* Set the size of the div element that contains the map */
+				      #map {
+					
+						height:1280px;
+						width:100%;
+				   
+				       }
+				    </style>
+
+				    <!--The div element for the map -->
+				    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
+				    <script>
+				// Initialize and add the map
+				var marker = null;
+				var map = null;
+				 var geocoder =null;
+
+
+				function initMap() {
+				  // The location of Uluru
+				  var uluru = {lat: 15.8700, lng: 100.9925};
+				  // The map, centered at Uluru
+				  map = new google.maps.Map(
+				      document.getElementById('map'), {zoom: 16, center: uluru});
+				  // The marker, positioned at Uluru
+				  marker = new google.maps.Marker({position: uluru, map: map, draggable:true});
+
+			  geocoder = new google.maps.Geocoder;
+
+				// var image="https://example.com/images/carnew.svg";
+
+				 // marker = new google.maps.Marker({
+				 // 			    position: uluru,
+				 // 			    icon: image,
+				 // 			    map: map
+				 // 			});
+				}
+
+				function goPosition(){
+						setPosition(53.345735,-6.259548)
+				}
+
+				function setPosition(lat,lng){
+
+					// lat = 53.345735;
+					// 			lng = -6.259548;
+
+					var new_marker_position = new google.maps.LatLng(lat, lng);
+
+				   marker.setPosition(new_marker_position);
+				   map.setCenter(new google.maps.LatLng( lat, lng ) );
+
+				}
+				
+				$('#address').change(function(){
+					address = $(this).val()
+					url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=#{key}"
+					
+					geocodeAddress(geocoder,map,address)
+				})
+				
+				
+			  function geocodeLatLng(geocoder, map, infowindow) {
+			    var input = document.getElementById('latlng').value;
+			    var latlngStr = input.split(',', 2);
+			    var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+			    geocoder.geocode({'location': latlng}, function(results, status) {
+			      if (status === 'OK') {
+			        if (results[0]) {
+			          map.setZoom(11);
+			          var marker = new google.maps.Marker({
+			            position: latlng,
+			 			draggable:true,
+			            map: map
+			          });
+			          infowindow.setContent(results[0].formatted_address);
+			          infowindow.open(map, marker);
+			        } else {
+			          window.alert('No results found');
+			        }
+			      } else {
+			        window.alert('Geocoder failed due to: ' + status);
+			      }
+			    });
+			  }
+
+
+				function geocodeAddress(geocoder, map,address) {
+			      
+			        geocoder.geocode({'address': address}, function(results, status) {
+			          if (status === 'OK') {
+			            map.setCenter(results[0].geometry.location);
+			            var marker = new google.maps.Marker({
+			              map: map,
+			 			  draggable:true,
+			              position: results[0].geometry.location
+			            });
+			          } else {
+			            alert('Geocode was not successful for the following reason: ' + status);
+			          }
+			        });
+			      }
+				
+				
+				    </script>
+				    <!--Load the API from the specified URL
+				    * The async attribute allows the browser to render the page while the API loads
+				    * The key parameter will contain your own API key (which is not needed for this tutorial)
+				    * The callback parameter executes the initMap() function
+				    -->
+				    <script async defer
+				    src="https://maps.googleapis.com/maps/api/js?key=<%=key%>&callback=initMap">
+				    </script>
+				</div>
+
+			</div>
+
+	</div>
+	
+	
+	<script>
+	$('#main-container').removeClass('container')
+	</script>
