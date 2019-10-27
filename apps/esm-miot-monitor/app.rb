@@ -501,7 +501,44 @@ def self.registered(app)
           
           if app.settings.apps_ws[app.settings.name] and app.settings.stations[name] and app.settings.senses[name]
             # puts app.settings.senses[name].inspect 
-            dispatch "ZoneUpdate", "zone_id=*", {:time=>Time.now, :list=>app.settings.stations[name].keys.sort,:data=>app.settings.senses[name]}.to_json
+            
+            result = {:time=>Time.now, :list=>app.settings.stations[name].keys.sort,:data=>app.settings.senses[name]}
+            
+            if list = Ambulance.all and list.size > 0 
+                
+              result[:ambu_data] = {}
+              
+              for i in list
+                am = i
+      
+                am[:admit_id] = i.admit.id if i.admit
+                  
+                result[:ambu_data][i.id] = am
+                
+              end
+              
+            end
+            
+            if list = Admit.where(:status=>'Admitted') and list.size > 0 
+                
+              result[:admit_data] = {}
+              
+              for i in list
+                  
+                ad = {}
+                
+                ad[:patient] = i.patient
+                ad[:station_name] = nil
+                ad[:station_name] = i.station.name if i.station
+                ad[:note] = i.note
+                  
+                result[:admit_data][i.id] = ad
+                
+              end
+              
+            end
+            
+            dispatch "ZoneUpdate", "zone_id=*", result .to_json
             
             # reset all wave data after sent
             
@@ -525,8 +562,6 @@ def self.registered(app)
                  start_time = v['current_time'] if v['current_time']
                  v['current_time'] = now
                  
-                 
-   
                  Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
                  
                  v.delete 'vs'
@@ -540,15 +575,17 @@ def self.registered(app)
                end 
               
               
-                
+              # clear wave  
               v['wave'] = []
+              
+              # clear leads
               if v['leads']
-              v['leads'].each_pair do |l,lv|
-                
-                v['leads'][l] = []
-                
+                v['leads'].each_pair do |l,lv|
+                    v['leads'][l] = []
+                end
               end
-            end
+              
+              
             end
             
             

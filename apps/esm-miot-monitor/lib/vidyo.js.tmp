@@ -16,7 +16,7 @@ const optionDefinitions = [{
     name: 'key',
     type: String
 }, {
-    name: 'appID',
+    name: 'app',
     type: String
 }, {
     name: 'userName',
@@ -52,7 +52,7 @@ function printHelp() {
     process.exit();
 }
 
-if ((typeof options.help !== 'undefined') || (typeof options.key == 'undefined') || (typeof options.appID == 'undefined') || (typeof options.userName == 'undefined')) {
+if ((typeof options.help !== 'undefined') || (typeof options.key == 'undefined') || (typeof options.app == 'undefined') || (typeof options.userName == 'undefined')) {
     printHelp();
 }
 
@@ -104,7 +104,7 @@ function generateTokenExpiresOnDate(key, appID, userName, date) {
 
 console.log("\nGenerating token with the following inputs");
 console.log("Key: " + options.key);
-console.log("appID: " + options.appID);
+console.log("appID: " + options.app);
 console.log("userName: " + options.userName);
 
 if (typeof options.vCardFile !== 'undefined') {
@@ -113,11 +113,11 @@ if (typeof options.vCardFile !== 'undefined') {
 
 if (typeof options.expiresInSecs !== 'undefined') {
     console.log("expiresInSecs: " + options.expiresInSecs);
-    checkForVCardFileAndGenerateToken(options.key, options.appID, options.userName, options.expiresInSecs);
+    checkForVCardFileAndGenerateToken(options.key, options.app, options.userName, options.expiresInSecs);
 
 } else if (typeof options.expiresAt !== 'undefined') {
     console.log("expiresAt: " + options.expiresAt);
-    generateTokenExpiresOnDate(options.key, options.appID, options.userName, options.expiresAt);
+    generateTokenExpiresOnDate(options.key, options.app, options.userName, options.expiresAt);
 } else {
     console.log("Error: Neither expiresInSecs or expiresAt parameters passed in");
 }

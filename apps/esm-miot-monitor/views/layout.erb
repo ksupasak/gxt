@@ -39,13 +39,15 @@ body{
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 		
 	    <a class="navbar-brand" href="../Home/index" ><image src="<%=url_for 'img/gxt-sos.png' %>" height="40"></a>
-		
-			<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-3" style="" action="../Home/search" id="search-form">
+			
+			<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
 					<!--<%=link_to "+", "../Admit/create",:class=>'btn btn-outline-success mr-2 my-0 col-3 col-xs-2 col-sm-1 col-lg-1' %>	-->
+			
 			    <input class="form-control mr-2  my-0 col-12 col-xs-6" name='query' id="search" type="text" placeholder="Search" aria-label="Search">
+				
 		<!--	<button class="btn btn-outline-success my-0  col-3" type="submit">O</button>-->
  </form>
-		
+			
       <button class="navbar-toggler col-2" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -156,9 +158,9 @@ body{
               <a class="dropdown-item" href="../Setting/index">Settings</a>
 		    </div>
           </li>
-       	 <li>
-			<%= Setting.get :mode %>
-		</lid>
+       	 <li class="nav-item" >
+			
+		</li>
 		 <!--
 		      <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>

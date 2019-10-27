@@ -43,8 +43,9 @@ class Zone
   include MongoMapper::Document
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   has_many :stations, :class_name=>'EsmMiotMonitor::Station'
+  has_many :ambulances, :class_name=>'EsmMiotMonitor::Ambulance'
   
-  key :name, String
+  key :name, String 
 end
 
 
@@ -211,8 +212,10 @@ class Patient
   key :first_name, String 
   key :last_name, String 
   key :dob, Time 
-  key :gender, String 
-  
+  key :age, String
+  key :gender, String
+  key :contact_name, String 
+  key :contact_phone, String
   def to_s
     "#{self.prefix_name}#{self.first_name} #{self.last_name}"
   end
@@ -291,13 +294,20 @@ end
 
 class Ambulance
   include MongoMapper::Document
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
+  has_one :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
   key :status, String
   key :name, String
-  key :plat_license, String
+  key :plate_license, String
   key :phone, String
   key :station_id, ObjectId
   key :driver_id, ObjectId
+  key :zone_id, ObjectId
+  key :last_location, String
+  key :last_address, String
+  key :device_no, String
 
   
 end

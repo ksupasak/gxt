@@ -268,6 +268,27 @@ zone_id = @record.zone_id if @record.zone_id
 </div>
 
 
+<%
+	
+name = 'ambulance_id'
+
+options = Ambulance.all.collect{|i| [i.name,i.id]}
+
+ambulance_id = @record.ambulance_id 
+
+	
+%>
+<div class="col-12 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
 
 
 
