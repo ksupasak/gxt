@@ -510,8 +510,8 @@ def self.registered(app)
               
               for i in list
                 am = i
-      
-                am[:admit_id] = i.admit.id if i.admit
+                admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
+                am[:admit_id] = admit.id if admit
                   
                 result[:ambu_data][i.id] = am
                 
