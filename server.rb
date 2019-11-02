@@ -6,7 +6,7 @@ require 'sinatra-websocket'
 require 'sinatra/form_helpers'
 require 'redis'
 require 'json'
-require "hiredis"
+
 
 require_relative 'config/init'
 
@@ -24,12 +24,28 @@ require 'barby/outputter/png_outputter'
 require 'crc'
 
 
-# register Sinatra::Reloader
+
+
+
+
+
+# Redis config
+
+require "hiredis"
+
+redis = Redis.new(url: "redis://127.0.0.1:6379/15",:driver => :hiredis)
+set :redis, redis
+
+
+# Server configuration
 
 set :server, 'thin'
 set :bind, '0.0.0.0'
-
 set :port, 1792
+
+
+
+
 set :sockets, []
 
 set :stations, {}
@@ -43,8 +59,6 @@ set :apps_ws_rv, {}
 
 set :extended, {}
 
-redis = Redis.new(url: "redis://127.0.0.1:6379/15",:driver => :hiredis)
-set :redis, redis
 
 
 require_relative 'config/init'

@@ -12,6 +12,8 @@ gem 'sinatra-formhelpers-ng'
 gem 'puma'
 gem 'mqtt'
 
+gem 'pusher'
+
 gem 'parallel'
 
 gem 'activesupport', require: 'active_support/all'
