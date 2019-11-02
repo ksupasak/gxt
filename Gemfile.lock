@@ -67,12 +67,12 @@ GEM
       multi_json (~> 1.0)
       pusher-signature (~> 0.1.8)
     pusher-signature (0.1.8)
-    rack (1.6.0)
+    rack (1.6.11)
     rack-gridfs (0.4.1)
       mime-types
       mongo (~> 1.2)
       rack
-    rack-protection (1.5.3)
+    rack-protection (1.5.5)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
