@@ -617,7 +617,7 @@ $('#main-container').removeClass('container')
       ws.onmessage = function(m) { 
 	
 	
-		show(''+m.data)
+	//	show(''+m.data)
 		
 		lines = m.data.split("\n")
 		
@@ -710,11 +710,11 @@ $('#main-container').removeClass('container')
 				    path.push(marker.position);
 					
 					
-					show_wave_data['0'] = 	show_wave_data['0'].concat(obj['leads'][1])	
-					show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][2])	
-					show_wave_data['2'] = 	show_wave_data['2'].concat(obj['leads'][3])	
-					show_wave_data['3'] = 	show_wave_data['3'].concat(obj['leads'][4])	
-					show_wave_data['4'] = 	show_wave_data['4'].concat(obj['leads'][5])
+					show_wave_data['0'] = 	show_wave_data['0'].concat(obj['leads'][0])	
+					show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][1])	
+					show_wave_data['2'] = 	show_wave_data['2'].concat(obj['leads'][2])	
+					show_wave_data['3'] = 	show_wave_data['3'].concat(obj['leads'][3])	
+					show_wave_data['4'] = 	show_wave_data['4'].concat(obj['leads'][4])
 					
 					
 				}
