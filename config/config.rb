@@ -1,5 +1,4 @@
-DEFAULT_APP_CONIFG = 'console'
+@conf_default_app = 'miot'
 
-MONGO_HOST_CONFIG = 'localhost'
-MONGO_PASSWD_CONFIG = nil
-MONGO_PORT_CONFIG = 27017
+
+# @conf_server_port = 80

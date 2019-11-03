@@ -70,8 +70,11 @@ body{
       # admits = @current_zone.admits.where(:status=>'Admitted').all
 	  unless @current_zone
 	  	@current_zone = Zone.first 
-      end
-	
+      	@current_zone = Zone.create :name=>'Default' unless @current_zone
+	  	
+	  end
+		
+		
 	  stations = @current_zone.stations.all
 
       for station in stations
