@@ -245,6 +245,8 @@ module Device
           end
 
 
+          puts map['wave_key'].inspect
+
           # data[:wave] = wbuff.shift(25)
           #data[:wave] =  data[:leads][0]
 

@@ -44,6 +44,7 @@ def self.parser l
   startup = 32
   
   map = {}
+  wave_key = {}
   
   pos = startup
   tag = l[pos..pos+1].join
@@ -59,15 +60,18 @@ def self.parser l
     elsif tag == '0200'
        res = get_list  l, pos+14, 40
        key = l[pos+10..pos+11].join("-")
+       wave_key[key] = 40
        len = 94
     elsif tag =='0100'
        # spo2
        res = get_list  l, pos+14, 20
        key = l[pos+10..pos+11].join("-")
+       wave_key[key] = 20
        len = 54
      elsif tag =='050'
        res = get_list  l, pos+14, 10
        key = l[pos+10..pos+11].join("-")
+       wave_key[key] = 10
        len = 34
     elsif tag == '014'
        len = 12
@@ -100,6 +104,8 @@ def self.parser l
   end
 
 end
+
+map['wave_key'] = wave_key
 
   return map
 
