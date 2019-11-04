@@ -466,12 +466,14 @@ if record
 	//      	return function(msg){ el.innerHTML = msg  }
 	//     }
    
-	function show(text){
-		// console.log(text)
-		$('.msg').html(text)
-	}
+	// function show(text){
+	// 	// console.log(text)
+	// 	$('.msg').html(text)
+	// }
    
-	
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
 	
 	  var ws       = new WebSocket('ws://' + window.location.host + "<%='/miot/Home/index'%>");
 	
