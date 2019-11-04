@@ -501,17 +501,31 @@ $('#main-container').removeClass('container')
 			obj = data['data'][i]
 				
 			
-		  if(obj['wave']){	
+		  // if(obj['wave']){
+		  //
+		  // 			    // wave_data.push(obj['wave']);
+		  //  		// wave_data = wave_data.concat(obj['wave']);
+		  // 				for(var j=0;j<obj['wave'].length;j++){
+		  // 					wave_data[i].push(obj['wave'][j]);
+		  // 				}
+		  //    				// console.log("v"+i+" "+wave_data[i].length);
+		  // 				// wave_data = obj['wave'];
+		  //  }
+		    		
+					
+			
+ 		  if(obj['leads']){	
 			  
-			    // wave_data.push(obj['wave']);
-		   		// wave_data = wave_data.concat(obj['wave']);
-				for(var j=0;j<obj['wave'].length;j++){
-					wave_data[i].push(obj['wave'][j]);
-				}
-   				// console.log("v"+i+" "+wave_data[i].length);
-				// wave_data = obj['wave'];
-		   }
-		    			
+ 			    // wave_data.push(obj['wave']);
+ 		   		// wave_data = wave_data.concat(obj['wave']);
+ 				for(var j=0;j<obj['leads']['2'].length;j++){
+ 					wave_data[i].push(obj['leads']['2'][j]);
+ 				}
+    				// console.log("v"+i+" "+wave_data[i].length);
+ 				// wave_data = obj['wave'];
+ 		   }
+		    						
+						
 			
 			 // console.log(obj)
 			$('#'+i+' .hn').html(obj['ref'])
