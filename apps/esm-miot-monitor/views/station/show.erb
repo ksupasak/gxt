@@ -475,7 +475,7 @@ if record
         return function(msg){ el.innerHTML = msg  }
       }(document.getElementById('msgs'));
 	
-	  var ws       = new WebSocket('ws://' + window.location.host + "<%='/miot/Home/index'%>");
+	  var ws       = new WebSocket('ws://' + window.location.host + "<%="/#{window.location.pathname.split("/")[0]}/Home/index"%>");
 	
 	  var plot_pos = {};
 	
