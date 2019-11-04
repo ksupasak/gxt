@@ -428,6 +428,7 @@ $('#main-container').removeClass('container')
 					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
 					  @current_zone = Zone.first unless @current_zone
 					  
+					  @current_zone = Zone.where(:name=>'Ambu').first
 					  
 					  
 					  admits = []
