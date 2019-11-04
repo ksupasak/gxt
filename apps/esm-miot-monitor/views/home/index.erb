@@ -301,7 +301,7 @@ $('#main-container').removeClass('container')
 	
 			function aniLine(idx, sampling, rawdata, last){
 	
-			var w = 40;
+			var w = 70;
 		    var h = 80;
 			var svg;
 			
@@ -319,7 +319,7 @@ $('#main-container').removeClass('container')
 
 
 		    var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
-		    var y = d3.scaleLinear().domain([0, 100]).range([10, h - 10]);
+		    var y = d3.scaleLinear().domain([1024, -1024]).range([10, h - 10]);
 
 		    var line = d3.line()
 		      .x(function(d,i) {return x(i);})
@@ -372,7 +372,8 @@ $('#main-container').removeClass('container')
 		
 		
 			function showWave(div,data){
-			var n = 32; // sample for a second
+			var n = 200; // sample for a second
+			
 		    var cut = 1;
 			var show = 8; //second
 			var second = 0;
@@ -389,7 +390,7 @@ $('#main-container').removeClass('container')
 					
 						rawdata = data.splice(0,cut*n+1);
 						data.unshift(rawdata[rawdata.length-1]);
-						if(rawdata.length>=n){
+						if(rawdata.length>=n-10){
 							aniLine(div,n ,rawdata,lastdata);
 							lastdata = rawdata;
 						}
@@ -520,7 +521,10 @@ $('#main-container').removeClass('container')
  		   		// wave_data = wave_data.concat(obj['wave']);
  				for(var j=0;j<obj['leads']['2'].length;j++){
  					wave_data[i].push(obj['leads']['2'][j]);
+						
  				}
+				
+				console.log(wave_data[i].length)
     				// console.log("v"+i+" "+wave_data[i].length);
  				// wave_data = obj['wave'];
  		   }
