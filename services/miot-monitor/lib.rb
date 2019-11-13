@@ -34,7 +34,7 @@ def self.connect
   rescue Exception => e
     sleep 5
       
-    puts 'Reconnect in 5 seconds'
+    puts "Reconnect in 5 seconds #{e.inspect}"
     
   end
   
