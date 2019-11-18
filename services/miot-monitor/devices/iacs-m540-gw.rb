@@ -606,6 +606,7 @@ MSG
           begin
             unless ws.open?
               sleep 5
+              ws.close
               ws = MIOT::connect
             end
             
@@ -616,6 +617,8 @@ MSG
               thread_pool.each_pair do |k,v|
                 v.terminate
               end
+              
+              ws.close
               ws = MIOT::connect
               thread_pool.clear
               
