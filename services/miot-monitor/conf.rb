@@ -22,7 +22,8 @@ require 'socket'
 host_ip = ARGV[1]
 
 unless host_ip
-  host_ip = IPSocket.getaddress(Socket.gethostname)
+  list = Socket.ip_address_list.select{|i| i.ipv4?}.collect(&:ip_address)
+  host_ip = list[1] #IPSocket.getaddress(Socket.gethostname)
 end
 HOST_IP = host_ip
 
