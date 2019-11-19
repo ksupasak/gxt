@@ -140,10 +140,10 @@ module Device
 
         m = map
         #	puts device_id
-        if false and  device_id =='191.1.2.10'
+        if false
           map.keys.sort.each do |i|
             #puts i
-            puts "#{i}\t#{map[i].inspect.to_s if map[i].inspect.size<10}"
+            puts "#{i}\t#{map[i].inspect.to_s }"
           end 
           puts
         end
@@ -167,7 +167,8 @@ module Device
         vs[:spo2] = m['1-191-0-1-2'] if m['1-191-0-1-2'] and m['1-191-0-1-2']>10
         vs[:spo2] = m['25-5-0-0-26'] if m['25-5-0-0-26']   
         vs[:spo2] = m['25-5-0-1-26'] /2 if m['25-5-0-1-26']
-
+	vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
+        
         vs[:spo2] = '-' unless vs[:spo2]
 
         vs[:rr] = m['94-120-0-0-66'] if m['94-120-0-0-66']
@@ -185,7 +186,8 @@ module Device
         bp_sys = (m['1-2-0-0-28']/10.0).round if m['1-2-0-0-28']
         bp_sys = (m['1-2-1-0-28']/10.0).round if m['1-2-1-0-28']
         bp_sys = (m['1-1-0-0-26']/10.0).round if m['1-1-0-0-26'] and m['1-1-0-0-26'] > 10
-
+	bp_sy =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
+	
         bp_dia = (m['30-9-0-1-9']/10.0).round if m['30-9-0-1-9']
         bp_dia = (m['30-8-0-0-9']/10.0).round if m['30-8-0-0-9']
         bp_dia = (m['30-8-0-1-9']/10.0).round if m['30-8-0-1-9']
@@ -198,7 +200,7 @@ module Device
 
         vs[:bp] = "#{bp_sys}/#{bp_dia}"
 
-
+	vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
 
 
         #	puts map.keys.sort.inspect
