@@ -69,10 +69,10 @@ else
 		 border-radius: 5px;
 	}
 	.distance{
-		font-size:1.2em;
+		font-size:1.4em;
 	}
 	.duration{
-		font-size:1.2em;
+		font-size:1.4em;
 	}
 	.ambu input{
 		background:none;
@@ -81,12 +81,16 @@ else
 <form action="create" method="post" enctype="multipart/form-data">
 
 <div class="" style="display:block;position:absolute;top:50px;z-index:99;left:300px;right:300px;color:#fff;	background-color: rgb(119, 138, 158);margin-left:auto;margin-right:auto;padding:20px;border:1px solid #ccc;border-radius: 5px;">
+	
 	<center>
+	
 	Address : <input type="text" name="address" id="address" value="" placeholder="Address" style="width:300px"> 
 	Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long" style="width:300px"> 
 	
 	<%=link_to 'Next', "\#", :class=>'btn btn-success next-button' %>
-	<%=link_to 'Cancel', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
+	<%=link_to 'Reset', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
+	<%=link_to 'Back', "index", :class=>'btn', :style=>"color:white"%>
+	
 </center>
 
 	<div class="row patient-panel" style="display:none">
@@ -106,7 +110,7 @@ else
 		DOB : <br/><input type="text" name="patient[dob]" id="patient_dob" value="" placeholder="DOB"> 
 		</div >
 		<div class="col-2">
-		AGE : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="HN"> 
+		AGE : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE"> 
 		</div>
 		<div class="col-2">
 		Sex : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Gender"> 
@@ -176,7 +180,7 @@ else
 			Ambulance : <br/>
 			
 			<select name="ambulance_id" id="ambulance_id"  style="width:200px;padding:10px;background:#FFF">
-		  	<% for i in ambulances %>
+		  	<% for i in ambulances.sort{|a,b| a.name<=>b.name} %>
 			<option value="<%=i.id%>"><%=i.name%> <%=i.plate_license%> </option>
 			<% end %>
 			</select>
@@ -202,7 +206,7 @@ else
 			
 			<select name="station_id" id="station_id" style="width:200px;padding:10px;background:#FFF">
 			<option vlaue=""></option>
-		  	<% for i in stations %>
+		  	<% for i in stations.sort{|a,b| a.name<=>b.name }%>
 			<option value="<%=i.id%>"><%=i.zone.name if i.zone %> : <%=i.name%> </option>
 			<% end %>
 			</select>
