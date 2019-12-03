@@ -140,7 +140,7 @@ module Device
 
         m = map
         #	puts device_id
-        if false
+        if true
           map.keys.sort.each do |i|
             #puts i
             puts "#{i}\t#{map[i].inspect.to_s }"
@@ -208,7 +208,7 @@ module Device
 
         t = 16
 # 1-34 1-36
-        lx = %w{6-1 25-22 1-2 1-3 1-4 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 95-57}
+        lx = %w{6-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 95-57}
 
         now = Time.now 
         stamp = now.to_json
