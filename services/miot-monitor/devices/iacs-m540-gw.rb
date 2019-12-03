@@ -140,7 +140,7 @@ module Device
 
         m = map
         #	puts device_id
-        if true
+        if false
           map.keys.sort.each do |i|
             #puts i
             puts "#{i}\t#{map[i].inspect.to_s }"
