@@ -428,7 +428,7 @@ $('#main-container').removeClass('container')
 					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
 					  @current_zone = Zone.first unless @current_zone
 					  
-					  @current_zone = Zone.where(:name=>'Ambu').first
+					  # @current_zone = Zone.where(:name=>'Ambu').first
 					  
 					  
 					  admits = []
@@ -601,7 +601,7 @@ $('#main-container').removeClass('container')
 	
       ws.onopen    = function()  { show('websocket opened'); 
 
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
     
