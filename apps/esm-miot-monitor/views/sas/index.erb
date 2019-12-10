@@ -596,7 +596,7 @@ $('#main-container').removeClass('container')
    
    	 <%=inline(this,:'_websocket.js')%>
 	
-	  var ws  = new WebSocket('ws://' + window.location.host + window.location.pathname);
+	  var ws  = new WebSocket('ws://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 	
 	
       ws.onopen    = function()  { show('websocket opened'); 

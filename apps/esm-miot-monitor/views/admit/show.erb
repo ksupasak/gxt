@@ -792,7 +792,7 @@ if record
    
 	
 	
-	  var ws       = new WebSocket('ws://' + window.location.host + "<%='/miot/Home/index'%>");
+	  var ws       = new WebSocket('ws://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 	
 	  var plot_pos = {};
 	
