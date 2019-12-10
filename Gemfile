@@ -30,6 +30,7 @@ gem 'bson_ext'
 
 gem 'redis'
 gem 'hiredis'
+gem 'em-hiredis'
 # gem 'redis-rails'
 gem 'resque', :require => "resque/server"
 gem 'xmpp4r'

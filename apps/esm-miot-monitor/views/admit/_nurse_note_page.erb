@@ -4,6 +4,16 @@
 </div>
 <div style="float:right" >
 
+<select id="score_id">
+  <% 
+admit = Admit.find(params[:id])
+score_id = admit.score_id
+  
+  for s in Score.all %>
+  <option <%#'selected="selected"' if s.id==score_id %> value="<%=s.id%>"><%=s.name%></option>
+ <% end %>
+</select>
+
 <%=link_to "+Score", '#', :id=>'nurse_score_add',:class=>'link link-info'%>
 	
 <%=link_to "+Note", '#', :id=>'nurse_note_add',:class=>'link link-info'%>
@@ -52,7 +62,9 @@
 	
 	$('#nurse_note_add').click(create_nurse_note);
 	$('#nurse_score_add').click(function(){
-		call_submit('<%=params[:id]%>')
+		score_id = $('#score_id  option:selected').val()
+
+		call_submit('<%=params[:id]%>',score_id)
 	});
 	
 	reload_nurse_note();

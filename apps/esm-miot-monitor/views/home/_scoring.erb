@@ -8,9 +8,10 @@
 </div>
 <script>
 
-function call_submit(id){
+function call_submit(id, score_id){
+	
 	$.ajax({
-	  url: "../Admit/scoring?id="+id,
+	  url: "../Admit/scoring?id="+id+"&score_id="+score_id,
 	  context: document.body
 	}).done(function(data) {
 	  $('.modal-content').html(data);

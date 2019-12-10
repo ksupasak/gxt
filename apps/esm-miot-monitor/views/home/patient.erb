@@ -448,7 +448,7 @@ $('#main-container').removeClass('container')
 	
       ws.onopen    = function()  { show('websocket opened'); 
 
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
       ws.onclose   = function()  { show('websocket closed'); 
@@ -510,7 +510,7 @@ $('#main-container').removeClass('container')
 			
 			
 			  obj = data['data'][i]
-				
+				if(obj){
 			 console.log(obj)
 			  // if(obj['wave']){	
 			  // 
@@ -577,7 +577,7 @@ $('#main-container').removeClass('container')
 				
 				$('.note-panel-'+i).css('background',color);
 			
-			
+			}
 			// }else{
 			// 		// console.log(lines)
 			// 		setTimeout(function () {

@@ -11,7 +11,7 @@ class SasController < GXTDocument
 
 
             ws.onopen do
-              puts "open websocket for #{@context.settings.name} on #{ws.hash}"
+              puts "open AOC websocket for #{@context.settings.name} on #{ws.hash}"
               # ws.send("websocket opened")
               # @context.settings.redis.ping
               @context.settings.apps_ws[@context.settings.name] << ws

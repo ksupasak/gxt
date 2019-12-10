@@ -117,6 +117,7 @@ a.link-info:hover{
 	
 	admit = Admit.find params[:id]
 	
+	@current_zone = admit.zone
 	
 	# .admits.where(:status=>'Admitted', :station_id=>station.id).last
 		
@@ -128,8 +129,12 @@ a.link-info:hover{
 		station = admit.station
 	
 		station_id = station.name
-
+		
+		@current_zone = station.zone
+	
 	end
+	
+	
 	
 %>
 
@@ -793,7 +798,7 @@ if record
 	
    ws.onopen    = function()  { show('websocket opened'); 
 	
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
    ws.onclose   = function()  { show('websocket closed'); 
@@ -867,7 +872,7 @@ if record
 		   
 		   if(obj['leads']){
 		   	
-			   for(var j=0;j<14;j++){
+			   for(var j=0;j<16;j++){
 				jid = ''+j
 			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
 			
@@ -975,7 +980,7 @@ if record
 
    // var wave_data = [];
 
-<% 14.times do |i|  %>
+<% 16.times do |i|  %>
    
    presetWave('wave-<%=i%>')
 

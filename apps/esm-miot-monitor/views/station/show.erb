@@ -480,7 +480,7 @@ if record
 	
    ws.onopen    = function()  { show('websocket opened'); 
 	
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{params[:gxt]}/z/#{record.zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
    ws.onclose   = function()  { show('websocket closed'); 

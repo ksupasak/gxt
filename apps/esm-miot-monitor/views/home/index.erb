@@ -72,7 +72,13 @@ body{
 	  	@current_zone = Zone.first 
       	@current_zone = Zone.create :name=>'Default' unless @current_zone
 	  	
-	  end
+		%>
+		
+		<meta http-equiv="Refresh" content="0; url=../Home/switch_zone?id=<%=@current_zone.id%>" />
+		
+		<%
+		
+	  else
 		
 		
 	  stations = @current_zone.stations.all
@@ -440,7 +446,7 @@ $('#main-container').removeClass('container')
 	
       ws.onopen    = function()  { show('websocket opened'); 
 
-	  	ws.send('WS.Select name=<%=session.id%>\n["ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=<%=@current_zone.name%>","Alert station_id=*","Data.Image station_id=*"]')
 
 	  };
       ws.onclose   = function()  { show('websocket closed'); 
@@ -454,9 +460,9 @@ $('#main-container').removeClass('container')
       ws.onmessage = function(m) { 
 	
 		active = $('.active-station').size()
-	
-		// show(''+m.data)
-		
+		 <% if params[:debug] %>
+		show(''+m.data)
+		<% end %>
 		lines = m.data.split("\n")
 		
 		// console.log(lines[0].split(" ")[0])
@@ -497,9 +503,12 @@ $('#main-container').removeClass('container')
 		$('#timer').html(data['time'])
 		for(var id in data['list']){
 			i = data['list'][id]
+		
+			obj=data['data'][i]
+			if($('#'+i).length > 0 && obj){ 
 			
-			if($('#'+i).length > 0){ 
-			obj = data['data'][i]
+				
+		  
 				
 			
 		  // if(obj['wave']){
@@ -623,3 +632,4 @@ By E.S.M.Solution Co.,Ltd.
 <%= inline(this,:'_scoring') %>
 
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
+<% end %>

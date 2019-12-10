@@ -2,7 +2,13 @@
 
 	admit = Admit.find(params[:id])
 	patient = admit.patient
-	score = admit.score
+	
+	if params[:score_id]
+		score = Score.find params[:score_id]
+	else
+		score = admit.score
+	end
+	
 	station = admit.station
 	
 	staiton_name = ""
@@ -10,12 +16,12 @@
 	station_name = station.name if station.name
 	
 	
-	data = settings.senses[settings.name][station_name]
-	if data['bp'] and t = data['bp'].split("/")
-		data['bp_sys'] = t[0].to_i
-		data['bp_dia'] = t[1].to_i
-		
-	end
+	# data = settings.senses[settings.name][station_name]
+	# if data['bp'] and t = data['bp'].split("/")
+	# 	data['bp_sys'] = t[0].to_i
+	# 	data['bp_dia'] = t[1].to_i
+	#
+	# end
 	
     unless score	
 %>
@@ -55,7 +61,7 @@ No score selected.
 
 
 <form action="../Admit/submit_data?id=<%=admit.id%>" method="post" enctype="multipart/form-data">
-
+<input type="hidden" name="score_id" value="<%=score.id%>" >
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle">Patient Scoring Record</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -228,7 +234,7 @@ function update_value(map, value){
 }
 <% for i in all_data %>
 map = '<%=i%>'
-value = '<%= data[i] %>'
+value = $('.<%=i%> .value').text()
 	
 if(value!="-"){
 	
@@ -242,7 +248,7 @@ if(value!="-"){
 <% for i in cond_map.keys %>
 
 value = $('#<%=station_name%> .<%=i%> .value').html()
-value = '<%= data[i] %>'
+value = $('.<%=i%> .value').text() 
 
 // if('<%=i%>'=='bp_sys')value = $('#<%=station_name%> .bp .value').html().split("/")[0];
 // if('<%=i%>'=='bp_dia')value = $('#<%=station_name%> .bp .value').html().split("/")[1];

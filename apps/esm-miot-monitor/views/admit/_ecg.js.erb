@@ -161,6 +161,9 @@ function presetWave(div){
 			data = lead_data[id];
 			console.log('all '+id+" "+second%show+' = '+data.length);
 			$('#wave-'+id+"-note").html(""+data.length);
+			if(data.length>show*n){
+				data.splice(0,data.length-n*2);
+			}
 			if(second%cut==cut-1){
 				
 				rawdata = data.splice(0,cut*n);

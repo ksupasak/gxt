@@ -22,6 +22,9 @@ GEM
     crc (0.4.1)
     daemons (1.2.4)
     durran-validatable (2.0.1)
+    em-hiredis (0.3.1)
+      eventmachine (~> 1.0)
+      hiredis (~> 0.6.0)
     em-websocket (0.3.8)
       addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
@@ -142,6 +145,7 @@ DEPENDENCIES
   bson_ext
   chunky_png
   crc
+  em-hiredis
   faye-websocket
   hiredis
   mongo
