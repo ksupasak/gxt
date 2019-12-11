@@ -234,7 +234,11 @@ function update_value(map, value){
 }
 <% for i in all_data %>
 map = '<%=i%>'
+
 value = $('.<%=i%> .value').text()
+
+if('<%=i%>'=='bp_sys')value = $('#<%=station_name%> .bp .value').html().split("/")[0]
+if('<%=i%>'=='bp_dia')value = $('#<%=station_name%> .bp .value').html().split("/")[1];
 	
 if(value!="-"){
 	
@@ -250,8 +254,8 @@ if(value!="-"){
 value = $('#<%=station_name%> .<%=i%> .value').html()
 value = $('.<%=i%> .value').text() 
 
-// if('<%=i%>'=='bp_sys')value = $('#<%=station_name%> .bp .value').html().split("/")[0];
-// if('<%=i%>'=='bp_dia')value = $('#<%=station_name%> .bp .value').html().split("/")[1];
+if('<%=i%>'=='bp_sys')value = $('#<%=station_name%> .bp .value').html().split("/")[0];
+if('<%=i%>'=='bp_dia')value = $('#<%=station_name%> .bp .value').html().split("/")[1];
 
 if(value!="-"){
 	$('#data-<%=i%>').val(value);

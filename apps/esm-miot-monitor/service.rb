@@ -11,7 +11,6 @@ def self.registered(app)
      
      
   
-     puts "Start MIOT Solution : #{mode}"
      @@settings = app.settings
      
      settings.set :ws_map, {}
@@ -21,7 +20,11 @@ def self.registered(app)
      
      data = 0
      
+  
+     puts "Start MIOT Solution : #{mode}" 
+     
      if mode=='application'
+       puts "Start MIOT Solution : App" 
        
        EM.next_tick do 
          
@@ -99,14 +102,16 @@ def self.registered(app)
          
        end
        
+     elsif false
        
+      puts mode 
        
        
      elsif mode=='service'
      
+       puts "Start MIOT Solution : Service" 
 
      EM.next_tick do 
-         
          
          
        
