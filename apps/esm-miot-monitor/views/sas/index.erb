@@ -616,7 +616,7 @@ $('#main-container').removeClass('container')
       }
 	  
       ws.onmessage = function(m) { 
-	
+	console.log("zz"+m.data.length)	
 		  <% if params[:debug] %>
 		show(''+m.data)
 		  <% end %>
@@ -666,7 +666,7 @@ $('#main-container').removeClass('container')
 			
 				
 		}	
-			
+		console.log("yy"+data['list'].length)	
 
 		for(var id in data['list']){
 			i = data['list'][id]
@@ -684,13 +684,14 @@ $('#main-container').removeClass('container')
 					// for(var j=0;j<obj['leads'].length;j++){
 					// 	wave_data[i].push(obj['wave'][j]);
 					// }
-					console.log(wave_data)
-					console.log(i)
+					// console.log(wave_data)
+					// console.log(i)
 					if(wave_data[i]==null){
 						wave_data[i] = []
 					}
+					console.log("xx"+id)
 					wave_data[i] = 	wave_data[i].concat(obj['leads'][2])
-				   	 console.log(wave_data[i])
+				   	 // console.log(wave_data[i])
 	   				// console.log("v"+i+" "+wave_data[i].length);
 					// wave_data = obj['wave'];
 			   }
@@ -725,7 +726,7 @@ $('#main-container').removeClass('container')
 			
 		    			
 			
-			 	// console.log(obj)
+			 	console.log(obj)
 				$('.station-'+i+' .hn').html(obj['ref'])
 			
 				if($('.station-'+i+' .bp').html()!=obj['bp']){
