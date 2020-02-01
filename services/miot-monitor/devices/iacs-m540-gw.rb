@@ -152,9 +152,9 @@ module Device
         vs[:hr] = m['1-4-0-1-26'] if m['1-4-0-1-26']
         vs[:hr] = m['1-112-0-1-2'] if m['1-112-0-1-2'] and  m['1-112-0-1-2'] > 10
         vs[:hr] = m['6-9-0-0-9'] if m['6-9-0-0-9']
+	
 
-
-        vs[:hr] = '-' unless vs[:hr]
+        #vs[:hr] = '-' unless vs[:hr]
 
         vs[:pr] = m['25-14-0-0-28'] if m['25-14-0-0-28']
         vs[:pr] = m['25-14-0-1-28'] if m['25-14-0-1-28']   
@@ -163,14 +163,14 @@ module Device
 
         vs[:pr] = '-' unless vs[:pr]
 
-        vs[:spo2] = nil
+     #   vs[:spo2] = nil
         #vs[:spo2] = m['1-3-1-0-30'] if m['1-3-1-0-30'] and m['1-3-1-0-30'] > 10 
         #vs[:spo2] = m['1-191-0-1-2'] if m['1-191-0-1-2'] and m['1-191-0-1-2']>10
         #vs[:spo2] = m['25-5-0-0-26'] if m['25-5-0-0-26']   
         #vs[:spo2] = m['25-5-0-1-26'] /2 if m['25-5-0-1-26']
-	      vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
-        
-        vs[:spo2] = '-' unless vs[:spo2]
+	vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
+      
+        #vs[:spo2] = '-' unless vs[:spo2]
 
         vs[:rr] = m['94-120-0-0-66'] if m['94-120-0-0-66']
         vs[:rr_pmean] = (m['94-113-0-0-66']/10.0).round if m['94-113-0-0-66']
@@ -187,12 +187,19 @@ module Device
         bp_sys = (m['1-2-0-0-28']/10.0).round if m['1-2-0-0-28']
         bp_sys = (m['1-2-1-0-28']/10.0).round if m['1-2-1-0-28']
         bp_sys = (m['1-1-0-0-26']/10.0).round if m['1-1-0-0-26'] and m['1-1-0-0-26'] > 10
-	      bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
-	
+	bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
+	bp_sys = (m['25-5-0-1-26']/10.0).round if m['25-5-0-1-26']	
+        bp_sys = (m['25-5-1-1-26']/10.0).round if m['25-5-1-1-26']
+	#puts m.inspect 
+
+#	puts "************#{ m['25-5-1-1-26'].inspect}"
+
         bp_dia = (m['30-9-0-1-9']/10.0).round if m['30-9-0-1-9']
         bp_dia = (m['30-8-0-0-9']/10.0).round if m['30-8-0-0-9']
         bp_dia = (m['30-8-0-1-9']/10.0).round if m['30-8-0-1-9']
 
+
+	
 
         vs[:bp_sys] = bp_sys
         vs[:bp_dia] = bp_dia
@@ -234,7 +241,7 @@ module Device
         end
         #	puts "#{lbuff.collect{|c| c[1].size}.join(",")}"
 
-        if lbuff[2].size>=200        
+        if lbuff[3].size>=200        
 
           #          puts "#{lbuff.collect{|c| c[1].size}.join(" ")}"
           data = {}

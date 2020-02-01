@@ -35,7 +35,7 @@ end
 
 def self.parser l
   if l.size > 0 
-  # puts l.size
+ #  puts 'size '+ l.size.to_s
   
   ip = l[12..15]
   
@@ -48,8 +48,9 @@ def self.parser l
   
   pos = startup
   tag = l[pos..pos+1].join
-  # puts tag
-  count = 300
+  #puts tag
+  
+ count = 600
   while pos < l.size and (tag = l[pos..pos+1].join )  and tag!='03' and tag!= '016' and tag!='013'  and count > 0 
     key = nil
     len = nil
