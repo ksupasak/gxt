@@ -283,16 +283,36 @@ module Device
           l3 = data[:leads][3]
           198.times do |x|
             if l3[x]>500 and l3[x+1]<l3[x]-10 and l3[x-1]<l3[x]-10 
-              puts "#{l3[x-1]} #{l3[x]} #{l3[x+1]}"
+              # puts "#{l3[x-1]} #{l3[x]} #{l3[x+1]}"
               peak << "(#{x} #{l3[x]})"
               change[device_id] << [x,l3[x]]
             end
           end
          
-          puts "Found #{peak.join(", ")}" if peak.size>0 
-          puts change[device_id].collect{|x| x[0]}
+          # puts "Found #{peak.join(", ")}" if peak.size>0
           
-          
+          # puts change[device_id].collect{|x| x[0]}
+          n = 7
+          if change[device_id].size > n
+            a = change[device_id]
+            mode = []
+            n.times do |x|
+              
+              dif = a[-x-1][0] - a[-x-2][0] 
+              # puts dif
+              hr = 60.0/dif*200
+              mode << hr
+              
+            end
+            mode.sort!
+            # puts mode.join(", ")
+            hr = mode[n/2].to_i
+            # hr = mode[0].to_i
+            
+            puts "HR : #{hr}"
+            vs[:hr] = hr
+            change[device_id] = change[device_id][-n..-1]
+          end
          
          end
          
