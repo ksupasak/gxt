@@ -107,7 +107,7 @@ module Device
     devices = {}
 
 
-
+    change = {}
 
 
 
@@ -129,11 +129,20 @@ module Device
         wbuff = device[:wbuff]
         # lead data package
 
-
-
-
-
-
+        # if false and l.size == 602
+ #
+ #        l.each_with_index do |y,x|
+ #
+ #        change[x] = {} unless change[x]
+ #        change[x][y] = 1 unless change[x][y]
+ #
+ #        end
+ #
+ #        change.keys.sort.each do |x|
+ #          puts "#{x}\t#{change[x].keys.join("\t")}" if change[x].keys.size>1
+ #        end
+ #
+ #        end
 
         map = IACS::parser l
 
@@ -168,7 +177,7 @@ module Device
         #vs[:spo2] = m['1-191-0-1-2'] if m['1-191-0-1-2'] and m['1-191-0-1-2']>10
         #vs[:spo2] = m['25-5-0-0-26'] if m['25-5-0-0-26']   
         #vs[:spo2] = m['25-5-0-1-26'] /2 if m['25-5-0-1-26']
-	vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
+	      vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
       
         #vs[:spo2] = '-' unless vs[:spo2]
 
@@ -187,14 +196,16 @@ module Device
         bp_sys = (m['1-2-0-0-28']/10.0).round if m['1-2-0-0-28']
         bp_sys = (m['1-2-1-0-28']/10.0).round if m['1-2-1-0-28']
         bp_sys = (m['1-1-0-0-26']/10.0).round if m['1-1-0-0-26'] and m['1-1-0-0-26'] > 10
-	bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
-	bp_sys = (m['25-5-0-1-26']/10.0).round if m['25-5-0-1-26']	
+	      bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
+	      
+        bp_sys = (m['25-5-0-1-26']/10.0).round if m['25-5-0-1-26']	
         bp_sys = (m['25-5-1-1-26']/10.0).round if m['25-5-1-1-26']
 	#puts m.inspect 
 
 #	puts "************#{ m['25-5-1-1-26'].inspect}"
 
-        bp_dia = (m['30-9-0-1-9']/10.0).round if m['30-9-0-1-9']
+        
+        
         bp_dia = (m['30-8-0-0-9']/10.0).round if m['30-8-0-0-9']
         bp_dia = (m['30-8-0-1-9']/10.0).round if m['30-8-0-1-9']
 
@@ -208,7 +219,7 @@ module Device
 
         vs[:bp] = "#{bp_sys}/#{bp_dia}"
 
-	vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
+	      vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
 
 
         #	puts map.keys.sort.inspect
@@ -254,7 +265,39 @@ module Device
 
           end
 
-
+          peak = []
+          
+          
+          
+          
+          # change[device_id] = change[device_id][..]
+          
+          
+          if true
+            
+          change[device_id] = [] unless change[device_id]
+          
+          change[device_id].collect!{|x| [x[0]-200,x[1]] }
+            
+          
+          l3 = data[:leads][3]
+          198.times do |x|
+            if l3[x]>500 and l3[x+1]<l3[x]-10 and l3[x-1]<l3[x]-10 
+              puts "#{l3[x-1]} #{l3[x]} #{l3[x+1]}"
+              peak << "(#{x} #{l3[x]})"
+              change[device_id] << [x,l3[x]]
+            end
+          end
+         
+          puts "Found #{peak.join(", ")}" if peak.size>0 
+          puts change[device_id].collect{|x| x[0]}
+          
+          
+         
+         end
+         
+         
+         
           # puts map['wave_key'].inspect
 
           # data[:wave] = wbuff.shift(25)
