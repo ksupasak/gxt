@@ -296,7 +296,7 @@ module Device
           # puts "Found #{peak.join(", ")}" if peak.size>0
           
           # puts change[device_id].collect{|x| x[0]}
-          n = 7
+          n = 9
           if change[device_id].size > n
             a = change[device_id]
             mode = []
