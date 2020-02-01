@@ -310,11 +310,11 @@ module Device
             end
             mode.sort!
             # puts mode.join(", ")
-            hr = mode[n/2].to_i
+            hr = mode[n/2].ceil
             # hr = mode[0].to_i
             
                 
-            puts "HR : #{hr}"
+            # puts "HR : #{hr}"
             vs[:hr] = hr unless true_hr
             
             change[device_id] = change[device_id][-n..-1]
