@@ -156,11 +156,15 @@ module Device
           end 
           puts
         end
-
-        vs[:hr] = m['1-4-0-0-26'] if m['1-4-0-0-26']
-        vs[:hr] = m['1-4-0-1-26'] if m['1-4-0-1-26']
-        vs[:hr] = m['1-112-0-1-2'] if m['1-112-0-1-2'] and  m['1-112-0-1-2'] > 10
-        vs[:hr] = m['6-9-0-0-9'] if m['6-9-0-0-9']
+        
+        
+        
+        true_hr = nil
+      
+        true_hr =  m['1-4-0-0-26'] if m['1-4-0-0-26'] and  m['1-4-0-0-26'] > 10
+        true_hr =  m['1-4-0-1-26'] if m['1-4-0-1-26']  and  m['1-4-0-1-26'] > 10
+        true_hr =  m['1-112-0-1-2'] if m['1-112-0-1-2'] and  m['1-112-0-1-2'] > 10
+        true_hr =  m['6-9-0-0-9'] if m['6-9-0-0-9'] and  m['6-9-0-0-9'] > 10
 	
 
         #vs[:hr] = '-' unless vs[:hr]
@@ -309,13 +313,18 @@ module Device
             hr = mode[n/2].to_i
             # hr = mode[0].to_i
             
+                
             puts "HR : #{hr}"
-            vs[:hr] = hr
+            vs[:hr] = hr unless true_hr
+            
             change[device_id] = change[device_id][-n..-1]
           end
          
          end
          
+         
+         vs[:hr] = true_hr if true_hr
+           # puts vs[:hr]     
          
          
           # puts map['wave_key'].inspect
