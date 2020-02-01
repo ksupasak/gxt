@@ -88,16 +88,16 @@ for i in notes
 end
 
 for i in medications
-
-	k = i.start_time.localtime.strftime("%H:%M:%S")
-	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['Med',"#{i.name if i} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
-	
-	
-	k = i.stop_time.localtime.strftime("%H:%M:%S")
-	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
-	
+	if i.start_time
+		k = i.start_time.localtime.strftime("%H:%M:%S")
+		tmap[k] = [] unless tmap[k]
+		tmap[k] << ['Med',"#{i.name if i} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
+	end
+	if i.stop_time
+		k = i.stop_time.localtime.strftime("%H:%M:%S")
+		tmap[k] = [] unless tmap[k]
+		tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+	end
 end	
 
 for i in records

@@ -30,6 +30,7 @@ gem 'bson_ext'
 
 gem 'redis'
 gem 'hiredis'
+gem 'em-hiredis'
 # gem 'redis-rails'
 gem 'resque', :require => "resque/server"
 gem 'xmpp4r'
@@ -41,7 +42,13 @@ gem 'faye-websocket'
 gem 'barby'
 gem 'chunky_png'
 gem 'rqrcode'
-
+gem 'pdfkit'
+gem 'prawn'
 
 gem 'serialport'
 # gem 'rpi_gpio'
+
+
+gem 'rest-client'
+gem 'rest-graph'
+gem 'eventmachine'

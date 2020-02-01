@@ -46,6 +46,8 @@ class Zone
   has_many :ambulances, :class_name=>'EsmMiotMonitor::Ambulance'
   
   key :name, String 
+  key :mode, String 
+  
 end
 
 
@@ -471,18 +473,24 @@ class AdmitController < GXTDocument
          
           admit.update_attributes :current_score=>params[:data][:score]
           
+          if params[:option]
+          
           params[:option].each_pair do |k,v|
             
             params[:data]["#{k}_opt".to_sym] = v
             
           end
+        end
          
           record = admit.records.create params[:data]
           
           record.update_attributes :data=>params[:data].to_json, :stamp=>Time.now
           
-          score = admit.score
-          
+          if params[:score_id]
+            score = Score.find params[:score_id]
+          else
+            score = admit.score
+          end
           
           admit.nurse_records.create :start_time=> Time.now , :description=>"#{score.name} v.#{score.version} = #{params[:data][:score]} : #{score.description}"
           

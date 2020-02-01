@@ -1,0 +1,16 @@
+	ion.sound({
+    sounds: [
+        {name: "bell_ring"}
+    ],
+
+    // main config
+    path: "<%=url_for 'sounds/'%>",
+    preload: true,
+    multiplay: true,
+    volume: 0.9
+	});
+	
+		
+	 var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
