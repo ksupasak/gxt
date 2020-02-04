@@ -543,8 +543,9 @@ MSG
                  
                  if v['admit_id'] 
                  
-                   # admit = Admit.find v['admit_id']
-                 # if admit and admit.status == 'Admitted'
+                 admit = Admit.find v['admit_id']
+                 
+                 if admit and admit.status == 'Admitted'
                  
                  start_time = now
                  start_time = v['current_time'] if v['current_time']
@@ -553,8 +554,9 @@ MSG
                  Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
                  
                  v.delete 'vs'
+                 end
                  
-               else
+                 else
                  
                  v.delete 'admit_id'
                  

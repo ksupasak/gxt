@@ -299,6 +299,8 @@ class Ambulance
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
   has_one :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
+  
   
   key :status, String
   key :name, String

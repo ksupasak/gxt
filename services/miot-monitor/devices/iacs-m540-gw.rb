@@ -342,7 +342,15 @@ module Device
 
           name = device[:name]
 
-
+          if @global_position
+            
+            t = @global_position.split(",")
+            
+            data[:lat] = t[0].to_f #15.8700+0.01*Math.cos(Time.now.to_i*Math::PI/180)
+            data[:lng] = t[1].to_f #100.9925+0.01*Math.sin(Time.now.to_i*Math::PI/180)
+          
+          end
+          
           #   puts data.inspect  if device_id=='191.1.2.2'
 
          msg = <<MSG

@@ -22,6 +22,9 @@ require_relative 'devices/vista-120-S-v2-gw'
 require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
+require_relative 'devices/gps/gps'
+
+
 unless HOST_IP
 HOST_IP = IPSocket.getaddress(Socket.gethostname)
 end
@@ -33,7 +36,7 @@ HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
 CMS_URI = URI("http://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 MIOT::post_config
 
-
+$global_position = ""
 
 threads = []
 
@@ -65,12 +68,15 @@ ws = MIOT::connect
 # threads << Thread.new {
 # Device::monitor_vista_120_s_v2(ws)
 # }
+threads << Thread.new {
+Device::gps_cms_server(ws)
+}
+# threads << Thread.new {
+# Device::gps_test_server(ws)
+# }
 
-
-for i in threads
-  
+for i in threads  
   i.run
-  
 end
 
 for i in threads
