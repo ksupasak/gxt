@@ -39,7 +39,7 @@ def self.parser l
   if l.size > 0 
     debug = false
     debug = (l.size!=602 and l.size!=302 and l.size!=398 and l.size!=1298 and l.size!=252 and l.size!=110)  
-  
+   debug = false
   # puts 'size '+ l.size.to_s + " ========================================="
   
   ip = l[12..15]
