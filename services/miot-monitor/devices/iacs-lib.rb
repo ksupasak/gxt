@@ -37,7 +37,7 @@ end
 
 def self.parser l
   if l.size > 0 
-    debug = true
+    debug = false
     debug = (l.size!=602 and l.size!=302 and l.size!=398 and l.size!=1298 and l.size!=252 and l.size!=110)  
   
   # puts 'size '+ l.size.to_s + " ========================================="
@@ -99,7 +99,7 @@ def self.parser l
     key = nil
     len = nil
     res = ''
-     puts 'cur '+tag + " pos "+pos.to_s if debug
+     # puts 'cur '+tag + " pos "+pos.to_s if debug
     if tag == '012'
       len = 12
     elsif tag == '0200' # range 200 values 
@@ -151,7 +151,7 @@ def self.parser l
     elsif tag == '024'
         len = 194
     elsif tag == '00'
-      puts "Tag : #{tag} " 
+      # puts "Tag : #{tag} " 
     else
         #puts '========================================'
     end
