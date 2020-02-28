@@ -483,7 +483,8 @@ $('#main-container').removeClass('container')
 
 				resource_id = i.name
 				
-				admit = i.admit
+				admit = nil
+				admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
 				
 				patient = nil
 				patient = admit.patient if admit
@@ -547,6 +548,18 @@ $('#main-container').removeClass('container')
 					$('#wave-3').html("")
 					$('#wave-4').html("")
 					
+					var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+					prefix = full+"/<%=@context.settings.name%>"
+					admit_path = prefix+"/Station/show?id=<%=station_id%>"
+					<% if admit %>	
+					admit_path = prefix+"/Admit/show?id=<%=admit.id%>"
+					<% end %>
+					
+					dvr_path = "http://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&jsession=3883c38b-c306-4f48-a837-7c9a8dcda3f0"
+					
+					tele_path = ""
+					
+					console.log("#select view1|"+admit_path+" view2|"+dvr_path+" view3|"+tele_path)
 					
 					// $('.callEnd').click();
 // 					setTimeout(function(){
@@ -596,7 +609,7 @@ $('#main-container').removeClass('container')
    
    	 <%=inline(this,:'_websocket.js')%>
 	
-	  var ws  = new WebSocket('ws://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+	  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 	
 	
       ws.onopen    = function()  { show('websocket opened'); 

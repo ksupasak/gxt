@@ -44,9 +44,9 @@ threads = []
 ws = MIOT::connect 
 
 
-# threads << Thread.new {
-# Device::monitor_b450_v1(ws)
-# }
+threads << Thread.new {
+Device::monitor_b450_v1(ws)
+}
 
 # threads << Thread.new {
 # Device::monitor_vista_120_v1(ws)

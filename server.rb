@@ -14,6 +14,19 @@ require 'barby/outputter/png_outputter'
 require 'crc'
 require 'active_support/all'
 
+require 'rack/ssl-enforcer'
+# use Rack::SslEnforcer
+
+# set :session_secret, 'asdfa2342923422f1adc05c837fa234230e3594b93824b00e930ab0fb94b'
+
+#Enable sinatra sessions
+# use Rack::Session::Cookie, :key => '_rack_session',
+#                            :path => '/',
+#                            :expire_after => 2592000, # In seconds
+#                            :secret => settings.session_secret
+
+  # set :ssl, true
+
 mode = 'application'
 mode = ARGV[0] if ARGV[0]
 
@@ -56,7 +69,7 @@ set :server, @conf_server
 if mode == 'application'
   set :bind, @conf_server_bind
   set :port, @conf_server_port
-else
+elsif mode =='service'
   set :bind, @conf_service_bind
   set :port, @conf_service_port
 end
