@@ -52,3 +52,5 @@ gem 'serialport'
 gem 'rest-client'
 gem 'rest-graph'
 gem 'eventmachine'
+
+gem 'rack-ssl-enforcer'

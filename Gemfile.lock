@@ -87,6 +87,7 @@ GEM
       rack
     rack-protection (1.5.5)
       rack
+    rack-ssl-enforcer (0.2.9)
     rack-test (0.6.3)
       rack (>= 1.0)
     rb-fsevent (0.10.3)
@@ -178,6 +179,7 @@ DEPENDENCIES
   puma
   pusher
   rack-gridfs
+  rack-ssl-enforcer
   redis
   rerun
   resque
