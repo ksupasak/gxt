@@ -42,7 +42,7 @@ def self.registered(app)
              
              settings.ch_map.each_pair do |k,v|
                
-               puts "#{k} #{v.inspect}"
+               # puts "#{k} #{v.inspect}"
                
                
                unless v[:t]
@@ -57,14 +57,15 @@ def self.registered(app)
                                           
                                           
                                           ws_list = app.settings.ch_map[channel][:ws].keys
-                
+                                          # puts app.settings.ch_map[channel][:ws].keys.inspect
                                           # puts message
                                            for i in ws_list
                                               ws = settings.ws_map[i]
                                               if ws
-                                               EM.next_tick do
+                                               # EM.next_tick do
+                                                 # puts "send to #{i}"
                                                  ws.send message
-                                              end
+                                              # end
                                             end
 
                                            end
