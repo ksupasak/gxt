@@ -1,6 +1,11 @@
 
 module EsmMiotMonitor
-  
+
+class SasMobileController < GXT
+
+
+end
+
 class SasController < GXTDocument
 
   def websocket request

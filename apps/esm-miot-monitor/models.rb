@@ -140,6 +140,23 @@ class Admit
   end
 end
 
+class AdmitLog
+  include MongoMapper::Document
+  
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :admit_id, ObjectId
+  key :name, String
+  key :status, String
+  key :latlng, String
+  key :note, String
+  key :stamp, Time
+  key :sort_order, Integer
+  key :parent, Integer
+  timestamps!
+end
+
+
 class NurseRecord
   
   include MongoMapper::Document
@@ -464,7 +481,10 @@ class SettingController < GXTDocument
   
 end
 
+class AdmitLogController < GXTDocument
+end
 
+  
 class AdmitController < GXTDocument
   
   def submit_data params

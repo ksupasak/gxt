@@ -1,3 +1,19 @@
+<%
+
+
+display_name = "userDemo#{rand(999)}"
+cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+out = `#{cmd}`
+puts cmd
+puts out
+out = out.split("\n")
+puts out.inspect
+
+puts 
+token = out[-1]
+@token = token
+	
+%>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
@@ -356,7 +372,7 @@ invoke the VidyoConnector API. -->
 			<!-- This is the display name that other users will see.
 			-->
 			<label for="displayName">Display Name</label>
-			<input id="displayName" class="displayName" type="text" placeholder="Display Name" value="Ambulance Control Center">
+			<input id="displayName" class="displayName" type="text" placeholder="Display Name" value="AOC">
 		</p>
 		<p>
 			<!-- This is the "room" or "space" to which you're connecting

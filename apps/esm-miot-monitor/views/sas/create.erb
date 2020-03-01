@@ -49,11 +49,31 @@ if request.post?
 	
 	ad = {:note=> params[:note], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
 	
-	
+	ambu = Ambulance.find params[:ambulance_id]
 	score = Score.first
 	ad.merge! :score_id=>score.id if score
 	
 	admit = Admit.create ad
+	
+	AdmitLog.create :admit_id=>admit.id, :name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
+	AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
+	AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2
+	AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2
+	AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
+	AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+	AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+	
+	
+	
+	
+	
+    # key :status, String
+   #  key :latlng, String
+   #  key :note, String
+   #  key :stamp, Time
+   #  key :sort_order, Integer
+	
+	
 	
 	
 %>
@@ -77,13 +97,56 @@ else
 	.ambu input{
 		background:none;
 	}
+	.small {
+		width:80px;
+	}
 </style>
 <form action="create" method="post" enctype="multipart/form-data">
 
-<div class="" style="display:block;position:absolute;top:50px;z-index:99;left:300px;right:300px;color:#fff;	background-color: rgb(119, 138, 158);margin-left:auto;margin-right:auto;padding:20px;border:1px solid #ccc;border-radius: 5px;">
+<div class="" style="display:block;position:absolute;top:10px;z-index:99;left:20%;right:20%;color:#fff;	background-color: rgb(119, 138, 158);margin-left:auto;margin-right:auto;padding:20px;border:1px solid #ccc;border-radius: 5px;">
 	
-	<center>
+	<div class="row patient-panel" style="">
 	
+		<div class="col-3">
+		ชื่อ-สุกล : <br/><input type="text" name="patient[name]" id="patient_name" value="" placeholder="Patient Name" style="width:100%;background:#ffffaa"> 
+		</div>
+		<div class="col-3">
+		เลขบัตรประจำตัวประชาชน : <br/><input type="text" name="patient[public_id]" id="patient_hn" value="" placeholder="เลขที่บัตรประชาชน"> 
+		</div>
+		<div class="col-2">
+		HN : <br/><input type="text" name="patient[hn]" id="patient_hn" value="" placeholder="HN" class="small"> 
+		</div>
+		<div class="col-1">
+		Sex : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Sex" class="small"> 
+		</div>
+		<div class="col-1">
+		DOB : <br/><input type="text" name="patient[dob]" id="patient_dob" value="" placeholder="DOB" class="small"> 
+		</div >
+		<div class="col-1">
+		Age : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE" class="small"> 
+		</div>
+	
+		<div class="col-6">
+		Remark : <br/><input type="text" name="note" id="admit_note" value="" placeholder=" อาการ และ อื่น ๆ " style="width:100%;background:#ffffaa"> 
+		</div>
+	
+		<div class="col-3">
+		Contact Name : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name"> 
+		</div>
+		<div class="col-3">
+		Contact Phone : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone"> 
+		</div>
+	
+		
+		<div class="col-3">
+		<!-- Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long">  -->
+		</div>
+	</div>
+	
+	<div class="row search-panel" style="border:0px solid" >
+	<div class="col-12">
+<center>
+	<br/>
 	Address : <input type="text" name="address" id="address" value="" placeholder="Address" style="width:300px"> 
 	Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long" style="width:300px"> 
 	
@@ -91,45 +154,10 @@ else
 	<%=link_to 'Reset', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
 	<%=link_to 'Back', "index", :class=>'btn', :style=>"color:white"%>
 	
-</center>
-
-	<div class="row patient-panel" style="display:none">
-		<div class="col-12">
-			<div class="clear"></div>
-			<br/>
-			<b>Patient Information</b>
-			<hr/>
-		</div>
-		<div class="col-3">
-		Patient : <br/><input type="text" name="patient[name]" id="patient_name" value="" placeholder="Patient Name"> 
-		</div>
-		<div class="col-3">
-		HN : <br/><input type="text" name="patient[hn]" id="patient_hn" value="" placeholder="HN"> 
-		</div>
-		<div class="col-2">
-		DOB : <br/><input type="text" name="patient[dob]" id="patient_dob" value="" placeholder="DOB"> 
-		</div >
-		<div class="col-2">
-		AGE : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE"> 
-		</div>
-		<div class="col-2">
-		Sex : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Gender"> 
-		</div>
-		<div class="col-3">
-		Contact Name : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name"> 
-		</div>
-		<div class="col-3">
-		Contact Phone : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone"> 
-		</div>
-		
-		<div class="col-5">
-		Note : <br/><input type="text" name="note" id="admit_note" value="" placeholder=" อาการ และ อื่น ๆ " style="width:100%"> 
-		</div>
-		
-		<div class="col-3">
-		<!-- Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long">  -->
-		</div>
+</center></div>
 	</div>
+
+	
 	
 	<div class="row ambu-panel" style="display:none">
 		
@@ -160,12 +188,7 @@ else
 	
 	
 	<div class="row ambu-station" style="display:none">
-	<div class="col-12">
-		<div class="clear"></div>
-		<br/>
-		<b>Ambulance Assignment & Coordinator</b>
-		<hr/>
-	</div>
+
 	<%
 		
 	ambulances = Ambulance.all
@@ -224,7 +247,12 @@ else
 			<div class="col-3">
 			Estimate Distance : <br/><input type="text" name="arrival_distance" id="arrival_distance" value="" readonly="readonly"  placeholder="-"> 
 			</div>
-	
+			<div class="col-3">
+				<br/>
+			<input type="submit"  id="patient_name" value="Submit"  class="btn btn-success" style="background:green"> 
+			<%=link_to 'Cancel', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
+			
+			</div>
 	</div>
 	
 	
@@ -232,12 +260,7 @@ else
 	
 	
 	<div class="col-12">
-		
-	<div class="clear"></div>
-	<br/>
-	<input type="submit"  id="patient_name" value="Submit"  class="btn btn-success"> 
-	<%=link_to 'Cancel', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
-	
+
 	</div>
 	
 	
@@ -289,6 +312,9 @@ else
 
 	
 				$('.select-ambu').click(function(){
+					
+					
+					$('.search-panel').slideUp(300);
 					
 					$('.ambu-panel').slideUp(300);
 					$('.ambu-station').slideDown(300);
@@ -345,7 +371,7 @@ else
 				})
 	
 				$('.next-button').click(function(){
-					$('.patient-panel').slideDown(300);
+					// $('.patient-panel').slideDown(300);
 					$('.ambu-panel').slideDown(300);
 					$('.cancel-button').show();
 		
@@ -354,7 +380,7 @@ else
 	
 	
 				$('.cancel-button').click(function(){
-					$('.patient-panel').slideUp(300);
+					 $('.search-panel').slideDown(300);
 					$('.ambu-panel').slideUp(300);
 					$('.ambu-station').slideUp(300);
 					$('.cancel-button').hide();

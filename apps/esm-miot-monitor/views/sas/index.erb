@@ -284,12 +284,15 @@ $('#main-container').removeClass('container')
 						}
 					</style>
 					<div class="station-<%=station_id%> row " >
-						<div class="col-1 select-<%=i.id%> " >
+						<div class="col-1 eselect-<%=i.id%>" style="font-size:0.9em" >
 						<center>
-						<%=link_to i.name,"../Ambulance/show?id=#{i.id}"%><br/>
+						<%=link_to i.name,"../Ambulance/show?id=#{i.id}", :class=>"select-#{i.id} btn btn-default", :style=>"font-size:1em"%><br/>
 						<%=link_to i.plate_license,"../Ambulance/show?id=i#{i.id}"%><br/>
-						<%=link_to i.phone,"../Ambulance/show?id=#{i.id}"%>
+						<a href="tel:<%=i.phone%>"><%=i.phone%></a>
+					
+						
 						</center>	
+						<br/>
 						</div>
 						<div class="col-5">
 						<div class="row" style="">
@@ -345,11 +348,11 @@ $('#main-container').removeClass('container')
 						<div class="col-1">
 						
 								<% if admit %>
-								<a href="../Admit/show?id=<%=admit.id%>" class="btn btn-warning" >Flow</a><br/>	
+								<a style="width:60px;padding:5px" href="../Admit/show?id=<%=admit.id%>" class="btn btn-warning" >Flow</a><br/>	
 								<% end %>
-								<a href="" id="call-<%=i.id%>" class="btn btn-success" >Call</a><br/>	
+								<a style="width:60px;padding:5px" href="" id="call-<%=i.id%>" class="btn btn-success" >Call</a><br/>	
 								
-								<a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-info">Share</a>
+								<a style="width:60px;padding:5px" target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-info">Share</a>
 							
 								<script>
 					
