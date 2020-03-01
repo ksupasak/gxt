@@ -276,7 +276,7 @@ invoke the VidyoConnector API. -->
 		configParams.returnURL = getUrlParameterByName("returnURL");
 		configParams.isIE = platformInfo.isIE;
 		var hideConfig = getUrlParameterByName("hideConfig");
-
+	
 		// If the parameters are passed in the URI, do not display options dialog
 		if (host && token && displayName && resourceId) {
 			$(".optionsParameters").addClass("hiddenPermanent");

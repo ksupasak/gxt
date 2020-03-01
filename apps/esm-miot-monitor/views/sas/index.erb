@@ -152,7 +152,7 @@ $('#main-container').removeClass('container')
 						
 				       });
 				       $('#loading').show();
-				       $('iframe').attr( "src", "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=819112150&account=admin&password=admin");
+				       // $('iframe').attr( "src", "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=819112150&account=admin&password=admin");
 
 				     });
 				</script>
@@ -228,7 +228,6 @@ $('#main-container').removeClass('container')
 
 						host = 'prod.vidyo.io'
 
-						ambulances = Ambulance.all
 
 						display_name = "userDemo#{rand(999)}"
 						cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
@@ -241,6 +240,10 @@ $('#main-container').removeClass('container')
 						puts 
 						token = out[-1]
 						@token = token
+
+
+
+						ambulances = Ambulance.all
 
 						for i in ambulances 
 							admit= nil
@@ -423,11 +426,14 @@ $('#main-container').removeClass('container')
 				<% 	  
 				
 			
-				
+					
  					  @current_zone = Zone.first
 					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
-					  @current_zone = Zone.first unless @current_zone
-					  
+					  @current_zone = nil if @current_zone and @current_zone.mode!='aoc'
+					   unless @current_zone
+					  	 @current_zone = Zone.where(:mode=>'aoc').first
+				  	  	 session[:current_zone] = @current_zone.id
+					  end
 					  # @current_zone = Zone.where(:name=>'Ambu').first
 					  
 					  
@@ -557,7 +563,10 @@ $('#main-container').removeClass('container')
 					
 					// dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&jsession=3883c38b-c306-4f48-a837-7c9a8dcda3f0"
 					dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&account=admin&password=admin"
-					tele_path = ""
+					tele_path =  prefix+"/Sas/tele?resourceId=<%=i.name%>"
+					
+			       $('iframe').attr( "src", dvr_path);
+					
 					
 					console.log("#select view1|"+admit_path+" view2|"+dvr_path+" view3|"+tele_path)
 					
@@ -810,14 +819,15 @@ $('#main-container').removeClass('container')
 	</div>
 	
 <div style="font-size:0.8em;color:#999">
+	
   	<div style="float:right" class="timer">
 	00:00
-	</div>
-By GEXINTEC Co.,Ltd. 2019. <a href="tel:+66865443352">0865443352</a>
+	</div>f
+By GEXINTEC Co.,Ltd. 201\. 
 </div>
 
 <br/>
-
+<a href="tel:+66865443352">0865443352</a>
 <%= inline(this,:'../home/_scoring') %>
 
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
