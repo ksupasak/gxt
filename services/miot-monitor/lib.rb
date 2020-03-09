@@ -18,13 +18,13 @@ CMS_SOLUTION = path1[1]
 end
 
 CMS_PATH = "#{CMS_SOLUTION}/Home/index"
-CMS_URI = URI("http://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 
 module MIOT
 
 def self.connect 
   
-  connect_url = "ws://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}"
+  connect_url = "wss://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}"
   puts connect_url
   loop do 
   begin

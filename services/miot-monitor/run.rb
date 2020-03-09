@@ -33,7 +33,7 @@ t = HOST_IP.split('.')
 HOST_NETWORK = t[0..2].join(".")+".1"
 HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
  
-CMS_URI = URI("http://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 MIOT::post_config
 
 $global_position = ""
