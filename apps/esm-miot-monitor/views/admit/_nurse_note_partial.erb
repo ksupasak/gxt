@@ -15,7 +15,7 @@ records = admit.nurse_records.sort(:start_time)
 <tbody>
 	<% for i in records %>
 	<tr>
-		<td><%=link_to i.start_time.localtime().strftime("%H:%M:%S"), '#', :id=>"#{i.id}" %>
+		<td><%=link_to i.start_time.localtime().strftime("%H:%M:%S"), '#', :id=>"#{i.id}" if i.start_time%>
 			
 		
 		

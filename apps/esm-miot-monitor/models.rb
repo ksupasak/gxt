@@ -125,6 +125,7 @@ class Admit
   
   key :status, String
   
+  key :an, String
   
   key :current_score, Integer
   

@@ -47,7 +47,7 @@ if request.post?
 	
 	station = Station.find params[:station_id]
 	
-	ad = {:note=> params[:note], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
+	ad = {:note=> params[:note], :an=>params[:an], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
 	
 	ambu = Ambulance.find params[:ambulance_id]
 	score = Score.first
@@ -117,24 +117,24 @@ else
 		HN : <br/><input type="text" name="patient[hn]" id="patient_hn" value="" placeholder="HN" class="small"> 
 		</div>
 		<div class="col-1">
-		Sex : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Sex" class="small"> 
+		เพศ : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Sex" class="small"> 
 		</div>
 		<div class="col-1">
 		DOB : <br/><input type="text" name="patient[dob]" id="patient_dob" value="" placeholder="DOB" class="small"> 
 		</div >
 		<div class="col-1">
-		Age : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE" class="small"> 
+		อายุ : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE" class="small"> 
 		</div>
 	
 		<div class="col-6">
-		Remark : <br/><input type="text" name="note" id="admit_note" value="" placeholder=" อาการ และ อื่น ๆ " style="width:100%;background:#ffffaa"> 
+		อาการ : <br/><input type="text" name="note" id="admit_note" value="" placeholder=" อาการ และ อื่น ๆ " style="width:100%;background:#ffffaa"> 
 		</div>
 	
 		<div class="col-3">
-		Contact Name : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name"> 
+		ชื่อผู้ติดต่อ : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name"> 
 		</div>
 		<div class="col-3">
-		Contact Phone : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone"> 
+		หมายเลขติดต่อ : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone"> 
 		</div>
 	
 		
@@ -147,8 +147,16 @@ else
 	<div class="col-12">
 <center>
 	<br/>
+	<%
+		
+	number =  format("%s%04d",Time.now.strftime("%y"),Admit.count) 
+	
+		
+	%>
+	Case No : <input type="text" name="an" id="an" value="<%=number%>" placeholder="Case No" style="width:100px"> 
+	
 	Address : <input type="text" name="address" id="address" value="" placeholder="Address" style="width:300px"> 
-	Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long" style="width:300px"> 
+	Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long" style="width:/00px"> 
 	
 	<%=link_to 'Next', "\#", :class=>'btn btn-success next-button' %>
 	<%=link_to 'Reset', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
@@ -169,13 +177,25 @@ else
 		
 		<div class="col-12">
 		<table class="table">
-		<% for i in ambulances %>
+		<% for i in ambulances 
+		
+		 admit = Admit.where(:status=>'Admitted', :ambulance_id=>i.id).first
+
+		%>
 			<tr class="ambu-<%=i.id%>">
 				<td><%=i.name%><br/><%=i.plate_license%><br/><%=i.phone%></td>	<td style="font-size:0.7em;display:none" ><span class="last_address" style="width:300px;display:block"><%=i.last_address%></span>
 					 LatLng: <%=i.last_location%></td> <td ></td> 
 					 <td ><span class="distance">-</span><br/><span class="duration">-</span></td> 
-				<td >Status</td>
-				<td><%=link_to 'Select', "#", :class=>'btn btn-success select-ambu', :ambu_id=>i.id %></td>
+				
+				<td>
+				<% unless admit %>	
+					<%=link_to 'Select', "#", :class=>'btn btn-success select-ambu', :ambu_id=>i.id %>
+				<% else %>
+				
+					<%=link_to 'ALLOCATED', "../Admit/show?id=#{admit.id}",:target=>'_blank', :class=>'btn btn-warning', :ambu_id=>i.id %>
+					
+				<% end %>
+				</td>
 			</tr>
 		<% end %>
 		</table>
