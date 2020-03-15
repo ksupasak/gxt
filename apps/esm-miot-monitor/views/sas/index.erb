@@ -29,7 +29,7 @@ $('#main-container').removeClass('container')
 
 <div class="selection row header context-header"  style="color:white">
 	
-	<div class="col-1" >
+	<div class="col-2" >
 	<%=link_to '+', "create",:class=>'btn btn-success'%>
 	<span class="ambu-name "><span class="value">-</span></span>
 	
@@ -119,10 +119,7 @@ $('#main-container').removeClass('container')
 					}
 				</style>
 
-				<div id="wave-0" class="wave col-lg-12  order-1" style="">
-
-				</div>
-				
+			
 				<div id="wave-1" class="wave col-lg-12  order-1" style="">
 
 				</div>
@@ -139,6 +136,9 @@ $('#main-container').removeClass('container')
 
 				</div>
 				
+				<div id="wave-5" class="wave col-lg-12  order-1" style="">
+
+				</div>
 				
 				
 			</div >
@@ -186,13 +186,20 @@ $('#main-container').removeClass('container')
 		<div class="row">
 			<div class="col-12" style="background-color: rgb(19, 38, 58);line-height:3em;padding:10px">
 				<center>
-				<%=link_to 'Mode1',"\#", :class=>'btn btn-info',:style=>"line-height:3em" %>
+					
+					
+				<%=link_to '+',"create", :class=>'btn btn-info btn-success',:style=>"line-height:3em;width:80px" %>
+					
+				<%=link_to 'History',"../Admit/index", :class=>'btn btn-info',:style=>"line-height:3em" %>
+				
+				<!--
 				
 				<%=link_to 'Mode2',"\#", :class=>'btn btn-info',:style=>"line-height:3em" %>
 				
 				<%=link_to 'Mode3',"\#", :class=>'btn btn-info',:style=>"line-height:3em" %>
 				
 				<%=link_to 'Mode4',"\#", :class=>'btn btn-warning',:style=>"line-height:3em" %>
+						-->
 				
 			</center>
 			</div>
@@ -545,17 +552,21 @@ $('#main-container').removeClass('container')
 					
 					$('#resourceId').val("<%=i.name%>")
 					
-					show_wave_data['0'] = [];
+					//show_wave_data['0'] = [];
 					show_wave_data['1'] = [];
 					show_wave_data['2'] = [];
 					show_wave_data['3'] = [];
 					show_wave_data['4'] = [];
+					show_wave_data['5'] = [];
+					
 					
 					$('#wave-0').html("")
 					$('#wave-1').html("")
 					$('#wave-2').html("")
 					$('#wave-3').html("")
 					$('#wave-4').html("")
+					$('#wave-5').html("")
+					
 					
 					var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
 					prefix = full+"/<%=@context.settings.name%>"
@@ -597,13 +608,15 @@ $('#main-container').removeClass('container')
 		 
 		 var wave_data = {};
 
-	<% 5.times do |i| %>
+	<% 5.times do |i|
+		
+		  %>
 	   
-	   i = "<%=i%>"
+	   i = "<%=i+1%>"
 	   
 	   show_wave_data[i] = [];
 
-	  showWave('wave-<%=i%>',show_wave_data, i );
+	  showWave('wave-<%=i+1%>',show_wave_data, i );
 	
     <% end %>
 
@@ -738,12 +751,11 @@ $('#main-container').removeClass('container')
 				    path.push(marker.position);
 					
 					
-					show_wave_data['0'] = 	show_wave_data['0'].concat(obj['leads'][0])	
 					show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][1])	
 					show_wave_data['2'] = 	show_wave_data['2'].concat(obj['leads'][2])	
 					show_wave_data['3'] = 	show_wave_data['3'].concat(obj['leads'][3])	
 					show_wave_data['4'] = 	show_wave_data['4'].concat(obj['leads'][4])
-					
+					show_wave_data['5'] = 	show_wave_data['5'].concat(obj['leads'][5])	
 					
 				}
 				

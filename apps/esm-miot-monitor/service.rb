@@ -552,6 +552,13 @@ MSG
                  start_time = v['current_time'] if v['current_time']
                  v['current_time'] = now
                  
+                 if v['lat'] 
+                 ambu = Ambulance.find  admit.ambulance_id 
+                 if ambu
+                   ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+                 end
+                 end
+                 
                  Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
                  
                  v.delete 'vs'
