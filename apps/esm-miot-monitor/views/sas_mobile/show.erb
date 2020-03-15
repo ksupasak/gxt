@@ -124,7 +124,11 @@ station = Station.find ambu.station_id
 	</div>
 	<div class="row  ">
 	<div class="col-2">
-  	<%= link_to 'Call', "show2?id=#{params[:id]}", :class=>'btn btn-warning'%>
+		
+		
+  	<%= link_to 'Call', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-warning'%>
+	
+	
 	</div>
 
 
@@ -166,10 +170,7 @@ station = Station.find ambu.station_id
 							<div class="value">-</div>
 						</div>
 			
-							<div class="col-6  col-lg-3 col-sm-3 cvp">
-								<span class="label">CVP</span>
-								<div class="value">-</div>
-							</div>
+						
 							
 							<div class="col-6  col-lg-3  col-sm-3 rr">
 								<span class="label">RR</span>
@@ -204,7 +205,7 @@ station = Station.find ambu.station_id
 		<div class="" style="height:200px;border:1px solid #ccc">
 			
 		<form action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
-		<textarea name="note" style="height:6em"></textarea>
+		<textarea name="note" style="height:6em;width:100%"></textarea>
 		
    	  	<input type="submit" class="btn btn-primary"  name="Submit" value="Submit"/>
 		

@@ -620,7 +620,7 @@ $('#main-container').removeClass('container')
 	
    
    	 <%=inline(this,:'_websocket.js')%>
-	
+		  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
 	  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 	
 	

@@ -440,7 +440,11 @@ $('#main-container').removeClass('container')
       }(document.getElementById('msgs'));
 
 	
-	  var ws       = new WebSocket('wss://' + window.location.host + window.location.pathname);
+	 // var ws       = new WebSocket('wss://' + window.location.host + window.location.pathname);
+	 
+	  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+	  // alert(tag)
+	  var ws  = new WebSocket(tag);
 	
 	  var plot_pos = {};
 	
@@ -452,11 +456,14 @@ $('#main-container').removeClass('container')
       ws.onclose   = function()  { show('websocket closed'); 
 		
 	 	setTimeout(function () {
-	       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
 	    }, 2000); //will call the function after 2 secs.
 	
 
       }
+	  ws.onerror = function(event) {
+	    alert(event.message);
+	  };
       ws.onmessage = function(m) { 
 	
 		active = $('.active-station').size()
