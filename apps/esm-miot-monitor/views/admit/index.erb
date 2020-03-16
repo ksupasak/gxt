@@ -1,6 +1,102 @@
-
+<br/>
 <h3>Patient Admission <%= link_to '+Admit', "create", :class=>'btn btn-success' %></h3>
+<% 
+unless params[:query]
+	admits = Admit.limit(20).sort(:created_at=>-1).all
+else
+	query = params[:query]
+	patients = Patient.where('$or'=>[{:first_name=>/#{query}/i}]).all
+	admits = []
+	for i in patients 
+		admit = Admit.where(:patient_id=>i.id).first
+		admits << admit
+	end
+	
+end
+%>
+<p>
+<form action="index">
+	
+Search : <input type="text" name="query" value="<%=params[:query]%>" />
+
+<input type="submit" value="Search" />
+</form>
+</p>
+
+<%#inline  this, :'_list' %>
+<table class="table"> 
+	<thead>
+			<tr>
+					<th>Case No.</th>
+					<th>HN</th>
+					<th>Patinet Name</th>
+					<th>DateTime</th>
+					<th>Duration</th>
+					<th>Gender</th>
+					<th>Age</th>	
+			</tr>
+					
+	</thead>
+	<tbody>
+		<% for i in admits
+			
+		patient = Patient.find i.patient_id
+		station = Station.find i.station_id
+		ambu = Ambulance.find i.ambulance_id
+		
+		%>
+		<tr>	
+			
+				<td>
+					<%=link i.an, "show?id=#{i.id}"%>
+					
+				</td>
+				<td><%=patient.hn%>
+				</td>
+				<td><%=patient.name%>
+				</td>
+				
+				
+				<td>
+					<%=i.admit_stamp %>
+				</td>
+				
+				<td><%
+						
+					hours = 0 
+					mins = 0 
+					
+					if i.discharge_stamp
+					
+					total = ((i.discharge_stamp - i.admit_stamp)/60).to_i
+					
+					mins = total%60
+					hours = total/60
+					
+					
+				%>
+					<%="#{hours} hours" if hours > 0 %> <%="#{mins} mins" if mins > 0 %>
+				<% else %>
+					<span class="alert alert-warning">Admitted</span>
+				<% end %>
+				</td>
+				<td><%=patient.gender%></th>
+				<td><%=patient.age%></th>
+				<td>
+					<%=link 'Review', "show?id=#{i.id}"%>
+				</td>
+				<td>
+					<%=link 'Edit', "edit?id=#{i.id}"%>
+				</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
 
 
 
-<%=inline  this, :'_list' %>
+<script>
+	
+	
+	
+</script>

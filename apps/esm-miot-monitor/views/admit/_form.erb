@@ -322,16 +322,27 @@ options = [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Can
 
 <%
 	
+name = 'an'
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+<div>
+	<%=@record.an%>
+</div>	
+</div>
+
+<%
+	
 name = 'admit_stamp'
 	
 %>
-<div class="col-6">
+<div class="col-3">
 <label for="product-name"><%=name.humanize%></label>
 <div>
 	<%=@record.admit_stamp%>
 </div>	
 </div>
-
 
 </div>
 </div>
