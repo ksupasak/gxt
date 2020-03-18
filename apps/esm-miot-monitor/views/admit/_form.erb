@@ -1,3 +1,4 @@
+
 <%
 	# patient = Patient.new
 	
@@ -309,7 +310,7 @@ options = [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Can
 
 <div class="row">
 
-<div class="col-6">
+<div class="col-3">
 <label for="product-name">Status</label>
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
@@ -320,6 +321,30 @@ options = [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Can
 </select>
 </div>
 
+
+<%
+	
+name = 'period'
+options = [['15','15 mins'],['5','5 mins'],['1','1 min']]
+selected = false
+
+
+	
+%>
+
+<div class="col-3">
+<label for="product-name">Monitor Period <%=@record[name].inspect%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in options
+	selected = false
+	selected = true if @record[name]==j[0].to_i
+%>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0].to_i %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
 <%
 	
 name = 'an'

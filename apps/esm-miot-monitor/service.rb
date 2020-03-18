@@ -16,6 +16,8 @@ def self.registered(app)
      settings.set :ws_map, {}
      settings.set :cmd_map, {}
      settings.set :ch_map,  {}
+     settings.set :last_map, {}
+     
      
      
      data = 0
@@ -557,6 +559,59 @@ MSG
                  if ambu
                    ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
                  end
+                 end
+                 
+                 if admit.period and admit.period!="" 
+                   
+                   t =  (now-admit.created_at).to_i/60%admit.period
+                   lt =  (now-admit.created_at).to_i/60/admit.period
+                   app.settings.last_map[v['station_id']] = 0 unless app.settings.last_map[v['station_id']]
+                   llt = app.settings.last_map[v['station_id']]
+                   puts "p #{admit.period} t #{t} lt #{lt} llt #{llt}"
+                   if t==0 
+                     
+                     
+                
+                     if llt!=lt
+                     
+                       puts "Auto monitor #{v['station_id']}"
+                       
+                       
+                       bp_sys,bp_dia = v['bp'].split('/')
+                       
+                       DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now
+                       
+                       # bp":"121/72","bp_stamp":"115806","pr":93,"rr":18,"spo2":97}]}
+  
+  
+                       # key :admit_id, ObjectId
+   #
+   #                     key :data, String
+   #                     key :bp, String
+   #                     key :bp_sys, Integer
+   #                     key :bp_dia, Integer
+   #                     key :pr, Integer
+   #                     key :hr, Integer
+   #                     key :spo2, Integer
+   #                     key :rr, Integer
+   #                     key :temp, Float
+   #
+   #                     key :stamp, Time
+   #
+   #                     key :status, String
+   #
+   #                     key :score, Integer
+                       
+                       
+                       
+                     app.settings.last_map[v['station_id']] = lt
+                  
+                     end
+                     
+                   end 
+                   
+                   
+                   
                  end
                  
                  Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time

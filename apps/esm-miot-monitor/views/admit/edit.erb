@@ -32,7 +32,7 @@
 	 if params[:patient]
 		
 		 patient = @record.patient
-		 
+		 params[:patient][:name] = "#{params[:patient][:first_name]} #{params[:patient][:last_name]}"
 		 patient.update_attributes params[:patient]
 		
 		 
