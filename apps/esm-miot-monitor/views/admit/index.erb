@@ -40,7 +40,16 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 	<tbody>
 		<% for i in admits
 			
+			
 		patient = Patient.find i.patient_id
+		
+		unless patient
+			
+			i.destroy
+			
+		else
+			
+		
 		station = Station.find i.station_id
 		ambu = Ambulance.find i.ambulance_id
 		
@@ -89,6 +98,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 					<%=link 'Edit', "edit?id=#{i.id}"%>
 				</td>
 		</tr>
+		<% end %>
 		<% end %>
 	</tbody>
 </table>
