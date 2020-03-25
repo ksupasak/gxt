@@ -121,8 +121,12 @@ module Device
         l = message.each_byte.to_a.collect{|i| i.to_i}  
 
         device_id = info[2]
-
+        
         devices[device_id] = {:name=>device_id.gsub('.','-'),:id=>device_id,:wbuff=>[],:vs=>{},:lbuff=>{}} unless devices[device_id] 
+        
+        
+        if  true or device_id=='191.1.2.11'
+          
         device = devices[device_id]
         vs = device[:vs]
         lbuff = device[:lbuff]
@@ -143,6 +147,7 @@ module Device
  #        end
  #
  #        end
+ #puts l.size
 
         map = IACS::parser l
 
@@ -152,7 +157,12 @@ module Device
         if false
           map.keys.sort.each do |i|
             #puts i
+            if map[i].class==Array
+           # puts "#{i}\t#{map[i].size}"
+          else
             puts "#{i}\t#{map[i].inspect.to_s }"
+            
+            end
           end 
           puts
         end
@@ -161,30 +171,40 @@ module Device
         
         true_hr = nil
       
-        true_hr =  m['1-4-0-0-26'] if m['1-4-0-0-26'] and  m['1-4-0-0-26'] > 10
-        true_hr =  m['1-4-0-1-26'] if m['1-4-0-1-26']  and  m['1-4-0-1-26'] > 10
-        true_hr =  m['1-112-0-1-2'] if m['1-112-0-1-2'] and  m['1-112-0-1-2'] > 10
-        true_hr =  m['6-9-0-0-9'] if m['6-9-0-0-9'] and  m['6-9-0-0-9'] > 10
-	
+        # true_hr =  m['1-4-0-0-26'] if m['1-4-0-0-26'] and  m['1-4-0-0-26'] > 10
+#         true_hr =  m['1-4-0-1-26'] if m['1-4-0-1-26']  and  m['1-4-0-1-26'] > 10
+#         true_hr =  m['1-112-0-1-2'] if m['1-112-0-1-2'] and  m['1-112-0-1-2'] > 10
+#         true_hr =  m['6-9-0-0-9'] if m['6-9-0-0-9'] and  m['6-9-0-0-9'] > 10
+#
+
+          
+          
+       vs[:hr] = m['1-1-0-0-26'] if m['1-1-0-0-26']
+          
+       vs[:hr] = m['1-1-0-1-26'] if m['1-1-0-1-26']
 
         #vs[:hr] = '-' unless vs[:hr]
 
-        vs[:pr] = m['25-14-0-0-28'] if m['25-14-0-0-28']
-        vs[:pr] = m['25-14-0-1-28'] if m['25-14-0-1-28']   
+        vs[:pr] = m['25-5-0-0-26'] if m['25-5-0-0-26']
+        vs[:pr] = m['25-5-0-1-26'] if m['25-5-0-1-26']   
         # vs[:pr] = m['25-255-0-0-28'] if m['25-255-0-0-28'] and m['25-255-0-0-28'] >10
         # vs[:pr] = m['30-7-0-0-9'] if m['30-7-0-0-9'] and ( m['30-7-0-0-9'] - vs[:hr] ).abs < (vs[:pr]-vs[:hr]).abs
 
-        vs[:pr] = '-' unless vs[:pr]
+      #  vs[:pr] = '-' unless vs[:pr]
 
      #   vs[:spo2] = nil
         #vs[:spo2] = m['1-3-1-0-30'] if m['1-3-1-0-30'] and m['1-3-1-0-30'] > 10 
         #vs[:spo2] = m['1-191-0-1-2'] if m['1-191-0-1-2'] and m['1-191-0-1-2']>10
         #vs[:spo2] = m['25-5-0-0-26'] if m['25-5-0-0-26']   
         #vs[:spo2] = m['25-5-0-1-26'] /2 if m['25-5-0-1-26']
-	      vs[:spo2] = m['2-6-1-1-27'] if m['2-6-1-1-27']
+	      
+        vs[:spo2] = m['25-14-0-1-28'] if m['25-14-0-1-28']
+        vs[:spo2] = m['25-14-0-0-28'] if m['25-14-0-0-28']
+        
       
         #vs[:spo2] = '-' unless vs[:spo2]
-
+        
+        vs[:rr] = m['2-6-0-1-27'] if m['2-6-0-1-27']
         vs[:rr] = m['94-120-0-0-66'] if m['94-120-0-0-66']
         vs[:rr_pmean] = (m['94-113-0-0-66']/10.0).round if m['94-113-0-0-66']
         vs[:rr_pip] = (m['94-123-0-0-27']/10.0).round if m['94-123-0-0-27']
@@ -196,22 +216,24 @@ module Device
 
 
 
-        bp_sys = (m['30-9-0-0-9']/10.0).round if m['30-9-0-0-9']
-        bp_sys = (m['1-2-0-0-28']/10.0).round if m['1-2-0-0-28']
-        bp_sys = (m['1-2-1-0-28']/10.0).round if m['1-2-1-0-28']
-        bp_sys = (m['1-1-0-0-26']/10.0).round if m['1-1-0-0-26'] and m['1-1-0-0-26'] > 10
-	      bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
-	      
-        bp_sys = (m['25-5-0-1-26']/10.0).round if m['25-5-0-1-26']	
-        bp_sys = (m['25-5-1-1-26']/10.0).round if m['25-5-1-1-26']
+        # bp_sys = (m['30-9-0-0-9']/10.0).round if m['30-9-0-0-9']
+#         bp_sys = (m['1-2-0-0-28']/10.0).round if m['1-2-0-0-28']
+#         bp_sys = (m['1-2-1-0-28']/10.0).round if m['1-2-1-0-28']
+#         bp_sys = (m['1-1-0-0-26']/10.0).round if m['1-1-0-0-26'] and m['1-1-0-0-26'] > 10
+#         bp_sys =  (m['31-6-0-1-27']/10.0).round if m['31-6-0-1-27']
+#
+        bp_sys = (m['30-8-0-0-9']/10.0).round if m['30-8-0-0-9']
+        bp_sys = (m['30-8-0-1-9']/10.0).round if m['30-8-0-1-9']
+        
+#bp_sys = (m['25-5-1-1-26']/10.0).round if m['25-5-1-1-26']
 	#puts m.inspect 
 
 #	puts "************#{ m['25-5-1-1-26'].inspect}"
 
         
         
-        bp_dia = (m['30-8-0-0-9']/10.0).round if m['30-8-0-0-9']
-        bp_dia = (m['30-8-0-1-9']/10.0).round if m['30-8-0-1-9']
+        bp_dia = (m['30-7-0-0-9']/10.0).round if m['30-7-0-0-9']
+        bp_dia = (m['30-7-0-1-9']/10.0).round if m['30-7-0-1-9']
 
 
 	
@@ -219,7 +241,9 @@ module Device
         vs[:bp_sys] = bp_sys
         vs[:bp_dia] = bp_dia
 
-        vs[:bp_mean] = (m['30-7-0-0-9']/10.0).round if m['30-7-0-0-9']
+        vs[:bp_mean] = (m['30-9-0-0-9']/10.0).round if m['30-9-0-0-9']
+        vs[:bp_mean] = (m['30-9-0-1-9']/10.0).round if m['30-9-0-1-9']
+
 
         vs[:bp] = "#{bp_sys}/#{bp_dia}"
 
@@ -277,7 +301,7 @@ module Device
           # change[device_id] = change[device_id][..]
           
           
-          if true
+          if false
             
           change[device_id] = [] unless change[device_id]
           
@@ -323,7 +347,7 @@ module Device
          end
          
          
-         vs[:hr] = true_hr if true_hr
+         # vs[:hr] = true_hr if true_hr
            # puts vs[:hr]     
          
          
@@ -373,7 +397,9 @@ MSG
 
 
 
-
+        # end filter
+     
+      end
 
 
 
@@ -758,7 +784,7 @@ MSG
 
     media_thread.run
 
-
+    
     start_monitor socket, ws , queue
 
     thread.join

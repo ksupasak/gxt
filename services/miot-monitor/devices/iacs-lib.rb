@@ -94,7 +94,7 @@ def self.parser l
   puts "start #{tag} #{pos}" if debug
   
   
- count = 600
+ count = 5000
   while pos < l.size and (tag = l[pos..pos+1].join ) and count > 0  # and tag!='03' and tag!= '016' and tag!='013'  
     key = nil
     len = nil
@@ -102,49 +102,67 @@ def self.parser l
      # puts 'cur '+tag + " pos "+pos.to_s if debug
     if tag == '012'
       len = 12
-    elsif tag == '0200' # range 200 values 
+    elsif tag == '0200' # range 40 values 
        res = get_list  l, pos+14, 40
        key = l[pos+10..pos+11].join("-")
        wave_key[key] = 40
        len = 94
-    elsif tag =='0100' # range 100 values 
+    elsif tag =='0100' # range 20 values 
        # spo2
        res = get_list  l, pos+14, 20
        key = l[pos+10..pos+11].join("-")
        wave_key[key] = 20
        len = 54
-     elsif tag =='050'  # range 50 values 
+     elsif tag =='050'  # range 10 values 
        res = get_list  l, pos+14, 10
        key = l[pos+10..pos+11].join("-")
        wave_key[key] = 10
        len = 34
     elsif tag == '014'
       # puts 'Start'
-       len = 12
+       len = 6
+       internal = {}
+       cx = l[pos+4]
+       base = pos+len
+       cx.times do |x|
+         
+         res = get_val l, base+x*36
+         key = l[base+x*36+20..base+x*36+24].join("-")
+         map[key] = res
+         internal[key] = res
+       end
+       
+       key = nil
+       len += cx*36
+     #  puts internal.inspect 
+       
+       
     elsif tag == '00' or tag =='0120'    # normal key value
          res = get_val l, pos+30
          key =l[pos+14..pos+18].join("-")
          len = 36
     elsif tag == '018'
+      # warning text ... 00
        len = 130
+       
     elsif tag == '010'
         # hn bed
-        len = 302
+        len = 116
         
         
         s = []
         8.times do |i|
-          break if l[i*2+97]==0
-          s<<l[i*2+97].chr
+          break if l[i*2+65]==0
+          s<<l[i*2+65].chr
         end
         map['bed'] = s.join.strip
         
-        s = []
-        40.times do |i|
-          break if l[i*2+133]==0
-          s<<l[i*2+133].chr
-        end
-        map['msg'] = s.join.strip
+        # s = []
+  #       40.times do |i|
+  #         break if l[i*2+133]==0
+  #         s<<l[i*2+133].chr
+  #       end
+  #       map['msg'] = s.join.strip
         
     elsif tag == '015'
         len = 252
