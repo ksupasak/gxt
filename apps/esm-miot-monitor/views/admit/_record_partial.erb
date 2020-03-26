@@ -2,13 +2,13 @@
 	
 admit = Admit.find(params[:admit_id])
 
-records = admit.records
+records = admit.records.limit(10).sort(:created_at=>-1).all.reverse
 	
 %>
 <table class="table table-striped" style="border:0px solid #0c5758">
 <thead>
 	<tr>
-		<th>Time</th><th>BP</th><th>HR</th><th>PR</th><th>SpO2</th>
+		<th>Time</th><th>BP</th><th>HR</th><th>PR</th><th>SpO2</th><th>RR</th>
 	</tr>
 </thead>
 <tbody>
@@ -16,7 +16,8 @@ records = admit.records
 	<tr>
 
 		<tr>
-			<td><%=link_to i.stamp.localtime().strftime("%H:%M:%S"), '#', :id=>"#{i.id}" %></td><td><%=i.bp_sys%>/<%=i.bp_dia%></td><td><%=i.hr%></td><td><%=i.pr%></td><td><%=i.spo2%></td>
+			<td><%=link_to i.stamp.localtime().strftime("%H:%M:%S"), '#', :id=>"#{i.id}" %></td><td><%=i.bp_sys%>/<%=i.bp_dia%></td><td><%=i.hr%></td><td><%=i.pr%></td>
+			<td><%=i.spo2%></td><td><%=i.rr%></td>
 		</tr>
 	</tr>
 	<% end %>

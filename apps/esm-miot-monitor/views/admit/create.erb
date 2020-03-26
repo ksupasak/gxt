@@ -11,7 +11,22 @@ return_url = params[:return] if params[:return]
 
 
 	@record =  this.model.new params[:record]
+	@current_zone = nil
 	
+	if session[:current_zone]
+		
+		@current_zone = Zone.find session[:current_zone] 
+		
+		
+	end
+	
+	if params[:station_id]
+	@record.station_id = params[:station_id] 
+	station = Station.find params[:station_id]
+	@record.zone_id = station.zone.id
+	else
+		@record.zone_id= @current_zone.id
+	end
 	
 	if request.post?
 		

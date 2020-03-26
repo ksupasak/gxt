@@ -53,15 +53,15 @@
 
 <div class="col-6 ">
 <div class="row">
-<div class="col-12 col-sm-2">
+<div class="col-12 col-sm-3">
   <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=hn%>" placeholder="HN" style="">
 </div>
 
-<div class="col-12 col-sm-5">
+<div class="col-12 col-sm-4">
   <input type="text" class="form-control" id="patient-first_name" name="patient[first_name]" value="<%=patient_first_name%>" placeholder="First Name" style="">
 </div>
 
-<div class="col-12 col-sm-5">
+<div class="col-12 col-sm-4">
 <input type="text" class="form-control" id="patient-last_name" name="patient[last_name]" value="<%=patient_last_name%>" placeholder="Last Name" style="">
 </div>
 </div>
@@ -136,7 +136,6 @@ $('#station-sn').keypress(function(event) {
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
-<option value=""></option>
 <% for j in stations.collect{|k| [k.id,"#{k.name} #{k.ip} #{k.zone.name if k.zone}"]} %>
   <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
 <% end %>
@@ -158,7 +157,6 @@ zone_id = @record.zone_id if @record.zone_id
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
-<option value=""></option>
 <% for j in options %>
   <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
 <% end %>
@@ -271,6 +269,9 @@ zone_id = @record.zone_id if @record.zone_id
 
 <%
 	
+if @current_zone.mode == 'aoc'
+	
+	
 name = 'ambulance_id'
 
 options = Ambulance.all.collect{|i| [i.name,i.id]}
@@ -290,7 +291,7 @@ ambulance_id = @record.ambulance_id
 <% end %>
 </select>
 </div>
-
+<% end %>
 
 
 
@@ -351,9 +352,11 @@ name = 'an'
 	
 %>
 <div class="col-3">
-<label for="product-name"><%=name.humanize%></label>
+<label for="product-name">Admission Number (AN)</label>
 <div>
-	<%=@record.an%>
+
+    <input type="text" class="form-control" id="record-an" name="record[an]" value="<%=@record.an%>" placeholder="AN" style="">
+	
 </div>	
 </div>
 

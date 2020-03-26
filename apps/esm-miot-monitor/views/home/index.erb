@@ -105,21 +105,26 @@ body{
 		<div class="col-2 text-left ">
 		<%= link_to title,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
-		<div class="col-7 text-center">
+		<div class="col-8 text-center">
 			<%
 			
 			if admit
 				patient = admit.patient
 			
 			%>
-			<%= link_to "#{patient} (#{patient.hn})","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<%= link_to "#{patient} #{"("+patient.hn+")" if patient.hn.size>0}","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<% else %>
+			
+			 	
 			<% end %> 	
+			
 	
 		</div>
-		<div class="col-3">
+		<div class="col-2">
 			
-		<%= link_to "","../Station/show?id=#{station.id}",:class=>'btn hn' %>
-		
+		<% unless admit %>
+		<%= link_to "+","../Admit/create?station_id=#{station.id}", :class=>'btn btn-success'%>
+		<% end %>
 		</div>
 		
 			

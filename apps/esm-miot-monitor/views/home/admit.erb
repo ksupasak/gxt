@@ -18,8 +18,8 @@
 <table class="table  table-responsive " >
 <thead>
 	<tr>
-		<th>No.</th>
-		<th>Bed.</th>
+		<th>Case No.</th>
+		<th>Bed</th>
 		<th>Patient</th>
 		<th class="hidden-xs hidden-sm">Admit</th>
 		<th class="hidden-xs hidden-sm">Discharge</th>
@@ -42,11 +42,7 @@
 	 %>
 	<tr>
 		
-		<td><%= index+1 %>.
-			
-			
-			
-		</td>
+		<td><%= i.an %></td>
 		<td><%= i.bed_no %></td>
 		<td><%= patient.name %> (<%= patient.hn %>)</td>
 		<td class="hidden-xs hidden-sm"><%= i.created_at.getlocal.strftime('%H:%M') +" ~ #{(Time.now-i.created_at).to_i/60}m" if i.created_at %></td>
