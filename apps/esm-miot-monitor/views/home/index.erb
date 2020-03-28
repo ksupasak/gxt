@@ -310,7 +310,7 @@ $('#main-container').removeClass('container')
 			}
 	    
 	
-			function aniLine(idx, sampling, rawdata, last){
+			function aniLine(idx, sampling, rawdata, last, tag){
 	
 			var w = 70;
 		    var h = 80;
@@ -360,7 +360,11 @@ $('#main-container').removeClass('container')
 		        .attr("stroke", "green")
 		        .attr("stroke-width", "1")
 		        .attr("fill", "none");
-
+			
+				if(tag==2){
+				path.attr("stroke","#96d6f2")
+				}
+			
 		      var totalLength = path.node().getTotalLength();
 
 		      path
@@ -382,7 +386,7 @@ $('#main-container').removeClass('container')
 	
 		
 		
-			function showWave(div,data){
+			function showWave(div,data,wt){
 			var n = 200; // sample for a second
 			
 		    var cut = 1;
@@ -402,7 +406,7 @@ $('#main-container').removeClass('container')
 						rawdata = data.splice(0,cut*n+1);
 						data.unshift(rawdata[rawdata.length-1]);
 						if(rawdata.length>=n-10){
-							aniLine(div,n ,rawdata,lastdata);
+							aniLine(div,n ,rawdata,lastdata, wt[div]);
 							lastdata = rawdata;
 						}
 						// second = 0 ;
@@ -418,14 +422,16 @@ $('#main-container').removeClass('container')
    
 		   // var wave_data = [];
 		   var wave_data = {};
+		   var wave_type = {};
 
 		<% for i in stations.collect{|i| i.name}.sort %>
 		   
 		   i = "<%=i%>"
 		   
 		   wave_data[i] = [];
+		   wave_type['wave-<%=i%>'] = 1; // ekg
 		   
-		  showWave('wave-<%=i%>',wave_data[i]);
+		  showWave('wave-<%=i%>',wave_data[i], wave_type);
 		
 	    <% end %>
 	
@@ -540,8 +546,16 @@ $('#main-container').removeClass('container')
 			  
  			    // wave_data.push(obj['wave']);
  		   		// wave_data = wave_data.concat(obj['wave']);
- 				for(var j=0;j<obj['leads']['2'].length;j++){
- 					wave_data[i].push(obj['leads']['2'][j]);
+ 				select_ch = '2'
+				
+				if(obj['leads']['2'][0]==1){
+					select_ch = '1'
+					wave_type['wave-'+i] = 2
+				}
+				
+				for(var j=0;j<obj['leads'][select_ch].length;j++){
+					
+ 					wave_data[i].push(obj['leads'][select_ch][j]);
 						
  				}
 				

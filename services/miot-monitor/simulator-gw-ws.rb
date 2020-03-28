@@ -155,7 +155,19 @@ data[:leads] = {} unless data[:leads]
   #   wave << format("%.3f",y).to_f
   #
    # wave <<  50-(lead_template[id*s2].to_f / 1024) *50
-   wave << lead_template[id*s2] if lead_template[id*s2] 
+   
+   # if(x==2)
+   #
+   #   wave << 1
+   # else
+       wave << lead_template[id*s2] if lead_template[id*s2] 
+       
+       
+   # end   
+     
+     
+   
+   
    id += 1
    id = 0 if id*s2 > lead_template.size
  
