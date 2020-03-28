@@ -46,6 +46,7 @@
 	
 <%= inline(this,:'_form') %>
 <button type="submit" class="btn btn-primary">Submit</button>
-<%=link_to 'Back', return_url ,:class=>'btn'%>
+<%=link_to 'Delete', "../ScoreItem/destroy?id=#{@record.id}" ,:class=>'btn btn-danger'%>
+<%=link_to 'Back', "../Score/show?id=#{@record.score_id}" ,:class=>'btn'%>
 </form>
 <% end %>
