@@ -62,7 +62,7 @@
 	// svg.selectAll("path").attr("class", "old");
 
     var x = d3.scaleLinear().domain([0, sampling]).range([0, w]);
-    var y = d3.scaleLinear().domain([1000,-500]).range([10, h - 10]);
+    var y = d3.scaleLinear().domain([1000,-1000]).range([10, h - 10]);
 
     var line = d3.line()
       .x(function(d,i) {return x(i);})
