@@ -117,7 +117,7 @@ module Device
 
       begin
 
-        message, info = socket.recvfrom(4096)
+        message, info = socket.recvfrom(6096)
         l = message.each_byte.to_a.collect{|i| i.to_i}  
 
         device_id = info[2]
@@ -154,7 +154,7 @@ module Device
 
         m = map
         #	puts device_id
-        if false
+        if false and device_id=='10.6.96.202'
           map.keys.sort.each do |i|
             #puts i
             if map[i].class==Array
@@ -200,6 +200,10 @@ module Device
 	      
         vs[:spo2] = m['25-14-0-1-28'] if m['25-14-0-1-28']
         vs[:spo2] = m['25-14-0-0-28'] if m['25-14-0-0-28']
+        
+        vs[:co2] = m['31-15-0-1-9'] if m['31-15-0-1-9']
+        vs[:co2] = m['31-15-0-0-9'] if m['31-15-0-0-9']
+        
         
       
         #vs[:spo2] = '-' unless vs[:spo2]
@@ -254,7 +258,10 @@ module Device
 
         t = 16
 # 1-34 1-36
-        lx = %w{6-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 95-57}
+
+        # lx = %w{6-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 95-57}
+        lx = %w{6-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 31-1 95-54 95-55 }
+        
 
         now = Time.now 
         stamp = now.to_json
