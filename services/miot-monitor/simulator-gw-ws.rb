@@ -207,6 +207,9 @@ MSG
      data[:hr] = data[:pr]
      data[:rr] = 18 + rand(4)
      data[:temp] = 36 + rand(4) 
+     
+     data[:co2] = 30 + rand(20) 
+     
      data[:spo2] = 90+rand(10)
      
      data[:lat] = 15.8700+0.01*Math.cos(Time.now.to_i*Math::PI/180)

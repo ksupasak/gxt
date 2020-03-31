@@ -137,8 +137,8 @@ $(document).ready(function(){
 						<div class="value">-</div>
 					</div>			
 		
-						<div class="col-6 col-lg-2 col-sm-3  cc">
-						    <span class="label">LC</span>
+						<div class="col-6 col-lg-2 col-sm-3  co2">
+						    <span class="label">CO<sub>2</sub></span>
 							<div class="value">-</div> 
 						</div>
 						<div class="col-6  col-lg-2 col-sm-3 uc">
@@ -252,7 +252,8 @@ $('#main-container').removeClass('container')
 						<div class="col-sm-6 boxx"><span class="bp-label x-label" >BP</span><span class="bp">-/-</span></div>
 						<div class="col-sm-6 boxx"><span class="spo2-label x-label" >SpO<sub>2</sub></span><span class="spo2">-</span></div>
 						<div class="col-sm-6 boxx"><span class="rr-label x-label" >RR</span><span class="rr">-</span></div>
-						<div class="col-sm-6 boxx"><span class="cc-label x-label" >CC</span><span class="cc" >-</span></div>
+						<div class="col-sm-6 boxx"><span class="co2-label x-label" >CO<sub>2</sub></span><span class="co2" >-</span></div>
+						
 						<div class="col-sm-6 boxx"><span class="uc-label x-label" >UC</span><span class="uc">-</span></div>
 						</div>
 
@@ -562,6 +563,7 @@ $('#main-container').removeClass('container')
 				$('#'+i+' .pr .value').html(obj['pr'])
 				$('#'+i+' .rr .value').html(obj['rr'])
 				$('#'+i+' .spo2 .value').html(obj['spo2'])
+				$('#'+i+' .co2 .value').html(obj['co2'])
 			
 			
 				$('#'+i+' .score .value').html(obj['score'])

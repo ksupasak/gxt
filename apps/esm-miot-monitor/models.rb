@@ -381,6 +381,7 @@ class DataRecord
   key :spo2, Integer
   key :rr, Integer
   key :temp, Float
+  key :co2, Integer
   
   key :stamp, Time
   
