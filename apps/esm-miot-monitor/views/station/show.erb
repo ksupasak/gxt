@@ -76,6 +76,10 @@
 										<span class="label">Temp</span>
 										<div class="value">-</div>
 									</div>
+									<div class="col-6 col-lg-3 col-sm-3 co2">
+									    <span class="label">CO2</span>
+										<div class="value">-</div> 
+									</div>
 						<div class="col-6 col-lg-3 col-sm-3 cc">
 						    <span class="label">LC</span>
 							<div class="value">-</div> 
@@ -380,7 +384,7 @@ if record
 
 		    var components = [];
 	
-			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','rr','temp','bp_sys','bp_dia'],records:null};
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','co2','rr','temp','bp_sys','bp_dia'],records:null};
 			records = [];
 	
 			now = Date.now();
@@ -592,6 +596,8 @@ if record
 			
 			$('#'+i+' .rr .value').html(obj['rr'])
 			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			$('#'+i+' .co2 .value').html(obj['co2'])
+			
 			
 			
 			$('#'+i+' .score .value').html(obj['score'])
