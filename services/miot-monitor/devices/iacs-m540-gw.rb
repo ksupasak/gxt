@@ -147,14 +147,19 @@ module Device
  #        end
  #
  #        end
- #puts l.size
+
+
+
 
         map = IACS::parser l
 
 
         m = map
         #	puts device_id
-        if false and device_id=='10.6.96.202'
+        if false #or device_id=='191.1.2.11'
+          
+          puts "="*30
+          puts l.size
           map.keys.sort.each do |i|
             #puts i
             if map[i].class==Array
@@ -253,14 +258,14 @@ module Device
 
 	      vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
 
-
+        vs[:msg] = m['msg'] if m['msg']
         #	puts map.keys.sort.inspect
 
         t = 16
 # 1-34 1-36
 
         # lx = %w{6-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 95-57}
-        lx = %w{31-1 25-22 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 6-1 95-54 95-55 }
+        lx = %w{31-1 25-22 6-1 1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48 95-54 95-55 }
         
 
         now = Time.now 
@@ -274,6 +279,7 @@ module Device
 
 
           wave = map[j]
+          wave = map['2-1'] if j=='6-1' and map['6-1'] ==nil
 
           #puts wave.inspect if j=='6-1'
 

@@ -138,14 +138,62 @@ def self.parser l
        
        
     elsif tag == '00' or tag =='0120'    # normal key value
+      puts 'xxxx'+tag.to_s+" "+pos.to_s
          res = get_val l, pos+30
          key =l[pos+14..pos+18].join("-")
          len = 36
     elsif tag == '018'
+      
       # warning text ... 00
        len = 130
        
+       
+       s = []
+       stop = false
+       24.times do |i|
+         break if l[pos+i*2+5] == 0
+         s<<l[pos+i*2+5].chr 
+       end
+         # puts 'xxxx'+tag.to_s+" "+pos.to_s+" msg =  #{s.join()}"
+         if s.size > 0 
+           
+           map['msg'] = s.join()
+         
+         end
+           #
+       # n = 30
+       # r = l.size/n+1
+       #
+       # print "-\t"
+       #
+       # n.times do |i|
+       #
+       #   print "#{i}\t"
+       #
+       # end
+       # puts
+       # r.times do |j|
+       #
+       #   print "#{j*n}\t"
+       #
+       #   n.times do |i|
+       #
+       #     # print ".#{l[j*n+i].chr}\t"
+       #
+       #     print "#{l[j*n+i]}\t"
+       #
+       #
+       #   end
+       #
+       #   puts
+       #
+       #
+       # end
+
+       
+       
     elsif tag == '010'
+       
         # hn bed
         len = 116
         
@@ -165,13 +213,53 @@ def self.parser l
   #       map['msg'] = s.join.strip
         
     elsif tag == '015'
+       puts 'xxxx'+tag.to_s+" "+pos.to_s
         len = 252
     elsif tag == '024'
+       puts 'xxxx'+tag.to_s+" "+pos.to_s
         len = 194
     elsif tag == '00'
+       puts 'xxxx'+tag.to_s+" "+pos.to_s
       # puts "Tag : #{tag} " 
     else
-        #puts '========================================'
+      
+      # puts l[pos..pos+100].join("\t")
+      
+       # puts "ua "+tag.to_s+" "+pos.to_s+" "+l.size.to_s
+       #  #puts '========================================'
+       #
+       #  n = 30
+       #  r = l.size/n+1
+       #
+       #  print "-\t"
+       #
+       #  n.times do |i|
+       #
+       #    print "#{i}\t"
+       #
+       #  end
+       #  puts
+       #  r.times do |j|
+       #
+       #    print "#{j*n}\t"
+       #
+       #    n.times do |i|
+       #
+       #      # print ".#{l[j*n+i].chr}\t"
+       #
+       #      print "#{l[j*n+i]}\t"
+       #
+       #
+       #    end
+       #
+       #    puts
+       #
+       #
+       #  end
+
+        break
+        
+        
     end
     
    # puts "#{tag}\t#{pos}\t#{len}\t#{key}\t#{res}"
