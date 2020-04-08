@@ -88,10 +88,13 @@
 							<span class="label">UO</span>
 							<div class="value">-</div>
 						</div>
-						
+						<div class="col-6 col-lg-3  col-sm-3 msg">
+							<span class="label">MSG</span>
+							<div class="value" style="font-size:1em;color:gray">-</div>
+						</div>
 						<div class="col-6 col-lg-3  col-sm-3 score">
-							<span class="label">Sc</span>
-							<div class="value"><%=admit.score if admit%></div>
+							<span class="label">Score</span>
+							<div class="value" ><%=admit.score if admit%></div>
 						</div>
 						
 						
@@ -578,7 +581,7 @@ if record
 			if($('#'+i+' .bp').html()!=obj['bp']){
 				$('#'+i).addClass('bp_alert');
 				$('#'+i).removeClass('bp_alert_2');
-				$('#'+i+' .msg').html("-");
+		
 			}else{
 				$('#'+i).removeClass('bp_alert');
 				// $('#'+i).removeClass('bp_alert_2');
@@ -599,6 +602,7 @@ if record
 			$('#'+i+' .co2 .value').html(obj['co2'])
 			
 			
+			$('#'+i+' .msg .value').html(obj['msg'])
 			
 			$('#'+i+' .score .value').html(obj['score'])
 			

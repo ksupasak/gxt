@@ -214,6 +214,7 @@ MSG
      
      data[:lat] = 15.8700+0.01*Math.cos(Time.now.to_i*Math::PI/180)
      data[:lng] = 100.9925+0.01*Math.sin(Time.now.to_i*Math::PI/180)
+     data[:msg] = "ALERT:#{Time.now.inspect}"
      
      # puts data.inspect 
      

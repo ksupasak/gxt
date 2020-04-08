@@ -222,6 +222,11 @@ body{
 		<div id="wave-<%=i%>" class="col-lg-12 order-lg-1 order-2" style="min-height:5em;background:#111">
 		
 		</div>
+		<div id="msg-<%=i%>" class="col-lg-12 order-lg-1 order-2 msg" style="border:0px solid red;min-height:1em;background:#111;color:gray;text-align:center">
+		<div class="value" style="font-size:1em">
+		
+		</div >
+		</div>
 	</div>
 
 </div>
@@ -580,7 +585,7 @@ $('#main-container').removeClass('container')
 			if($('#'+i+' .bp').html()!=obj['bp']){
 				$('#'+i).addClass('bp_alert');
 				$('#'+i).removeClass('bp_alert_2');
-				$('#'+i+' .msg').html("-");
+				// $('#'+i+' .msg').html("-");
 			}else{
 				$('#'+i).removeClass('bp_alert');
 				// $('#'+i).removeClass('bp_alert_2');
@@ -596,6 +601,8 @@ $('#main-container').removeClass('container')
 			$('#'+i+' .rr .value').html(obj['rr'])
 			$('#'+i+' .spo2 .value').html(obj['spo2'])
 			$('#'+i+' .co2 .value').html(obj['co2'])
+			
+			$('#'+i+' .msg .value').html(obj['msg'])
 			
 			
 			
