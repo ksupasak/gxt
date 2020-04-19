@@ -1,0 +1,191 @@
+<%
+	
+flowsheet =true
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+%>
+		<style>
+		        .viewport {
+		            top: 0px;
+		            left: 0px;
+		            overflow-y: auto;
+		            right: 0px;
+		            height: 400px;
+					width: 800px;
+					font-size:0.8em;
+					padding:0px;
+					
+		            background-color: white;
+		            border: 0px solid #000;
+		           border-radius: 4px;
+		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
+		        }
+				svg text {
+				    -webkit-user-select: none;
+				       -moz-user-select: none;
+				        -ms-user-select: none;
+				            user-select: none;
+				}
+				svg text::selection {
+				    background: none;
+				}
+		        .info-svg {
+		            fill: #2968AA;
+		            overflow: visible;
+		        }
+				.gxt-box{
+					border:0px solid #265d5c;
+					min-height:300px;
+					color:#ccc;
+					margin-bottom:1em
+				}
+				h5{
+					border :1px solid #265d5c;padding:10px;
+/*		            border: 0px solid #000;*/
+		           border-radius: 4px;
+				}
+		</style>
+		<div class="row" style="my-2">
+			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>; width:1080px;border:0px solid;height:600px">
+			<%= inline(this,:'../admit/_flowsheet2')  %>
+			</div>
+			dfdf
+	    </div>
+<script>
+	
+		var settings = {version:'1.0'};
+		
+		vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],
+		 groups:[{params:['pr','hr'],range:[0,200],range_auto:true,show:true},
+				{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
+				{params:['spo2','co2','temp'],range:[0,100],range_auto:false,show:true}],records:null};
+		records = [];
+		
+		now = Date.now();
+		
+		<%
+		
+		list = [] ;
+		
+		
+		# for i in DataRecord.where(:admit_id=>params[:id]).all
+		
+		now = Time.now 
+		n = 1000
+		n.times.each do |t| 
+	
+			# o = ActiveSupport::JSON.decode(i.data)
+			
+		# list.push :time=>i.stamp,:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
+		list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
+		
+		
+			# if o['vs']
+			# 	for j in o['vs']
+			#
+			# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+			# 		bp = j['bp'].split("/")
+			# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+			# 	end
+			#
+			# end
+		
+		end
+		
+		
+		
+		for j in list 	
+		%>
+		j = <%=j.to_json.html_safe%>
+		records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia'],co2:j['co2']});
+		<% end %>
+		
+		
+		
+		vs['records'] = records;
+		
+		
+	<%
+		
+		med_map = {}
+		med_map[:fentanyl]=[];
+		med_map[:domicum]=[];
+		
+	
+		
+		
+	%>
+		
+		
+		
+		
+		med = {name:'medication',type:'med',show:true,params:<%=med_map.keys.to_json.html_safe%>,records:null};
+		
+		records = [];
+	
+		
+		 records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
+	 	records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
+		
+		
+		med['records'] = records;
+		
+		
+		
+		
+		
+	 var components = [];
+		components.push(vs);
+		components.push(med);
+	
+		settings['components'] = components
+	
+		console.log(settings)
+		
+		
+		
+	
+		
+		
+	var viewport = d3.select(".viewport").append("svg")
+		 .attr("class", "info-svg")
+
+	 var g = viewport.append("g")
+	    .attr("transform", "translate(0,0)");
+
+	 gfx = GFX()
+	 .svg(g)
+	 .startTime(Date.now())
+	 .endTime(Date.now())
+	 .viewport(d3.select(".viewport"));
+	 gfx.data(settings);
+	 d3.select("svg").call(gfx);
+
+	 window.addEventListener("resize", gfx.resize);
+		
+		
+	 function update(){
+	 	
+	     vs = [{time:Date.now(),hr:100,pr:100,spo2:99,temp:38,co2:35,rr:20,bp_sys:140,bp_dia:80}];
+
+	 	gfx.tick({update:[{name:'vitalsign',append:vs}]});
+		
+		
+		
+	 }	
+	 setInterval(update, 1000);
+		
+		
+		
+		
+</script>
+	
