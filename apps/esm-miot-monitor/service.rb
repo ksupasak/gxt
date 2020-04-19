@@ -313,13 +313,13 @@ def self.registered(app)
               
               # mark history
               
-              if admit!=nil and (data['bp'] or data['pr'] or data['spo2'])
+              if admit!=nil and (data['bp'] or data['pr'] or data['spo2'] or data['hr'])
                 
                 odata['admit_id'] = admit.id
                 
                 now = Time.now
                 # core":0,"bp":"113/87","pr":114,"hr":114,"rr":18,"temp":37,"spo2":90,"bp_stamp":"133737","ref":"1234"}}}
-                record = {:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:spo2=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
+                record = {:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:hr=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
                 
                 odata['vs'] = [] unless odata['vs']
                 
