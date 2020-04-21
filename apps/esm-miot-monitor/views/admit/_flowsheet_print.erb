@@ -28,8 +28,6 @@
 				cmap = {};
 				hidden = {};
 				
-				colors = [];
-				
 				function colorScale(i){
 					
 					switch(i) {
@@ -129,82 +127,82 @@
 // 						//# blue bar
 //
 
-		   					g.append("rect")
-		   			        .attr("x", h1w)
-							.attr("y", chartHeight)
-		   			        .attr("rx", 3)
-		   			        .attr("ry", 3)
-		   			        .attr("width", w-h1w-h3w)
-		   			        .attr("height", 30)
-		   					.attr("fill",fillcolor)
-		   			        .attr("fill-opacity", 0.10)
-		   			        .attr("stroke", "#999999")
-		   			        .attr("stroke-width", "1px")
-						    .on("mousedown", function() {
-						             var coords = d3.mouse(this);
-
-									 xtime = coords[0];
-									 // console.log("md "+coords[0]+" = "+ xscale.invert(coords[0]))
-									 if(drag==false){
-										 drag = true;
-										 startTime = xscale.invert(coords[0]-mx);
-										 endTime = null
-									 }
-							})
-							.on("click",function(){
-
-								// alert('sidfj')
-
-							})
-						    .on("mouseup", function() {
-						             var coords = d3.mouse(this);
-
-									 xtime = coords[0];
-									 // console.log("mu "+coords[0]+" = "+ xscale.invert(coords[0]))
-									 if(drag==true){
-										 drag = false;
-										 endTime = xscale.invert(coords[0]-mx);
-										 // endTime = Date.now();
-
-									 }
-							})
-						    .on("mouseout", function() {
-
-										 // drag = false;
-									// console.log('out')
-							})
-							.on("mousemove", function(){
-
-				             		var coords = d3.mouse(this);
-							 	    // console.log("m "+coords[0]+","+coords[1])
-									 if(drag){endTime = xscale.invert(coords[0]-mx);
-
-									// console.log(startTime+" "+endTime+" "+drag)
-									if(startTime!=null&&endTime!=null&&xscale!=null){
-									svg.select('.rowx').remove();
-			              	 		g = svg.append("g")
-			            			.attr("class", "rowx")
-									.attr("transform", "translate("+mx+",100)");
-									x1 = xscale(startTime)
-									x2 = xscale(endTime)
-									if(x2>x1){
-				   					h1 = g.append("rect")
-				   			        .attr("x", x1)
-									.attr("y", 0)
-				   			        .attr("rx", 3)
-				   			        .attr("ry", 3)
-				   			        .attr("width", x2-x1 )
-				   			        .attr("height", 30)
-				   					.attr("fill",'#111')
-				   			        .attr("fill-opacity", 0.10)
-				   			        .attr("stroke", "#999999")
-				   			        .attr("stroke-width", "1px")
-										}
-
-									}}
-
-
-							})
+		   					// g.append("rect")
+	// 	   			        .attr("x", h1w)
+	// 						.attr("y", chartHeight)
+	// 	   			        .attr("rx", 3)
+	// 	   			        .attr("ry", 3)
+	// 	   			        .attr("width", w-h1w-h3w)
+	// 	   			        .attr("height", 30)
+	// 	   					.attr("fill",fillcolor)
+	// 	   			        .attr("fill-opacity", 0.10)
+	// 	   			        .attr("stroke", "#999999")
+	// 	   			        .attr("stroke-width", "1px")
+	// 					    .on("mousedown", function() {
+	// 					             var coords = d3.mouse(this);
+	//
+	// 								 xtime = coords[0];
+	// 								 // console.log("md "+coords[0]+" = "+ xscale.invert(coords[0]))
+	// 								 if(drag==false){
+	// 									 drag = true;
+	// 									 startTime = xscale.invert(coords[0]-mx);
+	// 									 endTime = null
+	// 								 }
+	// 						})
+	// 						.on("click",function(){
+	//
+	// 							// alert('sidfj')
+	//
+	// 						})
+	// 					    .on("mouseup", function() {
+	// 					             var coords = d3.mouse(this);
+	//
+	// 								 xtime = coords[0];
+	// 								 // console.log("mu "+coords[0]+" = "+ xscale.invert(coords[0]))
+	// 								 if(drag==true){
+	// 									 drag = false;
+	// 									 endTime = xscale.invert(coords[0]-mx);
+	// 									 // endTime = Date.now();
+	//
+	// 								 }
+	// 						})
+	// 					    .on("mouseout", function() {
+	//
+	// 									 // drag = false;
+	// 								// console.log('out')
+	// 						})
+	// 						.on("mousemove", function(){
+	//
+	// 			             		var coords = d3.mouse(this);
+	// 						 	    // console.log("m "+coords[0]+","+coords[1])
+	// 								 if(drag){endTime = xscale.invert(coords[0]-mx);
+	//
+	// 								// console.log(startTime+" "+endTime+" "+drag)
+	// 								if(startTime!=null&&endTime!=null&&xscale!=null){
+	// 								svg.select('.rowx').remove();
+	// 		              	 		g = svg.append("g")
+	// 		            			.attr("class", "rowx")
+	// 								.attr("transform", "translate("+mx+",100)");
+	// 								x1 = xscale(startTime)
+	// 								x2 = xscale(endTime)
+	// 								if(x2>x1){
+	// 			   					h1 = g.append("rect")
+	// 			   			        .attr("x", x1)
+	// 								.attr("y", 0)
+	// 			   			        .attr("rx", 3)
+	// 			   			        .attr("ry", 3)
+	// 			   			        .attr("width", x2-x1 )
+	// 			   			        .attr("height", 30)
+	// 			   					.attr("fill",'#111')
+	// 			   			        .attr("fill-opacity", 0.10)
+	// 			   			        .attr("stroke", "#999999")
+	// 			   			        .attr("stroke-width", "1px")
+	// 									}
+	//
+	// 								}}
+	//
+	//
+	// 						})
 
 //
 							// console.log(startTime+" "+endTime+" ")
@@ -264,14 +262,14 @@
 						
 					if(r.length>0){
 				    xscale_1 = d3.scaleTime()
-				        .range([ 0,mw/2]);
+				        .range([0,mw]);
 					var xAxis_1 = d3.axisTop(xscale_1);//.tickFormat(function(d){ return d.x;});
 					}
 					
 					
 						
 			    	xscale_2 = d3.scaleTime()
-			        	.range([mw/2,mw]);
+			        	.range([0,mw]);
 					var xAxis_2 = d3.axisTop(xscale_2);//.tickFormat(function(d){ return d.x;});
 					
 						
@@ -279,7 +277,7 @@
 					r2 = []
 					data = []
 					now = new Date()
-					from_now = (now.getTime())-300000
+					from_now = (now.getTime())-600000
 
 					for(var ci in context['components']){
 							c = context['components'][ci];
@@ -299,32 +297,7 @@
 					
 					
 					
-					if(r.length>0){
-					xscale_1.domain(d3.extent(r, function(d) { return d.time; }));
-					g = svg.append("g")
-					.attr("class", "row")
-					.attr("transform", "translate("+h1w+"," + 0 +")");
-					 g.append("g")
-					 .attr("class", "x axis")
-					 .attr("transform", "translate(0," + currentY + ")")
-					 .attr("stroke","#aaa")
-					 .call(xAxis_1);
-					}
 					
-					xscale_2.domain(d3.extent(r2, function(d) { return d.time; }));
-						
-						
-				
-					 
-					g = svg.append("g")
-					.attr("class", "row")
-					.attr("transform", "translate("+h1w+"," + 0 +")");
-					 g.append("g")
-					 .attr("class", "x axis")
-					 .attr("transform", "translate(0," + currentY + ")")
-					 .attr("stroke","#aaa")
-					 .call(xAxis_2);
-						
 					
 					for(var ci in context['components']){
 						c = context['components'][ci];
@@ -358,7 +331,32 @@
 							group = c['groups'][gi]
 								
 								
-						 
+							if(r.length>0){
+							xscale_1.domain(d3.extent(r, function(d) { return d.time; }));
+							g = svg.append("g")
+							.attr("class", "row")
+							.attr("transform", "translate("+h1w+"," + 0 +")");
+							 g.append("g")
+							 .attr("class", "x axis")
+							 .attr("transform", "translate(0," + currentY + ")")
+							 .attr("stroke","#aaa")
+							 .call(xAxis_1);
+							}
+					
+							xscale_2.domain(d3.extent(r2, function(d) { return d.time; }));
+						
+						
+				
+					 
+							g = svg.append("g")
+							.attr("class", "row")
+							.attr("transform", "translate("+h1w+"," + 0 +")");
+							 g.append("g")
+							 .attr("class", "x axis")
+							 .attr("transform", "translate(0," + (currentY+rowHeight+30) + ")")
+							 .attr("stroke","#aaa")
+							 .call(xAxis_2);
+							 
 								
 								
 								
@@ -370,7 +368,7 @@
 	   			        .attr("x", h1w)
 	   			        .attr("rx", 0)
 	   			        .attr("ry", 0)
-	   			        .attr("width", contentWidth/2)
+	   			        .attr("width", contentWidth)
 	   			        .attr("height", rowHeight)
 	   					.attr("fill",fillcolor)
 	   			        .attr("fill-opacity", 0.10)
@@ -383,10 +381,11 @@
 						
 						
 	   					h2 = g.append("rect")
-	   			        .attr("x", h1w+contentWidth/2)
+	   			        .attr("x", h1w)
+						.attr("y", rowHeight+30)
 	   			        .attr("rx", 0)
 	   			        .attr("ry", 0)
-	   			        .attr("width", contentWidth/2)
+	   			        .attr("width", contentWidth)
 	   			        .attr("height", rowHeight)
 	   					.attr("fill",fillcolor)
 	   			        .attr("fill-opacity", 0.10)
@@ -440,6 +439,14 @@
 								 .attr("stroke","#aaa")
 								 .call(yAxis);
 								 
+ 								g = svg.append("g")
+ 								.attr("class", "row")
+ 								.attr("transform", "translate("+(mw+100)+"," + (currentY+30) +")");
+ 								 g.append("g")
+ 								 .attr("class", "x axis")
+ 								 .attr("transform", "translate(0," + rowHeight + ")")
+ 								 .attr("stroke","#aaa")
+ 								 .call(yAxis);
 								 
 
 							for (var pi  in group['params']) {
@@ -506,7 +513,7 @@
 
  	         	                g = svg.append("g")
  	 				            	.attr("class", "row")
- 	 								.attr("transform", "translate("+(h1w)+"," + currentY +")");
+ 	 								.attr("transform", "translate("+(h1w)+"," + (currentY+rowHeight+30) +")");
 								
 									// console.log(data)
 							   g = g.append("g")
@@ -526,7 +533,7 @@
  						
 							
 								
-							currentY+=rowHeight	
+							currentY+=rowHeight*2+60	
 								
 								
 								

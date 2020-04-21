@@ -211,7 +211,7 @@ a.link-info:hover{
 		            left: 0px;
 		            overflow-y: auto;
 		            right: 0px;
-		            height: 400px;
+		            height: 510px;
 					width: 600px;
 					font-size:0.8em;
 					padding:0px;
@@ -655,7 +655,9 @@ if record
 			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],
 			groups:[{params:['pr','hr'],range:[0,200],range_auto:true,show:true},
 			{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
-			{params:['spo2','co2','temp'],range:[0,100],range_auto:false,show:true}],records:null};
+			{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
+			{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
+		],records:null};
 			
 			records = [];
 	
