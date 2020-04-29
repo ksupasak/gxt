@@ -103,7 +103,7 @@ body{
 		title = station.title if station.title and station.title.size>0 
 %>
 
-
+		
 <div id="<%=i%>"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
 	<div class="row" style="background:#666">
 		
@@ -230,6 +230,55 @@ body{
 	</div>
 
 </div>
+
+<% if station.stream_url %>
+
+<div id="<%=i%>-img"  class=" col-lg-6 col-xl-3 station active-station " style="border-right:1px solid #888">
+	<div class="row" style="background:#666">
+		
+		<div class="col-2 text-left ">
+		<%= link_to title,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		</div>
+		<div class="col-8 text-center">
+			<%
+			
+			if admit
+				patient = admit.patient
+			
+			%>
+			<%= link_to "#{patient} #{"("+patient.hn+")" if patient.hn.size>0}","../Admit/show?id=#{admit.id}", :class=>'btn'%>
+			<% else %>
+			
+			 	
+			<% end %> 	
+			
+	
+		</div>
+		<div class="col-2">
+		Stream
+		<% unless admit %>
+		<%= link_to "+","../Admit/create?station_id=#{station.id}", :class=>'btn btn-success'%>
+		<% end %>
+		</div>
+		
+			
+	</div>
+					
+		<div class="row">
+			<div class="col-12" style="padding:20px">			
+					<% if station.stream_url.index('m3u8')%>
+					<video width="100%"  src="http://esm-solution.com:8080/hls/test.m3u8" controls autoplay>
+						 <source src="http://esm-solution.com:8080/dash/test.mpd">
+					</video>
+					<% else %>
+						<center><img src="<%= station.stream_url%>" height="250"></center>
+					<% end %>
+			</div>
+		</div>
+</div>
+
+<% end %>
+			
 <% end %>
 <% end %>
 
@@ -403,7 +452,7 @@ $('#main-container').removeClass('container')
 			var n = 200; // sample for a second
 			
 		    var cut = 1;
-			var show = 8; //second
+			var show = 6; //second
 			var second = 0;
 			var lastdata = [];
 		

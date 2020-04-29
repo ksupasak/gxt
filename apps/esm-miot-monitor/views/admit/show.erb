@@ -135,6 +135,9 @@ a.link-info:hover{
 		station_id = station.name
 		
 		@current_zone = station.zone
+		
+		
+		videostream = true if station.stream_url and station.stream_url.size>0
 	
 	end
 	
@@ -364,10 +367,13 @@ a.link-info:hover{
 		<div class="row">
 			<% if videostream %>
 				<div class="col-12 my-2">
+					<% if station.stream_url.index('m3u8')%>
 					<video width="100%"  src="http://esm-solution.com:8080/hls/test.m3u8" controls autoplay>
 						 <source src="http://esm-solution.com:8080/dash/test.mpd">
 					</video>
-
+					<% else %>
+						<center><img src="<%= station.stream_url%>" height="300"></center>
+					<% end %>
 				</div>
 				<% end %>
 		</div>

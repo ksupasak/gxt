@@ -63,6 +63,7 @@ class Station
   key :type, String
   key :ip, String
   key :zone_id, ObjectId  
+  key :stream_url, ObjectId
   def to_s
     self.name
   end
