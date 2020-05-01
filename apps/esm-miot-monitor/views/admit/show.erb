@@ -365,7 +365,7 @@ a.link-info:hover{
 		
 		<% end %>
 		<div class="row">
-			<% if videostream %>
+			<% if videostream and station.stream_url %>
 				<div class="col-12 my-2">
 					<% if station.stream_url.index('m3u8')%>
 					<video width="100%"  src="http://esm-solution.com:8080/hls/test.m3u8" controls autoplay>
