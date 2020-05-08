@@ -50,6 +50,9 @@ class TestController < GXT
 
 end
 
+class OpdController < GXT
+
+end
 
 
 class HomeController < GXT

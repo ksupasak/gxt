@@ -1,0 +1,57 @@
+<link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
+<h1>OPD</h1>
+<hr/>
+<div class="row-fluid">
+    <div class="col-12">
+    <div class="head-hn">
+    กรอกเลข HN ของท่าน
+    </div>
+    </div>
+    <div class="col-12">
+    <div class="display-hn">
+    587468
+    </div>
+    </div>
+    <div class="col-12">
+    <center>
+    <table width="400px">
+    <tr>
+        <td><div class="btn-hn">1</div></td>
+        <td><div class="btn-hn">2</div></td>
+        <td><div class="btn-hn">3</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">4</div></td>
+        <td><div class="btn-hn">5</div></td>
+        <td><div class="btn-hn">6</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">7</div></td>
+        <td><div class="btn-hn">8</div></td>
+        <td><div class="btn-hn">9</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">/</div></td>
+        <td><div class="btn-hn">0</div></td>
+        <td><div class="btn-hn">Del</div></td>
+    </tr>
+    </table>
+    </center>
+    </div>
+
+    <div class="col-12">
+    <center><a href="select" class="btn btn-primary btn-opd">ยืนยัน</a></center>
+    </div>
+</div>
+<script>
+$(".btn-hn").click(function(){
+    v = $(".display-hn").html().trim()
+    b = $(this).html()
+    if(b.indexOf("Del")!==-1){
+        v = v.substr(0,v.length-1)
+    }else{
+        v+=b
+    }
+    $(".display-hn").html(v)
+})
+</script>
