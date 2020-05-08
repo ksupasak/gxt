@@ -192,8 +192,9 @@ DEPENDENCIES
   sinatra-partial
   sinatra-reloader
   sinatra-websocket
+  thin
   websocket-client-simple
   xmpp4r
 
 BUNDLED WITH
-   1.17.1
+   1.17.3

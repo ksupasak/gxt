@@ -11,6 +11,7 @@ gem 'sinatra-formhelpers-ng'
 
 gem 'puma'
 gem 'mqtt'
+gem 'thin'
 
 gem 'pusher'
 

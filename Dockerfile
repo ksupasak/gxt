@@ -1,5 +1,6 @@
-FROM ruby:2.3
-RUN apt-get update -qq && apt-get install -y imagemagick
+FROM rubylang/ruby:2.3.8-bionic
+RUN apt-get update -qq && apt-get install -y imagemagick 
+RUN apt-get install -y build-essential 
 RUN mkdir /docker_gxt
 WORKDIR /docker_gxt
 COPY Gemfile /docker_gxt/Gemfile
@@ -14,8 +15,9 @@ ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 1792
 
 RUN echo "OKay"
+RUN which thin
 
 # Start the main process.
-CMD ["bundle", "exec", "ruby", "server.rb"]
+# CMD ["bundle", "exec", "ruby", "server.rb"]
 
 

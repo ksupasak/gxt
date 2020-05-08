@@ -18,4 +18,30 @@ end
   
 
 
+if ENV['REDIS_HOST']
+  REDIS_HOST = ENV['REDIS_HOST'] 
+else
+  REDIS_HOST = @conf_redis_host
+end
+
+if ENV['REDIS_PORT']
+  REDIS_PORT = ENV['REDIS_PORT'] 
+else
+  REDIS_PORT = @conf_redis_port
+end
+
+if ENV['REDIS_DB']
+  REDIS_DB = ENV['REDIS_DB'] 
+else
+  REDIS_DB = @conf_redis_db
+end
+
+
+if ENV['REDIS_PASS']
+  REDIS_PASS = ENV['REDIS_PASS'] 
+else
+  REDIS_PASS = @conf_redis_password
+end
+
+  
 # @default_media_server = 'http://localhost:8080'

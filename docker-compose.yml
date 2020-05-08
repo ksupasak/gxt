@@ -9,6 +9,7 @@ services:
   #     MYSQL_ROOT_PASSWORD: minadadmin
   redis:
     image: redis
+    # command: redis-server --requirepass minadadmin
     restart: always
   mongo:
     image: mongo:3.2
@@ -16,7 +17,7 @@ services:
   gxt:
     restart: always
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec ruby server.rb"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec thin start --ssl --port 1792"
     volumes:
       - .:/docker_gxt
     ports:
@@ -27,4 +28,23 @@ services:
       - redis
     environment:
       MONGO_HOST: mongo
+      REDIS_HOST: redis
+      # REDIS_PASS: minadadmin
+      DEFAULT_APP: miot
+  gxt_service:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/service.pid && bundle exec ruby server.rb service"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1793:1793"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      # REDIS_PASS: minadadmin
       DEFAULT_APP: miot

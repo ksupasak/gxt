@@ -25,6 +25,9 @@ require_relative 'config/init'
 require 'mongo'
 require 'mongo_mapper'
 
+
+
+
 set :mongo_prefix, @conf_mongo_prefix
 
 # Redis config
@@ -32,7 +35,7 @@ set :mongo_prefix, @conf_mongo_prefix
 require 'redis'
 require "hiredis"
 
-redis = Redis.new(url: "redis://127.0.0.1:6379/15", :driver => :hiredis)
+redis = Redis.new(url: "redis://#{REDIS_PASS +"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}", :driver => :hiredis)
 set :redis, redis
 
 
