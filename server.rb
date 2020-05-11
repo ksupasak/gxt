@@ -57,7 +57,7 @@ set :redis, redis
 set :redis_host, REDIS_HOST
 set :redis_port, REDIS_PORT
 set :redis_db, REDIS_DB
-set :redis_password, REDIS_PASS
+set :redis_password, REDIS_PASS 
 
 
 
