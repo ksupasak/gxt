@@ -47,9 +47,9 @@ require 'em-hiredis'
 require 'redis'
 require "hiredis"
 
-
-redis = Redis.new(url: "redis://#{REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}",:driver => :hiredis)
-
+redis_url = "redis://#{REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
+redis = Redis.new(url: redis_url,:driver => :hiredis)
+puts "REDIS CONFIG : #{redis_url}" 
 # redis = EM::Hiredis.connect "redis://#{@conf_redis_host}:#{@conf_redis_port}/#{@conf_redis_db}"
 
 

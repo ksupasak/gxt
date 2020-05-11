@@ -38,7 +38,7 @@ require "hiredis"
 redis_url = "redis://#{REDIS_PASS +"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
 redis = Redis.new(url: redis_url, :driver => :hiredis)
 
-puts redis.inspect +" #{redis_url}" 
+puts "REDIS CONFIG : #{redis_url}" 
 
 set :redis, redis
 
