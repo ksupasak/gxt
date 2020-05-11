@@ -65,9 +65,9 @@ ws = MIOT::connect
 # Device::monitor_vista_120_s(ws)
 # }
 # 
-# threads << Thread.new {
-# Device::monitor_vista_120_s_v2(ws)
-# }
+threads << Thread.new {
+Device::monitor_vista_120_s_v2(ws)
+}
 threads << Thread.new {
 Device::gps_cms_server(ws)
 }
