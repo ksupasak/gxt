@@ -35,6 +35,7 @@ def self.registered(app)
          redis = app.settings.redis
        
          c = "redis://#{REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
+         puts "REDIS CONFIG SERVICE 1 : #{c}"
          redis = EM::Hiredis.connect c
          
          
@@ -458,7 +459,7 @@ def self.registered(app)
       # c = "redis://#{app.settings.redis_password+"@"  if app.settings.redis_password }#{app.settings.redis_host}:#{app.settings.redis_port}/#{app.settings.redis_db}"
       c = "redis://#{REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
       
-      # puts c
+      puts "REDIS CONFIG SERVICE : #{c}"
       # redis = Redis.new(url: "redis://#{@conf_redis_host}:#{@conf_redis_port}/#{@conf_redis_db}",:driver => :hiredis)
       redis = EM::Hiredis.connect c
        
