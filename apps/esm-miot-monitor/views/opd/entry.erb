@@ -1,3 +1,32 @@
+<script>
+	function deviceSend(msg){
+	
+		$('#msg').html(msg);
+		
+		map = {}
+		
+		list = msg.split("|")
+		for(var i=0;i<list.length;i++){
+			p = list[i].split(":");
+			map[p[0]] = p[1];
+		}
+		
+		if(map['PR']=='-99')map['PR']='-'
+		if(map['SPO2']=='000')map['SPO2']='-'
+			
+		
+		$('.pr').html(map['PR'])
+		$('.spo2').html(map['SPO2'])
+		$('.sys').html(map['SYS'])
+		$('.dia').html(map['DIA'])
+		$('.mean').html(map['MEAN'])
+		
+		
+		
+		
+		
+	}
+</script>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <h1>Entry</h1>
 <hr/>
@@ -70,7 +99,7 @@
                         <img src="<%=url_for 'img/svg/bp.svg'%>" width="40">
                     </div>
                     <div class="col-9 v-entry">
-                    120/80
+                    <span class="sys">-</span>/<span class="dia">-</span>&nbsp;&nbsp;&nbsp;m <span class="mean">-</span>
                     </div>
                 </div>
             </div>
@@ -81,8 +110,11 @@
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/hr.svg'%>" width="40">
                     </div>
-                    <div class="col-9 v-entry">
-                    82
+                    <div class="col-4 v-entry pr" >
+                    -
+                    </div>
+                    <div class="col-4 v-entry spo2" >
+                    -
                     </div>
                 </div>
             </div>
@@ -115,7 +147,10 @@
     <div class="col-12">
     <center>
     <a href="result" class="btn btn-primary btn-opd">ส่ง</a><br/>
-    <a href="index" class="">ยกเลิก</a>
+    <a href="index" class="">ยกเลิก</a> <div id="msg"></div>
     </center>
     </div>
 </div>
+<script>
+	deviceSend('ok')
+	</script>
