@@ -1,2 +1,40 @@
-<h1>Log</h1>
-<%= link_to 'Finish', 'index'  %>
+<link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
+<h1>Data Log</h1>
+<div class="row-fluid">
+    <div class="jumbotron">
+    <table class="table">
+    <thead>
+        <tr class="table-primary">
+            <th>Date</th>
+            <th>HN</th>
+            <th>Name</th>
+            <th>BMI</th>
+            <th>BP</th>
+            <th>Scoring type</th>
+            <th>Scoring</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>19/05/2020</td>
+            <td>587468</td>
+            <td>นายธนา พิพิธยการ</td>
+            <td>22 </td>
+            <td>110/90</td>
+            <td>NEWS</td>  
+            <td><span class="badge badge-pill badge-success badge-score">1</span></td>   
+        </tr>
+        <tr>
+            <td>19/04/2020</td>
+            <td>587468</td>
+            <td>นายธนา พิพิธยการ</td>
+            <td>25</td>
+            <td>120/80</td>
+            <td>NEWS</td>  
+            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>   
+        </tr>
+    </tbody>
+    </table>
+    </div>
+</div>
+<%= link_to '<< Home', 'index'  %>
