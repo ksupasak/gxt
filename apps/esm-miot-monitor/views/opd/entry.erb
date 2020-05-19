@@ -174,7 +174,33 @@ mon_th = months[date.strftime("%m").to_i-1]
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <center>
+        <div class="display-hn">
+        -
+        </div>
+        <table width="400px">
+        <tr>
+            <td><div class="btn-hn">1</div></td>
+            <td><div class="btn-hn">2</div></td>
+            <td><div class="btn-hn">3</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">4</div></td>
+            <td><div class="btn-hn">5</div></td>
+            <td><div class="btn-hn">6</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">7</div></td>
+            <td><div class="btn-hn">8</div></td>
+            <td><div class="btn-hn">9</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">/</div></td>
+            <td><div class="btn-hn">0</div></td>
+            <td><div class="btn-hn">Del</div></td>
+        </tr>
+        </table>
+        </center>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -182,6 +208,22 @@ mon_th = months[date.strftime("%m").to_i-1]
       </div>
     </div>
   </div>
+  <script>
+    $(".btn-hn").click(function(){
+        v = $(".display-hn").html().trim()
+        b = $(this).html()
+        if(b.indexOf("Del")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)
+        
+        let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
+        let audio = new Audio(src);
+        audio.play();
+    })
+    </script>
 </div>
 
 <script>
@@ -189,6 +231,8 @@ mon_th = months[date.strftime("%m").to_i-1]
     
     $(document).ready(function(){
         $(".v-entry").click(function(){
+            v = $(this).html().split(' ')[0]
+            $(".display-hn").html(v)
             mname = $(this).parent("div").find(".l-entry").html()
             $("#opdModalTitle").html(mname)
             $("#opdModal").modal('toggle')
