@@ -53,5 +53,9 @@ $(".btn-hn").click(function(){
         v+=b
     }
     $(".display-hn").html(v)
+    
+    let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
+    let audio = new Audio(src);
+    audio.play();
 })
 </script>

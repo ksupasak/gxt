@@ -74,6 +74,9 @@ body{
     padding:20px;
     
 }
+.badge-score{
+    padding:5px 20px 5px 20px;
+}
 .d-entry{
     padding:20px;
     margin:10px;

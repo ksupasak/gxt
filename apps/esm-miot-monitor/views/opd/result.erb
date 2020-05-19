@@ -1,3 +1,58 @@
+
+<link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <h1>Result</h1>
+
+<div class="row">
+    <div class="col-6">
+    <div class="jumbotron">
+    Blood Pressure
+    </div>
+    </div>
+    <div class="col">
+    <div class="jumbotron">
+    Body temperature
+    </div>
+    </div>
+</div>
+<div class="row-fluid">
+    History Records
+    <div class="jumbotron">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Weight</th>
+            <th>BP</th>
+            <th>Scoring type</th>
+            <th>Scoring</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>19/05/2020</td>
+            <td>65.7</td>
+            <td>110/90</td>
+            <td>NEWS</td>  
+            <td><span class="badge badge-pill badge-success badge-score">1</span></td>   
+        </tr>
+        <tr>
+            <td>19/04/2020</td>
+            <td>66.9</td>
+            <td>120/80</td>
+            <td>NEWS</td>  
+            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>   
+        </tr>
+    </tbody>
+    </table>
+    </div>
+</div>
 <%= link_to 'Finish', 'index' %> | 
 <%= link_to 'Log', 'log' %>
+
+<script>
+$("#aa").click(function(){
+    let src = '<%=url_for 'sounds/Wood_Plank_Flicks.mp3'%>';
+    let audio = new Audio(src);
+    audio.play();
+})
+</script>
