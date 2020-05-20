@@ -2,8 +2,26 @@
 <h1 style="color:white">OPD</h1>
 
 <div class="row">
-<div class="col-6">
-<img class="rounded" src="<%=url_for 'img/OPD_ad.png'%>">
+<div class="col">
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel"  style="padding-top:50px;">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="<%=url_for 'img/OPD_ad1.png'%>" class="d-block w-100 rounded" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="<%=url_for 'img/OPD_ad2.png'%>" class="d-block w-100 rounded" alt="...">
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
 </div>
 <div class="col">
     <div class="row">
@@ -19,8 +37,9 @@
     
     </div>
     <div class="col-12">
+    <div class="d-hn">
     <center>
-    <table width="400px">
+    <table width="300px">
     <tr>
         <td><div class="btn-hn">1</div></td>
         <td><div class="btn-hn">2</div></td>
@@ -42,12 +61,11 @@
         <td><div class="btn-hn">Del</div></td>
     </tr>
     </table>
+    <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
     </center>
     </div>
-
-    <div class="col-12">
-    <center><a href="#" class="btn btn-primary btn-opd">ยืนยัน</a></center>
     </div>
+
     </div>
 </div>
 </div>
@@ -60,29 +78,24 @@
         }else{
             v+=b
         }
-        $(".display-hn").html(v)
-        
+        $(".display-hn").html(v)       
     }
 
-    $(".btn-hn").on("click touchstart",function(){
+    $(".btn-hn").on("click",function(){
         try{
             hnPush($(this))
         }catch(e){}
         return false;
     })
 	
-	$('.btn-opd').click(function(){
-		
+	$('.btn-opd').click(function(){	
 		hn = $(".display-hn").html().trim()
 		window.location.replace("entry?hn="+hn);
-		
 	})
     //$(".display-hn").html('a')
 </script>
+
 <script>
-
-
-
 $(document).ready(function(){
     $(".btn-hnaaaa").on("click touchstart ",function(){
         $(".display-hn").html('a')
@@ -97,5 +110,4 @@ $(document).ready(function(){
 
     })
 })
-
 </script>
