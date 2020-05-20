@@ -389,6 +389,10 @@ class DataRecord
   key :status, String
   
   key :score, Integer
+  
+  key :note, String
+  key :score_id, ObjectId
+  
   timestamps!
 end
 

@@ -2,12 +2,19 @@
 date = Time.now
 months = %w{มกราคม กุมภาพันธ์ มีนาคม เมษายน พฤษภาคม มิถุนายน กรกฎาคม สิงหาคม กันยายน ตุลาคม พฤศจิกายน ธันวาคม}
 mon_th = months[date.strftime("%m").to_i-1]
+
+patient = Patient.where(:hn=>params[:hn]).first
+
+patient = Patient.new unless patient 
+
 %>
 <script>
 	
 	var wait_monitor = true;
 	var wait_scaler = true; 
 	
+	// S0. S1
+	// M0. M1
 	
 	function deviceSend(msg){
 	
@@ -76,8 +83,10 @@ mon_th = months[date.strftime("%m").to_i-1]
 <div class="row-fluid">
     <div class="col-12">
     <div class="p-name">
-    HN 587468: นายธนา พิพิธยการ
+    HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
     </div>
+	
+ 
     <div class="p-date">
     วันที่ <%=date.strftime("%d #{mon_th} %Y เวลา %H:%M น.")%>
     </div>
@@ -119,16 +128,16 @@ mon_th = months[date.strftime("%m").to_i-1]
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/temp.svg'%>" width="40">
                     </div>
-                    <div class="col-9 v-entry">
-                    37.0
+                    <div class="col-9 v-entry v-under  temp">
+                    -
                     </div>
                 </div>
             </div>
             <div class="d-entry-dark">
                 <div class="l-entry">Scoring</div>
                 <div class="row">
-                    <div class="col-3 v-entry">
-                    5
+                    <div class="col-3 v-entry v-under score">
+                    -
                     </div>
                     
                     <img src="<%=url_for 'img/svg/score.svg'%>" class="col-8" >
@@ -172,21 +181,21 @@ mon_th = months[date.strftime("%m").to_i-1]
         <div class="col-4"><div class="row">
             <div class="col-5 d-entry">
             <div class="l-entry">Height</div>
-            <div class=""><span class="v-entry v-under height">165</span> cm</div>
+            <div class=""><span class="v-entry v-under height">-</span> cm</div>
             </div>
             <div class="col-5 d-entry">
             <div class="l-entry">Weight</div>
-            <div class=""><span class="v-entry v-under weight">60</span> kg</div>
+            <div class=""><span class="v-entry v-under weight">-</span> kg</div>
             </div>
             
             <div class="col-10 d-entry">
             <div class="l-entry">BMI</div>
-            <div class="v-entry v-under "><span class="bmi">22.04</span></div>
+            <div class="v-entry v-under "><span class="bmi">-</span></div>
             </div>
             
             <div class="col-10 d-entry">   
             <div class="l-entry">Scoring Type</div>
-            <div class="v-entry v-under">NEWS</div>
+            <div class="v-entry v-under">OPD</div>
             </div>
             </div>
         </div>
@@ -195,7 +204,7 @@ mon_th = months[date.strftime("%m").to_i-1]
 
     <div class="col-12">
     <center>
-    <a href="result" class="btn btn-primary btn-opd">ส่ง</a><br/>
+    <a href="#" class="btn btn-primary btn-opd">ส่ง</a><br/>
     <a href="index" class="">ยกเลิก</a>  
 	
 	<div id="msg"></div>
@@ -273,6 +282,26 @@ mon_th = months[date.strftime("%m").to_i-1]
     </script>
 </div>
 
+<form id="form" action="post" method="post">
+
+<input class="hn_val" name="hn" value="" type="hidden"/>
+<input class="datetime_val" name="datetime" value="" type="hidden"/>
+<input class="bp_val" name="bp" value="" type="hidden"/>
+<input class="bp_sys_val" name="bp_sys" value="" type="hidden"/>
+<input class="bp_dia_val" name="bp_dia" value="" type="hidden"/>
+<input class="pr_val" name="pr" value="" type="hidden"/>
+<input class="spo2_val" name="spo2" value="" type="hidden"/>
+<input class="weight_val" name="weight" value="" type="hidden"/>
+<input class="height_val" name="height" value="" type="hidden"/>
+<input class="bmi_val" name="bmi" value="" type="hidden"/>
+<input class="temp_val" name="temp" value="" type="hidden"/>
+<input class="score_val" name="score" value="" type="hidden"/>
+
+
+
+</form>
+
+
 <script>
     
 	$('#bp_start').click(function(){
@@ -295,4 +324,75 @@ mon_th = months[date.strftime("%m").to_i-1]
             $("#opdModal").modal('toggle')
         })
     })
+	
+	function prepare(){
+		var data = {};
+		hn = "<%=params[:hn]%>"
+		var today = new Date();
+		var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+		var datetime = date+'T'+time;
+		var bp=''
+		var bp_sys=''
+		var bp_dia=''
+		var pr=''
+		var spo2=''
+		var temp=''
+		var weight=''
+		var height=''
+		var score = ''
+		
+		
+		$('.bp_sys').each(function(){
+			bp_sys = $(this).html().trim();
+		})
+		$('.bp_dia').each(function(){
+			bp_dia = $(this).html().trim();
+		})
+		$('.weight').each(function(){
+			weight = $(this).html().trim();
+		})
+		$('.height').each(function(){
+			height = $(this).html().trim();
+		})
+		$('.pr').each(function(){
+			pr = $(this).html().trim();
+		})
+		$('.spo2').each(function(){
+			spo2 = $(this).html().trim();
+		})
+		
+		$('.temp').each(function(){
+			temp = $(this).html().trim();
+		})
+		
+		$('.score').each(function(){
+			score = $(this).html().trim();
+		})
+		
+		
+		bp = ""+bp_sys+"/"+bp_dia
+		
+		
+		$()
+		
+		
+		
+	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height }
+		return data
+	}
+	
+	$('.btn-opd').click(function(){
+		
+		
+		
+		$.post( "post", prepare() , function( data ) {
+			
+			data.inspect 
+			window.location.replace("result?hn=<%=params[:hn]%>");
+		
+		});
+		
+	
+	})
 </script>

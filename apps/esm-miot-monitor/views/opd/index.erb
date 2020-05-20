@@ -46,7 +46,7 @@
     </div>
 
     <div class="col-12">
-    <center><a href="entry" class="btn btn-primary btn-opd">ยืนยัน</a></center>
+    <center><a href="#" class="btn btn-primary btn-opd">ยืนยัน</a></center>
     </div>
     </div>
 </div>
@@ -64,12 +64,19 @@
         
     }
 
-    $(".btn-hn").on("click touchstart mouseover",function(){
+    $(".btn-hn").on("click touchstart",function(){
         try{
             hnPush($(this))
         }catch(e){}
         return false;
     })
+	
+	$('.btn-opd').click(function(){
+		
+		hn = $(".display-hn").html().trim()
+		window.location.replace("entry?hn="+hn);
+		
+	})
     //$(".display-hn").html('a')
 </script>
 <script>
@@ -77,7 +84,7 @@
 
 
 $(document).ready(function(){
-    $(".btn-hnaaaa").on("click touchstart mouseover",function(){
+    $(".btn-hnaaaa").on("click touchstart ",function(){
         $(".display-hn").html('a')
         try{
             hnPush($(this))
