@@ -1,7 +1,12 @@
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
-<h1>OPD</h1>
-<hr/>
-<div class="row-fluid">
+<h1 style="color:white">OPD</h1>
+
+<div class="row">
+<div class="col-6">
+<img class="rounded" src="<%=url_for 'img/OPD_ad.png'%>">
+</div>
+<div class="col">
+    <div class="row">
     <div class="col-12">
     <div class="head-hn">
     กรอกเลข HN ของท่าน
@@ -9,8 +14,9 @@
     </div>
     <div class="col-12">
     <div class="display-hn">
-    -
+    587468
     </div>
+    
     </div>
     <div class="col-12">
     <center>
@@ -40,22 +46,49 @@
     </div>
 
     <div class="col-12">
-    <center><a href="select" class="btn btn-primary btn-opd">ยืนยัน</a></center>
+    <center><a href="entry" class="btn btn-primary btn-opd">ยืนยัน</a></center>
+    </div>
     </div>
 </div>
+</div>
 <script>
-$(".btn-hn").click(function(){
-    v = $(".display-hn").html().trim()
-    b = $(this).html()
-    if(b.indexOf("Del")!==-1){
-        v = v.substr(0,v.length-1)
-    }else{
-        v+=b
+    function hnPush(s){
+        v = $(".display-hn").html().trim()
+        b = s.html()
+        if(b.indexOf("Del")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)
+        
     }
-    $(".display-hn").html(v)
-    
-    let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
-    let audio = new Audio(src);
-    audio.play();
+
+    $(".btn-hn").on("click touchstart mouseover",function(){
+        try{
+            hnPush($(this))
+        }catch(e){}
+        return false;
+    })
+    //$(".display-hn").html('a')
+</script>
+<script>
+
+
+
+$(document).ready(function(){
+    $(".btn-hnaaaa").on("click touchstart mouseover",function(){
+        $(".display-hn").html('a')
+        try{
+            hnPush($(this))
+
+            let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
+            let audio = new Audio(src);
+            audio.play();
+        }catch(e){}
+        return false;
+
+    })
 })
+
 </script>
