@@ -1,4 +1,14 @@
+<%
+	
+patient = Patient.where(:hn=>params[:hn]).first
 
+
+admits = Admit.where(:patient_id=>patient.id).all
+
+records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
+	
+	
+%>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <svg width="0" height="0">
     <defs>
@@ -36,30 +46,56 @@
         <tr class="table-primary">
             <th>Date</th>
             <th>Weight</th>
+            <th>Height</th>
+            <th>BMI</th>
+			
             <th>BP</th>
+            <th>PR</th>
+            <th>Spo2</th>
+			
             <th>Scoring type</th>
             <th>Scoring</th>
         </tr>
     </thead>
     <tbody>
+		<% for i in records 
+			
+		data = JSON.parse(i.data)
+		weight = data['weight']
+		height = data['height']
+		bmi = data['bmi']		
+		%>
+		
         <tr>
-            <td>19/05/2020</td>
-            <td>68.7 
+            <td><%=i.stamp%></td>
+            <td><%=weight%>
             <svg class="symbol">
                 <use xlink:href="#t-down" />
             </svg>
-            </td>
-            <td>110/90</td>
-            <td>NEWS</td>  
-            <td><span class="badge badge-pill badge-success badge-score">1</span></td>   
+			</td>
+            <td><%=height%>
+            <svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>
+			</td>
+              <td><%= bmi %></td>
+			<td><%= i.bp %></td>
+            <td><%= i.pr %></td>
+            <td><%= i.spo2 %></td>
+          
+			    <td><%= 'OPD' %></td>
+			  
+            <td><span class="badge badge-pill badge-success badge-score"><%=i.score%></span></td>   
         </tr>
-        <tr>
+		
+		<% end %>
+        <!-- <tr>
             <td>19/04/2020</td>
             <td>66.9 </td>
             <td>120/80</td>
-            <td>NEWS</td>  
-            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>   
-        </tr>
+            <td>NEWS</td>
+            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>
+        </tr> -->
     </tbody>
     </table>
     </div>

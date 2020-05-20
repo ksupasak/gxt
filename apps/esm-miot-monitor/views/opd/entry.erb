@@ -8,6 +8,14 @@ patient = Patient.where(:hn=>params[:hn]).first
 patient = Patient.new unless patient 
 
 %>
+<style>
+	.v-entry{
+		
+		text-align :center;
+		display:inline-block;
+		width:100px;
+	}
+	</style>
 <script>
 	
 	var wait_monitor = true;
@@ -64,7 +72,7 @@ patient = Patient.new unless patient
 			}
 			
 			if(wait_scaler||map['STATUS']=='S1'){
-				$('.height').html(h);
+				$('.height').html(h*100);
 				$('.weight').html(w);
 				$('.bmi').html(bmi);
 			}
@@ -78,7 +86,7 @@ patient = Patient.new unless patient
 	}
 </script>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
-<h1>Entry</h1>
+<h1>&nbsp;</h1>
 <hr/>
 <div class="row-fluid">
     <div class="col-12">
@@ -102,8 +110,8 @@ patient = Patient.new unless patient
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="40">
                     </div>
-                    <div class="col-9 v-entry">
-                    <span class="sys">-</span>/<span class="dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
+                    <div class="col-9 ">
+                    <span class="sys v-entry bp_sys" label="Blood pressure - Systolic" name="bp_sys">-</span> / <span class="dia v-entry bp_dia" label="Blood pressure - Diastolic" name="bp_dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
                     </div>
                 </div>
             </div>
@@ -114,10 +122,10 @@ patient = Patient.new unless patient
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/hr.svg'%>" width="40">
                     </div>
-                    <div class="col-4 v-entry pr" >
+                    <div class="col-4 v-entry pr" label="Pulse (BPM)" name="pr" >
                     -
                     </div>
-                    <div class="col-4 v-entry spo2" >
+                    <div class="col-4 v-entry spo2" label="SpO2 %" name="spo2" >
                     -
                     </div>
                 </div>
@@ -128,7 +136,7 @@ patient = Patient.new unless patient
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/temp.svg'%>" width="40">
                     </div>
-                    <div class="col-9 v-entry v-under  temp">
+                    <div class="col-9 v-entry v-under  temp"  name="temp">
                     -
                     </div>
                 </div>
@@ -136,7 +144,7 @@ patient = Patient.new unless patient
             <div class="d-entry-dark">
                 <div class="l-entry">Scoring</div>
                 <div class="row">
-                    <div class="col-3 v-entry v-under score">
+                    <div class="col-3 v-entry v-under score"  name="score">
                     -
                     </div>
                     
@@ -180,22 +188,22 @@ patient = Patient.new unless patient
 
         <div class="col-4"><div class="row">
             <div class="col-5 d-entry">
-            <div class="l-entry">Height</div>
-            <div class=""><span class="v-entry v-under height">-</span> cm</div>
+            <div class="l-entry">Height (cm)</div>
+            <span class="v-entry  v-under height" label="Height (cm)" name="height" style="display:block">-</span>
             </div>
             <div class="col-5 d-entry">
-            <div class="l-entry">Weight</div>
-            <div class=""><span class="v-entry v-under weight">-</span> kg</div>
+            <div class="l-entry">Weight (kg)</div>
+           <span class=" v-entry v-under  weight" label="Weight (kg)" name="weight" style="display:block">-</span>
             </div>
             
             <div class="col-10 d-entry">
             <div class="l-entry">BMI</div>
-            <div class="v-entry v-under "><span class="bmi">-</span></div>
+            <span class="v-entry v-under  bmi" label="BMI" name="bmi" style="display:block">-</span>
             </div>
             
             <div class="col-10 d-entry">   
             <div class="l-entry">Scoring Type</div>
-            <div class="v-entry v-under">OPD</div>
+            <div class="v-entry v-under score_type" name="score_type" label="Scoring Type">OPD</div>
             </div>
             </div>
         </div>
@@ -253,7 +261,7 @@ patient = Patient.new unless patient
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
       </div>
     </div>
   </div>
@@ -320,14 +328,44 @@ patient = Patient.new unless patient
 		
 	})
     
+
+	
     $(document).ready(function(){
+		
+		var current_modal ;
+			
         $(".v-entry").click(function(){
-            v = $(this).html().split(' ')[0]
-            $(".display-hn").html(v)
+            v = $(this).html().trim()
+            if(v=='-')v = '' 
+			$(".display-hn").html(v)
+			
+			current_modal = $(this).attr('name')
             mname = $(this).parent("div").find(".l-entry").html()
-            $("#opdModalTitle").html(mname)
+            $("#opdModalTitle").html($(this).attr('label'))
             $("#opdModal").modal('toggle')
         })
+		
+		$("#save-modal").click(function(){
+			value = $(".display-hn").html().trim()
+			$('.'+current_modal).html(value)
+			
+			if(current_modal=='weight'||current_modal=='height'){
+				if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
+					weight = parseFloat($('.weight').html().trim())
+					height = parseFloat($('.height').html().trim())
+					bmi = weight /(height*height/10000.0)
+					bmi_text = bmi.toFixed(2);
+					
+					$('.bmi').html(bmi_text)
+				}
+				
+			}
+			
+			$("#opdModal").modal('toggle')
+			
+		})
+		
+		
     })
 	
 	function prepare(){
@@ -346,7 +384,7 @@ patient = Patient.new unless patient
 		var weight=''
 		var height=''
 		var score = ''
-		
+		var bmi =''
 		
 		$('.bp_sys').each(function(){
 			bp_sys = $(this).html().trim();
@@ -360,6 +398,12 @@ patient = Patient.new unless patient
 		$('.height').each(function(){
 			height = $(this).html().trim();
 		})
+		$('.bmi').each(function(){
+			bmi = $(this).html().trim();
+		})
+		
+		
+		
 		$('.pr').each(function(){
 			pr = $(this).html().trim();
 		})
@@ -379,11 +423,9 @@ patient = Patient.new unless patient
 		bp = ""+bp_sys+"/"+bp_dia
 		
 		
-		$()
 		
 		
-		
-	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height }
+	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi }
 		return data
 	}
 	
