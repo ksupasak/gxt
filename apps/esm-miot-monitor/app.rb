@@ -51,7 +51,11 @@ class TestController < GXT
 end
 
 class OpdController < GXT
-
+ 
+  def default_layout
+    return :opd_layout
+  end
+ 
 end
 
 

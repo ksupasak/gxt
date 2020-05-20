@@ -233,6 +233,12 @@ end
 class GXT 
 
   
+
+def default_layout 
+ true
+end
+
+  
 attr_accessor :request  
   
 def setRequest request
@@ -273,7 +279,7 @@ def method_missing(m, *args, &block)
   
   # , :layout => false
    
-   layout = true
+   layout = default_layout
    
    # puts "LOOK #{File.join(@settings.views, self.class.views, ctrl, "_#{m}.erb")}"
    
@@ -336,7 +342,7 @@ class GXTDocument < GXT
        
      # puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
    
-    layout = true
+    layout = default_layout
 
      
      if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")
