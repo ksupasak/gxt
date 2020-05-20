@@ -58,7 +58,7 @@
     <tr>
         <td><div class="btn-hn">/</div></td>
         <td><div class="btn-hn">0</div></td>
-        <td><div class="btn-hn">Del</div></td>
+        <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
     </tr>
     </table>
     <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
@@ -73,7 +73,7 @@
     function hnPush(s){
         v = $(".display-hn").html().trim()
         b = s.html()
-        if(b.indexOf("Del")!==-1){
+        if(b.indexOf("img")!==-1){
             v = v.substr(0,v.length-1)
         }else{
             v+=b
@@ -98,16 +98,13 @@
 <script>
 $(document).ready(function(){
     $(".btn-hnaaaa").on("click touchstart ",function(){
-        $(".display-hn").html('a')
+        hnPush($(this))
         try{
-            hnPush($(this))
-
             let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
             let audio = new Audio(src);
             audio.play();
         }catch(e){}
         return false;
-
     })
 })
 </script>
