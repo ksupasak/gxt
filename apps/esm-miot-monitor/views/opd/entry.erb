@@ -260,15 +260,15 @@ patient = Patient.new unless patient
   <audio  src="" preload></audio>
   <script>
 	  
-      let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
+      //let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
      
 	  
     $(".btn-hn").on('click',function(){
 		// audio.pause()
 		
-        let audio = new Audio(src);
+        //let audio = new Audio(src);
        // audioElement.play()
-       audio.play();
+       //audio.play();
         v = $(".display-hn").html().trim()
         b = $(this).html()
         if(b.indexOf("Del")!==-1){
@@ -277,6 +277,11 @@ patient = Patient.new unless patient
             v+=b
         }
         $(".display-hn").html(v)
+        var myAudio = document.createElement('audio');
+        if (myAudio.canPlayType('audio/mpeg')) {
+        myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+        }
+        myAudio.play();
         
     })
     </script>
