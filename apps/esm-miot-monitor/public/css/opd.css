@@ -14,18 +14,18 @@ body{
     font-size: 4em;
     background-color: #BCD1E4;
     color:#00517F;
-    margin: 20px 50px 50px 50px;
+    margin: 5px 20px 20px 20px;
 }
 .btn-hn{
     background-color: #6B98C1;
     color:#ffffff;
     border-radius: 100px;
-    height:100px;
-    width:100px;
+    height:80px;
+    width:80px;
     text-align: center;
-    font-size: 3em;
+    font-size: 2.4em;
     padding-top:10px;
-    margin:10px;
+    margin:5px;
 }
 .btn-hn:hover{
     background-color: #00517F;
