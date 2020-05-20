@@ -4,6 +4,11 @@ months = %w{มกราคม กุมภาพันธ์ มีนาคม
 mon_th = months[date.strftime("%m").to_i-1]
 %>
 <script>
+	
+	var wait_monitor = true;
+	var wait_scaler = true; 
+	
+	
 	function deviceSend(msg){
 	
 		$('#msg').html(msg);
@@ -19,13 +24,46 @@ mon_th = months[date.strftime("%m").to_i-1]
 		if(map['PR']=='-99')map['PR']='-'
 		if(map['SPO2']=='000')map['SPO2']='-'
 			
+		if(map['STATUS']=='M0'||map['STATUS']=='M1'){	
 		
+		if(wait_monitor||map['STATUS']=='M1'){
 		$('.pr').html(map['PR'])
 		$('.spo2').html(map['SPO2'])
-		$('.sys').html(map['SYS'])
-		$('.dia').html(map['DIA'])
-		$('.mean').html(map['MEAN'])
+			
+		if(map['STATUS']=='M1'){	
+			$('.sys').html(map['SYS'])
+			$('.dia').html(map['DIA'])
+			wait_monitor = false;
+			// $('.mean').html(map['MEAN'])
+		}
+		}
 		
+		}
+		
+		
+		
+		if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
+			
+			var w = parseFloat(map['WEIGHT'])
+			var h = parseFloat(map['HEIGHT'])
+			
+			
+			var bmi = (w/(h*h)).toFixed(2);
+			if(map['STATUS']=='S0'){
+				w = parseFloat(map['CWEIGHT'])
+				bmi = 'Processing'
+			}else{
+				
+			}
+			
+			if(wait_scaler||map['STATUS']=='S1'){
+				$('.height').html(h);
+				$('.weight').html(w);
+				$('.bmi').html(bmi);
+			}
+			
+			
+		}
 		
 		
 		
@@ -53,10 +91,10 @@ mon_th = months[date.strftime("%m").to_i-1]
                 <div class="l-entry">Blood Pressure</div> 
                 <div class="row">
                     <div class="col-3">
-                        <img src="<%=url_for 'img/svg/bp.svg'%>" width="40">
+                        <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="40">
                     </div>
                     <div class="col-9 v-entry">
-                    <span class="sys">-</span>/<span class="dia">-</span>&nbsp;&nbsp;&nbsp;m <span class="mean">-</span>
+                    <span class="sys">-</span>/<span class="dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
                     </div>
                 </div>
             </div>
@@ -134,16 +172,16 @@ mon_th = months[date.strftime("%m").to_i-1]
         <div class="col-4"><div class="row">
             <div class="col-5 d-entry">
             <div class="l-entry">Height</div>
-            <div class="v-entry v-under">165 cm</div>
+            <div class=""><span class="v-entry v-under height">165</span> cm</div>
             </div>
             <div class="col-5 d-entry">
             <div class="l-entry">Weight</div>
-            <div class="v-entry v-under">60 kg</div>
+            <div class=""><span class="v-entry v-under weight">60</span> kg</div>
             </div>
             
             <div class="col-10 d-entry">
             <div class="l-entry">BMI</div>
-            <div class="v-entry v-under">22.04</div>
+            <div class="v-entry v-under "><span class="bmi">22.04</span></div>
             </div>
             
             <div class="col-10 d-entry">   
@@ -158,7 +196,9 @@ mon_th = months[date.strftime("%m").to_i-1]
     <div class="col-12">
     <center>
     <a href="result" class="btn btn-primary btn-opd">ส่ง</a><br/>
-    <a href="index" class="">ยกเลิก</a> <div id="msg"></div>
+    <a href="index" class="">ยกเลิก</a>  
+	
+	<div id="msg"></div>
     </center>
     </div>
 </div>
@@ -208,8 +248,18 @@ mon_th = months[date.strftime("%m").to_i-1]
       </div>
     </div>
   </div>
+  <audio  src="" preload></audio>
   <script>
-    $(".btn-hn").click(function(){
+	  
+      let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
+     
+	  
+    $(".btn-hn").on('click',function(){
+		// audio.pause()
+		
+        let audio = new Audio(src);
+       // audioElement.play()
+       audio.play();
         v = $(".display-hn").html().trim()
         b = $(this).html()
         if(b.indexOf("Del")!==-1){
@@ -219,15 +269,22 @@ mon_th = months[date.strftime("%m").to_i-1]
         }
         $(".display-hn").html(v)
         
-        let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
-        let audio = new Audio(src);
-        audio.play();
     })
     </script>
 </div>
 
 <script>
-    deviceSend('ok')
+    
+	$('#bp_start').click(function(){
+		alert('start')
+		if(typeof device_interface === 'undefined'){
+			
+		}else{
+			device_interface.bp_start();
+		}
+		
+		
+	})
     
     $(document).ready(function(){
         $(".v-entry").click(function(){
