@@ -9,13 +9,31 @@ patient = Patient.where(:hn=>params[:hn]).first
 admits = Admit.where(:patient_id=>patient.id).all
 
 records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).order(:stamp.desc).all
-	
+w = {}
+ws = records.sort{|a,b| a.stamp<=>b.stamp}
+weight_int = 0
+weight_cmp = 0
+for i in ws
+    weight = '-'
+    begin	
+        data = JSON.parse(i.data)
+        weight = data['weight']	
+        weight_int = weight.to_i
+    rescue Exception=>e
+    end	   
+    svg = '' 
+    svg = '<svg class="symbol"><use xlink:href="#t-up"/></svg>' if weight_cmp < weight_int
+    svg = '<svg class="symbol"><use xlink:href="#t-down"/></svg>' if weight_cmp > weight_int
+    svg = '' if weight=='-'
+    w[i.stamp] = svg
+    weight_cmp = weight_int
+end
 %>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <svg width="0" height="0">
     <defs>
         <g id="t-up">
-        <polygon points="10,0 0,20 20,20" class="triangle" />
+        <polygon points="10,0 0,20 20,20" class="triangle_up" />
         </g>
         <g id="t-down">
         <polygon points="0,0 20,0 10,20" class="triangle" />
@@ -23,12 +41,14 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).order(:
     </defs>
     <style>
     .triangle{fill:#51A451;}
+    .triangle_up{fill:#F7C244;}
     .symbol{height:20px;width:20px;}
     </style>
 </svg>
 <div class="p-name" style="padding:20px">
 HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
 </div>
+
 <script src="https://d3js.org/d3.v4.js"></script>
 <div class="row">
     <div class="col-6">
@@ -191,19 +211,34 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
         <% 
         isFirst = true
         for i in records 
-			
-		data = JSON.parse(i.data)
-		weight = data['weight']
-		height = data['height']
-		bmi = data['bmi']		
+        weight = '-'
+        height = '-'
+        bmi = '-'
+        begin	
+            data = JSON.parse(i.data)
+            weight = data['weight']
+            height = data['height']
+            bmi = data['bmi']	
+        rescue Exception=>e
+        end	
+        
+        score = 0
+        badge = 'badge-success'
+        begin
+            score = i.score.to_i 
+        rescue Exception=>e
+        end
+        badge = 'badge-warning' if score>1
+        badge = 'badge-danger' if score>3
+
 		%>
 		
         <tr class="<%=(isFirst)?"bg-primary r-first":""%>" >
             <td><%=i.stamp.strftime('%d/%m/%Y %H:%M')%></td>
-            <td><%=weight%>
-            <svg class="symbol">
+            <td><%=weight%><%=w[i.stamp]%>
+            <!--<svg class="symbol">
                 <use xlink:href="#t-down" />
-            </svg>
+            </svg>-->
 			</td>
             <!--<td><%=height%>
             <svg class="symbol">
@@ -217,7 +252,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
           
 			    <td><%= 'OPD' %></td>
 			  
-            <td><span class="badge badge-pill badge-success badge-score"><%=i.score%></span></td>   
+            <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
         </tr>
 		<% isFirst=false %>
 		<% end %>

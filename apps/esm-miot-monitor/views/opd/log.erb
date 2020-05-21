@@ -41,9 +41,9 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
     </thead>
     <tbody>
         <% for i in records 
-        weight = ''
-        height = ''
-        bmi = ''	
+        weight = '-'
+        height = '-'
+        bmi = '-'	
 		begin	
             data = JSON.parse(i.data)
             weight = data['weight'].strip
@@ -52,24 +52,31 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
         rescue Exception=>e
         end
 		admit = Admit.find i.admit_id
-		patient = Patient.find admit.patient_id if admit
-		
+        patient = Patient.find admit.patient_id if admit
+        score = 0
+        badge = 'badge-success'
+        begin
+            score = i.score.to_i 
+        rescue Exception=>e
+        end
+        badge = 'badge-warning' if score>1
+        badge = 'badge-danger' if score>3
 		%>
 		
         <tr>
-             <td><%=i.stamp%></td>
+             <td><%=i.stamp.strftime('%d/%m/%Y %H:%M')%></td>
              <td><%=patient.hn%></td>
 	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>
 			
 			<td><%=weight%>
-            <svg class="symbol">
+            <!--<svg class="symbol">
                 <use xlink:href="#t-down" />
-            </svg>
+            </svg>-->
 			</td>
             <td><%=height%>
-            <svg class="symbol">
+            <!--<svg class="symbol">
                 <use xlink:href="#t-down" />
-            </svg>
+            </svg>-->
 			</td>
               <td><%= bmi %></td>
 			<td><%= i.bp %></td>
@@ -78,7 +85,7 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
           
 			    <td><%= 'OPD' %></td>
 			  
-            <td><span class="badge badge-pill badge-success badge-score"><%=i.score%></span></td>   
+            <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
         </tr>
         <%
         
@@ -95,4 +102,4 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
     </table>
     </div>
 </div>
-<%= link_to '<< Home', 'index'  %>
+<%= link_to '<< Home', 'index' ,{:class=>'btn-result-cancle'} %>
