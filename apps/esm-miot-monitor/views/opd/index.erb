@@ -62,7 +62,7 @@
     </tr>
     </table>
     <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
-
+    <a href="#" id="beep" style="display:none"></a>
     </center>
     </div>
     </div>
@@ -98,15 +98,21 @@
             myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
             }
             myAudio.play();
-        }catch(e){}
-        
-        
+        }catch(e){}       
         return false;
     })
-	
+
+    var beep = document.createElement('audio');
+    if (beep.canPlayType('audio/mpeg')) {
+        beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+    }	
+    $("#beep").on("click",function(){
+        beep.play();       
+    })
 	$('.btn-opd').click(function(){	
-		hn = $(".display-hn").html().trim()
-		window.location.replace("entry?hn="+hn);
-	})
-    //$(".display-hn").html('a')
+        hn = $(".display-hn").html().trim()
+        $("#beep").click()
+        setTimeout(function(){ window.location.replace("entry?hn="+hn);  }, 1000);
+    })
+
 </script>

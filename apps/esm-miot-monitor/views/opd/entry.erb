@@ -87,24 +87,16 @@ patient = Patient.new unless patient
 </script>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <h1>&nbsp;</h1>
-<hr/>
 <div class="row-fluid">
     <div class="col-12">
-    <div class="p-name">
-    HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
-    </div>
-	
- 
-    <div class="p-date">
-    วันที่ <%=date.strftime("%d #{mon_th} %Y เวลา %H:%M น.")%>
-    </div>
+    
     </div>
 
     <div class="col-12">
     <div class="row">
 
         <div class="col-4">
-            <div class="d-entry-dark">
+            <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Blood Pressure</div> 
                 <div class="row">
                     <div class="col-3">
@@ -116,7 +108,7 @@ patient = Patient.new unless patient
                 </div>
             </div>
             
-            <div class="d-entry-dark">
+            <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Pulse</div>
                 <div class="row">
                     <div class="col-3">
@@ -130,7 +122,7 @@ patient = Patient.new unless patient
                     </div>
                 </div>
             </div>
-            <div class="d-entry-dark">
+            <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Body Temperature</div>
                 <div class="row">
                     <div class="col-3">
@@ -141,7 +133,7 @@ patient = Patient.new unless patient
                     </div>
                 </div>
             </div>
-            <div class="d-entry-dark">
+            <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Scoring</div>
                 <div class="row">
                     <div class="col-3 v-entry v-under score"  name="score">
@@ -156,6 +148,14 @@ patient = Patient.new unless patient
         
         <div class="col-4">
             <div class=""><center>
+            <div class="p-name">
+            HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>ฉันท์มิตร แก้วพรหมมาลย์
+            </div>
+
+
+            <div class="p-date">
+            วันที่ <%=date.strftime("%d #{mon_th} %Y เวลา %H:%M น.")%>
+            </div>
             <svg class="col-12" xmlns="http://www.w3.org/2000/svg" width="242.668" height="525.791" viewBox="0 0 242.668 525.791">
             <defs>
             <style>
@@ -186,37 +186,38 @@ patient = Patient.new unless patient
             </center></div>
         </div>
 
-        <div class="col-4"><div class="row">
-            <div class="col-5 d-entry">
-            <div class="l-entry">Height (cm)</div>
-            <span class="v-entry  v-under height" label="Height (cm)" name="height" style="display:block">-</span>
+        <div class="col-4">
+            <div class="row">
+                <div class="col-5 d-entry">
+                <div class="l-entry">Height (cm)</div>
+                <span class="v-entry  v-under height" label="Height (cm)" name="height" style="display:block">-</span>
+                </div>
+                <div class="col-5 d-entry">
+                <div class="l-entry">Weight (kg)</div>
+                <span class=" v-entry v-under  weight" label="Weight (kg)" name="weight" style="display:block">-</span>
+                </div>
+                
+                <div class="col-10 d-entry">
+                <div class="l-entry">BMI</div>
+                <span class="v-entry v-under  bmi" label="BMI" name="bmi" style="display:block">-</span>
+                </div>
+                
+                <div class="col-10 d-entry">   
+                <div class="l-entry">Scoring Type</div>
+                <div class="v-entry v-under score_type" name="score_type" label="Scoring Type">OPD</div>
+                </div>
             </div>
-            <div class="col-5 d-entry">
-            <div class="l-entry">Weight (kg)</div>
-           <span class=" v-entry v-under  weight" label="Weight (kg)" name="weight" style="display:block">-</span>
-            </div>
-            
-            <div class="col-10 d-entry">
-            <div class="l-entry">BMI</div>
-            <span class="v-entry v-under  bmi" label="BMI" name="bmi" style="display:block">-</span>
-            </div>
-            
-            <div class="col-10 d-entry">   
-            <div class="l-entry">Scoring Type</div>
-            <div class="v-entry v-under score_type" name="score_type" label="Scoring Type">OPD</div>
-            </div>
-            </div>
+            <center>
+            <a href="#" class="btn btn-primary btn-opd">ส่ง</a>
+            <a href="index" class="">ยกเลิก</a>  
+            <div id="msg"></div>
+            </center>
         </div>
     </div> 
     </div>
 
-    <div class="col-12">
-    <center>
-    <a href="#" class="btn btn-primary btn-opd">ส่ง</a><br/>
-    <a href="index" class="">ยกเลิก</a>  
-	
-	<div id="msg"></div>
-    </center>
+    <div class="col-12" style="height:50px">
+    
     </div>
 </div>
 
@@ -235,7 +236,7 @@ patient = Patient.new unless patient
         <div class="display-hn">
         -
         </div>
-        <table width="400px">
+        <table width="300px">
         <tr>
             <td><div class="btn-hn">1</div></td>
             <td><div class="btn-hn">2</div></td>
@@ -329,7 +330,20 @@ patient = Patient.new unless patient
 	})
     
 
-	
+	function checkInput(d){
+        v = $("."+d).html().trim()
+        c = $("."+d).closest(".d-entry-dark,.d-entry")
+        prefix="de-"
+        if(c.hasClass("d-entry-dark")) prefix="dk-"
+        if(v!==''&&v!=='-'){              
+            c.addClass(prefix+"active").removeClass(prefix+"empty")      
+        }else{
+            c.addClass(prefix+"empty").removeClass(prefix+"active")
+        }
+        //alert(c.attr('class'))
+        
+    }
+
     $(document).ready(function(){
 		
 		var current_modal ;
@@ -346,7 +360,8 @@ patient = Patient.new unless patient
         })
 		
 		$("#save-modal").click(function(){
-			value = $(".display-hn").html().trim()
+            value = $(".display-hn").html().trim()
+            if(value==='') value='-'
 			$('.'+current_modal).html(value)
 			
 			if(current_modal=='weight'||current_modal=='height'){
@@ -360,7 +375,7 @@ patient = Patient.new unless patient
 				}
 				
 			}
-			
+			checkInput(current_modal)
 			$("#opdModal").modal('toggle')
 			
 		})

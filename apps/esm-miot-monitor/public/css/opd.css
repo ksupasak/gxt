@@ -64,9 +64,11 @@ div {
     font-weight: bold;
 }
 .p-date{
+    font-size: 1.2em;
     text-align: center;
     vertical-align: middle;
     color:#6B98C1;
+    padding-bottom: 20px;
 }
 .head-select{
     color:#00517F;
@@ -99,22 +101,52 @@ div {
     padding:20px;
     margin:10px;
     color:#4D4D4D;
+    border-radius: 10px;
 
 }
 .d-entry-dark{
-    background-color: #374C5F;
+    /*background-color: #374C5F;*/
     color:#DCDCDC;
     border-radius: 10px;
     padding:20px;
     margin:10px;
+
 }
+.dk-active{
+    background-color: #374C5F;
+    -webkit-box-shadow: 0px 0px 5px 1px #42B7AB;
+    -moz-box-shadow: 0px 0px 5px 1px #42B7AB;
+    box-shadow: 0px 0px 5px 1px #42B7AB;    
+}
+.dk-empty{
+    background-color: #DCDCDC;
+    color:#919191;
+}
+.de-active{
+    -webkit-box-shadow: 0px 0px 5px 1px #42B7AB;
+    -moz-box-shadow: 0px 0px 5px 1px #42B7AB;
+    box-shadow: 0px 0px 5px 1px #42B7AB;    
+}
+.de-empty{
+    /*background-color: #DCDCDC;*/
+    color:#919191;
+}
+
 .l-entry{
-    font-size: 0.8em;
+    font-size: 1.4em;
 }
 .v-entry{
-    font-size: 2em;
+    font-size: 3em;
     color:#42B7AB;
 }
 .v-under{
     border-bottom: 1px solid #4D4D4D;
+}
+.d-result{
+    background: #BCD1E4;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 20px;
+    font-size: 1.4em;
+ 
 }

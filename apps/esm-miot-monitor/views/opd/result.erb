@@ -28,20 +28,20 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
 
 <div class="row">
     <div class="col-6">
-    <div class="jumbotron">
+    <div class="d-result">
     Blood Pressure
     </div>
     </div>
     <div class="col">
-    <div class="jumbotron">
+    <div class="d-result">
     Body temperature
     </div>
     </div>
 </div>
 <div class="row-fluid">
     History Records
-    <div class="jumbotron">
-    <table class="table">
+    <div class="d-result">
+    <table class="table table-sm">
     <thead>
         <tr class="table-primary">
             <th>Date</th>
@@ -101,7 +101,7 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
     </div>
     <div class="col-12">
     <center>
-    <a href="index" class="btn btn-primary btn-opd">เสร็จสิ้น</a><br/>
+    <a href="index" class="btn btn-primary btn-opd">เสร็จสิ้น</a>
     <a href="log" class="">view log</a> 
     </center>
     </div>
