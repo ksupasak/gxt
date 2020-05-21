@@ -5,10 +5,10 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 <svg width="0" height="0">
     <defs>
         <g id="t-up">
-        <polygon points="10,0 0,20 20,20" class="triangle" />
+        <polygon points="10,0 0,10 10,10" class="triangle" />
         </g>
         <g id="t-down">
-        <polygon points="0,0 20,0 10,20" class="triangle" />
+        <polygon points="0,0 10,0 10,10" class="triangle" />
         </g>        
     </defs>
     <style>
@@ -16,15 +16,16 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
     .symbol{height:20px;width:20px;}
     </style>
 </svg>
-<h1>&nbsp;</h1>
-<h3>Data Logs</h3>
+<h1><img src='<%= url_for('img/OPD_logo.png')%>'  height='50'>&nbsp;&nbsp;&nbsp;Data Logs</h1>
+
 <div class="row-fluid">
     <div class="d-log">
     <table class="table table-sm">
     <thead>
         <tr class="table-primary">
             <th>Date</th>
-            <th>HN</th>
+            <th>Device ID</th>
+		    <th>HN</th>
             <th>Patient Name</th>
 			
             <th>Weight</th>
@@ -64,8 +65,9 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 		%>
 		
         <tr>
-             <td><%=i.stamp.strftime('%d/%m/%Y %H:%M')%></td>
-             <td><%=patient.hn%></td>
+             <td><%=i.stamp.localtime.strftime('%d/%m/%Y %H:%M')%></td>
+			 <td><%=data['device_id'] if data['device_id']%></td>
+             <td><%=link_to patient.hn, "result?hn=#{patient.hn}" %></td>
 	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>
 			
 			<td><%=weight%>
