@@ -27,90 +27,142 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).order(:
     </style>
 </svg>
 <div class="p-name" style="padding:20px">
-HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>ฉันท์มิตร แก้วพรหมมาลย์
+HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
 </div>
-
+<script src="https://d3js.org/d3.v4.js"></script>
 <div class="row">
     <div class="col-6">
     <div class="d-result ">
     Blood Pressure
+    <div id="linechart"></div>
+    
+    <script>
+
+    // set the dimensions and margins of the graph
+    var margin = {top: 10, right: 30, bottom: 30, left: 60},
+        width = 600 - margin.left - margin.right,
+        height = 200 - margin.top - margin.bottom;
+    
+    // append the svg object to the body of the page
+    var svg = d3.select("#linechart")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+    
+    //Read the data
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
+    
+      // group the data: I want to draw one line per group
+      var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+        .key(function(d) { return d.name;})
+        .entries(data);
+    
+      // Add X axis --> it is a date format
+      var x = d3.scaleLinear()
+        .domain(d3.extent(data, function(d) { return d.year; }))
+        .range([ 0, width ]);
+      svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(5));
+    
+      // Add Y axis
+      var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return +d.n; })])
+        .range([ height, 0 ]);
+      svg.append("g")
+        .call(d3.axisLeft(y));
+    
+      // color palette
+      var res = sumstat.map(function(d){ return d.key }) // list of group names
+      var color = d3.scaleOrdinal()
+        .domain(res)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
+    
+      // Draw the line
+      svg.selectAll(".line")
+          .data(sumstat)
+          .enter()
+          .append("path")
+            .attr("fill", "none")
+            .attr("stroke", function(d){ return color(d.key) })
+            .attr("stroke-width", 1.5)
+            .attr("d", function(d){
+              return d3.line()
+                .x(function(d) { return x(d.year); })
+                .y(function(d) { return y(+d.n); })
+                (d.values)
+            })
+    
+    })
+    
+    </script>    
     </div>
     </div>
     <div class="col">
     <div class="d-result ">
     Weight
     <div id="barchart"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    
     
     <script>
     var weights = JSON.parse('[{"date":"2020-05","value":"50"},{"date":"2020-04","value":"60"},{"date":"2020-03","value":"70"},{"date":"2020-02","value":"55"}]')
     
-    var margin = {top: 20, right: 20, bottom: 70, left: 40},
-        width = 500 - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
-    
-    // Parse the date / time
-    var	parseDate = d3.time.format("%Y-%m").parse;
-    
-    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
-    
-    var y = d3.scale.linear().range([height, 0]);
-    
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .tickFormat(d3.time.format("%Y-%m"));
-    
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(5);
-    
-    var svg = d3.select("#barchart").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
-    
-    data = weights
+    // set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
 
-    data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.value = +d.value;
-    });
-    
-    x.domain(data.map(function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.value; })]);
-    
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", "-.55em")
-        .attr("transform", "rotate(-90)" );
-    
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("kg");
-    
-    svg.selectAll("bar")
-        .data(data)
-        .enter().append("rect")
-        .style("fill", "steelblue")
-        .attr("x", function(d) { return x(d.date); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.value); })
-        .attr("height", function(d) { return height - y(d.value); });
+// append the svg object to the body of the page
+var svgbar = d3.select("#barchart")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// get the data
+d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
+
+  // X axis: scale and draw:
+  var x = d3.scaleLinear()
+      .domain([0, 1000])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .range([0, width]);
+  svgbar.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // set the parameters for the histogram
+  var histogram = d3.histogram()
+      .value(function(d) { return d.price; })   // I need to give the vector of value
+      .domain(x.domain())  // then the domain of the graphic
+      .thresholds(x.ticks(70)); // then the numbers of bins
+
+  // And apply this function to data to get the bins
+  var bins = histogram(data);
+
+  // Y axis: scale and draw:
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+  svgbar.append("g")
+      .call(d3.axisLeft(y));
+
+  // append the bar rectangles to the svg element
+  svgbar.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#69b3a2")
+
+});
         
     </script>    
     </div>
