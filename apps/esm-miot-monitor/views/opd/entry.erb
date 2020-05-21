@@ -17,7 +17,27 @@ patient = Patient.new unless patient
 	}
 	</style>
 <script>
-	
+    function checkInput(d){
+        v = $("."+d).html().trim()
+        c = $("."+d).closest(".d-entry-dark,.d-entry")
+        prefix="de-"
+        if(c.hasClass("d-entry-dark")) prefix="dk-"
+        if(v!==''&&v!=='-'){              
+            c.addClass(prefix+"active").removeClass(prefix+"empty")      
+        }else{
+            c.addClass(prefix+"empty").removeClass(prefix+"active")
+        }
+        isComplete = true
+        $(".d-entry-dark,.d-entry").each(function(){
+            if($(this).attr('class').indexOf("empty")!==-1&&isComplete) isComplete=false;
+        })
+
+        if(isComplete){
+            $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+            $('.btn-opd').click(submitEntry)    
+        }
+    }
+
 	var wait_monitor = true;
 	var wait_scaler = true; 
 	
@@ -39,20 +59,22 @@ patient = Patient.new unless patient
 		if(map['PR']=='-99')map['PR']='-'
 		if(map['SPO2']=='000')map['SPO2']='-'
 			
-		if(map['STATUS']=='M0'||map['STATUS']=='M1'){	
-		
-		if(wait_monitor||map['STATUS']=='M1'){
-		$('.pr').html(map['PR'])
-		$('.spo2').html(map['SPO2'])
-			
-		if(map['STATUS']=='M1'){	
-			$('.sys').html(map['SYS'])
-			$('.dia').html(map['DIA'])
-			wait_monitor = false;
-			// $('.mean').html(map['MEAN'])
-		}
-		}
-		
+		if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
+		    if(wait_monitor||map['STATUS']=='M1'){
+                $('.pr').html(map['PR'])
+                $('.spo2').html(map['SPO2'])
+                checkInput('pr')
+                checkInput('spo2')
+
+                if(map['STATUS']=='M1'){	
+                    $('.sys').html(map['SYS'])
+                    $('.dia').html(map['DIA'])
+                    checkInput('sys')
+                    checkInput('dia')
+                    wait_monitor = false;
+                    // $('.mean').html(map['MEAN'])
+                }
+            }
 		}
 		
 		
@@ -74,7 +96,10 @@ patient = Patient.new unless patient
 			if(wait_scaler||map['STATUS']=='S1'){
 				$('.height').html(h*100);
 				$('.weight').html(w);
-				$('.bmi').html(bmi);
+                $('.bmi').html(bmi);
+                checkInput('height')
+                checkInput('weight')
+                checkInput('bmi')
 			}
 			
 			
@@ -330,33 +355,7 @@ patient = Patient.new unless patient
 	})
     
 
-	function checkInput(d){
-        v = $("."+d).html().trim()
-        c = $("."+d).closest(".d-entry-dark,.d-entry")
-        prefix="de-"
-        if(c.hasClass("d-entry-dark")) prefix="dk-"
-        if(v!==''&&v!=='-'){              
-            c.addClass(prefix+"active").removeClass(prefix+"empty")      
-        }else{
-            c.addClass(prefix+"empty").removeClass(prefix+"active")
-        }
 
-        $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
-        //alert(c.attr('class'))       
-    }
-
-	function checkInput2(d){
-        v = d.html().trim()
-        c = d.closest(".d-entry-dark,.d-entry")
-        prefix="de-"
-        if(c.hasClass("d-entry-dark")) prefix="dk-"
-        if(v!==''&&v!=='-'){              
-            c.addClass(prefix+"active").removeClass(prefix+"empty")      
-        }else{
-            c.addClass(prefix+"empty").removeClass(prefix+"active")
-        }
-        //alert(c.attr('class'))       
-    }
 
     $(document).ready(function(){
 		
@@ -385,7 +384,8 @@ patient = Patient.new unless patient
 					bmi = weight /(height*height/10000.0)
 					bmi_text = bmi.toFixed(2);
 					
-					$('.bmi').html(bmi_text)
+                    $('.bmi').html(bmi_text)
+                    checkInput('bmi')
 				}
 				
 			}
@@ -456,19 +456,16 @@ patient = Patient.new unless patient
 		
 	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi }
 		return data
-	}
-	
-	$('.btn-opd').click(function(){
-		
-		
-		
-		$.post( "post", prepare() , function( data ) {
+    }
+    
+    function submitEntry(){
+        $.post( "post", prepare() , function( data ) {
 			
 			data.inspect 
 			window.location.replace("result?hn=<%=params[:hn]%>");
 		
 		});
-		
+    }
 	
-	})
+	$('.btn-opd').click(submitEntry)
 </script>
