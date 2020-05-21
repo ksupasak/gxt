@@ -1,11 +1,26 @@
 <% 
-records = DataRecord.all
+records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 %>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
-<h1>Data Log</h1>
+<svg width="0" height="0">
+    <defs>
+        <g id="t-up">
+        <polygon points="10,0 0,20 20,20" class="triangle" />
+        </g>
+        <g id="t-down">
+        <polygon points="0,0 20,0 10,20" class="triangle" />
+        </g>        
+    </defs>
+    <style>
+    .triangle{fill:#51A451;}
+    .symbol{height:20px;width:20px;}
+    </style>
+</svg>
+<h1>&nbsp;</h1>
+<h3>Data Logs</h3>
 <div class="row-fluid">
-    <div class="jumbotron">
-    <table class="table">
+    <div class="d-log">
+    <table class="table table-sm">
     <thead>
         <tr class="table-primary">
             <th>Date</th>
@@ -25,13 +40,17 @@ records = DataRecord.all
         </tr>
     </thead>
     <tbody>
-		<% for i in records 
-			
-		data = JSON.parse(i.data)
-		weight = data['weight']
-		height = data['height']
-		bmi = data['bmi']		
-		
+        <% for i in records 
+        weight = ''
+        height = ''
+        bmi = ''	
+		begin	
+            data = JSON.parse(i.data)
+            weight = data['weight'].strip
+            height = data['height'].strip
+            bmi = data['bmi'].strip		
+        rescue Exception=>e
+        end
 		admit = Admit.find i.admit_id
 		patient = Patient.find admit.patient_id if admit
 		
@@ -61,7 +80,9 @@ records = DataRecord.all
 			  
             <td><span class="badge badge-pill badge-success badge-score"><%=i.score%></span></td>   
         </tr>
-		
+        <%
+        
+        %>
 		<% end %>
         <!-- <tr>
             <td>19/04/2020</td>

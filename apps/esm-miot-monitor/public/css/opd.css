@@ -170,5 +170,15 @@ div {
 .r-first{
     color:white;
 }
-
+.d-log{
+    background: #BCD1E4;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-radius: 20px;
+    font-size: 1.4em;
+    height: 600px !important; 
+    overflow-y: auto !important;
+    width: 100%;
+ 
+}
 
