@@ -31,8 +31,8 @@
     </div>
     </div>
     <div class="col-12">
-    <div class="display-hn">
-    587468
+    <div class="display-hn" >
+    
     </div>
     
     </div>
@@ -81,7 +81,9 @@
 </audio>
 
 <script>
-
+	function deviceSend(msg){
+		
+	}
     function hnPush(s){
         v = $(".display-hn").html().trim()
         b = s.html()
@@ -108,24 +110,11 @@
 
     $(".btn-hn").on("click",function(){
       
-        // try{
-            // var myAudio = document.createElement('audio');
-  //           if (myAudio.canPlayType('audio/mpeg')) {
-  //           myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet-trim.mp3'%>');
-  //           }
-  //
-  //           myAudio.play();
-  
   				var myAudio = document.getElementById('audio-'+cur_buffer)
   				myAudio.play();
   			  	cur_buffer+=1;
 				if(cur_buffer==10)cur_buffer=0;
-        //
-        // }catch(e){
-        //
-        //
-        //
-        // }    
+  
 		  hnPush($(this))  
         return false;
     })
@@ -137,10 +126,34 @@
     $("#beep").on("click",function(){
         beep.play();       
     })
-	$('.btn-opd').click(function(){	
+	
+	function submit(){
+		
+		$('.btn-opd').html('Loading')
         hn = $(".display-hn").html().trim()
         $("#beep").click()
         setTimeout(function(){ window.location.replace("entry?hn="+hn);  }, 1000);
+	}
+	
+	$('.btn-opd').click(function(){	
+       submit()
     })
+	
+	$(document).keypress(function(e){
+		
+	    if( event.which == 13 ) {
+	        submit();
+	     }else{
+        v = $(".display-hn").html().trim()
+        v+=String.fromCharCode(e.keyCode)
+        
+        $(".display-hn").html(v.trim())   
+		 } 
+		
+	})
+		
+	     
+	
+	
 
 </script>

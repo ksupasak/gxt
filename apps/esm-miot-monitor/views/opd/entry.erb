@@ -5,7 +5,7 @@ mon_th = months[date.strftime("%m").to_i-1]
 
 patient = Patient.where(:hn=>params[:hn]).first
 
-patient = Patient.new unless patient 
+patient = Patient.new :hn=>params[:hn] unless patient 
 
 %>
 <style>
@@ -18,6 +18,7 @@ patient = Patient.new unless patient
 	</style>
 <script>
     function submitEntry(){
+		$('.btn-primary').html('Loading')
         $.post( "post", prepare() , function( data ) {         
             data.inspect 
             $("#beep").click()
@@ -54,77 +55,6 @@ patient = Patient.new unless patient
         }
     }
 
-	var wait_monitor = true;
-	var wait_scaler = true; 
-	
-	// S0. S1
-	// M0. M1
-	
-	function deviceSend(msg){
-	
-		$('#msg').html(msg);
-		
-		map = {}
-		
-		list = msg.split("|")
-		for(var i=0;i<list.length;i++){
-			p = list[i].split(":");
-			map[p[0]] = p[1];
-		}
-		
-		if(map['PR']=='-99')map['PR']='-'
-		if(map['SPO2']=='000')map['SPO2']='-'
-			
-		if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
-		    if(wait_monitor||map['STATUS']=='M1'){
-                $('.pr').html(map['PR'])
-                $('.spo2').html(map['SPO2'])
-                checkInput('pr')
-                checkInput('spo2')
-
-                if(map['STATUS']=='M1'){	
-                    $('.sys').html(map['SYS'])
-                    $('.dia').html(map['DIA'])
-                    checkInput('sys')
-                    checkInput('dia')
-                    wait_monitor = false;
-                    // $('.mean').html(map['MEAN'])
-                }
-            }
-		}
-		
-		
-		
-		if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
-			
-			var w = parseFloat(map['WEIGHT'])
-			var h = parseFloat(map['HEIGHT'])
-			
-			
-			var bmi = (w/(h*h)).toFixed(2);
-			if(map['STATUS']=='S0'){
-				w = parseFloat(map['CWEIGHT'])
-				bmi = 'Processing'
-			}else{
-				
-			}
-			
-			if(wait_scaler||map['STATUS']=='S1'){
-				$('.height').html(h*100);
-				$('.weight').html(w);
-                $('.bmi').html(bmi);
-                checkInput('height')
-                checkInput('weight')
-                checkInput('bmi')
-			}
-			
-			
-		}
-		
-		
-		
-		
-	}
 </script>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <h1>&nbsp;</h1>
@@ -182,11 +112,12 @@ patient = Patient.new unless patient
             <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Scoring</div>
                 <div class="row">
-                    <div class="col-3 v-entry v-under score"  name="score">
+					<img src="<%=url_for 'img/svg/score.svg'%>" class="col-6" >
+					<div class="col-3 v-entry v-under score"  name="score">
                     -
                     </div>
-                    
-                    <img src="<%=url_for 'img/svg/score.svg'%>" class="col-8" >
+                    <span class="col-3  alert"></span>
+                  
                     
                 </div>
             </div>
@@ -418,6 +349,7 @@ patient = Patient.new unless patient
 			}
 			checkInput(current_modal)
 			$("#opdModal").modal('toggle')
+			sos()
 			
         })
         var beep = document.createElement('audio');
@@ -500,6 +432,160 @@ patient = Patient.new unless patient
 	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi }
 		return data
     }
+
+
+
+
+	var wait_monitor = true;
+	var wait_scaler = true; 
+	
+	// S0. S1
+	// M0. M1
+	
+	
+	function sos(){
+		
+		score = 0
+		
+		list = ['spo2', 'bp_sys', 'temp', 'pr']
+		err = [];
+		for(var i=0;i<list.length;i++){
+			
+			v = list[i]
+			s = 0 
+			title = ""
+			t = $('.'+v).html().trim()
+			if(t!=''&&t!='-'&&t!='0'){
+				x = parseFloat(t)
+				
+				if(v=='temp'){
+					title = "temp"
+					if(x<=35)s=-2;
+					if(x>=35.1&&x<=36)s=-1;
+					if(x>=36.1&&x<=38)s=0;
+					if(x>=38.1&&x<=38.4)s=1;
+					if(x>=38.5)s=2;
+					
+				}else
+				if(v=='bp_sys'){
+					title = "BP systolic"
+					if(x<=80)s=-3;
+					if(x>=81&&x<=90)s=-2;
+					if(x>=91&&x<=100)s=-1;
+					if(x>=101&&x<=180)s=0;
+					if(x>=181&&x<=199)s=1;
+					if(x>=200)s=2;
+					
+				}else
+				if(v=='pr'){
+					title = "Pulse rate"
+					if(x<=40)s=-3;
+					if(x>=41&&x<=50)s=-1;
+					if(x>=51&&x<=100)s=0;
+					if(x>=100&&x<=120)s=1;
+					if(x>=121&&x<=139)s=2;
+					if(x>=140)s=3;
+					
+				}
+				
+				if(s!=0){
+					score+=Math.abs(s)
+					if(s<0)
+						err.push("Under "+title)
+					else
+						err.push("Over "+title)
+				}
+				
+			}
+			
+		}
+		console.log(err)
+		$('.score').html(score)
+
+		$('.alert').html(err.join('<br\>'))
+		 checkInput('score')
+		
+	}
+	
+	
+	function deviceSend(msg){
+	
+		$('#msg').html(msg);
+		
+		map = {}
+		
+		list = msg.split("|")
+		for(var i=0;i<list.length;i++){
+			p = list[i].split(":");
+			map[p[0]] = p[1];
+		}
+		
+		if(map['PR']=='-99')map['PR']='-'
+		if(map['SPO2']=='000')map['SPO2']='-'
+			
+		if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
+		    if(wait_monitor||map['STATUS']=='M1'){
+                $('.pr').html(map['PR'])
+                $('.spo2').html(map['SPO2'])
+                checkInput('pr')
+                checkInput('spo2')
+
+                if(map['STATUS']=='M1'){	
+                    $('.sys').html(map['SYS'])
+                    $('.dia').html(map['DIA'])
+                    checkInput('sys')
+                    checkInput('dia')
+                    wait_monitor = false;
+                    // $('.mean').html(map['MEAN'])
+                }
+            }
+		}
+		
+		if(map['STATUS']=='T1'){	
+				$('.temp').html(map['T1']);
+				checkInput('temp')
+		}
+		
+		if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
+			
+			var w = parseFloat(map['WEIGHT'])
+			var h = parseFloat(map['HEIGHT'])
+			
+			
+			var bmi = (w/(h*h)).toFixed(2);
+			if(map['STATUS']=='S0'){
+				w = parseFloat(map['CWEIGHT'])
+				bmi = 'Processing'
+			}else{
+				
+			}
+			
+			if(wait_scaler||map['STATUS']=='S1'){
+				$('.height').html(h*100);
+				$('.weight').html(w);
+                $('.bmi').html(bmi);
+                checkInput('height')
+                checkInput('weight')
+                checkInput('bmi')
+			}
+			
+			
+		}
+		
+		
+		sos()
+		
+	}
+
+	$('.p-name').click(function(){
+		
+		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80')
+		deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+		deviceSend('STATUS:T1|T1:35.4')
+		
+		
+		
+	})
     
 
 </script>
