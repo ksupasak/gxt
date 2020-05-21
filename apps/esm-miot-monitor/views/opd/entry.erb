@@ -17,6 +17,15 @@ patient = Patient.new unless patient
 	}
 	</style>
 <script>
+    function submitEntry(){
+        $.post( "post", prepare() , function( data ) {         
+            data.inspect 
+            $("#beep").click()
+            setTimeout(function(){ window.location.replace("result?hn=<%=params[:hn]%>");  }, 1000);
+                   
+        });
+    }
+
     function checkInput(d){
         v = $("."+d).html().trim()
         c = $("."+d).closest(".d-entry-dark,.d-entry")
@@ -33,8 +42,15 @@ patient = Patient.new unless patient
         })
 
         if(isComplete){
-            $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
-            $('.btn-opd').click(submitEntry)    
+            if($(".btn-entry").attr('class')){
+                $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+                $('.btn-opd').click(submitEntry)   
+                $("#ready").click() 
+            }
+        }else{
+            $('.btn-opd').unbind()
+            $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
+            
         }
     }
 
@@ -125,10 +141,12 @@ patient = Patient.new unless patient
                 <div class="l-entry">Blood Pressure</div> 
                 <div class="row">
                     <div class="col-3">
-                        <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="40">
+                        <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="60" style="padding-top:10px">
                     </div>
                     <div class="col-9 ">
-                    <span class="sys v-entry bp_sys" label="Blood pressure - Systolic" name="bp_sys">-</span> / <span class="dia v-entry bp_dia" label="Blood pressure - Diastolic" name="bp_dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
+                    <span class="sys v-entry bp_sys" label="Blood pressure - Systolic" name="bp_sys">-</span> 
+                    <span style="font-size:3em;">/</span>
+                    <span class="dia v-entry bp_dia" label="Blood pressure - Diastolic" name="bp_dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
                     </div>
                 </div>
             </div>
@@ -137,12 +155,15 @@ patient = Patient.new unless patient
                 <div class="l-entry">Pulse</div>
                 <div class="row">
                     <div class="col-3">
-                        <img src="<%=url_for 'img/svg/hr.svg'%>" width="40">
+                        <img src="<%=url_for 'img/svg/hr.svg'%>" width="40" style="padding-top:10px">
                     </div>
-                    <div class="col-4 v-entry pr" label="Pulse (BPM)" name="pr" >
+                    <div class="col-3 v-entry pr" label="Pulse (BPM)" name="pr" >
                     -
                     </div>
-                    <div class="col-4 v-entry spo2" label="SpO2 %" name="spo2" >
+                    <div class="col-3">
+                    <img src="<%=url_for 'img/svg/o2.svg'%>" width="40">
+                    </div>
+                    <div class="col-3 v-entry spo2" label="SpO2 %" name="spo2" >
                     -
                     </div>
                 </div>
@@ -213,16 +234,16 @@ patient = Patient.new unless patient
 
         <div class="col-4">
             <div class="row">
-                <div class="col-5 d-entry">
+                <div class="col-5 d-entry de-empty">
                 <div class="l-entry">Height (cm)</div>
                 <span class="v-entry  v-under height" label="Height (cm)" name="height" style="display:block">-</span>
                 </div>
-                <div class="col-5 d-entry">
+                <div class="col-5 d-entry de-empty">
                 <div class="l-entry">Weight (kg)</div>
                 <span class=" v-entry v-under  weight" label="Weight (kg)" name="weight" style="display:block">-</span>
                 </div>
                 
-                <div class="col-10 d-entry">
+                <div class="col-10 d-entry de-empty">
                 <div class="l-entry">BMI</div>
                 <span class="v-entry v-under  bmi" label="BMI" name="bmi" style="display:block">-</span>
                 </div>
@@ -234,8 +255,10 @@ patient = Patient.new unless patient
             </div>
             <center>
             <a href="#" class="btn btn-primary btn-entry">ส่ง</a>
-            <a href="index" class="">ยกเลิก</a>  
+            <a href="index" class="btn btn-sub">ยกเลิก</a>  
             <div id="msg"></div>
+            <a href="#" id="beep" style="display:none">beep</a>
+            <a href="#" id="ready" style="display:none">ready</a>
             </center>
         </div>
     </div> 
@@ -280,7 +303,7 @@ patient = Patient.new unless patient
         <tr>
             <td><div class="btn-hn">.</div></td>
             <td><div class="btn-hn">0</div></td>
-            <td><div class="btn-hn">Del</div></td>
+            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
         </tr>
         </table>
         </center>
@@ -291,32 +314,40 @@ patient = Patient.new unless patient
       </div>
     </div>
   </div>
-  <audio  src="" preload></audio>
+<div id="buffer">
+</div>
   <script>
-	  
-      //let src = '<%=url_for 'sounds/water_droplet.mp3'%>';
-     
-	  
-    $(".btn-hn").on('click',function(){
-		// audio.pause()
-		
-        //let audio = new Audio(src);
-       // audioElement.play()
-       //audio.play();
+    function hnPush(s){
         v = $(".display-hn").html().trim()
-        b = $(this).html()
-        if(b.indexOf("Del")!==-1){
+        b = s.html()
+        if(b.indexOf("img")!==-1){
             v = v.substr(0,v.length-1)
         }else{
             v+=b
         }
-        $(".display-hn").html(v)
-        var myAudio = document.createElement('audio');
-        if (myAudio.canPlayType('audio/mpeg')) {
-        myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
-        }
+        $(".display-hn").html(v)       
+    }
+
+    var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	for(var i=0;i<buffer;i++){
+		var myAudio = document.createElement('audio');
+		  myAudio.setAttribute("id","audio-"+i)
+		 if (myAudio.canPlayType('audio/mpeg')) {
+			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+		 }
+		 $('#buffer').append(myAudio);
+		  
+	}
+	  	  
+    $(".btn-hn").on('click',function(){
+        var myAudio = document.getElementById('audio-'+cur_buffer)
         myAudio.play();
-        
+        cur_buffer+=1;
+        if(cur_buffer==10)cur_buffer=0;
+        hnPush($(this))      
+        return false;
     })
     </script>
 </div>
@@ -340,11 +371,10 @@ patient = Patient.new unless patient
 
 </form>
 
-
 <script>
-    
+
 	$('#bp_start').click(function(){
-		alert('start')
+		//alert('start')
 		if(typeof device_interface === 'undefined'){
 			
 		}else{
@@ -354,9 +384,6 @@ patient = Patient.new unless patient
 		
 	})
     
-
-
-
     $(document).ready(function(){
 		
 		var current_modal ;
@@ -392,7 +419,23 @@ patient = Patient.new unless patient
 			checkInput(current_modal)
 			$("#opdModal").modal('toggle')
 			
-		})
+        })
+        var beep = document.createElement('audio');
+        if (beep.canPlayType('audio/mpeg')) {
+            beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+        }	
+        var ready = document.createElement('audio');
+        if (ready.canPlayType('audio/mpeg')) {
+            ready.setAttribute('src','<%=url_for 'sounds/Wood_Plank_Flicks.mp3'%>');
+        }	
+        
+        $("#beep").on("click",function(){
+            beep.play();       
+        })
+
+        $("#ready").on("click",function(){
+            ready.play();       
+        })
 		
 		
     })
@@ -458,14 +501,5 @@ patient = Patient.new unless patient
 		return data
     }
     
-    function submitEntry(){
-        $.post( "post", prepare() , function( data ) {
-			
-			data.inspect 
-			window.location.replace("result?hn=<%=params[:hn]%>");
-		
-		});
-    }
-	
-	$('.btn-opd').click(submitEntry)
+
 </script>
