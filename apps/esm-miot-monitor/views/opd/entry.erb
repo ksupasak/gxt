@@ -152,7 +152,12 @@ patient = Patient.new unless patient
             </div>
             
             <div class="d-entry-dark dk-empty">
-                <div class="l-entry">Pulse</div>
+                <div class="l-entry">
+                    <div class="row">
+                    <div class="col">Pulse</div>
+                    <div class="col">spO2</div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/hr.svg'%>" width="40" style="padding-top:10px">
