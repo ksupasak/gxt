@@ -56,6 +56,16 @@ div {
     font-size: 1.8em;
     border-radius: 12px;
 }
+.btn-entry{
+    background: #919191;  
+    background: -webkit-linear-gradient(to bottom, #919191, #BBB);  
+    background: linear-gradient(to bottom, #919191, #BBB); 
+    padding:10px 60px 10px 60px;
+    margin:20px;
+    font-size: 1.8em;
+    border-radius: 12px;
+    color: #CCC;
+}
 .p-name{
     text-align: center;
     vertical-align: middle;
@@ -148,5 +158,15 @@ div {
     background: linear-gradient(to bottom, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 20px;
     font-size: 1.4em;
+    height: 250px !important; 
+    overflow-y: auto !important;
+    width: 100%;
  
 }
+.r-first{
+    color:white;
+}
+.table tbody {
+    height:200px !important;
+  }
+

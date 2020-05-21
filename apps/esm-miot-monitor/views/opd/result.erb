@@ -1,11 +1,14 @@
 <%
 	
+date = Time.now
+months = %w{มกราคม กุมภาพันธ์ มีนาคม เมษายน พฤษภาคม มิถุนายน กรกฎาคม สิงหาคม กันยายน ตุลาคม พฤศจิกายน ธันวาคม}
+mon_th = months[date.strftime("%m").to_i-1]
 patient = Patient.where(:hn=>params[:hn]).first
 
 
 admits = Admit.where(:patient_id=>patient.id).all
 
-records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
+records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).order(:stamp.desc).all
 	
 	
 %>
@@ -20,33 +23,35 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
         </g>        
     </defs>
     <style>
-    .triangle{fill:green;}
+    .triangle{fill:#51A451;}
     .symbol{height:20px;width:20px;}
     </style>
 </svg>
-<h1>Result</h1>
+<div class="p-name" style="padding:20px">
+HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>ฉันท์มิตร แก้วพรหมมาลย์
+</div>
 
 <div class="row">
     <div class="col-6">
-    <div class="d-result">
+    <div class="d-result ">
     Blood Pressure
     </div>
     </div>
     <div class="col">
-    <div class="d-result">
+    <div class="d-result ">
     Body temperature
     </div>
     </div>
 </div>
 <div class="row-fluid">
     History Records
-    <div class="d-result">
-    <table class="table table-sm">
+    <div class="d-result ">
+    <table class="table table-sm ">
     <thead>
-        <tr class="table-primary">
+        <tr class="table-primary sticky-top">
             <th>Date</th>
             <th>Weight</th>
-            <th>Height</th>
+            <!--<th>Height</th>-->
             <th>BMI</th>
 			
             <th>BP</th>
@@ -58,7 +63,9 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
         </tr>
     </thead>
     <tbody>
-		<% for i in records 
+        <% 
+        isFirst = true
+        for i in records 
 			
 		data = JSON.parse(i.data)
 		weight = data['weight']
@@ -66,18 +73,18 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
 		bmi = data['bmi']		
 		%>
 		
-        <tr>
-            <td><%=i.stamp%></td>
+        <tr class="<%=(isFirst)?"bg-primary r-first":""%>" >
+            <td><%=i.stamp.strftime('%d/%m/%Y %H:%M')%></td>
             <td><%=weight%>
             <svg class="symbol">
                 <use xlink:href="#t-down" />
             </svg>
 			</td>
-            <td><%=height%>
+            <!--<td><%=height%>
             <svg class="symbol">
                 <use xlink:href="#t-down" />
             </svg>
-			</td>
+			</td>-->
               <td><%= bmi %></td>
 			<td><%= i.bp %></td>
             <td><%= i.pr %></td>
@@ -87,7 +94,7 @@ records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
 			  
             <td><span class="badge badge-pill badge-success badge-score"><%=i.score%></span></td>   
         </tr>
-		
+		<% isFirst=false %>
 		<% end %>
         <!-- <tr>
             <td>19/04/2020</td>

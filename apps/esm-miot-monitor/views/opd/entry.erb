@@ -208,7 +208,7 @@ patient = Patient.new unless patient
                 </div>
             </div>
             <center>
-            <a href="#" class="btn btn-primary btn-opd">ส่ง</a>
+            <a href="#" class="btn btn-primary btn-entry">ส่ง</a>
             <a href="index" class="">ยกเลิก</a>  
             <div id="msg"></div>
             </center>
@@ -340,14 +340,26 @@ patient = Patient.new unless patient
         }else{
             c.addClass(prefix+"empty").removeClass(prefix+"active")
         }
-        //alert(c.attr('class'))
-        
+        //alert(c.attr('class'))       
+    }
+
+	function checkInput2(d){
+        v = d.html().trim()
+        c = d.closest(".d-entry-dark,.d-entry")
+        prefix="de-"
+        if(c.hasClass("d-entry-dark")) prefix="dk-"
+        if(v!==''&&v!=='-'){              
+            c.addClass(prefix+"active").removeClass(prefix+"empty")      
+        }else{
+            c.addClass(prefix+"empty").removeClass(prefix+"active")
+        }
+        //alert(c.attr('class'))       
     }
 
     $(document).ready(function(){
 		
 		var current_modal ;
-			
+
         $(".v-entry").click(function(){
             v = $(this).html().trim()
             if(v=='-')v = '' 
