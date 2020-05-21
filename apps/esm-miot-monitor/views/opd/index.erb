@@ -72,10 +72,12 @@
 
 </div>
 </div>
+<div id="buffer">
+</div>
 <audio id="my-audio" preload="auto">
-<source src="<%=url_for 'sounds/water_droplet-trim.mp3'%>" type="audio/mpeg">
+<source src="<%=url_for 'sounds/water_droplet.mp3'%>" type="audio/mpeg">
 <!-- place fallback here as <audio> supporting browsers will ignore it -->
-<p>Download<a href="<%=url_for 'sounds/water_droplet-trim.mp3'%>">audiofile.mp3</a></p>
+<p>Download<a href="<%=url_for 'sounds/water_droplet.mp3'%>">audiofile.mp3</a></p>
 </audio>
 
 <script>
@@ -90,10 +92,23 @@
         }
         $(".display-hn").html(v)       
     }
+	
+	var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	for(var i=0;i<buffer;i++){
+		var myAudio = document.createElement('audio');
+		  myAudio.setAttribute("id","audio-"+i)
+		 if (myAudio.canPlayType('audio/mpeg')) {
+			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+		 }
+		 $('#buffer').append(myAudio);
+		  
+	}
 
     $(".btn-hn").on("click",function(){
       
-        try{
+        // try{
             // var myAudio = document.createElement('audio');
   //           if (myAudio.canPlayType('audio/mpeg')) {
   //           myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet-trim.mp3'%>');
@@ -101,12 +116,16 @@
   //
   //           myAudio.play();
   
-  				var myAudio = document.getElementById('my-audio')
-  
+  				var myAudio = document.getElementById('audio-'+cur_buffer)
   				myAudio.play();
-  
-  
-        }catch(e){}     
+  			  	cur_buffer+=1;
+				if(cur_buffer==10)cur_buffer=0;
+        //
+        // }catch(e){
+        //
+        //
+        //
+        // }    
 		  hnPush($(this))  
         return false;
     })
