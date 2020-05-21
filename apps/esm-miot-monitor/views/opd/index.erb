@@ -73,10 +73,11 @@
 </div>
 </div>
 <audio id="my-audio" preload="auto">
-<source src="<%=url_for 'sounds/water_droplet.mp3'%>" type="audio/mpeg">
+<source src="<%=url_for 'sounds/water_droplet-trim.mp3'%>" type="audio/mpeg">
 <!-- place fallback here as <audio> supporting browsers will ignore it -->
-<p>Download<a href="<%=url_for 'sounds/water_droplet.mp3'%>">audiofile.mp3</a></p>
+<p>Download<a href="<%=url_for 'sounds/water_droplet-trim.mp3'%>">audiofile.mp3</a></p>
 </audio>
+
 <script>
 
     function hnPush(s){
@@ -91,14 +92,22 @@
     }
 
     $(".btn-hn").on("click",function(){
-        hnPush($(this))
+      
         try{
-            var myAudio = document.createElement('audio');
-            if (myAudio.canPlayType('audio/mpeg')) {
-            myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
-            }
-            myAudio.play();
-        }catch(e){}       
+            // var myAudio = document.createElement('audio');
+  //           if (myAudio.canPlayType('audio/mpeg')) {
+  //           myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet-trim.mp3'%>');
+  //           }
+  //
+  //           myAudio.play();
+  
+  				var myAudio = document.getElementById('my-audio')
+  
+  				myAudio.play();
+  
+  
+        }catch(e){}     
+		  hnPush($(this))  
         return false;
     })
 
