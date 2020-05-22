@@ -132,7 +132,12 @@
 		$('.btn-opd').html('Loading')
         hn = $(".display-hn").html().trim()
         $("#beep").click()
-        setTimeout(function(){ window.location.replace("entry?hn="+hn);  }, 1000);
+		<%
+			device_id = '00000'
+			
+			device_id = params[:device_id] if params[:device_id]
+		%>
+        setTimeout(function(){ window.location.replace("entry?hn="+hn+"&device_id=<%=device_id%>");  }, 1000);
 	}
 	
 	$('.btn-opd').click(function(){	

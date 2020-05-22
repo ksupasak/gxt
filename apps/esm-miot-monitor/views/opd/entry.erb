@@ -245,6 +245,8 @@ patient = Patient.new :hn=>params[:hn] unless patient
         </center>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
       </div>
@@ -319,6 +321,11 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		
 		
 	})
+	$('.btn-clear').click(function(){
+		$(".display-hn").html('')
+        var myAudio = document.getElementById('audio-0')
+        myAudio.play();
+	})
     
     $(document).ready(function(){
 		
@@ -380,6 +387,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 	function prepare(){
 		var data = {};
 		hn = "<%=params[:hn]%>"
+		var device_id = "<%=params[:device_id]%>"
 		var today = new Date();
 		var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -434,7 +442,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		
 		
 		
-	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi }
+	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
 		return data
     }
 
