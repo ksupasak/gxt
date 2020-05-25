@@ -49,7 +49,9 @@ end
 HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
 </div>
 
-<script src="https://d3js.org/d3.v4.js"></script>
+<!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+<script src="/vendor/d3/d3.min.cus.js"></script>
+
 <div class="row">
     <div class="col-6">
     <div class="d-result ">
@@ -73,7 +75,8 @@ HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= pati
               "translate(" + margin.left + "," + margin.top + ")");
     
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
+    // d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
+	    d3.csv("", function(data) {
     
       // group the data: I want to draw one line per group
       var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
@@ -145,7 +148,8 @@ var svgbar = d3.select("#barchart")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // get the data
-d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
+// d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
+	d3.csv("", function(data) {
 
   // X axis: scale and draw:
   var x = d3.scaleLinear()

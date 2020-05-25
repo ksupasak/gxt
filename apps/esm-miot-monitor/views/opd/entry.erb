@@ -14,6 +14,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		text-align :center;
 		display:inline-block;
 		width:100px;
+
 	}
 	</style>
 <script>
@@ -41,6 +42,8 @@ patient = Patient.new :hn=>params[:hn] unless patient
         $(".d-entry-dark,.d-entry").each(function(){
             if($(this).attr('class').indexOf("empty")!==-1&&isComplete) isComplete=false;
         })
+		
+		// if(v=='-')isComplete=true;
 
         if(isComplete){
             if($(".btn-entry").attr('class')){
@@ -74,18 +77,28 @@ patient = Patient.new :hn=>params[:hn] unless patient
                         <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="60" style="padding-top:10px">
                     </div>
                     <div class="col-9 ">
+					<center>
                     <span class="sys v-entry bp_sys" label="Blood pressure - Systolic" name="bp_sys">-</span> 
                     <span style="font-size:3em;">/</span>
                     <span class="dia v-entry bp_dia" label="Blood pressure - Diastolic" name="bp_dia">-</span><!-- &nbsp;&nbsp;&nbsp;m <span class="mean">-</span> -->
-                    </div>
+				</center>
+				<center style="margin-top:-20px">
+                    <span class="mean v-entry bp_mean" style="font-size:1.5em;margint-top:-20px" label="Blood pressure - Mean" name="bp_mean">-</span> 
+				</center>
+					</div>
+	               	
+					
+					
                 </div>
+             
+				
             </div>
             
             <div class="d-entry-dark dk-empty">
                 <div class="l-entry">
                     <div class="row">
-                    <div class="col">Pulse</div>
-                    <div class="col">spO2</div>
+                    <div class="col">Pulse (BPM)</div>
+                    <div class="col">SpO<sub>2</sub></div>
                     </div>
                 </div>
                 <div class="row">
@@ -104,7 +117,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
                 </div>
             </div>
             <div class="d-entry-dark dk-empty">
-                <div class="l-entry">Body Temperature</div>
+                <div class="l-entry">Body Temperature (C<sup>o</sup>)</div>
                 <div class="row">
                     <div class="col-3">
                         <img src="<%=url_for 'img/svg/temp.svg'%>" width="40">
@@ -121,10 +134,16 @@ patient = Patient.new :hn=>params[:hn] unless patient
 					<div class="col-3 v-entry v-under score"  name="score">
                     -
                     </div>
-                    <span class="col-3  alert"></span>
+                  
                   
                     
                 </div>
+                <div class="row">
+				<div class="col-12">
+				    <span class="col-3  alert"></span>
+                </div>
+                </div>
+				
             </div>
         </div> 
         
@@ -171,11 +190,11 @@ patient = Patient.new :hn=>params[:hn] unless patient
         <div class="col-4">
             <div class="row">
                 <div class="col-5 d-entry de-empty">
-                <div class="l-entry">Height (cm)</div>
+                <div class="l-entry">ส่วนสูง (เซ็นติเมตร)</div>
                 <span class="v-entry  v-under height" label="Height (cm)" name="height" style="display:block">-</span>
                 </div>
                 <div class="col-5 d-entry de-empty">
-                <div class="l-entry">Weight (kg)</div>
+                <div class="l-entry">น้ำหนัก (กิโลกรัม)</div>
                 <span class=" v-entry v-under  weight" label="Weight (kg)" name="weight" style="display:block">-</span>
                 </div>
                 
@@ -395,6 +414,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		var bp=''
 		var bp_sys=''
 		var bp_dia=''
+		var bp_mean=''
 		var pr=''
 		var spo2=''
 		var temp=''
@@ -409,6 +429,11 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		$('.bp_dia').each(function(){
 			bp_dia = $(this).html().trim();
 		})
+		
+		$('.bp_mean').each(function(){
+			bp_mean = $(this).html().trim();
+		})
+		
 		$('.weight').each(function(){
 			weight = $(this).html().trim();
 		})
@@ -442,7 +467,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		
 		
 		
-	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+	 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
 		return data
     }
 
@@ -459,7 +484,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 	function sos(){
 		
 		score = 0
-		
+		count = 0 
 		list = ['spo2', 'bp_sys', 'temp', 'pr']
 		err = [];
 		for(var i=0;i<list.length;i++){
@@ -470,7 +495,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 			t = $('.'+v).html().trim()
 			if(t!=''&&t!='-'&&t!='0'){
 				x = parseFloat(t)
-				
+				count++;
 				if(v=='temp'){
 					title = "temp"
 					if(x<=35)s=-2;
@@ -504,19 +529,23 @@ patient = Patient.new :hn=>params[:hn] unless patient
 				if(s!=0){
 					score+=Math.abs(s)
 					if(s<0)
-						err.push("Under "+title)
+						err.push("- Under "+title)
 					else
-						err.push("Over "+title)
+						err.push("- Over "+title)
+					
 				}
 				
 			}
 			
 		}
 		console.log(err)
-		$('.score').html(score)
-
-		$('.alert').html(err.join('<br\>'))
-		 checkInput('score')
+		
+		if(count>0){
+			$('.score').html(score)
+ 	   		checkInput('score')
+		}
+		$('.alert').html(err.join('&nbsp;'))
+		
 		
 	}
 	
@@ -533,29 +562,45 @@ patient = Patient.new :hn=>params[:hn] unless patient
 			map[p[0]] = p[1];
 		}
 		
-		if(map['PR']=='-99')map['PR']='-'
-		if(map['SPO2']=='000')map['SPO2']='-'
+		if(map['PR']=='-99'){
+			map['PR']='-'
+			map['SPO2']='-'
+		}	
 			
+		if(map['T1']&&map['T1']!=''){
+			c = parseFloat(map['T1']).toFixed(1)
+			$('.temp').html(c);
+			checkInput('temp')
+		}
+		
 		if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
 		    if(wait_monitor||map['STATUS']=='M1'){
                 $('.pr').html(map['PR'])
                 $('.spo2').html(map['SPO2'])
                 checkInput('pr')
                 checkInput('spo2')
+			
+                // $('.temp').html(map['T1'])
+              
+                
 
                 if(map['STATUS']=='M1'){	
                     $('.sys').html(map['SYS'])
                     $('.dia').html(map['DIA'])
-                    checkInput('sys')
+                    $('.mean').html(map['MEAN'])
+                    
+					checkInput('sys')
                     checkInput('dia')
+					
                     wait_monitor = false;
                     // $('.mean').html(map['MEAN'])
                 }
             }
 		}
 		
-		if(map['STATUS']=='T1'){	
-				$('.temp').html(map['T1']);
+		if(map['STATUS']=='T1'){
+				c = parseFloat(map['T1']).toFixed(1)
+				$('.temp').html(c);
 				checkInput('temp')
 		}
 		
@@ -566,20 +611,22 @@ patient = Patient.new :hn=>params[:hn] unless patient
 			
 			
 			var bmi = (w/(h*h)).toFixed(2);
-			if(map['STATUS']=='S0'){
-				w = parseFloat(map['CWEIGHT'])
-				bmi = 'Processing'
-			}else{
-				
-			}
+			// if(map['STATUS']=='S0'&&wait_scaler){
+// 				w = parseFloat(map['CWEIGHT'])
+// 				bmi = 'Processing'
+// 			}else{
+//
+// 			}
 			
-			if(wait_scaler||map['STATUS']=='S1'){
-				$('.height').html(h*100);
+			if(map['STATUS']=='S1'){
+				$('.height').html((h*100).toFixed(1));
 				$('.weight').html(w);
                 $('.bmi').html(bmi);
+				
                 checkInput('height')
                 checkInput('weight')
                 checkInput('bmi')
+				wait_scaler=false;
 			}
 			
 			
@@ -592,7 +639,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 
 	$('.p-name').click(function(){
 		
-		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80')
+		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
 		deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
 		deviceSend('STATUS:T1|T1:35.4')
 		

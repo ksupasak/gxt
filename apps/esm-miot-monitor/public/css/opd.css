@@ -150,7 +150,7 @@ div {
     font-size: 1.4em;
 }
 .v-entry{
-    font-size: 3em;
+    font-size: 3.5em;
     color:#42B7AB;
 }
 .v-under{
@@ -160,7 +160,7 @@ div {
     background: #BCD1E4;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to bottom, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to bottom, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 1.4em;
     height: 250px !important; 
     overflow-y: auto !important;

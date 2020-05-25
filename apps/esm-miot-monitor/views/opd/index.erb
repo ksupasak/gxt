@@ -27,7 +27,7 @@
     <div class="row">
     <div class="col-12">
     <div class="head-hn">
-    กรอกเลข HN ของท่าน
+   <center> กรอกเลข HN ของท่าน</center>
     </div>
     </div>
     <div class="col-12">
@@ -63,11 +63,13 @@
     </table>
     <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
     <a href="#" id="beep" style="display:none"></a>
-    </center>
+    </center> 
+
+    </div>
+	<a href="log" class="btn-result-cancle" style="float:right">View log</a> 
     </div>
     </div>
 
-    </div>
  
 
 </div>
@@ -109,13 +111,14 @@
 	}
 
     $(".btn-hn").on("click",function(){
-      
-  				var myAudio = document.getElementById('audio-'+cur_buffer)
-  				myAudio.play();
-  			  	cur_buffer+=1;
-				if(cur_buffer==10)cur_buffer=0;
-  
+      			
 		  hnPush($(this))  
+		
+		var myAudio = document.getElementById('audio-'+cur_buffer)
+		myAudio.play();
+		cur_buffer+=1;
+		if(cur_buffer==10)cur_buffer=0;
+		
         return false;
     })
 

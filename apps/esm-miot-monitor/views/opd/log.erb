@@ -1,6 +1,8 @@
 <% 
 records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 %>
+<br/>
+<br/>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <svg width="0" height="0">
     <defs>
