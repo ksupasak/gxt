@@ -75,11 +75,8 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 			
 		else
 			
-			station = nil
-		begin
+	
 		station = Station.find i.station_id
-		rescue
-		end
 		
 		ambu = Ambulance.find i.ambulance_id
 		

@@ -24,7 +24,8 @@
 #   end
 # 
 # end
-
+Mongoid.raise_not_found_error = false
+Mongoid::Config.belongs_to_required_by_default = false
 # config/initializers/mongoid.rb
 module Moped
   module BSON
@@ -35,7 +36,7 @@ module Moped
   end
 end
 
-Mongoid::Config.belongs_to_required_by_default = false
+
 
 # puts 'defind mongo wrapper'
 
