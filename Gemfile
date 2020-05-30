@@ -23,7 +23,7 @@ gem 'activesupport', require: 'active_support/all'
 gem 'rerun'
 
 gem 'mongo'
-gem 'mongo_mapper'
+# gem 'mongo_mapper'
 gem 'mongoid'
 gem 'rack-gridfs'
 gem 'bson_ext'

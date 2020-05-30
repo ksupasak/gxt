@@ -15,6 +15,13 @@ require 'crc'
 require 'active_support/all'
 
 require 'rack/ssl-enforcer'
+
+# Mongo config
+
+require 'mongo'
+# require 'mongo_mapper'
+require 'mongoid'
+
 # use Rack::SslEnforcer
 
 # set :session_secret, 'asdfa2342923422f1adc05c837fa234230e3594b93824b00e930ab0fb94b'
@@ -35,12 +42,15 @@ puts "Mode : #{mode}"
 require_relative 'config/init'
 
 
-# Mongo config
 
-require 'mongo'
-require 'mongo_mapper'
 
 set :mongo_prefix, @conf_mongo_prefix
+
+
+# MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}"}}, 'production')
+Mongoid.load!("config/mongoid.yml", :production)
+
+
 
 # Redis config
 require 'em-hiredis'

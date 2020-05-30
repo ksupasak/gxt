@@ -38,9 +38,13 @@ return_url = params[:return] if params[:return]
 		patient = Patient.create params[:patient]
 		params[:record][:patient_id] = patient.id
 		params[:record][:admit_stamp] = Time.now
-		record =  this.model.create params[:record]
+		puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx#{this.model.count}"
 		
-		
+		record =  this.model.create! params[:record]
+		puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy#{this.model.count}"
+		puts record.inspect
+		puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+		# puts
 		
 	%>
 	<%#redirect_to "../Admit/show?id=#{record.id}"%>

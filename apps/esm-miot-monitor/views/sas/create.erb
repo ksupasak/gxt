@@ -1,41 +1,6 @@
 <%
 
 if request.post?
-	
-    # key :hn, String
-    # key :name, String
-    # key :public_id, String
-    # key :prefix_name, String
-    # key :first_name, String
-    # key :last_name, String
-    # key :dob, Time
-    # key :gender, String
-    # key :contact_name, String
-    # key :contact_phone, String
-    #
-
-
-    # key :patient_id, ObjectId
- #    key :station_id, ObjectId
- #    key :score_id, ObjectId
- #    key :zone_id, ObjectId
- #
- #    key :provider_id, ObjectId
- #    key :procedure_id, ObjectId
- #    key :diagnosis_id, ObjectId
- #
- #    key :ambulance_id, ObjectId
- #
- #    key :admit_stamp, Time
- #    key :discharge_stamp, Time
- #
- #    key :status, String
- #
- #
- #    key :current_score, Integer
- #
- #    key :note, String
- #
 
 	p = params[:patient]
 	
@@ -358,11 +323,11 @@ else
 						waypoints = Array();
 						drawPath(directionsService, directionsDisplay,result['start_location'],result['end_location']);
 						
-						$('#ambulance_id').val(result['id'])
+						$('#ambulance_id').val(result['id']['$oid'])
 						
 						$('#ambu_phone').val(result['ambu']['phone'])
 
-						$('#station_id').val(result['ambu']['station_id'])
+						$('#station_id').val(result['ambu']['station_id']['$oid'])
 						// $('#ambu_phone').val(result['ambu']['phone'])
 						
 						
@@ -374,7 +339,7 @@ else
 	// 						$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
 							
 						}else{
-							$('.ambu-'+result['id']).hide()
+							$('.ambu-'+result['id']['$oid']).hide()
 						}
 							
 					  
@@ -562,7 +527,7 @@ else
 						console.log(i)
 						
 						$.ajax({
-						  url: "distance?l="+latlng_txt+"&ambu="+i['id'],
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']['$oid'],
 						  context: document.body
 						}).done(function(data) {
 					  
@@ -571,12 +536,12 @@ else
 							if(result['status']=='200 OK'){
 								
 								
-								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
-								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
-								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
+								$('.ambu-'+result['id']['$oid']+" .distance").html(result['distance']['text'])
+								$('.ambu-'+result['id']['$oid']+" .duration").html(result['duration']['text'])
+								$('.ambu-'+result['id']['$oid']+" .last_address").html(result['start_address'])
 								
 							}else{
-								$('.ambu-'+result['id']).hide()
+								$('.ambu-'+result['id']['$oid']).hide()
 							}
 								
 						  

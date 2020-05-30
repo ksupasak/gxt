@@ -139,8 +139,9 @@ class HomeController < GXT
            
            ws.onmessage do |msg_data|
              begin 
-             
+              
              name =  @context.settings.apps_ws_rv[ws.hash]
+              
              switch name
              
              
@@ -149,7 +150,7 @@ class HomeController < GXT
              # forward to redis
              redis.publish("miot/#{@context.settings.name}/in", msg_data)
              
-             
+            
              
              msgs = msg_data.split("EOL\n")             
              

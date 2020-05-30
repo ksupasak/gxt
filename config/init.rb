@@ -2,6 +2,7 @@ require_relative 'server_config'
 require_relative 'mongo_config'
 require_relative 'redis_config'
 require_relative 'config'
+require_relative 'mongoid'
 
 if ENV['DEFAULT_APP']
   DEFAULT_APP =  ENV['DEFAULT_APP'] 

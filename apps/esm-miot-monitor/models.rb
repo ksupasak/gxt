@@ -1,10 +1,79 @@
 
-module EsmMiotMonitor
+module Mongoid
+  module Clients
+    module StorageOptions
+      extend ActiveSupport::Concern
+      module ClassMethods
+        def storage_options_defaults
+            t = name.split("::")
+            
+            {
+              collection: "#{t[0].underscore}.#{t[1].collectionize}",
+              client: :default
+            }
+        end
+        
+      end
+    end
+  end
+end  
 
-class User
-  include MongoMapper::Document
-  belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
+module EsmMiotMonitor
   
+class ObjectId
+end  
+
+
+class GXTModel
+
+    # include Mongoid::Document
+    # include Mongoid::Timestamps
+    # store_in collection: name.collectionize.to_sym
+   
+    def self.keys
+     
+      self.fields.keys.collect{|i| [i]}
+      
+    end
+    
+    def self.key name, type
+      # puts "Key \#{type.inspect} \#{type.class}"
+      # for i in type.methods.sort
+      #         begin
+      #           r = type.send(i)
+      #           puts "\#{i} \#{r.inspect}"
+      #         rescue Exception=>e
+      #         end
+      #         
+      #       end
+      
+      type = BSON::ObjectId if type == ObjectId
+      
+      if type==Array
+        field name, type: type, default: []
+      else
+        field name, type: type
+      end
+    end
+    
+    
+    def self.size
+      self.count
+    end
+    
+    def self.timestamps!
+      
+    end
+    
+ 
+end  
+  
+
+class User < GXTModel
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
   key :login, String
   key :salt,  String
   key :hashed_password,  String
@@ -14,33 +83,38 @@ class User
   timestamps!
 end
 
-class Role
-  include MongoMapper::Document
+class Role < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   key :name, String
  
   timestamps!
 end
-class Provider
-  include MongoMapper::Document
+class Provider < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
    key :name, String
   
 end
 
-class Procedure
-  include MongoMapper::Document
+class Procedure < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
    key :name, String
   
 end
 
-class Diagnosis
-  include MongoMapper::Document
+class Diagnosis < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
    key :name, String
   
 end
 
 
-class Zone
-  include MongoMapper::Document
+class Zone < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   has_many :stations, :class_name=>'EsmMiotMonitor::Station'
   has_many :ambulances, :class_name=>'EsmMiotMonitor::Ambulance'
@@ -52,8 +126,9 @@ end
 
 
 
-class Station
-  include MongoMapper::Document
+class Station < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -70,8 +145,9 @@ class Station
 end
 
 
-class Sense
-  include MongoMapper::Document
+class Sense < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
@@ -90,18 +166,19 @@ class Sense
 end
 
 
-class Admit
-  include MongoMapper::Document
+class Admit < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
   belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   
-  has_many :records, :class_name=>'EsmMiotMonitor::DataRecord'
+  has_many :records, :class_name=>'EsmMiotMonitor::DataRecord', order: "start_time ASC"
   
-  has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord'
-  has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord'
+  has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time ASC"
+  has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time ASC"
   
   belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
   belongs_to :procedure, :class_name=>'EsmMiotMonitor::Procedure'
@@ -144,8 +221,9 @@ class Admit
   end
 end
 
-class AdmitLog
-  include MongoMapper::Document
+class AdmitLog  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -161,9 +239,10 @@ class AdmitLog
 end
 
 
-class NurseRecord
+class NurseRecord  < GXTModel
   
-  include MongoMapper::Document
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -184,8 +263,9 @@ class NurseRecord
   
 end
 
-class Medication
-  include MongoMapper::Document
+class Medication  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   key :name,  String
   key :concentration, String
@@ -193,8 +273,9 @@ class Medication
     
 end
 
-class MedicationRecord
-  include MongoMapper::Document
+class MedicationRecord  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   belongs_to :medication, :class_name=>'EsmMiotMonitor::Medication'
@@ -224,8 +305,9 @@ class MedicationRecord
   
 end
 
-class Patient
-  include MongoMapper::Document
+class Patient  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   
   key :hn, String 
@@ -248,8 +330,9 @@ end
 
 
 
-class Score
-  include MongoMapper::Document
+class Score  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   has_many :items, :class_name=>'EsmMiotMonitor::ScoreItem'
   
@@ -261,8 +344,9 @@ class Score
     end
 end
 
-class ScoreItem
-  include MongoMapper::Document
+class ScoreItem  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
   has_many :conditions, :class_name=>'EsmMiotMonitor::ScoreCondition'
@@ -276,8 +360,9 @@ class ScoreItem
   
 end
 
-class ScoreCondition
-  include MongoMapper::Document
+class ScoreCondition < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :score_item, :class_name=>'EsmMiotMonitor::ScoreItem'
   
@@ -302,8 +387,9 @@ end
 
 
 
-class Device
-  include MongoMapper::Document
+class Device  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   key :name, String
   key :ip, String
@@ -315,8 +401,9 @@ class Device
 end
 
 
-class Ambulance
-  include MongoMapper::Document
+class Ambulance  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
   has_one :admit, :class_name=>'EsmMiotMonitor::Admit'
@@ -337,8 +424,9 @@ class Ambulance
   
 end
 
-class AmbulanceDriver
-  include MongoMapper::Document
+class AmbulanceDriver  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   key :name, String
   key :mobile, String
   key :phone, String
@@ -349,8 +437,9 @@ end
 
 
 
-class Setting
-  include MongoMapper::Document
+class Setting  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   key :name, String
   key :value, String
   
@@ -366,8 +455,9 @@ end
 
 
 
-class DataRecord
-  include MongoMapper::Document
+class DataRecord  < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   

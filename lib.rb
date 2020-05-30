@@ -1,9 +1,14 @@
+
+
 def switch name
   
   settings.set :name, name 
   settings.set :app, settings.apps[name]
   settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
-  MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  # MongoMapper.database = "#{settings.mongo_prefix}-#{settings.name}"
+  Mongoid.override_database("#{settings.mongo_prefix}-#{settings.name}")
+  
+  
   
 end
 
@@ -114,7 +119,7 @@ get '/a/:gxt/:service/*.*' do
    for i in l
      
      f = File.join(i,"#{file_path}.#{ext}")
-     puts "-  Check for #{f}"
+     # puts "-  Check for #{f}"
      if File.exist? f
       file = f
       break
@@ -147,7 +152,7 @@ get '/:service/*.*' do
    for i in l
      
      f = File.join(i,"#{file_path}.#{ext}")
-     puts "-  Check for #{f}"
+     # puts "-  Check for #{f}"
      if File.exist? f
       file = f
       break

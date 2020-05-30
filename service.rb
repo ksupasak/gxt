@@ -93,8 +93,12 @@ def switch name
   settings.set :name, name 
   settings.set :app, settings.apps[name]
   settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
-  MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
+  # MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
   # end
+  Mongoid.override_database("#{settings.mongo_prefix}-#{settings.name}")
+  
+  
+  
   
 end
 

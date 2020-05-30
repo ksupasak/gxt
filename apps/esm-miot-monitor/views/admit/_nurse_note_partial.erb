@@ -1,8 +1,9 @@
 <%
 	
 admit = Admit.find(params[:admit_id])
+records = admit.nurse_records.sort
+# records = admit.nurse_records.sort :start_time
 
-records = admit.nurse_records.sort(:start_time)
 	
 %>
 <table class="table table-striped" style="border:0px solid #0c5758">
