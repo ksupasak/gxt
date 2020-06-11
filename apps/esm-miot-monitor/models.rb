@@ -118,11 +118,34 @@ class Zone < GXTModel
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   has_many :stations, :class_name=>'EsmMiotMonitor::Station'
   has_many :ambulances, :class_name=>'EsmMiotMonitor::Ambulance'
+  has_many :rooms, :class_name=>'EsmMiotMonitor::Room'
+  
   
   key :name, String 
   key :mode, String 
   
 end
+
+class Room < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
+  has_many :beds, :class_name=>'EsmMiotMonitor::Bed'
+  
+  key :name, String 
+  key :zoon_id, ObjectId
+  
+end
+
+class Bed < GXTModel
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
+  key :name, String 
+  key :room_id, ObjectId 
+  
+end
+
 
 
 
@@ -183,8 +206,9 @@ class Admit < GXTModel
   belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
   belongs_to :procedure, :class_name=>'EsmMiotMonitor::Procedure'
   belongs_to :diagnosis, :class_name=>'EsmMiotMonitor::Diagnosis'
-  
   belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance'
+  
+  belongs_to :bed, :class_name=>'EsmMiotMonitor::Bed'
   
   
   key :patient_id, ObjectId
@@ -197,6 +221,7 @@ class Admit < GXTModel
   key :diagnosis_id, ObjectId
   
   key :ambulance_id, ObjectId
+  key :bed_id, ObjectId
   
   key :period, Integer
     
@@ -512,6 +537,15 @@ class ZoneController < GXTDocument
   
 end
 
+class RoomController < GXTDocument
+  
+end
+
+class BedController < GXTDocument
+  
+end
+
+
 class ProviderController < GXTDocument
   
 end
@@ -528,6 +562,7 @@ end
 class MedicationController < GXTDocument
   
 end
+
 
 class StationController < GXTDocument
   

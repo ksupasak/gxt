@@ -45,7 +45,7 @@ before do
   # configure solution and user
   
   
-  if paths[1]!='__sinatra__' and paths[1]!='favicon.ico'
+  if paths[1]!='__sinatra__' and paths[1]!='favicon.ico' 
   
   
   puts "-  Solution Name : #{solution_name}"

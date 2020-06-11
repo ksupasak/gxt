@@ -12,12 +12,12 @@ services:
     # command: redis-server --requirepass minadadmin
     restart: always
   mongo:
-    image: mongo:3.2
+    image: mongo:4.2
     restart: always
   gxt:
     restart: always
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec thin start --ssl --port 1792"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec thin start --ssl --port 1792 --ssl-key-file private.key  --ssl-cert-file  server.crt  "
     volumes:
       - .:/docker_gxt
     ports:

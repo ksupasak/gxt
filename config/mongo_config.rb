@@ -1,5 +1,5 @@
 
-@conf_mongo_host = 'localhost'
+@conf_mongo_host = 'mongo'
 @conf_mongo_user = nil
 @conf_mongo_password = nil
 @conf_mongo_port = 27017

@@ -37,6 +37,50 @@ module Moped
 end
 
 
+# Mongoid::Association::Referenced::HasMany::Targets::Enumerable.class_exec{
+  
+# Mongoid::Association::Options.class_exec{
+#
+#   def order *spec
+#     puts 'xxxxxxx'+spec.class.inspect
+#     puts spec.inspect
+#     return []
+#   end
+#
+# }
+
+Mongoid::Criteria::Queryable::Extensions::String.class_exec{
+
+  def __sort_option__
+    split(/,/).inject({}) do |hash, spec|
+
+      
+      # spec = spec.to_sym.asc if spec
+      
+      hash.tap do |_hash|
+        field, direction = spec.strip.split(/\s/)
+        
+        puts 'sort option edited '+field.inspect+'::'+direction.inspect
+        
+        
+        if direction
+        _hash[field.to_sym] = direction.to_direction
+      elsif f = field.split(".") and f.size==2
+            
+          _hash[f[0].to_sym] = f[1]=='desc'?-1:1
+           
+        
+        else
+          
+        _hash[field.to_sym] = 1 
+      end
+      end
+    end
+  end
+  
+
+
+}
 
 # puts 'defind mongo wrapper'
 
