@@ -629,6 +629,14 @@ class AdmitController < GXTDocument
          
           admit.update_attributes :current_score=>params[:data][:score]
           
+         
+        end
+         
+         
+          # record = admit.records.create params[:data]
+          params[:data][:admit_id] = admit.id
+          record = DataRecord.create params[:data]
+          
           if params[:option]
           
           params[:option].each_pair do |k,v|
@@ -636,9 +644,6 @@ class AdmitController < GXTDocument
             params[:data]["#{k}_opt".to_sym] = v
             
           end
-        end
-         
-          record = admit.records.create params[:data]
           
           record.update_attributes :data=>params[:data].to_json, :stamp=>Time.now
           

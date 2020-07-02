@@ -95,7 +95,7 @@ No score selected.
 	
 	cond_map = {}
 	
-	for i in score.items.order(:sort_order).all 
+	for i in score.items.order(:sort_order=>1).all 
 	
 	conditions = i.conditions
 	
