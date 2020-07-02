@@ -632,10 +632,19 @@ class AdmitController < GXTDocument
          
         end
          
+        
+          data = {}
+          
+          for i in DataRecord.fields.keys 
+            data[i] = params[:data][i] if i.to_s!='_id'
+          end
+          
+          
+          
          
-          # record = admit.records.create params[:data]
-          params[:data][:admit_id] = admit.id
-          record = DataRecord.create params[:data]
+          record = admit.records.create data
+          # params[:data][:admit_id] = admit.id
+          # record = DataRecord.create params[:data]
           
           if params[:option]
           
