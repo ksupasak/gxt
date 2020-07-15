@@ -207,7 +207,7 @@ class HomeController < GXT
                     
                       
                   else
-                    
+                 
                     @context.settings.cmd_map[name] = {} unless @context.settings.cmd_map[name]
                     @context.settings.cmd_map[name][icmd] = {} unless @context.settings.cmd_map[name][icmd]
                     @context.settings.cmd_map[name][icmd][ipath] = [] unless @context.settings.cmd_map[name][icmd][ipath]
