@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
+
+body {
+  background-color: #000000;
+  color: #C2C2C2;
+  font-family: "Sarabun", sans-serif;
+}
+
+.navbar-pcm {
+  /* background-color: #06202E; */
+  background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+    0% no-repeat padding-box;
+}
+/* change the brand and text color */
+.navbar-pcm .navbar-brand,
+.navbar-pcm .navbar-text{
+  color: #C2C2C2;
+}
+.navbar-pcm .navbar-toggler-icon{
+  color: #C2C2C2 !important;
+}
+/* change the link color */
+.navbar-pcm .navbar-nav .nav-link {
+  color: #C2C2C2;
+}
+/* change the color of active or hovered links */
+.navbar-pcm .nav-item.active .nav-link,
+.navbar-pcm .nav-item:hover .nav-link {
+  color: #ffffff;
+}
+.navbar-pcm .nav-item.active {
+border-bottom: 2px solid #3147FF;
+}
+.btn-pcm{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  0% no-repeat padding-box;
+}
+.btn-pcm2{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
+  0% no-repeat padding-box;
+}
+.panel-pcm{
+  background:#06202E;
+  border-radius: 1vh;
+  padding: 1vh;
+  margin: 0.4vh;
+}
+.panel-active{
+  border:2px solid #3147FF;
+}
+.panel-normal{
+  border:2px solid #686E71;
+}

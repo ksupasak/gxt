@@ -19,9 +19,30 @@
     <link href="" rel="stylesheet">
 	<script src="/vendor/jquery-1.9.1.min.js"></script>
 <style>
-body{
-	background:#444;
-	color:#111;
+.navbar-pcm {
+  /* background-color: #06202E; */
+  background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+    0% no-repeat padding-box;
+}
+/* change the brand and text color */
+.navbar-pcm .navbar-brand,
+.navbar-pcm .navbar-text{
+  color: #C2C2C2;
+}
+.navbar-pcm .navbar-toggler-icon{
+  color: #C2C2C2 !important;
+}
+/* change the link color */
+.navbar-pcm .navbar-nav .nav-link {
+  color: #C2C2C2;
+}
+/* change the color of active or hovered links */
+.navbar-pcm .nav-item.active .nav-link,
+.navbar-pcm .nav-item:hover .nav-link {
+  color: #ffffff;
+}
+.navbar-pcm .nav-item.active {
+border-bottom: 2px solid #3147FF;
 }
 .card{
 	color:black;
@@ -36,7 +57,7 @@ body{
 
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm">
 		
 	    <a class="navbar-brand" href="../Home/index" ><image src="<%=url_for 'img/gxt-sos.png' %>" height="40"></a>
 			
@@ -151,6 +172,7 @@ body{
 				  <a class="dropdown-item" href="../Sas/client">Client</a>
 				  <a class="dropdown-item" href="../Ambulance/index">Ambulance</a>
 				  <a class="dropdown-item" href="../AmbulanceDriver/index">AmbulanceDriver</a>
+				  <a class="dropdown-item" href="../Sas/dashboard">Dashboard</a>
 		 		 </div>
 	          </li>
 

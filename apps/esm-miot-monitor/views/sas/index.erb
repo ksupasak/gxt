@@ -4,8 +4,9 @@
 <style>
 .header{
 	line-height:3em;
-
-	background-color: rgb(19, 38, 58);
+	/*background-color: rgb(19, 38, 58);*/
+	background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+    0% no-repeat padding-box;
 }
 .conference{
 	height:500px;
@@ -21,8 +22,10 @@
 }
 
 .value{
+	color: #C2C2C2;
 }
 </style>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
 <script>
 $('#main-container').removeClass('container')
 </script>
@@ -30,7 +33,7 @@ $('#main-container').removeClass('container')
 <div class="selection row header context-header"  style="color:white">
 	
 	<div class="col-2" >
-	<%=link_to '+', "create",:class=>'btn btn-success'%>
+	<%=link_to '+', "create",:class=>'btn btn-pcm'%>
 	<span class="ambu-name "><span class="value">-</span></span>
 	
 	</div>
@@ -114,8 +117,10 @@ $('#main-container').removeClass('container')
 				<style>
 					.wave{
 						min-height:3em;
-						background:#111;
-						border:1px solid #333;
+						/*background:#111;
+						border:1px solid #333;*/
+						background:#06202E;
+						border:1px solid #686E71;
 					}
 				</style>
 
@@ -184,19 +189,19 @@ $('#main-container').removeClass('container')
 			</div >
 		</div>
 		<div class="row">
-			<div class="col-12" style="background-color: rgb(19, 38, 58);line-height:3em;padding:10px">
+			<div class="col-12 header" >
 				<center>
 					
 					
-				<%=link_to '+',"create", :class=>'btn btn-success',:style=>"line-height:3em;width:80px" %>
+				<%=link_to '+',"create", :class=>'btn btn-pcm',:style=>"line-height:3em;width:80px" %>
 					
-				<%=link_to 'History',"../Admit/index", :class=>'btn btn-info',:style=>"line-height:3em" %>
+				<%=link_to 'History',"../Admit/index", :class=>'btn btn-pcm2',:style=>"line-height:3em" %>
 				
 				<!--
 				
-				<%=link_to 'Mode2',"\#", :class=>'btn btn-info',:style=>"line-height:3em" %>
+				<%=link_to 'Mode2',"\#", :class=>'btn btn-pcm2',:style=>"line-height:3em" %>
 				
-				<%=link_to 'Mode3',"\#", :class=>'btn btn-info',:style=>"line-height:3em" %>
+				<%=link_to 'Mode3',"\#", :class=>'btn btn-pcm2',:style=>"line-height:3em" %>
 				
 				<%=link_to 'Mode4',"\#", :class=>'btn btn-warning',:style=>"line-height:3em" %>
 						-->
@@ -241,11 +246,11 @@ $('#main-container').removeClass('container')
 						out = `#{cmd}`
 						puts cmd
 						puts out
-						out = out.split("\n")
+						out = out.split("\n") if out
 						puts out.inspect
 						
 						puts 
-						token = out[-1]
+						token = out[-1] if out
 						@token = token
 
 
@@ -253,6 +258,7 @@ $('#main-container').removeClass('container')
 						ambulances = Ambulance.all
 
 						for i in ambulances 
+							begin
 							admit= nil
 							patient = nil
 							station = nil
@@ -357,9 +363,9 @@ $('#main-container').removeClass('container')
 								<% if admit %>
 								<a style="width:60px;padding:5px" href="../Admit/show?id=<%=admit.id%>" class="btn btn-warning" >Flow</a><br/>	
 								<% end %>
-								<a style="width:60px;padding:5px" href="" id="call-<%=i.id%>" class="btn btn-success" >Call</a><br/>	
+								<a style="width:60px;padding:5px" href="" id="call-<%=i.id%>" class="btn btn-pcm" >Call</a><br/>	
 								
-								<a style="width:60px;padding:5px" target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-info">Share</a>
+								<a style="width:60px;padding:5px" target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-pcm2">Share</a>
 							
 								<script>
 					
@@ -424,6 +430,8 @@ $('#main-container').removeClass('container')
 					
 					
 				</div>
+<% rescue Exception=>e 
+					end %>				
 <% end %>
 
 
@@ -436,7 +444,7 @@ $('#main-container').removeClass('container')
 				<% 	  
 				
 			
-					
+					begin
  					  @current_zone = Zone.first
 					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
 					  @current_zone = nil if @current_zone and @current_zone.mode!='aoc'
@@ -453,6 +461,8 @@ $('#main-container').removeClass('container')
 
 
 					  stations = Station.find(admits.collect{|i| i.station_id})
+					rescue Exception=>e 
+					end
 
 				%>
 				</div>
@@ -496,7 +506,7 @@ $('#main-container').removeClass('container')
 		<% for i in ambulances 
 				
 				
-
+				begin	
 				resource_id = i.name
 				
 				admit = nil
@@ -595,6 +605,9 @@ $('#main-container').removeClass('container')
 					event.preventDefault()
 
 				})
+
+			<% rescue Exception=>e
+			end%>	
 				
 			<% end %>	
 				
@@ -620,7 +633,7 @@ $('#main-container').removeClass('container')
 	
     <% end %>
 
-
+<% if stations %>
 		<% for i in stations.collect{|i| i.name}.sort %>
 		   
 		   i = "<%=i%>"
@@ -630,7 +643,7 @@ $('#main-container').removeClass('container')
 		  showWave('wave-<%=i%>',wave_data,i);
 		
 	    <% end %>
-	
+<% end %>	
    
    	 <%=inline(this,:'_websocket.js')%>
 		  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
@@ -638,9 +651,10 @@ $('#main-container').removeClass('container')
 	
 	
       ws.onopen    = function()  { show('websocket opened'); 
-
+		<%begin%>
 	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
-
+		<%rescue Exception=>e
+		end%>
 	  };
     
 	

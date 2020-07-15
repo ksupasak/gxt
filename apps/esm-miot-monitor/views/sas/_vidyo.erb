@@ -6,11 +6,11 @@ cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} -
 out = `#{cmd}`
 puts cmd
 puts out
-out = out.split("\n")
+out = out.split("\n") if out
 puts out.inspect
 
 puts 
-token = out[-1]
+token = out[-1] if  out
 @token = token
 	
 %>
