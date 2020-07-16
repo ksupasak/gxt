@@ -21,10 +21,15 @@ body{
 .label-pcm{
     font-size:1vh;
     white-space: nowrap;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 .val-pcm{
     
     font-size:6vh;
+    display:flex;
+    align-items:center;
 }
 </style>
 <script>
@@ -36,19 +41,19 @@ $('#main-container').removeClass('container')
     <div class="row">
     <div class="col-md-3 panel-pcm panel-normal">
         <div class="row">
-            <div class="col label-pcm">On Site</div>
+            <div class="col label-pcm">On Site <img src="<%=url_for 'img/svg/ambu.svg' %>"></div>
             <div class="col val-pcm">1</div>
         </div>
     </div>
     <div class="col-md-3 panel-pcm panel-normal">
         <div class="row">
-            <div class="col label-pcm">Stand By</div>
+            <div class="col label-pcm">Stand By <img src="<%=url_for 'img/svg/ambu.svg' %>"></div>
             <div class="col val-pcm">1</div>
         </div>
     </div>
     <div class="col-md-3 panel-pcm panel-normal">
         <div class="row">
-            <div class="col label-pcm">Today Patient</div>
+            <div class="col label-pcm">Today Patient <img src="<%=url_for 'img/svg/bed.svg' %>"></div>
             <div class="col val-pcm">1</div>
         </div>
     </div>
