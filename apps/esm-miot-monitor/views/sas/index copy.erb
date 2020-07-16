@@ -10,12 +10,10 @@
 }
 .conference{
 	height:500px;
-	/*height:45vh;*/
 	background-color: black;
 }
 .map{
 	height:500px;
-	/*height:45vh;*/
 		background:#aaa;
 }
 
@@ -25,9 +23,6 @@
 
 .value{
 	color: #C2C2C2;
-}
-.ph{
-	height:8vh;
 }
 </style>
 <link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
@@ -83,33 +78,33 @@ $('#main-container').removeClass('container')
 	
 	<div class="col-8">
 		
-		<div class="row context-panel" style="height:24vh;border:0px solid #ccc;font-size:1.2em">
+		<div class="row context-panel" style="height:300px;border:0px solid #ccc;font-size:1.2em">
 			<div class="col-4 station" id="panel-a">
 				<div class="row">
-				<div class="col-6  ph pr">
+				<div class="col-6  pr">
 					<span class="label">PR</span>
 					<div class="value">-</div>
 				</div>
-				<div class="col-6 ph  bp">
+				<div class="col-6   bp">
 					<span class="label">BP</span>
 					<div class="value">-</div>
 				</div>
 
-					<div class="col-6  ph temp">
+					<div class="col-6   temp">
 						<span class="label">Temp</span>
 						<div class="value">-</div>
 					</div>
-					<div class="col-6  ph rr">
+					<div class="col-6  rr">
 						<span class="label">RR</span>
 						<div class="value">-</div>
 					</div>
 
-				<div class="col-6 ph spo2">
+				<div class="col-6  spo2">
 					<span class="label">SpO2</span>
 					<div class="value">-</div>
 				</div>
 
-			    <div class="col-6 ph hr">
+			    <div class="col-6  hr">
 				    <span class="label">HR</span>
 				    <div class="value">-</div>
 			    </div>
@@ -121,8 +116,7 @@ $('#main-container').removeClass('container')
 			
 				<style>
 					.wave{
-						/*min-height:3em;*/
-						height:4.8vh;
+						min-height:3em;
 						/*background:#111;
 						border:1px solid #333;*/
 						background:#06202E;
@@ -154,7 +148,7 @@ $('#main-container').removeClass('container')
 				
 			</div >
 			<div class="col-4" id="panel-c">
-				<div style="width:100%;height:24vh;overflow:hidden;font-size:0.5em">
+				<div style="width:100%;height:300px;overflow:hidden;font-size:0.5em">
 					<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:340px"></iframe>
 				</div>
 				<script>
@@ -302,7 +296,7 @@ $('#main-container').removeClass('container')
 							color:#bbb;
 						}
 					</style>
-					<div class="station-<%=station_id%> row <%=(patient)?"panel-active":""%>" >
+					<div class="station-<%=station_id%> row " >
 						<div class="col-1 eselect-<%=i.id%>" style="font-size:0.9em" >
 						<center>
 						<%=link_to i.name,"../Ambulance/show?id=#{i.id}", :class=>"select-#{i.id} btn btn-default", :style=>"font-size:1em"%><br/>

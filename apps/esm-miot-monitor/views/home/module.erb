@@ -1,0 +1,61 @@
+<link href="<%=url_for 'css/module.css'%>" rel="stylesheet">
+<style>
+body{
+    color:white;
+    background:#1E1E1E ;    
+    background-image: url('<%=url_for 'img/svg/bg_pcm.svg' %>');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+</style>
+<script>
+$('#main-container').removeClass('container')
+</script>
+<div class="row h-100">
+<div class="col-sm-8 d-center">
+<div class="row">
+    <div class="col-6 d-center" style="padding-top:50px;padding-bottom:50px;">
+        <img src="<%=url_for 'img/svg/pcm_logo.svg' %>" />
+    </div>
+    </div>
+    <div class="d-menu">
+        <div class="row">    
+            <div class="col-3 menu-item">
+                <a href="https://pcm-life.com:1792/miot/Home/index">
+                <img src="./assests/svg/ipd_logo.svg" class="pcm-icon">
+                </a>
+                <div class="menu-label">IPD</div>
+            </div>           
+            <div class="col-3 menu-item">
+                <!-- <a href="https://pcm-life.com:1792/miot/Opd/index"> -->
+                <a href="./opd/index.html">
+                <img src="./assests/svg/opd_logo.svg" class="pcm-icon">
+                </a>
+                <div class="menu-label">OPD</div>
+            </div>
+            <div class="col-3 menu-item">
+                <!-- <a href="https://pcm-life.com:1792/miot/Sas/index"> -->
+                    <a href="./aoc/index.html">
+                <img src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">AOC</div>
+            </div>
+            <div class="col-3 menu-item">
+                <a href="https://pcm-life.com:1792/miot/Home/index">
+                <img src="./assests/svg/er_logo.svg" class="pcm-icon">
+                </a>
+                <div class="menu-label">ER</div>
+            </div>
+            <div class="col-3 menu-item">
+                <img src="./assests/svg/tele_logo.svg" class="pcm-icon">
+                <div class="menu-label">TeleHealth</div>
+            </div>
+            <div class="col-3 menu-item">
+                <img src="./assests/svg/setting_logo.svg" class="pcm-icon">
+                <div class="menu-label">Setting</div>
+            </div>                
+        <div>
+        
+    </div>
+</div>
+</div>

@@ -52,6 +52,10 @@ border-bottom: 2px solid #3147FF;
 	box-shadow: 0px 0px 15px #111;
 	border-radius:5px;	
 }
+.logo-pcm{
+  height:3vh;
+  border-radius:0.4vh;
+}
 </style>
   </head>
 
@@ -59,7 +63,10 @@ border-bottom: 2px solid #3147FF;
 
     <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm">
 		
-	    <a class="navbar-brand" href="../Home/index" ><image src="<%=url_for 'img/gxt-sos.png' %>" height="40"></a>
+      <a class="navbar-brand" href="../Home/module" >
+      <!--<image src="<%=url_for 'img/gxt-sos.png' %>" height="40">-->
+      <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
+      </a>
 			
 			<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
 					<!--<%=link_to "+", "../Admit/create",:class=>'btn btn-outline-success mr-2 my-0 col-3 col-xs-2 col-sm-1 col-lg-1' %>	-->
