@@ -168,6 +168,26 @@ class Station < GXTModel
 end
 
 
+class Message < GXTModel
+  
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  
+  belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :sender, String # bed name
+  key :recipient, String
+  key :recipient_type, String
+  key :ts, Integer
+  key :type, String
+  key :media_type, String 
+  key :content, String
+  key :file_id, ObjectId
+  
+end
+
+
 class Sense < GXTModel
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -567,6 +587,32 @@ end
 class StationController < GXTDocument
   
 end
+
+class MessageController < GXTDocument
+  def content params
+   
+    message = model.find params[:id]
+    
+    connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+   
+    grid = Mongo::Grid::FSBucket.new(connection.database)
+    
+    ofile = grid.open_download_stream(message.file_id)
+    
+    info = ofile.file_info 
+    filename = info.filename
+   
+    @context.content_type 'image/jpg'
+   
+    data =  ofile.read.force_encoding('utf-8') 
+    
+    return data
+    
+    
+    
+  end
+end
+
 
 class ScoreController < GXTDocument
   

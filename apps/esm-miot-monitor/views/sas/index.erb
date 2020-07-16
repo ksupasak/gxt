@@ -20,11 +20,15 @@
 }
 
 .selected{
-	background:#133;
+  border:2px solid #3147FF;
+}
+.panel-admit{
+  background:#01174F;
 }
 
+
 .value{
-	color: #C2C2C2;
+/*	color: #C2C2C2;*/
 }
 .ph{
 	height:8vh;
@@ -125,7 +129,7 @@ $('#main-container').removeClass('container')
 						height:4.8vh;
 						/*background:#111;
 						border:1px solid #333;*/
-						background:#06202E;
+						background:#111;
 						border:1px solid #686E71;
 					}
 				</style>
@@ -155,7 +159,7 @@ $('#main-container').removeClass('container')
 			</div >
 			<div class="col-4" id="panel-c">
 				<div style="width:100%;height:24vh;overflow:hidden;font-size:0.5em">
-					<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:340px"></iframe>
+					<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:400px"></iframe>
 				</div>
 				<script>
 				    $(window).load(function(){
@@ -288,21 +292,24 @@ $('#main-container').removeClass('container')
 							
 							else
 								
-								station_id = ''
+								station = i.station
+								
+								
+								station_id = station.name if station
 								admit = nil
 								
 							
 							end
 							
 					%>
-					<div  id="ambu-<%=i.id%>" class="col-12  ambu-row" style="height:120px;font-size:0.8em;border-bottom:1px solid #666;padding:0px;padding-right:15px;">
+					<div  id="ambu-<%=i.id%>" class="col-12  ambu-row <%=(patient)?"panel-admit":""%>" style="margin-top:5px;height:120px;font-size:0.8em;padding:0px;padding-right:15px;">
 					<style>
 					
 						span.head{
 							color:#bbb;
 						}
 					</style>
-					<div class="station-<%=station_id%> row <%=(patient)?"panel-active":""%>" >
+					<div class="station-<%=station_id%> row " >
 						<div class="col-1 eselect-<%=i.id%>" style="font-size:0.9em" >
 						<center>
 						<%=link_to i.name,"../Ambulance/show?id=#{i.id}", :class=>"select-#{i.id} btn btn-default", :style=>"font-size:1em"%><br/>
@@ -315,6 +322,7 @@ $('#main-container').removeClass('container')
 						</div>
 						<div class="col-5">
 						<div class="row" style="">
+							
 						<% if patient 
 							hn = '-'
 							hn = patient.hn if patient.hn and patient.hn!=''
@@ -466,7 +474,7 @@ $('#main-container').removeClass('container')
 					 # admits =  Admit.where(:status=>'Admitted').all
 
 
-					  stations = Station.find(admits.collect{|i| i.station_id})
+					  stations = Station.find(ambulances.collect{|i| i.station_id})
 					rescue Exception=>e 
 					end
 
@@ -526,10 +534,14 @@ $('#main-container').removeClass('container')
 				if admit
 					
 					station = admit.station
-					station_id= station.name
 				
+				else
+					station = i.station
 				end
 				
+				if station
+					station_id= station.name
+				end
 				
 				%>
 					
@@ -549,7 +561,7 @@ $('#main-container').removeClass('container')
 				$('.select-<%=i.id%>').click(function(event){
 					
 					
-					
+					$('.station .value').html('-')
 					$(".ambu-row").removeClass('selected');
 					$("#ambu-<%=i.id%>").addClass('selected');
 					
@@ -713,6 +725,7 @@ $('#main-container').removeClass('container')
 		if(selected_ambu&&data['ambu_data']){
 				
 			ambu = data['ambu_data'][selected_ambu]
+			if( data['admit_data']&&ambu['admit_id']){
 			admit = data['admit_data'][ambu['admit_id']]
 			if(admit){
 				console.log(admit['patient']['first_name'])
@@ -720,7 +733,7 @@ $('#main-container').removeClass('container')
 				$('.selection .ambu-name .value').html(ambu['name'])
 				$('.selection .patient-name .value').html(admit['patient']['first_name']+" "+admit['patient']['last_name'])
 			}
-			
+			}
 			
 				
 		}	
@@ -747,19 +760,19 @@ $('#main-container').removeClass('container')
 					if(wave_data[i]==null){
 						wave_data[i] = []
 					}
-					console.log("xx"+id)
+					
 					wave_data[i] = 	wave_data[i].concat(obj['leads'][2])
 				   	 // console.log(wave_data[i])
 	   				// console.log("v"+i+" "+wave_data[i].length);
 					// wave_data = obj['wave'];
 			   }
+		
 			
-			
-			if(selected_ambu&&data['ambu_data']){
-				
-					admit = data['admit_data'][ambu['admit_id']]
-				
-				if(admit&&i==admit['station_name']){
+			if(selected_ambu&&data['ambu_data']&&data['ambu_data'][selected_ambu]['name']==i){
+		
+					// admit = data['admit_data'][ambu['admit_id']]
+					
+				// if(admit&&i==admit['station_name']){
 					
 					console.log( "Lat "+obj['lat']+" Lng " + obj['lng'])
 				    var latlng = {lat: parseFloat(obj['lat']), lng: parseFloat(obj['lng'])};
@@ -777,7 +790,7 @@ $('#main-container').removeClass('container')
 					show_wave_data['4'] = 	show_wave_data['4'].concat(obj['leads'][4])
 					show_wave_data['5'] = 	show_wave_data['5'].concat(obj['leads'][5])	
 					
-				}
+				// }
 				
 			}
 			
@@ -857,8 +870,8 @@ $('#main-container').removeClass('container')
 	
   	<div style="float:right" class="timer">
 	00:00
-	</div>f
-By GEXINTEC Co.,Ltd. 201\. 
+	</div>
+E.S.M.Solution Co.,Ltd. and Aliance
 </div>
 
 <br/>

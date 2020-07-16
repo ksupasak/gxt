@@ -25,6 +25,7 @@ gem 'rerun'
 gem 'mongo'
 # gem 'mongo_mapper'
 gem 'mongoid'
+gem 'mongoid-grid_fs'
 gem 'rack-gridfs'
 gem 'bson_ext'
 

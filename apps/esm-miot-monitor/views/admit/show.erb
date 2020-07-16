@@ -11,6 +11,9 @@ body{
 	background:black;
 	
 }
+v{
+	
+}
 .container{
 	background:black;
 }
@@ -430,11 +433,43 @@ a.link-info:hover{
 		
 		
 		
-		
+	
 		
 	</div>	
-		
+		<div class="row">
+		<div class="col-12">
+			<% if admit.ambulance %>
+			<%
+				name = admit.ambulance.name
+			
+				msgs = Message.where(:recipient=>name).all
+				
+			%>
+			<div class="" style="overflow:scroll;height:600px;padding:10px">
+				<% for i in msgs %>
+					<div class="row">
+					<div class="col-12">
+						<v><%= i.sender %></v> <span style="float:right"><%=Time.at i.ts%></span><br/>
+						<% if i.type == 'image' 
+						
+							url  = "https://localhost:1792/miot/img/svg/aoc-icon.svg"
+							url = "../Message/content?id=#{i.id}" 
+						%>
+						<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a></center>
+						<% else %>
+						<p><%=i.content%></p>
+						<% end %>
+						<br/><br/>
+					</div>
+					</div>
+				<% end %>
+			</div>
+			<% end  %>
+		</div>
+		</div>
 </div>
+
+
 
 
 </div>

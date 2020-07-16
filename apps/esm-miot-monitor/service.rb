@@ -1,4 +1,6 @@
 
+require_relative 'zello'
+
 module EsmMiotMonitor
 
 def self.settings
@@ -17,6 +19,9 @@ def self.registered(app)
      settings.set :cmd_map, {}
      settings.set :ch_map,  {}
      settings.set :last_map, {}
+     settings.set :zello_map, {}
+     
+     
      
      
      
@@ -110,7 +115,99 @@ def self.registered(app)
        
       puts mode 
        
+    elsif mode=='zello' 
+      
+      EM.next_tick do 
+        
+     
+       EM.add_periodic_timer(1) do
        
+         
+         if app.settings.apps_rv
+           
+         for name in app.settings.apps_rv['esm-miot-monitor']
+           switch name
+         
+           # start Zello
+           
+           zello_connect = Setting.where(:name=>'zello_connect').first
+           
+           if zello_connect and zello_connect.value and zello_connect.value.size>0
+             
+             puts "zello : #{name}"
+             
+             unless app.settings.zello_map[name]
+               
+               
+               zello = Zello::Connector.new zello_connect.value
+              
+               app.settings.zello_map[name] = zello
+               
+               
+             end
+             
+             zello = app.settings.zello_map[name]
+             
+             msgs = zello.feed
+             
+             
+             if msgs
+                 for i in msgs
+                   if i['media_key']
+                     media = zello.retrieve i['media_key']
+                     puts "Sender #{i['sender']} To #{i['recipient']}  Type #{i['type']} Path #{media['url']}"
+
+                     uri = URI("#{media['url']}?sid=#{zello.getSID}")
+                     content = Net::HTTP.get(uri)
+                     filename = media['url'].split("/")[-1]
+                     
+                      connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+                     
+                      grid = Mongo::Grid::FSBucket.new(connection.database)
+                      
+                      fid = grid.upload_from_stream(filename,content)
+                     # f = File.new "#{filename}", "w"
+#
+#                      f.write response
+#                      f.flush
+
+            
+                     
+                     Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid
+
+
+                   else
+                     puts "Sender #{i['sender']} To #{i['recipient']} Text #{i['text']}  "
+                     
+                     Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type']
+                     
+                     
+                   end
+                   
+                   
+                   
+                   
+                 end
+
+              end
+
+             
+             
+           end
+           
+           
+         
+         
+         end
+         
+       end
+       
+        
+       end
+       
+         end
+      
+        
      elsif mode=='service'
      
        puts "Start MIOT Solution : Service" 
@@ -452,7 +549,7 @@ def self.registered(app)
        end
        
        
-      } 
+      } # end thread
       
       redis = app.settings.redis
        
@@ -462,7 +559,12 @@ def self.registered(app)
       puts "REDIS CONFIG SERVICE : #{c}"
       # redis = Redis.new(url: "redis://#{@conf_redis_host}:#{@conf_redis_port}/#{@conf_redis_db}",:driver => :hiredis)
       redis = EM::Hiredis.connect c
-       
+         
+      
+      
+      
+      
+         
        
         EM.add_periodic_timer(1) do
           puts '. '

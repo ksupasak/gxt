@@ -5,6 +5,10 @@ NurseRecord.create :admit_id=>params[:admit_id], :description=>params[:note], :s
 admit = Admit.find params[:admit_id]
 
 
-	
+unless params[:mode]
 %>
 <meta http-equiv="Refresh" content="0; url=show?id=<%=admit.ambulance_id%>" />
+<%else%>
+<meta http-equiv="Refresh" content="0; url=glasses?id=<%=admit.ambulance_id%>" />
+<%end%>
+

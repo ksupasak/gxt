@@ -129,7 +129,13 @@ def index params
   @context.erb :home, :locals=>{:a=>User.count}
 end
 
+
 end
+
+
+
+
+
 
 # Object.send(:remove_const, :Home2) if   Object.const_defined?('Home2')
 class Home2Controller < HomeController

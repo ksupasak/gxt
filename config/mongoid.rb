@@ -82,6 +82,38 @@ Mongoid::Criteria::Queryable::Extensions::String.class_exec{
 
 }
 
+# module Mongoid
+#  module Document
+#    def as_json(options={})
+#      attrs = super(options)
+#      attrs["id"] = attrs["_id"].to_s
+#      attrs
+#    end
+#  end
+# end
+
+
+module BSON
+  class ObjectId
+    def to_json(*args)
+      to_s.to_json
+    end
+
+    def as_json(*args)
+      to_s.as_json
+    end
+  end
+end
+# Mongoid::Document.class_exec{
+#
+#   def as_json(options={})
+#     attrs = super(options)
+#     attrs["id"] = attrs["_id"].to_s
+#     attrs
+#   end
+#
+# }
+
 # puts 'defind mongo wrapper'
 
 Mongoid::Contextual::Mongo.class_exec{

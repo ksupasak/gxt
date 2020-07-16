@@ -96,10 +96,10 @@ else
 		</div>
 	
 		<div class="col-3">
-		ชื่อผู้ติดต่อ : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name"> 
+		ชื่อผู้ติดต่อ : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name" style="background:#ffffaa"> 
 		</div>
 		<div class="col-3">
-		หมายเลขติดต่อ : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone"> 
+		หมายเลขติดต่อ : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone" style="background:#ffffaa"> 
 		</div>
 	
 		
@@ -369,6 +369,8 @@ else
 					$('.ambu-panel').slideUp(300);
 					$('.ambu-station').slideUp(300);
 					$('.cancel-button').hide();
+					$('#address').val("");
+					$('#location').val("");
 					directionsDisplay.set('directions', null);
 				})
 	
