@@ -164,7 +164,7 @@ def self.registered(app)
                    
                    msg = nil
                    
-                   sz = msg.recipient.split('|')
+                   sz = i.recipient.split('|')
                    zone = nil
                    station = nil
                    if sz.size==1
