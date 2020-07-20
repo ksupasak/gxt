@@ -602,7 +602,16 @@ class MessageController < GXTDocument
     info = ofile.file_info 
     filename = info.filename
    
+   
+    if message.type == 'image' 
+     
     @context.content_type 'image/jpg'
+    
+   elsif message.type == 'voice' 
+    
+    @context.content_type 'audio/mpeg3'
+    
+    end
    
     data =  ofile.read.force_encoding('utf-8') 
     

@@ -63,6 +63,7 @@ def self.registered(app)
 
                                         redis.pubsub.psubscribe(k) { |channel, message|
                                           
+                                          puts message.inspect 
                                           
                                           ws_list = app.settings.ch_map[channel][:ws].keys
                                           # puts app.settings.ch_map[channel][:ws].keys.inspect
@@ -118,7 +119,12 @@ def self.registered(app)
     elsif mode=='zello' 
       
       EM.next_tick do 
-        
+       
+        require 'redis'
+        require 'json'
+        require "hiredis"
+
+        redis = settings.redis 
      
        EM.add_periodic_timer(1) do
        
@@ -152,7 +158,34 @@ def self.registered(app)
              
              
              if msgs
+               
+               
                  for i in msgs
+                   
+                   msg = nil
+                   
+                   sz = msg.recipient.split('|')
+                   zone = nil
+                   station = nil
+                   if sz.size==1
+                     staton = Station.where(:name=>sz[0]).first
+                     if station
+                       zone = station.zone
+                     end
+                   else
+                     zone = Zone.where(:name=>sz[0]).first
+                     unless zone
+                       station = Station.where(:name=>sz[1]).first
+                       if station
+                         zone = station.zone
+                       end
+                     else
+                       station = Station.where(:name=>sz[1], :zone_id=>zone.id).first
+                     end
+                   end 
+                   
+                   station_id = station.id if station
+                   
                    if i['media_key']
                      media = zello.retrieve i['media_key']
                      puts "Sender #{i['sender']} To #{i['recipient']}  Type #{i['type']} Path #{media['url']}"
@@ -173,18 +206,35 @@ def self.registered(app)
 
             
                      
-                     Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id
 
 
                    else
                      puts "Sender #{i['sender']} To #{i['recipient']} Text #{i['text']}  "
                      
-                     Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type']
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id
                      
                      
                    end
                    
+                  
+                   puts "xxxxx #{zone.inspect }"
+                   puts "xxxxx #{station.inspect }"
                    
+                   if zone and station
+                   # puts result.to_json
+                   path = "miot/#{name}/z/#{zone.name}"
+                   puts "path #{path}"
+                 # EM.next_tick do 
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+                  
+       # puts msg
+                   redis.publish(path, send_msg)
+                  
+                 end
                    
                    
                  end

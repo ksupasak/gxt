@@ -257,6 +257,11 @@ class HomeController < GXT
              end
              
          # store local sensing     
+         
+             when 'Zone.Message'
+         
+              puts "MSG Header : #{header}"
+              puts "MSG Body : #{body}"   
             
              when 'Data.Sensing'
                

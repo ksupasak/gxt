@@ -185,7 +185,7 @@ a.link-info:hover{
 		<a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-warning">Video Call</a>
 		<% end %>
 			&nbsp;
-		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-info '  %>
+		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-info'  %>
 		&nbsp;
 		<%= link_to "Discharge","discharge?id=#{admit.id}",:class=>'btn hn btn-danger'  %>
 		
@@ -436,41 +436,95 @@ a.link-info:hover{
 	
 		
 	</div>	
-		<div class="row">
-		<div class="col-12">
+		
+			<style>
+				.chat
+				{
+				    list-style: none;
+				    margin: 0;
+				    padding: 0;
+				}
+
+				.chat li
+				{
+				    margin-bottom: 10px;
+				    padding-bottom: 5px;
+				    border-bottom: 1px dotted #B3A9A9;
+					min-height:80px;
+				}
+
+				.chat li.left .chat-body
+				{
+				    margin-left: 60px;
+					margin-top:-50px;
+				}
+
+				.chat li.right .chat-body
+				{
+				    margin-right: 60px;
+				}
+
+
+				.chat li .chat-body p
+				{
+				    margin: 0;
+				    color: #777777;
+				}
+
+				.panel .slidedown .glyphicon, .chat .glyphicon
+				{
+				    margin-right: 5px;
+				}
+
+				.panel-body
+				{
+				    overflow-y: scroll;
+				    height: 500px;
+				}
+
+				::-webkit-scrollbar-track
+				{
+				    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+				    background-color: #F5F5F5;
+				}
+
+				::-webkit-scrollbar
+				{
+				    width: 12px;
+				    background-color: #F5F5F5;
+				}
+
+				::-webkit-scrollbar-thumb
+				{
+				    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+				    background-color: #555;
+				}
+			
+				</style>
+				
+				
 			<% if admit.ambulance %>
 			<%
-				name = admit.ambulance.name
+				# name = admit.ambulance.name
 			
-				msgs = Message.where(:recipient=>name).all
+				# msgs = Message.where(:recipient=>"#{@current_zone.name}|#{station.name}").all
 				
 			%>
-			<div class="" style="overflow:scroll;height:600px;padding:10px">
-				<% for i in msgs %>
-					<div class="row">
-					<div class="col-12">
-						<v><%= i.sender %></v> <span style="float:right"><%=Time.at i.ts%></span><br/>
-						<% if i.type == 'image' 
-						
-							url  = "https://localhost:1792/miot/img/svg/aoc-icon.svg"
-							url = "../Message/content?id=#{i.id}" 
-						%>
-						<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a></center>
-						<% else %>
-						<p><%=i.content%></p>
-						<% end %>
-						<br/><br/>
-					</div>
-					</div>
-				<% end %>
-			</div>
+		
+			<%= inline(this,:'_message_page') %>
+			
+			
+			
 			<% end  %>
 		</div>
 		</div>
 </div>
 
 
-
+<script>
+	let div = document.getElementById('panel-primary');
+	div.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+</script>
 
 </div>
 
@@ -876,7 +930,7 @@ if record
 	
 		show(''+m.data)
 		
-		
+
 		
 		lines = m.data.split("\n")
 		
@@ -904,6 +958,13 @@ if record
 			
 		}
 		else
+		if(lines[0].split(" ")[0]=='Zone.Message'){
+			
+		reload_message()
+
+		
+		}
+		else		
 		if(lines[0].split(" ")[0]=='ZoneUpdate'){
 		
 	

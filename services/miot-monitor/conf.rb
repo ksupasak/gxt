@@ -29,7 +29,9 @@ HOST_IP = host_ip
 
  puts HOST_IP
 
-
+ 
+ 
+  
 
 # HIS Data GW
 GW_HIS_IP = 'his.gw'

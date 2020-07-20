@@ -323,11 +323,11 @@ else
 						waypoints = Array();
 						drawPath(directionsService, directionsDisplay,result['start_location'],result['end_location']);
 						
-						$('#ambulance_id').val(result['id']['$oid'])
+						$('#ambulance_id').val(result['id'])
 						
 						$('#ambu_phone').val(result['ambu']['phone'])
 
-						$('#station_id').val(result['ambu']['station_id']['$oid'])
+						$('#station_id').val(result['ambu']['station_id'])
 						// $('#ambu_phone').val(result['ambu']['phone'])
 						
 						
@@ -339,7 +339,7 @@ else
 	// 						$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
 							
 						}else{
-							$('.ambu-'+result['id']['$oid']).hide()
+							$('.ambu-'+result['id']).hide()
 						}
 							
 					  
@@ -529,7 +529,7 @@ else
 						console.log(i)
 						
 						$.ajax({
-						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']['$oid'],
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id'],
 						  context: document.body
 						}).done(function(data) {
 					  
@@ -538,12 +538,12 @@ else
 							if(result['status']=='200 OK'){
 								
 								
-								$('.ambu-'+result['id']['$oid']+" .distance").html(result['distance']['text'])
-								$('.ambu-'+result['id']['$oid']+" .duration").html(result['duration']['text'])
-								$('.ambu-'+result['id']['$oid']+" .last_address").html(result['start_address'])
+								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
+								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
 								
 							}else{
-								$('.ambu-'+result['id']['$oid']).hide()
+								$('.ambu-'+result['id']).hide()
 							}
 								
 						  

@@ -31,8 +31,13 @@ end
 
 t = HOST_IP.split('.')
 HOST_NETWORK = t[0..2].join(".")+".1"
+
+unless ARGV[2]
 HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
- 
+else
+HOST_NETWORK_BOARDCAST = ARGV[2]
+end
+
 CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 MIOT::post_config
 

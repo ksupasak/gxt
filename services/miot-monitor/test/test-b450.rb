@@ -64,6 +64,8 @@ data =  server_boardcast.recvfrom(200)
 # puts 'recieve from central boardcast 7000'
 # puts data.inspect
 
+puts data.inspect 
+
 tx = data[0].bytes
 tx[5] = 16
 tx[7] = 39

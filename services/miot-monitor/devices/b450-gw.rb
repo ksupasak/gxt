@@ -37,7 +37,7 @@ host = ARGV[0] if ARGV[0]
 network_addr = ARGV[1] if ARGV[1]
 
 
-@config = {:network=>network_addr, :gw=>true, :host=>host, :port=>port}
+@config = {:network=>HOST_NETWORK_BOARDCAST, :gw=>true, :host=>host, :port=>port}
 
 
 # looking for all monitor
@@ -50,10 +50,38 @@ threads = []
 
 # Thread 0 : for checking monitor status  ====================
 
+
+threads << Thread.new do 
+
+monitor_boardcast = UDPSocket.new
+monitor_boardcast.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
+
+now = Time.now 
+
+while(true)
+  
+msg = "\x01\x04\x00\x00\xAC\x0FW+_\x11\xB2\x81X|CSCS\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\a\x00\x02\a\xD0\x002\a\x01\x00\x17\x04\x01\x00\a\x04\x04\x00!\x04\x05\x00\"\a\xD0\x00\t\a\xD0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+tx = msg.bytes
+tx[5] = 16
+tx[7] = 39
+tx = tx.collect{|i| i.chr}.join
+
+
+monitor_boardcast.send tx, 0, HOST_NETWORK_BOARDCAST, 7000
+puts 'ack'
+
+
+sleep 5
+
+end
+
+end
+
+
 threads << Thread.new do 
 
 central = UDPSocket.new
-central.bind(network_addr, 7000)
+central.bind(HOST_NETWORK_BOARDCAST, 7000)
 
 now = Time.now 
 
@@ -63,6 +91,8 @@ data =  central.recvfrom(100)
 
 
 ip = data[1][2]
+
+if ip != HOST_IP
 
 msg = data[0]
 bed_name = msg[12..27].to_s
@@ -90,6 +120,8 @@ monitors[ip] = {:name => name, :ip=> ip, :update=>n, :vital=>t}
 
 # threads << t
   
+end
+
 end
 
 
