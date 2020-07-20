@@ -63,7 +63,7 @@ def self.registered(app)
 
                                         redis.pubsub.psubscribe(k) { |channel, message|
                                           
-                                          puts message.inspect 
+                                          # puts message.inspect 
                                           
                                           ws_list = app.settings.ch_map[channel][:ws].keys
                                           # puts app.settings.ch_map[channel][:ws].keys.inspect
@@ -218,8 +218,8 @@ def self.registered(app)
                    end
                    
                   
-                   puts "xxxxx #{zone.inspect }"
-                   puts "xxxxx #{station.inspect }"
+                   # puts "xxxxx #{zone.inspect }"
+                   # puts "xxxxx #{station.inspect }"
                    
                    if zone and station
                    # puts result.to_json
