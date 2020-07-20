@@ -40,7 +40,10 @@
 			border:1px solid #333;
 			border-radius: 5px;
 	}
-
+	.station .col-3{
+			border:1px solid #333;
+			border-radius: 5px;
+	}
 	.station .cc{
 		color:#bcaf06;
 
@@ -62,6 +65,10 @@
 	}
 	main{
 		m
+	}
+	
+	input{
+		border:1px solid;
 	}
 	</style>
 <%
@@ -140,67 +147,66 @@ station = Station.find ambu.station_id
 	</div>
 	</div> -->
 	<div class="row">
-		<div class="col-6">
+		<div class="col-12">
 		Patient : <v><%=patient.first_name%> <%=patient.last_name%></v>
 		<div class="station" id="<%=station.name%>" style="">
 			
 			<div class="row">
-						<div class="col-6  col-lg-3 col-sm-3 pr">
+						<div class="col-3  col-lg-3 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-6  col-lg-3 col-sm-3 bp">
+						<div class="col-3  col-lg-3 col-sm-3 bp">
 							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
 							<div class="value">-</div>
 						</div>
 			
 						
 							
-							<div class="col-6  col-lg-3  col-sm-3 rr">
+							<div class="col-3  col-lg-3  col-sm-3 rr">
 								<span class="label">RR</span>
 								<div class="value">-</div>
 							</div>
 			
-						<div class="col-6  col-lg-3 col-sm-3 spo2">
+						<div class="col-3  col-lg-3 col-sm-3 spo2">
 							<span class="label">SpO2</span>
 							<div class="value">-</div>
 						</div>
-							<div class="col-6  col-lg-3 col-sm-3 hr">
+							<div class="col-3  col-lg-3 col-sm-3 hr">
 								<span class="label">HR</span>
 								<div class="value">-</div>
 							</div>	
 							
 							
-									<div class="col-6  col-lg-3 col-sm-3 temp">
+									<div class="col-3  col-lg-3 col-sm-3 temp">
 										<span class="label">Temp</span>
 										<div class="value">-</div>
 									</div>
 			
-				
+				<div class="col-6 ">
+					<span class="label">Note</span>
+				<div class="" style="border:0px solid #ccc">
+			
+				<form action="nurse_note_create?admit_id=<%=admit.id%>&mode=glasses" class="model-remote" method="post" enctype="multipart/form-data" >
+				<input name="note" style="width:100%;background:black;color:gray"></input>
+		
+		   	  	<input type="submit" class="btn "  name="Submit" value="Submit" style="padding:5px"/>
+		
+				</form>
+		
+				</div>
 						
 			</div>
 			
 			
 		</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-6 ">
-		Nurse Note : 
-		<div class="" style="height:200px;border:0px solid #ccc">
-			
-		<form action="nurse_note_create?admit_id=<%=admit.id%>&mode=glasses" class="model-remote" method="post" enctype="multipart/form-data" >
-		<textarea name="note" style="height:6em;width:100%;background:black;color:gray"></textarea>
+
 		
-   	  	<input type="submit" class="btn "  name="Submit" value="Submit"/>
-		
-		</form>
-		
-		</div>
 		
 	</div>
 	</div>
-<br/>
+
 	<div class="row " style="display:none">
 		<div class="col-12">
 			 History : 
