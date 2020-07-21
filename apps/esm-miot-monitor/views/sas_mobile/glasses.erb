@@ -1,4 +1,5 @@
-<style>
+
+	<style>
 	.station .label{
 		font-size:0.8em;
 
@@ -77,22 +78,23 @@ ambu = Ambulance.find params[:id]
 	
 	
 admit = Admit.where(:status=>'Admitted', :ambulance_id=>ambu.id).first
+
 station = Station.find ambu.station_id
 
 
 
 	
 %>
-<%=%>
 
 
-	<% if admit %>
+
+	<% if true %>
 	
 	
 	
 	<%
-	
-	patient = Patient.find admit.patient_id
+	patient = nil
+	patient = Patient.find admit.patient_id if admit
 		
 	%>
 	<!-- <div class='clear'></div>
@@ -235,7 +237,7 @@ station = Station.find ambu.station_id
 	</div>
 	
 	<%end %>
- 
+ <div id="wave-data"></div>
 <!-- <hr/>
 <center>  <%=link_to 'Back', "index",:class=>'nav-link' %></center> -->
 <style>
@@ -252,13 +254,19 @@ station = Station.find ambu.station_id
 <script>
 	
 <%
-	if admit 
+	if true 
 		
-	record = Station.find admit.station_id
+	record = station #Station.find admit.station_id
 	
-		if record 
+		if true 
 %>
+			
+		
+			
+			
 	$(document).ready(function(){
+		
+				<%=inline(this,:'../Sas/_ecg.js')%>
 		
 		function show(text){
 			console.log(text)
@@ -272,7 +280,14 @@ station = Station.find ambu.station_id
 	
   	  var ws       = new WebSocket('wss://' + window.location.host + "<%="/#{params[:gxt]}/Home/index"%>");
 	
+	 var wave_data = {};
+	
   	  var plot_pos = {};
+	  
+	  
+	  showWave('wave-data',wave_data, 'default' );
+		  
+	  
 	
      ws.onopen    = function()  { show('websocket opened'); 
 	
@@ -332,7 +347,10 @@ station = Station.find ambu.station_id
 			
   		$('#timer').html(data['time'])
   		for(var id in data['list']){
-  			i = data['list'][id]
+			i = data['list'][id]
+			
+			if(i=='<%=station.name%>')
+			
 			
   			if($('#'+i).length > 0){ 
   			obj = data['data'][i]
@@ -341,7 +359,7 @@ station = Station.find ambu.station_id
 				
   		  if(obj['wave']){	
 			  
-  			    // wave_data.push(obj['wave']);
+  			     // wave_data.push(obj['wave']);
   		   		// wave_data = wave_data.concat(obj['wave']);
   				
   				// console.log(wave_data);
@@ -357,6 +375,13 @@ station = Station.find ambu.station_id
 		   //   			   console.log(lead_data[jid].length)
 		   //
 		   //   			   }
+			
+			
+			if(wave_data['default']==null){
+				wave_data['default'] = []
+			}
+		
+			wave_data['default'] = 	wave_data['default'].concat(obj['leads'][2])
 			
   		   }
 		    			
