@@ -1,5 +1,8 @@
 
 	<style>
+		.station {
+/*			font-size:0.8em;*/
+		}
 	.station .label{
 		font-size:0.8em;
 
@@ -31,6 +34,9 @@
 	}
 
 	.station .temp{color:#2F50E2;
+
+	}
+	.station .co2{color:yellow;
 
 	}
 
@@ -158,7 +164,7 @@ station = Station.find ambu.station_id
 							<span class="label">PR</span>
 							<div class="value">-</div>
 						</div>
-						<div class="col-3  col-lg-3 col-sm-3 bp">
+						<div class="col-6  col-lg-3 col-sm-3 bp">
 							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
 							<div class="value">-</div>
 						</div>
@@ -184,8 +190,15 @@ station = Station.find ambu.station_id
 										<span class="label">Temp</span>
 										<div class="value">-</div>
 									</div>
-			
-				<div class="col-6 ">
+									<div class="col-3  col-lg-3 col-sm-3 co2">
+										<span class="label">CO2</span>
+										<div class="value">-</div>
+									</div>
+			    <div class="col-12">
+					<span class="label">Wave</span>
+				 <div id="wave-data"></div>
+				</div>
+				<div class="col-6  " style="display:none">
 					<span class="label">Note</span>
 				<div class="" style="border:0px solid #ccc">
 			
@@ -237,7 +250,7 @@ station = Station.find ambu.station_id
 	</div>
 	
 	<%end %>
- <div id="wave-data"></div>
+
 <!-- <hr/>
 <center>  <%=link_to 'Back', "index",:class=>'nav-link' %></center> -->
 <style>
@@ -406,7 +419,7 @@ station = Station.find ambu.station_id
   			$('#'+i+' .pr .value').html(obj['pr'])
   			$('#'+i+' .hr .value').html(obj['hr'])
 			
-			
+			$('#'+i+' .co2 .value').html(obj['co2'])
 			
   			$('#'+i+' .rr .value').html(obj['rr'])
   			$('#'+i+' .spo2 .value').html(obj['spo2'])
