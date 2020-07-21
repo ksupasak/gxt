@@ -117,6 +117,16 @@ a.link-info:visited{
 a.link-info:hover{
 	background:#2c7778;
 }
+.btn-pcm{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  0% no-repeat padding-box;
+}
+.btn-pcm2{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
+  0% no-repeat padding-box;
+}
 </style>
 
 <%
@@ -174,8 +184,8 @@ a.link-info:hover{
 		display_name = "userAmbu#{rand(999)}"
 		cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
 		out = `#{cmd}`
-		out = out.split("\n")
-		token = out[-1]
+		out = out.split("\n") if out
+		token = out[-1] if out
 		@token = token
 		
 		resource_id= admit.ambulance.name
@@ -185,13 +195,13 @@ a.link-info:hover{
 		<a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-warning">Video Call</a>
 		<% end %>
 			&nbsp;
-		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-info'  %>
+		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-pcm2'  %>
 		&nbsp;
-		<%= link_to "Discharge","discharge?id=#{admit.id}",:class=>'btn hn btn-danger'  %>
+		<%= link_to "Discharge","discharge?id=#{admit.id}",:class=>'btn hn btn-pcm'  %>
 		
 		<% else %>
 		
-		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-success'  %>
+		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-pcm2'  %>
 		
 		<% end %>
 		
@@ -222,7 +232,7 @@ a.link-info:hover{
 					font-size:0.8em;
 					padding:0px;
 					
-		            background-color: white;
+		            background-color: #21272c;
 		            border: 0px solid #000;
 		           border-radius: 4px;
 		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
@@ -539,7 +549,7 @@ a.link-info:hover{
 			
 			
 		<!-- Nav tabs -->
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs"  style="padding-top:10px"> 
   		  <li class="nav-item nav-itemx active">
   		    <a class="nav-link" data-toggle="tab" href="#menu1">ECG 12 leads & Monitor</a>
 		  </li>
@@ -559,10 +569,10 @@ a.link-info:hover{
 	 	<div id="menu1" class="col-12 order-3">
 	 			
 	 		<div class="row">
-	 				<div class="col-12 right">
+	 				<div class="col-12 right " style="padding:10px">
 				
-	 			     <span><%=link_to 'History', '#',:class=>'btn btn-info', :id=>'ecg-history-btn' %></span>
-	 			    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-info',:target=>'_blank' %></span>
+	 			     <span><%=link_to 'History', '#',:class=>'btn btn-pcm2', :id=>'ecg-history-btn' %></span>
+	 			    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-pcm2',:target=>'_blank' %></span>
 			
 			
 	 				</div>
