@@ -1,10 +1,16 @@
 
 
-def switch name
+def switch name, app=nil
   
   settings.set :name, name 
-  settings.set :app, settings.apps[name]
-  settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
+ 
+  app = settings.apps[name] unless app
+
+
+  settings.set :app, app
+  settings.set :context, eval("#{app.gsub('-','_').camelize}")
+
+  # settings.set :context, eval("#{settings.apps[name].gsub('-','_').camelize}")
   # MongoMapper.database = "#{settings.mongo_prefix}-#{settings.name}"
   Mongoid.override_database("#{settings.mongo_prefix}-#{settings.name}")
   
@@ -58,7 +64,10 @@ before do
   #   \
   settings.set :context, nil
   # if solution_name!='promptpay' and solution_name!='barcode'
-  switch solution_name
+  app = nil
+  app = settings.redis.get("GXT|#{solution_name}")
+  
+  switch solution_name, app
   # end
   
   # MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
@@ -76,7 +85,7 @@ before do
        u  = context::User.find session[:identity] 
        
        if u
-         @current_user = u.login
+         @current_user = u#.login
          role = context::Role.find u.role
          @current_role = role.name if role
          settings.set :current_user, @current_user
@@ -197,17 +206,33 @@ def process_request
     puts  params[:service]
 
    @this = eval "#{params[:service]}Controller.new @context, settings"
-   # eval "@this.init"
+  
    @this.setRequest request
   
    # normal web http request
    if !request.websocket?
    
+    acl = {}
+    acl = @this.acl if @this.respond_to? :acl
+
+    
+    if params[:operation] != "login" and acl['*'] == nil and (acl[params[:operation].to_sym]==nil or (acl[params[:operation].to_sym] and acl[params[:operation].to_sym].index('*')==nil)) #"#{params[:service]}/#{params[:operation]}" != "Home/index"
+    unless session[:identity]
+      
+    session[:return_to] = request.fullpath 
+      
+    redirect  "#{params[:gxt]}/User/login"
+    end
+    end
    
-     puts 'xxxx '+ params[:operation]
-   
+    # redirect  "#{params[:gxt]}/User/login"
+    
+    
+    
    # get content of service
-   content = eval "@this.#{params[:operation]} params"
+   # content = eval "@this.#{params[:operation]} params"
+   
+   content = @this.send params[:operation], params
    
    
    return content
@@ -220,7 +245,7 @@ def process_request
       
    request.websocket do |ws|
          ws.onopen do
-           # ws.send("Hello World!")
+           settings.apps_ws[settings.name] = [] unless settings.apps_ws[settings.name]
            settings.apps_ws[settings.name] << ws
          end
          ws.onmessage do |msg|
@@ -239,7 +264,16 @@ def process_request
   
 end
    
-   
+before '/:gxt/:service/:operation' do 
+#   if !request.websocket?
+#   if params[:operation] != "login" and "#{params[:service]}/#{params[:operation]}" != "Home/index"
+#   unless session[:identity]
+#     redirect  "#{params[:gxt]}/User/login"
+#   end
+#   end
+# end
+  
+end
    
 get '/:gxt/:service/:operation' do
  process_request

@@ -20,15 +20,31 @@ if request.post?
 	
 	admit = Admit.create ad
 	
-	AdmitLog.create :admit_id=>admit.id, :name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
-	AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
-	AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2
-	AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2
-	AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
-	AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
-	AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
 	
 	
+	if params[:location2] == ""
+		
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
+		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+	
+	else
+	
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
+		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2 #, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4 , :address=>params[:address2], :latlng=>params[:location2]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4 #, :address=>params[:address2], :latlng=>params[:location2]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+	
+	
+	
+	end
 	
 	
 	
@@ -59,6 +75,14 @@ else
 	.duration{
 		font-size:1.4em;
 	}
+	
+	.total_distance{
+		font-size:1.4em;
+	}
+	.total_duration{
+		font-size:1.4em;
+	}
+	
 	.ambu input{
 		background:none;
 	}
@@ -109,49 +133,69 @@ else
 	</div>
 	
 	<div class="row search-panel" style="border:0px solid" >
-	<div class="col-12">
-<center>
-	<br/>
 	<%
 		
 	number =  format("%s%04d",Time.now.strftime("%y"),Admit.count) 
 	
 		
 	%>
-	Case No : <input type="text" name="an" id="an" value="<%=number%>" placeholder="Case No" style="width:100px"> 
 	
-	Address : <input type="text" name="address" id="address" value="" placeholder="Address" style="width:300px"> 
-	Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long" style="width:/00px"> 
+	<div class="col-12">
+	<div class="row">
+	<div class="col-1">	
+	No : <br/><input type="text" name="an" id="an" value="<%=number%>" placeholder="Case No" style="width:100%">
+	</div>
 	
+	<div class="col-4">	
+	Address (A) : <%=link_to '[-]', '#', :class=>"address-btn " %> <br/><input type="text" name="address" id="address" value="" placeholder="ที่หมาย" style="width:100%"> 
+	<input type="hidden" name="location" id="location" value="" placeholder="Lat,Long" style="width:/00px"> 
+	</div>
+	
+	<div class="col-4">	
+	Address (B) : <%=link_to '[-]', '#', :class=>"address-btn" %> <br/><input type="text" name="address2" id="address2" value="" placeholder="นำส่ง" style="width:100%">
+	<input type="hidden" name="location2" id="location2" value="" placeholder="Lat,Long" style="width:/00px">  
+	</div>
+	
+	<div class="col-3">	<br/>
 	<%=link_to 'Next', "\#", :class=>'btn btn-success next-button' %>
 	<%=link_to 'Reset', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
 	<%=link_to 'Back', "index", :class=>'btn', :style=>"color:white"%>
 	
-</center></div>
+	</div>
+	</div>
+	
+	
+	
+	
+	</div>
 	</div>
 
 	
 	
 	<div class="row ambu-panel" style="display:none">
 		
-		<div class="col-12">
-			<div class="clear"></div>
-			<br/>
-		<b>Ambulance</b>
-		</div>
+	
 		
-		<div class="col-12">
+		<div class="col-12"><br/><br/>
 		<table class="table">
+			<tr><td><b>Ambulance</b></td>
+				<td align="left">A (ที่หมาย)</td>
+				<td align="left">A-B (รวม)</td>
+				<td></td>
+			</tr>
+				
 		<% for i in ambulances 
 		
 		 admit = Admit.where(:status=>'Admitted', :ambulance_id=>i.id).first
 
 		%>
 			<tr class="ambu-<%=i.id%>">
-				<td><%=i.name%><br/><%=i.plate_license%><br/><%=i.phone%></td>	<td style="font-size:0.7em;display:none" ><span class="last_address" style="width:300px;display:block"><%=i.last_address%></span>
-					 LatLng: <%=i.last_location%></td> <td ></td> 
-					 <td ><span class="distance">-</span><br/><span class="duration">-</span></td> 
-				
+				<td><%=i.name%><br/><%=i.plate_license%><br/><%=i.phone%></td>	
+				<!-- <td style="font-size:0.7em;display:none" >
+				<span class="last_address" style="width:300px;display:block"><%=i.last_address%></span>
+				 LatLng: <%=i.last_location%></td> <td ></td>  -->
+				<td ><span class="distance">-</span><br/><span class="duration">-</span></td> 
+				<td ><span class="total_distance">-</span><br/><span class="total_duration">-</span></td> 
 				<td>
 				<% unless admit %>	
 					<%=link_to 'Select', "#", :class=>'btn btn-success select-ambu', :ambu_id=>i.id %>
@@ -288,9 +332,13 @@ else
 						
 				// Initialize and add the map
 				var marker = null;
+				var marker2 = null;
+				
 				var map = null;
 				var geocoder =null;
-				var postition = null;
+				var position = null;
+				var position2 = null;
+				
 			    var directionsService = null;
 			    var directionsDisplay = null;
 				var waypoints = null;
@@ -304,14 +352,28 @@ else
 					$('.ambu-panel').slideUp(300);
 					$('.ambu-station').slideDown(300);
 					$('.cancel-button').show();
+					waypoints = Array();
+					
 					
 					ambu_id = $(this).attr('ambu_id')
 						
 				    var latlng = {lat: parseFloat(position.lat()), lng: parseFloat(position.lng())};
 					latlng_txt = ""+position.lat()+","+position.lng();
 					
+					wp = ""
+					// console.log(position2)
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+					
+					latlng_txt = latlng_txt_2
+					}
+					
 					$.ajax({
-					  url: "distance?l="+latlng_txt+"&ambu="+ambu_id,
+					  url: "distance?l="+latlng_txt+"&ambu="+ambu_id+"&wp="+wp,
 					  context: document.body
 					}).done(function(data) {
 				  
@@ -320,7 +382,8 @@ else
 						
 						if(result['status']=='200 OK'){
 							
-						waypoints = Array();
+						
+						
 						drawPath(directionsService, directionsDisplay,result['start_location'],result['end_location']);
 						
 						$('#ambulance_id').val(result['id'])
@@ -371,6 +434,9 @@ else
 					$('.cancel-button').hide();
 					$('#address').val("");
 					$('#location').val("");
+					$('#address2').val("");
+					$('#location2').val("");
+					
 					directionsDisplay.set('directions', null);
 				})
 	
@@ -387,6 +453,8 @@ else
 				      document.getElementById('map'), {zoom: 16, center: uluru});
 				  // The marker, positioned at Uluru
 				  marker = new google.maps.Marker({position: uluru, map: map, draggable:true});
+				  marker2 = new google.maps.Marker({position: uluru, map: map, draggable:true});
+				  
 				  google.maps.event.addListener(marker, 'dragend', function() { 
 				  
 				  
@@ -398,6 +466,19 @@ else
 				  
 				  
 				   } );
+				   
+				   
+ 				  google.maps.event.addListener(marker2, 'dragend', function() { 
+				  
+				  
+ 				  	position2 = marker2.position
+					
+ 					updatePosition2();
+					 
+ 				  	// $('.next-button').click();
+				  
+				  
+ 				   } );
 				   
 				   
 				   map.addListener('rightclick', function(e){
@@ -422,6 +503,7 @@ else
 
 
 				function drawPath(directionsService, directionsDisplay,start,end) {
+						console.log(waypoints)
 				        directionsService.route({
 				          origin: start,
 				          destination: end,
@@ -458,6 +540,28 @@ else
 						  var latlng = ""+position.lat()+","+position.lng();
 						  $('#location').val(latlng)
 						  updatePosition();
+						  $('.next-button').click()
+						  
+					  }else{
+						 alert('Geocode was not successful for the following reason: ' + status);
+					  }
+					});
+					
+						$('#address2').focus()
+					
+				})
+				
+				
+				$('#address2').change(function(){
+					address = $(this).val()
+					url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=#{key}"
+					
+			        geocoder.geocode({'address': address}, function(results, status) {
+			          if (status === 'OK') {
+						  position2 = results[0].geometry.location;
+						  var latlng = ""+position2.lat()+","+position2.lng();
+						  $('#location2').val(latlng)
+						  updatePosition2();
 						  
 					  }else{
 						 alert('Geocode was not successful for the following reason: ' + status);
@@ -467,6 +571,7 @@ else
 					
 					
 				})
+				
 				
 				$('#location').change(function(){
 				
@@ -505,7 +610,8 @@ else
 					
 				})
 				
-			  
+			      
+				  
 				function updatePosition(){
 				
 					map.setCenter(position);
@@ -522,14 +628,32 @@ else
 					  }
 				    });
 					
+					wp = ""
+					// console.log(position2)
+					waypoints = new Array();
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+				
+					latlng_txt = latlng_txt_2
+					}
+					
 					
 					for(var ix in ambulances){
 						i = ambulances[ix];
 						
 						console.log(i)
 						
+						
+						
+						
+						
+						
 						$.ajax({
-						  url: "distance?l="+latlng_txt+"&ambu="+i['_id'],
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']+"&wp="+wp,
 						  context: document.body
 						}).done(function(data) {
 					  
@@ -540,6 +664,10 @@ else
 								
 								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
 								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+								
+								$('.ambu-'+result['id']+" .total_distance").html(result['total_distance']['text'])
+								$('.ambu-'+result['id']+" .total_duration").html(result['total_duration']['text'])
+								
 								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
 								
 							}else{
@@ -555,8 +683,92 @@ else
 					}
 					
 				
+					
+				
+					 
+				}
+				
+				
+				
+				function updatePosition2(){
+				
+					map.setCenter(position2);
+					marker2.setPosition(position2);
+					
+				    var latlng = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt = ""+position2.lat()+","+position2.lng();
+				    
+					geocoder.geocode({'location': latlng}, function(results, status) {
+				      if (status === 'OK') {
+							  
+							  $('#location2').val(latlng_txt)
+							  $('#address2').val(results[0].formatted_address)
+					  }
+				    });
+					
+				    latlng = {lat: parseFloat(position.lat()), lng: parseFloat(position.lng())};
+					latlng_txt = ""+position.lat()+","+position.lng();
+					
+					
+					wp = ""
+					// console.log(position2)
+					waypoints = new Array();
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+				
+					latlng_txt = latlng_txt_2
+					}
+					
+					
+					for(var ix in ambulances){
+						i = ambulances[ix];
+						
+						console.log(i)
+						
+						
+						
+						
+						
+						
+						$.ajax({
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']+"&wp="+wp,
+						  context: document.body
+						}).done(function(data) {
+					  
+					  	  result = JSON.parse(data)
+							console.log(result)
+							if(result['status']=='200 OK'){
+								
+								
+								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
+								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+								
+								$('.ambu-'+result['id']+" .total_distance").html(result['total_distance']['text'])
+								$('.ambu-'+result['id']+" .total_duration").html(result['total_duration']['text'])
+								
+								
+								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
+								
+							}else{
+								$('.ambu-'+result['id']).hide()
+							}
+								
+						  
+					  
+						});
+					
+						
+						
+					}
+				
 					 
 				}	
+			 	
+					
 			 	
 				
 			  function geocodeLatLng(geocoder, map, infowindow) {

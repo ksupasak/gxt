@@ -2,7 +2,18 @@
 module EsmMiotMonitor
 
 class SasMobileController < GXT
-
+  
+  def acl
+    
+     acl = {}
+    
+     # acl = {'*'=>'*'}
+    
+     acl[:glasses] = %w{*}
+     
+     return acl
+    
+  end
 
 end
 

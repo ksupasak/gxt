@@ -1,0 +1,104 @@
+<style>
+	.center {
+	  margin: auto;
+	  width: 30%;
+	  min-width:300px;
+/*	  border: 1px solid #1e6dfB;*/
+	  padding: 10px;
+	}
+	</style>
+	<link rel="stylesheet" type="text/css" href="<%=url_for "PatternLock/_style/patternlock.css"%>"/>
+	
+<%
+	
+login_mode = Setting.get 'default_login'
+
+
+record = User.find params[:id] 
+	
+if request.post?
+	
+	if params[:login] and params[:password]
+		user_login = User.authenticate(params[:login], params[:password])
+		session[:identity] = user_login.id if user_login	
+	end
+	
+	if login_mode == 'pattern' and params[:pattern_password]
+		user_login = User.where(:pattern=>params[:pattern_password]).first
+		if user_login
+			user_login.login_perform
+			session[:identity] = user_login.id  if user_login
+		end
+	end
+	
+	path = '../Home/index'
+	path = session[:return_to] if session[:return_to]
+	session.delete :return_to
+	
+%>
+<%= redirect_to path
+%>
+
+<% else %>
+<div class="center">
+<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"> AOC</h3></center>
+
+<form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
+
+    <input type="hidden" class="form-control" id="record_id" name="id" value="<%=params[:id]%>" placeholder="Password">
+
+<div class="login-panel">	
+<div class="form-group">
+  <label for="product-name">Login</label>
+
+    <input type="text" class="form-control" id="login" name="login" value="" placeholder="User ID or email">
+	
+
+</div>
+
+<div class="form-group">
+  <label for="product-name">Password Confirmation</label>
+
+    <input type="password" class="form-control" id="password" name="password" value="" placeholder="Password">
+	
+
+</div>
+
+<button type="submit" class="btn btn-primary">Submit</button> 
+<%=link_to 'Back', "index" %> | 
+<a href="#" class="patternlock-toggle"> Login with Pattern </a>
+
+</div>
+
+
+<div class="patternlock-panel">
+<center>
+<div>
+<input type="password" name="pattern_password" class="patternlock">
+<!-- <input type="reset" value="reset" > -->
+
+</div>
+</center>
+<br/>
+<input type="submit" value="login" style="display: none;">
+
+<%=link_to 'Back', "index" %> | 
+<a href="#" class="patternlock-toggle"> Login with User </a>
+</div>
+
+</form>
+
+</div>
+<script>
+	$('.patternlock-toggle').click(function(){
+		$('.patternlock-panel').toggle();
+		$('.login-panel').toggle();
+	});
+	<% if login_mode=='pattern' %>
+	$('.login-panel').toggle();
+	<% else %>
+	$('.patternlock-panel').toggle();
+	<% end %>
+</script>
+<% end %>
+	<script src="<%=url_for "PatternLock/_script/patternlock.js"%>"></script>

@@ -132,7 +132,7 @@ def self.registered(app)
          if app.settings.apps_rv
            
          for name in app.settings.apps_rv['esm-miot-monitor']
-           switch name
+           switch name, 'esm-miot-monitor'
          
            # start Zello
            
@@ -298,7 +298,7 @@ MSG
        
        name =  tag.split('/')[1]
        
-       switch name
+       switch name, 'esm-miot-monitor'
        
        
        redis = settings.redis
@@ -612,18 +612,24 @@ MSG
          
       
       
-      
+      # Redis.new(url: c,:driver => :hiredis)
       
          
        
         EM.add_periodic_timer(1) do
           puts '. '
           if app.settings.apps_rv
+          
+          redis = Redis.new(url: c,:driver => :hiredis)
+          
             
-          for name in app.settings.apps_rv['esm-miot-monitor']
-          switch name
+          for name in redis.smembers('esm-miot-monitor')#app.settings.apps_rv['esm-miot-monitor']
+          switch name, 'esm-miot-monitor'
           
           puts "app : #{name}"
+          
+          
+          
           
           if  app.settings.apps_ws[app.settings.name] and app.settings.stations[name] and app.settings.senses[name]
             # puts app.settings.senses[name].inspect 

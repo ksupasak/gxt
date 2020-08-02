@@ -7,11 +7,22 @@ require 'barby/outputter/png_outputter'
 
 
 def register_app name, application, extended=nil
+
+  for name in settings.redis.smembers(application)
+
   settings.apps[name] = application
   settings.apps_ws[name] = []
   settings.apps_rv[application] = [] unless  settings.apps_rv[application]
   settings.apps_rv[application] << name
   # settings.extended[application] = extended if extended
+  
+  settings.redis.set "GXT|#{name}",  application
+  settings.redis.sadd application, name 
+  
+  end
+  # settings.redis.set "", name 
+  
+  
 
 end
 def normalize_distance_of_time_argument_to_time(value)

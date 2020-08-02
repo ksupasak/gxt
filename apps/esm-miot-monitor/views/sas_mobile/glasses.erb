@@ -99,15 +99,16 @@ station = Station.find ambu.station_id
 	
 	
 	<%
+	
 	patient = nil
 	patient = Patient.find admit.patient_id if admit
-		
+	if admit
 	%>
 	<!-- <div class='clear'></div>
 	<div class="row hidden">
 		<div class="col-12 ">
 		<div class="alert alert-success ">
-		Case No : <v><%=admit.an%></v> HN : <v><%=patient.hn%> </v> <br/>
+		Case No : <v><%#admit.an%></v> HN : <v><%patient.hn%> </v> <br/>
 		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
 		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
 
@@ -132,10 +133,12 @@ station = Station.find ambu.station_id
 
 
 	<%
+	
+
   		
 	last_log = AdmitLog.where(:admit_id=>admit.id, :status=>'PENDING').sort(:sort_order=>1).first
 	station = Station.find admit.station_id
-	
+
 	
   	%>
   	
@@ -154,9 +157,13 @@ station = Station.find ambu.station_id
 	  	<%= link_to 'Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-success' if last_log%>
 	</div>
 	</div> -->
+	<% end %>
 	<div class="row">
 		<div class="col-12">
-		Patient : <v><%=patient.first_name%> <%=patient.last_name%></v>
+			
+		Patient : <% if admit %><v><%=patient.first_name%> <%=patient.last_name%></v><% else %>
+		-
+		<% end %>
 		<div class="station" id="<%=station.name%>" style="">
 			
 			<div class="row">
@@ -198,11 +205,20 @@ station = Station.find ambu.station_id
 					<span class="label">Wave</span>
 				 <div id="wave-data"></div>
 				</div>
+			    
+				<div class="col-12">
+					<span class="label">Conf</span>
+				 <div id="">
+				 	<%#link_to 'Button', "javascript:alert('ok')", :class=>'btn btn-success'%>
+				 </div>
+				</div>
+				
+				
 				<div class="col-6  " style="display:none">
 					<span class="label">Note</span>
 				<div class="" style="border:0px solid #ccc">
 			
-				<form action="nurse_note_create?admit_id=<%=admit.id%>&mode=glasses" class="model-remote" method="post" enctype="multipart/form-data" >
+				<form action="nurse_note_create?admit_id=<%=admit.id if admit%>&mode=glasses" class="model-remote" method="post" enctype="multipart/form-data" >
 				<input name="note" style="width:100%;background:black;color:gray"></input>
 		
 		   	  	<input type="submit" class="btn "  name="Submit" value="Submit" style="padding:5px"/>
@@ -222,6 +238,7 @@ station = Station.find ambu.station_id
 	</div>
 	</div>
 
+	<% if admit %>
 	<div class="row " style="display:none">
 		<div class="col-12">
 			 History : 
@@ -248,7 +265,7 @@ station = Station.find ambu.station_id
 			</table>
 		</div>
 	</div>
-	
+	<%end %>
 	<%end %>
 
 <!-- <hr/>

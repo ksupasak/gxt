@@ -11,11 +11,20 @@
 
 	
 	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}"
+	
+	if params[:wp] and params[:wp].size>0
+	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}&waypoints=#{params[:wp]}"
+	end
 
+	puts url 
 	
 	data = `curl '#{url}'`
 	
 	obj = JSON.parse data
+	
+	puts obj.inspect
+	
+
 	
 	if obj['geocoded_waypoints'][0]['geocoder_status']=='OK'
 	
@@ -23,14 +32,45 @@
 	
 	best_route = routes[0]
 	legs = best_route['legs']
-	best_leg = legs[0]
-	distance = best_leg['distance']
+	best_leg_0 = legs[0]
+	best_leg = legs[legs.length-1]
 	
-	duration = best_leg['duration']
+	total_distance = 0
+	total_duration = 0
+	
+
+	distance = best_leg_0['distance']
+	
+	duration = best_leg_0['duration']
+		 
+	for i in legs
+		
+		total_distance+= i['distance']['value']
+		total_duration+= i['duration']['value']
+		
+	end
+		
+	total_duration_i = total_duration/3600.0
+		
+	total_distance_text = "#{(total_distance/1000).round(1)} km"	
+	total_duration_text = ""
+	
+	h = 0 
+	total_duration_text += "#{total_duration_i.to_i } hours " if total_duration_i.to_i > 0
+	
+	m = 0 
+	m = ((total_duration_i%1)*60).to_i  
+	total_duration_text += "#{m} mins" 
+	
+	
+	
+	
+	# e"=>{"text"=>"293 km", "value"=>293184}
+	
 	
 	ambu.update_attributes :last_address=> best_leg['start_address']
 	
-	result = {:status=>'200 OK', :id=> ambu.id, :ambu=>ambu,  :start_address=>best_leg['start_address'],:start_location=>best_leg['start_location'], :end_address=>best_leg['end_address'],:end_location=>best_leg['end_location'], :distance=>distance, :duration=>duration,  :data=>data}
+	result = {:status=>'200 OK', :id=> ambu.id, :ambu=>ambu,  :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location'], :end_address=>best_leg['end_address'],:end_location=>best_leg['end_location'],:total_distance=>{'text'=>total_distance_text,'value'=>total_distance},:total_duration=>{'text'=>total_duration_text,'value'=>total_duration},:distance=>distance, :duration=>duration,  :data=>data}
 	
 	end
 	

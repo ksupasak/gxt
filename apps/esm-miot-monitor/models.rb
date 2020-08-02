@@ -68,26 +68,65 @@ class GXTModel
  
 end  
   
-
+require 'digest/sha1'
 class User < GXTModel
 
   include Mongoid::Document
-  include Mongoid::Timestamps
+ 
   belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
   key :login, String
   key :salt,  String
+  key :passcode, String
+  key :pattern, String
   key :hashed_password,  String
-  key :last_login, DateTime
+  key :last_accessed, DateTime
   key :role_id, ObjectId
   key :email, String
+   include Mongoid::Timestamps
   timestamps!
+  
+  def self.authenticate(login, pass)
+    u=  self.where(:login=>login).first()
+    return nil if u.nil?
+    if User.encrypt(pass, u.salt)==u.hashed_password
+      u.last_accessed = Time.now
+      u.save
+      return u
+    end
+    nil
+  end
+  
+  def password=(pass)
+    @password=pass
+    self.salt = User.random_string(10) if !self.salt?
+    self.hashed_password = User.encrypt(@password, self.salt)
+  end
+  
+  def login_perform
+    self.last_accessed = Time.now
+    self.save
+    self
+  end
+  
+  def self.random_string(len)
+    #generat a random password consisting of strings and digits
+    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
+    newpass = ""
+    1.upto(len) { |i| newpass << chars[rand(chars.size-1)] }
+    return newpass
+  end
+  
+  def self.encrypt(pass, salt)
+    Digest::SHA1.hexdigest(pass+salt)
+  end
+  
 end
 
 class Role < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   key :name, String
- 
+  include Mongoid::Timestamps 
   timestamps!
 end
 class Provider < GXTModel
@@ -99,22 +138,22 @@ end
 
 class Procedure < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
    key :name, String
-  
+    include Mongoid::Timestamps
 end
 
 class Diagnosis < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
    key :name, String
-  
+    include Mongoid::Timestamps
 end
 
 
 class Zone < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   has_many :stations, :class_name=>'EsmMiotMonitor::Station'
   has_many :ambulances, :class_name=>'EsmMiotMonitor::Ambulance'
@@ -123,35 +162,49 @@ class Zone < GXTModel
   
   key :name, String 
   key :mode, String 
-  
+    include Mongoid::Timestamps
 end
 
 class Room < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
-  
+   
   has_many :beds, :class_name=>'EsmMiotMonitor::Bed'
   
   key :name, String 
   key :zoon_id, ObjectId
-  
+  include Mongoid::Timestamps
+ 
 end
 
 class Bed < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+ 
   
   key :name, String 
   key :room_id, ObjectId 
+   include Mongoid::Timestamps
+end
+
+
+class AddressBook < GXTModel
+  include Mongoid::Document
+ 
+  
+  key :name, String 
+  key :contact_name, String
+  key :address, String
+  key :phone, String
+  key :latlng, String
+  
+  include Mongoid::Timestamps
+  
   
 end
 
 
-
-
 class Station < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -162,6 +215,7 @@ class Station < GXTModel
   key :ip, String
   key :zone_id, ObjectId  
   key :stream_url, ObjectId
+  include Mongoid::Timestamps
   def to_s
     self.name
   end
@@ -171,7 +225,7 @@ end
 class Message < GXTModel
   
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
@@ -184,13 +238,13 @@ class Message < GXTModel
   key :media_type, String 
   key :content, String
   key :file_id, ObjectId
-  
+  include Mongoid::Timestamps
 end
 
 
 class Sense < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   belongs_to :station, :class_name=>'EsmMiotMonitor::Admit'
@@ -205,13 +259,13 @@ class Sense < GXTModel
   key :tag, String
   
   key :note, String
-  
+  include Mongoid::Timestamps
 end
 
 
 class Admit < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+ 
   
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
@@ -257,6 +311,7 @@ class Admit < GXTModel
   key :note, String
   
   key :bed_no, String
+   include Mongoid::Timestamps
  timestamps!
   
   def discharge
@@ -268,18 +323,22 @@ end
 
 class AdmitLog  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+ 
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :addressbook, :class_name=>'EsmMiotMonitor::AddressBook'
   
   key :admit_id, ObjectId
+  key :addressbook_id, ObjectId
   key :name, String
+  key :address, String 
   key :status, String
   key :latlng, String
   key :note, String
   key :stamp, Time
   key :sort_order, Integer
   key :parent, Integer
+  include Mongoid::Timestamps
   timestamps!
 end
 
@@ -287,7 +346,6 @@ end
 class NurseRecord  < GXTModel
   
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -305,22 +363,22 @@ class NurseRecord  < GXTModel
   key :note, String
   
   key :tag, String
+  include Mongoid::Timestamps
   
 end
 
 class Medication  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   key :name,  String
   key :concentration, String
+  include Mongoid::Timestamps
   
     
 end
 
 class MedicationRecord  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   belongs_to :medication, :class_name=>'EsmMiotMonitor::Medication'
@@ -345,6 +403,7 @@ class MedicationRecord  < GXTModel
   key :note, String
   
   key :tag, String
+  include Mongoid::Timestamps
   
   
   
@@ -352,7 +411,7 @@ end
 
 class Patient  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
+
   has_many :admits, :class_name=>'EsmMiotMonitor::Admit'
   
   key :hn, String 
@@ -366,6 +425,7 @@ class Patient  < GXTModel
   key :gender, String
   key :contact_name, String 
   key :contact_phone, String
+  include Mongoid::Timestamps
   def to_s
     "#{self.prefix_name}#{self.first_name} #{self.last_name}"
   end
@@ -377,13 +437,14 @@ end
 
 class Score  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   has_many :items, :class_name=>'EsmMiotMonitor::ScoreItem'
   
   key :name, String
   key :version, String
   key :description, String
+  include Mongoid::Timestamps
+  
   def to_s
       self.name
     end
@@ -391,7 +452,6 @@ end
 
 class ScoreItem  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
   has_many :conditions, :class_name=>'EsmMiotMonitor::ScoreCondition'
@@ -402,12 +462,12 @@ class ScoreItem  < GXTModel
   
   key :sort_order, Integer
   key :score_id, ObjectId
+  include Mongoid::Timestamps
   
 end
 
 class ScoreCondition < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   belongs_to :score_item, :class_name=>'EsmMiotMonitor::ScoreItem'
   
@@ -424,6 +484,7 @@ class ScoreCondition < GXTModel
   
   key :alert_msg, String
   key :alert_tag, String
+  include Mongoid::Timestamps
   
 end
 
@@ -434,12 +495,12 @@ end
 
 class Device  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
   key :name, String
   key :ip, String
   key :serial_number, String
   key :type, String
+  include Mongoid::Timestamps
   def to_s
     self.name
   end
@@ -448,7 +509,6 @@ end
 
 class Ambulance  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
   has_one :admit, :class_name=>'EsmMiotMonitor::Admit'
@@ -465,28 +525,30 @@ class Ambulance  < GXTModel
   key :last_location, String
   key :last_address, String
   key :device_no, String
-
+  include Mongoid::Timestamps
+  
   
 end
 
 class AmbulanceDriver  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   key :name, String
   key :mobile, String
   key :phone, String
   key :address, String
   key :public_id, String
   key :user_id, ObjectId
+  include Mongoid::Timestamps
+  
 end
 
 
 
 class Setting  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   key :name, String
   key :value, String
+  include Mongoid::Timestamps
   
   def self.get name, default=nil
       record = self.where(:name=>name).first
@@ -502,7 +564,6 @@ end
 
 class DataRecord  < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
@@ -527,6 +588,7 @@ class DataRecord  < GXTModel
   
   key :note, String
   key :score_id, ObjectId
+  include Mongoid::Timestamps
   
   timestamps!
 end
@@ -547,6 +609,9 @@ class UserController < GXTDocument
 
 end
 
+class AddressBookController < GXTDocument
+
+end
 
 class RoleController < GXTDocument
 

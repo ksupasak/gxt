@@ -45,6 +45,8 @@ MSG
     
     
 end
+
+
   
 class TestController < GXT
 
@@ -60,7 +62,12 @@ end
 
 
 class HomeController < GXT
-
+  
+  def acl
+    
+    return {:index=>['*']}
+    
+  end
     
   def get_stations params
       
@@ -130,6 +137,7 @@ class HomeController < GXT
            ws.onopen do
              puts "open websocket for #{@context.settings.name} on #{ws.hash}"
              # ws.send("websocket opened")
+             @context.settings.apps_ws[@context.settings.name] = [] unless @context.settings.apps_ws[@context.settings.name] 
              @context.settings.apps_ws[@context.settings.name] << ws
              @context.settings.apps_ws_rv[ws.hash] = @context.settings.name
            end

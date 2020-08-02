@@ -535,9 +535,9 @@ $('#main-container').removeClass('container')
 
       }
 	  ws.onerror = function(event) {
-		  alert(tag);
+		  alert(JSON.stringify(event));
 		  console.log(event)
-	    alert(event.message);
+	      // alert(event.message);
 	  };
       ws.onmessage = function(m) { 
 	

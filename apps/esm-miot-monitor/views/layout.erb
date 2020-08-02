@@ -68,13 +68,26 @@ border-bottom: 2px solid #3147FF;
       <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
       </a>
 			
-			<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
-					<!--<%=link_to "+", "../Admit/create",:class=>'btn btn-outline-success mr-2 my-0 col-3 col-xs-2 col-sm-1 col-lg-1' %>	-->
-			
+				<% if @current_user %>
+					<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
+				<!--<%=link_to "+", "../Admit/create",:class=>'btn btn-outline-success mr-2 my-0 col-3 col-xs-2 col-sm-1 col-lg-1' %>	-->
 			    <input class="form-control mr-2  my-0 col-12 col-xs-6" name='query' id="search" type="text" placeholder="Search" aria-label="Search">
-				
-		<!--	<button class="btn btn-outline-success my-0  col-3" type="submit">O</button>-->
- </form>
+				<!--	<button class="btn btn-outline-success my-0  col-3" type="submit">O</button>-->
+ 			</form>
+		
+
+	   
+	   <div class="order-12" style="">
+		  
+	   <%=link_to "#{@current_user.login}  (#{@current_role}) ", "../User/profile", :class=>'btn btn-success'  %>	
+	
+  	  </div>
+  	   <div class="order-12 text-right" style="width:80px">
+		   
+  	   <%=link_to "Logout","../User/logout" %>	
+	 
+    	  </div>	
+		  <% end %>
 			
       <button class="navbar-toggler col-2" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -117,7 +130,7 @@ border-bottom: 2px solid #3147FF;
 
  
      
-		  
+		  <% if @current_user %>
         
 		  
           <!-- <li class="nav-item dropdown">
@@ -131,13 +144,7 @@ border-bottom: 2px solid #3147FF;
             <a class="nav-link" href="../Admit/index" >Admission</a>
 		  </li>
 		  
-		    <li class="nav-item dropdown">
-               <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Care Unit</a>
-               <div class="dropdown-menu" aria-labelledby="dropdown01">
-				 <% for i in Zone.all.collect{|i| i if i.name!='default'}.compact %>
-                 <a class="dropdown-item" href="../Home/switch_zone?id=<%=i.id%>"><%=i.name%></a>
-				 <% end %>
-             </li>
+		   
 		  
           <!-- <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/sos" >SOS</a>
@@ -167,6 +174,11 @@ border-bottom: 2px solid #3147FF;
     		  <a class="dropdown-item" href="../Provider/index">Provider</a>
     		 <a class="dropdown-item" href="../Procedure/index">Procedure</a>
     		 <a class="dropdown-item" href="../Diagnosis/index">Diagnosis</a>
+ 			 <a class="dropdown-item" href="../Score/index">Score</a>
+	         <a class="dropdown-item" href="../ScoreItem/index">Score-Item</a>
+	         <a class="dropdown-item" href="../ScoreCondition/index">Score-Condition</a>
+			<a class="dropdown-item" href="../AddressBook/index">AddressBook</a>
+			  <a class="dropdown-item" href="../Sense/index">Data</a>
 	 		 </div>
           </li>
 
@@ -184,25 +196,36 @@ border-bottom: 2px solid #3147FF;
 		 		 </div>
 	          </li>
 
-	      <li class="nav-item dropdown hidden">
+	      <!-- <li class="nav-item dropdown hidden">
 	            <a class="nav-link dropdown-toggle" href="../Opd/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">OPD</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
 	 		  <a class="dropdown-item" href="../Opd/index">Station</a>
 		  </div>
-			  </li>
+			  </li> -->
+  		    <li class="nav-item dropdown">
+                 <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Care Unit</a>
+                 <div class="dropdown-menu" aria-labelledby="dropdown01">
+  				 <% for i in Zone.all.collect{|i| i if i.name!='default'}.compact %>
+                   <a class="dropdown-item" href="../Home/switch_zone?id=<%=i.id%>"><%=i.name%></a>
+  				 <% end %>
+               </li>
+			   
+			   
+			   	  <% if  @current_role == 'admin' %>
+			   
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">System</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../User/index">User</a>
               <a class="dropdown-item" href="../Role/index">Role</a>
- 			 <a class="dropdown-item" href="../Score/index">Score</a>
-	         <a class="dropdown-item" href="../ScoreItem/index">Score-Item</a>
-	         <a class="dropdown-item" href="../ScoreCondition/index">Score-Condition</a>
-			
-			  <a class="dropdown-item" href="../Sense/index">Data</a>
+
               <a class="dropdown-item" href="../Setting/index">Settings</a>
 		    </div>
           </li>
+		    <% end %>
+		  <% end %>
+		  
+		  
        	 <li class="nav-item" >
 			
 		</li>
@@ -231,6 +254,8 @@ border-bottom: 2px solid #3147FF;
   <div class="row">
    <div class="col-12">
    <%=yield :content%>
+   
+   <%=session.inspect if params[:debug]%>
    
    <br/>
    
