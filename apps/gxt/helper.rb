@@ -8,6 +8,8 @@ require 'barby/outputter/png_outputter'
 
 def register_app name, application, extended=nil
 
+  settings.redis.sadd application, name 
+
   for name in settings.redis.smembers(application)
 
   settings.apps[name] = application
