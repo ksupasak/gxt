@@ -606,6 +606,10 @@ end
 
 
 class UserController < GXTDocument
+  
+  def acl
+    return {'*'=>'*'}
+  end
 
 end
 
