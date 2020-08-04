@@ -53,3 +53,15 @@ border-bottom: 2px solid #3147FF;
 .panel-normal{
   border:2px solid #686E71;
 }
+
+@media (max-width: 800px) {
+  .navbar {
+    font-size: 14px;
+  }
+
+  .stepper {
+      font-size: x-small;
+      padding-left: 0px;
+  }
+}
+
