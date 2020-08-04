@@ -1,3 +1,4 @@
+   <script src="<%=url_for('hls/hls.js')%>"></script>
 
 <%= inline(this,:'../home/_monitor') %>
 
@@ -43,9 +44,26 @@
 	<div  class="row align-items-start">
 		<div class="col-lg-6 order-2">
 		<% if station.stream_url and station.stream_url.index('m3u8')%>
-		<video width="100%"  src="http://esm-solution.com:8080/hls/test.m3u8" controls autoplay>
-			 <source src="http://esm-solution.com:8080/dash/test.mpd">
-		</video>
+		 <video id="video" width="100%" controls autoplay="true"></video>
+		<script>
+		  var video = document.getElementById('video');
+		  var videoSrc = '<%=station.stream_url%>';
+		  if (Hls.isSupported()) {
+		    var hls = new Hls();
+		    hls.loadSource(videoSrc);
+		    hls.attachMedia(video);
+		    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+		    //   video.play();
+		    });
+		  }
+
+		  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+		    video.src = videoSrc;
+		    video.addEventListener('loadedmetadata', function() {
+		      video.play();
+		    });
+		  }
+		</script>
 		<% else %>
 			<center><img src="<%= station.stream_url%>" height="300"></center> 
 		<% end %>
