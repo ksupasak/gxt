@@ -282,6 +282,9 @@ class Admit < GXTModel
   belongs_to :diagnosis, :class_name=>'EsmMiotMonitor::Diagnosis'
   belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance'
   
+  has_one :case_report, :class_name=>'EsmMiotMonitor::CaseReport'
+  
+  
   belongs_to :bed, :class_name=>'EsmMiotMonitor::Bed'
   
   
@@ -560,6 +563,25 @@ class Setting  < GXTModel
 end
 
 
+class CaseReport < GXTModel
+  
+  include Mongoid::Document
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :center_name, String
+  key :date, Time
+  key :center_address, String
+  
+  key :admit_id, ObjectId
+  key :result, String
+  
+  
+  
+  include Mongoid::Timestamps
+  
+end
+
+
 
 
 class DataRecord  < GXTModel
@@ -619,6 +641,10 @@ end
 
 class RoleController < GXTDocument
 
+end
+
+class CaseReportController < GXTDocument
+  
 end
 
 

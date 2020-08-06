@@ -197,7 +197,21 @@ a.link-info:hover{
 			&nbsp;
 		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn btn-pcm2'  %>
 		&nbsp;
+		
 		<%= link_to "Discharge","discharge?id=#{admit.id}",:class=>'btn hn btn-pcm'  %>
+		
+		
+		&nbsp;
+		<% if admit.case_report %>
+		
+		<%= link_to "CaseReport","../CaseReport/edit?id=#{admit.case_report.id}",:class=>'btn hn btn-pcm'  %>
+		
+		<% else %>
+		
+		<%= link_to "CaseReport","../CaseReport/create?admit_id=#{admit.id}",:class=>'btn hn btn-success'  %>
+		
+		
+		<% end %>
 		
 		<% else %>
 		
