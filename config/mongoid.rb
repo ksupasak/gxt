@@ -92,6 +92,47 @@ Mongoid::Criteria::Queryable::Extensions::String.class_exec{
 #  end
 # end
 
+  
+class ObjectId
+end  
+
+
+
+class GXTModel
+
+    # include Mongoid::Document
+    # include Mongoid::Timestamps
+    # store_in collection: name.collectionize.to_sym
+   
+    def self.keys
+     
+      self.fields.keys.collect{|i| [i]}
+      
+    end
+    
+    def self.key name, type
+
+      type = BSON::ObjectId if type == ObjectId
+      
+      if type==Array
+        field name, type: type, default: []
+      else
+        field name, type: type
+      end
+    end
+    
+    
+    def self.size
+      self.count
+    end
+    
+    def self.timestamps!
+      
+    end
+    
+ 
+end  
+
 
 module BSON
   class ObjectId
@@ -104,6 +145,27 @@ module BSON
     end
   end
 end
+
+
+module Mongoid
+  module Clients
+    module StorageOptions
+      extend ActiveSupport::Concern
+      module ClassMethods
+        def storage_options_defaults
+            t = name.split("::")
+            
+            {
+              collection: "#{t[0].underscore}.#{t[1].collectionize}",
+              client: :default
+            }
+        end
+        
+      end
+    end
+  end
+end  
+
 # Mongoid::Document.class_exec{
 #
 #   def as_json(options={})

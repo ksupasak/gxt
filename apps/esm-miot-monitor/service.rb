@@ -20,6 +20,7 @@ def self.registered(app)
      settings.set :ch_map,  {}
      settings.set :last_map, {}
      settings.set :zello_map, {}
+     settings.set :station_status, {}
      
      
      
@@ -112,9 +113,138 @@ def self.registered(app)
          
        end
        
-     elsif false
+    elsif mode=='gps'
        
       puts mode 
+      
+      EM.next_tick do 
+       
+        require 'redis'
+        require 'json'
+        require "hiredis"
+
+        redis = settings.redis 
+        
+        
+        jsessionid_map = {}
+        connection_map = {}
+     
+       EM.add_periodic_timer(1) do
+       
+         
+         if app.settings.apps_rv
+           
+         for name in app.settings.apps_rv['esm-miot-monitor']
+           switch name, 'esm-miot-monitor'
+         
+          if cms_url = Setting.where(:name=>'cms_url').first and cms_url
+         
+           jsessionid = jsessionid_map[name]
+            
+           unless jsessionid
+             # https://103.76.181.125:8080/StandardApiAction_getDeviceStatus.action?jsession=821e9919-3862-4352-ad23-e4863e8ebf40&devIdno=819112151&toMap=1&driver=0&language=th&
+             # http://103.76.181.125:8080/808gps
+             
+             # response_body = Net::HTTP.get_response("example.com", "/", 443)
+             
+             uri = URI("https://103.76.181.125:8080")
+             use_ssl = true
+
+             http = Net::HTTP.new(uri.host, uri.port)
+             http.use_ssl = use_ssl
+             http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+             result = nil
+
+             http.start do |http| 
+            
+             req = Net::HTTP::Get.new("/StandardApiAction_login.action?account=admin&password=admin")
+
+             response = http.request(req)
+             json = JSON.parse(response.body)
+             
+             jid = json['JSESSIONID']
+             
+             jsessionid_map[name] = jid
+             
+             end
+             
+             
+           end
+            
+           
+          
+          
+           # start Zello
+           puts "Station GPS update #{name}"
+                  
+          # zello_connect = Setting.where(:name=>'zello_connect').first
+          
+          unless http = connection_map[name]
+          
+            http = Net::HTTP.new(uri.host, uri.port)
+            http.use_ssl = use_ssl
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+            connection_map[name] = http
+            
+          end 
+           
+          http.start do |http|  
+           
+            results = {}
+           
+          for ambu in Ambulance.where(:device_no=>{'$ne'=>''}).all
+            
+            req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
+            
+            # puts  ambu.name
+            
+            response = http.request(req)
+            json = JSON.parse(response.body)
+            
+            json = json['status'][0]
+            # puts json.inspect
+            sp = 0
+            sp = json['sp']/10.0 if json['sp']
+            result = {:ambulance_id=> ambu.id , :device_id=>ambu.device_no,:lat=>json['mlat'], :lng=>json['mlng'], :sp=>sp, :ol=>json['ol'], :hx=>json['hx']} 
+            
+            puts "#{ambu.name} #{result.inspect}"
+            
+            results[ambu.station_id] = result
+            
+           
+          end
+          
+          
+            path = "miot/#{name}/in"
+            puts "path #{path}"
+            
+send_msg = <<MSG
+#{'Station.Update'} #{path}
+#{results.to_json}
+MSG
+            redis.publish(path, send_msg)          
+          
+          
+          
+         end
+          
+            
+          
+         end
+          
+        
+         end
+        
+        end 
+           
+           
+      end
+      
+      
+    end     
+      
+      
        
     elsif mode=='zello' 
       
@@ -326,66 +456,50 @@ MSG
        case cmd 
          
          
+       when 'Station.Update'
+         
+         
+        # puts "#{channel}: #{tag}: \n#{message} #{Time.now.to_f}"
+      
+        json = JSON.parse(body)
+        
+        
+        settings.station_status[name] = {} unless settings.station_status[name]
+        staiton_status = settings.station_status[name]
+        
+        
+        
+        
+        json.each_pair do |k,v|
+          
+          station = Station.find k
+          
+          if station
+             
+             ambu = Ambulance.find v['ambulance_id']
+             
+             ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+             
+             staiton_status[k] = v
+              
+            
+          end
+          
+          
+        end
+        
+        
+      
+         
 # register message receiver 
          
        when 'WS.Select'
-         
-         # puts  "msg from #{settings.name} #{msg}"
-         # wsname = path.split("=")[-1]
-         # wsname = ws.hash
-         # settings.ws_map[wsname]=ws
-         # puts body.inspect
-         # data =  ActiveSupport::JSON.decode(body)
-         # puts "#{cmd} #{path} #{data.inspect}"
-         #
-         # for i in data
-         #    t = i.split()
-         #    icmd = t[0]
-         #    ipath = t[1]
-         #
-         #    @context.settings.cmd_map[name] = {} unless @context.settings.cmd_map[name]
-         #    @context.settings.cmd_map[name][icmd] = {} unless @context.settings.cmd_map[name][icmd]
-         #    @context.settings.cmd_map[name][icmd][ipath] = [] unless @context.settings.cmd_map[name][icmd][ipath]
-         #    @context.settings.cmd_map[name][icmd][ipath] << wsname unless @context.settings.cmd_map[name][icmd][ipath].index(wsname)
-         #
-         # end
-         #
-         #
-         # puts "#---- #{  @context.settings.cmd_map.inspect}"
-         
+                  
 # store remote sensing 
       
        when 'Zone.Data'
          
-         
-      # station_id = "#{name}|#{station_name}"
-      #
-      #  zone_name = path.split("=")[-1]
-      #
-      #  zone = Zone.where(:name=>zone_name).first
-      #
-      #  zone = Zone.create(:name=>zone_name) unless zone
-      #
-      #  data = ActiveSupport::JSON.decode(body)
-      #
-      #  for i in data['list']
-      #
-      #    record = data['data'][i]
-      #    station_name = "#{zone_name}_#{i}"
-      #
-      #    station = Station.where(:name=>station_name, :zone_id=>zone.id).first
-      #
-      #    unless  station
-      #       title = station_name
-      #       title = record['title'] if record['title'] and record['title'].size > 0
-      #       station = Station.create :name=>station_name,:title=>title, :zone_id=>zone.id unless station
-      #     end
-      #    @context.settings.senses[name][station_id] = record
-      #
-      #
-      #  end
-       
-   # store local sensing     
+# store local sensing     
       
        when 'Data.Sensing'
          
@@ -507,6 +621,9 @@ MSG
                # puts odata.inspect 
                
                settings.live[name] = {} unless  settings.live[name]
+               
+               # keep sensing data
+               
                settings.senses[name][station_name] = odata
                settings.live[name][station_name] = 10
          
@@ -627,19 +744,62 @@ MSG
           switch name, 'esm-miot-monitor'
           
           puts "app : #{name}"
-          
+      
           
           
           
           if  app.settings.apps_ws[app.settings.name] and app.settings.stations[name] and app.settings.senses[name]
             # puts app.settings.senses[name].inspect 
-            
+              
             
             for z in Zone.all
             
             stations = z.stations.all
             snames = stations.collect{|i| i.name}
+                
+            
+             
+            station_status = app.settings.station_status[app.settings.name]
+           
+            # puts station_status.inspect
+            if station_status
+
+              stations.each do |s|
+
+                if v = station_status[s.id.to_s]
+               
+                  arg = app.settings.senses[name][s.name]
+                  if arg
+                    
+                    # puts "#{v['lat']},#{v['lng']} - #{ arg['lat']}, #{ arg['lng']}"
+                  
+                   arg['lat'] = v['lat']
+                   arg['lng'] = v['lng']
+                  arg['dvr_sp'] = v['sp']
+                  arg['dvr_hx'] = v['hx']
+                  arg['dvr_ol'] = v['ol']
+                
+                
+                end
+                  # app.settings.senses[name][s.name] = arg
+                  
+                  # puts app.settings.senses[name][s.name].inspect
+
+
+                end
+
+
+              end
+
+            end
+            
+            
+            
             result = {:time=>Time.now, :list=>snames,:data=>app.settings.senses[name].select{|k,v| snames.index(k) }}
+            
+                      #
+            
+            
             
             if z.mode == 'aoc'
             
@@ -677,6 +837,8 @@ MSG
               end
               
             end
+            
+            
             
             # puts result.to_json
             path = "miot/#{name}/z/#{z.name}"
@@ -718,7 +880,7 @@ MSG
                  if v['lat'] 
                  ambu = Ambulance.find  admit.ambulance_id 
                  if ambu
-                   ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+                   # ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
                  end
                  end
                  
