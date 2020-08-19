@@ -163,7 +163,7 @@ a.link-info:hover{
 		<div class="col-2 text-left ">
 		<%= link_to station_id,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
-		<div class="col-7 text-center">
+		<div class="col-5 text-center">
 			<%
 			
 				patient = admit.patient
@@ -172,7 +172,7 @@ a.link-info:hover{
 			<%= link_to "#{patient} (#{patient.hn}) ","../Admit/show?id=#{admit.id}", :class=>'btn' if admit %> 
 	
 		</div>
-		<div class="col-12  col-sm-3 right">
+		<div class="col-12  col-sm-5 right float-right ">
 		
 		<% if admit.status!='Discharged'%>
 		<% if admit.ambulance  

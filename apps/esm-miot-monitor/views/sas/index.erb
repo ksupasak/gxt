@@ -13,7 +13,7 @@
 	/*height:45vh;*/
 	background-color: black;
 }
-.map{
+.geo-map{
 	height:500px;
 	/*height:45vh;*/
 		background:#aaa;
@@ -159,7 +159,7 @@ $('#main-container').removeClass('container')
 			</div >
 			<div class="col-4" id="panel-c">
 				<div style="width:100%;height:24vh;overflow:hidden;font-size:0.5em">
-					<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:300px"></iframe>
+					<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:380px"></iframe>
 				</div>
 				<script>
 				    $(window).load(function(){
@@ -497,7 +497,7 @@ $('#main-container').removeClass('container')
 			<%=inline(this,:'_vidyo')%>
 		</div>
 		
-		<div class="map">
+		<div class="geo-map">
 			<%=inline(this,:'_map')%>
 		</div>
 		

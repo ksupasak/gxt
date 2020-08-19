@@ -54,14 +54,19 @@
 			 	  <li><a href="../Setting/index">Setting</a></li>
 			    </ul>
 			    <ul class="nav navbar-nav navbar-right">
-			        <li class="dropdown">
-			          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=username%> <b class="caret"></b></a>
+			        
+						<% if @current_user %>
+					
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=@current_user.login%> <b class="caret"></b></a>
 			        <ul class="dropdown-menu">
-			            <li><a href="/login/form">Login</a></li>
+			            <li><a href="../User/login">Login</a></li>
 			            <li class="divider"></li>
-			            <li><a href="/logout">Logout</a></li>
+			            <li><a href="../User/logout">Logout</a></li>
 			        </ul>
 			      </li>
+				  
+				  <% end %>
 
 			    </ul>
 			  </div><!--/.nav-collapse -->

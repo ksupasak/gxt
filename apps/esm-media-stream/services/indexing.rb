@@ -38,7 +38,7 @@ for i in list
   
   
   unless File.exist?(capture_path)
-  cmd = "/usr/local/bin/ffmpeg -ss 00:00:00 -i '#{i}' -vframes 1 -q:v 2 #{capture_path}"
+  cmd = "ffmpeg -ss 00:00:00 -i '#{i}' -vframes 1 -q:v 2 #{capture_path}"
   `#{cmd}`
   puts "Capture track no : #{track_name} completed. #{capture_path}"
   

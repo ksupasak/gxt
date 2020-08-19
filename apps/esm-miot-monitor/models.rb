@@ -1,72 +1,8 @@
 
-module Mongoid
-  module Clients
-    module StorageOptions
-      extend ActiveSupport::Concern
-      module ClassMethods
-        def storage_options_defaults
-            t = name.split("::")
-            
-            {
-              collection: "#{t[0].underscore}.#{t[1].collectionize}",
-              client: :default
-            }
-        end
-        
-      end
-    end
-  end
-end  
+
 
 module EsmMiotMonitor
   
-class ObjectId
-end  
-
-
-class GXTModel
-
-    # include Mongoid::Document
-    # include Mongoid::Timestamps
-    # store_in collection: name.collectionize.to_sym
-   
-    def self.keys
-     
-      self.fields.keys.collect{|i| [i]}
-      
-    end
-    
-    def self.key name, type
-      # puts "Key \#{type.inspect} \#{type.class}"
-      # for i in type.methods.sort
-      #         begin
-      #           r = type.send(i)
-      #           puts "\#{i} \#{r.inspect}"
-      #         rescue Exception=>e
-      #         end
-      #         
-      #       end
-      
-      type = BSON::ObjectId if type == ObjectId
-      
-      if type==Array
-        field name, type: type, default: []
-      else
-        field name, type: type
-      end
-    end
-    
-    
-    def self.size
-      self.count
-    end
-    
-    def self.timestamps!
-      
-    end
-    
- 
-end  
   
 require 'digest/sha1'
 class User < GXTModel
