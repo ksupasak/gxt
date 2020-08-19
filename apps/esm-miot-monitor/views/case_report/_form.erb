@@ -1,6 +1,6 @@
 <%# this.model.fields.sort.collect{|i| i.name}.join(" ")%>
 <%# this.model.keys['date'].type%>
-
+<!--
 <%
 	
 	@record.admit_id = params[:admit_id] if params[:admit_id]
@@ -45,8 +45,223 @@
 <% end %>
 
 <% end %>
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<style>
+@font-face {
+  font-family: IBMPlex;
+  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+}
 
 
+.active{background:#000;}
+
+.sidenav {
+  background-image: linear-gradient(#C2C2C2, #C2C2C2);
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  width: 20vw;
+  position: fixed;
+  z-index: 1;
+  top: 20px;
+  left: 10px;
+  /* background: #eee; */
+  overflow-x: hidden;
+  margin: 10vh 0;
+}
+
+.sidenav a {
+  /* padding: 6px 8px 6px 16px; */
+  text-decoration: none;
+  font-size: 2vh;
+  color: #fff;
+  display: block;
+  text-align:center;
+  margin-top:4vh;
+
+}
+.c-bg{
+  background-image : url('data:image/svg+xml,<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="#C2C2C2" /></svg>');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  padding:1vh;
+}
+
+.sidenav a:hover {
+  color: #064579;
+}
+
+.main {
+  margin-left: 10vw; /* Same width as the sidebar + left position in px */
+  font-size: 2vh; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+  font-family: "IBMPlex", sans-serif;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+<script>
+sel_sec=(id)=>{
+  $(".active").removeClass('active')
+  $("#sec-"+id).addClass('active')
+}
+$(document).ready(function(){
+  $('#sec-1').addClass("active");
+  
+    $("#sec-1").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-1").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-2").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-2").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-3").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-3").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-4").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-4").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-5").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-5").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-6").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-6").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-7").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-7").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-8").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-8").offset().top-112
+        }, 1000);
+    return false;
+    });
+
+  $("#sec-9").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-9").offset().top-112
+        }, 1000);
+    return false;
+    });
+
+
+
+$(function() {
+    // var oTop = $('#section-9').offset().top - window.innerHeight;
+     $(window).scroll(function () {
+        // get the element that you want check scrolling on it
+        var off = $("#section-2").offset().top; 
+        var top = $(window).scrollTop() ;
+        console.log(off+' t:'+top+' s:'+$(window).scrollTop()+' h:'+$(window).height())
+        if ( top <= $("#section-1").offset().top  ) {
+          sel_sec('1')
+        }else if ( top > $("#section-1").offset().top  &&  top <=$("#section-2").offset().top) {
+            sel_sec('2')
+        }else if ( top > $("#section-2").offset().top  &&  top <=$("#section-3").offset().top) {
+            sel_sec('3')
+        }else if ( top > $("#section-3").offset().top  &&  top <=$("#section-4").offset().top) {
+            sel_sec('4')
+        }else if ( top > $("#section-4").offset().top  &&  top <=$("#section-5").offset().top) {
+            sel_sec('5')
+        }else if ( top > $("#section-5").offset().top  &&  top <=$("#section-6").offset().top) {
+            sel_sec('6')
+        }else if ( top > $("#section-6").offset().top  &&  top <=$("#section-7").offset().top) {
+            sel_sec('7')
+        }else if ( top > $("#section-7").offset().top  &&  top <=$("#section-8").offset().top) {
+            sel_sec('8')
+        }else if ( top > $("#section-8").offset().top  &&  top <=$("#section-9").offset().top) {
+            sel_sec('9')
+        }
+    });
+});
+$(".sidenav a").hover(function(){
+  $('[data-toggle="popover"]').popover('hide')
+  $(this).popover('show')
+})
+$(".sidenav a").mouseout(function(){
+  $('[data-toggle="popover"]').popover('hide')
+})
+
+})
+
+</script>
+<div class="row">
+<div id="crnav" class="col-2 sidenav">
+    <a id="sec-1" href="#section-1" data-container="body" data-toggle="popover" data-placement="bottom" data-content="ข้อมูลทั่วไป" style="margin-top:0px"><div class="c-bg">1</div></a>
+    <a id="sec-2" href="#section-2" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-html="true" data-content="<center>อาการนำสำคัญ<br>ของผู้ป่วยฉุกเฉิน<br>ที่ได้จากการรับแจ้ง</center>"><div class="c-bg">2</div></a>
+    <a id="sec-3" href="#section-3" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>อาการ/<br>เหตุการณ์/<br>รายละเอียดอื่นๆ</center>"><div class="c-bg">3</div></a>
+    <a id="sec-4" href="#section-4" data-container="body" data-toggle="popover" data-placement="bottom" data-content="การให้รหัสความรุนแรง"><div class="c-bg">4</div></a>
+    <a id="sec-5" href="#section-5" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>การสั่งการ<br>(โดยการเห็นชอบ<br>ของหัวหน้าศูนย์ฯ)</center>"><div class="c-bg">5</div></a>
+    <a id="sec-6" href="#section-6" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>การให้รหัสความรุนแรง<br> ณ จุดเกิดเหตุ <br>RC(Response Code)</center>"><div class="c-bg">6</div></a>
+    <a id="sec-7" href="#section-7" data-container="body" data-toggle="popover" data-placement="bottom" data-content="การปฏิบัติการ"><div class="c-bg">7</div></a>
+    <a id="sec-8" href="#section-8" data-container="body" data-toggle="popover" data-placement="bottom" data-content="ชื่อผู้ป่วย"><div class="c-bg">8</div></a>
+    <a id="sec-9" href="#section-9" data-container="body" data-toggle="popover" data-placement="bottom" data-content="เพิ่มเติม" style="margin-bottom:0px"><div class="c-bg">9</div> </a>
+
+</div>
+<div class="col-10 main">
+  <section id="section-1">
+    <h1>1 ข้อมูลทั่วไป</h1>
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis, blanditiis expedita? Earum eligendi pariatur quaerat quos expedita ab quibusdam ratione veniam in, mollitia fuga repudiandae?</p>
+  </section>
+  <section id="section-2">
+    <h1>2 อาการนำสำคัญของผู้ป่วยฉุกเฉินที่ได้จากการรับแจ้ง</h1>
+    <p>Ratione nulla nam, ipsa dignissimos corrupti veniam nostrum, laudantium asperiores sequi numquam placeat velit voluptate in praesentium non labore unde incidunt laborum maxime quae magni.</p>
+  </section>
+  <section id="section-3">
+    <h1>3 อาการ/เหตุการณ์/รายละเอียดอื่นๆ</h1>
+    <p>Soluta quibusdam ad nostrum vel voluptate delectus sequi dolores quia quaerat officia corrupti, aperiam fugit facere debitis repudiandae praesentium sapiente inventore repellendus, nemo commodi alias!</p>
+  </section>
+  <section id="section-4">
+    <h1>4 การให้รหัสความรุนแรง</h1>
+    <p>Aliquid aliquam magnam ducimus similique obcaecati, unde exercitationem laborum incidunt, quas in ipsum inventore nostrum? Blanditiis optio cumque earum iste odio! Alias sint accusamus repudiandae.</p>
+  </section>
+  <section id="section-5">
+    <h1>5 การสั่งการ(โดยการเห็นชอบของหัวหน้าศูนย์ฯ)</h1>
+    <p>Officia ipsum fugit iure eaque quisquam error tempore earum enim illum, delectus officiis incidunt corrupti aliquid nam quas perspiciatis eveniet doloremque quod labore? Doloremque, ipsum?</p>
+  </section>
+  <section id="section-6">
+    <h1>6 การให้รหัสความรุนแรง ณ จุดเกิดเหตุ RC(Response Code)</h1>
+    <p>Aperiam repellat dignissimos fugiat possimus esse, suscipit neque nisi libero alias obcaecati ipsam, porro illo corrupti nostrum reprehenderit unde, illum in laudantium impedit. Modi, veniam.</p>
+  </section>
+  <section id="section-7">
+    <h1>7 การปฏิบัติการ</h1>
+    <p>Cum asperiores temporibus itaque consequatur quod inventore, quia quis explicabo dicta esse minus voluptatem reiciendis eveniet animi, necessitatibus illum dolorem doloremque repellat placeat, dolores eaque.</p>
+  </section>
+  <section id="section-8">
+    <h1>8 ชื่อผู้ป่วย</h1>
+    <p>Optio qui, omnis itaque rerum iusto molestiae necessitatibus deleniti quod tenetur id perspiciatis voluptatum dolorum quisquam eius ipsum non architecto labore! Distinctio, tenetur. Officiis, necessitatibus?</p>
+  </section>
+  <section id="section-9">
+    <h1>9 เพิ่มเติม เฉพาะ อาการนำสำคัญของผู้ป่วยฉุกเฉินที่ได้จากการรับแจ้ง เป็นรหัส 25 อุบัติเหตุยานยนต์ รายละเอียดการกรอกข้อมูลโปรดดูในโปรแกรม</h1>
+    <p>Rem iste iure blanditiis excepturi esse nisi corrupti sequi, illo, laborum quo quis quaerat assumenda perspiciatis quod fuga vel laudantium doloribus architecto tempora omnis earum!</p>
+  </section>
+</div>
+</div>
 <!--
 
 <form class="form-inline">
