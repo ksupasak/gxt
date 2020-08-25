@@ -287,6 +287,9 @@ MSG
              
              puts "zello : #{name}"
              
+             
+             
+             
              unless app.settings.zello_map[name]
                
                
@@ -296,6 +299,8 @@ MSG
                
                
              end
+             
+             begin 
              
              zello = app.settings.zello_map[name]
              
@@ -385,6 +390,15 @@ MSG
                  end
 
               end
+
+
+            rescue Exception=>e
+              
+                 app.settings.zello_map.delete name
+              
+              
+            end
+              
 
              
              
