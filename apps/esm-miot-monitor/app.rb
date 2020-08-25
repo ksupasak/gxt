@@ -60,6 +60,9 @@ class OpdController < GXT
  
 end
 
+class ErController < GXT
+
+end
 
 class HomeController < GXT
   
