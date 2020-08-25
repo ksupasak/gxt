@@ -180,6 +180,8 @@ def self.registered(app)
                   
           # zello_connect = Setting.where(:name=>'zello_connect').first
           
+          begin
+          
           unless http = connection_map[name]
           
             http = Net::HTTP.new(uri.host, uri.port)
@@ -188,6 +190,8 @@ def self.registered(app)
             connection_map[name] = http
             
           end 
+          
+          
            
           http.start do |http|  
            
@@ -229,6 +233,17 @@ MSG
           
          end
           
+            
+         rescue Exception
+           
+             
+           http = nil
+           
+           
+         end
+         
+            
+            
             
           
          end
