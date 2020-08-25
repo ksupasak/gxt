@@ -53,11 +53,18 @@ body {
 } */
 
 .form-control {
-  height: 90px;
-  font-size: 65px;
+  /* height: 90px;
+  font-size: 65px; */
   color: white;
   background: #486178;
   border: none;
+}
+.container{
+  background:#0F1D28;
+  box-shadow: none;
+}
+body{
+  background:#0F1D28;
 }
 
 .btn-dial {
@@ -125,6 +132,7 @@ a {
 .patient-info {
   margin-top: 30px;
   background-color: #07263b;
+  color: #dcdcdc;
 }
   
 #patient-name {
