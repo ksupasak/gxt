@@ -3,6 +3,13 @@ require 'net/http'
 require_relative '../../services/monitor/conf'
 require_relative 'sas'
 require_relative 'aoc'
+require_relative 'smart_er'
+require_relative 'smart_health'
+require_relative 'smart_icu'
+require_relative 'smart_ipd'
+
+
+
 
 require 'active_support'
 
@@ -68,7 +75,7 @@ class HomeController < GXT
   
   def acl
     
-    return {:index=>['*']}
+    return {}
     
   end
     

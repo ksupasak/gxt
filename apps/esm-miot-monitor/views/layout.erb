@@ -79,12 +79,12 @@ border-bottom: 2px solid #3147FF;
 	   
 	   <div class="order-12" style="">
 		  
-	   <%=link_to "#{@current_user.login}  (#{@current_role}) ", "../User/profile", :class=>'btn btn-success'  %>	
+	   <%=link_to "#{@current_user.login}  (#{@current_role}) ", "../User/logout", :class=>'btn btn-success'  %>	
 	
   	  </div>
   	   <div class="order-12 text-right" style="width:80px">
 		   
-  	   <%=link_to "Logout","../User/logout" %>	
+  	   <%#link_to "Logout","../User/logout" %>	
 	 
     	  </div>	
 		  <% end %>

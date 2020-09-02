@@ -1,7 +1,7 @@
 
 module EsmMiotMonitor
   
-    class ErController < GXTDocument
+    class SmartIPDController < GXT
     
      
     
@@ -9,5 +9,4 @@ module EsmMiotMonitor
     end
     
     
-    
-    end
+end

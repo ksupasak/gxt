@@ -1,4 +1,46 @@
-   <script src="<%=url_for('hls/hls.js')%>"></script>
+<%
+	
+	
+ @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+	
+ %>
+ 
+<%
+if @current_zone
+	
+redirect_home = nil
+
+if @current_zone.mode == 'smart_er' 
+
+	redirect_home = "../SmartER/index"
+	
+elsif @current_zone.mode == 'smart_health'
+
+	redirect_home = "../SmartHealth/index"
+
+elsif @current_zone.mode == 'smart_icu'
+
+	redirect_home = "../SmartICU/index"
+	
+elsif @current_zone.mode == 'smart_ipd'
+
+	redirect_home = "../SmartIPD/index"	
+	
+elsif @current_zone.mode == 'aoc'
+
+	redirect_home = "../Sas/index"
+end
+
+if redirect_home
+%>
+<%=redirect_to  redirect_home %>
+
+
+<% else %>
+
+
+&nbsp;
+<script src="<%=url_for('hls/hls.js')%>"></script>
 <style>
 body{
 	background:black;
@@ -68,7 +110,7 @@ body{
 
       
 		
-	  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+	 
 
 	  # @current_zone = get_zone
 
@@ -740,4 +782,8 @@ By E.S.M.Solution Co.,Ltd.
 <%= inline(this,:'_scoring') %>
 
 <i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
+<% end %>
+
+
+<% end %>
 <% end %>

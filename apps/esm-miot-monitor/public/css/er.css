@@ -1,19 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");*/
 
 body {
-  background-color: #0c1f2d;
+/*  background-color: #0c1f2d;*/
   color: #C2C2C2;
-  font-family: "Sarabun", sans-serif;
+/*  font-family: "Sarabun", sans-serif;*/
 }
 
-/* navbar for all */
-.navbar {
-  padding: 15px;
-  background-color: #07263b;
-  font-size: 18px;
-  font-family: "Segoe UI", sans-serif;
-  font-weight: 700;
-}
 
 
 .title-fill {
@@ -37,7 +29,7 @@ body {
   background: #334351 0% 0% no-repeat padding-box;
   border: 1px solid #374c5f;
   font-size: 50px;
-  font-family: "Segoe UI", sans-serif;
+/*  font-family: "Segoe UI", sans-serif;*/
   margin: 10px;
 }
 
@@ -165,6 +157,28 @@ a {
   width: 120px;
   height: 36px;
 }
+
+.btn-triage-red.active{
+  background: #FF3C3C;
+}
+
+
+.btn-triage-yellow.active{
+  background: #FFAB2C;
+}
+
+.btn-triage-green.active{
+  background: #42B7AB;
+}
+
+.btn-triage-white.active{
+  background: #fff;
+}
+
+.btn-triage-black.active{
+  background: #000000;
+}
+
 
 #red:hover {
   background: #FF3C3C;

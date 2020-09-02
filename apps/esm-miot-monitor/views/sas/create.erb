@@ -12,7 +12,7 @@ if request.post?
 	
 	station = Station.find params[:station_id]
 	
-	ad = {:note=> params[:note], :an=>params[:an], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
+	ad = {:zone_id=>session[:current_zone], :note=> params[:note], :an=>params[:an], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
 	
 	ambu = Ambulance.find params[:ambulance_id]
 	score = Score.first

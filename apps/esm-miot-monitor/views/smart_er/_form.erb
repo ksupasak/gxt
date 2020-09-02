@@ -1,0 +1,340 @@
+<%
+		
+admit = Admit.find params[:admit_id]
+patient = Patient.find admit.patient_id
+
+report = ERCaseReport.where(:admit_id=>admit.id).first
+	
+%>
+
+
+	            <!--vital sign-->
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Vital Sign</p>
+	            <div class="row justify-content-between mb-2">
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Blood Pressure</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Pulse / SpO2</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Body Temp</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Respiratory Rate</p>
+	                    </a>
+	                </div>
+	            </div>
+	            <!--end of vital sign-->
+	            <!--neuro sign-->
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Neuro Sign</p>
+	            <div class="row justify-content-between mb-2">
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Eye Opening</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Motor Response</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2 ">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Verbal Response</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm mb-2 ">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p>Pupil</p>
+	                    </a>
+	                </div>
+	            </div>
+	            <!--end of neuro sign-->
+           
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Chief Complaint</p>
+	            <textarea class="chef-complaint" name="report[chief_complaint]"><%=report.chief_complaint%></textarea>
+	            <!--er triage-->
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">ระบบการคัดแยก (ER Triage)</p>
+	            <div class="row justify-content-between text-center mb-2">
+					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
+	                <div class="col-sm pl-0 mb-2 ">
+	                    <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.level=='red' %> " id="red">
+	                        <p>แดง</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm pl-0 mb-2">
+	                    <a href="#" class="btn btn-triage btn-triage-yellow <%='active' if report.level=='yellow' %> " id="yellow">
+	                        <p>เหลือง</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm pl-0 mb-2">
+	                    <a href="#" class="btn btn-triage btn-triage-green  <%='active' if report.level=='green' %> " id="green">
+	                        <p>เขียว</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm pl-0 mb-2">
+	                    <a href="#" class="btn btn-triage btn-triage-white  <%='active' if report.level=='white' %> " id="white">
+	                        <p>ขาว</p>
+	                    </a>
+	                </div>
+	                <div class="col-sm pl-0 mb-2">
+	                    <a href="#" class="btn btn-triage btn-triage-black  <%='active' if report.level=='black' %> " id="black">
+	                        <p>ดำ</p>
+	                    </a>
+	                </div>
+	            </div>
+	            <!--end of er triage-->
+	            <!--trauma choice-->
+	            <div class="card patient-info">
+	                <div class="card-header">
+	                    <nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+	                        <a class="flex-sm-fill text-sm-center nav-link active" id="pills-trauma-tab" data-toggle="pill"
+	                            href="#pills-trauma" role="tab" aria-controls="pills-trauma" aria-selected="true">Trauma</a>
+	                        <a class="flex-sm-fill text-sm-center nav-link" id="pills-nontrauma-tab" data-toggle="pill"
+	                            href="#pills-nontrauma" role="tab" aria-controls="pills-nontrauma"
+	                            aria-selected="false">Non-Trauma</a>
+	                </div>
+
+	                <div class="tab-content" id="pills-tabContent">
+	                        <div class="tab-pane fade show active" id="pills-trauma" role="tabpanel"
+	                            aria-labelledby="pills-trauma-tab" style="width: 100%;">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">ความรู้สึกตัว</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #093A54; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">รู้สึกตัวดี</li>
+	                                            <li class="list-group-item">ซึม</li>
+	                                            <li class="list-group-item">หมดสติปลุกตื่น</li>
+	                                            <li class="list-group-item">หมดสติปลุกไม่ตื่น</li>
+	                                            <li class="list-group-item">เอะอะโวยวาย</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                            <li class="list-group-item">Burn</li>
+	                                            <li class="list-group-item">Stab Wound</li>
+	                                            <li class="list-group-item">Amputate</li>
+	                                            <li class="list-group-item">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">กระดูกผิดรูป</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Closed</li>
+	                                            <li class="list-group-item">Opened</li>
+	                                            <li class="list-group-item">Dislocate</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">การเสียเลือด</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3 mb-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">อวัยวะ</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">Head/Neck</li>
+	                                            <li class="list-group-item">Face</li>
+	                                            <li class="list-group-item">Spine/Back</li>
+	                                            <li class="list-group-item">Chest/Clavicle</li>
+	                                            <li class="list-group-item">Abdomen</li>
+	                                            <li class="list-group-item">Pelvis</li>
+	                                            <li class="list-group-item">Extremities</li>
+	                                            <li class="list-group-item">External Body Surface</li>
+	                                            <li class="list-group-item">Multiple Injury Back</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+                        
+
+	                        <div class="tab-pane fade" id="pills-nontrauma" role="tabpanel"
+	                            aria-labelledby="v-pills-nontrauma-tab" style="width: 100%;">
+
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">อายุรกรรม</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #093A54; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">Dyspnea</li>
+	                                            <li class="list-group-item">High Fever</li>
+	                                            <li class="list-group-item">Ulteration of Conscious</li>
+	                                            <li class="list-group-item">Seizure</li>
+	                                            <li class="list-group-item">Chest Pain</li>
+	                                            <li class="list-group-item">Poisoning</li>
+	                                            <li class="list-group-item">Digestive</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                            <li class="list-group-item">Burn</li>
+	                                            <li class="list-group-item">Stab Wound</li>
+	                                            <li class="list-group-item">Amputate</li>
+	                                            <li class="list-group-item">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                            <li class="list-group-item">Burn</li>
+	                                            <li class="list-group-item">Stab Wound</li>
+	                                            <li class="list-group-item">Amputate</li>
+	                                            <li class="list-group-item">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                            <li class="list-group-item">Burn</li>
+	                                            <li class="list-group-item">Stab Wound</li>
+	                                            <li class="list-group-item">Amputate</li>
+	                                            <li class="list-group-item">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush">
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                            <li class="list-group-item">Burn</li>
+	                                            <li class="list-group-item">Stab Wound</li>
+	                                            <li class="list-group-item">Amputate</li>
+	                                            <li class="list-group-item">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>                  
+
+
+	                </div>
+
+
+	            </div>
+				
+				<script>
+				
+					$('.btn-triage').click(function(){
+						$('.btn-triage').removeClass('active')
+						$('#report_level').val($(this).attr("id"))
+						$(this).addClass('active')
+						
+					})
+					
+				</script>

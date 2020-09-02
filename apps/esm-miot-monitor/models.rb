@@ -1,4 +1,6 @@
 
+require_relative 'models/er_models'
+
 
 
 module EsmMiotMonitor
@@ -107,7 +109,7 @@ class Room < GXTModel
   has_many :beds, :class_name=>'EsmMiotMonitor::Bed'
   
   key :name, String 
-  key :zoon_id, ObjectId
+  key :zone_id, ObjectId
   include Mongoid::Timestamps
  
 end
@@ -252,6 +254,22 @@ class Admit < GXTModel
   key :bed_no, String
    include Mongoid::Timestamps
  timestamps!
+ 
+  def duration to_time = Time.now
+    
+    
+    
+    to_time = self.discharge_stamp if self.discharge_stamp
+    
+        
+		total = ((to_time - self.admit_stamp)/60).to_i
+		
+		mins = total%60
+		hours = total/60
+    
+    return ["#{hours} HR #{mins} MINS",hours,mins]
+    
+  end
   
   def discharge
     self.discharge_stamp = Time.now
@@ -364,10 +382,26 @@ class Patient  < GXTModel
   key :gender, String
   key :contact_name, String 
   key :contact_phone, String
+  
+  key :picture, ObjectId
+  
   include Mongoid::Timestamps
   def to_s
     "#{self.prefix_name}#{self.first_name} #{self.last_name}"
   end
+  
+  def to_age date = Time.now
+    
+    out = self.age
+    
+    if self.dob 
+      out = (date - self.dob)/31536000
+    end 
+    
+    return out
+    
+  end
+  
 end
 
 
@@ -531,6 +565,9 @@ class DataRecord  < GXTModel
   key :bp, String
   key :bp_sys, Integer
   key :bp_dia, Integer
+  key :bp_mean, Integer
+  key :bp_pr, Integer
+  
   key :pr, Integer
   key :hr, Integer
   key :spo2, Integer
