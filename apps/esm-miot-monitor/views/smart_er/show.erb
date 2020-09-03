@@ -7,7 +7,6 @@ data_records = admit.records
 	
 %>
 
-
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
     <!--Content-->
@@ -20,7 +19,9 @@ data_records = admit.records
 				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
 				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
 				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
-				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span>
+				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
+				     <span class="col p-0" id="gender">Complaint: <%=admit.note%></span>
+					 
 				 </div>
 				 <div class="col text-right">
 				     <h6 class="" id="arrival-time">Arrival:
@@ -34,28 +35,56 @@ data_records = admit.records
             </div>
             <!--end of patient card-->
             <!--nurse summary-->
-            <h4 class="font-weight-bold mt-4">Summary Report</h4>
+            <h4 class="font-weight-bold mt-4">Nurse Report</h4>
             <div class="card sum-report mt-4">
+                <div class="card-header card-vital">
+                    <strong> General Information</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+						<%
+							weight = admit.weight
+							weight = ' - ' unless weight 
+							
+							height = admit.height
+							height = ' - ' unless height 
+							 
+							
+						%>
+                        <div class="col-3">Weight : <%=weight%> kg.</div>
+						<div class="col-3">Height : <%=height%> cm.</div>
+					</div>
+					
+				</div>
                 <div class="card-header card-vital">
                     <strong> Triage Assessment</strong>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-4">09:58</div>
+			        <div class="row">
+                        <div class="col-4"><%= admit.admit_stamp.strftime("%H:%M")  %></div>
                         <div class="col-8">
-                            <span class="pr-2">Patient's triage acuity: </span>
-                            <span class="badge badge-danger">
-                                <h6 class="m-0 pl-2 pr-2">วิกฤติ</h6>
-                            </span>
+                         	
+							Admit เข้าระบบ
+						 
                         </div>
                     </div>
-                    <div class="row mt-3 mb-2">
-                        <div class="col-4">13:25</div>
+					<%
+						
+					nurse_records = NurseRecord.where(:admit_id=>admit.id).all
+						
+						for i in nurse_records  
+							stamp =  i.start_time.strftime("%H:%M")
+					%>
+			        <div class="row">
+                        <div class="col-4"><%= stamp %></div>
                         <div class="col-8">
-                            <span class="pr-2">Appear in no apparent distress, Behavior is agitated Complaint of pain in
-                                chest </span>
+                         	
+							<%= i.description %>
+						 
                         </div>
                     </div>
+					<% end %>
+            
                 </div>
                 <!--vital sign part-->
                 <div class="card-header card-vital">
@@ -107,12 +136,12 @@ data_records = admit.records
         </div>
         <div class="d-flex justify-content-center mt-5">
             <a href="edit?admit_id=<%=admit.id%>" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
-                <img src="../assests/heart.svg" alt="heart" class="pr-3"/>
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                 Record
             </a>&nbsp;
 			
             <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
-                <img src="../assests/heart.svg" alt="heart" class="pr-3"/>
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                 วัดค่า
             </a>
 

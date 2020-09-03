@@ -8,8 +8,52 @@
 
 <style>
 	.admit{
-		margin-bottom:20px;
+		
+		padding:10px;
+	
+		border:0px solid #ccc;
+		
+		
 	}
+	.admit-content{
+		
+		border-radius: 10px;
+		border:0px solid #aaa;
+		padding:10px;
+	    background-color: #334351;
+		
+	}
+	
+	.level-content{
+		border:1px solid #aaa;
+		width:50px;
+		height:20px;
+		
+	}
+	
+	.level-content.red{
+		background:#FF3C3C;
+	}
+	
+	.level-content.yellow{
+		background:#FFAB2C;
+	}
+	.level-content.green{
+		background:#42B7AB;
+	}
+	.level-content.white{
+		background:#fff;
+	}
+	.level-content.black{
+		background:#000000;
+	}
+	
+	.btn-triage-red.active{
+	  background: #FF3C3C;
+	}
+
+
+
 </style>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
@@ -36,16 +80,75 @@
 							
 							<% for admit in admits 
 							patient = admit.patient
+							
+							report  = ERCaseReport.where(:admit_id=>admit.id).first
+							report  = ERCaseReport.new(:admit_id=>admit.id) unless report
+							
 							%>
-                            <div class="col-4 admit">
-                                <a href="./show?id=<%=admit.id%>" class="btn er-room">
-                                    <span>
-                                        <i class="fas fa-bed pr-2"></i>
-                                    </span>
-                                    <%= admit.bed_no %><br/>
-									<span> <%=patient%>
-                                </a>
+							
+                            <div class="col-6 col-sm-4 admit " >
+									<a href="./show?id=<%=admit.id%>" class="">
+								<div class="admit-content">
+	
+								<div class="row">
+									
+								<div class="col-4">
+									<div class="row">
+										<div class="col-12 d-flex justify-content-center">
+		                                    <span>
+		                                        <i class="fas fa-bed pr-2"></i><%= admit.bed_no %>
+		                                    </span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12 d-flex justify-content-center">
+											<div class="level-content <%=report.level if report%>">
+										
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12 d-flex justify-content-center" style="font-size:0.6em" >
+										
+											<%= admit.duration[0] %>
+										
+										</div>
+									</div>
+									
+								</div>
+								
+								<div class="col-8">
+									<div class="row">
+										<div class="col-12">
+										
+											  <%= patient.hn %>
+										 	
+										</div>
+									</div>
+									<div class="row" >
+										<div class="col-12"  >
+										
+											<%= patient %>
+										
+										</div>
+										
+									</div>
+									
+									<div class="row">
+										<div class="col-12" style="overflow:hidden;font-size:0.8em" >
+										
+											<%= report.chief_complaint %>
+										
+										</div>
+										
+									</div>
+								
+								</div>
+							
+							</div>	</a>
+								</div>
                             </div>
+							    <!-- </a> -->
                            <% end %>
 
                         </div>
