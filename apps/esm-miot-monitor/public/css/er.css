@@ -1,7 +1,7 @@
 /*@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");*/
 
 body {
-/*  background-color: #0c1f2d;*/
+  background-color: #0c1f2d;
   color: #C2C2C2;
 /*  font-family: "Sarabun", sans-serif;*/
 }
@@ -141,7 +141,7 @@ a {
     border-radius: 0.25rem;
 }
 
-.chef-complaint {
+.chief-complaint {
   background: #043149;
   border-radius: 8px;
   opacity: 1;
@@ -238,6 +238,7 @@ a {
 /* Summary Report page*/
 .sum-report {
   background-color: #334351;
+    color: #dcdcdc;
 }
 
 .table-vital {

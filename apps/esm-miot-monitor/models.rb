@@ -243,6 +243,9 @@ class Admit < GXTModel
   key :admit_stamp, Time
   key :discharge_stamp, Time
   
+  key :weight, Float
+  key :height, Float
+  
   key :status, String
   
   key :an, String
@@ -267,7 +270,7 @@ class Admit < GXTModel
 		mins = total%60
 		hours = total/60
     
-    return ["#{hours} HR #{mins} MINS",hours,mins]
+    return ["#{hours} Hr #{mins} Min",hours,mins]
     
   end
   
@@ -574,6 +577,8 @@ class DataRecord  < GXTModel
   key :rr, Integer
   key :temp, Float
   key :co2, Integer
+  
+
   
   key :stamp, Time
   
