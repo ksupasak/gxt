@@ -1,5 +1,19 @@
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+<style>
+.human {
+  background: transparent url('<%=url_for('img/svg/human.svg')%>') 0% 0% no-repeat;
+  background-repeat: no-repeat, repeat;
+  background-position: center;
+  background-size:container;
+  opacity: 1;
+  height:60vh;
+}
+.human .col{
+    min-height:125px;
+    /* padding-bottom:1vh; */
+}
+</style>
    <!--Content-->
     <section>
         <div class="container">
@@ -32,56 +46,56 @@
                 <h4 class="font-weight-bold mt-4 mb-4">Patient Data</h4>
                 <div class="row  mb-2">
                     <div class="col p-0 d-flex flex-column" id="patient-vital-sign">
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Blood Pressure</p>
-                                <img src="../assests/bp.svg" alt="blood-pressure" style="width: 15%;" />
+                                <img src="<%=url_for('img/svg/bp.svg')%>" alt="blood-pressure" style="width: 15%;" />
                              
 
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Pulse / SpO<sub>2</sub></p>
-                                <img src="../assests/pulse.svg" alt="pulse" />
+                                <img src="<%=url_for('img/svg/pulse.svg')%>" alt="pulse" />
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Body Temperature</p>
-                                <img src="../assests/bodytemp.svg" alt="Body Temperature" class="p-2" />
+                                <img src="<%=url_for('img/svg/bodytemp.svg')%>" alt="Body Temperature" class="p-2" />
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Respiratory Rate</p>
-                                <img src="../assests/respirate.svg" alt="Respiratory Rate" />
+                                <img src="<%=url_for('img/svg/respirate.svg')%>" alt="Respiratory Rate" />
                             </a>
                         </div>
                     </div>
                     <div class="col p-0 d-flex flex-column" id="patient-neuro-sign">
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                              <a href="#" class="btn vital-card text-left">
                                 <p>Eye Opening</p>
-                                <img src="../assests/eyeopen.svg" alt="Eye Opening" />
+                                <img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Motor response</p>
-                                <img src="../assests/motor.svg" alt="Motor responseg" />
+                                <img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Verbal Response</p>
-                                <img src="../assests/verbal.svg" alt="Verbal Response" />
+                                <img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
                             </a>
                         </div>
-                        <div class="col-sm mb-2">
+                        <div class="col mb-2">
                             <a href="#" class="btn vital-card text-left">
                                 <p>Pupil</p>
-                                <img src="../assests/pupil.svg" alt="Pupil" />
+                                <img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
                             </a>
                         </div>
                     </div>
@@ -90,13 +104,13 @@
 
         </div>
         <div class="d-flex justify-content-center mt-5">
-            <a href="summary.html" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
+            <a href="show" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
                 ยืนยัน
             </a>
 
         </div>
         <br>
-        <a href="index.html" class="d-flex justify-content-center">
+        <a href="create" class="d-flex justify-content-center">
             <p>ยกเลิก</p>
         </a>
         </div>
