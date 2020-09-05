@@ -4,9 +4,22 @@ admit = Admit.find params[:id]
 patient = admit.patient
 
 data_records = admit.records
+
+
+
+report = ERCaseReport.where(:admit_id=>admit.id).first
+report = ERCaseReport.new unless report
+
 	
 %>
-
+<style>
+	table {
+	    max-width: 100%;
+	}
+	.last{
+		background:#443;
+	}
+	</style>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
     <!--Content-->
@@ -18,7 +31,7 @@ data_records = admit.records
 				 <div class="col">
 				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
 				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
-				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
+				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age_text %> ปี</span>
 				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
 				     <span class="col p-0" id="gender">Complaint: <%=admit.note%></span>
 					 
@@ -30,13 +43,26 @@ data_records = admit.records
 				     <span id="duration">Duration:
 				         <span><%= admit.duration[0] %></span>
 				     </span>
+					 <br/>
+					 Room : <%=admit.room_no%> &nbsp;
+					 Bed : <%=admit.bed_no%> &nbsp;
+					<div class="level-content <%=report.level if report%>" style="float:right">
+				
+					</div>
 				 </div>
                 </div>
             </div>
             <!--end of patient card-->
             <!--nurse summary-->
-            <h4 class="font-weight-bold mt-4">Nurse Report</h4>
-            <div class="card sum-report mt-4">
+            <h4 class="font-weight-bold mt-4" style="border:0px solid">Nurse Report
+			
+            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" style="float:right">
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                วัดค่า
+            </a>&nbsp;
+			</h4>
+			<div class="clear"></div>
+            <div class="card sum-report mt-4 station">
                 <div class="card-header card-vital">
                     <strong> General Information</strong>
                 </div>
@@ -91,7 +117,7 @@ data_records = admit.records
                     <strong> Vital Sign</strong>
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover table-vital text-center">
+                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:0.8em">
                         <thead>
                           <tr>
                             <th scope="col">เวลา</th>
@@ -100,28 +126,31 @@ data_records = admit.records
                             <th scope="col">RR</th>
                             <th scope="col">BT</th>
                     
-                            <th scope="col">Pain</th>
-							
-                            <th scope="col">Staff</th>
+                            <th scope="col">Score</th>
+						    <th scope="col">Staff</th>
                           </tr>
                         </thead>
                         <tbody>
                          
 						 <%
 						 	   
-						 for i in data_records
+						 data_records.each_with_index do |i,ix| 
 							
 						 %>
 						 
-						  <tr>
-                            <th scope="row">09:58</th>
-                            <td><%=i.bp%></td>
-                            <td><%=i.pr%>/<%=i.spo2%></td>
-                            <td><%=i.rr%></td>
-                            <td><%=i.temp%></td>
+						  <tr class="<%='last' if ix==data_records.size-1%>">
+                            <th scope="row"><%=i.stamp.strftime("%H:%M")%></th>
+                            <td class="bp"><%=i.bp%></td>
+                            <td class="pr"><%=i.pr%>/<%=i.spo2%></td>
+                            <td class="rr"><%=i.rr%></td>
+                            <td class="temp"><%=i.temp%></td>
                        
-                            <td>-</td>
-                            <td>นารารัตน์</td>
+                            <td><%=i.score%></td>
+                            <td><%
+                            	user = '-'
+								user = User.find i.updated_user_id 
+								
+                            %><%=user.login if user%></td>
                           </tr>
                          
 						 <% end  %>
@@ -135,14 +164,21 @@ data_records = admit.records
 
         </div>
         <div class="d-flex justify-content-center mt-5">
-            <a href="edit?admit_id=<%=admit.id%>" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
+			
+            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary btn-action btn-info d-flex align-items-center justify-content-center" style="float:right">
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                Transfer
+            </a>&nbsp;
+			
+            <a href="edit?admit_id=<%=admit.id%>" class="btn btn-primary btn-action btn-submit d-flex align-items-center justify-content-center">
                 <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                 Record
             </a>&nbsp;
 			
-            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
+        
+            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary  btn-action btn-danger d-flex align-items-center justify-content-center" style="float:right">
                 <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                วัดค่า
+                Discharge
             </a>
 
         </div>

@@ -63,7 +63,7 @@ border-bottom: 2px solid #3147FF;
 
     <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm">
 		
-      <a class="navbar-brand" href="../Home/module" >
+      <a class="navbar-brand" href="../Home/index" >
       <!--<image src="<%=url_for 'img/gxt-sos.png' %>" height="40">-->
       <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
       </a>
@@ -162,6 +162,9 @@ border-bottom: 2px solid #3147FF;
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../Zone/index">Zone</a>
+  		      <a class="dropdown-item" href="../Room/index">Room</a>
+  		       <a class="dropdown-item" href="../Bed/index">Bed</a>
+			
 			  <a class="dropdown-item" href="../Station/index">Station</a>
 			  <a class="dropdown-item" href="../Patient/index">Patient</a>
 			  <a class="dropdown-item" href="../Admit/index">Admit</a>
@@ -258,8 +261,7 @@ border-bottom: 2px solid #3147FF;
    <%=session.inspect if params[:debug]%>
    
    <br/>
-   
-   <br/>
+    &nbsp;
    </div>
   </div>
   

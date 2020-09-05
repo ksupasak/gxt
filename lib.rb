@@ -379,7 +379,12 @@ get '/promptpay' do
 end
 
 get '/:gxt' do
+  
+  unless params[:gxt].index('.')
    redirect to "/#{params[:gxt]}/Home/index"
+ else
+   
+ end
 end
 
 

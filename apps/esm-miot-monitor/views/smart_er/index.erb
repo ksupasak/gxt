@@ -2,56 +2,11 @@
 	
 	admits =  Admit.where(:zone_id=>session[:current_zone], :status=>'Admitted').all
 	
-	\
+	
 	
 %>
 
 <style>
-	.admit{
-		
-		padding:10px;
-	
-		border:0px solid #ccc;
-		
-		
-	}
-	.admit-content{
-		
-		border-radius: 10px;
-		border:0px solid #aaa;
-		padding:10px;
-	    background-color: #334351;
-		
-	}
-	
-	.level-content{
-		border:1px solid #aaa;
-		width:50px;
-		height:20px;
-		
-	}
-	
-	.level-content.red{
-		background:#FF3C3C;
-	}
-	
-	.level-content.yellow{
-		background:#FFAB2C;
-	}
-	.level-content.green{
-		background:#42B7AB;
-	}
-	.level-content.white{
-		background:#fff;
-	}
-	.level-content.black{
-		background:#000000;
-	}
-	
-	.btn-triage-red.active{
-	  background: #FF3C3C;
-	}
-
 
 
 </style>
@@ -59,7 +14,7 @@
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
     <!--Content-->
     <section>
-        <div class="container">
+        <div class="containerx">
                 <header class=" d-flex align-items-center title-fill">
                     <div class="col">
                         <p class="mb-0"><strong>ER ZONE</strong></p>
@@ -76,7 +31,7 @@
                 <!--er room-->
                 <section id="er-room">
                     <div class="container-fluid">
-                        <div class="row justify-content-between mb-2">
+                        <div class="row justify-content-left mb-2">
 							
 							<% for admit in admits 
 							patient = admit.patient
@@ -86,13 +41,13 @@
 							
 							%>
 							
-                            <div class="col-6 col-sm-4 admit " >
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 admit " style="border:0px solid" >
 									<a href="./show?id=<%=admit.id%>" class="">
-								<div class="admit-content">
+								<div class="admit-content" style="height:100%">
 	
 								<div class="row">
 									
-								<div class="col-4">
+								<div class="col-5">
 									<div class="row">
 										<div class="col-12 d-flex justify-content-center">
 		                                    <span>
@@ -117,7 +72,7 @@
 									
 								</div>
 								
-								<div class="col-8">
+								<div class="col-7">
 									<div class="row">
 										<div class="col-12">
 										
@@ -126,9 +81,9 @@
 										</div>
 									</div>
 									<div class="row" >
-										<div class="col-12"  >
+										<div class="col-12"   style="font-size:0.8em">
 										
-											<%= patient %>
+											<b><%= patient %></b>
 										
 										</div>
 										

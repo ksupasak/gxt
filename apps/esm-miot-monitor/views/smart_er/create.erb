@@ -54,7 +54,13 @@ else
 	            </div>
 	            <!--end of patient card-->
 	            <!--case report form-->
-	            <h4 class="font-weight-bold mt-4">Case Report Form</h4>
+	            <h4 class="font-weight-bold mt-4">Case Report
+	            <a href="connect?admit_id=<%=admit.id%>&return=case_report" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" style="float:right">
+	                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	                วัดค่า
+	            </a>&nbsp;
+				</h4>
+				<div class="clear"></div>
 	         
 			 
 			 

@@ -110,7 +110,6 @@ class Room < GXTModel
   
   key :name, String 
   key :zone_id, ObjectId
-  include Mongoid::Timestamps
  
 end
 
@@ -120,7 +119,6 @@ class Bed < GXTModel
   
   key :name, String 
   key :room_id, ObjectId 
-   include Mongoid::Timestamps
 end
 
 
@@ -231,6 +229,13 @@ class Admit < GXTModel
   key :score_id, ObjectId
   key :zone_id, ObjectId
   
+  belongs_to :created_user, :class_name=>'EsmMiotMonitor::User'
+  belongs_to :updated_user, :class_name=>'EsmMiotMonitor::User'
+  
+  key :created_user_id, ObjectId
+  key :updated_user_id, ObjectId
+  
+  
   key :provider_id, ObjectId
   key :procedure_id, ObjectId
   key :diagnosis_id, ObjectId
@@ -253,7 +258,7 @@ class Admit < GXTModel
   key :current_score, Integer
   
   key :note, String
-  
+  key :room_no, String
   key :bed_no, String
    include Mongoid::Timestamps
  timestamps!
@@ -269,6 +274,15 @@ class Admit < GXTModel
 		
 		mins = total%60
 		hours = total/60
+    days = hours/24
+    
+  
+    
+    text = "#{hours} Hr #{mins} Min" 
+    
+    text = "#{mins} Min" if hours == 0 
+    
+    text = "#{days} D #{hours} Hr" if days>0
     
     return ["#{hours} Hr #{mins} Min",hours,mins]
     
@@ -404,6 +418,17 @@ class Patient  < GXTModel
     return out
     
   end
+  
+  def to_age_text date = Time.now
+    
+    age = self.to_age date
+    out = '-'
+    out = "#{format("%0.1f",age)}" if age
+    
+    return out
+    
+  end
+  
   
 end
 
@@ -562,6 +587,13 @@ class DataRecord  < GXTModel
   
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
+  belongs_to :created_user, :class_name=>'EsmMiotMonitor::User'
+  belongs_to :updated_user, :class_name=>'EsmMiotMonitor::User'
+  
+  key :created_user_id, ObjectId
+  key :updated_user_id, ObjectId
+  
+  
   key :admit_id, ObjectId
   
   key :data, String
@@ -588,6 +620,8 @@ class DataRecord  < GXTModel
   
   key :note, String
   key :score_id, ObjectId
+  
+  
   include Mongoid::Timestamps
   
   timestamps!

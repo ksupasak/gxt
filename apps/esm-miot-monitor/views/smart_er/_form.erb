@@ -4,31 +4,54 @@ admit = Admit.find params[:admit_id]
 patient = Patient.find admit.patient_id
 
 report = ERCaseReport.where(:admit_id=>admit.id).first
+
+last = DataRecord.where(:admit_id=>admit.id).last
+
 	
 %>
+<style>
+	.param-value{
+		font-size:2em;
+		text-align:center;
+		width:100%;
+		
+	}
+</style>
 
 
 	            <!--vital sign-->
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Vital Sign</p>
-	            <div class="row justify-content-between mb-2">
+	            <div class="row justify-content-center mb-2 station">
 	                <div class="col-sm mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p>Blood Pressure</p>
+								<center>
+							<span class="bp param-value" ><%=last.bp if last%></span>
+						</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p>Pulse / SpO2</p>
+							<center>
+							<span class="pr param-value" ><%=last.pr if last%></span> / <span class="spo2 param-value" ><%=last.spo2 if last%></span>
+						</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p>Body Temp</p>
+									<center>
+								<span class="temp param-value" ><%=last.temp if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p>Respiratory Rate</p>
+									<center>
+								<span class="rr param-value" ><%=last.rr if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	            </div>
@@ -63,8 +86,9 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	            <textarea class="chief-complaint" name="report[chief_complaint]"><%=report.chief_complaint%></textarea>
 	            <!--er triage-->
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">ระบบการคัดแยก (ER Triage)</p>
-	            <div class="row justify-content-between text-center mb-2">
+	            <div class="row justify-content-center mb-2" style="border:0px solid">
 					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
+					
 	                <div class="col-sm pl-0 mb-2 ">
 	                    <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.level=='red' %> " id="red">
 	                        <p>แดง</p>
@@ -103,7 +127,7 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	                            aria-selected="false">Non-Trauma</a>
 	                </div>
 
-	                <div class="tab-content" id="pills-tabContent">
+	                <div class="tab-content report" id="pills-tabContent">
 	                        <div class="tab-pane fade show active" id="pills-trauma" role="tabpanel"
 	                            aria-labelledby="pills-trauma-tab" style="width: 100%;">
 	                            <div class="row no-gutters mt-3">
@@ -112,18 +136,28 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 
 	                                </div>
 	                                <div class="col-sm">
-	                                    <div class="card m-3"
-	                                        style="color: #dcdcdc; background-color: #093A54; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">รู้สึกตัวดี</li>
-	                                            <li class="list-group-item">ซึม</li>
-	                                            <li class="list-group-item">หมดสติปลุกตื่น</li>
-	                                            <li class="list-group-item">หมดสติปลุกไม่ตื่น</li>
-	                                            <li class="list-group-item">เอะอะโวยวาย</li>
+	                                    <div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+											<ul class="list-group list-group-flush parameter" field="trauma_concious">
+												<input type="hidden" name="report[trauma_concious]" value="<%=report.trauma_concious%>" id="report_trauma_concious">
+												<li class="list-group-item  " >รู้สึกตัวดี</li>
+	                                            <li class="list-group-item  ">ซึม</li>
+	                                            <li class="list-group-item  ">หมดสติปลุกตื่น</li>
+	                                            <li class="list-group-item  ">หมดสติปลุกไม่ตื่น</li>
+	                                            <li class="list-group-item  ">เอะอะโวยวาย</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
 	                            </div>
+								<style>
+									.report .selected{
+										background:#103a59;
+									}
+									.report .inactive{
+										display:none;
+									}
+									
+								</style>
+						
 	                            <hr class="hr-trauma">
 	                            <div class="row no-gutters mt-3">
 	                                <div class="col-sm d-flex align-items-center justify-content-center">
@@ -133,15 +167,16 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">No</li>
-	                                            <li class="list-group-item">Cut/Laceration</li>
-	                                            <li class="list-group-item">Abrasion</li>
-	                                            <li class="list-group-item">Contusion</li>
-	                                            <li class="list-group-item">Burn</li>
-	                                            <li class="list-group-item">Stab Wound</li>
-	                                            <li class="list-group-item">Amputate</li>
-	                                            <li class="list-group-item">Gun Shot</li>
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_wound" >
+												<input type="hidden" name="report[trauma_wound]" value="<%=report.trauma_wound%>" id="report_trauma_wound">
+												<li class="list-group-item ">No</li>
+	                                            <li class="list-group-item ">Cut/Laceration</li>
+	                                            <li class="list-group-item ">Abrasion</li>
+	                                            <li class="list-group-item ">Contusion</li>
+	                                            <li class="list-group-item ">Burn</li>
+	                                            <li class="list-group-item ">Stab Wound</li>
+	                                            <li class="list-group-item ">Amputate</li>
+	                                            <li class="list-group-item ">Gun Shot</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
@@ -155,7 +190,9 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_bone">
+												<input type="hidden" name="report[trauma_bone]" value="<%=report.trauma_bone%>" id="report_trauma_bone">
+												
 	                                            <li class="list-group-item">No</li>
 	                                            <li class="list-group-item">Closed</li>
 	                                            <li class="list-group-item">Opened</li>
@@ -173,7 +210,9 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_blood">
+												<input type="hidden" name="report[trauma_blood]" value="<%=report.trauma_blood%>" id="report_trauma_blood">
+												
 	                                            <li class="list-group-item">No</li>
 	                                            <li class="list-group-item">Cut/Laceration</li>
 	                                            <li class="list-group-item">Abrasion</li>
@@ -191,7 +230,9 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_organ">
+												<input type="hidden" name="report[trauma_organ]" value="<%=report.trauma_organ%>" id="report_trauma_organ">
+												
 	                                            <li class="list-group-item">Head/Neck</li>
 	                                            <li class="list-group-item">Face</li>
 	                                            <li class="list-group-item">Spine/Back</li>
@@ -330,11 +371,69 @@ report = ERCaseReport.where(:admit_id=>admit.id).first
 				
 				<script>
 				
-					$('.btn-triage').click(function(){
+					$('.btn-triage').click(function(event){
 						$('.btn-triage').removeClass('active')
 						$('#report_level').val($(this).attr("id"))
 						$(this).addClass('active')
+						event.preventDefault()
 						
 					})
 					
 				</script>
+													<script>
+									
+														$(".parameter").each(function(){
+										
+									
+									
+														$(this).find('.list-group-item').click(function(event){
+										
+															p =  $(this).parent()
+															f =  p.attr("field")
+										
+															input = p.find('input')
+										
+														if(input.val()==''){
+											
+															val = $(this).html().trim()
+										
+															input.val(val)
+											
+															p.find(".list-group-item").removeClass('selected')
+										
+												
+															p.find(".list-group-item").each(function(){
+																v = $(this).html().trim()
+																input = $(this).parent().find('input')
+																if(v!=input.val()){
+																$(this).slideUp();
+																}
+															});
+										
+															$(this).addClass('selected')
+										
+														}else{
+																input.val('')
+																$(this).parent().find('.list-group-item').removeClass('inactive')
+																$(this).parent().find('.list-group-item').slideDown();
+															}
+										
+														});
+										
+														val = $(this).find('input').val()
+														if(val!=""){
+														$(this).find(".list-group-item").each(function(){
+															v = $(this).html().trim()
+															input = $(this).parent().find('input')
+															if(v!=input.val()){
+																$(this).slideUp();
+															}
+														});
+														}
+										
+														})
+									
+									
+														
+									
+													</script>
