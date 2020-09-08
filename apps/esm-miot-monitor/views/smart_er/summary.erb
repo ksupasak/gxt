@@ -1,0 +1,75 @@
+<%
+
+
+map = {}
+map[:title] = 'แบบบันทึกการปฏิบัติงานบริการการแพทย์ฉุกเฉินระดับสูง'
+map[:first_name] = 'ชื่อ'
+map[:last_name] = 'นามสกุล'
+
+if params[:lang] == 'en'
+
+map[:title] = 'Advanced Life Support Information Form'
+map[:first_name] = 'First name'
+map[:last_name] = 'Last name'
+map[:age] = 'Age'
+
+end 
+
+    admit = Admit.find params[:admit_id]
+    patient = admit.patient
+
+    records = admit.records
+
+
+%>
+<%=  %>
+<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+
+<div class="container">
+<div class="mt-2">
+
+</div>
+    <h3 class="text-center"><span class="lang" value="title"></span></h3>
+    <span>ข้อมูลผู้ป่วย</span>
+    <span class="lang" value="first_name"></span> : <label><%=patient.first_name if patient %></label>
+    <span class="lang" value="last_name"></span> 
+    <span class="lang" value="age"></span> 
+
+<br/>
+
+    <%=records.size%> records
+    <table class='table'>
+
+    <% for i in records  %>
+    <tr>
+
+    <td> <%=i.bp %> </td><td> <%=i.pr %> </td><td> <%=i.temp %> </td>
+
+    </tr>
+    <% end %>
+
+    </table>
+    </div>
+
+
+<script>
+
+var t_map = <%= map.to_json.html_safe %>
+
+console.log(t_map)
+
+$(document).ready(function(){
+
+    $('.lang').each(function(){
+    
+        val = $(this).attr('value')
+
+        $(this).html(t_map[val]);
+
+
+    })
+
+})
+
+
+</script>
