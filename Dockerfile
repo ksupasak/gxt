@@ -7,7 +7,7 @@ COPY Gemfile /docker_gxt/Gemfile
 COPY Gemfile.lock /docker_gxt/Gemfile.lock
 RUN bundle update --bundler
 RUN bundle install
-COPY . /docker_gxt
+COPY . .
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/

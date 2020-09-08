@@ -1,0 +1,74 @@
+<%
+
+
+map = {}
+map[:title] = 'title'
+map[:first_name] = 'First name'
+map[:last_name] = 'Last name'
+map[:age] = 'Age'
+
+if params[:lang] == 'th'
+
+map[:title] = 'หัวเรื่อง'
+map[:first_name] = 'ชื่อ'
+map[:last_name] = 'นามสกุล'
+
+
+end 
+
+    admit = Admit.find params[:admit_id]
+    patient = admit.patient
+
+    records = admit.records
+
+
+%>
+<%= Time.now %>
+
+<h1><span class="lang" value="title">Title</span> </h1>
+
+
+<span class="lang" value="first_name"></span> : <label><%=patient.first_name if patient %></label>
+
+<span class="lang" value="last_name"></span> 
+
+<span class="lang" value="age"></span> 
+
+<br/>
+
+<%=records.size%> records
+
+
+<table class='table'>
+
+<% for i in records  %>
+<tr>
+
+<td> <%=i.bp %> </td><td> <%=i.pr %> </td><td> <%=i.temp %> </td>
+
+</tr>
+<% end %>
+
+</table>
+
+<script>
+
+var t_map = <%= map.to_json.html_safe %>
+
+console.log(t_map)
+
+$(document).ready(function(){
+
+    $('.lang').each(function(){
+    
+        val = $(this).attr('value')
+
+        $(this).html(t_map[val]);
+
+
+    })
+
+})
+
+
+</script>

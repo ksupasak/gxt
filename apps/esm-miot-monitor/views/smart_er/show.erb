@@ -174,7 +174,11 @@ report = ERCaseReport.new unless report
                 <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                 Record
             </a>&nbsp;
-			
+
+            <a href="summary?admit_id=<%=admit.id%>" class="btn btn-primary  btn-action btn-danger d-flex align-items-center justify-content-center" style="float:right">
+            <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                Summary
+            </a>&nbsp;
         
             <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary  btn-action btn-danger d-flex align-items-center justify-content-center" style="float:right">
                 <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
