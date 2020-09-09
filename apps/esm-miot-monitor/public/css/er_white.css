@@ -1,0 +1,22 @@
+/* variables */
+:root {
+    --main-white-color: white;
+    --main-color: #f1651e;
+    --second-color: #f26e2c;
+    --main-select-color: #000;
+    --normal-text:#7D889E;
+    --body-bg: #FFFFFF;
+    --text-grey:  #dcdcdc;
+    --btn-green-main:#42b7ab;
+    --btn-green-second:#2f867d;
+    --btn-grey-main:#919191;
+    --btn-grey-second:#BBB;
+    --btn-grey-text:#CCC;
+    --btn-lightblue-main:#BCD1E4;
+    --btn-lightblue-second:#E2E2E2;
+    --form-bg:#486178;
+    --er-room-bg:#334351;
+    --er-room-hover:#054366;   
+
+
+  }
