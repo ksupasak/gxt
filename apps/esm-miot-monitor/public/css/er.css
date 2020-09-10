@@ -521,3 +521,30 @@ a {
 }
 
 /*print summary ER*/
+.summary-container {
+  font-family: "Sarabun", sans-serif;
+}
+
+.table-title {
+  font-size: smaller;
+}
+.patient-table{
+  font-size: x-small;
+  border: 1px solid #aaaaaa;
+}
+
+.paitent-sum {
+  width: 350px;
+}
+
+.text-rotate {
+  transform: rotate(270deg);
+}
+
+@media print {
+  @page {
+    margin: 0cm;
+    margin-left: 1cm;
+    size: A4; 
+  }
+}
