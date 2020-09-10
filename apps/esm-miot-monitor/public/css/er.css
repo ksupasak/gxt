@@ -530,7 +530,7 @@ a {
 }
 .patient-table{
   font-size: x-small;
-  border: 1px solid #aaaaaa;
+  border: 1px solid var(--btn-grey-second) ;
 }
 
 .paitent-sum {
