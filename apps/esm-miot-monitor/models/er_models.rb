@@ -46,11 +46,23 @@ class ERCaseReport < GXTModel
   key :trauma_organ, String
   
   
-  key :non_trauma_med, String
+  key :non_trauma_med, String #อายุรกรรม
   
   key :non_trauma_wound, String
+
+  key :non_trauma_gyne, String #สูติ-นรีเวช
+  key :non_trauma_pediatric, String #กุมารฯ
+  key :non_trauma_surgery, String #ศัลยกรรม
+  key :non_trauma_etc, String #อื่นๆ
   
-  
+  key :treatment_breath, String #หายใจ
+  key :treatment_wound, String #แผล
+  key :treatment_liquid, String #สารน้ำ
+  key :treatment_bone, String #ดามกระดูก
+  key :treatment_cpr, String #CPR
+
+  key :medicine, String 
+  key :primary_result, String 
   
   include Mongoid::Timestamps
   
