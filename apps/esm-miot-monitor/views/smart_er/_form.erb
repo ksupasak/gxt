@@ -380,60 +380,61 @@ last = DataRecord.where(:admit_id=>admit.id).last
 					})
 					
 				</script>
-													<script>
-									
-														$(".parameter").each(function(){
-										
-									
-									
-														$(this).find('.list-group-item').click(function(event){
-										
-															p =  $(this).parent()
-															f =  p.attr("field")
-										
-															input = p.find('input')
-										
-														if(input.val()==''){
-											
-															val = $(this).html().trim()
-										
-															input.val(val)
-											
-															p.find(".list-group-item").removeClass('selected')
-										
-												
-															p.find(".list-group-item").each(function(){
-																v = $(this).html().trim()
-																input = $(this).parent().find('input')
-																if(v!=input.val()){
-																$(this).slideUp();
-																}
-															});
-										
-															$(this).addClass('selected')
-										
-														}else{
-																input.val('')
-																$(this).parent().find('.list-group-item').removeClass('inactive')
-																$(this).parent().find('.list-group-item').slideDown();
-															}
-										
-														});
-										
-														val = $(this).find('input').val()
-														if(val!=""){
-														$(this).find(".list-group-item").each(function(){
-															v = $(this).html().trim()
-															input = $(this).parent().find('input')
-															if(v!=input.val()){
-																$(this).slideUp();
-															}
-														});
-														}
-										
-														})
-									
-									
-														
-									
-													</script>
+				
+				<script>
+
+					$(".parameter").each(function(){
+	
+
+
+					$(this).find('.list-group-item').click(function(event){
+	
+						p =  $(this).parent()
+						f =  p.attr("field")
+	
+						input = p.find('input')
+	
+					if(input.val()==''){
+		
+						val = $(this).html().trim()
+	
+						input.val(val)
+		
+						p.find(".list-group-item").removeClass('selected')
+	
+			
+						p.find(".list-group-item").each(function(){
+							v = $(this).html().trim()
+							input = $(this).parent().find('input')
+							if(v!=input.val()){
+							$(this).slideUp();
+							}
+						});
+	
+						$(this).addClass('selected')
+	
+					}else{
+							input.val('')
+							$(this).parent().find('.list-group-item').removeClass('inactive')
+							$(this).parent().find('.list-group-item').slideDown();
+						}
+	
+					});
+	
+					val = $(this).find('input').val()
+					if(val!=""){
+					$(this).find(".list-group-item").each(function(){
+						v = $(this).html().trim()
+						input = $(this).parent().find('input')
+						if(v!=input.val()){
+							$(this).slideUp();
+						}
+					});
+					}
+	
+					})
+
+
+					
+
+				</script>
