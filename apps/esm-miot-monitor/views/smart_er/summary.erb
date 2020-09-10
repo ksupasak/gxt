@@ -42,15 +42,46 @@ end
         <span class="table-title">ลำดับผู้ป่วย(CN)</span>
         <span class="table-title">เลขที่ผู้ป่วย</span>
     </div>
+    <table class=" mt-2 w-100 table-style">
+    <tr>
+      <th class="p-1 paitent-sum" colspan="13">
+        <div class="d-flex justify-content-between">
+            <span>ชื่อหน่วยบริการ:</span> <label class="pr-2"></label>
+            <span>วันที่:</span>  <label class="pr-2"></label>
+            <span>เลขที่ปฏิบัติการ:</span>  <label class="pr-2"></label>
+        </div>
+        <div class="col">
+            <span>เจ้าหน้าที่ปฏิบัติการ:</span> 
+            <span class="col pl-3">1.</span><span class="col pl-3">รหัส</span>
+            <span class="col pl-3">2.</span><span class="col pl-3">รหัส</span>
+            <br/>
+            <span class=" pl-10">3.</span><span class="pl-3">รหัส</span>
+            <span class=" pl-3">4.</span><span class="pl-3">รหัส</span>
+            <br/>
+            <div class="d-flex align-content-center">
+            <span class="lang" value="">ผลการปฏิบัติงาน</span> : 
+            <div class="form-check form-check-inline pl-1">
+              <input class="form-check-input" type="checkbox" value="">
+              <label class="form-check-label" for="defaultCheck1">ไม่พบเหตุ</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input " type="checkbox" value="">
+              <label class="form-check-label" for="defaultCheck1">พบเหตุ</label>
+            </div>
+            <span class="lang col" value="">สถานที่เกิดเหตุ</span>
+            <span class="lang col" value="">เหตุการณ์</span>
+            </div>
+          </th>
+        </tr>
+      </table>
     
-    <br/>
     <span class="table-title pl-5">2. ข้อมูลเวลา</span>
     <br/>
 
 <!--Patient Info Table--> 
   <span class="table-title pl-5">3. ข้อมูลผู้ป่วย</span>
   <br/>
-  <table class=" mt-2 w-100 patient-table">
+  <table class=" mt-2 w-100 table-style">
     <tr>
       <th class="p-1 paitent-sum" colspan="13">
         <span class="lang" value="first_name"></span> : <label class="pr-2"><%=patient.first_name if patient %></label>
@@ -62,8 +93,9 @@ end
             <span class="lang" value="nationality"></span> : <label class="pr-2"></label>
             <span class="lang" value="citizen_id"></span> : <label class="pr-2"></label>
             <br/>
+        
             <span class="lang" value="">สิทธิการรักษา</span> : 
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline pl-1">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">บัตรทอง</label>
             </div>
@@ -79,68 +111,70 @@ end
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">แรงงานต่างด้าวขึ้นทะเบียน</label>
             </div>
+    
             <div class="form-check form-check-inline">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่มีหลักประกัน</label>
             </div>
+            
           </th>
-          <th class="p-2 patient-table" colspan="2">
+          <th class="p-2 table-style" colspan="2">
             <span class="lang" value="">ประกันอื่นๆ (ถ้ามี)</span> : <label class="pr-2"></label>
             <br/>
           </th>
         </tr>
       </table>
-      <table class="table-bordered  w-100 patient-table">
-        <tr class="text-center ">
-          <td rowspan="2" >Time</td>
-          <td colspan="4">Vital Sign</td>
-          <td colspan="3">Neuro Sign</td>
-          <td colspan="4">Pupils</td>
+      <table class="w-100 table-style">
+        <tr class="table-style text-center ">
+          <td class="table-style" rowspan="2" >Time</td>
+          <td class="table-style" colspan="4">Vital Sign</td>
+          <td class="table-style" colspan="3">Neuro Sign</td>
+          <td class="table-style" colspan="4">Pupils</td>
           <td>O2 Sat</td>
           <td>DTX</td>
         </tr>
-        <tr class="text-center">
-          <td>T</td>
-          <td>BP</td>
-          <td>PR</td>
-          <td>RR</td>
-          <td>E</td>
-          <td>V</td>
-          <td>M</td>
-          <td>Rt</td>
-          <td>RTL</td>
-          <td>Lt</td>
-          <td>RTL</td>
-          <td></td>
-          <td></td>
+        <tr class="table-style text-center">
+          <td class="table-style">T</td>
+          <td class="table-style">BP</td>
+          <td class="table-style">PR</td>
+          <td class="table-style">RR</td>
+          <td class="table-style">E</td>
+          <td class="table-style">V</td>
+          <td class="table-style">M</td>
+          <td class="table-style">Rt</td>
+          <td class="table-style">RTL</td>
+          <td class="table-style">Lt</td>
+          <td class="table-style">RTL</td>
+          <td class="table-style"></td>
+          <td class="table-style"></td>
         </tr>
         <% for i in records  %>
-          <tr class="text-center">
-            <td><%=Time %></td>
-            <td> <%=i.bp %> </td>
-            <td> <%=i.pr %> </td>
-            <td> <%=i.temp %> </td>
-            <td><%=i.rr %></td>
-            <td> E </td>
-            <td> V </td>
-            <td>M</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+          <tr class="text-center table-style">
+            <td class="table-style"><%=Time %></td>
+            <td class="table-style"> <%=i.bp %> </td>
+            <td class="table-style"> <%=i.pr %> </td>
+            <td class="table-style"> <%=i.temp %> </td>
+            <td class="table-style"><%=i.rr %></td>
+            <td class="table-style"> E </td>
+            <td class="table-style"> V </td>
+            <td class="table-style">M</td>
+            <td class="table-style"></td>
+            <td class="table-style"></td>
+            <td class="table-style"></td>
+            <td class="table-style"></td>
+            <td class="table-style"></td>
+            <td class="table-style"></td>
           </tr>
         <% end %>
       </table>
-      <table class="table-bordered w-100 patient-table">
-        <tr>
-          <td class="text-rotate " rowspan="4" ><span class="">Trauma</span> </td>
-          <td>
+      <table class="w-100 table-style">
+        <tr class="table-style">
+          <td class="text-rotate table-style " rowspan="4" ><span class="">Trauma</span> </td>
+          <td class="table-style">
             <span>บาดแผล</span>
           </td>
-          <td colspan="12">
-            <div class="">
+          <td colspan="12" class="table-style">
+            <div class="pl-1">
               <div class="form-check form-check-inline">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">No</label>
@@ -176,11 +210,11 @@ end
             </div>
           </td>
         </tr>
-        <tr>
-          <td>
+        <tr class="table-style">
+          <td class="table-style">
             <span>กระดูกผิดรูป</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -201,11 +235,11 @@ end
             </td>
           </td>
         </tr>
-        <tr>
-          <td>
+        <tr class="table-style">
+          <td class="table-style">
             <span>การเสียเลือด</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -225,11 +259,11 @@ end
               </div>
             </td>
           </tr>
-          <tr>
-            <td>
+          <tr class="table-style">
+            <td class="table-style">
               <span>อวัยวะ</span>
-              <td colspan="12">
-                <div class="">
+              <td colspan="12" class="table-style">
+                <div class="pl-1">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input " type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheck1">Head/Neck</label>
@@ -270,13 +304,13 @@ end
               </td>
             </td>
           </tr>
-          <tr>
-            <td class="text-rotate" rowspan="5" ><span class="">Non-Trauma</span> </td>
-            <td>
+          <tr class="table-style">
+            <td class="text-rotate table-style" rowspan="5" ><span class="">Non-Trauma</span> </td>
+            <td class="table-style">
               <span>อายุรกรรม</span>
             </td>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">Dyspnea</label>
@@ -312,11 +346,11 @@ end
               </div>
             </td>
           </tr>
-          <tr>
-            <td>
+          <tr class="table-style">
+            <td class="table-style">
               <span>สูติ-นรีเวชฯ</span>
-              <td colspan="12">
-                <div class="">
+              <td colspan="12" class="table-style">
+                <div class="pl-1">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input " type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheck1">Labour pain child birth</label>
@@ -341,11 +375,11 @@ end
               </td>
             </td>
           </tr>
-          <tr>
-            <td>
+          <tr class="table-style">
+            <td class="table-style">
               <span>กุมารฯ</span>
-              <td colspan="12">
-                <div class="">
+              <td colspan="12" class="table-style">
+                <div class="pl-1">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input " type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheck1">Convulsion</label>
@@ -370,11 +404,11 @@ end
               </td>
             </td>
           </tr>
-          <tr>
-            <td>
+          <tr class="table-style">
+            <td class="table-style">
               <span>ศัลยกรรม</span>
-              <td colspan="12">
-                <div class="">
+              <td colspan="12" class="table-style">
+                <div class="pl-1">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input " type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheck1">Ac. abdominal pain</label>
@@ -391,11 +425,11 @@ end
               </td>
             </td>
           </tr>
-          <tr>
-            <td>
+          <tr class="table-style">
+            <td class="table-style">
               <span>อื่นๆ</span>
-              <td colspan="12">
-                <div class="">
+              <td colspan="12" class="table-style">
+                <div class="pl-1">
                   <div class="form-check form-check-inline">
                     <input class="form-check-input " type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheck1">Eye</label>
@@ -416,13 +450,13 @@ end
               </td>
             </td>
           </tr>
-          <tr>
-            <td class="text-rotate" rowspan="5" ><span class="pl-1">Treatment</span> </td>
-            <td>
+          <tr class="table-style">
+            <td class="text-rotate table-style" rowspan="5" ><span class="pl-1">Treatment</span> </td>
+            <td class="table-style">
               <span>ทางเดินหายใจ/การหายใจ</span>
             </td>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -454,12 +488,12 @@ end
               </div>
             </td>
           </td>
-        </tr>
-        <tr>
-          <td>
+        </tr >
+        <tr class="table-style">
+          <td class="table-style">
             <span>บาดแผล/ห้ามเลือด</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -476,11 +510,11 @@ end
             </td>
           </td>
         </tr>
-        <tr>
-          <td>
+        <tr class="table-style">
+          <td class="table-style">
             <span>การให้สารน้ำ</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -509,11 +543,11 @@ end
             </td>
           </td>
         </tr>
-        <tr>
-          <td>
+        <tr class="table-style">
+          <td class="table-style">
             <span>การดามกระดูก</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -534,11 +568,11 @@ end
             </td>
           </td>
         </tr>
-        <tr>
-          <td>
+        <tr class="table-style">
+          <td class="table-style">
             <span>การทำ CPR</span>
-            <td colspan="12">
-              <div class="">
+            <td colspan="12" class="table-style">
+              <div class="pl-1">
                 <div class="form-check form-check-inline">
                   <input class="form-check-input " type="checkbox" value="">
                   <label class="form-check-label" for="defaultCheck1">No</label>
@@ -555,7 +589,7 @@ end
             </td>
           </td>
         </tr>
-        <tr>
+        <tr class="table-style">
           <td colspan="15"><span class="pl-1">ยา(วิธีใช้และขนาดให้ระบุ): </span></td>
         </tr>
         <tr>
@@ -586,7 +620,7 @@ end
             </div>
           </td>
         </tr>
-        <tr>
+        <tr class="table-style">
           <td colspan="15"><span class="pl-1 pr-3">ระดับการคัดแยก (RC code)</span>
             <div class="form-check form-check-inline">
               <input class="form-check-input " type="checkbox" value="">

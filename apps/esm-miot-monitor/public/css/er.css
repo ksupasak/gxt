@@ -528,10 +528,12 @@ a {
 .table-title {
   font-size: smaller;
 }
-.patient-table{
+.table-style {
   font-size: x-small;
-  border: 1px solid #aaaaaa;
+  border: 1px solid var(--btn-grey-second);
 }
+
+
 
 .paitent-sum {
   width: 350px;
