@@ -260,7 +260,8 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #093A54; ">
-	                                        <ul class="list-group list-group-flush">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_med">
+												<input type="hidden" name="report[non_trauma_med]" value="<%=report.non_trauma_med%>" id="report_non_trauma_med">
 	                                            <li class="list-group-item">Dyspnea</li>
 	                                            <li class="list-group-item">High Fever</li>
 	                                            <li class="list-group-item">Ulteration of Conscious</li>
@@ -276,21 +277,19 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                            <hr class="hr-trauma">
 	                            <div class="row no-gutters mt-3">
 	                                <div class="col-sm d-flex align-items-center justify-content-center">
-	                                    <h5 class="">บาดแผล</h5>
+	                                    <h5 class="">สูติ-นรีเวชฯ</h5>
 
 	                                </div>
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">No</li>
-	                                            <li class="list-group-item">Cut/Laceration</li>
-	                                            <li class="list-group-item">Abrasion</li>
-	                                            <li class="list-group-item">Contusion</li>
-	                                            <li class="list-group-item">Burn</li>
-	                                            <li class="list-group-item">Stab Wound</li>
-	                                            <li class="list-group-item">Amputate</li>
-	                                            <li class="list-group-item">Gun Shot</li>
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_gyne">
+												<input type="hidden" name="report[non_trauma_gyne]" value="<%=report.non_trauma_gyne%>" id="report_non_trauma_gyne">
+	                                            <li class="list-group-item">Labour pain child birth</li>
+	                                            <li class="list-group-item">Bleeding per Vagina</li>
+	                                            <li class="list-group-item">High risk preg</li>
+	                                            <li class="list-group-item">Rape</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
@@ -298,21 +297,19 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                            <hr class="hr-trauma">
 	                            <div class="row no-gutters mt-3">
 	                                <div class="col-sm d-flex align-items-center justify-content-center">
-	                                    <h5 class="">บาดแผล</h5>
+	                                    <h5 class="">กุมารฯ</h5>
 
 	                                </div>
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">No</li>
-	                                            <li class="list-group-item">Cut/Laceration</li>
-	                                            <li class="list-group-item">Abrasion</li>
-	                                            <li class="list-group-item">Contusion</li>
-	                                            <li class="list-group-item">Burn</li>
-	                                            <li class="list-group-item">Stab Wound</li>
-	                                            <li class="list-group-item">Amputate</li>
-	                                            <li class="list-group-item">Gun Shot</li>
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_pediatric">
+												<input type="hidden" name="report[non_trauma_pediatric]" value="<%=report.non_trauma_pediatric%>" id="report_non_trauma_pediatric">
+	                                            <li class="list-group-item">Convulsion</li>
+	                                            <li class="list-group-item">High Fever</li>
+	                                            <li class="list-group-item">Dyspnea</li>
+	                                            <li class="list-group-item">Digestive</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
@@ -320,21 +317,17 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                            <hr class="hr-trauma">
 	                            <div class="row no-gutters mt-3">
 	                                <div class="col-sm d-flex align-items-center justify-content-center">
-	                                    <h5 class="">บาดแผล</h5>
+	                                    <h5 class="">ศัลยกรรม</h5>
 
 	                                </div>
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">No</li>
-	                                            <li class="list-group-item">Cut/Laceration</li>
-	                                            <li class="list-group-item">Abrasion</li>
-	                                            <li class="list-group-item">Contusion</li>
-	                                            <li class="list-group-item">Burn</li>
-	                                            <li class="list-group-item">Stab Wound</li>
-	                                            <li class="list-group-item">Amputate</li>
-	                                            <li class="list-group-item">Gun Shot</li>
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_surgery">
+												<input type="hidden" name="report[non_trauma_surgery]" value="<%=report.non_trauma_surgery%>" id="report_non_trauma_surgery">
+	                                            <li class="list-group-item">Ac. abdominal pain</li>
+	                                            <li class="list-group-item">GI Bleeding</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
@@ -342,21 +335,18 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                            <hr class="hr-trauma">
 	                            <div class="row no-gutters mt-3">
 	                                <div class="col-sm d-flex align-items-center justify-content-center">
-	                                    <h5 class="">บาดแผล</h5>
+	                                    <h5 class="">อื่นๆ</h5>
 
 	                                </div>
 	                                <div class="col-sm">
 	                                    <div class="card m-3"
 	                                        style="color: #dcdcdc; background-color: #054366; ">
-	                                        <ul class="list-group list-group-flush">
-	                                            <li class="list-group-item">No</li>
-	                                            <li class="list-group-item">Cut/Laceration</li>
-	                                            <li class="list-group-item">Abrasion</li>
-	                                            <li class="list-group-item">Contusion</li>
-	                                            <li class="list-group-item">Burn</li>
-	                                            <li class="list-group-item">Stab Wound</li>
-	                                            <li class="list-group-item">Amputate</li>
-	                                            <li class="list-group-item">Gun Shot</li>
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_etc">
+												<input type="hidden" name="report[non_trauma_etc]" value="<%=report.non_trauma_etc%>" id="report_non_trauma_etc">
+	                                            <li class="list-group-item">Eye</li>
+	                                            <li class="list-group-item">ENT</li>
+	                                            <li class="list-group-item">Ortho</li>
+	                                            <li class="list-group-item">Psychological problem</li>
 	                                        </ul>
 	                                    </div>
 	                                </div>
