@@ -526,14 +526,16 @@ a {
 }
 
 .table-title {
-  font-size: smaller;
+  font-size: small;
 }
 .table-style {
-  font-size: x-small;
+  font-size: small;
   border: 1px solid var(--btn-grey-second);
 }
 
-
+.table-none{
+  background: var(--btn-grey-second) ;
+}
 
 .paitent-sum {
   width: 350px;
