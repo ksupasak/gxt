@@ -358,7 +358,130 @@ last = DataRecord.where(:admit_id=>admit.id).last
 
 
 	            </div>
-				
+
+	            <!--Treatment choice-->
+	            <div class="card patient-info">
+	                <div class="card-header">
+	                    <nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+	                        <a class="flex-sm-fill text-sm-center nav-link active" id="pills-treatment-tab" data-toggle="pill"
+	                            href="#pills-treatment" role="tab" aria-controls="pills-treatment" aria-selected="true">Treatment</a>
+	                </div>
+
+	                <div class="tab-content report" id="pills-tabContent">
+						<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+							aria-labelledby="pills-treatment-tab" style="width: 100%;">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">ทางเดินหายใจ/ การหายใจ</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_breath">
+											<input type="hidden" name="report[treatment_breath]" value="<%=report.treatment_breath%>" id="report_treatment_breath">
+											<li class="list-group-item ">No</li>
+											<li class="list-group-item ">Clear airway</li>
+											<li class="list-group-item ">Suction</li>
+											<li class="list-group-item ">O2 canular/mask</li>
+											<li class="list-group-item ">Ambu bag</li>
+											<li class="list-group-item ">ET</li>
+											<li class="list-group-item ">Amputate</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<style>
+								.report .selected{
+									background:#103a59;
+								}
+								.report .inactive{
+									display:none;
+								}
+								
+							</style>
+					
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">บาดแผล/ห้ามเลือด</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_wound" >
+											<input type="hidden" name="report[treatment_wound]" value="<%=report.treatment_wound%>" id="report_treatment_wound">
+											<li class="list-group-item ">No</li>
+											<li class="list-group-item ">Pressure Dressing</li>
+											<li class="list-group-item ">Dressing</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การให้สารน้ำ</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_liquid">
+											<input type="hidden" name="report[treatment_liquid]" value="<%=report.treatment_liquid%>" id="report_treatment_liquid">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">NSS</li>
+											<li class="list-group-item">RLS</li>
+											<li class="list-group-item">5%DN/2</li>
+											<li class="list-group-item">on locked</li>
+											<li class="list-group-item">Others</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การดามกระดูก</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_bone">
+											<input type="hidden" name="report[treatment_bone]" value="<%=report.treatment_bone%>" id="report_treatment_bone">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">เผือกลม/ไม้ดาม/ sling</li>
+											<li class="list-group-item">Collar With  Long Spinal Board</li>
+											<li class="list-group-item">KED</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3 mb-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การทำ CPR</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_cpr">
+											<input type="hidden" name="report[treatment_cpr]" value="<%=report.treatment_cpr%>" id="report_treatment_cpr">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">Yes</li>
+											<li class="list-group-item">AED/Defib</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<script>
 				
 					$('.btn-triage').click(function(event){
