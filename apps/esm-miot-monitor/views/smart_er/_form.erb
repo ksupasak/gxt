@@ -482,6 +482,33 @@ last = DataRecord.where(:admit_id=>admit.id).last
 						</div>
 					</div>
 				</div>
+
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">ยา (วิธีใช้ และขนาด ให้ระบุ)</p>
+				<textarea class="chief-complaint" name="report[chief_complaint]"><%=report.chief_complaint%></textarea>
+
+				<div class="card patient-info">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="" style="color: #42B7AB;">ผลการดูแลรักษาขั้นต้น</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="primary_result">
+									<input type="hidden" name="report[primary_result]" value="<%=report.primary_result%>" id="report_primary_result">
+									
+									<li class="list-group-item">ไม่มีการรักษา</li>
+									<li class="list-group-item">ทุเลา</li>
+									<li class="list-group-item">คงเดิม</li>
+									<li class="list-group-item">ทรุดหนัก</li>
+									<li class="list-group-item">เสียชีวิต ณ จุดเกิดเหตุ</li>
+									<li class="list-group-item">เสียชีวิต ขณะนำส่ง</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
 				<script>
 				
 					$('.btn-triage').click(function(event){
