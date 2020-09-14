@@ -113,8 +113,14 @@ body{
     box-shadow: 0px 3px 6px #00000029;
     border-radius: 10px;
     border-color: var(--btn-green-main);
+    color: var(--text-grey);
+
 }
 
+
+a:hover {
+  color: #fff !important;
+}
 
 a {
   color: inherit;
