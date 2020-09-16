@@ -65,45 +65,45 @@
 			
 			
 		%>
-			
-		<div class="form-group">
-		 <label for="product-name">Patient</label>
-		<div class="row">
-	
-	<form action="admit" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
-	
-	
+		<div class="card admit-form">
+            <div class="card-body d-flex">
+				<form action="admit" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+					<div class="form-group">
+		 				<%# <label for="product-name">Patient</label> %>
 		<div class='row'  style="border:0px solid gray">
 	
-		<div class="col-4" > 
+		<div class="col-4 col-sm-4" > 
 		
-		<div class="row">
-		<div class="col-12" > 
-		<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
-		</div>
-		</div>
-		
-		<div class="row">
-		<div class="col-12 col-sm-6">
-		  <label for="product-name">HN</label>
-		  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" style="">
-		</div>
-
-		<div class="col-12 col-sm-6">
-		  <label for="product-name">AN</label>
-		  <input type="text" class="form-control" id="patient-hn" name="admit[an]" value="<%=admit.an%>" placeholder="HN" style="">
-		</div>
-		</div>
-		
-		
-		
+			<div class="row">
+				<div class="col-12" > 
+					<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
+					<a href="" class="mt-3 d-flex justify-content-center d-inline p-1">
+						<img src="<%=url_for 'img/ER/photo_camera.svg' %>" alt="upload-photo">
+						<span class="pl-1">อัพโหลดภาพ</span>
+					</a>
+				</div>
+			</div>
 		</div>
 
 
-		<div class="col-8 ">
+		<div class="col-8 col-sm-8 p-3">
+
+			<div class="row">
+				<div class="col col-sm-6">
+		  			<label for="product-name">HN</label>
+		  			<input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" style="">
+				</div>
+
+				<div class="col col-sm-6">
+		  			<label for="product-name">AN</label>
+		  			<input type="text" class="form-control" id="patient-hn" name="admit[an]" value="<%=admit.an%>" placeholder="HN" style="">
+				</div>
+			</div>
+
+		<hr class="hr-new">
 			
 			
-		<div class="row">
+		<div class="row mt-1">
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-prefix_name">คำนำหน้า</label>
@@ -125,7 +125,7 @@
 		</div><!--row-->
 		
 		
-		<div class="row">
+		<div class="row mt-1">
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-gener">เพศ</label>
@@ -142,7 +142,7 @@
 		</div><!--row-->
 		
 		
-		<div class="row">
+		<div class="row mt-1">
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-gener">น้ำหนัก</label>
@@ -158,7 +158,7 @@
 
 		</div><!--row-->
 		
-		<div class="row">
+		<div class="row mt-1">
 		
 
 
@@ -175,19 +175,10 @@
 			
 		</div><!--row-->
 			
-		
-		
-		</div> <!--col8-->
-		
-		
-		</div> <!--row-->
-  <br/>
+		  <br/>
+		<div class="row mt-3 "  style="border:0px solid gray">
 			
-		<div class="row"  style="border:0px solid gray">
 			
-			<div class="col-4">
-			
-			</div>	
 			<div class="col-4">
       		
 		    <input type="submit" value="ยืนยัน" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" />			  
@@ -195,17 +186,28 @@
 	 	 	</div>
 	   	   
 		    <div class="col-4">
-            <a href="../Home/index" class="justify-content-center btn">
-                <p>ยกเลิก</p>
+            <a href="../Home/index" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
+                ยกเลิก
             </a>
 		
 			</div>
 			
 		</div>
+		</div> <!--col8-->
+		
+		
+		</div> <!--row-->
+
 			
-		</div>
+		
+			
+		
 
 		</div>
+		</form>
+			</div>
+		</div><!--Card-->
+		
 		</div>
         
 				
