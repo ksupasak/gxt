@@ -22,33 +22,33 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	            <!--vital sign-->
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Vital Sign</p>
 	            <div class="row justify-content-center mb-2 station">
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Blood Pressure</p>
+	                        <p class="pl-1">Blood Pressure</p>
 								<center>
 							<span class="bp param-value" ><%=last.bp if last%></span>
 						</center>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Pulse / SpO2</p>
+	                        <p class="pl-1">Pulse / SpO2</p>
 							<center>
 							<span class="pr param-value" ><%=last.pr if last%></span> / <span class="spo2 param-value" ><%=last.spo2 if last%></span>
 						</center>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Body Temp</p>
+	                        <p class="pl-1">Body Temp</p>
 									<center>
 								<span class="temp param-value" ><%=last.temp if last%></span>
 							</center>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Respiratory Rate</p>
+	                        <p class="pl-1">Respiratory Rate</p>
 									<center>
 								<span class="rr param-value" ><%=last.rr if last%></span>
 							</center>
@@ -59,24 +59,24 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	            <!--neuro sign-->
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Neuro Sign</p>
 	            <div class="row justify-content-between mb-2">
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Eye Opening</p>
+	                        <p class="pl-1">Eye Opening</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2">
+	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Motor Response</p>
+	                        <p class="pl-1">Motor Response</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2 ">
+	                <div class="col-sm-6 col-md-3 mb-2 ">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Verbal Response</p>
+	                        <p class="pl-1">Verbal Response</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm mb-2 ">
+	                <div class="col-sm-6 col-md-3 mb-2 ">
 	                    <a href="#" class="btn vital-card text-left">
-	                        <p>Pupil</p>
+	                        <p class="pl-1">Pupil</p>
 	                    </a>
 	                </div>
 	            </div>
@@ -86,30 +86,30 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	            <textarea class="chief-complaint" name="report[chief_complaint]"><%=report.chief_complaint%></textarea>
 	            <!--er triage-->
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">ระบบการคัดแยก (ER Triage)</p>
-	            <div class="row justify-content-center mb-2" style="border:0px solid">
+	            <div class="row justify-content-between mb-2" style="border:0px solid">
 					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
 					
-	                <div class="col-sm pl-0 mb-2 ">
+	                <div class="col-sm  mb-2 ">
 	                    <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.level=='red' %> " id="red">
 	                        <p>แดง</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm pl-0 mb-2">
+	                <div class="col-sm  mb-2">
 	                    <a href="#" class="btn btn-triage btn-triage-yellow <%='active' if report.level=='yellow' %> " id="yellow">
 	                        <p>เหลือง</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm pl-0 mb-2">
+	                <div class="col-sm  mb-2">
 	                    <a href="#" class="btn btn-triage btn-triage-green  <%='active' if report.level=='green' %> " id="green">
 	                        <p>เขียว</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm pl-0 mb-2">
+	                <div class="col-sm  mb-2">
 	                    <a href="#" class="btn btn-triage btn-triage-white  <%='active' if report.level=='white' %> " id="white">
 	                        <p>ขาว</p>
 	                    </a>
 	                </div>
-	                <div class="col-sm pl-0 mb-2">
+	                <div class="col-sm  mb-2">
 	                    <a href="#" class="btn btn-triage btn-triage-black  <%='active' if report.level=='black' %> " id="black">
 	                        <p>ดำ</p>
 	                    </a>

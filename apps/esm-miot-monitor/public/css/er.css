@@ -168,8 +168,8 @@ a {
 
 .btn-triage {
   background: #043149;
-  width: 120px;
-  height: 36px;
+  width: 100%;
+  height: 80%;
 }
 
 .btn-triage-red.active{
@@ -579,5 +579,4 @@ a {
     color: var(--text-grey);
 
 }
-
 
