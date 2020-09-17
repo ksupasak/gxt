@@ -113,6 +113,9 @@
                             <a href="#" class="btn vital-card text-left">
                                 <p>Pupil</p>
                                 <img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
+							<div class="col-8 v-entry v-under  temp"  name="temp">
+				                    -
+				        	</div>
                             </a>
                         </div>
                         <div class="col mb-2">
@@ -259,7 +262,7 @@
 </form>
 
 
-<!-- Modal -->
+<!-- Modal for vital sign -->
 <div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -307,6 +310,8 @@
     </div>
   </div>
 </div>
+
+
 <div id="buffer">
 </div>
 
@@ -495,6 +500,9 @@
 		
     })
 	
+	
+	
+
 	function prepare(){
 		var data = {};
 		hn = "<%=params[:hn]%>"
