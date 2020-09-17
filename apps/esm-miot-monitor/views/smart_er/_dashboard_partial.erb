@@ -1,44 +1,32 @@
 <%
 	
 	
-	zone = Zone.find session[:current_zone]
+    room = Room.find params[:id]
+	zone = Zone.find room.zone_id
 	
-	name = zone.name if zone
+	beds = room.beds 
 	
-	rooms = zone.rooms
+	admits = []
 	
-	session[:default_room] = params[:room_id]  if params[:room_id]
+	for bed in beds 
 	
-	
-	
-	if session[:default_room]=='*' or session[:default_room]==nil
-		
-		admits =  Admit.where(:zone_id=>session[:current_zone], :status=>'Admitted').all
-	
-	elsif  session[:default_room]=='' 
-		
-		admits =  Admit.where(:zone_id=>session[:current_zone], :status=>'Admitted', '$or'=>[{:room_id=>nil}]).all
-		
-	else
-		
-		room = Room.find  session[:default_room]
-		
-		beds = room.beds 
-		
-		admits =  beds.collect{|i| Admit.where(:bed_id=>i.id, :zone_id=>session[:current_zone], :status=>'Admitted').first }.compact
-		
-	
+		admit =  Admit.where(:bed_id=> bed.id, :zone_id=>session[:current_zone], :status=>'Admitted').first
+	 	
+		admits << admit
 	end
+	
+	
+	
 	
 %>
 
-
-	
 <style>
 
 
 </style>
+
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+
 <link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
     <!--Content-->
@@ -46,29 +34,10 @@
         <div class="containerx">
                 <header class=" d-flex align-items-center title-fill">
                     <div class="col">
-                        <p class="mb-0"><strong>ER</strong></p>
-                     
-						<select name="" class="admit-content" id="select-room" style="padding:20px;font-size:0.8em;border:1px solid gray;color:#ccc;">
-							<option value=""<%='selected' if session[:default_room]=='' or  session[:default_room]==nil %>>Screening</option>
-							<% for r in rooms  %>
-							<option value="<%=r.id%>" <%='selected' if session[:default_room]== r.id.to_s %> ><%=r.name%></option>
-							<% end %>
-							<option value="*" <%='selected' if session[:default_room]=='*' %> >All</option>
-							
-						</select >
-							
+                        <p class="mb-0"><strong><%=link_to zone.name, "index"%></strong></p>
+                        <small><%= room.name %></small>
+						<span style="float:right">วันที่ <%=Time.now.strftime("%a %d %B %Y")%> เวลา <%= Time.now.strftime("%H:%M:%S")%> </div>
                     </div>
-					<script>
-						$('#select-room').change(function(){
-							val = $(this).val()
-					 	   	window.location = "index?room_id="+val
-						})
-					</script>
-					<%
-						
-						
-						
-					%>
                     <!--<div class="col d-flex justify-content-end">
                         <button class=" btn  er-scan">
                             <img src="<%=url_for('img/svg/scan.svg')%>" alt="scan" class="p-1" />
@@ -163,21 +132,20 @@
                 <hr class="hr-new">
             </div>
            
-            <div class="container d-flex justify-content-center " >
-                <a href="./admit?room_id=#{room.id}" class="btn btn-submit d-flex align-items-center justify-content-center">
+            <!-- <div class="container d-flex justify-content-center"  style="display:none">
+                <a href="./admit" class="btn btn-submit d-flex align-items-center justify-content-center">
                     <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                         <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
                       </svg>
                     <span class="pl-2 pb-0">เพิ่มใหม่</span>
                 </a>
-            </div>
+            </div> -->
         </div>
     </section>
-
-Feed : &nbsp;
-<% for r in rooms %> 
-<%=link_to "#{r.name}", "dashboard?id=#{r.id}", :target=>'_blank', :class=>"btn btn-info"%> 
-<% end %>
-
-
+	<script>
+		
+		$('nav').remove()
+		$('body').css("padding-top","0px")
+	</script>
+	
