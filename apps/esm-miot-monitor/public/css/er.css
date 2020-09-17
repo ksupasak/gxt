@@ -416,6 +416,10 @@ a {
     font-size: 3.5em;
     color:var(--btn-green-main);
 }
+.n-entry{
+  font-size: 3.5em;
+  color:var(--btn-green-main);
+}
 .v-under{
     border-bottom: 1px solid #4D4D4D;
 }
