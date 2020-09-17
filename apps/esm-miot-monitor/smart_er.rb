@@ -5,7 +5,7 @@ module EsmMiotMonitor
     
       def acl
     
-        return {:upload=>'*'}
+        return {:upload=>'*',:dashboard=>'*'}
     
       end
       

@@ -105,7 +105,7 @@ end
 
 class Room < GXTModel
   include Mongoid::Document
-   
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone' 
   has_many :beds, :class_name=>'EsmMiotMonitor::Bed'
   
   key :name, String 
@@ -222,6 +222,7 @@ class Admit < GXTModel
   
   
   belongs_to :bed, :class_name=>'EsmMiotMonitor::Bed'
+  belongs_to :room, :class_name=>'EsmMiotMonitor::Bed'
   
   
   key :patient_id, ObjectId
@@ -241,6 +242,7 @@ class Admit < GXTModel
   key :diagnosis_id, ObjectId
   
   key :ambulance_id, ObjectId
+  key :room_id, ObjectId
   key :bed_id, ObjectId
   
   key :period, Integer
