@@ -464,11 +464,12 @@ a {
 	border:0px solid #aaa;
 	padding:10px;
     background-color: var(--er-room-bg);
-	
+    
 }
 
 .level-content{
-	border:1px solid #aaa;
+  border:1px solid #aaa;
+  border-radius: 3px;
 	width:50px;
 	height:20px;
 	
@@ -584,3 +585,25 @@ a {
 
 }
 
+/*Dashboard*/
+.dashboard-head {
+  background-color: #283540;
+}
+
+.dashboard-table {
+  background-color: var(--er-room-bg);
+}
+
+.card-info {
+  border: 1px solid #374C5F;
+  border-radius: 0.25rem;
+  width: 187px;
+  height: 100px;
+  padding: 0.5rem;
+  background: var(--er-room-bg);
+}
+
+.card-num {
+    font-size: 42px;
+    color: var(--btn-green-main);
+}
