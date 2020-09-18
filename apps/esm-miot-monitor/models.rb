@@ -116,6 +116,7 @@ end
 class Bed < GXTModel
   include Mongoid::Document
  
+  belongs_to :room, :class_name=>'EsmMiotMonitor::Room'
   
   key :name, String 
   key :room_id, ObjectId 

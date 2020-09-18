@@ -185,7 +185,7 @@ report = ERCaseReport.new unless report
         </div>
         <div class="d-flex justify-content-center mt-5">
 			
-            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary btn-action btn-info d-flex align-items-center justify-content-center" style="float:right">
+            <a href="#" class="btn btn-primary btn-action btn-info d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#opdModal" style="float:right">
                 <img src="<%=url_for('img/ER/arrow_circle.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                 Transfer
             </a>&nbsp;
@@ -240,3 +240,61 @@ report = ERCaseReport.new unless report
         </div>
         </div>
     </section>
+	
+	<!-- Modal for vital sign -->
+	<div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="opdModalTitle">Transfer</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" style="color:black">
+	        <center>
+	        
+			<%
+			
+			zone = Zone.find session[:current_zone]
+	
+			name = zone.name if zone
+	
+			rooms = zone.rooms
+		
+			%>
+			<% for room in rooms %>
+			<div class="">
+				<%=link_to room.name, "transfer?id=#{admit.id}&room_id=#{room.id}" %>
+			</div>
+			<div class=" row">
+			<% for bed in room.beds
+			
+				current_admit = Admit.where(:bed_id=>bed.id, :zone_id=>session[:current_zone], :status=>'Admitted').first 
+			 %>
+			<div class="col-4">
+				<% unless current_admit %>
+				<%=link_to bed.name, "transfer?id=#{admit.id}&bed_id=#{bed.id}" %>
+				<% else %>
+				<%=link_to bed.name, "show?id=#{current_admit.id}"%><br/>
+				<%= current_admit.patient.to_s %>
+				<% end %>
+			</div>
+			<% end %>
+			
+		</div>
+			<hr/>
+				<div class="clear"></div>
+			<% end %>
+	        </center>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
