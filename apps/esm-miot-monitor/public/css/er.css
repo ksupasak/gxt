@@ -118,14 +118,16 @@ body{
 }
 
 
-a:hover {
-  color: #fff !important;
-}
+
 
 a {
   color: inherit;
 }
 
+.admit a:hover {
+  color: white !important;
+  text-decoration: none;
+}
 
 .hr-new {
     border: 1px solid #707070;
@@ -416,6 +418,10 @@ a {
     font-size: 3.5em;
     color:var(--btn-green-main);
 }
+.n-entry{
+  font-size: 3.5em;
+  color:var(--btn-green-main);
+}
 .v-under{
     border-bottom: 1px solid #4D4D4D;
 }
@@ -460,11 +466,12 @@ a {
 	border:0px solid #aaa;
 	padding:10px;
     background-color: var(--er-room-bg);
-	
+    
 }
 
 .level-content{
-	border:1px solid #aaa;
+  border:1px solid #aaa;
+  border-radius: 3px;
 	width:50px;
 	height:20px;
 	
@@ -580,3 +587,25 @@ a {
 
 }
 
+/*Dashboard*/
+.dashboard-head {
+  background-color: #283540;
+}
+
+.dashboard-table {
+  background-color: var(--er-room-bg);
+}
+
+.card-info {
+  border: 1px solid #374C5F;
+  border-radius: 0.25rem;
+  width: 187px;
+  height: 100px;
+  padding: 0.5rem;
+  background: var(--er-room-bg);
+}
+
+.card-num {
+    font-size: 42px;
+    color: var(--btn-green-main);
+}

@@ -96,7 +96,7 @@
 	
 								<div class="row">
 									
-								<div class="col-5">
+								<div class="col-5" style="line-height: 1.8">
 									<div class="row">
 										<div class="col-12 d-flex justify-content-center">
 		                                    <span>
@@ -130,7 +130,7 @@
 										</div>
 									</div>
 									<div class="row" >
-										<div class="col-12"   style="font-size:0.8em">
+										<div class="col-12"   style="font-size:1em">
 										
 											<b><%= patient %></b>
 										
@@ -172,12 +172,16 @@
                     <span class="pl-2 pb-0">เพิ่มใหม่</span>
                 </a>
             </div>
+			<br/>
         </div>
     </section>
+	
 
+<div class="ml-3 d-flex align-self-center">
 Feed : &nbsp;
+</div>
 <% for r in rooms %> 
-<%=link_to "#{r.name}", "dashboard?id=#{r.id}", :target=>'_blank', :class=>"btn btn-info"%> 
+<%=link_to "#{r.name}", "dashboard?id=#{r.id}", :target=>'_blank', :class=>"mr-2 d-flex align-items-center btn btn-info"%> 
 <% end %>
 
 

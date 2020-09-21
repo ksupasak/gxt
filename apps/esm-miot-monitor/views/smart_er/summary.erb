@@ -340,7 +340,7 @@ end
                   </div>
                   <div class="form-check form-check-inline trauma_organ">
                     <input class="form-check-input " type="checkbox" value="">
-                    <label class="form-check-label" for="defaultCheck1">Spine/back</label>
+                    <label class="form-check-label" for="defaultCheck1">Spine/Back</label>
                   </div>
                   <div class="form-check form-check-inline trauma_organ">
                     <input class="form-check-input " type="checkbox" value="">
@@ -360,11 +360,11 @@ end
                   </div>
                   <div class="form-check form-check-inline trauma_organ">
                     <input class="form-check-input " type="checkbox" value="">
-                    <label class="form-check-label" for="defaultCheck1">External body surface</label>
+                    <label class="form-check-label" for="defaultCheck1">External Body Surface</label>
                   </div>
                   <div class="form-check form-check-inline trauma_organ">
                     <input class="form-check-input " type="checkbox" value="">
-                    <label class="form-check-label" for="defaultCheck1">Multiple injury back</label>
+                    <label class="form-check-label" for="defaultCheck1">Multiple Injury Back</label>
                   </div>
                 </div>
               </td>
@@ -984,7 +984,7 @@ end
             if($("."+i)){
               if($("."+i).hasClass("form-check")){ //checkbox
                 $("."+i).each(function(index,sel){
-                  if($(sel).find("label").html().trim()==v||$(sel).find("[type='checkbox']").val()==v){
+                  if($(sel).find("label").html().trim()==v||($(sel).find("[type='checkbox']").val()!=''&&$(sel).find("[type='checkbox']").val()==v)){
                     $(sel).find("[type='checkbox']").attr('checked',true)
                   }
                 })

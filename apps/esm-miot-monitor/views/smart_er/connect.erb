@@ -53,9 +53,12 @@
     min-height:125px;
     /* padding-bottom:1vh; */
 }
-.v-entry{
+.v-entry,.n-entry{
     font-size: 2em;
-    color:#42B7AB;
+	color:var(--btn-green-main);
+	text-align :center;
+	display:inline-block;
+	width:100px;
 }
 
 </style>
@@ -91,36 +94,72 @@
                 <div class="row  mb-2">
                     
                     <div class="col p-0 d-flex flex-column" id="patient-neuro-sign">
+						
                         <div class="col mb-2 ">
-                             <a href="#" class="btn vital-card text-left">
+							<div class="vital-card">
                                 <p>Eye Opening</p>
-                                <img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
-                            </a>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="E">
+									-
+									</div>
+								</div>
+							</div>
                         </div>
-                        <div class="col mb-2">
-                            <a href="#" class="btn vital-card text-left">
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
                                 <p>Motor response</p>
-                                <img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
-                            </a>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="M">
+									-
+									</div>
+								</div>
+							</div>
                         </div>
-                        <div class="col mb-2">
-                            <a href="#" class="btn vital-card text-left">
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
                                 <p>Verbal Response</p>
-                                <img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
-                            </a>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under  temp"  name="temp"  type="R">
+									-
+									</div>
+								</div>
+							</div>
                         </div>
-                        <div class="col mb-2">
-                            <a href="#" class="btn vital-card text-left">
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
                                 <p>Pupil</p>
-                                <img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
-							<div class="col-8 v-entry v-under  temp"  name="temp">
-				                    -
-				        	</div>
-                            </a>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="P">
+									-
+									</div>
+								</div>
+							</div>
                         </div>
-                        <div class="col mb-2">
-                                
-                               
+
+                        <div class="col mb-2">     
 								<div class="vital-card">
 								 <p>Nurse Note  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
 								<textarea class="vital-card" style="height:auto" id="nurse-note"></textarea>
@@ -311,6 +350,31 @@
   </div>
 </div>
 
+<!-- Modal for neuro-sign -->
+<div class="modal fade" id="neuroModal" tabindex="-1" role="dialog" aria-labelledby="neuroModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="neuroModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <center>
+		<div id="neuroBody">
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="buffer">
 </div>
@@ -335,15 +399,7 @@
 
 </form>
 
-<style>
-	.v-entry{
-		
-		text-align :center;
-		display:inline-block;
-		width:100px;
 
-	}
-	</style>
 <script>
 	
 	
@@ -439,10 +495,34 @@
         var myAudio = document.getElementById('audio-0')
         myAudio.play();
 	})
+
+	function genList(t,v){
+		let map = new Map([
+			['E',['E1,ไม่ลืมตาเลย(none)','E2,ลืมตาเมื่อเจ็บ(pain)','ลืมตาเมื่อเรียกชื่อ(speech)','ลืมตาเอง(spontaneous)']],
+			['M',['M1,ไม่มีการเคลืิ่อนไหว','M2,แขนและขาเหยียดผิดปกติ','M3,แขนงอเข้าหาลำตัว ขา 2ข้างงอ','M4,เมื่อทำให้เจ็บชักแขนขาหนี','M5,ไม่ทำตามคำสั่งแต่ทราบตำแหน่งที่เจ็บ','M6,เคลื่อนไหวตามคำสั่งได้ถูกต้อง']],
+			['V',['V1,ไม่ส่งเสียง','V2,ส่งเสียงไม่เป็นคำพูด ครวญคราง','V3,ส่งเสียงเป็นคำๆ','V4,พูดได้เป็นประโยคแต่สับสน','V5,พูดตอบคำถามได้ปกติ/ถูกต้อง']],
+			['P',['R-Reaction,รูม่านตาหดเล็กลงทันที','S-Sluggish,รูม่านตาจะหดเล็กลงช้าๆกว่าปกติ','N-No reaction,รูม่านตาไม่มีปฏิกิริยาต่อแสงไฟ','C-Close,ตาบวมปิด']],
+		])
+		h = map.get(t)
+		return h
+	}
     
     $(document).ready(function(){
 		
 		var current_modal ;
+
+        $(".n-entry").click(function(){
+		
+            v = $(this).html().trim()
+            if(v=='-')v = '' 
+			$(".display-hn").html(v)
+			t = $(this).attr('type')
+			current_modal = $(this).attr('name')
+            mname = $(this).parent("div").find(".l-entry").html()
+            $("#neuroModalTitle").html($(this).attr('label'))
+			$("#neuroBody").html(genList(t))
+            $("#neuroModal").modal('toggle')
+        })
 
         $(".v-entry").click(function(){
 		
@@ -454,8 +534,8 @@
             mname = $(this).parent("div").find(".l-entry").html()
             $("#opdModalTitle").html($(this).attr('label'))
             $("#opdModal").modal('toggle')
-        })
-		
+        })	
+
 		$("#save-modal").click(function(){
             value = $(".display-hn").html().trim()
             if(value==='') value='-'

@@ -36,7 +36,12 @@
                     <div class="col">
                         <p class="mb-0"><strong><%=link_to zone.name, "index"%></strong></p>
                         <small><%= room.name %></small>
-						<span style="float:right">วันที่ <%=Time.now.strftime("%a %d %B %Y")%> เวลา <%= Time.now.strftime("%H:%M:%S")%> </div>
+						<span style="float:right;text-align:right">
+						<!-- วันที่  -->
+						<%=Time.now.strftime("%a %d %b, %Y")%> 
+						<!--เวลา -->
+						<br><%= Time.now.strftime("%H:%M:%S")%> 
+						</span>
                     </div>
                     <!--<div class="col d-flex justify-content-end">
                         <button class=" btn  er-scan">
@@ -45,7 +50,7 @@
                         </button>
                     </div>-->
                 </header>
-                <br>
+                
                 <!--er room-->
                 <section id="er-room">
                     <div class="container-fluid">
@@ -129,7 +134,7 @@
                     </div>
                 </section>
                 <!--end of er-room--> 
-                <hr class="hr-new">
+                
             </div>
            
             <!-- <div class="container d-flex justify-content-center"  style="display:none">
