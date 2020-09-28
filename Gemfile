@@ -27,7 +27,7 @@ gem 'mongo'
 gem 'mongoid'
 gem 'mongoid-grid_fs'
 gem 'rack-gridfs'
-gem 'bson_ext'
+# gem 'bson_ext'
 
 
 gem 'redis'

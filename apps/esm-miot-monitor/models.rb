@@ -210,9 +210,12 @@ class Admit < GXTModel
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   
   has_many :records, :class_name=>'EsmMiotMonitor::DataRecord', order: "start_time ASC"
-  
   has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time ASC"
   has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time ASC"
+  
+  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "stamp ASC"
+  has_many :messages, :class_name=>'EsmMiotMonitor::Message', order: "ts ASC"
+  
   
   belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
   belongs_to :procedure, :class_name=>'EsmMiotMonitor::Procedure'
@@ -261,6 +264,7 @@ class Admit < GXTModel
   key :current_score, Integer
   
   key :note, String
+  key :case_no, String
   key :room_no, String
   key :bed_no, String
    include Mongoid::Timestamps
@@ -554,6 +558,16 @@ class Setting  < GXTModel
   key :value, String
   include Mongoid::Timestamps
   
+  
+  def self.set name, value
+    record = self.where(:name=>name).first
+    unless record
+      record = self.create :name=>name, :value=>default
+    else
+      record.update_attributes :value=>value
+    end
+  end
+  
   def self.get name, default=nil
       record = self.where(:name=>name).first
       unless record
@@ -828,6 +842,16 @@ class AdmitController < GXTDocument
           end
           
           admit.nurse_records.create :start_time=> Time.now , :description=>"#{score.name} v.#{score.version} = #{params[:data][:score]} : #{score.description}"
+
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
           
          
        end

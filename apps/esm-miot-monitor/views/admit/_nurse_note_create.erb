@@ -17,6 +17,18 @@ end
 if request.post?
 	
 record = admit.nurse_records.create params[:record] 
+
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+				   
+				   
+
 	
 %><%= inline(this,:'_nurse_note_partial') %><br/>
 

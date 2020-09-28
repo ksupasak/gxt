@@ -1,0 +1,220 @@
+			
+			
+			<%
+			
+				
+			    station = Station.find params[:id]
+			    zone = station.zone
+			
+				admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
+			    
+				
+				
+				
+				
+				console = []
+				
+				
+				
+				if admit 
+				
+				nurse_records = admit.nurse_records
+				
+				for m in nurse_records
+				
+					console << [m.start_time, :nurse, m]
+					
+				end
+				
+				records = admit.records
+				for m in records
+				
+					console << [m.created_at, :record, m]
+					
+				end
+				
+				records = admit.logs.where(:status=>'COMPLETED').all
+				for m in records
+				
+					console << [m.stamp, :log, m]
+					
+				end
+				
+				
+				# msgs = Message.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
+			
+				msgs = admit.messages.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
+				
+				for m in msgs
+				
+					console << [m.created_at, :msg, m]
+					
+				end
+				
+				end
+			
+				console.sort!{|a,b| b[0]<=>a[0] }
+			
+			
+			%>
+		
+			
+			<div class="container">
+			    <div class="row">
+			        <div class="col-12">
+			            <div class="panel panel-primary" id="panel-primary">
+			                <div class="panel-heading" id="accordion">
+			                    <span class="glyphicon glyphicon-comment"></span> 
+			                    <div class="btn-group pull-right">
+			                        <!-- <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+			                            <span class="glyphicon glyphicon-chevron-down"></span>
+			                        </a> -->
+			                    </div>
+			                </div>
+			            <div class="panel-collapse " id="collapseOne">
+			                <div class="panel-body" id="panel-body">
+			                    <ul class="chat" id="chat">
+									
+		<% for item in console 
+		
+						
+						i = item[2]
+						
+						if item[1]==:msg
+		
+		%>
+						
+			                        <li class="left clearfix">
+										<span class="chat-img pull-left">
+			                            <img src="http://placehold.it/50/55C1E7/fff&text=<%=i.sender[0..2].upcase%>" alt="User Avatar" class="img-circle" />
+			                        	</span>
+			                            <div class="chat-body clearfix">
+			                                <div class="msg-header" style="">
+			                                    <strong class="primary-font"><%= i.sender %></strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
+			                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.ts).strftime("%H:%M")%></small>
+			                                </div>
+			                                <p>
+					  						
+					  						<% if i.type == 'image' 
+						
+					  							url  = "/miot/img/svg/aoc-icon.svg"
+					  							url = "../Message/content?id=#{i.id}" 
+					  						%>
+					  						<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a></center>
+					  						<% elsif i.type == 'voice' 
+												url = "../Message/content?id=#{i.id}" 
+											%>
+											<audio controls>
+											  <source src="<%=url%>" type="audio/mpeg">
+											Your browser does not support the audio element.
+											</audio>
+
+												
+											<% else %>
+					  						<p><%=i.content%></p>
+					  						<% end %>
+			                                </p>
+			                            </div>
+			                        </li>
+	    	<% elsif item[1]==:nurse %>    
+					 	    <li class="left clearfix">
+							<span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FCBA32/fff&text=NR" alt="User Avatar" class="img-circle" />
+                        	</span>
+                            <div class="chat-body clearfix">
+                                <div class="msg-header"  style="">
+                                    <strong class="primary-font">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
+                                </div>
+                                <p>
+		  							
+							
+		  						<p><%=i.description%></p>
+		  					
+                                </p>
+                            </div>
+						</li>
+	    	<% elsif item[1]==:med %>    
+					 	    <li class="left clearfix">
+							<span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/A01111/fff&text=MED" alt="User Avatar" class="img-circle" />
+                        	</span>
+                            <div class="chat-body clearfix">
+                                <div class="msg-header"  style="">
+                                    <strong class="primary-font">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
+                                </div>
+                                <p>
+		  							
+							
+		  						<p><%=i.inspect%></p>
+		  					
+                                </p>
+                            </div>
+						</li>						
+	    	<% elsif item[1]==:log %>    
+					 	    <li class="left clearfix">
+							<span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/2D39DF/fff&text=LOG" alt="User Avatar" class="img-circle" />
+                        	</span>
+                            <div class="chat-body clearfix">
+                                <div class="msg-header"  style="">
+                                    <strong class="primary-font">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
+                                </div>
+                                <p>
+		  							
+							
+		  						<p><%=i.name%></p>
+		  					
+                                </p>
+                            </div>
+						</li>			
+	    	<% elsif item[1]==:record %>    
+			
+	 	    <li class="left clearfix">
+			<span class="chat-img pull-right">
+            <img src="http://placehold.it/50/05B706/fff&text=VS" alt="User Avatar" class="img-circle" />
+        	</span>
+					 
+                            <div class="chat-body clearfix">
+                                <div class="msg-header">
+                                    <strong class="primary-font">Vital Sign</strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
+                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
+                                </div>
+                                <p>
+		  							
+							
+		  						<p>PR : <%=i.pr%>, SPO2 : <%=i.spo2%>, NIBP : <%=i.bp%> , TEMP : <%=i.temp%></p>
+		  					
+                                </p>
+                            </div>
+						</li>			
+		 	
+	 
+	  <% end %>
+		 
+   <% end %>
+			                  
+			                    </ul>
+			                </div>
+			                <!-- <div class="panel-footer">
+			                    <div class="input-group">
+			                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+			                        <span class="input-group-btn">
+			                            <button class="btn btn-warning btn-sm" id="btn-chat">
+			                                Send</button>
+			                        </span>
+			                    </div>
+			                </div> -->
+			            </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<script>
+				// var objDiv = document.getElementById("panel-body");
+	// 			objDiv.scrollTop = objDiv.scrollHeight;
+			</script>
+			

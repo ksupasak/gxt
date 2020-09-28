@@ -336,6 +336,11 @@ MSG
                    
                    station_id = station.id if station
                    
+                   admit_id = nil
+                   admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
+                   admit_id = admit.id if admit
+                   
+                   
                    if i['media_key']
                      media = zello.retrieve i['media_key']
                      puts "Sender #{i['sender']} To #{i['recipient']}  Type #{i['type']} Path #{media['url']}"
@@ -356,13 +361,13 @@ MSG
 
             
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
 
                    else
                      puts "Sender #{i['sender']} To #{i['recipient']} Text #{i['text']}  "
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id, :admit_id=>admit_id
                      
                      
                    end
