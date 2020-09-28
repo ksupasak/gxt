@@ -33,14 +33,14 @@
     <section>
         <div class="containerx">
                 <header class=" d-flex align-items-center title-fill">
-                    <div class="col">
-                        <p class="mb-0"><strong><%=link_to zone.name, "index"%></strong></p>
-                        <small><%= room.name %></small>
+                    <div class="col d-flex align-items-center justify-content-between">
+                        <span class="mb-0"><strong><%=link_to zone.name, "index"%></strong></span>
+                        <h1 class=""><%= room.name %></h1>
 						<span style="float:right;text-align:right">
 						<!-- วันที่  -->
 						<%=Time.now.strftime("%a %d %b, %Y")%> 
 						<!--เวลา -->
-						<br><%= Time.now.strftime("%H:%M:%S")%> 
+						<%= Time.now.strftime("%H:%M:%S")%> 
 						</span>
                     </div>
                     <!--<div class="col d-flex justify-content-end">
