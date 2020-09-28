@@ -652,3 +652,20 @@ a {
 .font-score {
   font-size: 3em;
 }
+.nlist {
+  border: 1px solid var(--normal-text);
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
+}
+.nlist:hover{
+  border: 1px solid var(--btn-green-second);
+  color:var(--btn-green-second);
+}
+.nlist-sel{
+  border: 1px solid var(--btn-green-main);
+  color:var(--btn-green-main);
+}
+.nitem{
+  text-align: left;
+}
