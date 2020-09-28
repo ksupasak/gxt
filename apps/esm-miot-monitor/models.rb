@@ -613,6 +613,10 @@ class DataRecord  < GXTModel
   key :temp, Float
   key :co2, Integer
   
+  key :eye, String
+  key :motor, String
+  key :verbal, String
+  key :pupil, String
 
   
   key :stamp, Time
