@@ -207,12 +207,14 @@ station = Station.find ambu.station_id
 				</div>
 			    
 				<div class="col-12">
-					<span class="label">Conf</span>
+					<!-- <a href="#" src="https://pcm-life.com/web2/#<%=ambu.name%>" id="assistant" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a> -->
+					
+					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a>
 				 <div id="">
 				 	<%#link_to 'Button', "javascript:alert('ok')", :class=>'btn btn-success'%>
 				 </div>
 				</div>
-				
+		
 				
 				<div class="col-6  " style="display:none">
 					<span class="label">Note</span>
@@ -487,4 +489,35 @@ station = Station.find ambu.station_id
 	
 	})
 </script>
+	<iframe id="iframe" src="" width="300" height="480" style="display:none;border:1px solid gray;margin-top:10px" >
+	</iframe>
+	<a href="" id="back"  style="display:none;">Back</a>
 	
+	<script>
+		
+		$('#back').click(function(event){
+			$('#iframe').css("display","none")
+			$('#back').css("display","none")
+			$('#iframe').attr('src',"");
+			$('#iframe').removeAttr('status');
+			javascript:window.scrollTo(0, 0);
+			 event.preventDefault()
+		});
+		
+		$('#assistant').click(function(event){
+			if($('#iframe').attr('status')!='on'){
+				$('#iframe').attr('src',"https://pcm-life.com/web2/#<%=ambu.name%>");
+				$('#iframe').css("display","table")
+				$('#back').css("display","table")
+			    $("html, body").animate({ scrollTop: $(document).height() }, 600);
+			
+				$('#iframe').attr('status','on');
+			}else{
+				$('#iframe').css("display","none")
+				$('#back').css("display","none")
+				$('#iframe').attr('src',"");
+				$('#iframe').removeAttr('status');
+			}
+			 event.preventDefault()
+		})
+	</script>
