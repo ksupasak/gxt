@@ -101,6 +101,15 @@ module EsmMiotMonitor
         
         puts params.inspect 
         
+        
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+        
       rescue =>error
         error.backtrace 
       end

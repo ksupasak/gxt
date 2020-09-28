@@ -314,14 +314,18 @@ MSG
                    
                    msg = nil
                    
-                   sz = i['recipient'].split('|')
+                   sz = i['recipient'].split('.')
                    zone = nil
                    station = nil
                    if sz.size==1
-                     staton = Station.where(:name=>sz[0]).first
+                     station = Station.where(:name=>sz[0]).first
                      if station
                        zone = station.zone
                      end
+                   elsif sz.size==3 and sz[2] == name
+                     zone = Zone.where(:name=> /#{sz[1]}/i).first
+                     
+                     station = Station.where(:name=>sz[0],:zone_id=>zone.id).first
                    else
                      zone = Zone.where(:name=>sz[0]).first
                      unless zone
@@ -398,7 +402,9 @@ MSG
 
 
             rescue Exception=>e
-              
+                  
+              puts e.inspect 
+                  
                  app.settings.zello_map.delete name
               
               

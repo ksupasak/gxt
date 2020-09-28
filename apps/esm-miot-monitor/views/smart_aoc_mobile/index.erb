@@ -12,11 +12,33 @@ end
 	ambulances = Ambulance.where(:zone_id=>@current_zone.id).all
 	
 	
-%><br/>
+%><br/><br/>
 <center>
-<h3>AOC-LIFE : Mobile</h3>
+<h3 class="header">Smart AOC : Mobile</h3>
 </center>
 <hr/>
-<% for i in ambulances %>
-<%=link_to i.name, "show?id=#{i.id}",:class=>'btn btn-success col-12',:style=>''%><br/><br/>
+
+<% for i in ambulances 
+
+admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
+
+cls = 'btn-success'
+
+
+name = "#{i.name} #{i.plate_license}"
+
+if admit
+	name = "#{i.name} #{i.plate_license} : #{admit.case_no}"
+	cls = 'btn-warning' 
+end
+
+%>
+<div class="row">
+<div class="col-12">
+	<center>
+<%=link_to "#{name}", "show?id=#{i.id}",:class=>"btn #{cls}",:style=>''%><br/><br/>
+</center>
+</div></div>
 <% end %>
+<hr/>
+<center>  <%=link_to 'Back', "../SmartAOC/index",:class=>'nav-link' %></center>

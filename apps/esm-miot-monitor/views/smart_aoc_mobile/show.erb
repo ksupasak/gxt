@@ -108,7 +108,7 @@ station = Station.find ambu.station_id
 	<div class="row">
 		<div class="col-12 ">
 		<div class="alert alert-success">
-		Case No : <v><%=admit.an%></v> HN : <v><%=patient.hn%> </v> <br/>
+		Case No : <v><%=admit.case_no%></v> HN : <v><%=patient.hn%> </v> <br/>
 		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
 		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
 		
@@ -208,7 +208,15 @@ station = Station.find ambu.station_id
 		<textarea name="note" style="height:6em;width:100%"></textarea>
 		
    	  	<input type="submit" class="btn btn-primary"  name="Submit" value="Submit"/>
-		
+            <a href="#" class="btn btn-submit d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
+            <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
+            ถ่ายรูป
+        </a>
+	    <script>
+		$('#image_capture_btn').click(function(){
+		device_interface.image_capture(window.location.origin+"<%=url_for("SmartAOCMobile/upload?admit_id=#{admit.id}")%>", "key")
+	    })
+		</script>
 		</form>
 		
 		</div>

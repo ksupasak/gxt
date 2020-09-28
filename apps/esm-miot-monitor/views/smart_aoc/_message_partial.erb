@@ -43,7 +43,9 @@
 				
 				# msgs = Message.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
 			
-				msgs = admit.messages.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
+				# msgs = admit.messages.where(:recipient=>"#{station.name}.#{zone.name.downcase}.#{@context.settings.name}").limit(10).sort(:created_at=>-1).all.reverse
+				msgs = admit.messages.desc(:created_at).all :limit=>10
+				
 				
 				for m in msgs
 				
@@ -57,7 +59,9 @@
 			
 			
 			%>
+		<%= puts msgs.inspect 
 		
+		%>
 			
 			<div class="container">
 			    <div class="row">
@@ -75,15 +79,15 @@
 			                <div class="panel-body" id="panel-body">
 			                    <ul class="chat" id="chat">
 									
-		<% for item in console 
+		<% while (item = console.shift)!=nil
 		
 						
 						i = item[2]
 						
-						if item[1]==:msg
+				if item[1]==:msg
 		
 		%>
-						
+									
 			                        <li class="left clearfix">
 										<span class="chat-img pull-left">
 			                            <img src="http://placehold.it/50/55C1E7/fff&text=<%=i.sender[0..2].upcase%>" alt="User Avatar" class="img-circle" />
@@ -97,10 +101,25 @@
 					  						
 					  						<% if i.type == 'image' 
 						
-					  							url  = "/miot/img/svg/aoc-icon.svg"
+												
+											
+						
+					  							# url  = "/miot/img/svg/aoc-icon.svg"
 					  							url = "../Message/content?id=#{i.id}" 
 					  						%>
-					  						<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a></center>
+					  						
+											<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+											
+											<%
+												while  console.first != nil and console.first[1]==:msg and console.first[2].type=='image'
+													item = console.shift
+													i = item[2]
+													url = "../Message/content?id=#{i.id}" 
+											%>
+											<a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+											<% end %>
+											</center>
+											
 					  						<% elsif i.type == 'voice' 
 												url = "../Message/content?id=#{i.id}" 
 											%>
@@ -110,7 +129,7 @@
 											</audio>
 
 												
-											<% else %>
+											<% else %>fff
 					  						<p><%=i.content%></p>
 					  						<% end %>
 			                                </p>

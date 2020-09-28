@@ -1,4 +1,5 @@
 <%= inline(this,:'../home/_monitor') %>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
 <style>
 	li.menu{
 		padding:5px;
@@ -56,6 +57,37 @@
 	.ph{
 		height:8vh;
 	}
+	
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.panel-body::-webkit-scrollbar {
+	  display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.panel-body {
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+	}
+	
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	body::-webkit-scrollbar {
+	  display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	body {
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+	}
+	
+	.disable{
+		background:gray;
+		opacity:0.7;
+		border:0px;
+	}
+	
+	
+	
 </style>
 
 <%
@@ -87,7 +119,7 @@ ambulances = Ambulance.all
 
 				%>
 
-<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+
 
 	
 <div class="container-fluid">
@@ -96,7 +128,7 @@ ambulances = Ambulance.all
 	<div class="col-4 col-md-2 col-xl-2  d-none d-sm-none d-md-block" >
 		
 		<b>Request</b>
-		<span style="float:right"><%= link_to "+ Case", "create", :class=>'btn btn-pcm'%><br/></span>
+		<span style="float:right"><%= link_to "+ Case", "create", :class=>'btn btn-success'%><br/></span>
 		
 		
 		<ul>
@@ -416,15 +448,15 @@ ambulances = Ambulance.all
 			<center>
 				
 				
-			<%=link_to 'Note',"#", :class=>'note_btn btn btn-pcm',:style=>"line-height:3em;width:80px" %>
+			<%=link_to 'Note',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"line-height:3em;width:80px" %>
 			
-			<%=link_to 'Chart',"#", :class=>'chart_btn btn btn-warning',:style=>"line-height:3em;width:80px" %>
+			<%=link_to 'Chart',"#", :class=>'chart_btn btn btn-warning  context disable',:style=>"line-height:3em;width:80px" %>
 			
-			<%=link_to 'Call',"../Admit/index", :class=>'btn btn-info',:style=>"line-height:3em;width:80px" %>
+			<%=link_to 'Call',"#", :class=>'call_btn btn btn-info  context disable',:style=>"line-height:3em;width:80px" %>
 				
-			<%=link_to 'Summary',"../Admit/index", :class=>'btn btn-success',:style=>"line-height:3em;width:120px" %>
+			<%=link_to 'Summary',"#", :class=>'summary_btn btn btn-success context disable', :style=>"line-height:3em;width:100px" %>
 			
-			<%=link_to 'Discharge',"../Admit/index", :class=>'btn btn-danger',:style=>"line-height:3em;width:120px" %>
+			<%=link_to 'Discharge',"#", :class=>'discharge_btn btn btn-danger  context disable',:style=>"line-height:3em;width:100px" %>
 		
 		
 		
@@ -672,6 +704,35 @@ ambulances = Ambulance.all
 						
 					})
 					
+					$('.discharge_btn').click(function(){
+						
+						window.location = '../Admit/discharge?id='+selected_admit_id
+						
+					})
+					
+					$('.summary_btn').click(function(){
+						
+						window.open('../Admit/summary?id='+selected_admit_id)
+						
+					})
+					
+					
+					$('.call_btn').click(function(){
+						
+						// $('#call-'+selected_ambu).click()
+						
+						$('.callEnd').click();
+						setTimeout(function(){ 
+
+								$('#resourceId').val(selected_station_name)
+								$('.callStart').click();
+
+							}, 1500);
+							event.preventDefault()
+						
+					})
+					
+					
 					
 					
 					$('.note_btn').click(function(event){	
@@ -741,7 +802,8 @@ ambulances = Ambulance.all
 						$('.station .value').html('-')
 						$(".ambu-row").removeClass('selected');
 						$(".ambu-<%=i.id%>").addClass('selected');
-					
+						
+						
 						if(selected_station_name!=null){
 							$('.context-panel').removeClass('station-'+selected_station_name)
 							$('.context-header').removeClass('station-'+selected_station_name)
@@ -752,8 +814,13 @@ ambulances = Ambulance.all
 						selected_admit_id = null
 						<% if admit %>
 						selected_admit_id = "<%=admit.id%>"
-						<% end %>
 						
+						$('.context').removeClass('disable')
+						
+						<% else %>
+						$('.context').addClass('disable')
+						
+						<% end %>
 						selected_station_id = null
 						<% if station %>
 						selected_station_id = "<%=station.id%>"
