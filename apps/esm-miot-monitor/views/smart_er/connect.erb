@@ -104,7 +104,7 @@
 										<img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="E">
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="E" title="Eye Opening">
 									-
 									</div>
 								</div>
@@ -120,7 +120,7 @@
 										<img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="M">
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="M" title="Motor response">
 									-
 									</div>
 								</div>
@@ -136,7 +136,7 @@
 										<img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp"  type="R">
+									<div class="col-8 n-entry v-under  temp"  name="temp"  type="V" title="Verbal Response">
 									-
 									</div>
 								</div>
@@ -152,7 +152,7 @@
 										<img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="P">
+									<div class="col-8 n-entry v-under  temp"  name="temp" type="P" title="Pupil">
 									-
 									</div>
 								</div>
@@ -498,13 +498,21 @@
 
 	function genList(t,v){
 		let map = new Map([
-			['E',['E1,ไม่ลืมตาเลย(none)','E2,ลืมตาเมื่อเจ็บ(pain)','ลืมตาเมื่อเรียกชื่อ(speech)','ลืมตาเอง(spontaneous)']],
-			['M',['M1,ไม่มีการเคลืิ่อนไหว','M2,แขนและขาเหยียดผิดปกติ','M3,แขนงอเข้าหาลำตัว ขา 2ข้างงอ','M4,เมื่อทำให้เจ็บชักแขนขาหนี','M5,ไม่ทำตามคำสั่งแต่ทราบตำแหน่งที่เจ็บ','M6,เคลื่อนไหวตามคำสั่งได้ถูกต้อง']],
+			['E',['E1,ไม่ลืมตาเลย(none)','E2,ลืมตาเมื่อเจ็บ(pain)','E3,ลืมตาเมื่อเรียกชื่อ(speech)','E4,ลืมตาเอง(spontaneous)']],
+			['M',['M1,ไม่มีการเคลื่อนไหว','M2,แขนและขาเหยียดผิดปกติ','M3,แขนงอเข้าหาลำตัว ขา 2ข้างงอ','M4,เมื่อทำให้เจ็บชักแขนขาหนี','M5,ไม่ทำตามคำสั่งแต่ทราบตำแหน่งที่เจ็บ','M6,เคลื่อนไหวตามคำสั่งได้ถูกต้อง']],
 			['V',['V1,ไม่ส่งเสียง','V2,ส่งเสียงไม่เป็นคำพูด ครวญคราง','V3,ส่งเสียงเป็นคำๆ','V4,พูดได้เป็นประโยคแต่สับสน','V5,พูดตอบคำถามได้ปกติ/ถูกต้อง']],
 			['P',['R-Reaction,รูม่านตาหดเล็กลงทันที','S-Sluggish,รูม่านตาจะหดเล็กลงช้าๆกว่าปกติ','N-No reaction,รูม่านตาไม่มีปฏิกิริยาต่อแสงไฟ','C-Close,ตาบวมปิด']],
 		])
 		h = map.get(t)
-		return h
+		let list = ''
+		h.forEach((v,i)=>{
+			try{
+				text = v.split(',') 
+				list += '<div class="row nlist"><div class="col-5">'+text[0]+'</div><div class="col-7 nitem">'+text[1]+'</div></div>'
+			}catch(e){}
+		})
+
+		return list
 	}
     
     $(document).ready(function(){
@@ -518,9 +526,13 @@
 			$(".display-hn").html(v)
 			t = $(this).attr('type')
 			current_modal = $(this).attr('name')
-            mname = $(this).parent("div").find(".l-entry").html()
-            $("#neuroModalTitle").html($(this).attr('label'))
+			title = $(this).attr('title')
+            $("#neuroModalTitle").html(title)
 			$("#neuroBody").html(genList(t))
+			$(".nlist").click(function(){
+				$(".nlist").removeClass("nlist-sel")
+				$(this).addClass("nlist-sel")
+			})
             $("#neuroModal").modal('toggle')
         })
 
