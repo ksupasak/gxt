@@ -9,6 +9,13 @@ admit = Admit.find(params[:admit_id])
 if request.post?
 	
 record = admit.medication_records.create params[:record] 
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
 	
 %><%= inline(this,:'_medication_partial') %><br/>
 

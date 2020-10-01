@@ -16,6 +16,13 @@ last = DataRecord.where(:admit_id=>admit.id).last
 		width:100%;
 		
 	}
+	.param-value2{
+		font-size:0.8em;
+		text-align:center;
+		width:100%;
+		white-space:wrap;
+		color: #42B7AB;
+	}
 </style>
 
 
@@ -62,21 +69,33 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p class="pl-1">Eye Opening</p>
+							<center>
+								<span class="eye param-value2" ><%=last.eye if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p class="pl-1">Motor Response</p>
+							<center>
+								<span class="motor param-value2" ><%=last.motor if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm-6 col-md-3 mb-2 ">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p class="pl-1">Verbal Response</p>
+							<center>
+								<span class="verbal param-value2" ><%=last.verbal if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	                <div class="col-sm-6 col-md-3 mb-2 ">
 	                    <a href="#" class="btn vital-card text-left">
 	                        <p class="pl-1">Pupil</p>
+							<center>
+								<span class="pupil param-value2" ><%=last.pupil if last%></span>
+							</center>
 	                    </a>
 	                </div>
 	            </div>

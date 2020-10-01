@@ -1,0 +1,859 @@
+<%
+
+if request.post?
+
+	p = params[:patient]
+	
+	tags = p['name'].split(" ")
+	
+	p.merge! :first_name=>tags[0], :last_name=>tags[1]
+
+	patient = Patient.create p
+	
+	station = Station.find params[:station_id]
+	
+	ad = {:zone_id=>session[:current_zone], :note=> params[:note], :case_no=>params[:case_no], :station_id=>station.id, :patient_id=> patient.id, :zone_id=>station.zone.id, :ambulance_id=>params[:ambulance_id], :admit_stamp=>Time.now, :status=>'Admitted' }
+	
+	ambu = Ambulance.find params[:ambulance_id]
+	score = Score.first
+	ad.merge! :score_id=>score.id if score
+	
+	admit = Admit.create ad
+	
+	last = params[:case_no].split("-")[-1].to_i
+	Setting.set(:aoc_code_order,last.to_s)
+	
+	
+	if params[:location2] == ""
+		
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
+		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+	
+	else
+	
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
+		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
+		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2 #, :address=>params[:address], :latlng=>params[:location]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4 , :address=>params[:address2], :latlng=>params[:location2]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4 #, :address=>params[:address2], :latlng=>params[:location2]
+		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+	
+	
+	
+	end
+	
+	
+	
+    # key :status, String
+   #  key :latlng, String
+   #  key :note, String
+   #  key :stamp, Time
+   #  key :sort_order, Integer
+	
+	
+	
+	
+%>
+    <meta http-equiv = "refresh" content = "2; url = aoc?admit_id=<%=admit.id%>" />
+<%
+else 
+	key = Setting.get :google_map_key
+	ambulances = Ambulance.all
+
+%>
+<style>
+	input{
+		 border-radius: 5px;
+	}
+	.distance{
+		font-size:1.4em;
+	}
+	.duration{
+		font-size:1.4em;
+	}
+	
+	.total_distance{
+		font-size:1.4em;
+	}
+	.total_duration{
+		font-size:1.4em;
+	}
+	
+	.ambu input{
+		background:none;
+	}
+	.small {
+		width:80px;
+	}
+</style>
+<form action="create" method="post" enctype="multipart/form-data">
+
+<div class="" style="display:block;position:absolute;top:10px;z-index:99;left:20%;right:20%;color:#fff;	background-color: rgb(119, 138, 158);margin-left:auto;margin-right:auto;padding:20px;border:1px solid #ccc;border-radius: 5px;">
+	
+	<div class="row patient-panel" style="">
+	
+		<div class="col-3">
+		ชื่อ-สุกล : <br/><input type="text" name="patient[name]" id="patient_name" value="" placeholder="Patient Name" style="width:100%;background:#ffffaa"> 
+		</div>
+		<div class="col-3">
+		เลขบัตรประจำตัวประชาชน : <br/><input type="text" name="patient[public_id]" id="patient_hn" value="" placeholder="เลขที่บัตรประชาชน"> 
+		</div>
+		<div class="col-2">
+		HN : <br/><input type="text" name="patient[hn]" id="patient_hn" value="" placeholder="HN" class="small"> 
+		</div>
+		<div class="col-1">
+		เพศ : <br/><input type="text" name="patient[gender]" id="gender" value="" placeholder="Sex" class="small"> 
+		</div>
+		<div class="col-1">
+		DOB : <br/><input type="text" name="patient[dob]" id="patient_dob" value="" placeholder="DOB" class="small"> 
+		</div >
+		<div class="col-1">
+		อายุ : <br/><input type="text" name="patient[age]" id="patient_age" value="" placeholder="AGE" class="small"> 
+		</div>
+	
+		<div class="col-6">
+		อาการ : <br/><input type="text" name="note" id="admit_note" value="" placeholder=" อาการ และ อื่น ๆ " style="width:100%;background:#ffffaa"> 
+		</div>
+	
+		<div class="col-3">
+		ชื่อผู้ติดต่อ : <br/><input type="text" name="patient[contact_name]" id="contact_name" value="" placeholder="Contact Name" style="background:#ffffaa"> 
+		</div>
+		<div class="col-3">
+		หมายเลขติดต่อ : <br/><input type="text" name="patient[contact_phone]" id="contact_phone" value="" placeholder="Contact Phone" style="background:#ffffaa"> 
+		</div>
+	
+		
+		<div class="col-3">
+		<!-- Location :  <input type="text" name="location" id="location" value="" placeholder="Lat,Long">  -->
+		</div>
+	</div>
+	
+	<div class="row search-panel" style="border:0px solid" >
+	<%
+	
+	tag = format("%s-%s",Time.now.strftime("%y%m"), Setting.get(:aoc_code,'0000')) 
+	
+	order_tag = Setting.get(:aoc_tag,tag)
+	if order_tag != tag
+		Setting.set(:aoc_code_order,'0')
+	end	
+	
+	order_no = Setting.get(:aoc_code_order,'0').to_i+1
+	
+		
+		
+	number =  format("%s-%s-%04d",Time.now.strftime("%y%m"), Setting.get(:aoc_code,'0000'),order_no) 
+	
+		
+	%>
+	
+	<div class="col-12">
+	<div class="row">
+	<div class="col-2">	
+	No : <br/><input type="text" name="case_no" id="case_no" value="<%=number%>" placeholder="Case No" style="width:100%">
+	</div>
+
+	<div class="col-4">	
+	Address (A) : <%=link_to '[-]', '#', :class=>"address-btn " %> <br/><input type="text" name="address" id="address" value="" placeholder="ที่หมาย" style="width:100%"> 
+	<input type="hidden" name="location" id="location" value="" placeholder="Lat,Long" style="width:/00px"> 
+	</div>
+	
+	<div class="col-3">	
+	Address (B) : <%=link_to '[-]', '#', :class=>"address-btn" %> <br/><input type="text" name="address2" id="address2" value="" placeholder="นำส่ง" style="width:100%">
+	<input type="hidden" name="location2" id="location2" value="" placeholder="Lat,Long" style="width:/00px">  
+	</div>
+	
+	<div class="col-3">	<br/>
+	<%=link_to 'Next', "\#", :class=>'btn btn-success next-button' %>
+	<%=link_to 'Reset', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
+	<%=link_to 'Back', "index", :class=>'btn', :style=>"color:white"%>
+	
+	</div>
+	</div>
+	
+	
+	
+	
+	</div>
+	</div>
+
+	
+	
+	<div class="row ambu-panel" style="display:none">
+		
+	
+		
+		<div class="col-12"><br/><br/>
+		<table class="table">
+			<tr><td><b>Ambulance</b></td>
+				<td align="left">A (ที่หมาย)</td>
+				<td align="left">A-B (รวม)</td>
+				<td></td>
+			</tr>
+				
+		<% for i in ambulances 
+		
+		 admit = Admit.where(:status=>'Admitted', :ambulance_id=>i.id).first
+
+		%>
+			<tr class="ambu-<%=i.id%>">
+				<td><%=i.name%><br/><%=i.plate_license%><br/><%=i.phone%></td>	
+				<!-- <td style="font-size:0.7em;display:none" >
+				<span class="last_address" style="width:300px;display:block"><%=i.last_address%></span>
+				 LatLng: <%=i.last_location%></td> <td ></td>  -->
+				<td ><span class="distance">-</span><br/><span class="duration">-</span></td> 
+				<td ><span class="total_distance">-</span><br/><span class="total_duration">-</span></td> 
+				<td>
+				<% unless admit %>	
+					<%=link_to 'Select', "#", :class=>'btn btn-success select-ambu', :ambu_id=>i.id %>
+				<% else %>
+				
+					<%=link_to 'ALLOCATED', "../Admit/show?id=#{admit.id}",:target=>'_blank', :class=>'btn btn-warning', :ambu_id=>i.id %>
+					
+				<% end %>
+				</td>
+			</tr>
+		<% end %>
+		</table>
+		</div>
+		
+		
+	</div>
+	
+	
+	
+	
+	<div class="row ambu-station" style="display:none">
+
+	<%
+		
+	ambulances = Ambulance.all
+	stations = Station.all
+		
+	%>
+	<div class="col-12">
+	
+	<div class="row ambu">
+	
+			<div class="col-3">
+			Ambulance : <br/>
+			
+			<select name="ambulance_id" id="ambulance_id"  style="width:200px;padding:10px;background:#FFF">
+		  	<% for i in ambulances.sort{|a,b| a.name<=>b.name} %>
+			<option value="<%=i.id%>"><%=i.name%> <%=i.plate_license%> </option>
+			<% end %>
+			</select>
+			
+			
+			</div>
+	
+			<div class="col-3">
+			Ambulance Phone : <br/><input type="text" name="ambulance[phone]" id="ambu_phone" value="" readonly="readonly" style="background:none" placeholder="-"> 
+			</div>
+			
+			<div class="col-3">
+			Driver : <br/><input type="text" name="ambulance[driver]" id="driver_name" value="" readonly="readonly"  placeholder="-"> 
+			</div>
+			
+			<div class="col-3">
+			Driver Phone : <br/><input type="text" name="ambulance[driver_phone]" id="driver_phone" value="" readonly="readonly"  placeholder="-"> 
+			</div>
+			
+			
+			<div class="col-3">
+			SAS Unit : <br/>
+			
+			<select name="station_id" id="station_id" style="width:200px;padding:10px;background:#FFF">
+			<option vlaue=""></option>
+		  	<% for i in stations.sort{|a,b| a.name<=>b.name }%>
+			<option value="<%=i.id%>"><%=i.zone.name if i.zone %> : <%=i.name%> </option>
+			<% end %>
+			</select>
+			
+			
+			</div>
+			
+			
+			
+			<div class="col-3">
+			Estimate Time Arrival : <br/><input type="text" name="arrival_time" id="arrival_time" value="" readonly="readonly"  placeholder="-"> 
+			</div>
+			
+			
+			<div class="col-3">
+			Estimate Distance : <br/><input type="text" name="arrival_distance" id="arrival_distance" value="" readonly="readonly"  placeholder="-"> 
+			</div>
+			<div class="col-3">
+				<br/>
+			<input type="submit"  id="patient_name" value="Submit"  class="btn btn-success" style="background:green"> 
+			<%=link_to 'Cancel', "\#", :class=>'btn btn-danger cancel-button',:style=>"display:none" %>
+			
+			</div>
+	</div>
+	
+	
+	</div>
+	
+	
+	<div class="col-12">
+
+	</div>
+	
+	
+	
+	</div>
+	
+	
+	
+	
+	
+</div>
+
+
+
+<script>
+
+	
+</script>
+
+
+
+	<div class="map">
+			<div class="row" >
+				<div class="col-12  my-2" >
+				<style>
+				       /* Set the size of the div element that contains the map */
+				      #map {
+						height:90vh;
+						width:100%;
+				   
+				       }
+				    </style>
+
+				    <!--The div element for the map -->
+				    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
+				    <script>
+						
+				var ambulances = <%=ambulances.to_json.html_safe%>		
+						
+						
+				// Initialize and add the map
+				var marker = null;
+				var marker2 = null;
+				
+				var map = null;
+				var geocoder =null;
+				var position = null;
+				var position2 = null;
+				
+			    var directionsService = null;
+			    var directionsDisplay = null;
+				var waypoints = null;
+
+	
+				$('.select-ambu').click(function(){
+					
+					
+					$('.search-panel').slideUp(300);
+					
+					$('.ambu-panel').slideUp(300);
+					$('.ambu-station').slideDown(300);
+					$('.cancel-button').show();
+					waypoints = Array();
+					
+					
+					ambu_id = $(this).attr('ambu_id')
+						
+				    var latlng = {lat: parseFloat(position.lat()), lng: parseFloat(position.lng())};
+					latlng_txt = ""+position.lat()+","+position.lng();
+					
+					wp = ""
+					// console.log(position2)
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+					
+					latlng_txt = latlng_txt_2
+					}
+					
+					$.ajax({
+					  url: "distance?l="+latlng_txt+"&ambu="+ambu_id+"&wp="+wp,
+					  context: document.body
+					}).done(function(data) {
+				  
+				  	  result = JSON.parse(data)
+						console.log(result)
+						
+						if(result['status']=='200 OK'){
+							
+						
+						
+						drawPath(directionsService, directionsDisplay,result['start_location'],result['end_location']);
+						
+						$('#ambulance_id').val(result['id'])
+						
+						$('#ambu_phone').val(result['ambu']['phone'])
+
+						$('#station_id').val(result['ambu']['station_id'])
+						// $('#ambu_phone').val(result['ambu']['phone'])
+						
+						
+						$('#arrival_time').val(result['duration']['text'])
+						$('#arrival_distance').val(result['distance']['text'])
+							
+							// $('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
+	// 						$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+	// 						$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
+							
+						}else{
+							$('.ambu-'+result['id']).hide()
+						}
+							
+					  
+				  
+					});
+				
+				
+					
+					
+					
+					
+					
+					
+				})
+	
+				$('.next-button').click(function(){
+					// $('.patient-panel').slideDown(300);
+					$('.ambu-panel').slideDown(300);
+					$('.cancel-button').show();
+		
+		
+				})
+	
+	
+				$('.cancel-button').click(function(){
+					 $('.search-panel').slideDown(300);
+					$('.ambu-panel').slideUp(300);
+					$('.ambu-station').slideUp(300);
+					$('.cancel-button').hide();
+					$('#address').val("");
+					$('#location').val("");
+					$('#address2').val("");
+					$('#location2').val("");
+					
+					directionsDisplay.set('directions', null);
+				})
+	
+				$(document).ready(function(){
+					$('#address').focus()
+				})
+	
+
+				function initMap() {
+				  // The location of Uluru
+				  var uluru = {lat: 15.8700, lng: 100.9925};
+				  // The map, centered at Uluru
+				  map = new google.maps.Map(
+				      document.getElementById('map'), {zoom: 16, center: uluru});
+				  // The marker, positioned at Uluru
+				  marker = new google.maps.Marker({position: uluru, map: map, draggable:true});
+				  marker2 = new google.maps.Marker({position: uluru, map: map, draggable:true});
+				  
+				  google.maps.event.addListener(marker, 'dragend', function() { 
+				  
+				  
+				  	position = marker.position
+					
+					updatePosition();
+					 
+				  	$('.next-button').click();
+				  
+				  
+				   } );
+				   
+				   
+ 				  google.maps.event.addListener(marker2, 'dragend', function() { 
+				  
+				  
+ 				  	position2 = marker2.position
+					
+ 					updatePosition2();
+					 
+ 				  	// $('.next-button').click();
+				  
+				  
+ 				   } );
+				   
+				   
+				   map.addListener('rightclick', function(e){
+					   position = e.latLng;
+					   updatePosition();
+					   	$('.next-button').click();
+				   })
+				   
+			      geocoder = new google.maps.Geocoder;
+			      directionsService = new google.maps.DirectionsService;
+			      directionsDisplay = new google.maps.DirectionsRenderer;
+				   directionsDisplay.setMap(map);
+				// var image="https://example.com/images/carnew.svg";
+
+				 // marker = new google.maps.Marker({
+				 // 			    position: uluru,
+				 // 			    icon: image,
+				 // 			    map: map
+				 // 			});
+				}
+
+
+
+				function drawPath(directionsService, directionsDisplay,start,end) {
+						console.log(waypoints)
+				        directionsService.route({
+				          origin: start,
+				          destination: end,
+				          waypoints: waypoints,
+				          optimizeWaypoints: true,
+				          travelMode: 'DRIVING'
+				        }, function(response, status) {
+				            if (status === 'OK') {
+								directionsDisplay.setDirections(response);
+				            } else {
+				            window.alert('Problem in showing direction due to ' + status);
+				            }
+				        });
+
+					}
+
+
+				function setPosition(lat,lng){
+
+					var new_marker_position = new google.maps.LatLng(lat, lng);
+
+				   marker.setPosition(new_marker_position);
+				   map.setCenter(new google.maps.LatLng( lat, lng ) );
+
+				}
+				
+				$('#address').change(function(){
+					address = $(this).val()
+					url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=#{key}"
+					
+			        geocoder.geocode({'address': address}, function(results, status) {
+			          if (status === 'OK') {
+						  position = results[0].geometry.location;
+						  var latlng = ""+position.lat()+","+position.lng();
+						  $('#location').val(latlng)
+						  updatePosition();
+						  $('.next-button').click()
+						  
+					  }else{
+						 alert('Geocode was not successful for the following reason: ' + status);
+					  }
+					});
+					
+						$('#address2').focus()
+					
+				})
+				
+				
+				$('#address2').change(function(){
+					address = $(this).val()
+					url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=#{key}"
+					
+			        geocoder.geocode({'address': address}, function(results, status) {
+			          if (status === 'OK') {
+						  position2 = results[0].geometry.location;
+						  var latlng = ""+position2.lat()+","+position2.lng();
+						  $('#location2').val(latlng)
+						  updatePosition2();
+						  
+					  }else{
+						 alert('Geocode was not successful for the following reason: ' + status);
+					  }
+					});
+					
+					
+					
+				})
+				
+				
+				$('#location').change(function(){
+				
+					url = "https://maps.googleapis.com/maps/api/geocode/json?address="+address+"&key=#{key}"
+					
+				    var input = $(this).val()
+				    var latlngStr = input.split(',', 2);
+				    var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+				    geocoder.geocode({'location': latlng}, function(results, status) {
+				      if (status === 'OK') {
+				        if (results[0]) {
+				          map.setZoom(15);
+						  position = results[0].geometry.location;
+						
+						  updatePosition();
+						  // var marker = new google.maps.Marker({
+// 				            position: latlng,
+// 				 			draggable:true,
+// 				            map: map
+// 				          });
+						$('#address').val(results[0].formatted_address)
+						  // alert(results[0].formatted_address)
+				          infowindow.setContent(results[0].formatted_address);
+				          infowindow.open(map, marker);
+				        } else {
+				          window.alert('No results found');
+				        }
+				      } else {
+				        window.alert('Geocoder failed due to: ' + status);
+				      }
+				    });
+					
+					
+				
+					
+					
+				})
+				
+			      
+				  
+				function updatePosition(){
+				
+					map.setCenter(position);
+					marker.setPosition(position);
+					
+				    var latlng = {lat: parseFloat(position.lat()), lng: parseFloat(position.lng())};
+					latlng_txt = ""+position.lat()+","+position.lng();
+				    
+					geocoder.geocode({'location': latlng}, function(results, status) {
+				      if (status === 'OK') {
+							  
+							  $('#location').val(latlng_txt)
+							  $('#address').val(results[0].formatted_address)
+					  }
+				    });
+					
+					wp = ""
+					// console.log(position2)
+					waypoints = new Array();
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+				
+					latlng_txt = latlng_txt_2
+					}
+					
+					
+					for(var ix in ambulances){
+						i = ambulances[ix];
+						
+						console.log(i)
+						
+						
+						
+						
+						
+						
+						$.ajax({
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']+"&wp="+wp,
+						  context: document.body
+						}).done(function(data) {
+					  
+					  	  result = JSON.parse(data)
+							
+							if(result['status']=='200 OK'){
+								
+								
+								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
+								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+								
+								$('.ambu-'+result['id']+" .total_distance").html(result['total_distance']['text'])
+								$('.ambu-'+result['id']+" .total_duration").html(result['total_duration']['text'])
+								
+								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
+								
+							}else{
+								$('.ambu-'+result['id']).hide()
+							}
+								
+						  
+					  
+						});
+					
+						
+						
+					}
+					
+				
+					
+				
+					 
+				}
+				
+				
+				
+				function updatePosition2(){
+				
+					map.setCenter(position2);
+					marker2.setPosition(position2);
+					
+				    var latlng = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt = ""+position2.lat()+","+position2.lng();
+				    
+					geocoder.geocode({'location': latlng}, function(results, status) {
+				      if (status === 'OK') {
+							  
+							  $('#location2').val(latlng_txt)
+							  $('#address2').val(results[0].formatted_address)
+					  }
+				    });
+					
+				    latlng = {lat: parseFloat(position.lat()), lng: parseFloat(position.lng())};
+					latlng_txt = ""+position.lat()+","+position.lng();
+					
+					
+					wp = ""
+					// console.log(position2)
+					waypoints = new Array();
+					
+					if(position2!=null){
+				    var latlng2 = {lat: parseFloat(position2.lat()), lng: parseFloat(position2.lng())};
+					latlng_txt_2 = ""+position2.lat()+","+position2.lng();
+					wp = latlng_txt
+					waypoints.push({location:latlng_txt,stopover:true})
+				
+					latlng_txt = latlng_txt_2
+					}
+					
+					
+					for(var ix in ambulances){
+						i = ambulances[ix];
+						
+						console.log(i)
+						
+						
+						
+						
+						
+						
+						$.ajax({
+						  url: "distance?l="+latlng_txt+"&ambu="+i['_id']+"&wp="+wp,
+						  context: document.body
+						}).done(function(data) {
+					  
+					  	  result = JSON.parse(data)
+							console.log(result)
+							if(result['status']=='200 OK'){
+								
+								
+								$('.ambu-'+result['id']+" .distance").html(result['distance']['text'])
+								$('.ambu-'+result['id']+" .duration").html(result['duration']['text'])
+								
+								$('.ambu-'+result['id']+" .total_distance").html(result['total_distance']['text'])
+								$('.ambu-'+result['id']+" .total_duration").html(result['total_duration']['text'])
+								
+								
+								$('.ambu-'+result['id']+" .last_address").html(result['start_address'])
+								
+							}else{
+								$('.ambu-'+result['id']).hide()
+							}
+								
+						  
+					  
+						});
+					
+						
+						
+					}
+				
+					 
+				}	
+			 	
+					
+			 	
+				
+			  function geocodeLatLng(geocoder, map, infowindow) {
+			    var input = document.getElementById('latlng').value;
+			    var latlngStr = input.split(',', 2);
+			    var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+			    geocoder.geocode({'location': latlng}, function(results, status) {
+			      if (status === 'OK') {
+			        if (results[0]) {
+			          map.setZoom(11);
+			          var marker = new google.maps.Marker({
+			            position: latlng,
+			 			draggable:true,
+			            map: map
+			          });
+			          infowindow.setContent(results[0].formatted_address);
+			          infowindow.open(map, marker);
+			        } else {
+			          window.alert('No results found');
+			        }
+			      } else {
+			        window.alert('Geocoder failed due to: ' + status);
+			      }
+			    });
+			  }
+
+
+				function geocodeAddress(geocoder, map,address) {
+			      
+			        geocoder.geocode({'address': address}, function(results, status) {
+			          if (status === 'OK') {
+						  
+						position = results[0].geometry.location;
+						  
+			            map.setCenter(position);
+			            
+						var latlng = ""+position.lat()+","+position.lng();
+						
+					    // var latlng = new google.maps.LatLng(-24.397, 140.644);
+						console.log(position);
+						 marker.setPosition(position.location);
+						 $('#location').val(latlng)
+					 	
+						// var marker = new google.maps.Marker({
+// 			              map: map,
+// 			 			  draggable:true,
+// 			              position: results[0].geometry.location
+// 			            });
+			          } else {
+			            alert('Geocode was not successful for the following reason: ' + status);
+			          }
+			        });
+			      }
+				
+				
+				    </script>
+				    <!--Load the API from the specified URL
+				    * The async attribute allows the browser to render the page while the API loads
+				    * The key parameter will contain your own API key (which is not needed for this tutorial)
+				    * The callback parameter executes the initMap() function
+				    -->
+				    <script async defer
+				    src="https://maps.googleapis.com/maps/api/js?key=<%=key%>&callback=initMap">
+				    </script>
+				</div>
+
+			</div>
+
+	</div>
+	
+</form>
+	<% end %>
+	<script>
+	$('#main-container').removeClass('container')
+	</script>

@@ -314,14 +314,18 @@ MSG
                    
                    msg = nil
                    
-                   sz = i['recipient'].split('|')
+                   sz = i['recipient'].split('.')
                    zone = nil
                    station = nil
                    if sz.size==1
-                     staton = Station.where(:name=>sz[0]).first
+                     station = Station.where(:name=>sz[0]).first
                      if station
                        zone = station.zone
                      end
+                   elsif sz.size==3 and sz[2] == name
+                     zone = Zone.where(:name=> /#{sz[1]}/i).first
+                     
+                     station = Station.where(:name=>sz[0],:zone_id=>zone.id).first
                    else
                      zone = Zone.where(:name=>sz[0]).first
                      unless zone
@@ -335,6 +339,11 @@ MSG
                    end 
                    
                    station_id = station.id if station
+                   
+                   admit_id = nil
+                   admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
+                   admit_id = admit.id if admit
+                   
                    
                    if i['media_key']
                      media = zello.retrieve i['media_key']
@@ -356,13 +365,13 @@ MSG
 
             
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
 
                    else
                      puts "Sender #{i['sender']} To #{i['recipient']} Text #{i['text']}  "
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id
+                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id, :admit_id=>admit_id
                      
                      
                    end
@@ -393,7 +402,9 @@ MSG
 
 
             rescue Exception=>e
-              
+                  
+              puts e.inspect 
+                  
                  app.settings.zello_map.delete name
               
               

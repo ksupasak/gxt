@@ -2,34 +2,48 @@
 	
 admit = Admit.find(params[:admit_id])
 
+start_time = Time.now 
 
+
+desc = "Random text : #{rand(99999)} #{Time.now}"
+
+if params[:record] 
+
+start_time = params[:record][:start_time] 
+desc = params[:record][:description]
+
+end
 
 if request.post?
 	
-	
-	record = admit.records.create params[:record]
+record = admit.nurse_records.create params[:record] 
+
+
 path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 msg = 'NULL'
 send_msg = <<MSG
 #{'Zone.Message'} #{path}
 #{msg.to_json}
 MSG
-@context.settings.redis.publish(path, send_msg)	
+@context.settings.redis.publish(path, send_msg)
+				   
+				   
+
 	
-%><%= inline(this,:'_record_partial') %><br/>
+%>
 
 <% else %>
 
-<form action="record_create?admit_id=<%=params[:admit_id]%>" class="model-remote" method="post" enctype="multipart/form-data" >
+<form action="nurse_note_create?admit_id=<%=params[:admit_id]%>" class="model-remote" method="post" enctype="multipart/form-data" >
 	
 <div class="modal-header">
-    <h5 class="modal-title" id="">Data Record</h5>
+    <h5 class="modal-title" id="exampleModalLongTitle">Nurse Note Record : Create</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">	  	
-<%= inline(this,:'_record_form') %>
+<%= inline(this,:'_nurse_note_form') %>
   </div>
   
   <div class="modal-footer">
@@ -40,6 +54,11 @@ MSG
 
 </form>
 <script>
+		$(document).ready(function(){
+			
+			$('#nurse_note_desc').focus()
+			
+		})
 		
 		$(".model-remote").submit(function(e) {
 	
@@ -54,7 +73,7 @@ MSG
 	           data: form.serialize(), // serializes the form's elements.
 	           success: function(data)
 	           {
-	               $('#record-partial').html(data)// show response from the php script.
+	               $('#nurse_note-partial').html(data)// show response from the php script.
 				   $('#admit-modal').modal('toggle');
 	           }
 	    });

@@ -10,7 +10,7 @@
 		puts params.inspect 
 		
 		# {"admit_id"=>"5f4f13eb6906deb73f8a4626", "hn"=>"", "datetime"=>"2020-9-5T15:54:48", "score"=>"1", "rr"=>"20", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>"100", "pr"=>"80", "spo2"=>"99", "temp"=>"35.4", "weight"=>"", "height"=>"", "bmi"=>"", "device_id"=>"", "gxt"=>"miot", "service"=>"EsmMiotMonitor::SmartER", "operation"=>"connect"}
-		list = %w{bp bp_sys bp_dia bp_mean bp_pr pr spo2 temp rr score note}
+		list = %w{bp bp_sys bp_dia bp_mean bp_pr pr spo2 temp rr score note eye motor verbal pupil}
 		
 		
 		px = {:admit_id=>params[:admit_id], :stamp=> params[:datetime]}
@@ -104,7 +104,7 @@
 										<img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="E" title="Eye Opening">
+									<div class="col-8 n-entry v-under eye"  name="eye" type="E" title="Eye Opening">
 									-
 									</div>
 								</div>
@@ -120,7 +120,7 @@
 										<img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="M" title="Motor response">
+									<div class="col-8 n-entry v-under motor"  name="motor" type="M" title="Motor response">
 									-
 									</div>
 								</div>
@@ -136,7 +136,7 @@
 										<img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp"  type="V" title="Verbal Response">
+									<div class="col-8 n-entry v-under verbal"  name="verbal"  type="V" title="Verbal Response">
 									-
 									</div>
 								</div>
@@ -152,7 +152,7 @@
 										<img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
 										</center>
 									</div>
-									<div class="col-8 n-entry v-under  temp"  name="temp" type="P" title="Pupil">
+									<div class="col-8 n-entry v-under pupil"  name="pupil" type="P" title="Pupil">
 									-
 									</div>
 								</div>
@@ -395,6 +395,11 @@
 <input class="rr_val" name="rr" value="" type="hidden"/>
 <input class="score_val" name="score" value="" type="hidden"/>
 
+<input class="eye_val" name="eye" value="" type="hidden"/>
+<input class="motor_val" name="motor" value="" type="hidden"/>
+<input class="verbal_val" name="verbal" value="" type="hidden"/>
+<input class="pupil_val" name="pupil" value="" type="hidden"/>
+
 
 
 </form>
@@ -508,7 +513,7 @@
 		h.forEach((v,i)=>{
 			try{
 				text = v.split(',') 
-				list += '<div class="row nlist"><div class="col-5">'+text[0]+'</div><div class="col-7 nitem">'+text[1]+'</div></div>'
+				list += '<div class="row nlist" type="'+t+'" value="'+text[0]+' '+text[1]+'"><div class="col-5">'+text[0]+'</div><div class="col-7 nitem">'+text[1]+'</div></div>'
 			}catch(e){}
 		})
 
@@ -532,6 +537,11 @@
 			$(".nlist").click(function(){
 				$(".nlist").removeClass("nlist-sel")
 				$(this).addClass("nlist-sel")
+				// alert($("[title='"+title+"']").attr('class'))
+				$("[title='"+title+"']").html($(this).attr('value'))
+				$("."+$("[title='"+title+"']").attr('name')+"_val").val($(this).attr('value'))
+				alert($("."+$("[title='"+title+"']").attr('name')+"_val").val())
+				$("#neuroModal").modal('toggle')
 			})
             $("#neuroModal").modal('toggle')
         })
@@ -657,6 +667,19 @@
 		$('.score').each(function(){
 			score = $(this).html().trim();
 		})
+
+		$('.eye').each(function(){
+			eye = $(this).html().trim();
+		})
+		$('.motor').each(function(){
+			motor = $(this).html().trim();
+		})
+		$('.verbal').each(function(){
+			verbal = $(this).html().trim();
+		})
+		$('.pupil').each(function(){
+			pupil = $(this).html().trim();
+		})
 		
 		
 		bp = ""+bp_sys+"/"+bp_dia
@@ -666,7 +689,7 @@
 		
 		
 		
-	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, eye:eye, motor:motor, verbal:verbal, pupil:pupil }
 		return data
     }
 
