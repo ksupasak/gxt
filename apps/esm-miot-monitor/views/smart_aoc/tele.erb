@@ -1,0 +1,60 @@
+<%
+
+
+display_name = "userDemo#{rand(999)}"
+cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+out = `#{cmd}`
+puts cmd
+puts out
+out = out.split("\n")
+puts out.inspect
+
+puts 
+token = out[-1]
+@token = token
+	
+%>
+
+		<div class="conference">
+			<%=inline(this,:'_vidyo')%>
+		</div>
+		
+		<script>
+			$(document).ready(function(){
+				
+				function call(){
+					$('.callStart').click();
+					
+				}
+				
+				
+				$('.resourceId').val("<%=params[:resourceId]%>")
+				
+				
+
+				$('#main-container').removeClass('container')
+				$('nav').remove();
+				// $('.rendererFullScreen').css("position","absolute")
+		// 		$('.rendererFullScreen').css("bottom","0px")
+		// 		$('.rendererFullScreen').css("top","0px")
+		//
+				
+				
+				
+				setTimeout(function() { call(); }, 3000);
+				
+			})
+		</script>
+			
+<style>
+
+	.confernence{
+		position:absolute;
+		bottom:100px;
+	}
+	#renderer{
+		height:800px;
+	}
+	
+	
+</style>

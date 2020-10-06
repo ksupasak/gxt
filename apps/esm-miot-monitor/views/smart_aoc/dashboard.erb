@@ -7,32 +7,10 @@
  
 <%
 if @current_zone
-	
-redirect_home = nil
 
-if @current_zone.mode == 'smart_er' 
-
-	redirect_home = "../SmartER/index"
-	
-elsif @current_zone.mode == 'smart_health'
-
-	redirect_home = "../SmartHealth/index"
-
-elsif @current_zone.mode == 'smart_icu'
-
-	redirect_home = "../SmartICU/index"
-	
-elsif @current_zone.mode == 'smart_ipd'
-
-	redirect_home = "../SmartIPD/index"	
-	
-elsif @current_zone.mode == 'aoc'
-	redirect_home = "../SmartAOC/index"
-end
-
-if redirect_home
+if false
 %>
-<%=redirect_to  redirect_home %>
+<%#edirect_to  redirect_home %>
 
 
 <% else %>

@@ -301,13 +301,16 @@ def method_missing(m, *args, &block)
       
       path = File.join(ctrl,m.to_s)
       
+   elsif FileTest.exist? File.join(@settings.views, ctrl, "_#{m}.erb")
+       path = File.join(ctrl,"_"+m.to_s)
+       layout = false    
+      
+      
    elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "#{m}.erb")
    
       path = File.join(self.class.views,ctrl,m.to_s)
       
-   elsif FileTest.exist? File.join(@settings.views, ctrl, "_#{m}.erb")
-      path = File.join(ctrl,"_"+m.to_s)
-      layout = false
+  
       
    elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "_#{m}.erb")
      path = File.join(self.class.views,ctrl,"_"+m.to_s)

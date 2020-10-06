@@ -126,6 +126,10 @@ body{
   text-decoration: none;
 }
 
+.btn-noline a:hover{
+  color: white !important;
+  text-decoration: none;
+}
 
 a {
   color: inherit;

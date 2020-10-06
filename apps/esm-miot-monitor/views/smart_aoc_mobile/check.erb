@@ -2,17 +2,18 @@
 		
 log = AdmitLog.find(params[:admit_log_id])
 
+admit = log.admit
+
 if log
 	log.update_attributes :status=>'COMPLETED', :stamp=>Time.now
+end
 path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 msg = 'NULL'
 send_msg = <<MSG
 #{'Zone.Message'} #{path}
 #{msg.to_json}
 MSG
-@context.settings.redis.publish(path, send_msg)	
-end
-
+@context.settings.redis.publish(path, send_msg)
 # key :admit_id, ObjectId
 # key :name, String
 # key :status, String
