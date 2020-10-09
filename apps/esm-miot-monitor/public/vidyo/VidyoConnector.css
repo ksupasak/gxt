@@ -93,7 +93,7 @@
 	position: relative;
 	width:    100%;
 	bottom:   0px;
-	height:   60px;
+	height:   40px;
 }
 
 #toolbarLeft {
@@ -130,14 +130,14 @@
 }
 #participantStatus {
 	color:       white;
-	line-height: 60px;
+	line-height: 40px;
 	margin:      0px 10px;
 	position:    relative;
 	left:        0px;
 }
 #connectionStatus {
 	color:       white;
-	line-height: 50px;
+	line-height: 30px;
 	margin:      0px 10px;
 	position:    relative;
 	right:       0px;
@@ -172,9 +172,9 @@
 	border:              0;
 }
 .toolbarButton {
-	width:               60px;
-	height:              60px;
-	background-size:     32px auto;
+	width:               40px;
+	height:              40px;
+	background-size:     16px auto;
 	background-repeat:   no-repeat;
 	background-position: center;
 	background-color:    rgb(19, 38, 58);
