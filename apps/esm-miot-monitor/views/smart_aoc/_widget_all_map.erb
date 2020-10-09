@@ -1,29 +1,30 @@
+<div class="geo-all-map">
 				<div class="row">
 					<div class="col-12  my-2" >
 					<style>
 					       /* Set the size of the div element that contains the map */
-					      #geo-map {
+					      #geo-all-map {
 					        min-height:24vh;  /* The height is 400 pixels */
 					        width: 100%;  /* The width is the width of the web page */
 					       }
 					    </style>
 
 					    <!--The div element for the map -->
-					    <div id="geo-map"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <div id="geo-all-map"></div>	<%=link_to '', "javascript:goPosition()"%>
 					    <script>
 					// Initialize and add the map
-					var marker = null;
-					var map = null;
+					var marker_all = null;
+					var map_all = null;
 					var poly = null;
 
-					function initMap() {
+					function initMapAllMap() {
 					  // The location of Uluru
 					  var uluru = {lat: 15.8700, lng: 100.9925};
 					  // The map, centered at Uluru
-					  map = new google.maps.Map(
-					      document.getElementById('geo-map'), {zoom: 16, center: uluru});
+					  map_all = new google.maps.Map(
+					      document.getElementById('geo-all-map'), {zoom: 16, center: uluru});
 					  // The marker, positioned at Uluru
-					  marker = new google.maps.Marker({position: uluru, map: map});
+					  marker_all = new google.maps.Marker({position: uluru, map: map_all});
 
 					// var image="https://example.com/images/carnew.svg";
 
@@ -38,7 +39,7 @@
 					    strokeOpacity: 1.0,
 					    strokeWeight: 3
 					  });
-					  poly.setMap(map);
+					  poly.setMap(map_all);
 					 
 					 
 					 
@@ -55,8 +56,8 @@
 
 						var new_marker_position = new google.maps.LatLng(lat, lng);
 
-					   marker.setPosition(new_marker_position);
-					   map.setCenter(new google.maps.LatLng( lat, lng ) );
+					   marker_all.setPosition(new_marker_position);
+					   map_all.setCenter(new google.maps.LatLng( lat, lng ) );
 
 					}
 					    </script>
@@ -65,9 +66,10 @@
 					    * The key parameter will contain your own API key (which is not needed for this tutorial)
 					    * The callback parameter executes the initMap() function
 					    -->
-					    <script async defer
-					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
-					    </script>
+					    <!-- <script async defer
+					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMapAllMap">
+					    </script> -->
 					</div>
 
 				</div>
+</div>

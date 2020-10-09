@@ -20,9 +20,27 @@
 	    0% no-repeat padding-box;
 	}
 	
+	.widget{
+		background:#222;
+		border:1px solid #666;
+		border-radius: 4px;
+		
+	}
+	
 	.header{
 		line-height:3em;
-		background-color: rgb(19, 38, 58);
+/*		background-color: rgb(19, 38, 58);*/
+		background-color: rgb(04, 17, 46);
+		
+/*		background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%*/
+	    0% no-repeat padding-box;
+	}
+	
+	.header2{
+		line-height:3em;
+/*		background-color: rgb(19, 38, 58);*/
+		background-color: rgb(04, 17, 46);
+		
 		background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
 	    0% no-repeat padding-box;
 	}
@@ -34,7 +52,7 @@
 	.geo-map{
 /*		height:500px;*/
 		/*height:45vh;*/
-			background:#aaa;
+/*			background:#aaa;*/
 	}
 
 	.selected{
@@ -53,9 +71,11 @@
 
 	.value{
 	/*	color: #C2C2C2;*/
+/*		width:50px;*/
+		
 	}
 	.ph{
-		height:8vh;
+/*		height:3em;*/
 	}
 	
 	/* Hide scrollbar for Chrome, Safari and Opera */
@@ -87,12 +107,14 @@
 	}
 	
 	
-	
+	.toolbarButton{
+		width:30px;
+	}
 </style>
 
 <%
 	
-ambulances = Ambulance.all
+			ambulances = Ambulance.all
 	
  
 				
@@ -125,7 +147,7 @@ ambulances = Ambulance.all
 <div class="container-fluid">
 <div class="row">
 	
-	<div class="col-4 col-md-2 col-xl-2  d-none d-sm-none d-md-block" >
+	<div class="col-3 col-md-2 col-xl-2  d-none d-sm-none d-md-none  d-xl-block" >
 		
 		<b>Request</b>
 		<span style="float:right"><%= link_to "+ Case", "create", :class=>'btn btn-success'%><br/></span>
@@ -243,10 +265,54 @@ ambulances = Ambulance.all
 	<% end %>
 	
 	</ul>
+	
+	<div class="footer" style="">
+	footer
+	</div>
 		
 	</div>
 	
-	<div class="col-12 col-md-10 col-xl-10">
+	
+	
+	<div class="col-2 order-3 col-md-3 col-xl-2  d-none d-sm-none  d-md-block">
+	
+	<div class="col-12 header context-header ">
+		12:00
+	</div>
+	
+		
+	<div class="col-12 main-panel ">
+		<div class="conference">
+			
+			<%
+
+				host = 'prod.vidyo.io'
+
+
+				display_name = "userDemo#{rand(999)}"
+				cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+				out = `#{cmd}`
+				puts cmd
+				puts out
+				out = out.split("\n") if out
+				puts out.inspect
+				
+				puts 
+				token = out[-1] if out
+				@token = token
+				
+				
+			%>
+			<%=inline(this,:'_vidyo')%>
+		</div>
+	</div>
+	
+	<div class="col-12 main-panel" style="height:1040px">
+		<%= inline(this,:'_message_page') %>
+	
+	</div>
+	</div>
+	<div class="col-12 col-md-9 col-xl-8 order-2">
 		
 		<!-- Context -->
 		<!-- <div class="row">
@@ -260,15 +326,13 @@ ambulances = Ambulance.all
 
 		</div>
 		 -->
-		<div class="selection row header context-header"  style="color:white">
+		<div class="selection row header context-header"  style="color:white;font-size:1.2em">
 	
-			<div class="col-2 " >
+			<div class="col-6 " >
+				<span class="head">Ambu : </span>
+				
+			<span class="ambu-name"><span class="value">-</span></span>
 		
-			<span class="ambu-name "><span class="value">-</span></span>
-	
-			</div>
-	
-			<div class="col-6" >
 			<span class="head">Patient : </span>
 			<span class="patient-name "><span class="value">-</span></span>
 	
@@ -284,7 +348,7 @@ ambulances = Ambulance.all
 	
 			</div>
 	
-			<div class="col-4" >
+			<div class="col-6" >
 	
 	
 	
@@ -304,147 +368,8 @@ ambulances = Ambulance.all
 	
 		</div>
 		
-		
-		
-		<!-- Top panel -->
-		<div class="row  context-panel">
-			<!-- <div class="col-3 top-panel">
-			Top 1
-			</div>
-			<div class="col-3 top-panel ">
-			Top 2
-			</div>
-			<div class="col-3 top-panel">
-			Top 3
-			</div>
-			<div class="col-3 top-panel">
-			Top 4
-			</div> -->
-				
-				<div class="col-6 col-sm-3 station" id="panel-a">
-					<div class="row">
-					<div class="col-6  ph pr">
-						<span class="label">PR</span>
-						<div class="value">-</div>
-					</div>
-					<div class="col-6 ph  bp">
-						<span class="label">BP</span>
-						<div class="value">-</div>
-					</div>
-
-						<div class="col-6  ph temp">
-							<span class="label">Temp</span>
-							<div class="value">-</div>
-						</div>
-						<div class="col-6  ph rr">
-							<span class="label">RR</span>
-							<div class="value">-</div>
-						</div>
-
-					<div class="col-6 ph spo2">
-						<span class="label">SpO2</span>
-						<div class="value">-</div>
-					</div>
-
-				    <div class="col-6 ph hr">
-					    <span class="label">HR</span>
-					    <div class="value">-</div>
-				    </div>
-				
-				</div>
-				</div >
-			
-				<div class="col-6 col-sm-3" id="panel-b">
-			
-					<style>
-						.wave{
-							/*min-height:3em;*/
-							height:4.8vh;
-							/*background:#111;
-							border:1px solid #333;*/
-							background:#111;
-							border:1px solid #686E71;
-						}
-					</style>
-
-			
-					<div id="wave-1" class="wave col-lg-12  order-1" style="">
-
-					</div>
-				
-					<div id="wave-2" class="wave col-lg-12  order-1" style="">
-
-					</div>
-				
-					<div id="wave-3" class="wave col-lg-12  order-1" style="">
-
-					</div>
-				
-					<div id="wave-4" class="wave col-lg-12  order-1" style="">
-
-					</div>
-				
-					<div id="wave-5" class="wave col-lg-12  order-1" style="">
-
-					</div>
-				
-				
-				</div >
-				<div class="col-6 col-sm-3" id="panel-c">
-					<div style="">
-						<iframe id="frame"  style="width:100%;height:24vh"></iframe>
-					</div>
-					<script>
-						
-								
-						
-					    $(window).load(function(){
-					     $('iframe').load(function() {
-						
-					       });
-					       $('#loading').show();
-					       // $('iframe').attr( "src", "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=819112150&account=admin&password=admin");
-
-					     });
-					</script>
-				
-		
-				
-				</div >	
-				
-				<div class="col-6 col-sm-3 ">
-					
-					<%
-
-						host = 'prod.vidyo.io'
-
-
-						display_name = "userDemo#{rand(999)}"
-						cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
-						out = `#{cmd}`
-						puts cmd
-						puts out
-						out = out.split("\n") if out
-						puts out.inspect
-						
-						puts 
-						token = out[-1] if out
-						@token = token
-						
-						
-					%>	
-						<div class="geo-map">
-				
-				
-							<%=inline(this,:'_map')%>
-						</div>				
-					
-			
-				</div>
-				
-		</div>
 		<div class="row">
-		<div class="col-12 header" style="padding:10px" >
+		<div class="col-12 header header2" style="padding:10px;background:black" >
 			<center>
 				
 				
@@ -458,218 +383,51 @@ ambulances = Ambulance.all
 			
 			<%=link_to 'Discharge',"#", :class=>'discharge_btn btn btn-danger  context disable',:style=>"line-height:3em;width:100px" %>
 		
-		
-		
-			<!--
-			
-			<%=link_to 'Mode2',"\#", :class=>'btn btn-pcm2',:style=>"line-height:3em" %>
-			
-			<%=link_to 'Mode3',"\#", :class=>'btn btn-pcm2',:style=>"line-height:3em" %>
-			
-			<%=link_to 'Mode4',"\#", :class=>'btn btn-warning',:style=>"line-height:3em" %>
-					-->
 			
 		</center>
 		</div>
 		</div>
 		<!-- Main nenu -->
-		<div class="row">
-			<div class="col-6 main-panel" style="height:1040px">
-				<%= inline(this,:'_message_page') %>
-			
-			</div>
-			<div class="col-6 main-panel ">
-				<div class="conference">
-					<%=inline(this,:'_vidyo')%>
-				</div>
-			
-					<%
-						
+		
+		<!-- Top panel -->
+		<div class="row  context-panel">
+	
 				
-									for i in ambulances 
-										begin
-										admit= nil
-										patient = nil
-										station = nil
-										staiton_id = nil
-										resource_id = i.name
-							
-										admit = Admit.where(:status=>'Admitted', :ambulance_id=>i.id).first
-							
-										if admit and admit.status=='Admitted'
-							
-					
-										patient = admit.patient if admit
-							
-							
-										if admit 
-								
-											station = admit.station
-											station_id= station.name
-							
-										end
-							
-										else
-								
-											station = i.station
-								
-								
-											station_id = station.name if station
-											admit = nil
-								
-							
-										end
-							
-								%>
-								<div   class="col-12 ambu-<%=i.id%> ambu-row <%=(patient)?"panel-admit":""%>" style="margin-top:5px;height:120px;font-size:0.8em;padding:0px;padding-right:15px;">
-								<style>
-					
-									span.head{
-										color:#bbb;
-									}
-								</style>
-								<div class="station-<%=station_id%> row " >
-									<div class="col-1 eselect-<%=i.id%>" style="font-size:0.9em" >
-									<center>
-									<%=link_to i.name,"../Ambulance/show?id=#{i.id}", :class=>"select-#{i.id} btn btn-default", :style=>"font-size:1em"%><br/>
-									<%=link_to i.plate_license,"../Ambulance/show?id=i#{i.id}"%><br/>
-									<a href="tel:<%=i.phone%>"><%=i.phone%></a>
-					
-						
-									</center>	
-									<br/>
-									</div>
-									<div class="col-5">
-									<div class="row" style="">
-							
-									<% if patient 
-										hn = '-'
-										hn = patient.hn if patient.hn and patient.hn!=''
-										age = '-'
-										cid = '-'
-										cid = patient.public_id if patient.public_id
-										now = Time.now
-										age = Time.now - patient.dob if patient.dob 
-										gender = '-'
-										gender = patient.gender if patient.gender
-									%>
-									<div class="col-4"><span class="head">Patient:</span><span class="patient-name value"><%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %></span>
-									<span class="head">CID:</span> <span class="patient-cid value"><%=cid%></span><br/>
-									<span class="head">HN:</span> <span class="patient-hn value"><%=hn%></span> 
-									<span class="head">Age:</span> <span class="patient-age value"><%=age%></span>
-									<span class="head">Sex:</span> <span class="patient-gender value"><%=gender%></span><br/>
-									<span class="head">Contact:</span> <span class="patient-contact value"><%=patient.contact_name%> <%="(#{patient.contact_phone})" if patient.contact_phone%></span>
-									</div>
-									<div class="col-4">
-									<span class="head">Indication:</span> <span class="patient-inditcation value">
-										<%=admit.note%></span>
-									</div>
-									<div class="col-4">
-									<span class="head">Note:</span> <span class="patient-note value"></span>
-									</div>
-									<% end %>
-									</div>
-									<div class="row">
-										<div class="col-6">
-											<span class="head">Head to:</span> <span class="ambu-headto value">-</span>
-										</div>
-										<div class="col-6">
-											<span class="head">Location:</span> <span class="ambu-address value">-</span>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-4">
-											<span class="head">Est:</span> <span class="ambu-est value">- mins</span>
-										</div>
-										<div class="col-4">
-											<span class="head">Speed:</span> <span class="ambu-speed value">- km/h</span>
-										</div>
-										<div class="col-4">
-											<span class="head">Duration:</span> <span class="ambu-start value">- mins</span>
-										</div>
-									</div>
-						
-						
-									</div>
-									<div class="col-1">
-						
-											<% if admit %>
-											<a style="width:60px;padding:5px" href="../Admit/show?id=<%=admit.id%>" class="btn btn-warning" >Chart</a><br/>	
-											<% end %>
-											<a style="width:60px;padding:5px" href="" id="call-<%=i.id%>" class="btn btn-info" >Call</a><br/>	
-								
-											<a style="width:60px;padding:5px" target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-pcm2">Share</a>
-							
-											<script>
-					
-											</script>
-
-						
-									</div>
-									<div class="col-5 station" style="font-size:0.8em">
-						
-						
-									<div class="row">
-						
-						
-										<div class="col-6 col-lg-2 col-sm-3 pr">
-											<span class="label">PR</span>
-											<div class="value">-</div>
-										</div>
-										<div class="col-6 col-lg-2 col-sm-3  bp">
-											<span class="label">BP</span>
-											<div class="value">-</div>
-										</div>
-
-											<div class="col-6 col-lg-2 col-sm-3  temp">
-												<span class="label">Temp</span>
-												<div class="value">-</div>
-											</div>
-											<div class="col-6 col-lg-2 col-sm-3  rr">
-												<span class="label">RR</span>
-												<div class="value">-</div>
-											</div>
-
-										<div class="col-6 col-lg-2 col-sm-3  spo2">
-											<span class="label">SpO2</span>
-											<div class="value">-</div>
-										</div>
-
-									    <div class="col-6 col-lg-2 col-sm-3  hr">
-										    <span class="label">HR</span>
-										    <div class="value">-</div>
-									    </div>
-						
-						
-						
-									</div>
-						
-										<div class="row">
-								
-												<div id="wave-<%=station_id%>" class="col-lg-12  order-1" style="min-height:5em;background:#111">
-
-												</div>
-								
-										</div>
-						
-						
-						
-									</div>
-
-					
-									</div>
-					
-					
-					
-					
-							</div>
-			<% rescue Exception=>e 
-								end %>				
-			<% end %>
+				<div class="col-6 col-sm-6 col-lg-3 widget" id="panel-a">
+				<%=inline(this,:'_widget_patient')%>
+				</div>
+				
+				<div class="col-6 col-sm-6 col-lg-3 station widget" id="panel-a">
+				<%=inline(this,:'_widget_vitalsign')%>
+				</div >
 			
+				<div class="col-6 col-sm-6 col-lg-3" id="panel-b">
+				<%=inline(this,:'_widget_ecg')%>
+				</div >
+				
+				
+				<div class="col-6 col-sm-6 col-lg-3" id="panel-c">
+				<%=inline(this,:'_widget_dvr')%>
+				</div >	
+				
+				<div class="col-6 col-sm-6 col-lg-3 ">
+				<%=inline(this,:'_widget_map')%>
+				</div>
+				
+				
+		
 			
+				<div class="col-6 col-sm-6 col-lg-9">
+				<%=inline(this,:'_widget_all_ambulance')%>
 			
-			</div>
+				</div>
+				
+				
+				
+				<div class="col-12 col-sm-12 col-lg-12">
+				<%=inline(this,:'_widget_all_map')%>
+			
+				</div>
 		</div>
 		
 		<!-- Context -->
