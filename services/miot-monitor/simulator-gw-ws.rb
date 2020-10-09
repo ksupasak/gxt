@@ -136,7 +136,7 @@ s2 = 2
 
 # puts wave
 
-data[:wave] = wave
+# data[:wave] = wave
  
 
 data[:leads] = {} unless data[:leads]

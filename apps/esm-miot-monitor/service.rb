@@ -973,13 +973,67 @@ MSG
                      
                    end 
                    
-                   
-                   
                  end
                  
-                 Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
+
+                 # key :bp, String.    ok
+    #              key :bp_stamp, String. 
+    #              key :bp_sys, Integer
+    #              key :bp_dia, Integer
+    #              key :bp_mean, Integer
+    #              key :bp_pr, Integer
+    #
+    #              key :pr, Integer
+    #              key :hr, Integer
+    #              key :spo2, Integer
+    #              key :rr, Integer
+    #              key :temp, Float
+    #              key :co2, Integer
+    #
+    #              key :lat, String
+    #              key :lng, String
+    #
+    #              key :dvr_sp, Float
+    #              key :dvr_hx, Integer
+    #              key :dvr_ol, Integer
+                 
+                 
+               
+                  
+                 px = {:admit_id=>v['admit_id'], :station_id => v['station_id'],  :stop_time=>now, :start_time=>start_time,:bp=>v['bp'],:temp=>v['temp'],:co2=>v['co2'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now}  
+                 
+                 px[:bp_stamp] = v['bp_stamp']
+                 
+                 if v['bp'].index('/')
+                   
+                   t = v['bp'].split('/')
+                   px[:bp_sys] = t[0].to_i
+                   px[:bp_dia] = t[1].to_i
+                 
+                 end
+                 
+                 px[:lat] = v['lat']
+                 px[:lng] = v['lng']
+                 
+                 px[:dvr_sp] = v['dvr_sp']
+                 px[:dvr_hx] = v['dvr_hx']
+                 px[:dvr_ol] = v['dvr_ol']
+                   
+                 px[:msg] = v['msg']
+                 
+                 px[:vs] = v['vs'].to_json
                  
                  v.delete 'vs'
+                 
+                 px[:data] = v.to_json
+                 
+                 Sense.create px
+                 
+                 
+               
+                 
+                 
+                 
                  end
                  
                  else

@@ -17,8 +17,12 @@
 %>
 <tr>
 	<% for j in keys %>
+	<% if j[0]=='vs'%>
+	<td><%=i[j[0]] %></td>
+	<% else %>
 		<td><%=i[j[0]] %></td>
 	<% end %>
+		<% end %>
 	<td>
 	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default btn-small' %>
 	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info  btn-small' %>
