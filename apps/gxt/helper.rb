@@ -19,14 +19,101 @@ def register_app name, application, extended=nil
   # settings.extended[application] = extended if extended
   
   settings.redis.set "GXT|#{name}",  application
-  settings.redis.sadd application, name 
+  # settings.redis.sadd application, name 
   
   end
   # settings.redis.set "", name 
   
+
+end
+
+
+
+def get_solutions application
+
+  # settings.redis.sadd application, name
+
+  return  settings.redis.smembers(application)
   
 
 end
+
+
+def google_direction origin, distination, key
+  
+    	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{origin}&destination=#{distination}&key=#{key}"
+  
+      uri = URI(url)
+
+      data = nil
+
+      Net::HTTP.start(uri.host, uri.port,
+        :use_ssl => uri.scheme == 'https') do |http|
+        request = Net::HTTP::Get.new uri
+
+        response = http.request request # Net::HTTPResponse object
+        
+        data = response.body
+        
+      end
+      
+      if data
+        
+    	obj = JSON.parse data
+	
+      # puts obj.inspect
+	
+    	if obj['geocoded_waypoints'][0]['geocoder_status']=='OK'
+	
+    	routes = obj['routes']
+	
+    	best_route = routes[0]
+    	legs = best_route['legs']
+    	best_leg_0 = legs[0]
+    	best_leg = legs[legs.length-1]
+	
+    	total_distance = 0
+    	total_duration = 0
+	
+
+    	distance = best_leg_0['distance']
+	
+    	duration = best_leg_0['duration']
+		 
+    	for i in legs
+		
+    		total_distance+= i['distance']['value']
+    		total_duration+= i['duration']['value']
+		
+    	end
+		
+    	total_duration_i = total_duration/3600.0
+		
+    	total_distance_text = "#{(total_distance/1000).round(1)} km"	
+    	total_duration_text = ""
+	
+    	h = 0 
+    	total_duration_text += "#{total_duration_i.to_i } hours " if total_duration_i.to_i > 0
+	
+    	m = 0 
+    	m = ((total_duration_i%1)*60).to_i  
+    	total_duration_text += "#{m} mins" 
+	
+      puts "Get Direction #{origin} To #{distination}"
+      puts "distance_text #{total_distance_text}"  
+      puts "duration_text #{total_duration_text}"  
+  
+      
+      return {:status=>'200 OK', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location'], :end_address=>best_leg['end_address'],:end_location=>best_leg['end_location'],:total_distance=>{:text=>total_distance_text,:value=>total_distance},:total_duration=>{:text=>total_duration_text,:value=>total_duration},:distance=>distance, :duration=>duration}
+	   
+      end  
+      end
+      
+      return {:status=>'505 ERROR'}
+  
+end
+
+
 def normalize_distance_of_time_argument_to_time(value)
         if value.is_a?(Numeric)
           Time.at(value)

@@ -28,21 +28,43 @@ if request.post?
 		
 		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
 		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
-		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
-		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		
+		
+		a1 = AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
+		a2 = AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+		
+		r1 = AocCaseRoute.create :admit_id=>admit.id, :address=>params[:address], :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>params[:location], :sort_order=>0, :status=>'SCHEDULED'
+		
+		
+		c1 = AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
+		c2 = AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		
+		r2 = AocCaseRoute.create :admit_id=>admit.id, :address=>'base', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED'
+		
 		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
 	
 	else
 	
 		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Request', :status=>'COMPLETED', :latlng=>ambu.last_location, :note=>'', :sort_order=>0, :stamp=>Time.now
 		AdmitLog.create :admit_id=>admit.id,:name=>'AOC Accept', :status=>'PENDING', :note=>'', :sort_order=>1
-		AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING', :note=>'', :sort_order=>2, :address=>params[:address], :latlng=>params[:location]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2 #, :address=>params[:address], :latlng=>params[:location]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Back to hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4 , :address=>params[:address2], :latlng=>params[:location2]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4 #, :address=>params[:address2], :latlng=>params[:location2]
-		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>6, :parent=>0
+		
+		a1 = AdmitLog.create :admit_id=>admit.id,:name=>'Head to target', :status=>'PENDING',      :note=>'', :sort_order=>2 ,              :address=>params[:address], :latlng=>params[:location]
+		a2 = AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at target', :status=>'PENDING',   :note=>'', :sort_order=>3 , :parent=>2 , :address=>params[:address], :latlng=>params[:location]
+		
+		r1 = AocCaseRoute.create :admit_id=>admit.id, :address=>params[:address], :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>params[:location], :sort_order=>0, :status=>'SCHEDULED'
+		
+		b1 = AdmitLog.create :admit_id=>admit.id,:name=>'Head to hospital', :status=>'PENDING',    :note=>'', :sort_order=>4 , 			    :address=>params[:address2], :latlng=>params[:location2]
+		b2 = AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at hospital', :status=>'PENDING', :note=>'', :sort_order=>5 , :parent=>4 , :address=>params[:address2], :latlng=>params[:location2]
+		
+		r2 = AocCaseRoute.create :admit_id=>admit.id, :address=>params[:address2], :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>params[:location], :stop_latlng=>params[:location2], :sort_order=>1, :status=>'SCHEDULED'
+		
+		c1 = AdmitLog.create :admit_id=>admit.id,:name=>'Head to base', :status=>'PENDING',        :note=>'', :sort_order=>6 ,              :address=>ambu.last_location, :latlng=>ambu.last_location
+		c2 = AdmitLog.create :admit_id=>admit.id,:name=>'Arrived at base', :status=>'PENDING',     :note=>'', :sort_order=>7 , :parent=>6,  :address=>ambu.last_location, :latlng=>ambu.last_location
+		
+		r3 = AocCaseRoute.create :admit_id=>admit.id, :address=>'base', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED'
+		
+		
+		AdmitLog.create :admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', 		        :note=>'', :sort_order=>8, :parent=>0
 	
 	
 	
@@ -142,6 +164,8 @@ else
 	order_tag = Setting.get(:aoc_tag,tag)
 	if order_tag != tag
 		Setting.set(:aoc_code_order,'0')
+		Setting.set(:aoc_tag,tag)
+		
 	end	
 	
 	order_no = Setting.get(:aoc_code_order,'0').to_i+1

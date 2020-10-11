@@ -1,7 +1,7 @@
 
 require_relative 'models/er_models'
 
-
+require_relative 'models/aoc_models'
 
 module EsmMiotMonitor
   
