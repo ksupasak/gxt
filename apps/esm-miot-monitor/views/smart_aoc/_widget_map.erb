@@ -44,7 +44,23 @@
 					 initMapAllMap()
 					 
 					}
-
+					
+					function resetPath(){
+						// var size = poly.length;
+		//
+		// 				for (i=0; i<size; i++)
+		// 				{
+		// 				  poly[i].setMap(null);
+		// 				}
+						
+   					 poly = new google.maps.Polyline({
+   					    strokeColor: '#0000ff',
+   					    strokeOpacity: 1.0,
+   					    strokeWeight: 3
+   					  });
+   					  poly.setMap(map);
+					}
+					
 					function goPosition(){
 							setPosition(53.345735,-6.259548)
 					}
@@ -57,7 +73,7 @@
 						var new_marker_position = new google.maps.LatLng(lat, lng);
 
 					   marker.setPosition(new_marker_position);
-					   map.setCenter(new google.maps.LatLng( lat, lng ) );
+					   // map.setCenter(new google.maps.LatLng( lat, lng ) );
 
 					}
 					    </script>
