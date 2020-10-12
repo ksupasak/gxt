@@ -1,6 +1,41 @@
 module EsmMiotMonitor
   
 
+  class AocCaseRoute < GXTModel
+    
+    include Mongoid::Document
+    belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+    
+    belongs_to :departure_log, :class_name=>'EsmMiotMonitor::AdmitLog'
+    
+    belongs_to :arrival_log, :class_name=>'EsmMiotMonitor::AdmitLog'
+    
+    key :address, String
+    
+    key :status, String
+    
+    key :sort_order, Integer
+    
+    key :start_latlng, String
+    key :stop_latlng, String
+    
+    
+    key :departure_log_id, ObjectId
+    key :arrival_log_id, ObjectId
+    
+    key :est_distance, Integer # km
+    key :est_duration, Integer # min
+    key :act_distance, Integer
+    key :act_duration, Integer
+    
+    key :note, String
+    
+    
+    include Mongoid::Timestamps
+    
+  end
+
+
 class AocCaseReport < GXTModel
   
   include Mongoid::Document
@@ -74,6 +109,9 @@ class AocCaseReportController < GXTDocument
   
 end
 
+class AocCaseRouteController < GXTDocument
+  
+end
 
 
 end

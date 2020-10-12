@@ -1,7 +1,7 @@
 
 require_relative 'models/er_models'
 
-
+require_relative 'models/aoc_models'
 
 module EsmMiotMonitor
   
@@ -188,14 +188,41 @@ class Sense < GXTModel
   
   key :admit_id, ObjectId
   key :station_id, ObjectId
+  
   key :data,  String
   
   key :start_time, Time
   key :stop_time, Time
-    
-  key :tag, String
   
-  key :note, String
+  key :bp, String
+  key :bp_stamp, String
+  key :bp_sys, Integer
+  key :bp_dia, Integer
+  key :bp_mean, Integer
+  key :bp_pr, Integer
+  
+  key :pr, Integer
+  key :hr, Integer
+  key :spo2, Integer
+  key :rr, Integer
+  key :temp, Float
+  key :co2, Integer
+  
+  key :lat, String
+  key :lng, String
+  
+  key :dvr_sp, Float
+  key :dvr_hx, Integer
+  key :dvr_ol, Integer
+  
+  key :msg, String
+  
+  key :stamp, Time
+  
+  key :vs, String
+  
+  
+  
   include Mongoid::Timestamps
 end
 

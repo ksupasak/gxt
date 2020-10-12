@@ -285,7 +285,7 @@ station = Station.find ambu.station_id
 			
 		</td>
 		<td>
-			<% if i.stamp and i.parent and p = parent_map[i.parent]
+			<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp 
 			lap = (i.stamp - p.stamp).to_i/60
 			 %>
 			<w><%= lap %>m</w>

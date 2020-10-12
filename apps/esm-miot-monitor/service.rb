@@ -128,6 +128,141 @@ def self.registered(app)
         
         jsessionid_map = {}
         connection_map = {}
+        device_map = {}
+      
+        
+       
+       EM.add_periodic_timer(10) do
+        
+         #update list
+         
+         # for name in app.settings.apps_rv['esm-miot-monitor']
+          for name in get_solutions('esm-miot-monitor')
+             
+          
+            switch name, 'esm-miot-monitor'
+            
+            if cms_url = Setting.where(:name=>'cms_url').first and cms_url
+              
+              key =  Setting.get :google_map_key
+            
+              ambus = Ambulance.where(:device_no=>{'$ne'=>''}).all
+              list = []
+              
+              for i in ambus 
+                
+                admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted' ).first
+                
+                if admit
+                  
+                  route = AocCaseRoute.where(:admit_id=>admit.id,:status=>'SCHEDULED').sort(:sort_order=>1).first
+                  
+                  if route
+                    
+                    unless route.start_latlng
+                      
+                      route.update_attributes :start_latlng=>i.last_location
+                      
+                    end 
+                    
+                    
+                    unless route.est_distance
+                      # fill estimate distance
+                      direction = google_direction(route.start_latlng, route.stop_latlng, key)
+                      if direction[:status]=='200 OK'
+                        route.update_attributes :est_distance=>direction[:total_distance][:value], :est_duration=>direction[:total_duration][:value]
+                      end
+                      
+                    end
+                    
+                    # unless route.act_distance
+                      # fill estimate distance
+                    direction = google_direction(i.last_location, route.stop_latlng, key)
+                    if direction[:status]=='200 OK'
+                        route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
+                    end
+                      
+                      
+                    # end
+                    if route.est_distance - route.act_distance > 30  
+                      
+                      departure_log = AdmitLog.find route.departure_log_id  
+                      
+                      if departure_log and departure_log.status=='PENDING' 
+                 
+                      departure_log.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto check'
+                      
+                       accept = AdmitLog.where(:admit_id=>admit.id, :name=>'AOC Accept', :status=>'PENDING').first
+                       
+                        if accept
+                          
+                          accept.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto check'
+                          
+                        end 
+                      
+                      end
+                      
+                    end
+                    
+                    # route.act_distance = 10
+                    
+                    if route.act_distance < 30 # arrive
+                      
+                      arrival_log = AdmitLog.find route.arrival_log_id  
+                      
+                      if arrival_log and arrival_log.status=='PENDING'
+                 
+                      arrival_log.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto check'
+                      
+                      departure_log = AdmitLog.find route.departure_log_id
+                      
+                      if departure_log.status=='PENDING'
+                        
+                        departure_log.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto skip'
+                        
+                        accept = AdmitLog.where(:admit_id=>admit.id, :name=>'AOC Accept', :status=>'PENDING').first
+                       
+                         if accept
+                          
+                           accept.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto check'
+                          
+                     
+                         end
+                        
+                      end
+                        
+                      
+                      route.update_attributes :status=>'COMPLETED', :act_duration=>Time.now  - departure_log.stamp , :note=>'Auto check'
+                      
+                      end
+                          
+                    end
+                    
+                     
+                    
+                    
+                    puts route.inspect 
+                      
+                  end
+                  
+                  
+                  
+                end
+                
+                
+                
+                list << {:ambu=>i, :admit=>admit}
+                
+                
+              end
+              
+              device_map[name] = {:url=>cms_url.value, :key=>key, :list=> list}
+            
+            end
+         
+        end
+     
+       end
      
        EM.add_periodic_timer(1) do
        
@@ -137,7 +272,7 @@ def self.registered(app)
          for name in app.settings.apps_rv['esm-miot-monitor']
            switch name, 'esm-miot-monitor'
          
-          if cms_url = Setting.where(:name=>'cms_url').first and cms_url
+          if device_map[name] and device_map[name][:url] #cms_url = Setting.where(:name=>'cms_url').first and cms_url
          
            jsessionid = jsessionid_map[name]
             
@@ -147,7 +282,11 @@ def self.registered(app)
              
              # response_body = Net::HTTP.get_response("example.com", "/", 443)
              
-             uri = URI("https://103.76.181.125:8080")
+             # uri = URI("https://103.76.181.125:8080")
+             
+             puts device_map[name][:url]
+             uri = URI(device_map[name][:url])
+             
              use_ssl = true
 
              http = Net::HTTP.new(uri.host, uri.port)
@@ -197,8 +336,15 @@ def self.registered(app)
            
             results = {}
            
-          for ambu in Ambulance.where(:device_no=>{'$ne'=>''}).all
+          # for ambu in Ambulance.where(:device_no=>{'$ne'=>''}).all
             
+          for map in device_map[name][:list]
+            
+            
+            ambu = map[:ambu]
+            admit = map[:admit]
+            
+          
             req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
             
             # puts  ambu.name
@@ -210,11 +356,11 @@ def self.registered(app)
             # puts json.inspect
             sp = 0
             sp = json['sp']/10.0 if json['sp']
-            result = {:ambulance_id=> ambu.id , :device_id=>ambu.device_no,:lat=>json['mlat'], :lng=>json['mlng'], :sp=>sp, :ol=>json['ol'], :hx=>json['hx']} 
+            result = {:station_id=> ambu.station_id , :device_id=>ambu.device_no,:lat=>json['mlat'], :lng=>json['mlng'], :sp=>sp, :ol=>json['ol'], :hx=>json['hx']} 
             
-            puts "#{ambu.name} #{result.inspect}"
+            puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
             
-            results[ambu.station_id] = result
+            results[ambu.id] = result
             
            
           end
@@ -511,19 +657,31 @@ MSG
         
         
         json.each_pair do |k,v|
+
           
-          station = Station.find k
+           ambu = Ambulance.find k
           
-          if station
-             
-             ambu = Ambulance.find v['ambulance_id']
+          if ambu
              
              ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
              
-             staiton_status[k] = v
+             staiton_status[v['station_id']] = v
               
             
           end
+          
+          # station = Station.find k
+          #
+          # if station
+          #
+          #    ambu = Ambulance.find v['ambulance_id']
+          #
+          #    ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+          #
+          #    staiton_status[k] = v
+          #
+          #
+          # end
           
           
         end
@@ -571,6 +729,7 @@ MSG
              # register or retrieve station 
              
              station = Station.where(:name=>station_name).first
+             
              unless station
                     zone = Zone.first 
                     zone_id = nil
@@ -815,9 +974,9 @@ MSG
                   
                    arg['lat'] = v['lat']
                    arg['lng'] = v['lng']
-                  arg['dvr_sp'] = v['sp']
-                  arg['dvr_hx'] = v['hx']
-                  arg['dvr_ol'] = v['ol']
+                   arg['dvr_sp'] = v['sp']
+                   arg['dvr_hx'] = v['hx']
+                   arg['dvr_ol'] = v['ol']
                 
                 
                 end
@@ -973,13 +1132,67 @@ MSG
                      
                    end 
                    
-                   
-                   
                  end
                  
-                 Sense.create :admit_id=>v['admit_id'], :station_id => v['station_id'], :data=>v.to_json, :stop_time=>now, :start_time=>start_time
+
+                 # key :bp, String.    ok
+    #              key :bp_stamp, String. 
+    #              key :bp_sys, Integer
+    #              key :bp_dia, Integer
+    #              key :bp_mean, Integer
+    #              key :bp_pr, Integer
+    #
+    #              key :pr, Integer
+    #              key :hr, Integer
+    #              key :spo2, Integer
+    #              key :rr, Integer
+    #              key :temp, Float
+    #              key :co2, Integer
+    #
+    #              key :lat, String
+    #              key :lng, String
+    #
+    #              key :dvr_sp, Float
+    #              key :dvr_hx, Integer
+    #              key :dvr_ol, Integer
+                 
+                 
+               
+                  
+                 px = {:admit_id=>v['admit_id'], :station_id => v['station_id'],  :stop_time=>now, :start_time=>start_time,:bp=>v['bp'],:temp=>v['temp'],:co2=>v['co2'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now}  
+                 
+                 px[:bp_stamp] = v['bp_stamp']
+                 
+                 if v['bp'].index('/')
+                   
+                   t = v['bp'].split('/')
+                   px[:bp_sys] = t[0].to_i
+                   px[:bp_dia] = t[1].to_i
+                 
+                 end
+                 
+                 px[:lat] = v['lat']
+                 px[:lng] = v['lng']
+                 
+                 px[:dvr_sp] = v['dvr_sp']
+                 px[:dvr_hx] = v['dvr_hx']
+                 px[:dvr_ol] = v['dvr_ol']
+                   
+                 px[:msg] = v['msg']
+                 
+                 px[:vs] = v['vs'].to_json
                  
                  v.delete 'vs'
+                 
+                 px[:data] = v.to_json
+                 
+                 Sense.create px
+                 
+                 
+               
+                 
+                 
+                 
                  end
                  
                  else

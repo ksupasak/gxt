@@ -217,7 +217,10 @@ def process_request
 
     
     if params[:operation] != "login" and acl['*'] == nil and (acl[params[:operation].to_sym]==nil or (acl[params[:operation].to_sym] and acl[params[:operation].to_sym].index('*')==nil)) #"#{params[:service]}/#{params[:operation]}" != "Home/index"
-    unless session[:identity]
+    
+      puts "xxx " +session[:identity].inspect
+    
+    unless session[:identity] 
       
     session[:return_to] = request.fullpath 
       

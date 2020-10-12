@@ -414,13 +414,16 @@
 				<%=inline(this,:'_widget_map')%>
 				</div>
 				
+				<div class="col-6 col-sm-6 col-lg-3 ">
+				<%=inline(this,:'_widget_route')%>
+				</div>
 				
 		
-			
-				<div class="col-6 col-sm-6 col-lg-9">
-				<%=inline(this,:'_widget_all_ambulance')%>
-			
+				<div class="col-6 col-sm-6 col-lg-3 ">
+				<%=inline(this,:'_widget_img')%>
 				</div>
+			
+			
 				
 				
 				
@@ -428,6 +431,12 @@
 				<%=inline(this,:'_widget_all_map')%>
 			
 				</div>
+				
+				<div class="col-6 col-sm-6 col-lg-9">
+				<%=inline(this,:'_widget_all_ambulance')%>
+			
+				</div>
+				
 		</div>
 		
 		<!-- Context -->
@@ -840,6 +849,13 @@
 			
 			
 					$('.station-'+i+' .score .value').html(obj['score'])
+					
+					
+					$('.station-'+i+' .dvr_sp .value').html(obj['dvr_sp'])
+					$('.station-'+i+' .dvr_hx .value').html(obj['dvr_hx'])
+					$('.station-'+i+' .dvr_ol .value').html(obj['dvr_ol'])
+					
+
 			
 				    sos = parseInt(obj['score']);
 					color = 'none'

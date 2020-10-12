@@ -8,21 +8,19 @@
 	result = {:status=>'404 NOTFound', :id=>params[:ambu]}
 	
 	if ambu and ambu.last_location and ambu.last_location!=""
-
-	
 	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}"
 	
 	if params[:wp] and params[:wp].size>0
 	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}&waypoints=#{params[:wp]}"
 	end
 
-	puts url 
+	
 	
 	data = `curl '#{url}'`
 	
 	obj = JSON.parse data
 	
-	puts obj.inspect
+
 	
 
 	

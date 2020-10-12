@@ -60,7 +60,7 @@ Mongoid::Criteria::Queryable::Extensions::String.class_exec{
       hash.tap do |_hash|
         field, direction = spec.strip.split(/\s/)
         
-        puts 'sort option edited '+field.inspect+'::'+direction.inspect
+        # puts 'sort option edited '+field.inspect+'::'+direction.inspect
         
         
         if direction
