@@ -192,6 +192,9 @@ def self.registered(app)
                  
                       departure_log.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto check'
                       
+                      route.update_attributes :start_time=>Time.now
+                      
+                      
                        accept = AdmitLog.where(:admit_id=>admit.id, :name=>'AOC Accept', :status=>'PENDING').first
                        
                         if accept
@@ -219,6 +222,8 @@ def self.registered(app)
                       if departure_log.status=='PENDING'
                         
                         departure_log.update_attributes :status=>'COMPLETED', :stamp=>Time.now , :note=>'Auto skip'
+                        route.update_attributes :start_time=>Time.now
+                      
                         
                         accept = AdmitLog.where(:admit_id=>admit.id, :name=>'AOC Accept', :status=>'PENDING').first
                        
@@ -232,7 +237,7 @@ def self.registered(app)
                       end
                         
                       
-                      route.update_attributes :status=>'COMPLETED', :act_duration=>Time.now  - departure_log.stamp , :note=>'Auto check'
+                      route.update_attributes :status=>'COMPLETED', :act_duration=>Time.now  - departure_log.stamp , :note=>'Auto check', :stop_time=>Time.now
                       
                       end
                           
