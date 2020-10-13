@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="0 0 100 40" width="100" height="40">
+  <defs>
+    <radialGradient cx="0" cy="0" r="1" id="Gradient" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="white"/>
+      <stop offset="1" stop-color="#0007ee"/>
+    </radialGradient>
+    <radialGradient id="Obj_Gradient" xl:href="#Gradient" gradientTransform="translate(55.390676 12.454558) scale(5.917212)"/>
+    <linearGradient x1="0" x2="1" id="Gradient_2" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7f7f7f"/>
+      <stop offset=".21282953" stop-color="#515151"/>
+      <stop offset="1" stop-color="#191919"/>
+    </linearGradient>
+    <linearGradient id="Obj_Gradient_2" xl:href="#Gradient_2" gradientTransform="translate(52.09901 22.288852) scale(6.583333)"/>
+    <radialGradient id="Obj_Gradient_3" xl:href="#Gradient" gradientTransform="translate(55.390676 32.123145) scale(5.917212)"/>
+    <radialGradient cx="0" cy="0" r="1" id="Gradient_3" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="white"/>
+      <stop offset="1" stop-color="#000047"/>
+    </radialGradient>
+    <radialGradient id="Obj_Gradient_4" xl:href="#Gradient_3" gradientTransform="translate(68.917375 22.218974) scale(17.829054)"/>
+    <font-face font-family="Helvetica" font-size="13" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <radialGradient id="Obj_Gradient_5" xl:href="#Gradient" gradientTransform="translate(6.888889 8.260329) scale(3.568925)"/>
+    <radialGradient id="Obj_Gradient_6" xl:href="#Gradient" gradientTransform="translate(6.888889 36.75563) scale(3.568925)"/>
+    <linearGradient x1="0" x2="1" id="Gradient_4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="white"/>
+      <stop offset=".477987" stop-color="#9293ab"/>
+      <stop offset="1" stop-color="#000047"/>
+    </linearGradient>
+    <linearGradient id="Obj_Gradient_7" xl:href="#Gradient_4" gradientTransform="translate(61.15472 1.7843921) rotate(75.50599) scale(7.667282)"/>
+    <linearGradient x1="0" x2="1" id="Gradient_5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="white"/>
+      <stop offset=".47799714" stop-color="#9293ab"/>
+      <stop offset="1" stop-color="#000047"/>
+    </linearGradient>
+    <linearGradient id="Obj_Gradient_8" xl:href="#Gradient_5" gradientTransform="translate(61.16523 35.481747) rotate(75.50526) scale(7.667092)"/>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.17.5\n2020-10-13 07:59:14 +0000</metadata>
+  <g id="Canvas_1" stroke-dasharray="none" fill-opacity="1" stroke-opacity="1" fill="none" stroke="none">
+    <title>Canvas 1</title>
+    <g id="Canvas_1_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <title>path721</title>
+        <path d="M 2.5 42 L 79.96389 42 C 82.12147 41.780556 82.96238 40.35329 83.91389 37.719956 C 84.82853 34.758333 84.7548 10.4 83.80504 7.766667 C 82.96238 5.4625 82.12147 2.5 79.96389 2.5 L 2.5 2.5 Z" fill="white"/>
+        <path d="M 2.5 42 L 79.96389 42 C 82.12147 41.780556 82.96238 40.35329 83.91389 37.719956 C 84.82853 34.758333 84.7548 10.4 83.80504 7.766667 C 82.96238 5.4625 82.12147 2.5 79.96389 2.5 L 2.5 2.5 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_3">
+        <title>g635</title>
+        <g id="Graphic_6">
+          <title>rect611</title>
+          <rect x="52.09901" y="7.537412" width="6.583333" height="9.834293" fill="url(#Obj_Gradient)"/>
+          <rect x="52.09901" y="7.537412" width="6.583333" height="9.834293" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_5">
+          <title>rect614</title>
+          <rect x="52.09901" y="17.371705" width="6.583333" height="9.834293" fill="url(#Obj_Gradient_2)"/>
+          <rect x="52.09901" y="17.371705" width="6.583333" height="9.834293" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_4">
+          <title>rect620</title>
+          <rect x="52.09901" y="27.205998" width="6.583333" height="9.834293" fill="url(#Obj_Gradient_3)"/>
+          <rect x="52.09901" y="27.205998" width="6.583333" height="9.834293" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Graphic_7">
+        <title>path690</title>
+        <path d="M 63.28962 7.267211 C 62.64182 7.389573 62.07302 7.658524 62.048444 8.294562 C 62.72082 17.787378 62.69449 26.850784 61.73771 36.343073 C 61.73771 36.931184 62.28018 37.37885 62.668156 37.37885 L 73.52978 38.53225 C 74.356644 38.609496 75.20984 37.961696 75.39242 37.210318 C 76.32813 27.387984 76.38607 17.149584 75.23793 7.1200956 C 75.26251 6.3868 74.35138 5.714422 73.52978 5.9458044 L 63.28962 7.2666844 Z" fill="url(#Obj_Gradient_4)"/>
+        <path d="M 63.28962 7.267211 C 62.64182 7.389573 62.07302 7.658524 62.048444 8.294562 C 62.72082 17.787378 62.69449 26.850784 61.73771 36.343073 C 61.73771 36.931184 62.28018 37.37885 62.668156 37.37885 L 73.52978 38.53225 C 74.356644 38.609496 75.20984 37.961696 75.39242 37.210318 C 76.32813 27.387984 76.38607 17.149584 75.23793 7.1200956 C 75.26251 6.3868 74.35138 5.714422 73.52978 5.9458044 L 63.28962 7.2666844 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_8">
+        <title>text694</title>
+        <path d="M 76.67574 18.017217 L 76.67576 39.265233 L 82.48647 39.261286 L 82.48645 18.013271 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(0 0) rotate(89.99996)" fill="red">
+          <tspan font-family="Helvetica" font-size="13" font-weight="400" fill="red" x="0" y="13">AMBULANS</tspan>
+        </text>
+      </g>
+      <g id="Group_9">
+        <title>g717</title>
+        <g id="Graphic_12">
+          <title>path714</title>
+          <circle cx="30.188798" cy="22.410984" r="14.3735714983827" fill="red"/>
+          <circle cx="30.188798" cy="22.410984" r="14.3735714983827" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_11">
+          <title>rect715</title>
+          <rect x="26.639064" y="11.860096" width="7.022047" height="21.066667" fill="white"/>
+          <rect x="26.639064" y="11.860096" width="7.022047" height="21.066667" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_10">
+          <title>rect716</title>
+          <rect x="19.616842" y="18.882318" width="21.066667" height="7.022047" fill="white"/>
+          <rect x="19.616842" y="18.882318" width="21.066667" height="7.022047" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Graphic_13">
+        <title>path723</title>
+        <path d="M 82.11971 36.47351 C 83.70147 36.47351 83.57507 25.364356 83.54522 22.867956 C 83.59613 20.218822 83.77696 7.826882 82.22856 7.836362 C 82.22856 11.483178 82.17764 33.376184 82.11971 36.472984 Z" fill="#818181"/>
+        <path d="M 82.11971 36.47351 C 83.70147 36.47351 83.57507 25.364356 83.54522 22.867956 C 83.59613 20.218822 83.77696 7.826882 82.22856 7.836362 C 82.22856 11.483178 82.17764 33.376184 82.11971 36.472984 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Group_14">
+        <title>g729</title>
+        <g id="Graphic_16">
+          <title>path727</title>
+          <line x1="4.0981565" y1="4.9440844" x2="49.013906" y2="4.9440844" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_15">
+          <title>path728</title>
+          <line x1="4.0981565" y1="39.869107" x2="49.013906" y2="39.869107" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Group_17">
+        <title>g733</title>
+        <g id="Graphic_19">
+          <title>path724</title>
+          <path d="M 9.4125 8.260329 C 9.4125 9.654081 8.282641 10.78394 6.888889 10.78394 C 5.495137 10.78394 4.365278 9.654081 4.365278 8.260329 C 4.365278 6.866577 5.495137 5.736718 6.888889 5.736718 C 8.282641 5.736718 9.4125 6.866577 9.4125 8.260329 Z" fill="url(#Obj_Gradient_5)"/>
+          <path d="M 9.4125 8.260329 C 9.4125 9.654081 8.282641 10.78394 6.888889 10.78394 C 5.495137 10.78394 4.365278 9.654081 4.365278 8.260329 C 4.365278 6.866577 5.495137 5.736718 6.888889 5.736718 C 8.282641 5.736718 9.4125 6.866577 9.4125 8.260329 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+        <g id="Graphic_18">
+          <title>path726</title>
+          <circle cx="6.888889" cy="36.75563" r="2.52361111111111" fill="url(#Obj_Gradient_6)"/>
+          <circle cx="6.888889" cy="36.75563" r="2.52361111111111" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Graphic_20">
+        <title>path736</title>
+        <path d="M 59.947044 6.531809 C 58.87967 6.641531 52.050556 6.8609756 51.722267 6.531809 C 51.39398 6.1354044 51.39398 4.668989 51.722267 4.43708 L 71.60393 4.286629 C 72.95922 4.272409 72.97151 4.889311 72.37813 5.067149 C 71.28091 5.368929 61.119756 6.455091 59.947044 6.531809 Z" fill="url(#Obj_Gradient_7)"/>
+        <path d="M 59.947044 6.531809 C 58.87967 6.641531 52.050556 6.8609756 51.722267 6.531809 C 51.39398 6.1354044 51.39398 4.668989 51.722267 4.43708 L 71.60393 4.286629 C 72.95922 4.272409 72.97151 4.889311 72.37813 5.067149 C 71.28091 5.368929 61.119756 6.455091 59.947044 6.531809 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_21">
+        <title>path738</title>
+        <path d="M 59.95758 38.15709 C 58.8902 38.048244 52.06109 37.8288 51.7328 38.15709 C 51.40451 38.553844 51.40451 40.019733 51.7328 40.25322 L 71.61447 40.402444 C 72.969756 40.41649 72.982044 39.80029 72.38867 39.62298 C 71.291444 39.32102 61.13029 38.234333 59.95758 38.15709 Z" fill="url(#Obj_Gradient_8)"/>
+        <path d="M 59.95758 38.15709 C 58.8902 38.048244 52.06109 37.8288 51.7328 38.15709 C 51.40451 38.553844 51.40451 40.019733 51.7328 40.25322 L 71.61447 40.402444 C 72.969756 40.41649 72.982044 39.80029 72.38867 39.62298 C 71.291444 39.32102 61.13029 38.234333 59.95758 38.15709 Z" stroke="black" stroke-linecap="butt" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

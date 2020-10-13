@@ -1,5 +1,8 @@
 <%= inline(this,:'../home/_monitor') %>
 <link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<script>
+ 
+</script>
 <style>
 	li.menu{
 		padding:5px;
@@ -637,9 +640,9 @@
 						
 					 /////////////////////////////////////////////////// Widget Route
 					   
-					   
-					   widget_route_update(selected_admit_id)
-					   
+					   if(selected_admit_id){
+					   	widget_route_update(selected_admit_id)
+					   }
 					   resetPath();
 					   
 					 ///////////////////////////////////////////////////   
@@ -793,8 +796,8 @@
 			
 			
 				  obj = data['data'][i]
-				
-				  locations.push([parseFloat(obj['lat']),parseFloat(obj['lng'])])
+				  obj['title'] = i
+				  locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
 				
 				
 				 // console.log(obj)
@@ -826,14 +829,37 @@
 					
 					// if(admit&&i==admit['station_name']){
 					
-						console.log( "Lat "+obj['lat']+" Lng " + obj['lng'])
-					    var latlng = {lat: parseFloat(obj['lat']), lng: parseFloat(obj['lng'])};
+					    // var latlng = {lat: parseFloat(obj['lat']), lng: parseFloat(obj['lng'])};
 					
-						marker.setPosition(latlng);
-						map.setCenter(latlng);
+				  // locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
 					
-					    var path = poly.getPath();
-					    path.push(marker.position);
+						// var latlng = new google.maps.LatLng(parseFloat(obj['lat']), parseFloat(obj['lng']));
+						
+						widget_map_setLocation(obj, parseFloat(obj['lat']), parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']);
+						
+						
+						// marker = widget_map_getMarker();
+	//
+	// 					var latlng = new google.maps.LatLng(parseFloat(obj['lat']), parseFloat(obj['lng']));
+	// 					marker.setPosition(latlng);
+	//   					  	var ic = marker.get("icon");
+	//   					  	ic.rotation = obj['dvr_hx'];
+	//   					  	marker.set("icon", ic);
+	//
+	//
+	// 					map.setCenter(latlng);
+	//
+	//
+	// 					var mapLabel = new MapLabel({
+	// 					  text: i,
+	// 					  position: latlng,
+	// 					  map: map,
+	// 					  fontSize: 20,
+	// 					  align: 'left'
+	// 					});
+	//
+	// 				    var path = poly.getPath();
+	// 				    path.push(marker.position);
 					
 					
 						show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][1])	
