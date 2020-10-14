@@ -32,7 +32,7 @@ end
 		
     patient = Patient.find admit.patient_id
 
-    report = ERCaseReport.where(:admit_id=>admit.id).first
+    report = AocCaseReport.where(:admit_id=>admit.id).first
 
     last = DataRecord.where(:admit_id=>admit.id).last
 
@@ -44,6 +44,8 @@ end
 
 <div class="container summary-container">
     <a href="#" class="btn btn-secondary btn-print" id="btn-print">Print</a>
+    <a href="create_form?admit_id=<%=params[:admit_id]%>" class="btn btn-secondary" >Edit</a>
+    <a href="#" class="btn btn-danger" id="btn-discharge">Discharge</a>
     <p class="text-center mt-3 mb-1 font-weight-bold">
     <span class="lang" value="title"></span>
     </p>
@@ -712,7 +714,7 @@ end
         </tr>
       </table>
       <!--4. Transfer decision Table-->
-    <span class="table-title pl-5 ">4. เกณฑ์การตัดสินใจส่งโรงพยาบาล ๖โดยหัวหน้าทีมและ /ผ่านการเห็นชอบของศูนย์)</span>
+    <span class="table-title pl-5 ">4. เกณฑ์การตัดสินใจส่งโรงพยาบาล (โดยหัวหน้าทีมและ /ผ่านการเห็นชอบของศูนย์)</span>
     <table class="w-100 table-style">
     <tr>
       <td class="p-1" colspan="4">
