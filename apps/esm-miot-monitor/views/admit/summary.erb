@@ -234,10 +234,10 @@ end
 		
 		senses.each_with_index do |i,ii| 
 		
-			o = ActiveSupport::JSON.decode(i.data)
+			o = ActiveSupport::JSON.decode(i.vs)
 			
-			if o['vs']
-				o['vs'].each do |j| 
+			if o
+				o.each do |j| 
 					
 					# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
 					bp = j['bp'].split("/")
