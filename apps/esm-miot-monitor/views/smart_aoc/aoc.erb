@@ -625,15 +625,27 @@
 						<% if admit %>	
 						admit_path = prefix+"/Admit/show?id=<%=admit.id%>"
 						<% end %>
-					
+						
+						<% if i.device_no and i.device_no !="" %>
+						
 						// dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&jsession=3883c38b-c306-4f48-a837-7c9a8dcda3f0"
 						dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&account=admin&password=admin"
 						tele_path =  prefix+"/Sas/tele?resourceId=<%=i.name%>"
 					
 				       $('iframe').attr( "src", dvr_path);
 					
-					
+						<% end %>
+					   
 						console.log("#select view1|"+admit_path+" view2|"+dvr_path+" view3|"+tele_path)
+						
+					 /////////////////////////////////////////////////// Widget Route
+					   
+					   
+					   widget_route_update(selected_admit_id)
+					   
+					   resetPath();
+					   
+					 ///////////////////////////////////////////////////   
 					
 						// $('.callEnd').click();
 	// 					setTimeout(function(){
@@ -710,7 +722,10 @@
 	      }
 	  
 	      ws.onmessage = function(m) { 
-		console.log("zz"+m.data.length)	
+			  
+			  
+		console.log("package="+m.data.length)	
+			  
 			  <% if params[:debug] %>
 			show(''+m.data)
 			  <% end %>
@@ -755,13 +770,14 @@
 			
 			$('.timer').html(data['time'])
 				console.log(selected_ambu)	
+				
+				
 			if(selected_ambu&&data['ambu_data']){
 				
 				ambu = data['ambu_data'][selected_ambu]
 				if( data['admit_data']&&ambu['admit_id']){
 				admit = data['admit_data'][ambu['admit_id']]
 				if(admit){
-					console.log(admit['patient']['first_name'])
 					
 					$('.selection .ambu-name .value').html(ambu['name'])
 					$('.selection .patient-name .value').html(admit['patient']['first_name']+" "+admit['patient']['last_name'])
@@ -770,13 +786,20 @@
 			
 				
 			}	
-			console.log("yy"+data['list'].length)	
+			// console.log("yy"+data['list'].length)
+			
+			
+			locations = []
+			
 
 			for(var id in data['list']){
 				i = data['list'][id]
 			
 			
 				  obj = data['data'][i]
+				
+				  locations.push([parseFloat(obj['lat']),parseFloat(obj['lng'])])
+				
 				
 				 // console.log(obj)
 				if(obj){
@@ -875,7 +898,22 @@
 			}
 			
 			}
-			 }
+			
+				console.log(locations)
+					
+					///////////////////////////////////////////////////// All map
+			
+					widget_all_map_update(locations)
+					
+					//////////////////////////////////////////////////////////////
+			
+			}
+			
+			
+			
+			
+			
+			
 		 };
 
 

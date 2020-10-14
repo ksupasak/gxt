@@ -15,9 +15,14 @@
 					// Initialize and add the map
 					var marker_all = null;
 					var map_all = null;
-					var poly = null;
+					var poly_all = null;
+					
+					var bounds = null;
 
 					function initMapAllMap() {
+						
+						bounds = new google.maps.LatLngBounds();
+						
 					  // The location of Uluru
 					  var uluru = {lat: 15.8700, lng: 100.9925};
 					  // The map, centered at Uluru
@@ -34,19 +39,54 @@
 					 // 			    map: map
 					 // 			});
 					 
-					 poly = new google.maps.Polyline({
+					 poly_all = new google.maps.Polyline({
 					    strokeColor: '#0000ff',
 					    strokeOpacity: 1.0,
 					    strokeWeight: 3
 					  });
-					  poly.setMap(map_all);
+					  poly_all.setMap(map_all);
 					 
 					 
 					 
 					}
 
 					function goPosition(){
-							setPosition(53.345735,-6.259548)
+						<%
+							latlng = Setting.get(:google_map_key,"13.6908282,100.6987491").split(",")
+							
+						%>
+							setPosition(<%=latlng[0]%>,latlng[1])
+					}
+					
+					function widget_all_map_update(locations){
+						setPositions(locations);
+					}
+					
+					function setPositions(locations){
+						
+						for (i = 0; i < locations.length; i++) {  
+						  var marker = new google.maps.Marker({
+							  // console.log(locations[i][1])
+  // 							  console.log(locations[i][1])
+							  
+						    position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+						    map: map_all
+						  });
+
+						  //extend the bounds to include each marker's position
+						  bounds.extend(marker.position);
+
+						  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+						    // return function() {
+	    // 						      infowindow.setContent(locations[i][0]);
+	    // 						      infowindow.open(map_all, marker);
+	    // 						    }
+						  })(marker, i));
+						}
+
+						//now fit the map to the newly inclusive bounds
+						map_all.fitBounds(bounds);
+						
 					}
 
 					function setPosition(lat,lng){
@@ -54,10 +94,10 @@
 						// lat = 53.345735;
 						// 			lng = -6.259548;
 
-						var new_marker_position = new google.maps.LatLng(lat, lng);
+						// var new_marker_position = new google.maps.LatLng(lat, lng);
 
-					   marker_all.setPosition(new_marker_position);
-					   map_all.setCenter(new google.maps.LatLng( lat, lng ) );
+					   // marker_all.setPosition(new_marker_position);
+					   // map_all.setCenter(new google.maps.LatLng( lat, lng ) );
 
 					}
 					    </script>

@@ -28,6 +28,10 @@ module EsmMiotMonitor
     key :act_distance, Integer
     key :act_duration, Integer
     
+    key :start_time, Time
+    key :stop_time, Time
+    
+    
     key :note, String
     
     

@@ -1,0 +1,146 @@
+<%
+	
+admit = Admit.find params[:admit_id]
+
+list = AocCaseRoute.where(:admit_id=>admit.id).all
+
+current = AocCaseRoute.where(:admit_id=>admit.id, :status=>'SCHEDULED').sort(:sort_order=>1).first
+	
+%>
+
+<% if current 
+
+distance = "-"
+distance = "#{format("%0.1f",current.act_distance/1000.0)}" if current.act_distance
+
+duration = "-"
+duration = "#{format("%0.1f",current.act_duration/60.0)}" if current.act_duration
+
+arrival = "-"
+arrival = "#{(Time.now+current.act_duration).strftime("%H:%M")}" if current.act_distance
+
+
+%>
+<script>
+	$('.act_distance .value').each(function(){
+			$(this).html("<%=distance%>")
+	})
+	
+	$('.act_duration .value').each(function(){
+			$(this).html("<%=duration%>")
+	})
+	
+	$('.act_arrival .value').each(function(){
+			$(this).html("<%=arrival%>")
+	})
+</script>
+
+<% end %>
+
+
+<div class="row row-route ">
+
+<div class="col-12">
+	
+	<div class="row">
+
+	<div class="col-3">
+
+	Route
+
+	</div>
+	
+	<div class="col-2">
+	
+	Km
+	
+	</div>
+	
+	<div class="col-2">
+	
+	Min
+	</div>
+	
+	
+	<div class="col-2">
+	
+	T0
+	
+	</div>
+	
+	<div class="col-2">
+	
+		T1
+	
+	</div>
+	
+
+	</div>
+	
+</div>
+
+</div>
+
+<% for i in list 
+
+distance = "-"
+distance = "#{format("%0.1f",i.est_distance/1000.0)}" if i.est_distance
+
+duration = "-"
+duration = "#{format("%0.1f",i.est_duration/60.0)}" if i.est_duration
+	
+start_time = "-"
+stop_time = "-"	
+	
+start_time = i.start_time.strftime("%H:%M") if i.start_time
+stop_time = i.stop_time.strftime("%H:%M") if i.stop_time
+
+	
+%>
+
+	
+<div class="row row-route <%='route-active' if i == current%>">
+
+<div class="col-12">
+	
+	<div class="row">
+
+	<div class="col-3">
+
+	<%=i.address[0..10]%>
+
+	</div>
+	
+	<div class="col-2">
+	
+	<%=distance%>
+	
+	</div>
+	
+	<div class="col-2">
+	
+	<%=duration%>
+	
+	</div>
+	
+	
+	<div class="col-2">
+	
+	<%=start_time%>
+	
+	</div>
+	
+	<div class="col-2">
+	
+	<%=stop_time%>
+	
+	</div>
+	
+
+	</div>
+	
+</div>
+
+</div>
+
+<% end %>

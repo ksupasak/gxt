@@ -212,8 +212,8 @@ MSG
      
      data[:spo2] = 90+rand(10)
      
-     data[:lat] = 15.8700+0.01*Math.cos(Time.now.to_i*Math::PI/180)
-     data[:lng] = 100.9925+0.01*Math.sin(Time.now.to_i*Math::PI/180)
+     data[:lat] = 13.6908282+0.01*Math.cos(Time.now.to_i*Math::PI/180)
+     data[:lng] = 100.6987491+0.01*Math.sin(Time.now.to_i*Math::PI/180)
      
      data[:msg] = "ALERT:#{Time.now.inspect}"
      
