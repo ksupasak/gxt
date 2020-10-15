@@ -65,3 +65,75 @@ border-bottom: 2px solid #3147FF;
   }
 }
 
+
+.primary-nav{
+	background:#151C26;
+} 
+
+.secondary-nav{
+	background:#17222F;
+} 
+
+.primary-bg{
+	background:#000;
+}
+
+
+.secondary-bg{
+	background:#13171D;
+}
+
+.primary-blue{
+	background:#2437C6;
+} 
+
+.secondary-blue{
+	background:#36465E;
+} 
+
+.dark-blue{
+	background:#01174F;
+} 
+
+.dark-border{
+	background:#2A2F47;
+} 
+
+.primary-font{
+	background:#DADADB;
+}
+
+.secondary-font{
+	background:#C2C2C2;
+} 
+
+.dark-font{
+	background:#686E71;
+}
+
+.time-green{
+	background:#42B7AB;
+} 
+.alert-yellow{
+	background:#FFC107;
+} 
+
+.alert-red{
+	background:#FF5D5D;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
