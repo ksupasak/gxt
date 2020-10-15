@@ -68,8 +68,17 @@
 	
 	
 %>
-<%=link_to 'Note',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"width:80px" %>
+<div class="row" style="margin-top:10px;border:0px solid">
+<div class="col-3">
+บันทึก 
+</div>
 
+<input name="note" type="text" id="note-value" class="secondary-blue col-6" style="border:0px solid;border-radius: 4px;color:white;"/>
+
+<div class="col-3">
+<%=link_to 'เพิ่มบันทึก',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"font-size:0.8em;vertical-align:middle" %>
+</div>
+</div>
 <div id="message-partial" style="overflow:auto">
 	
 </div>

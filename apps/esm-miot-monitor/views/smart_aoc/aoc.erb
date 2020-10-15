@@ -278,7 +278,7 @@
 		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row">
 			<i class="fas fa-ambulance pr-2"></i>
 			<%= i.name %> : <%=i.plate_license%> 
-			<%if patient %><span class=" btn-warning btn-mini" style="float:right;font-size:0.7em">ALLOCATED</span><% end %>
+			<%if patient %><span class=" btn-warning btn-mini" style="float:right;font-size:0.7em;padding:5px;border-radius: 10px;">ALLOCATED</span><% end %>
 		</li>
 		
 			<% rescue Exception=>e %>
@@ -303,8 +303,9 @@
 			<div class="col-6" class="display: flex;  justify-content: start;">
 			Live Conference
 			</div>
-			<div class="col-6" class="display: flex;  justify-content: end;">
-			12:00 น.
+			<div class="col-6" class="display: flex;  justify-content: end;" style="border:0px solid;text-align:right">
+			<span class="timer"></span> น.
+			
 			</div>
 		</div>
 	</div>
@@ -353,11 +354,11 @@
 			<div class="col-4" >
 			<span class="">
 				
-				<%=link_to '<i class="fas fa-notes-medical pr-1"></i> Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-notes-medical pr-1"></i> Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:100px" %>
 			
-				<%=link_to '<i class="fas fa-heartbeat pr-1"></i> Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-heartbeat pr-1"></i> Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:100px" %>
 			
-				<%=link_to '<i class="fas fa-phone-alt pr-1"></i> Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-phone-alt pr-1"></i> Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:100px" %>
 				
 				
 			</span>
@@ -366,9 +367,9 @@
 			<div class="col-4 d-flex justify-content-end" >
 			<span class="">
 				
-				<%=link_to '<i class="far fa-list-alt"></i> Summary',"#", :class=>'btn btn-success context disable secondary-nav', :style=>"width:100px" %>
+				<%=link_to '<i class="far fa-list-alt"></i> Summary',"#", :class=>'btn btn-success context disable secondary-nav', :style=>"width:130px" %>
 			
-				<%=link_to '<i class="far fa-times-circle"></i> Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:100px" %>
+				<%=link_to '<i class="far fa-times-circle"></i> Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:130px" %>
 		
 			
 			 </span>
@@ -413,6 +414,7 @@
 			<span class="head">Indication : </span>
 			<span class="patient-indication "><span class="value">-</span></span>
 	
+	
 			<span class="head">Note : </span>
 			<span class="patient-note "><span class="value">-<span></span>
 	
@@ -423,7 +425,7 @@
 		</div>
 		
 		<div class="row">
-		<div class="col-12 header header2" style="padding:10px;background:black" >
+		<div class="col-12 header header2" style="padding:5px;background:black" >
 			<center>
 				
 				
@@ -458,7 +460,11 @@
 				
 				
 				<div class="xwidget col-6 col-sm-6 col-lg-3" id="panel-c">
+				<div class="row secondary-bg"  >
+				<div class="col-12">	
 				<%=inline(this,:'_widget_dvr')%>
+				</div>
+				</div>
 				</div >	
 				
 		
@@ -509,7 +515,73 @@
 	
 			<script type="text/javascript">
 	    
-
+				function strftime(sFormat, date) {
+				  if (!(date instanceof Date)) date = new Date();
+				  var nDay = date.getDay(),
+				    nDate = date.getDate(),
+				    nMonth = date.getMonth(),
+				    nYear = date.getFullYear(),
+				    nHour = date.getHours(),
+				    aDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+				    aMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+				    aDayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
+				    isLeapYear = function() {
+				      if ((nYear&3)!==0) return false;
+				      return nYear%100!==0 || nYear%400===0;
+				    },
+				    getThursday = function() {
+				      var target = new Date(date);
+				      target.setDate(nDate - ((nDay+6)%7) + 3);
+				      return target;
+				    },
+				    zeroPad = function(nNum, nPad) {
+				      return ('' + (Math.pow(10, nPad) + nNum)).slice(1);
+				    };
+				  return sFormat.replace(/%[a-z]/gi, function(sMatch) {
+				    return {
+				      '%a': aDays[nDay].slice(0,3),
+				      '%A': aDays[nDay],
+				      '%b': aMonths[nMonth].slice(0,3),
+				      '%B': aMonths[nMonth],
+				      '%c': date.toUTCString(),
+				      '%C': Math.floor(nYear/100),
+				      '%d': zeroPad(nDate, 2),
+				      '%e': nDate,
+				      '%F': date.toISOString().slice(0,10),
+				      '%G': getThursday().getFullYear(),
+				      '%g': ('' + getThursday().getFullYear()).slice(2),
+				      '%H': zeroPad(nHour, 2),
+				      '%I': zeroPad((nHour+11)%12 + 1, 2),
+				      '%j': zeroPad(aDayCount[nMonth] + nDate + ((nMonth>1 && isLeapYear()) ? 1 : 0), 3),
+				      '%k': '' + nHour,
+				      '%l': (nHour+11)%12 + 1,
+				      '%m': zeroPad(nMonth + 1, 2),
+				      '%M': zeroPad(date.getMinutes(), 2),
+				      '%p': (nHour<12) ? 'AM' : 'PM',
+				      '%P': (nHour<12) ? 'am' : 'pm',
+				      '%s': Math.round(date.getTime()/1000),
+				      '%S': zeroPad(date.getSeconds(), 2),
+				      '%u': nDay || 7,
+				      '%V': (function() {
+				              var target = getThursday(),
+				                n1stThu = target.valueOf();
+				              target.setMonth(0, 1);
+				              var nJan1 = target.getDay();
+				              if (nJan1!==4) target.setMonth(0, 1 + ((4-nJan1)+7)%7);
+				              return zeroPad(1 + Math.ceil((n1stThu-target)/604800000), 2);
+				            })(),
+				      '%w': '' + nDay,
+				      '%x': date.toLocaleDateString(),
+				      '%X': date.toLocaleTimeString(),
+				      '%y': ('' + nYear).slice(2),
+				      '%Y': nYear,
+				      '%z': date.toTimeString().replace(/.+GMT([+-]\d+).+/, '$1'),
+				      '%Z': date.toTimeString().replace(/.+\((.+?)\)$/, '$1')
+				    }[sMatch] || sMatch;
+				  });
+				}
+				
+				
 				$(document).ready(function(){
 					
 					var selected_ambu = null;
@@ -816,8 +888,10 @@
 
 			data = JSON.parse(lines[1])
 	
-			
-			$('.timer').html(data['time'])
+			time = strftime("%H:%M:%S",new Date())
+			$('.timer').html(time)
+				
+				
 				console.log(selected_ambu)	
 				
 				
@@ -1008,8 +1082,8 @@
 E.S.M.Solution Co.,Ltd. and Aliance
 </div>
 
-<br/>
-<a href="tel:+66865443352">0865443352</a>
+<a href="tel:+66865443352" style="display:none">0865443352</a>
 <%= inline(this,:'../home/_scoring') %>
-
-<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
+<% if params[:debug]%>
+<i style="color:#666"><div id="msgs" style="font-size:0.8em"></div></i>
+<% end %>
