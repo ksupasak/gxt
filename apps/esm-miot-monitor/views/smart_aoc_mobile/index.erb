@@ -1,3 +1,12 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<link href="<%=url_for('css/aoc_dark.css?=22')%>" rel="stylesheet">
+<style>	
+	
+	hr.new1 {
+		border-top: 1px solid #C2C2C287;
+	} */
+</style>
 <%
 		
 @current_zone = Zone.first
@@ -12,33 +21,38 @@ end
 	ambulances = Ambulance.where(:zone_id=>@current_zone.id).all
 	
 	
-%><br/><br/>
+%>
+<br/><br/>
 <center>
-<h3 class="header">Smart AOC : Mobile</h3>
+<h3 class="m-header font-weight-bold text-uppercase">Smart AOC : Mobile</h3>
 </center>
-<hr/>
+<br/>
+<p class="px-3">Ambulance lists:</p>
 
 <% for i in ambulances 
 
 admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
 
-cls = 'btn-success'
+cls = 'm-admit'
 
 
 name = "#{i.name} #{i.plate_license}"
 
 if admit
 	name = "#{i.name} #{i.plate_license} : #{admit.case_no}"
-	cls = 'btn-warning' 
+	cls = 'm-allocate' 
 end
 
 %>
+
 <div class="row">
-<div class="col-12">
-	<center>
-<%=link_to "#{name}", "show?id=#{i.id}",:class=>"btn #{cls}",:style=>''%><br/><br/>
-</center>
-</div></div>
+	<div class="col-12 ">
+		<div class="px-3">
+			<%=link_to "#{name}", "show?id=#{i.id}",:class=>"btn #{cls}",:style=>''%><br/>
+		</div>
+	</div>
+</div>
 <% end %>
-<hr/>
-<center>  <%=link_to 'Back', "../SmartAOC/index",:class=>'nav-link' %></center>
+<hr class="new1 mx-3 mb-4"/>
+<center>  <%=link_to 'Back', "../SmartAOC/index",:class=>'btn btn-secondary' %></center>
+

@@ -27,10 +27,12 @@ GEM
       eventmachine (>= 0.12.9)
     event_emitter (0.2.6)
     eventmachine (1.2.7)
+    eventmachine (1.2.7-x64-mingw32)
     faye-websocket (0.10.9)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.13.1)
+    ffi (1.13.1-x64-mingw32)
     hiredis (0.6.3)
     http-accept (1.7.0)
     http-cookie (1.0.3)
@@ -100,6 +102,12 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    rest-client (2.1.0-x64-mingw32)
+      ffi (~> 1.9)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rest-graph (2.0.3)
     rqrcode (1.1.2)
       chunky_png (~> 1.0)
@@ -140,6 +148,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
+    unf_ext (0.0.7.7-x64-mingw32)
     vegas (0.1.11)
       rack (>= 1.0.0)
     websocket (1.2.8)
@@ -153,6 +162,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   activesupport

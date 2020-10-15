@@ -1,4 +1,5 @@
 <%= inline(this,:'../home/_monitor') %>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
 <script>
  
@@ -192,7 +193,7 @@
 		</ul>
 		
 		<b>Operating</b>
-		<ul>
+		<ul style="list-style: none;">
 			<%
 				
 				admits.each do |admit| 
@@ -202,7 +203,11 @@
 				
 			%>
 		<li class="menu">
-			<a href="#" class="select-<%=ambu_id%>  <%='panel-admit' if patient %>  ambu-<%=ambu_id%> ambu-row"> <%=admit.case_no%></a>
+			
+			<a href="#" class="select-<%=ambu_id%>  <%='panel-admit' if patient %>  ambu-<%=ambu_id%> ambu-row">
+				<i class="fas fa-ambulance pr-2"></i>
+				<%=admit.case_no%>
+			</a>
 		</li>
 		<% end %>
 		
@@ -210,7 +215,7 @@
 		</ul>
 		
 		<b>Completed</b>
-		<ul>
+		<ul style="list-style: none;">
 		<%
 		
 			admits_completed = @current_zone.admits.where(:status=>'Discharged').sort(:created_at.desc).limit(5).all if @current_zone
@@ -231,7 +236,7 @@
 		</ul>
 		
 		<b>Ambulance</b>
-		<ul>
+		<ul style="list-style: none;">
 			
 	<%
 		
@@ -271,6 +276,7 @@
 			end
 	%>		
 		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row">
+			<i class="fas fa-ambulance pr-2"></i>
 			<%= i.name %> : <%=i.plate_license%> 
 			<%if patient %><span class=" btn-warning btn-mini" style="float:right;font-size:0.7em">ALLOCATED</span><% end %>
 		</li>
@@ -347,11 +353,11 @@
 			<div class="col-4" >
 			<span class="">
 				
-				<%=link_to 'Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-notes-medical pr-1"></i> Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:80px" %>
 			
-				<%=link_to 'Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-heartbeat pr-1"></i> Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:80px" %>
 			
-				<%=link_to 'Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:80px" %>
+				<%=link_to '<i class="fas fa-phone-alt pr-1"></i> Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:80px" %>
 				
 				
 			</span>
@@ -360,9 +366,9 @@
 			<div class="col-4 d-flex justify-content-end" >
 			<span class="">
 				
-				<%=link_to 'Summary',"#", :class=>'btn btn-success context disable secondary-nav', :style=>"width:100px" %>
+				<%=link_to '<i class="far fa-list-alt"></i> Summary',"#", :class=>'btn btn-success context disable secondary-nav', :style=>"width:100px" %>
 			
-				<%=link_to 'Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:100px" %>
+				<%=link_to '<i class="far fa-times-circle"></i> Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:100px" %>
 		
 			
 			 </span>
@@ -398,7 +404,10 @@
 	
 	
 			<span class="head">Contact : </span>
-			<span class="patient-contact"><span class="value">-</span></span>
+			<span class="patient-contact">
+				<i class="fas fa-phone-alt"></i>
+				<span class="value">-</span>
+			</span>
 	
 	
 			<span class="head">Indication : </span>

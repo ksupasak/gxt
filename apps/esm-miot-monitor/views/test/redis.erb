@@ -12,8 +12,8 @@ puts "REDIS CONFIG SERVICE : #{c}"
 redis = Redis.new(url: c,:driver => :hiredis)
 	
 	
-redis.sadd "esm-miot-monitor", "demo7"
-redis.set "GXT|demo7", "esm-miot-monitor"
+redis.sadd "esm-miot-monitor", "miot"
+redis.set "GXT|miot", "esm-miot-monitor"
 
 	
 	
