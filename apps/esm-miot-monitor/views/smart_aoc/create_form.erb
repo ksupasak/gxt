@@ -112,12 +112,33 @@ else
 <div class="col-10 main">
   <section id="section-1">
     <h3>1 <%=secname[1]%></h3>
-	<%=report.inspect%>
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis, blanditiis expedita? Earum eligendi pariatur quaerat quos expedita ab quibusdam ratione veniam in, mollitia fuga repudiandae?</p>
-  </section>
+		<div class="card patient-info">
+			
+			<div class="tab-content report" id="pills-tabContent">
+				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+					aria-labelledby="pills-treatment-tab" style="width: 100%;">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">ผลการปฏิบัติงาน</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_breath">
+									<input type="hidden" name="report[result]" value="<%=report.result%>" id="report_result">								
+									<li class="list-group-item ">ไม่พบเหตุ</li>
+									<li class="list-group-item ">พบเหตุ</li>									
+								</ul>
+							</div>
+						</div>
+					</div>
+			
+					
+				</div>
+			</div>
+		</div>	  </section>
   <section id="section-2">
     <h3>2 <%=secname[2]%></h3>
-    <p>Ratione nulla nam, ipsa dignissimos corrupti veniam nostrum, laudantium asperiores sequi numquam placeat velit voluptate in praesentium non labore unde incidunt laborum maxime quae magni.</p>
   </section>
   <section id="section-3">
     <h3>3 <%=secname[3]%></h3>
@@ -711,7 +732,54 @@ else
   </section>
   <section id="section-6">
     <h3>6 <%=secname[6]%></h3>
-        
+		<div class="card patient-info">
+			
+
+			<div class="tab-content report" id="pills-tabContent">
+				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+					aria-labelledby="pills-treatment-tab" style="width: 100%;">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">Admitted</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_breath">
+									<input type="hidden" name="report[admitted]" value="<%=report.admitted%>" id="report_admitted">								
+									<li class="list-group-item ">Yes</li>
+									<li class="list-group-item ">No</li>									
+								</ul>
+							</div>
+						</div>
+					</div>
+			
+					<hr class="hr-trauma">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">เหตุผล</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_wound" >
+									<input type="hidden" name="report[status]" value="<%=report.status%>" id="report_status">
+									<li class="list-group-item ">ทุเลา</li>
+									<li class="list-group-item ">รักษาต่อที่อื่น</li>
+									<li class="list-group-item ">ยังรักษาในรพ.</li>
+									<li class="list-group-item ">เสียชีวิตใน รพ.</li>
+									<li class="list-group-item ">ปฏิเสธการรักษา/หนีกลับ</li>
+									<li class="list-group-item ">กลับไปตายบ้าน</li>
+									<li class="list-group-item ">ตามแล้วไม่ทราบผล</li>
+								</ul>
+							</div>
+						</div>
+					</div>		
+					
+				</div>
+			</div>
+		</div>		       
   </section>
  
 	<section>
