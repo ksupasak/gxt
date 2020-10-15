@@ -546,7 +546,53 @@ else
         </div>
   </section>
   <section id="section-4">
-    <h3>4 <%=secname[4]%></h3>
+	<h3>4 <%=secname[4]%></h3>
+		<div class="card patient-info">
+			
+
+			<div class="tab-content report" id="pills-tabContent">
+				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+					aria-labelledby="pills-treatment-tab" style="width: 100%;">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">โรงพยาบาล</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_breath">
+									<input type="hidden" name="report[hospital_type]" value="<%=report.hospital_type%>" id="report_hospital_type">								
+									<li class="list-group-item ">รพ.รัฐ</li>
+									<li class="list-group-item ">รพ.เอกชน</li>									
+								</ul>
+							</div>
+						</div>
+					</div>
+			
+					<hr class="hr-trauma">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">เหตุผล</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_wound" >
+									<input type="hidden" name="report[reason]" value="<%=report.reason%>" id="report_reason">
+									<li class="list-group-item ">เหมาะสม/สามารถรักษาได้</li>
+									<li class="list-group-item ">อยู่ใกล้</li>
+									<li class="list-group-item ">มีหลักประกัน</li>
+									<li class="list-group-item ">เป็นผู้ป่วยเก่า</li>
+									<li class="list-group-item ">เป็นความประสงค์</li>
+								</ul>
+							</div>
+						</div>
+					</div>		
+					
+				</div>
+			</div>
+		</div>		
   </section>
   <section id="section-5">
     <h3>5 <%=secname[5]%></h3>
@@ -582,12 +628,7 @@ else
 		</div>
 
 		<div class="card patient-info">
-			<div class="card-header">
-				<nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
-					<a class="flex-sm-fill text-sm-center nav-link active" id="pills-treatment-tab" data-toggle="pill"
-						href="#pills-treatment" role="tab" aria-controls="pills-treatment" aria-selected="true">Treatment</a>
-			</div>
-
+			
 			<div class="tab-content report" id="pills-tabContent">
 				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
 					aria-labelledby="pills-treatment-tab" style="width: 100%;">
