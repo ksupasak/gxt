@@ -113,6 +113,10 @@
 	.toolbarButton{
 		width:30px;
 	}
+	
+	.xwidget {
+		margin-bottom:10px;
+	}
 </style>
 
 <%
@@ -145,16 +149,25 @@
 				%>
 
 
-
+<style>
+	.aoc-heading{
+		font-size:1.5em;
+		padding:15px;
+	}
+	.aoc-line{
+		border-bottom:1px var(--primary-blue);
+	}
+	
+</style>
 	
 <div class="container-fluid">
 <div class="row">
 	
-	<div class="col-3 col-md-2 col-xl-2  d-none d-sm-none d-md-none  d-xl-block" >
-		
-		<b>Request</b>
-		<span style="float:right"><%= link_to "+ Case", "create", :class=>'btn btn-success'%><br/></span>
-		
+	<div class="col-3 col-md-2 col-xl-2  d-none d-sm-none d-md-none  d-xl-block primary-nav"  >
+		<div style="padding:10px;border-bottom:1px solid" class="aoc-line">
+		<b class="aoc-heading">Request</b>
+		<span style="float:right"><%= link_to "+เพิ่มเคส", "create", :class=>'btn primary-blue'%><br/></span>
+		</div>
 		
 		<ul>
 			
@@ -316,20 +329,42 @@
 	</div>
 	</div>
 	<div class="col-12 col-md-9 col-xl-8 order-2">
+
+
+		<div class="row aoc-heading"  style="">
+	
+			<div class="col-4" >
+			<span class="">ศูนย์สั่งการหน่วย : โรงพยาบาลรามาธิบดี </span>
+			</div>
+			
+			<div class="col-4" >
+			<span class="">
+				
+				<%=link_to 'Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:80px" %>
+			
+				<%=link_to 'Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:80px" %>
+			
+				<%=link_to 'Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:80px" %>
+				
+				
+			</span>
+			</div>
+			
+			<div class="col-4 d-flex justify-content-end" >
+			<span class="">
+				
+				<%=link_to 'Summary',"#", :class=>'btn btn-success context disable secondary-nav', :style=>"width:100px" %>
+			
+				<%=link_to 'Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:100px" %>
 		
-		<!-- Context -->
-		<!-- <div class="row">
-			<div class="col-6">
-
-			Header 1
+			
+			 </span>
 			</div>
-			<div class="col-6">
-			Header 2
-			</div>
-
+			
 		</div>
-		 -->
-		<div class="selection row header context-header"  style="color:white;font-size:1.2em">
+
+
+		<div class="selection row dark-blue aoc-heading"  style="color:white;font-size:1.2em">
 	
 			<div class="col-6 " >
 				<span class="head">Ambu : </span>
@@ -376,16 +411,7 @@
 			<center>
 				
 				
-			<%=link_to 'Note',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"line-height:3em;width:80px" %>
-			
-			<%=link_to 'Chart',"#", :class=>'chart_btn btn btn-warning  context disable',:style=>"line-height:3em;width:80px" %>
-			
-			<%=link_to 'Call',"#", :class=>'call_btn btn btn-info  context disable',:style=>"line-height:3em;width:80px" %>
 				
-			<%=link_to 'Summary',"#", :class=>'summary_btn btn btn-success context disable', :style=>"line-height:3em;width:100px" %>
-			
-			<%=link_to 'Discharge',"#", :class=>'discharge_btn btn btn-danger  context disable',:style=>"line-height:3em;width:100px" %>
-		
 			
 		</center>
 		</div>
@@ -396,46 +422,54 @@
 		<div class="row  context-panel">
 	
 				
-				<div class="col-6 col-sm-6 col-lg-3 widget" id="panel-a">
-				<%=inline(this,:'_widget_patient')%>
+				<div class="xwidget col-6 col-sm-6 col-lg-3 d-flex align-content-stretch " id="panel-a">
+				<div class=" secondary-bg  flex-wrap flex-fill flex-fill">
+				<%=inline(this,:'_widget_patient')%>gg
+				</div>
 				</div>
 				
-				<div class="col-6 col-sm-6 col-lg-3 station widget" id="panel-a">
+				<div class="xwidget col-6 col-sm-6 col-lg-3 station  secondary-bg d-flex align-content-stretch" id="panel-a">
+				<div class="   flex-wrap flex-fill flex-fill">
 				<%=inline(this,:'_widget_vitalsign')%>
+				</div>
 				</div >
 			
-				<div class="col-6 col-sm-6 col-lg-3" id="panel-b">
+				<div class="xwidget col-6 col-sm-6 col-lg-3   d-flex align-content-stretch" id="panel-b">
+				<div class="   flex-wrap flex-fill flex-fill secondary-bg">
 				<%=inline(this,:'_widget_ecg')%>
+				</div >
 				</div >
 				
 				
-				<div class="col-6 col-sm-6 col-lg-3" id="panel-c">
+				<div class="xwidget col-6 col-sm-6 col-lg-3" id="panel-c">
 				<%=inline(this,:'_widget_dvr')%>
 				</div >	
 				
-				<div class="col-6 col-sm-6 col-lg-3 ">
-				<%=inline(this,:'_widget_map')%>
+		
+				<div class="xwidget col-6 col-sm-6 col-lg-3 ">
+				<%=inline(this,:'_widget_img')%>
 				</div>
 				
-				<div class="col-6 col-sm-6 col-lg-3 ">
+				
+				<div class="xwidget col-12 col-sm-6 col-lg-6 ">
 				<%=inline(this,:'_widget_route')%>
 				</div>
 				
-		
-				<div class="col-6 col-sm-6 col-lg-3 ">
-				<%=inline(this,:'_widget_img')%>
+				
+				<div class="xwidget col-6 col-sm-6 col-lg-3 ">
+				<%=inline(this,:'_widget_map')%>
 				</div>
+		
 			
-			
 				
 				
 				
-				<div class="col-12 col-sm-12 col-lg-12">
+				<div class="xwidget col-12 col-sm-12 col-lg-12">
 				<%=inline(this,:'_widget_all_map')%>
 			
 				</div>
 				
-				<div class="col-6 col-sm-6 col-lg-9">
+				<div class="xwidget col-6 col-sm-6 col-lg-9">
 				<%=inline(this,:'_widget_all_ambulance')%>
 			
 				</div>
@@ -800,13 +834,13 @@
 			
 			
 				  obj = data['data'][i]
-				  obj['title'] = i
-				  locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
-				
+				 
 				
 				 // console.log(obj)
 				if(obj){
-			
+				  obj['title'] = i
+				  locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
+				
 				  if(true){	
 
 					    // wave_data.push(obj['wave']);
