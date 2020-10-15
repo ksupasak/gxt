@@ -293,7 +293,14 @@
 	<div class="col-2 order-3 col-md-3 col-xl-2  d-none d-sm-none  d-md-block">
 	
 	<div class="col-12 header context-header ">
-		12:00
+		<div class="row" >
+			<div class="col-6" class="display: flex;  justify-content: start;">
+			Live Conference
+			</div>
+			<div class="col-6" class="display: flex;  justify-content: end;">
+			12:00 น.
+			</div>
+		</div>
 	</div>
 	
 		
@@ -423,19 +430,19 @@
 	
 				
 				<div class="xwidget col-6 col-sm-6 col-lg-3 d-flex align-content-stretch " id="panel-a">
-				<div class=" secondary-bg  flex-wrap flex-fill flex-fill">
+				<div class=" secondary-bg  flex-wrap flex-fill flex-fill" style="border-radius: 5px;">
 				<%=inline(this,:'_widget_patient')%>gg
 				</div>
 				</div>
 				
 				<div class="xwidget col-6 col-sm-6 col-lg-3 station  secondary-bg d-flex align-content-stretch" id="panel-a">
-				<div class="   flex-wrap flex-fill flex-fill">
+				<div class="   flex-wrap flex-fill flex-fill"  style="border-radius: 5px;">
 				<%=inline(this,:'_widget_vitalsign')%>
 				</div>
 				</div >
 			
 				<div class="xwidget col-6 col-sm-6 col-lg-3   d-flex align-content-stretch" id="panel-b">
-				<div class="   flex-wrap flex-fill flex-fill secondary-bg">
+				<div class="   flex-wrap flex-fill flex-fill secondary-bg"  style="border-radius: 5px;">
 				<%=inline(this,:'_widget_ecg')%>
 				</div >
 				</div >
@@ -516,8 +523,7 @@
 					
 					$('.summary_btn').click(function(){
 						
-						// window.open('../Admit/summary?id='+selected_admit_id)
-						window.open('../SmartAOC/create_form?admit_id='+selected_admit_id)
+						window.open('../Admit/summary?id='+selected_admit_id)
 						
 					})
 					
@@ -600,7 +606,7 @@
 					
 				
 					$('.select-<%=i.id%>').click(function(event){
-						
+					
 					    admit_id = $(this) 
 						
 						
@@ -633,11 +639,9 @@
 						
 						$('.context-panel').addClass('station-<%=station_id%>')
 						$('.context-header').addClass('station-<%=station_id%>')
-
-						<% if station %>
+					
 						reload_message("<%=station.id%>")
-						<% end %>
-
+					
 						$('#resourceId').val("<%=i.name%>")
 					
 						//show_wave_data['0'] = [];
@@ -697,7 +701,6 @@
 					})
 
 				<% rescue Exception=>e
-				%><%=e.inspect%><%
 				end%>	
 				
 				<% end %>	

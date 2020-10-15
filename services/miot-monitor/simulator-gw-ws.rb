@@ -191,6 +191,10 @@ MSG
   
   end
   
+  sx = rand()*0.01
+  sy = rand()*0.01
+  
+  
   # timer method
   EM.add_periodic_timer(1) do
     
@@ -212,8 +216,8 @@ MSG
      
      data[:spo2] = 90+rand(10)
      
-     data[:lat] = 13.6908282+0.005*Math.cos(Time.now.to_i*2*Math::PI/180)
-     data[:lng] = 100.6987491+0.005*Math.sin(Time.now.to_i*2*Math::PI/180)
+     data[:lat] = 13.6908282+0.005*Math.cos(Time.now.to_i*2*Math::PI/180)+sx
+     data[:lng] = 100.6987491+0.005*Math.sin(Time.now.to_i*2*Math::PI/180)+sy
      # puts Time.now.to_i%360+90
      data[:dvr_sp] = 30
      data[:dvr_hx] = Time.now.to_i*2%360+90

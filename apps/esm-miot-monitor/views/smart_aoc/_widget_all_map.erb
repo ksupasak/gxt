@@ -10,7 +10,7 @@
 					    </style>
 
 					    <!--The div element for the map -->
-					    <div id="geo-all-map"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <div id="geo-all-map" style="border-radius: 5px;"></div>	<%=link_to '', "javascript:goPosition()"%>
 					    <script>
 					// Initialize and add the map
 					var marker_all = {};
@@ -125,12 +125,16 @@
 						  // console.log("hx " +locations[i][4])
 						  var ic = marker.get("icon");
 						  ic.rotation = locations[i][4];
+						  
+						  
 						  marker.set("icon", ic);
+						  
 						  marker.setPosition(new google.maps.LatLng( locations[i][1], locations[i][2] ))
 						  
 						  
-						  mlabel.position = new google.maps.LatLng( locations[i][1], locations[i][2] +0.0001)
-						  
+						  mlabel.position = new google.maps.LatLng( locations[i][1], locations[i][2] +0.001)
+						  mlabel.setText(locations[i][0] +" : "+locations[i][3]+"km/h")
+						
   					
 						  
 						  //extend the bounds to include each marker's position
