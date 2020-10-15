@@ -178,6 +178,33 @@ border-bottom: 2px solid #3147FF;
 	background:#FF5D5D;
 }
 
+/*Style for landing*/
+.body-landing {
+  background: rgb(6,32,46);
+  background: linear-gradient(180deg, rgba(6,32,46,1) 0%, rgba(0,73,110,1) 100%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  
+}
+
+.landing-logo {
+  width: 450px;
+  height: auto;
+  }
+
+.landing-img {
+  width: auto;
+  height: 250px;
+}
+
+.landing-content {
+  line-height: 1.8;
+}
+
+.landing-title {
+  color: white !important;
+}
+
 
 
 
