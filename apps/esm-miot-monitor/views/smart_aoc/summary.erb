@@ -41,7 +41,12 @@ end
 <link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
 <link href="https://unpkg.com/pattern.css" rel="stylesheet">
-
+<style>
+.fdata{
+  text-decoration:underline;
+  width:100%;
+}
+</style>
 <div class="container summary-container">
     <a href="#" class="btn btn-secondary btn-print" id="btn-print">Print</a>
     <a href="create_form?admit_id=<%=params[:admit_id]%>" class="btn btn-secondary" >Edit</a>
@@ -52,40 +57,40 @@ end
     <!--1. Service Unit Table-->
     <div class="d-flex justify-content-between pl-5 pr-5">
         <span class="table-title">1. หน่วยบริการ</span>
-        <span class="table-title">ลำดับผู้ป่วย(CN)</span>
-        <span class="table-title">เลขที่ผู้ป่วย</span>
+        <span class="table-title">ลำดับผู้ป่วย(CN) <span class="fdata what"></span></span> 
+        <span class="table-title">เลขที่ผู้ป่วย <span class="fdata what"></span></span> 
     </div>
     <table class=" mt-1 w-100 table-style">
     <tr>
       <th class="p-1 paitent-sum" colspan="13">
         <div class="d-flex justify-content-between">
-            <span>ชื่อหน่วยบริการ:</span> <label class="pr-2"></label>
-            <span>วันที่:</span>  <label class="pr-2"></label>
-            <span>เลขที่ปฏิบัติการ:</span>  <label class="pr-2"></label>
+            <span>ชื่อหน่วยบริการ: <span class="fdata center_name"></span></span> <label class="pr-2"></label>
+            <span>วันที่: <span class="date"></span></span>  <label class="pr-2"></label>
+            <span>เลขที่ปฏิบัติการ: <span class="fdata what"></span> </span>  <label class="pr-2"></label>
         </div>
         <div class="row m-0">
         <div class="col-2 p-0">
             <span>เจ้าหน้าที่ปฏิบัติการ:</span>
         </div> 
-            <span class="col">1.</span><span class="col">รหัส</span>
-            <span class="col">2.</span><span class="col">รหัส</span>
+            <span class="col">1. <span class="fdata officer_1"></span></span><span class="col">รหัส <span class="fdata officer_id_1"></span></span>
+            <span class="col">2. <span class="fdata officer_2"></span></span><span class="col">รหัส <span class="fdata officer_id_2"></span></span>
             <br/>
-            <span class="col ">3.</span><span class="col">รหัส</span>
-            <span class="col ">4.</span><span class="col">รหัส</span>
+            <span class="col ">3. <span class="fdata officer_3"></span></span><span class="col">รหัส <span class="fdata officer_id_3"></span></span>
+            <span class="col ">4. <span class="fdata officer_4"></span></span><span class="col">รหัส <span class="fdata officer_id_4"></span></span>
         </div>
         
             <div class="d-flex align-content-center">
             <span class="lang" value="">ผลการปฏิบัติงาน</span> : 
-            <div class="form-check form-check-inline pl-1">
+            <div class="form-check form-check-inline pl-1 result">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่พบเหตุ</label>
             </div>
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline result">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">พบเหตุ</label>
             </div>
-            <span class="lang col" value="">สถานที่เกิดเหตุ</span>
-            <span class="lang col" value="">เหตุการณ์</span>
+            <span class="lang col" value="">สถานที่เกิดเหตุ <span class="fdata site_addr"></span></span>
+            <span class="lang col" value="">เหตุการณ์ <span class="fdata site_desc"></span></span>
             </div>
           </th>
         </tr>
@@ -718,16 +723,16 @@ end
     <table class="w-100 table-style">
     <tr>
       <td class="p-1" colspan="4">
-          <span>นำส่งห้องฉุกเฉินพยาบาล</span> <label class="pr-2"></label>  
+          <span>นำส่งห้องฉุกเฉินพยาบาล</span> <span class="fdata hospital"></span> <label class="pr-2"></label>  
       </td> 
       <td >
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 hospital_type">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">รพ.รัฐ</label>
             </div>
       </td>
       <td>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 hospital_type">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">รพ.เอกชน</label>
             </div>
@@ -736,31 +741,31 @@ end
     <tr >
       <td class="p-1"><span>เหตุผล</span></td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 reason">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">เหมาะสม/สามารถรักษาได้</label>
           </div>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 reason">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">อยู่ใกล้</label>
           </div>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 reason">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">มีหลักประกัน</label>
           </div>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 reason">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">เป็นผู้ป่วยเก่า</label>
           </div>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 reason">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">เป็นความประสงค์ (เลือกได้มากกว่า 1 ข้อ)</label>
           </div>
@@ -768,10 +773,10 @@ end
     </tr>
     <tr >
       <td class="p-1" colspan="5">
-          <span>ผู้สรุปรายงาน</span> <label class="pr-2"></label>  
+          <span>ผู้สรุปรายงาน</span> <label class="pr-2"><span class="fdata reporter"></span></label>  
       </td> 
       <td >
-          <span>รหัส</span> <label class="pr-2"></label>  
+          <span>รหัส</span> <label class="pr-2"><span class="fdata reporter_id"></span></label>  
       </td>
       
     </tr>
@@ -781,32 +786,32 @@ end
     <table class="  w-100 table-style">
     <tr>
       <td class="p-1" >
-            <span>HN</span> <label class="pr-2"></label>
+            <span>HN</span> <label class="pr-2"><span class="fdata what"></span></label>
       </td>
       <td colspan="13">
-          <span>การวินิจฉัยโรค</span> <label class="pr-2"></label>
+          <span>การวินิจฉัยโรค</span> <label class="pr-2"><span class="fdata diagnosis"></span></label>
       </td>
       <td></td>
     </tr>
     <tr>
           <td colspan="15"><span class="pl-1 pr-3">ระดับการคัดแยก (RC code)</span>
-            <div class="form-check form-check-inline level">
+            <div class="form-check form-check-inline diag_level">
               <input class="form-check-input " type="checkbox" value="red">
               <label class="form-check-label" for="defaultCheck1">แดง (วิกฤติ)</label>
             </div>
-            <div class="form-check form-check-inline level">
+            <div class="form-check form-check-inline diag_level">
               <input class="form-check-input " type="checkbox" value="yellow">
               <label class="form-check-label" for="defaultCheck1">เหลือง (เร่งด่วน)</label>
             </div>
-            <div class="form-check form-check-inline level">
+            <div class="form-check form-check-inline diag_level">
               <input class="form-check-input " type="checkbox" value="green">
               <label class="form-check-label" for="defaultCheck1">เขียว (ไม่รุนแรง)</label>
             </div>
-            <div class="form-check form-check-inline level">
+            <div class="form-check form-check-inline diag_level">
               <input class="form-check-input " type="checkbox" value="white">
               <label class="form-check-label" for="defaultCheck1">ขาว (ทั่วไป)</label>
             </div>
-            <div class="form-check form-check-inline level">
+            <div class="form-check form-check-inline diag_level">
               <input class="form-check-input " type="checkbox" value="black">
               <label class="form-check-label" for="defaultCheck1">ดำ (รับบริการสาธรณสุขอื่นๆ)</label>
             </div>
@@ -819,19 +824,19 @@ end
         <span>ทางเดินหายใจ</span>
       </td>
       <td >
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_breath">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่จำเป็น</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_breath">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่ได้ทำ</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_breath">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำและเหมาะสม</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_breath">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำแต่ไม่เหมาะสม ระบุ</label>
           </div>
@@ -842,19 +847,19 @@ end
         <span>การห้ามเลือด</span>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_blood">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่จำเป็น</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_blood">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่ได้ทำ</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_blood">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำและเหมาะสม</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_blood">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำแต่ไม่เหมาะสม ระบุ</label>
           </div>
@@ -865,19 +870,19 @@ end
         <span>การให้สารน้ำ</span>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_liquid">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่จำเป็น</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_liquid">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่ได้ทำ</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_liquid">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำและเหมาะสม</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_liquid">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำแต่ไม่เหมาะสม ระบุ</label>
           </div>
@@ -888,19 +893,19 @@ end
         <span>การดามกระดูก</span>
       </td>
       <td>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_bone">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่จำเป็น</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 diag_bone">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่ได้ทำ</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_bone">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำและเหมาะสม</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 diag_bone">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทำแต่ไม่เหมาะสม ระบุ</label>
           </div>
@@ -910,15 +915,15 @@ end
       <table  class="w-100 table-style">
         <tr class="table-style">
           <td class="p-1" colspan="14">
-          <span>ชื่อผู้ประเมิน</span> <label class="pr-2"></label>  
+          <span>ชื่อผู้ประเมิน</span>  <label class="pr-2"><span class="fdata diag_name"></span></label>  
           </td> 
           <td >
             <span>ตำแหน่ง</span> <label class="pr-2"></label>
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline diag_pos">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">แพทย์</label>
             </div>
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline diag_pos">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">พยาบาล</label>
             </div>  
@@ -931,11 +936,11 @@ end
     <tr >
       <td class="p-1">
         <span>Admitted</span>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 admitted">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">Yes</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 admitted">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">No</label>
           </div>
@@ -943,31 +948,31 @@ end
       </tr>
       <tr >
       <td class="p-1">
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ทุเลา</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">รักษาต่อที่อื่น</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ยังรักษาในรพ.</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">เสียชีวิตใน รพ.</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ปฏิเสธการรักษา/หนีกลับ</label>
         </div>
-        <div class="form-check form-check-inline pl-1">
+        <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">กลับไปตายบ้าน</label>
           </div>
-          <div class="form-check form-check-inline pl-1">
+          <div class="form-check form-check-inline pl-1 status">
               <input class="form-check-input" type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ตามแล้วไม่ทราบผล</label>
         </div>
@@ -993,6 +998,7 @@ end
               }else if($("."+i).is('span')){ //text
                 $("."+i).html(v)
               }
+              $(".what").html('test value')
             }
           })
       }
@@ -1009,9 +1015,9 @@ end
       
           })
           $("#btn-print").click(function(){
-            $(this).hide()
+            $('.btn').hide()
             window.print()
-            $(this).show()
+            $('.btn').show()
           })
           let report = <%= report.to_json.html_safe %>
           fillform(report)

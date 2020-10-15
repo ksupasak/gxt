@@ -513,9 +513,7 @@ else
 				</div>
 			</div>
 		</div>
-  </section>
-  <section id="section-4">
-    <h3>4 <%=secname[4]%></h3>
+		<h5 class="pt-2" >ระดับการคัดแยก (RC code)</h5>
         <div class="row justify-content-between mb-2" style="border:0px solid">
 					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
 					
@@ -546,9 +544,41 @@ else
             </div>
         </div>
   </section>
+  <section id="section-4">
+    <h3>4 <%=secname[4]%></h3>
+  </section>
   <section id="section-5">
     <h3>5 <%=secname[5]%></h3>
-    <p>Officia ipsum fugit iure eaque quisquam error tempore earum enim illum, delectus officiis incidunt corrupti aliquid nam quas perspiciatis eveniet doloremque quod labore? Doloremque, ipsum?</p>
+		<h5 class="pt-2" >ระดับการคัดแยก (RC code)</h5>
+        <div class="row justify-content-between mb-2" style="border:0px solid">
+					<input type="hidden" name="report[diag_level]" value="<%=report.diag_level%>" id="report_diag_level">
+					
+            <div class="col-sm  mb-2 ">
+                <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.diag_level=='red' %> " id="red">
+                    <p>แดง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-yellow <%='active' if report.diag_level=='yellow' %> " id="yellow">
+                    <p>เหลือง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-green  <%='active' if report.diag_level=='green' %> " id="green">
+                    <p>เขียว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-white  <%='active' if report.diag_level=='white' %> " id="white">
+                    <p>ขาว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-black  <%='active' if report.diag_level=='black' %> " id="black">
+                    <p>ดำ</p>
+                </a>
+            </div>
+		</div>
   </section>
   <section id="section-6">
     <h3>6 <%=secname[6]%></h3>
