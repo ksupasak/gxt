@@ -112,11 +112,13 @@ class AocCaseReport < GXTModel
   key :primary_result, String 
 
   key :hospital, String 
+  key :hospital_type, String 
   key :reason, String 
   key :reporter, String 
   key :reporter_id, String 
 
   key :diagnosis, String 
+  key :diag_level, String
   key :diag_breath, String 
   key :diag_blood, String 
   key :diag_liquid, String 
