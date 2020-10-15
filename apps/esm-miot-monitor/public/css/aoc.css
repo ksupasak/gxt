@@ -65,3 +65,59 @@ border-bottom: 2px solid #3147FF;
   }
 }
 
+/*AOC MOBILE index */
+.m-header {
+  color: var(--primary-font);
+}
+.m-footer {
+  background-color: var(--secondary-nav);
+  height: 4rem;
+  position: fixed;
+}
+
+.ambulance:hover , .tracking:hover , .share:hover {
+  background: var(--primary-blue);
+  color: var(--primary-font);
+}
+
+.m-admit {
+  background-color: var(--secondary-nav);
+  border-radius: 5px;
+  height: 65px;
+  color: var(--secondary-font);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-allocate {
+  background-color: var(--dark-blue);
+  border: 3px solid var(--dark-border);
+  border-radius: 5px;
+  height: 65px;
+  color: var(--secondary-font);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*AOC MOBILE show */
+.m-textarea {
+  background: var(--secondary-nav);
+  color: var(--primary-font);
+}
+
+.ambu-name {
+  color: var(--primary-font);
+}
+
+.alert-patient {
+  color: var(--secondary-font);
+  background-color: var(--dark-blue);
+}
+
+.time-green {
+  color: var(--time-green);
+}

@@ -1,3 +1,6 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<link href="<%=url_for('css/aoc_dark.css?=22')%>" rel="stylesheet">
 <style>
 	.station .label{
 		font-size:0.8em;
@@ -67,31 +70,40 @@ station = Station.find ambu.station_id
 %>
 <%=%>
 
+<div class="">
+<ul class="nav nav-pills fixed-bottom  nav-fill m-footer d-flex justify-content-center" style="">
 
-<ul class="nav nav-tabs justify-content-center" style="padding-top:10px">
-
   <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><%=ambu.name%></a>
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+	<i class="fas fa-ambulance"></i>
+	<br/>
+	<%=ambu.name%>
+	</a>
   </li>
   
   
   <li class="nav-item">
-    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tracking</a>
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+	<i class="far fa-check-circle"></i>
+	<br/>
+	Tracking
+	</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Share</a>
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
+	<i class="fas fa-share-alt"></i>
+	<br/>
+	Share
+	</a>
   </li>
   
-  <li class="nav-item">
-	
-  </li>
   
   
 <span style="float:right;margin-top:0px"></span>
 
   
 </ul>
-
+</div>
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
   	
@@ -105,9 +117,14 @@ station = Station.find ambu.station_id
 		
 	%>
 	<div class='clear'></div>
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<%=link_to '<i class="fas fa-long-arrow-alt-left"></i>', "index",:class=>'btn btn-outline-primary' %>
+		<h4 class="text-uppercase font-weight-bold mb-0 ambu-name"><%=ambu.name%></h4>
+		<%= link_to '<i class="fas fa-phone-alt"></i>', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-primary'%>
+	</div>
 	<div class="row">
 		<div class="col-12 ">
-		<div class="alert alert-success">
+		<div class="alert alert-patient">
 		Case No : <v><%=admit.case_no%></v> HN : <v><%=patient.hn%> </v> <br/>
 		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
 		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
@@ -116,21 +133,14 @@ station = Station.find ambu.station_id
 		
 		</div>
 		
-		<div class="alert alert-warning">
+		<div class="alert alert-patient">
 		<%=admit.note%>
 		</div>
 		
 		</div>
 	</div>
-	<div class="row  ">
-	<div class="col-2">
-		
-		
-  	<%= link_to 'Call', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-warning'%>
+	<div class="row d-flex justify-content-between ">
 	
-	
-	</div>
-
 
 	<%
   		
@@ -141,14 +151,14 @@ station = Station.find ambu.station_id
   	%>
   	
 	
-	<div class="col-4" style="padding:5px">
+	<div class="col-4 pl-3  " style="padding:5px">
 		<p>
 	<%=last_log.name if last_log%>
   		</p>
 	</div>
 	
-	<div class="col-3" style="padding:5px">
-	<v>+<%= ((Time.now - admit.created_at)/60).to_i%>m</v>
+	<div class="col-4" style="padding:5px">
+	<v class="time-green">+<%= ((Time.now - admit.created_at)/60).to_i%>m</v>
   	</div>
 	
 	<div class="col-3 text-right">
@@ -160,7 +170,7 @@ station = Station.find ambu.station_id
 		Monitor : 
 		<div class="station" id="<%=station.name%>" style="">
 			
-			<div class="row">
+			<div class="row pl-3 mt-1">
 						<div class="col-6  col-lg-3 col-sm-3 pr">
 							<span class="label">PR</span>
 							<div class="value">-</div>
@@ -200,17 +210,16 @@ station = Station.find ambu.station_id
 		</div>
 		</div>
 		
-		<div class="col-6 text-right">
+		<div class="col-6">
 		Nurse Note : 
-		<div class="" style="height:200px;border:1px solid #ccc">
+		<div class="mt-1" style="height:185px;">
 			
 		<form action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
-		<textarea name="note" style="height:6em;width:100%"></textarea>
+		<textarea name="note" style="height:6em;width:100%" class="m-textarea"></textarea>
 		
-   	  	<input type="submit" class="btn btn-primary"  name="Submit" value="Submit"/>
-            <a href="#" class="btn btn-submit d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
-            <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
-            ถ่ายรูป
+   	  	<input type="submit" class="btn-sm btn-primary"  name="Submit" value="Submit"  style="float:right"/>
+            <a href="#" class="btn-sm btn-secondary d-flex align-items-center justify-content-center" style="float:left" id="image_capture_btn">
+            <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:1.8em;fill:white;" alt="heart" class=" pulse"/>
         </a>
 	    <script>
 		$('#image_capture_btn').click(function(){
@@ -233,15 +242,16 @@ station = Station.find ambu.station_id
 				
 			%>
 			
-			<table class='table'>
+			<table class='table mt-1'>
 				<tbody>
 					<% for i in notes %>
 					<tr>
 						<td>
-							<%=i.start_time.strftime("%H:%M")%> <v>+<%=(Time.now-i.start_time).to_i/60%>m</v>
+							<%=i.start_time.strftime("%H:%M")%> 
+							<v class="pl-3 time-green">+<%=(Time.now-i.start_time).to_i/60%>m</v>
 						</th>
 						<td>
-							<v><%=i.description%></v>
+							<v class="ambu-name"><%=i.description%></v>
 						</td>
 						
 					</tr>
@@ -280,7 +290,7 @@ station = Station.find ambu.station_id
 			<%=i.name%>
 		</td>
 		<td><% if i.stamp %>
-			<%=i.stamp.localtime.strftime("%H:%M")%> <v>+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
+			<%=i.stamp.localtime.strftime("%H:%M")%> <v class="time-green">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
 			<% end %>
 			
 		</td>
@@ -311,29 +321,36 @@ station = Station.find ambu.station_id
 	<% end %>
 	
   </div>
+  
   <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-	 <center>
-  	<img src=<%="/barcode?code=#{request.url}&type=qr_code&xdim=10"%>/><br/><br/>
-	<%=link_to "Mobile Interface", request.url%>
-</center> <br/>
+	<h4 class="font-weight-bold text-center ">แชร์ไปยังอุปกรณ์อื่น</h4>
+	<div style="background: white;" class="pt-4 pb-3">
+	<center>
+  		<img src=<%="/barcode?code=#{request.url}&type=qr_code&xdim=8"%>/><br/><br/>
+		<%=link_to "Mobile Interface", request.url%>
+	</center> 
+	
+	<br/>
 
  <center>
-  	<img src=<%="/barcode?code=#{request.url.gsub("show","glasses")}&type=qr_code&xdim=10"%>/><br/><br/>
+  	<img src=<%="/barcode?code=#{request.url.gsub("show","glasses")}&type=qr_code&xdim=8"%>/><br/><br/>
 	<%=link_to "Smart Glasses Interface", request.url.gsub("show","glasses")%>
 </center>
-
+	</div>
 
   </div>
   
 </div>
 <hr/>
 <center>  <%=link_to 'Back', "index",:class=>'nav-link' %></center>
+
+
 <style>
 	.tab-pane{
 		padding-top:10px;
 	}
 	v{
-		color:blue;
+		color: var(--alert-yellow);
 	}
 	#toolbarRight{display:none;}
 	#optionsVisibilityButton{display:none;}
@@ -522,4 +539,3 @@ station = Station.find ambu.station_id
 	
 	})
 </script>
-	
