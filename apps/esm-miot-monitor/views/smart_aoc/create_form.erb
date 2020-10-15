@@ -6,6 +6,7 @@ patient = Patient.find admit.patient_id
 report = AocCaseReport.where(:admit_id=>admit.id).first 
 
 secname = %w{ section หน่วยบริการ ข้อมูลเวลา ข้อมูลผู้ป่วย เกณฑ์การตัดสินใจส่งโรงพยาบาล การประเมิน/รองรับการนำส่ง ผลการรักษาในโรงพยาบาล}
+diag_sel = %w{ ไม่จำเป็น ไม่ได้ทำ ทำและเหมาะสม ทำแต่ไม่เหมาะสม }
 
 unless report
 	report = AocCaseReport.create :admit_id=>admit.id
@@ -579,6 +580,93 @@ else
                 </a>
             </div>
 		</div>
+
+		<div class="card patient-info">
+			<div class="card-header">
+				<nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+					<a class="flex-sm-fill text-sm-center nav-link active" id="pills-treatment-tab" data-toggle="pill"
+						href="#pills-treatment" role="tab" aria-controls="pills-treatment" aria-selected="true">Treatment</a>
+			</div>
+
+			<div class="tab-content report" id="pills-tabContent">
+				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+					aria-labelledby="pills-treatment-tab" style="width: 100%;">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">ทางเดินหายใจ</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_breath">
+									<input type="hidden" name="report[diag_breath]" value="<%=report.diag_breath%>" id="report_diag_breath">
+									<%	for d in diag_sel %>
+									<li class="list-group-item "><%=d%></li>
+									<%	end %>
+								</ul>
+							</div>
+						</div>
+					</div>
+			
+					<hr class="hr-trauma">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">การห้ามเลือด</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_wound" >
+									<input type="hidden" name="report[diag_blood]" value="<%=report.diag_blood%>" id="report_diag_blood">
+									<%	for d in diag_sel %>
+									<li class="list-group-item "><%=d%></li>
+									<%	end %>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr class="hr-trauma">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">การให้สารน้ำ</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_liquid">
+									<input type="hidden" name="report[diag_liquid]" value="<%=report.diag_liquid%>" id="report_diag_liquid">
+									<%	for d in diag_sel %>
+									<li class="list-group-item "><%=d%></li>
+									<%	end %>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr class="hr-trauma">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="">การดามกระดูก</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="treatment_bone">
+									<input type="hidden" name="report[diag_bone]" value="<%=report.diag_bone%>" id="report_diag_bone">
+									<%	for d in diag_sel %>
+									<li class="list-group-item "><%=d%></li>
+									<%	end %>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					
+				</div>
+			</div>
+		</div>		
   </section>
   <section id="section-6">
     <h3>6 <%=secname[6]%></h3>
@@ -596,9 +684,16 @@ else
 </div>
 <script>
 
-	$('.btn-triage').click(function(event){
+	$('.btn-triage2').click(function(event){
 		$('.btn-triage').removeClass('active')
 		$('#report_level').val($(this).attr("id"))
+		$(this).addClass('active')
+		event.preventDefault()	
+	})
+	$('.btn-triage').click(function(event){
+		parentdiv = $(this).parent().parent()
+		parentdiv.find('.btn-triage').removeClass('active')
+		parentdiv.find("input[type='hidden']").val($(this).attr("id"))
 		$(this).addClass('active')
 		event.preventDefault()
 		
