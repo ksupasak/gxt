@@ -45,12 +45,25 @@ class AocCaseReport < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
+#หน่วย
   key :center_name, String
   key :date, Time
   key :center_address, String
   
   key :admit_id, ObjectId
   key :result, String
+
+  key :officer_1, String 
+  key :officer_id_1, String 
+  key :officer_2, String 
+  key :officer_id_2, String 
+  key :officer_3, String 
+  key :officer_id_3, String 
+  key :officer_4, String 
+  key :officer_id_4, String 
+  key :site_addr, String
+  key :site_desc, String
+  
   
   
   key :bp_sys, Integer
@@ -69,19 +82,14 @@ class AocCaseReport < GXTModel
   key :chief_complaint, String
   
   key :level, String
-  
-  
+    
   key :trauma_status, String
   
   
   key :trauma_concious, String
-  
   key :trauma_wound, String
-  
   key :trauma_bone, String
-  
   key :trauma_blood, String
-  
   key :trauma_organ, String
   
   
@@ -102,6 +110,22 @@ class AocCaseReport < GXTModel
 
   key :medicine, String 
   key :primary_result, String 
+
+  key :hospital, String 
+  key :reason, String 
+  key :reporter, String 
+  key :reporter_id, String 
+
+  key :diagnosis, String 
+  key :diag_breath, String 
+  key :diag_blood, String 
+  key :diag_liquid, String 
+  key :diag_bone, String 
+  key :diag_name, String 
+  key :diag_pos, String 
+
+  key :admitted, String 
+  key :status, String 
   
   include Mongoid::Timestamps
   

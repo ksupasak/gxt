@@ -516,7 +516,8 @@
 					
 					$('.summary_btn').click(function(){
 						
-						window.open('../Admit/summary?id='+selected_admit_id)
+						// window.open('../Admit/summary?id='+selected_admit_id)
+						window.open('../SmartAOC/create_form?admit_id='+selected_admit_id)
 						
 					})
 					
@@ -599,7 +600,7 @@
 					
 				
 					$('.select-<%=i.id%>').click(function(event){
-					
+						
 					    admit_id = $(this) 
 						
 						
@@ -632,9 +633,11 @@
 						
 						$('.context-panel').addClass('station-<%=station_id%>')
 						$('.context-header').addClass('station-<%=station_id%>')
-					
+
+						<% if station %>
 						reload_message("<%=station.id%>")
-					
+						<% end %>
+
 						$('#resourceId').val("<%=i.name%>")
 					
 						//show_wave_data['0'] = [];
@@ -694,6 +697,7 @@
 					})
 
 				<% rescue Exception=>e
+				%><%=e.inspect%><%
 				end%>	
 				
 				<% end %>	
