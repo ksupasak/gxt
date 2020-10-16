@@ -65,6 +65,21 @@ border-bottom: 2px solid #3147FF;
   }
 }
 
+.img-circle {
+  border-radius: 50%;
+}
+
+.footer-nav {
+  background-color: var(--secondary-nav) !important;
+  height: 2rem;
+}
+
+.footer-nav:hover {
+  background-color: black;
+}
+
+
+
 /*AOC MOBILE index */
 .m-header {
   color: var(--primary-font);

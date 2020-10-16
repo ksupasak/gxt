@@ -153,7 +153,7 @@
 <style>
 	.aoc-heading{
 		font-size:1.5em;
-		padding:15px;
+		
 	}
 	.aoc-line{
 		border-bottom:1px var(--primary-blue);
@@ -165,7 +165,7 @@
 <div class="row">
 	
 	<div class="col-3 col-md-2 col-xl-2  d-none d-sm-none d-md-none  d-xl-block primary-nav"  >
-		<div style="padding:10px;border-bottom:1px solid" class="aoc-line">
+		<div style="border-bottom:1px solid" class="aoc-line pb-3 pt-2">
 		<b class="aoc-heading">Request</b>
 		<span style="float:right"><%= link_to "+เพิ่มเคส", "create", :class=>'btn primary-blue'%><br/></span>
 		</div>
@@ -193,7 +193,7 @@
 		</ul>
 		
 		<b>Operating</b>
-		<ul style="list-style: none;">
+		<ul style="list-style: none;" class="mt-1">
 			<%
 				
 				admits.each do |admit| 
@@ -236,7 +236,7 @@
 		</ul>
 		
 		<b>Ambulance</b>
-		<ul style="list-style: none;">
+		<ul style="list-style: none;" class="mt-1">
 			
 	<%
 		
@@ -286,11 +286,31 @@
 			<% end %>
 	<% end %>
 	
-	</ul>
+	</ul>        
+
 	
-	<div class="footer" style="">
-	footer
-	</div>
+	<footer class="ml-3 pt-3 footer fixed-bottom col-3 col-md-2 col-xl-2 flex flex-column" style="background: #151C26; width:337px;">
+		<div class="d-flex justify-content-between footer-nav">
+			<span>Today Case</span>
+			<span style="color: #42B7AB">3</span>
+		</div>
+		<div class="d-flex justify-content-between footer-nav">
+			<span>Today Complete</span>
+			<span style="color: #42B7AB">3</span>
+		</div>
+		<hr style="border-top: 1px solid #C2C2C2;"/>
+		<div style="font-size:0.8em;color:#999">
+			<div style="float:right" class="timer">
+				00:00
+			</div>
+				E.S.M.Solution Co.,Ltd. and Aliance
+		</div>
+			<a href="tel:+66865443352" style="display:none">0865443352</a>
+				<%= inline(this,:'../home/_scoring') %>
+			<i style="color:#666"><div id="msgs" style="font-size:0.8em"></div></i>
+			<br/>
+		</footer>
+	
 		
 	</div>
 	
@@ -345,7 +365,7 @@
 	<div class="col-12 col-md-9 col-xl-8 order-2">
 
 
-		<div class="row aoc-heading"  style="">
+		<div class="row aoc-heading mb-2 mt-2"  style="">
 	
 			<div class="col-4" >
 			<span class="">ศูนย์สั่งการหน่วย : โรงพยาบาลรามาธิบดี </span>
@@ -1074,15 +1094,4 @@
 </div>
 
 </div>
-<div style="font-size:0.8em;color:#999">
-	
-  	<div style="float:right" class="timer">
-	00:00
-	</div>
-E.S.M.Solution Co.,Ltd. and Aliance
-</div>
 
-<a href="tel:+66865443352" style="display:none">0865443352</a>
-<%= inline(this,:'../home/_scoring') %>
-
-<i style="color:#666"><div id="msgs" style="font-size:0.8em"></div></i>
