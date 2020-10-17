@@ -1,4 +1,4 @@
-M540_MULTICAST_ADDR = "224.0.1.10"  # to receive data
+M540_MULTICAST_ADDR = "224.0.1.101"  # to receive data
 
 M540_BIND_ADDR_LOCAL = HOST_IP
 
