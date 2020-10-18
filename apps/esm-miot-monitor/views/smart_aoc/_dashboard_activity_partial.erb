@@ -3,40 +3,44 @@
 			<%
 			
 				
-			    station = Station.find params[:id]
-			    zone = station.zone
-			
-				admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
+			  	@current_zone = Zone.find session[:current_zone] if session[:current_zone]
+				
+				
+				
+				admits = Admit.where(:zone_id=>@current_zone.id, :status=>'Admitted').all
+				
+				console = []
+				
+				for admit in admits 
 			    
 				
 				
 				
 				
-				console = []
-				
-				
 				
 				if admit 
+					
+				station = admit.station	
 				
 				nurse_records = admit.nurse_records
 				
 				for m in nurse_records
 				
-					console << [m.start_time, :nurse, m]
+					console << [m.start_time, :nurse, m, admit, station]
 					
 				end
 				
 				records = admit.records
 				for m in records
 				
-					console << [m.created_at, :record, m]
+					console << [m.created_at, :record, m, admit, station]
 					
 				end
 				
 				records = admit.logs.where(:status=>'COMPLETED').all
 				for m in records
 				
-					console << [m.stamp, :log, m]
+					console << [m.stamp, :log, m, admit, station]
 					
 				end
 				
@@ -49,8 +53,10 @@
 				
 				for m in msgs
 				
-					console << [m.created_at, :msg, m]
+					console << [m.created_at, :msg, m, admit, station]
 					
+				end
+				
 				end
 				
 				end
@@ -135,14 +141,17 @@
 			                                </p>
 			                            </div>
 			                        </li>
-	    	<% elsif item[1]==:nurse %>    
+	    	<% elsif item[1]==:nurse 
+			
+			
+			%>    
 					 	    <li class="left clearfix">
 							<span class="chat-img pull-right">
                             <img src="http://placehold.it/50/FCBA32/fff&text=NR" alt="User Avatar" class="img-circle" />
                         	</span>
                             <div class="chat-body clearfix">
                                 <div class="msg-header"  style="">
-                                    <strong class="">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                    <strong class=""><%=item[-1].name%> : Note</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>
@@ -160,7 +169,7 @@
                         	</span>
                             <div class="chat-body clearfix">
                                 <div class="msg-header"  style="">
-                                    <strong class="primary-font">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                    <strong class="primary-font"><%=item[-1].name%> : Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>
@@ -178,7 +187,7 @@
                         	</span>
                             <div class="chat-body clearfix">
                                 <div class="msg-header"  style="">
-                                    <strong class="primary-font">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                    <strong class=""><%=item[-1].name%> : Tracking</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>
@@ -198,7 +207,7 @@
 					 
                             <div class="chat-body clearfix">
                                 <div class="msg-header">
-                                    <strong class="primary-font">Vital Sign</strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
+                                    <strong class="primary-font"><%=item[-1].name%> : Vital Sign</strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>

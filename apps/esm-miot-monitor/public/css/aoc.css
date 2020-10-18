@@ -124,6 +124,11 @@ border-bottom: 2px solid #3147FF;
   color: var(--primary-font);
 }
 
+.m-textarea:focus {
+  background: var(--secondary-nav);
+  color: var(--primary-font);
+}
+
 .ambu-name {
   color: var(--primary-font);
 }

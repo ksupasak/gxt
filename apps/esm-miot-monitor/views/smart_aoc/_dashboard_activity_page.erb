@@ -68,46 +68,10 @@
 	
 	
 %>
-<form action="nurse_note_create" class="note-message" method="post" enctype="multipart/form-data" >
-
 <div class="row" style="margin-top:10px;border:0px solid">
 <div class="col-3">
-บันทึก 
 </div>
-
-<textarea name="record[description]" class=" form-control col-6 m-textarea " id="nurse_note_desc" style="width:100%;border:0px solid;border-radius: 4px;"></textarea>
-
-
-<!-- <input name="note" type="text" id="note-value" class="secondary-blue col-6" style="border:0px solid;border-radius: 4px;color:white;"/> -->
-
-<div class="col-3">
-
-<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="font-size:0.8em;vertical-align:middle" />
-
-<%#link_to 'เพิ่มบันทึก',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"font-size:0.8em;vertical-align:middle" %>
-	
-<%#link_to 'เพิ่มบันทึก',"#", :class=>'note_btn btn btn-pcm context disable',:style=>"font-size:0.8em;vertical-align:middle" %>
 </div>
-
-
-
-
-
-
-</div>
-
-</form>
-
-
-
-<script>
-	
-
-	
-</script>
-	
-
-
 <div id="message-partial" style="overflow:auto">
 	
 </div>
@@ -150,41 +114,10 @@
 //   	 	})
 // 	}
 //
-
-
-var message_station_id = null;
-
-
-	$(".note-message").submit(function(e) {
-
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-    
-    var form = $(this);
-    var url = form.attr('action')+"?station_id="+ message_station_id;
-
-    $.ajax({
-           type: "POST",
-           url: url,
-           data: form.serialize(), // serializes the form's elements.
-           success: function(data)
-           {
-               $('#nurse_note-partial').html(data)// show response from the php script.
-			   // $('#admit-modal').modal('toggle');
-           }
-    });
+	function reload_message(){
 	
-	$('#nurse_note_desc').val('')
-
-});
-	
-	
-
-	function reload_message(station_id){
-		
-	message_station_id = station_id
-		
 	$.ajax({
-	  url: "message_partial?id="+station_id,
+	  url: "dashboard_activity_partial?",
 	  context: document.body
 	}).done(function(data) {
 	  $( '#message-partial' ).html(data);

@@ -1,6 +1,8 @@
 <%= inline(this,:'../home/_monitor') %>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc_dark.css?=22')%>" rel="stylesheet">
 <link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+
 <script>
  
 </script>
@@ -118,6 +120,12 @@
 	.xwidget {
 		margin-bottom:10px;
 	}
+	
+	pre{
+		color:#6c6c6c;
+		
+	}
+	
 </style>
 
 <%
@@ -462,7 +470,7 @@
 				
 				<div class="xwidget col-6 col-sm-6 col-lg-3 d-flex align-content-stretch " id="panel-a">
 				<div class=" secondary-bg  flex-wrap flex-fill flex-fill" style="border-radius: 5px;">
-				<%=inline(this,:'_widget_patient')%>gg
+				<%=inline(this,:'_widget_patient')%>
 				</div>
 				</div>
 				

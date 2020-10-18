@@ -78,8 +78,9 @@
 						%>
 							setPosition(<%=latlng[0]%>,latlng[1])
 					}
-					
+				
 					function widget_all_map_update(locations){
+						
 						setPositions(locations);
 					}
 					
@@ -149,7 +150,7 @@
 						}
 
 						//now fit the map to the newly inclusive bounds
-						if(set_bounds==null){
+						if(set_bounds==null<%='||true' if params['operation'] == 'dashboard' %>){
 							map_all.fitBounds(bounds);
 							set_bounds = true;
 						}

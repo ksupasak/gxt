@@ -1,6 +1,18 @@
 <%
+
+admit = nil
+
+if params[:station_id] 
+
+station = Station.find(params[:station_id])
+
+admit = Admit.where(:station_id=> station.id,:status=>'Admitted').first	
+	
+else
 	
 admit = Admit.find(params[:admit_id])
+
+end
 
 start_time = Time.now 
 
@@ -9,7 +21,9 @@ desc = "Random text : #{rand(99999)} #{Time.now}"
 
 if params[:record] 
 
+params[:record][:start_time] = Time.now unless params[:record][:start_time]
 start_time = params[:record][:start_time] 
+
 desc = params[:record][:description]
 
 end
