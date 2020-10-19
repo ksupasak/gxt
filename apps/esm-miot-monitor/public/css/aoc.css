@@ -70,14 +70,9 @@ border-bottom: 2px solid #3147FF;
 }
 
 .footer-nav {
-  background-color: var(--secondary-nav) !important;
+  /* background-color: var(--secondary-nav) !important; */
   height: 2rem;
 }
-
-.footer-nav:hover {
-  background-color: black;
-}
-
 
 
 /*AOC MOBILE index */
