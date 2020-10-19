@@ -8,6 +8,33 @@ report = AocCaseReport.where(:admit_id=>admit.id).first
 secname = %w{ section หน่วยบริการ ข้อมูลเวลา ข้อมูลผู้ป่วย เกณฑ์การตัดสินใจส่งโรงพยาบาล การประเมิน/รองรับการนำส่ง ผลการรักษาในโรงพยาบาล}
 diag_sel = %w{ ไม่จำเป็น ไม่ได้ทำ ทำและเหมาะสม ทำแต่ไม่เหมาะสม }
 
+cause = []
+cause << "ปวดท้อง หลัง เชิงกราน และขาหนีบ"
+cause << "แอนนาฟิแลกซิส ปฏิกิริยาภูมิแก้/แมลงกัด"
+cause << "สัตว์กัด"
+cause << "เลือดออกไม่ใช่จากการบาดเจ็บ"
+cause << "หายใจลำบาก"
+cause << "หัวใจหยุดเต้น"
+cause << "เจ็บแน่นทรวงอก หัวใจ"
+cause << "สำลักอุดทางเดินหายใจ"
+cause << "เบาหวาน"
+cause << "อันตรายจากสภาพแวดล้อม"
+cause << "อื่นๆ(เว้นว่าง)"
+cause << "ปวดศีรษะลำคอ"
+cause << "คลุ้มคลั่ง จิตประสาท อารมณ์"
+cause << "ยาเกินขนาด ได้รับพิษ"
+cause << "มีครรภ คลอด นรี"
+cause << "ชัก"
+cause << "ป่วย อ่อนเพลีย"
+cause << "อัมพาต(หลอดเลือดสมองตีบแตก)"
+cause << "หมดสติ ไม่ตอบสนอง หมดสติชั่ววูบ"
+cause << "เด็ก ทารก (กุมารเวชกรรม)"
+cause << "ถูกทำร้าย บาดเจ็บ"
+cause << "ไฟไหม้ ลวก ความร้อน กระแสไฟฟ้า สารเคมี"
+cause << "จมน้ำ หน้าคว่ำจมน้ำ บาดเจ็บเหตุดำน้ำ บาดเจ็บทางน้ำ"
+cause << "พลัดตกหกล้ม อุบัติเหตุ"
+cause << "อุบัติเหตุยานยนต์"
+
 unless report
 	report = AocCaseReport.create :admit_id=>admit.id
 end
@@ -86,6 +113,24 @@ else
   font-family: "IBMPlex", sans-serif;
 }
 
+.pinfo{
+	text-align:center;	
+	background:var(--body-bg);
+}
+input{
+	background:#093A54;
+	color:var(--text-grey);
+	border: 1px solid #446373;
+	padding:10px;
+}
+
+.site-item {
+  background-color: #07344b;
+  border: 1px solid #446373;
+  margin:10px;
+  padding:10px;
+  white-space:nowrap;
+}
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
@@ -102,6 +147,8 @@ else
 <!--Content-->
 <div class="row">
 <div id="crnav" class="col-2 sidenav">
+<div class="pinfo pb-4 rounded"><%=patient.name%></div>
+<div class="">
     <a id="sec-1" href="#section-1" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<%=secname[1]%>" style="margin-top:0px"><div class="c-bg">1</div></a>
     <a id="sec-2" href="#section-2" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-html="true" data-content="<%=secname[2]%>"><div class="c-bg">2</div></a>
     <a id="sec-3" href="#section-3" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<%=secname[3]%>"><div class="c-bg">3</div></a>
@@ -109,11 +156,59 @@ else
     <a id="sec-5" href="#section-5" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<%=secname[5]%>"><div class="c-bg">5</div></a>
     <a id="sec-6" href="#section-6" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<%=secname[6]%>"><div class="c-bg">6</div></a> 
 </div>
+<div class="d-flex justify-content-center mt-5">
+	           		
+	<button type="submit" class="btn btn-submit d-flex align-items-center justify-content-center">บันทึก</button>
+
+</div>
+</div>
 <div class="col-10 main">
   <section id="section-1">
     <h3>1 <%=secname[1]%></h3>
 		<div class="card patient-info">
-			
+			<div class="row">
+				<div class="col-sm-12">
+					ชื่อหน่วยบริการ 
+					<input type="text" name="report[center_name]" value="<%=report.center_name%>" id="report_center_name">
+				</div>
+				<div class="col-sm-12 pt-3">
+					เจ้าหน้่าที่ผู้ให้บริการ
+				</div>
+				<div class="col-sm-3">
+					1. 
+					<input type="text" name="report[officer_1]" value="<%=report.officer_1%>" id="report_officer_1">
+				</div>
+				<div class="col-sm-3">
+					รหัส 
+					<input type="text" name="report[officer_id_1]" value="<%=report.officer_id_1%>" id="report_officer_id_1">
+				</div>
+				<div class="col-sm-3">
+					2. 
+					<input type="text" name="report[officer_2]" value="<%=report.officer_2%>" id="report_officer_2">
+				</div>
+				<div class="col-sm-3">
+					รหัส 
+					<input type="text" name="report[officer_id_2]" value="<%=report.officer_id_2%>" id="report_officer_id_2">
+				</div>
+				<div class="col-sm-3">
+					3. 
+					<input type="text" name="report[officer_3]" value="<%=report.officer_3%>" id="report_officer_3">
+				</div>
+				<div class="col-sm-3">
+					รหัส 
+					<input type="text" name="report[officer_id_3]" value="<%=report.officer_id_3%>" id="report_officer_id_3">
+				</div>
+				<div class="col-sm-3">
+					4. 
+					<input type="text" name="report[officer_4]" value="<%=report.officer_4%>" id="report_officer_4">
+				</div>
+				<div class="col-sm-3">
+					รหัส 
+					<input type="text" name="report[officer_id_4]" value="<%=report.officer_id_4%>" id="report_officer_id_4">
+				</div>
+
+			</div>
+			<hr class="hr-trauma">
 			<div class="tab-content report" id="pills-tabContent">
 				<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
 					aria-labelledby="pills-treatment-tab" style="width: 100%;">
@@ -136,9 +231,90 @@ else
 					
 				</div>
 			</div>
-		</div>	  </section>
+			<hr class="hr-trauma">
+			<div class="row">
+				<div class="col-sm-12 pt-3">
+					เหตุการณ์
+				</div>
+				<div class="col-sm-12">
+					<div class="row">
+					
+						<input type="hidden" name="report[site_desc]" value="<%=report.site_desc%>" id="report_site_desc">	
+						<%cause.each_with_index{|c,i|%>							
+							<div class="col-sm"><div class="site-item"><%="#{i+1}. #{c}"%></div></div>
+						<%}%>						
+					</div>	
+				</div>
+			</div>
+		</div>	  
+  </section>
   <section id="section-2">
     <h3>2 <%=secname[2]%></h3>
+	<div class="card patient-info">
+		<div class="row">
+				<div class="col-sm-12 pt-3">
+					เวลา
+				</div>
+				
+				<div class="col-sm-3">
+					รับแจ้ง 
+					<input type="text" name="report[time_get]" value="<%=report.time_get%>" id="report_time_get">
+				</div>
+				<div class="col-sm-3">
+					สั่งการ 
+					<input type="text" name="report[time_order]" value="<%=report.time_order%>" id="report_time_order">
+				</div>
+				<div class="col-sm-3">
+					ออกจากฐาน
+					<input type="text" name="report[time_leave]" value="<%=report.time_leave%>" id="report_time_leave">
+				</div>
+				<div class="col-sm-3">
+					ถึงที่เกิดเหตุ 
+					<input type="text" name="report[time_arrive]" value="<%=report.time_arrive%>" id="report_time_arrive">
+				</div>
+				<div class="col-sm-6">
+					Response Time 
+					<input type="text" name="report[sum_time_response]" value="<%=report.sum_time_response%>" id="report_sum_time_response">
+				</div>
+				<div class="col-sm-6">
+					ระยะทาง 
+					<input type="text" name="report[dis_response]" value="<%=report.dis_response%>" id="report_dis_response">
+				</div>
+			</div>
+			<hr class="hr-trauma">
+			<div class="row">
+				
+				<div class="col-sm-4">
+					ออกจากที่เกิดเหตุ
+					<input type="text" name="report[time_back]" value="<%=report.time_back%>" id="report_time_back">
+				</div>
+				<div class="col-sm-4">
+					ถึงรพ.
+					<input type="text" name="report[time_hos]" value="<%=report.time_hos%>" id="report_time_hos">
+				</div>
+				<div class="col-sm-4">
+					ถึงฐาน
+					<input type="text" name="report[time_base]" value="<%=report.time_base%>" id="report_time_base">
+				</div>
+				<div class="col-sm-3">
+					เวลาไป รพ. 
+					<input type="text" name="report[sum_time_to_hos]" value="<%=report.sum_time_to_hos%>" id="report_sum_time_to_hos">
+				</div>
+				<div class="col-sm-3">
+					ระยะทางไป รพ. 
+					<input type="text" name="report[dis_to_hos]" value="<%=report.dis_to_hos%>" id="report_dis_to_hos">
+				</div>
+				<div class="col-sm-3">
+					เวลากลับฐาน 
+					<input type="text" name="report[sum_time_to_base]" value="<%=report.sum_time_to_base%>" id="report_sum_time_to_base">
+				</div>
+				<div class="col-sm-3">
+					ระยะทางกลับฐาน 
+					<input type="text" name="report[dis_to_base]" value="<%=report.dis_to_base%>" id="report_dis_to_base">
+				</div>
+
+			</div>
+		</div>
   </section>
   <section id="section-3">
     <h3>3 <%=secname[3]%></h3>
@@ -783,9 +959,9 @@ else
   </section>
  
 	<section>
-	<div class="d-flex justify-content-center mt-5">
+	<div class="d-flex justify-content-center mt-5" style="height:20vh">
 	           		
-		<button type="submit" class="btn btn-submit d-flex align-items-center justify-content-center">บันทึก</button>
+		<!--<button type="submit" class="btn btn-submit d-flex align-items-center justify-content-center">บันทึก</button>-->
 
 	</div>
 	</section>

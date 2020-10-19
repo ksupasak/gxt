@@ -64,6 +64,20 @@ class AocCaseReport < GXTModel
   key :site_addr, String
   key :site_desc, String
   
+  key :time_get, String
+  key :time_order, String
+  key :time_leave, String
+  key :time_arrive, String
+  key :time_back, String
+  key :time_hos, String
+  key :time_base, String
+
+  key :sum_time_response, String
+  key :sum_time_to_hos, String
+  key :sum_time_to_base, String
+  key :dis_response, String
+  key :dis_to_hos, String
+  key :dis_to_base, String
   
   
   key :bp_sys, Integer
