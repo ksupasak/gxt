@@ -125,6 +125,19 @@
 	}
 	
 	
+	
+	.track{
+		border:1px solid #333;
+		border-radius: 4px;
+		text-align:center; 
+		 
+	}
+	
+	.track .value{
+		font-size:1.5em;
+		line-height:4em;
+	}
+	
 </style>
 
 <%
@@ -236,7 +249,7 @@
 			</div>
 				<a href="tel:+66865443352" style="display:none">0865443352</a>
 					<%= inline(this,:'../home/_scoring') %>
-				<i style="color:#666"><div id="msgs" style="font-size:0.8em"></div></i>
+				<i style="color:#666"></i>
 				<br/>
 			</footer>
 		
@@ -278,7 +291,7 @@
 			
 				</div>
 				
-				<div class="xwidget col-6 col-sm-6 col-lg-9">
+				<div class="xwidget col-12 col-sm-12 col-lg-12">
 				<%=inline(this,:'_widget_all_ambulance')%>
 			
 				</div>
