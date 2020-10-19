@@ -721,7 +721,7 @@
 						if(admit_id.attr('caseid')!=''){
 							$('#btn_sum').click(()=>{window.location.href='summary?admit_id='+admit_id.attr('caseid')})
 						} else{
-							$('#btn_sum').click(()=>{window.location.href='create_form?admit_id=<%=admit.id%>'})
+							$('#btn_sum').click(()=>{window.location.href='create_form?admit_id=<%=admit.id if admit%>'})
 						}
 						
 						$('.station .value').html('-')
