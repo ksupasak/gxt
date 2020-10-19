@@ -213,7 +213,7 @@
 			%>
 		<li class="menu">
 			
-			<a href="#" class="select-<%=ambu_id%>  <%='panel-admit' if patient %>  ambu-<%=ambu_id%> ambu-row" caseid="<%=admit.id.to_s if aoc_cases[admit.id]%>">
+			<a href="#" class="select-<%=ambu_id%>  <%='panel-admit' if patient %>  ambu-<%=ambu_id%> ambu-row" caseid="<%=admit.id.to_s if admit and aoc_cases[admit.id]%>">
 				<i class="fas fa-ambulance pr-2"></i>
 				<%=admit.case_no%>
 			</a>
@@ -285,7 +285,7 @@
 
 			end
 	%>		
-		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row" caseid="<%=admit.id.to_s if aoc_cases[admit.id]%>">
+		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row" caseid="<%=admit.id.to_s if admit and aoc_cases[admit.id]%>">
 			<i class="fas fa-ambulance pr-2"></i>
 			<%= i.name %> : <%=i.plate_license%> 
 			<%if patient %><span class=" btn-warning btn-mini" style="float:right;font-size:0.7em;padding:5px;border-radius: 10px;">ALLOCATED</span><% end %>
