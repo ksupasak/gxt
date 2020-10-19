@@ -239,7 +239,8 @@
 		
 		%>
 		<li class="menu">
-			<%=link_to "#{code}", "../Admit/show?id=#{admit.id}", :class=>'completed', :target=>'_blank' %>
+			<%#=link_to "#{code}", "../Admit/show?id=#{admit.id}", :class=>'completed', :target=>'_blank' %>
+			<%=link_to "#{code}", "summary?admit_id=#{admit.id}", :class=>'completed', :target=>'_blank' %>
 		</li>
 		<% end %>
 		</ul>
@@ -284,7 +285,7 @@
 
 			end
 	%>		
-		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row">
+		<li class="select-<%=i.id%> menu  <%='panel-admit' if patient%>  ambu-<%=i.id%> ambu-row" caseid="<%=admit.id.to_s if aoc_cases[admit.id]%>">
 			<i class="fas fa-ambulance pr-2"></i>
 			<%= i.name %> : <%=i.plate_license%> 
 			<%if patient %><span class=" btn-warning btn-mini" style="float:right;font-size:0.7em;padding:5px;border-radius: 10px;">ALLOCATED</span><% end %>
