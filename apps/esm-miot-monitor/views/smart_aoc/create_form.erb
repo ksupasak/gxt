@@ -983,8 +983,20 @@ input{
 		event.preventDefault()
 		
 	})
+	$('.site-item').click(function(){
+		pa = $(this).parent().parent()
+		pa.find("input[type='hidden']").val($(this).html().trim())
+		$('.site-item').removeClass('selected')
+		$(this).addClass('selected')
+		$('.site-item').hide()
+		$(this).show().
+		alert(pa.find("input[type='hidden']").val())
+
+	})
 
 	$(".parameter").each(function(){
+
+	
 
 	$(this).find('.list-group-item').click(function(event){
 
