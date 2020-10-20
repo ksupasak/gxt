@@ -569,11 +569,22 @@ a {
   transform: rotate(270deg);
 }
 
+
 @media print {
   @page {
     margin: 0cm;
     margin-left: 1cm;
     size: A4; 
+  }
+  .noprint{
+    display: none;
+  }
+  .new-page{
+    /* page-break-before: always; */
+    page-break-after: always;
+  }
+  .avoidnew{
+    page-break-after: avoid;
   }
 }
 

@@ -46,11 +46,96 @@ end
   text-decoration:underline;
   width:100%;
 }
+.fsel{
+  border-radius:5px;
+  padding:5px;
+  margin-right:5px;
+  text-align:center;
+}
+.fselected{
+  background:#2437C6;
+}
+
+@media print {
+  .print-newpage{
+    clear: both;
+    page-break-after: always;
+  }
+}
 </style>
-<div class="container summary-container">
-    <a href="#" class="btn btn-secondary btn-print" id="btn-print">Print</a>
-    <a href="create_form?admit_id=<%=params[:admit_id]%>" class="btn btn-secondary" >Edit</a>
-    <a href="#" class="btn btn-danger" id="btn-discharge">Discharge</a>
+<script>
+  var t_map = <%= map.to_json.html_safe %>
+  
+  console.log(t_map)
+  fillform=(r)=>{
+      $.each(r,function(i,v){
+        if($("."+i)){
+          if($("."+i).hasClass("form-check")){ //checkbox
+            $("."+i).each(function(index,sel){
+              if($(sel).find("label").html().trim()==v||($(sel).find("[type='checkbox']").val()!=''&&$(sel).find("[type='checkbox']").val()==v)){
+                $(sel).find("[type='checkbox']").attr('checked',true)
+              }
+            })
+          }else if($("."+i).is('span')){ //text
+            $("."+i).html(v)
+          }
+          $(".what").html('test value')
+        }
+      })
+  }
+
+  
+  $(document).ready(function(){
+  
+      $('.lang').each(function(){
+  
+          val = $(this).attr('value')
+  
+          $(this).html(t_map[val]);
+  
+  
+      })
+      $("#btn-print").click(function(){
+        $('.btn').hide()
+        window.print()
+        $('.btn').show()
+      })
+      let report = <%= report.to_json.html_safe %>
+      fillform(report)
+      let patient =  <%= patient.to_json.html_safe %>
+  
+  })
+</script>
+<script>
+$(document).ready(function(){
+  $(".fchk").click(function(){
+    p = $(this).parent()
+    sid = $(this).attr('id')
+    if(p.hasClass("fselected")){
+       p.removeClass("fselected")
+       $("."+sid).addClass("noprint")
+       $("."+sid).hide()
+    }else{
+       p.addClass("fselected")
+       $("."+sid).removeClass("noprint")
+       $("."+sid).show()
+    }
+  })
+})
+</script>
+<div class="container summary-container noprint">
+  <div class="row noprint">
+    <div class="col">
+      <a href="#" class="btn btn-secondary btn-print" id="btn-print">Print</a>
+      <a href="create_form?admit_id=<%=params[:admit_id]%>" class="btn btn-secondary" >Edit</a>
+      <a href="#" class="btn btn-danger" id="btn-discharge">Discharge</a>
+    </div>
+    <div class="col fsel fselected"><input type="checkbox" id="chk_form" class="fchk" checked> Form</div>
+    <div class="col fsel "><input type="checkbox" id="chk_flow" class="fchk" > Flowsheet</div>
+    <div class="col fsel "><input type="checkbox" id="chk_gps" class="fchk" > Navigation gps</div>
+  </div>
+</div>
+<div class="container summary-container chk_form">
     <p class="text-center mt-3 mb-1 font-weight-bold">
     <span class="lang" value="title"></span>
     </p>
@@ -980,48 +1065,16 @@ end
       </td>
         </tr>
       </table>
-    </div>
+</div>
     
-    <script>
-      var t_map = <%= map.to_json.html_safe %>
-      
-      console.log(t_map)
-      fillform=(r)=>{
-          $.each(r,function(i,v){
-            if($("."+i)){
-              if($("."+i).hasClass("form-check")){ //checkbox
-                $("."+i).each(function(index,sel){
-                  if($(sel).find("label").html().trim()==v||($(sel).find("[type='checkbox']").val()!=''&&$(sel).find("[type='checkbox']").val()==v)){
-                    $(sel).find("[type='checkbox']").attr('checked',true)
-                  }
-                })
-              }else if($("."+i).is('span')){ //text
-                $("."+i).html(v)
-              }
-              $(".what").html('test value')
-            }
-          })
-      }
+<div class="container summary-container chk_flow">
+<!--<div class="print-newpage">&nbsp;</div>-->
+Flowsheet
+</div>
 
-      
-      $(document).ready(function(){
-      
-          $('.lang').each(function(){
-      
-              val = $(this).attr('value')
-      
-              $(this).html(t_map[val]);
-      
-      
-          })
-          $("#btn-print").click(function(){
-            $('.btn').hide()
-            window.print()
-            $('.btn').show()
-          })
-          let report = <%= report.to_json.html_safe %>
-          fillform(report)
-          let patient =  <%= patient.to_json.html_safe %>
-      
-      })
-    </script>
+<div class="container summary-container chk_gps">
+<div class="print-newpage">&nbsp;</div>
+GPS
+</div>
+
+    
