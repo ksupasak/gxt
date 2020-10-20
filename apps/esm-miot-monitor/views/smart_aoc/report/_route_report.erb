@@ -1,0 +1,395 @@
+<%
+	
+	
+	
+	
+	admit  = Admit.find params[:admit_id]
+
+
+	routes = AocCaseRoute.where(:admit_id=>admit.id).sort(:sort_order=>1).all
+
+
+	
+	
+%>
+
+<style>
+
+	.spot-value{
+		border:1px solid;
+		padding:20px;
+		font-size:1.5em;
+		display:table;
+		width:150px;
+		border-radius: 5px;
+		justify-content: center;
+	}
+	
+	.spot-under{
+		text-align:center;
+		border:0px solid;
+		padding:10px;
+		font-size:1em;
+		display:table;
+		width:150px;
+		justify-content: center;
+	}
+	
+	.spot-upper{
+		text-align:center;
+		border:0px solid;
+		padding:10px;
+		font-size:1em;
+		display:table;
+		width:150px;
+		justify-content: center;
+	}
+	
+	.route{
+		
+	}
+	
+	.route-block{
+		border:0px solid;
+		line-height:4em;
+	}
+	.route-trace{
+		border:1px solid;
+		height:100px;
+		margin-bottom:10px;
+	}
+</style>
+	
+<h3>Route Report</h3>
+<hr/>
+
+
+<div class="row" >
+<div class="col-12">
+
+
+<div class="row " >
+
+<div class="col-3 d-flex" style="	justify-content: center;">
+<div class="spot-upper d-flex">
+	Response Time
+</div >
+<div class="spot-value d-flex">
+	3 mins
+</div >
+<div class="spot-under d-flex">
+	12km
+</div >
+</div>
+
+
+
+<div class="col-3 d-flex" style="	justify-content: center;">
+<div class="spot-upper d-flex">
+	Total Route
+</div >
+<div class="spot-value d-flex">
+	23 mins
+</div >
+<div class="spot-under d-flex">
+	45km
+</div >
+</div>
+
+
+
+<div class="col-3 d-flex" style="	justify-content: center;">
+<div class="spot-upper d-flex">
+	Driving Speed
+</div >
+<div class="spot-value d-flex">
+	95%
+</div >
+<div class="spot-under d-flex">
+	&lt; 100 km/h
+</div >
+</div>
+
+
+<div class="col-3 d-flex" style="	justify-content: center;">
+<div class="spot-upper d-flex">
+	Over Speed
+</div >
+<div class="spot-value d-flex">
+	3% 
+</div >
+<div class="spot-under d-flex">
+	Max 124 km/h
+</div >
+</div>
+
+
+</div>
+
+</div>
+</div>
+
+
+
+
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #geo-map {
+					        min-height:40vh;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+					    <!--The div element for the map -->
+					    <div id="geo-map" style="border-radius: 5px;"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <script>
+					// Initialize and add the map
+					var marker_map = null;
+					var marker_label = null;
+					var map = null;
+					var poly = null;
+					
+					function initMap(){
+					  $.getScript("<%=url_for('js/aoc/maplabel.js')%>")	
+						$(document).ready(initMap2);
+					}	
+						
+					function initMap2() {
+						
+					  // The location of Uluru
+					  var uluru = {lat: 15.8700, lng: 100.9925};
+					  // The map, centered at Uluru
+					  map = new google.maps.Map(
+					      document.getElementById('geo-map'), {zoom: 16, center: uluru});
+					  // The marker, positioned at Uluru
+						  
+					 
+	    					var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+	  						// url: "<%=url_for "img/aoc/ambu.svg"%>",
+					
+	    					map_icon = {
+	    					  path: car,
+	    					  scale: 0.9,
+	    					  strokeColor: 'white',
+	    					  strokeWeight: .10,
+	    					  fillOpacity: 1,
+	    					  fillColor: '#303bef',
+	    					  offset: '5%',
+	  						// size: new google.maps.Size(sizeX, sizeY),
+	  		//         				origin: new google.maps.Point(0, 0),
+	  		//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+	    					  // rotation: parseInt(heading[i]),
+	    					  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+	    					};
+					 
+					 	  
+						  
+						  
+					  marker_map = new google.maps.Marker({position: uluru,icon: map_icon,  map: map});
+
+					// var image="https://example.com/images/carnew.svg";
+
+					 // marker = new google.maps.Marker({
+					 // 			    position: uluru,
+					 // 			    icon: image,
+					 // 			    map: map
+					 // 			});
+					 
+					 poly = new google.maps.Polyline({
+					    strokeColor: '#0000ff',
+					    strokeOpacity: 1.0,
+					    strokeWeight: 3
+					  });
+					  poly.setMap(map);
+					 
+					 
+					
+					 
+					 
+					 // initMapAllMap()
+					 
+					}
+					
+					
+					</script>
+
+
+
+
+
+
+
+<!--<hr style="border:0.5px solid #ddd"/> -->
+
+
+<br/>
+<br/>
+
+
+
+<h4>Routes (<%=routes.size%> routes)</h4>
+
+	
+	
+<% for i in routes 
+
+departure = AdmitLog.find i.departure_log_id
+arrival = AdmitLog.find i.arrival_log_id
+
+%>
+<div class="row">
+
+<div class="col-4 route-block">
+
+
+<%=departure.name %> - <%=i.start_latlng%>
+
+
+
+</div>
+<div class="col-4 route-block" style="	justify-content: center;">
+
+ <div class="d-flex" style="justify-content: center; font-size:1.2em">
+<%=format("%.1f",i.est_distance.to_f/1000) if i.est_distance%> km, <%=format("%.1f",i.est_duration/60.0) if i.est_distance%>  mins
+
+</div>
+</div>
+
+<div class="col-4 route-block "  >
+ <div class="d-flex justify-content-end" >
+
+<%=i.stop_latlng%> - 
+<%=i.address%> 
+
+</div>
+</div>
+
+
+</div>
+
+<div class="row">
+<div class="col-12 route-trace">
+<div id="route-<%=i.id%>"></div>
+</div>
+</div>
+
+
+
+<script>
+
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 5, left: 40},
+    width = 1100 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#route-<%=i.id%>")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// Parse the Data
+// d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv", function(data) {
+
+
+	var data = [
+	  {letter: "A", frequency: 11.08167},
+	  {letter: "B", frequency: 22.01492},
+	  {letter: "C", frequency: 44.02780},
+	  {letter: "D", frequency: 11.04253},
+	  {letter: "E", frequency: 22.12702},
+	  {letter: "F", frequency: 44.02288},
+	  {letter: "G", frequency: 22.02022},
+	  {letter: "H", frequency: 22.06094},
+	  {letter: "I", frequency: 20.06973},
+	  {letter: "J", frequency: 100.00153},
+	  {letter: "K", frequency: 15.00747},
+	  {letter: "L", frequency: 53.04025},
+	  {letter: "M", frequency: 23.02517},
+	  {letter: "N", frequency: 35.06749},
+	  {letter: "O", frequency: 122.07507},
+	  {letter: "P", frequency: 67.01929},
+	  {letter: "Q", frequency: 33.00098},
+	  {letter: "R", frequency: 23.05987},
+	  {letter: "S", frequency: 34.06333},
+	  {letter: "T", frequency: 42.09056},
+	  {letter: "U", frequency: 32.02758},
+	  {letter: "V", frequency: 62.01037},
+	  {letter: "W", frequency: 36.02465},
+	  {letter: "X", frequency: 23.00150},
+	  {letter: "Y", frequency: 22.01971},
+	  {letter: "Z", frequency: 62.00074},
+  	  {letter: "B1", frequency: 22.01492},
+  	  {letter: "C1", frequency: 44.02780},
+  	  {letter: "D1", frequency: 11.04253},
+  	  {letter: "E1", frequency: 22.12702},
+  	  {letter: "F1", frequency: 44.02288},
+  	  {letter: "G1", frequency: 22.02022},
+  	  {letter: "H1", frequency: 22.06094},
+  	  {letter: "I1", frequency: 20.06973},
+  	  {letter: "J1", frequency: 100.00153},
+  	  {letter: "K1", frequency: 15.00747},
+  	  {letter: "L1", frequency: 53.04025},
+  	  {letter: "M1", frequency: 23.02517},
+  	  {letter: "N1", frequency: 35.06749},
+  	  {letter: "O1", frequency: 122.07507},
+  	  {letter: "P1", frequency: 67.01929},
+  	  {letter: "Q1", frequency: 33.00098},
+  	  {letter: "R1", frequency: 23.05987},
+  	  {letter: "S1", frequency: 34.06333},
+  	  {letter: "T1", frequency: 42.09056},
+  	  {letter: "U1", frequency: 32.02758},
+  	  {letter: "V1", frequency: 62.01037},
+  	  {letter: "W1", frequency: 36.02465},
+  	  {letter: "X1", frequency: 23.00150},
+  	  {letter: "Y1", frequency: 22.01971},
+  	  {letter: "Z1", frequency: 62.00074}
+	];
+
+
+
+  // X axis
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(data.map(function(d) { return d.letter; }))
+    .padding(0.2);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain([0, 120])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+
+  // Bars
+  svg.selectAll("mybar")
+    .data(data)
+    .enter()
+    .append("rect")
+      .attr("x", function(d) { return x(d.letter); })
+      .attr("y", function(d) { return y(d.frequency); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.frequency); })
+      .attr("fill", "#69b3a2")
+
+  // })
+
+
+
+</script>
+
+<% end %>
+
+					    <script async defer
+					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
+					    </script>
