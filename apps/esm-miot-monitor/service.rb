@@ -184,7 +184,7 @@ def self.registered(app)
                       
                       
                     # end
-                    if route.est_distance - route.act_distance > 30  
+                    if  route.est_distance and route.act_distance and route.est_distance - route.act_distance > 30  
                       
                       departure_log = AdmitLog.find route.departure_log_id  
                       
