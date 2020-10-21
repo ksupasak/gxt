@@ -384,11 +384,12 @@
 			<div class="col-4" >
 			<span class="">
 				
-				<%=link_to '<i class="fas fa-notes-medical pr-1"></i> Note',"#", :class=>' btn btn-info context disable secondary-nav',:style=>"width:100px" %>
+				
+				<%=link_to '<i class="fas fa-heartbeat pr-1"></i> Chart',"#",:id=>'btn_chart', :target=>'_blank', :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:100px" %>
 			
-				<%=link_to '<i class="fas fa-heartbeat pr-1"></i> Chart',"#", :class=>' btn btn-warning  context disable secondary-nav',:style=>"width:100px" %>
+			     <%=link_to '<i class="fas fa-notes-medical pr-1"></i> Route',"#",:id=>'btn_route', :target=>'_blank', :class=>' btn btn-info context disable secondary-nav',:style=>"width:100px" %>
 			
-				<%=link_to '<i class="fas fa-phone-alt pr-1"></i> Call',"#", :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:100px" %>
+				<%=link_to '<i class="fas fa-phone-alt pr-1"></i> Call',"#",:id=>'btn_call', :class=>' btn btn-info  context disable  secondary-nav',:style=>"width:100px" %>
 				
 				
 			</span>
@@ -719,6 +720,26 @@
 					$('.select-<%=i.id%>').click(function(event){
 					
 					    admit_id = $(this) 
+						
+						$('#btn_chart').click((event)=>{
+							window.open('../Admit/show?id='+admit_id.attr('caseid'), '_blank');
+							event.preventDefault()
+						})
+						$('#btn_call').click(()=>{
+							
+							$('.callEnd').click();
+							setTimeout(function(){ 
+
+									$('#resourceId').val("<%=i.name%>")
+									$('.callStart').click();
+
+								}, 1500);
+								event.preventDefault()
+							
+						})
+						$('#btn_route').click(()=>{window.location.href='report?admit_id='+admit_id.attr('caseid')})
+						
+						
 						if(admit_id.attr('caseid')!=''){
 							$('#btn_sum').click(()=>{window.location.href='summary?admit_id='+admit_id.attr('caseid')})
 						} else{

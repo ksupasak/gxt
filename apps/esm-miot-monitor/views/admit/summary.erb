@@ -253,7 +253,7 @@ end
 		
 		else
 		
-			for i in DataRecord.where(:admit_id=>params[:id]).all
+			for i in DataRecord.where(:admit_id=>admit.id).all
 		
 				# o = ActiveSupport::JSON.decode(i.data)
 				

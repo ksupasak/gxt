@@ -1067,14 +1067,18 @@ $(document).ready(function(){
       </table>
 </div>
     
-<div class="container summary-container chk_flow">
+<div id="printout" class="container summary-container chk_flow print-newpage" >
 <!--<div class="print-newpage">&nbsp;</div>-->
-Flowsheet
+<div class="print-newpage">
+<%= inline(this,:'report/_flowsheet_report') %>
+</div>
 </div>
 
-<div class="container summary-container chk_gps">
-<div class="print-newpage">&nbsp;</div>
+<div  id="printout" class="container summary-container chk_gps print-newpage">
+<div class="print-newpage">
 <%= inline(this,:'report/_route_report') %>
+</div>
+
 </div>
 
     
