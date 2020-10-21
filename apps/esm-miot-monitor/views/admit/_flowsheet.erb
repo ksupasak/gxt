@@ -85,24 +85,7 @@
 					    .attr("class", "row")
       			  	    .attr("transform", "translate(0,0)");
 
-      			  		// g.append("rect")
-	//       						.attr("y",100)
-	//       			  	        .attr("rx", 3)
-	//       			  	        .attr("ry", 3)
-	//       			  	        .attr("width", "150")
-	//       			  	        .attr("height", "24")
-	//       			  	        .attr("fill-opacity", 0.25)
-	//       			  	        .attr("stroke", "#944")
-	// 						.attr("fill",'#944')
-	//       			  	        .attr("stroke-width", "1px")
-	//       			  			.on("click", function(){
-	//       			  				alert('odijvvfd')
-	//       			  			})
-	//       						.on("mousemove", function(){
-	//       							console.log('df')
-	//       						})
-	//
-		  
+      			  	
       			  		
 						//# blue bar  
 							
@@ -667,7 +650,6 @@
 			
 			gfx.tick = function(data){
 			
-				
 				if(data['update']){
 					
 					for(var id in data['update'] ){
@@ -682,7 +664,7 @@
 								// cmap[i['name']]['records'].shift();
 							}
 							
-							console.log("r")
+							
 							// cmap[i['name']]['records'].push()
 							gfx.render(true)
 							

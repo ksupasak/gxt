@@ -808,7 +808,7 @@
 						<% if i.device_no and i.device_no !="" %>
 						
 						// dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&jsession=3883c38b-c306-4f48-a837-7c9a8dcda3f0"
-						dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&account=admin&password=admin"
+						dvr_path = "https://103.76.181.125/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&account=admin&password=admin"
 						tele_path =  prefix+"/Sas/tele?resourceId=<%=i.name%>"
 					
 				       $('iframe').attr( "src", dvr_path);

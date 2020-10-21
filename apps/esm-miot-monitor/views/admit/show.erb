@@ -564,7 +564,7 @@ a.link-info:hover{
 
 <script>
 	let div = document.getElementById('panel-primary');
-	div.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+	// div.lastElementChild.scrollIntoView({ behavior: 'smooth' });
 </script>
 
 </div>
@@ -805,7 +805,7 @@ if record
 				
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
 		    
-			senses = Sense.collection.find({:admit_id=>admit.id}).limit(1000).to_a
+			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(1000).sort(:start_time=>-1).to_a
 			
 			
 		    
@@ -841,7 +841,7 @@ if record
 			
 					# o = ActiveSupport::JSON.decode(i.data)
 					
-				list.push :time=>i.stamp,:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
+				list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
 				
 				# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
 				
@@ -859,14 +859,18 @@ if record
 			
 			end
 			
-			
-			for j in list 	
 			%>
-			j = <%=j.to_json.html_safe%>
-			records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia'],co2:j['co2']});
+			
+			
 			<% end %>
-				<% end %>
-			//records = <%= list.to_json.html_safe %>
+			
+			records = <%= list.to_json.html_safe %>
+			
+			for(var ii in records){
+				
+					records[ii]['time'] = Date.parse(records[ii]['time'] )
+				
+			}
 		
 			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
 			// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
