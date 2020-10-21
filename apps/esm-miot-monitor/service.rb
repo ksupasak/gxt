@@ -209,7 +209,7 @@ def self.registered(app)
                     
                     # route.act_distance = 10
                     
-                    if route.act_distance < 30 # arrive
+                    if route.act_distance and route.act_distance < 30 # arrive
                       
                       arrival_log = AdmitLog.find route.arrival_log_id  
                       
