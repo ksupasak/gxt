@@ -1,0 +1,12 @@
+<%
+	
+admit = Admit.find params[:admit_id]
+
+records = admit.records
+
+patient = Patient.find admit.patient_id
+	
+%>
+Case Infomation :
+<br/>
+<%#=patient.inspect%>

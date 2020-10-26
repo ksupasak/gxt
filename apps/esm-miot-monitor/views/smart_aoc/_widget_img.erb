@@ -1,5 +1,16 @@
-
-
-Patient Infomation :
+<div id="widget-img" >
+Case Infomation :
 <br/>
-First name : <span class="value">Name</span>
+</div>
+
+<script>
+    function widget_patient_update(admit_id){
+		
+		$.ajax({
+		  url: "widget_img_partial?admit_id="+admit_id
+		}).done(function(data) {
+		  $('#widget-img').html(data);
+		});
+		
+	}
+</script>
