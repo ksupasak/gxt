@@ -1,5 +1,18 @@
 
-
+<div id="widget-patient" >
 Patient Infomation :
 <br/>
-First name : <span class="value">Name</span>
+Name : <span class="p-name">Name</span>
+</div>
+
+<script>
+    function widget_patient_update(admit_id){
+		
+		$.ajax({
+		  url: "widget_patient_partial?admit_id="+admit_id
+		}).done(function(data) {
+		  $('#widget-patient').html(data);
+		});
+		
+	}
+</script>
