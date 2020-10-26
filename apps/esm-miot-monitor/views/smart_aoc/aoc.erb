@@ -307,7 +307,7 @@
 		</div>
 		<div class="d-flex justify-content-between footer-nav">
 			<span>Today Complete</span>
-			<span style="color: #42B7AB">3</span>
+			<span style="color: #42B7AB"><%=admits_completed.size%></span>
 		</div>
 		<hr style="border-top: 1px solid #C2C2C2;"/>
 		<div style="font-size:0.8em;color:#999">
@@ -381,7 +381,7 @@
 		<div class="row aoc-heading mb-2 mt-2"  style="">
 	
 			<div class="col-4" >
-			<span class="">ศูนย์สั่งการหน่วย : โรงพยาบาลรามาธิบดี </span>
+			<span class=""><%=Setting.get :default_center_name%> </span>
 			</div>
 			
 			<div class="col-4" >
@@ -412,7 +412,7 @@
 		</div>
 
 
-		<div class="selection row dark-blue aoc-heading"  style="color:white;font-size:1.2em">
+		<div class="selection row dark-blue aoc-heading sel-ambu"  style="color:white;font-size:1.2em">
 	
 			<div class="col-6 " >
 				<span class="head">Ambu : </span>
@@ -471,7 +471,7 @@
 		<!-- Main nenu -->
 		
 		<!-- Top panel -->
-		<div class="row  context-panel">
+		<div class="row  context-panel sel-ambu ">
 	
 				
 				<div class="xwidget col-6 col-sm-6 col-lg-3 d-flex align-content-stretch " id="panel-a">
@@ -515,8 +515,9 @@
 				<div class="xwidget col-6 col-sm-6 col-lg-3 ">
 				<%=inline(this,:'_widget_map')%>
 				</div>
-		
-			
+
+		</div>
+		<div class="row  context-panel all-ambu">	
 				
 				
 				
@@ -623,7 +624,8 @@
 					var selected_station_name = null;
 					var selected_admit_id = null;
 					
-					
+					$(".sel-ambu").hide()
+
 					$('.chart_btn').click(function(){
 						
 						window.open('../Admit/show?id='+selected_admit_id)
@@ -721,6 +723,9 @@
 					
 				
 					$('.select-<%=i.id%>').click(function(event){
+
+						// $(".all-ambu").hide()
+						$(".sel-ambu").show()
 					
 					    admit_id = $(this) 
 						
