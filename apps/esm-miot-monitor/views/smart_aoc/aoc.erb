@@ -122,7 +122,8 @@
 	}
 	
 	pre{
-		color:#6c6c6c;
+		color:#999;
+		font-family: "Sarabun", sans-serif;
 		
 	}
 	
@@ -322,11 +323,11 @@
 			<div style="float:right" class="timer">
 				00:00
 			</div>
-				E.S.M.Solution Co.,Ltd. and Aliance
+				E.S.M.Solution Co.,Ltd.
 		</div>
 			<a href="tel:+66865443352" style="display:none">0865443352</a>
 				<%= inline(this,:'../home/_scoring') %>
-			<i style="color:#666"><div id="msgs" style="font-size:0.8em"></div></i>
+			<i style="color:#666"><% unless params[:debug] %><div id="msgs" style="font-size:0.8em"></div><% end %></i>
 			<br/>
 		</footer>
 	
@@ -525,7 +526,7 @@
 				</div>
 
 		</div>
-		<div class="row  context-panel all-ambu">	
+		<div class="row  all-ambu">	
 				
 				
 				
@@ -548,6 +549,9 @@
 		
 		
 	</div>
+	
+	
+	
 <div class="modal fade" id="admit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="color:black">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -1034,47 +1038,13 @@
 					   	 // console.log(wave_data[i])
 		   				// console.log("v"+i+" "+wave_data[i].length);
 						// wave_data = obj['wave'];
-				   }
+				 
 		
 			
 				if(selected_ambu&&data['ambu_data']&&data['ambu_data'][selected_ambu]['name']==i){
 		
-						// admit = data['admit_data'][ambu['admit_id']]
-					
-					// if(admit&&i==admit['station_name']){
-					
-					    // var latlng = {lat: parseFloat(obj['lat']), lng: parseFloat(obj['lng'])};
-					
-				  // locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
-					
-						// var latlng = new google.maps.LatLng(parseFloat(obj['lat']), parseFloat(obj['lng']));
 						
 						widget_map_setLocation(obj, parseFloat(obj['lat']), parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']);
-						
-						
-						// marker = widget_map_getMarker();
-	//
-	// 					var latlng = new google.maps.LatLng(parseFloat(obj['lat']), parseFloat(obj['lng']));
-	// 					marker.setPosition(latlng);
-	//   					  	var ic = marker.get("icon");
-	//   					  	ic.rotation = obj['dvr_hx'];
-	//   					  	marker.set("icon", ic);
-	//
-	//
-	// 					map.setCenter(latlng);
-	//
-	//
-	// 					var mapLabel = new MapLabel({
-	// 					  text: i,
-	// 					  position: latlng,
-	// 					  map: map,
-	// 					  fontSize: 20,
-	// 					  align: 'left'
-	// 					});
-	//
-	// 				    var path = poly.getPath();
-	// 				    path.push(marker.position);
-					
 					
 						show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][1])	
 						show_wave_data['2'] = 	show_wave_data['2'].concat(obj['leads'][2])	
@@ -1087,8 +1057,10 @@
 				}
 			
 		    			
-			
+					console.log("xxx "+i)
 				 	console.log(obj)
+				
+				
 					$('.station-'+i+' .hn').html(obj['ref'])
 			
 					if($('.station-'+i+' .bp').html()!=obj['bp']){
@@ -1131,11 +1103,13 @@
 				
 					$('.note-panel-'+i).css('background',color);
 			
-			}
+			  }
 			
 			}
 			
-				console.log(locations)
+			}
+			
+				// console.log(locations)
 					
 					///////////////////////////////////////////////////// All map
 			
@@ -1164,4 +1138,5 @@
 </div>
 
 </div>
+	<% if params[:debug] %><div id="msgs" style="font-size:0.8em"></div><% end %>
 

@@ -221,7 +221,7 @@ MSG
      data[:lng] = 100.6987491+0.005*Math.sin((Time.now.to_i*2+sp)*Math::PI/180)+sy
      # puts Time.now.to_i%360+90
      data[:dvr_sp] = 30
-     data[:dvr_hx] = Time.now.to_i*2%360+90
+     data[:dvr_hx] = Time.now.to_i*2%360
      data[:dvr_ol] = 1
      
      

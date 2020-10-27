@@ -1,6 +1,6 @@
 					<%
-					
-							ambulances = Ambulance.all
+								
+							ambulances = Ambulance.where(:zone_id=>@current_zone.id).sort(:name=>1).all
 									for i in ambulances 
 										if true
 										admit= nil
@@ -156,13 +156,13 @@
 									
 									<div class="col-3" >
 									
-									<div class="row">
-									<div class="col-6 col-lg-3 col-sm-3 track ambu-headto ">
+									<div class="row station ">
+									<div class="col-6 col-lg-3 col-sm-3 track dvr_hx ">
 										<span class="label">Direction</span>
 										<div class="value">-</div>
 									</div>
 
-								    <div class="col-6 col-lg-3 col-sm-3 track ambu-speed">
+								    <div class="col-6 col-lg-3 col-sm-3 track dvr_sp">
 									    <span class="label">Speed(km/h)</span>
 									    <div class="value">-</div>
 								    </div>

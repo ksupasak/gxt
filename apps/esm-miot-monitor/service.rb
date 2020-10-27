@@ -129,12 +129,21 @@ def self.registered(app)
         jsessionid_map = {}
         connection_map = {}
         device_map = {}
-      
+       
+        cache_stamp = nil
+        cache_directions = {}
         
        
        EM.add_periodic_timer(10) do
         
          #update list
+         
+         if cache_stamp==nil or cache_stamp!=Time.now.strftime("%Y-%m-%d")
+           cache_directions = {}
+           cache_stamp = Time.now.strftime("%Y-%m-%d")
+           
+         end
+         
          
          # for name in app.settings.apps_rv['esm-miot-monitor']
           for name in get_solutions('esm-miot-monitor')
@@ -168,16 +177,25 @@ def self.registered(app)
                     
                     unless route.est_distance
                       # fill estimate distance
+                     
                       direction = google_direction(route.start_latlng, route.stop_latlng, key)
+                      
+                      
                       if direction[:status]=='200 OK'
                         route.update_attributes :est_distance=>direction[:total_distance][:value], :est_duration=>direction[:total_duration][:value]
                       end
                       
                     end
                     
+                    kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
+                    direction = cache_directions[kcache]
+                    unless direction
+                      direction = google_direction(i.last_location, route.stop_latlng, key)
+                      cache_directions[kcache] = direction
+                    end
+                    puts cache_directions.keys
                     # unless route.act_distance
                       # fill estimate distance
-                    direction = google_direction(i.last_location, route.stop_latlng, key)
                     if direction[:status]=='200 OK'
                         route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
                     end
@@ -973,7 +991,11 @@ MSG
                 if v = station_status[s.id.to_s]
                
                   arg = app.settings.senses[name][s.name]
-                  if arg
+                   
+                  # puts v.inspect
+                  
+                  if arg and v['ol'] == 1
+                    
                     
                     # puts "#{v['lat']},#{v['lng']} - #{ arg['lat']}, #{ arg['lng']}"
                   
