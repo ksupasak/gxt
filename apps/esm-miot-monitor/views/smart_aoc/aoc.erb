@@ -130,38 +130,34 @@
 </style>
 
 <%
-	
-		
-	
- 
-				
-			
-					begin
- 					  @current_zone = Zone.first
-					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
-					  @current_zone = nil if @current_zone and @current_zone.mode!='aoc'
-					   unless @current_zone
-					  	 @current_zone = Zone.where(:mode=>'aoc').first
-				  	  	 session[:current_zone] = @current_zone.id
-					  end
-					  # @current_zone = Zone.where(:name=>'Ambu').first
-					  
-					  
-					  
-					  
-					  admits = []
-					  admits = @current_zone.admits.where(:status=>'Admitted').all if @current_zone
-					 # admits =  Admit.where(:status=>'Admitted').all
+	admits = []
+	begin
+		@current_zone = Zone.first
+		@current_zone = Zone.find session[:current_zone] if session[:current_zone]
+		@current_zone = nil if @current_zone and @current_zone.mode!='aoc'
+		unless @current_zone
+			@current_zone = Zone.where(:mode=>'aoc').first
+			session[:current_zone] = @current_zone.id
+		end
+		# @current_zone = Zone.where(:name=>'Ambu').first
+
+		admits = @current_zone.admits.where(:status=>'Admitted').all if @current_zone
+		# admits =  Admit.where(:status=>'Admitted').all
 
 
-					  stations = Station.find(ambulances.collect{|i| i.station_id})
-					rescue Exception=>e 
-					end
+		stations = Station.find(ambulances.collect{|i| i.station_id})
+	rescue Exception=>e 
+	end
+	admit_ids = admits.collect{|i| i.id}.compact
+	aoc_cases = Hash[AocCaseReport.where(:admit_id=>admit_ids).all.collect{|i| [i.admit_id,i]}.compact]
+
+	waits = admits.collect{|i| i if !i.ambulance_id}.compact
+	opers = admits.collect{|i| i if i.ambulance_id}.compact
+
 
 	ambulances = Ambulance.where(:zone_id=>@current_zone.id).sort(:name=>1).all
 
-
-				%>
+%>
 				
 				
 
@@ -186,35 +182,31 @@
 		<b class="aoc-heading">Request</b>
 		<span style="float:right"><%= link_to "+เพิ่มเคส", "create", :class=>'btn primary-blue'%><br/></span>
 		</div>
-		
-		<ul>
+		<b>Waiting</b>
+		<ul style="list-style: none;" class="mt-1">
+			<%
+				waits.each do |admit| 
+					
+					patient = admit.patient
+					ambu_id = admit.ambulance_id
+					ambu = admit.ambulance
+				
+			%>
+		<li class="menu">
 			
-	<%
-	
-		admits_completed = @current_zone.admits.where(:status=>'Admitted', :ambulance_id=>nil).sort(:created_at.desc).all if @current_zone
+			<a href="../Admit/show?id=<%=admit.id%>" target="_blank">
+				<i class="fas fa-ambulance pr-2"></i>
+				<%=admit.case_no%> : 
+			</a>
+		</li>
+		<% end %>
 		
-	%>
-	<% admits_completed.each do |admit| 
-	
-	  code =  admit.patient.to_s
-	  code = admit.an  if admit.an
-	  code = admit.case_no if admit.case_no
-	
-	
-	%>
-	<li>
-		<%=link_to "#{code}", "../Admit/show?id=#{admit.id}", :target=>'_blank' %>
-	</li>
-	<% end %>
 		
 		</ul>
-		
 		<b>Operation (Ongoing)</b>
 		<ul style="list-style: none;" class="mt-1">
 			<%
-				admit_ids = admits.collect{|i| i.id}.compact
-				aoc_cases = Hash[AocCaseReport.where(:admit_id=>admit_ids).all.collect{|i| [i.admit_id,i]}.compact]
-				admits.each do |admit| 
+				opers.each do |admit| 
 					
 					patient = admit.patient
 					ambu_id = admit.ambulance_id
@@ -225,7 +217,7 @@
 			
 			<a href="#" class="select-<%=ambu_id%>  <%='panel-admit' if patient %>  ambu-<%=ambu_id%> ambu-row" caseid="<%=admit.id.to_s if admit and aoc_cases[admit.id]%>">
 				<i class="fas fa-ambulance pr-2"></i>
-				<%=admit.case_no%> : <%=ambu.name%>
+				<%=admit.case_no%> : <%=ambu.name if ambu%>
 			</a>
 		</li>
 		<% end %>
@@ -738,7 +730,6 @@
 
 						// $(".all-ambu").hide()
 						
-					
 					    admit_id = $(this) 
 						
 						 
