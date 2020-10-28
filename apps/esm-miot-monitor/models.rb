@@ -559,6 +559,7 @@ class Ambulance  < GXTModel
   key :zone_id, ObjectId
   key :last_location, String
   key :last_address, String
+  key :last_speed, String
   key :device_no, String
   include Mongoid::Timestamps
   

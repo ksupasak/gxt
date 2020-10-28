@@ -134,7 +134,7 @@ def self.registered(app)
         cache_directions = {}
         
        
-       EM.add_periodic_timer(10) do
+       EM.add_periodic_timer(30) do
         
          #update list
          
@@ -1004,21 +1004,53 @@ MSG
                    arg['dvr_sp'] = v['sp']
                    arg['dvr_hx'] = v['hx']
                    arg['dvr_ol'] = v['ol']
+                   
+                  
                 
                 
                 end
+                
+                
+              
+                
                   # app.settings.senses[name][s.name] = arg
                   
                   # puts app.settings.senses[name][s.name].inspect
 
 
                 end
+                
+              
 
 
               end
+              
+              
+              
 
             end
             
+            ##########################################################################################################
+            
+            
+            # stations.each do |s|
+         #
+         #    arg = app.settings.senses[name][s.name]
+         #    if arg
+         #    ambu = Ambulance.where(:station_id=>s.id).first
+         #    # puts ambu.id if ambu
+         #    if ambu
+         #      ambu.update_attributes :last_location=> "#{arg['lat']},#{arg['lng']}", :last_speed=>arg['dvr_sp']
+         #    end
+         #
+         #    end
+         #    end
+         #
+         #
+            
+         ##########################################################################################################
+         
+         
             
             
             result = {:time=>Time.now, :list=>snames,:data=>app.settings.senses[name].select{|k,v| snames.index(k) }}
@@ -1130,28 +1162,7 @@ MSG
                        
                        DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now
                        
-                       # bp":"121/72","bp_stamp":"115806","pr":93,"rr":18,"spo2":97}]}
-  
-  
-                       # key :admit_id, ObjectId
-   #
-   #                     key :data, String
-   #                     key :bp, String
-   #                     key :bp_sys, Integer
-   #                     key :bp_dia, Integer
-   #                     key :pr, Integer
-   #                     key :hr, Integer
-   #                     key :spo2, Integer
-   #                     key :rr, Integer
-   #                     key :temp, Float
-   #
-   #                     key :stamp, Time
-   #
-   #                     key :status, String
-   #
-   #                     key :score, Integer
-                       
-                       
+
                        
                      app.settings.last_map[v['station_id']] = lt
                   
@@ -1162,28 +1173,7 @@ MSG
                  end
                  
 
-                 # key :bp, String.    ok
-    #              key :bp_stamp, String. 
-    #              key :bp_sys, Integer
-    #              key :bp_dia, Integer
-    #              key :bp_mean, Integer
-    #              key :bp_pr, Integer
-    #
-    #              key :pr, Integer
-    #              key :hr, Integer
-    #              key :spo2, Integer
-    #              key :rr, Integer
-    #              key :temp, Float
-    #              key :co2, Integer
-    #
-    #              key :lat, String
-    #              key :lng, String
-    #
-    #              key :dvr_sp, Float
-    #              key :dvr_hx, Integer
-    #              key :dvr_ol, Integer
-                 
-                 
+
                
                   
                  px = {:admit_id=>v['admit_id'], :station_id => v['station_id'],  :stop_time=>now, :start_time=>start_time,:bp=>v['bp'],:temp=>v['temp'],:co2=>v['co2'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now}  

@@ -7,7 +7,12 @@
 	
 	result = {:status=>'404 NOTFound', :id=>params[:ambu]}
 	
-	if ambu and ambu.last_location and ambu.last_location!=""
+
+	last_location = ambu.last_location
+	
+	
+	if ambu and last_location and last_location!="" and last_location.index(',') and last_location.split(",")[0].to_i!=0
+		
 	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}"
 	
 	if params[:wp] and params[:wp].size>0
