@@ -134,7 +134,7 @@ def self.registered(app)
         cache_directions = {}
         
        
-       EM.add_periodic_timer(30) do
+       EM.add_periodic_timer(10) do
         
          #update list
          
@@ -187,18 +187,26 @@ def self.registered(app)
                       
                     end
                     
+                    
+                    if i.last_speed and i.last_speed > 10 or route.act_distance ==nil
+                    
                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
                     direction = cache_directions[kcache]
+                    
                     unless direction
                       direction = google_direction(i.last_location, route.stop_latlng, key)
                       cache_directions[kcache] = direction
                     end
+                    
                     puts cache_directions.keys
                     # unless route.act_distance
                       # fill estimate distance
                     if direction[:status]=='200 OK'
                         route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
                     end
+                      
+                      
+                  end  
                       
                       
                     # end
@@ -1030,27 +1038,23 @@ MSG
 
             end
             
-            ##########################################################################################################
+            
+            stations.each do |s|
+
+            arg = app.settings.senses[name][s.name]
+            if arg
+            ambu = Ambulance.where(:station_id=>s.id).first
+            # puts ambu.id if ambu
+            if ambu
+              ambu.update_attributes :last_location=> "#{arg['lat']},#{arg['lng']}", :last_speed=>arg['dvr_sp']
+            end
+              
+            end
+            end
             
             
-            # stations.each do |s|
-         #
-         #    arg = app.settings.senses[name][s.name]
-         #    if arg
-         #    ambu = Ambulance.where(:station_id=>s.id).first
-         #    # puts ambu.id if ambu
-         #    if ambu
-         #      ambu.update_attributes :last_location=> "#{arg['lat']},#{arg['lng']}", :last_speed=>arg['dvr_sp']
-         #    end
-         #
-         #    end
-         #    end
-         #
-         #
             
-         ##########################################################################################################
-         
-         
+            
             
             
             result = {:time=>Time.now, :list=>snames,:data=>app.settings.senses[name].select{|k,v| snames.index(k) }}

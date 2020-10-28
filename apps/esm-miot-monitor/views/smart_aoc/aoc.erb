@@ -404,7 +404,7 @@
 				
 				<%=link_to '<i class="far fa-list-alt"></i> Summary',"#",:id=>'btn_sum', :class=>'btn btn-success context disable secondary-nav', :style=>"width:130px" %>
 			
-				<%=link_to '<i class="far fa-times-circle"></i> Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:130px" %>
+				<%#link_to '<i class="far fa-times-circle"></i> Discharge',"#", :class=>'btn btn-danger  context disable. secondary-nav',:style=>"3em;width:130px" %>
 		
 			
 			 </span>
@@ -681,6 +681,16 @@
 	
 					})
 					
+					
+					$('#btn_chart').click((event)=>{
+						// alert('ok ' + selected_admit_id)
+						window.open('../Admit/show?id='+selected_admit_id, '_blank');
+						event.preventDefault()
+					})
+				
+				
+					$('#btn_route').click((event)=>{window.location.href='report?admit_id='+selected_admit_id})
+						
 				
 			<% for i in ambulances 
 				
@@ -736,10 +746,11 @@
 						$(".sel-ambu").hide()
 					
 								
-						$('#btn_chart').click((event)=>{
-							window.open('../Admit/show?id='+admit_id.attr('caseid'), '_blank');
-							event.preventDefault()
-						})
+						// $('#btn_chart').click((event)=>{
+	// 						window.open('../Admit/show?id='+admit_id.attr('caseid'), '_blank');
+	// 						event.preventDefault()
+	// 					})
+						
 						$('#btn_call').click(()=>{
 							
 							$('.callEnd').click();
@@ -752,7 +763,7 @@
 								event.preventDefault()
 							
 						})
-						$('#btn_route').click(()=>{window.location.href='report?admit_id='+admit_id.attr('caseid')})
+						
 						
 						
 						if(admit_id.attr('caseid')!=''){
