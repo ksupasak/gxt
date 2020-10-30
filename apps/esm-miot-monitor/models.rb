@@ -385,6 +385,31 @@ class Medication  < GXTModel
     
 end
 
+class MedGroup  < GXTModel
+  include Mongoid::Document
+  
+  key :name,  String
+  include Mongoid::Timestamps
+  
+    
+end
+
+class MedDose  < GXTModel
+  include Mongoid::Document
+  
+  key :name,  String
+  include Mongoid::Timestamps
+    
+end
+
+class MedRoute  < GXTModel
+  include Mongoid::Document
+  
+  key :name,  String
+  include Mongoid::Timestamps
+    
+end
+
 class MedicationRecord  < GXTModel
   include Mongoid::Document
   
