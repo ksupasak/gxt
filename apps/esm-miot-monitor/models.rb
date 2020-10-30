@@ -827,6 +827,17 @@ class MedicationController < GXTDocument
   
 end
 
+class MedGroupController < GXTDocument
+  
+end
+
+class MedDoseController < GXTDocument
+  
+end
+
+class MedRouteController < GXTDocument
+  
+end
 
 class MedicationRecordController < GXTDocument
   
