@@ -377,7 +377,10 @@ end
 
 class Medication  < GXTModel
   include Mongoid::Document
-  
+  belongs_to :medgroup, :class_name=>'EsmMiotMonitor::MedGroup'
+  has_many :meddoses, :class_name=>'EsmMiotMonitor::MedDose'
+
+  key :medgroup_id, ObjectId
   key :name,  String
   key :concentration, String
   include Mongoid::Timestamps
@@ -387,7 +390,8 @@ end
 
 class MedGroup  < GXTModel
   include Mongoid::Document
-  
+  has_many :medications, :class_name=>'EsmMiotMonitor::Medication'
+
   key :name,  String
   include Mongoid::Timestamps
   
@@ -396,7 +400,9 @@ end
 
 class MedDose  < GXTModel
   include Mongoid::Document
+  belongs_to :medication, :class_name=>'EsmMiotMonitor::Medication'
   
+  key :medication_id, ObjectId
   key :name,  String
   include Mongoid::Timestamps
     
