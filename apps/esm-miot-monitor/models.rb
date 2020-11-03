@@ -383,6 +383,11 @@ class Medication  < GXTModel
   key :medgroup_id, ObjectId
   key :name,  String
   key :concentration, String
+
+  key :volume, Float
+  key :unit_type, String
+  key :route, String
+
   include Mongoid::Timestamps
   
     
@@ -438,6 +443,9 @@ class MedicationRecord  < GXTModel
   
   key :est_intake, Float
   key :actual_intake, Float
+ 
+  key :unit_type, String
+  key :route, String
   
   key :note, String
   
