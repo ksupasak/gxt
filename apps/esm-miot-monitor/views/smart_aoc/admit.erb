@@ -127,6 +127,10 @@ a.link-info:hover{
   background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
   0% no-repeat padding-box;
 }
+
+.vs-val {
+	border:1px solid #333;border-radius: 4px;
+}
 </style>
 
 <%
@@ -241,7 +245,7 @@ a.link-info:hover{
 		            left: 0px;
 		            overflow-y: auto;
 		            right: 0px;
-		            height: 510px;
+		            height: 710px;
 					width: 600px;
 					font-size:0.8em;
 					padding:0px;
@@ -279,6 +283,61 @@ a.link-info:hover{
 
 		<div class="row">
 
+	<div id="<%=station_id%>"  class="col-12 station " style="border-right:0px solid #f00">
+	
+		<div class="row" style="padding:15px" >
+					<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
+						<span class="label">PR</span>
+						<div class="value">-</div>
+					</div>
+					<div class="vs-val col-1  col-lg-1 col-sm-1 spo2">
+						<span class="label">SpO2</span>
+						<div class="value">-</div>
+					</div>
+					<div class="vs-val col-1  col-lg-1 col-sm-1 bp">
+						<span class="label">BP</span>
+						<div class="value">-</div>
+					</div>
+					<div class="vs-val col-1  col-lg-1 col-sm-1 hr">
+						<span class="label">HR</span>
+						<div class="value">-</div>
+					</div>
+						<div class="vs-val col-1  col-lg-1 col-sm-1 temp">
+							<span class="label">Temp</span>
+							<div class="value">-</div>
+						</div>
+						<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
+							<span class="label">RR</span>
+							<div class="value">-</div>
+						</div>
+		
+				
+					
+					<div class="vs-val col-1 col-lg-1 col-sm-1 co2">
+		    			<span class="label">CO<sub>2</sub></span>
+						<div class="value">-</div> 
+					</div>
+					<!-- <div class="col-1 col-lg-1 col-sm-1 cc">
+					    <span class="label">LC</span>
+						<div class="value">-</div>
+					</div>
+					<div class="col-1 col-lg-1  col-sm-1 uc">
+						<span class="label">UO</span>
+						<div class="value">-</div>
+					</div>
+					 -->
+					<div class="vs-val col-1 col-lg-1  col-sm-1 score">
+						<span class="label">Score</span>
+						<div class="value">&nbsp;</div>
+					</div>
+					
+					
+		
+	</div>
+	
+	</div>
+	
+	
 		<div class="col-12 "  >
 		<div class="row" style="my-2">
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
@@ -286,10 +345,11 @@ a.link-info:hover{
 			</div>
 	    </div>
 		</div>
+		
 
 		<div class="col-12 col-sm-12  col-md-12 col-xl-4 col-lg-6 gxt-box my-2">
 			
-	<%= inline(this,:'_nurse_note_page') %>
+	<%# inline(this,:'_nurse_note_page') %>
 	
 	
 		
@@ -298,7 +358,7 @@ a.link-info:hover{
 		</div>
 		
 		<div class="col-12 col-sm-12 col-xl-4 col-lg-6  gxt-box my-2">
-	<%= inline(this,:'_medication_page') %>
+	<%# inline(this,:'_medication_page') %>
 	
 		
 		
@@ -306,7 +366,7 @@ a.link-info:hover{
 		</div>
 		
 		<div class="col-12  col-sm-12 col-xl-4 col-lg-6  gxt-box my-2">
-	<%= inline(this,:'_record_page') %>
+	<%# inline(this,:'_record_page') %>
 	
 		
 		
@@ -421,62 +481,7 @@ a.link-info:hover{
 				</div>
 				<% end %>
 		</div>
-	<div  class="row align-items-start">
-		<div class="col-lg-12 order-lg-1 ">
-			<div class="row" style="padding:15px" >
-						<div class="col-3  col-lg-3 col-sm-3 pr">
-							<span class="label">PR</span>
-							<div class="value">-</div>
-						</div>
-						<div class="col-3  col-lg-3 col-sm-3 bp">
-							<span class="label">BP</span>
-							<div class="value">-</div>
-						</div>
-			
-							<div class="col-3  col-lg-3 col-sm-3 temp">
-								<span class="label">Temp</span>
-								<div class="value">-</div>
-							</div>
-							<div class="col-3  col-lg-3  col-sm-3 rr">
-								<span class="label">RR</span>
-								<div class="value">-</div>
-							</div>
-			
-						<div class="col-3  col-lg-3 col-sm-3 spo2">
-							<span class="label">SpO2</span>
-							<div class="value">-</div>
-						</div>
-							<div class="col-3  col-lg-3 col-sm-3 hr">
-								<span class="label">HR</span>
-								<div class="value">-</div>
-							</div>	
-			<div class="col-3 col-lg-3 col-sm-3 co2">
-			    <span class="label">CO<sub>2</sub></span>
-				<div class="value">-</div> 
-			</div>
-						<div class="col-3 col-lg-3 col-sm-3 cc">
-						    <span class="label">LC</span>
-							<div class="value">-</div> 
-						</div>
-						<div class="col-3 col-lg-3  col-sm-3 uc">
-							<span class="label">UO</span>
-							<div class="value">-</div>
-						</div>
-						
-						<div class="col-3 col-lg-3  col-sm-3 score">
-							<span class="label">Sc</span>
-							<div class="value">&nbsp;</div>
-						</div>
-						
-						
-			</div>
-		</div>
-		
-		
-		
 	
-		
-	</div>	
 		
 			<style>
 				.chat
@@ -554,8 +559,9 @@ a.link-info:hover{
 		
 			<%= inline(this,:'_message_page') %>
 			
-			
-			
+			<script>
+				reload_message("<%=station.id%>")
+			</script>
 			<% end  %>
 		</div>
 		</div>
@@ -757,7 +763,7 @@ a.link-info:hover{
 
 
 <%
-   record =  this.model.find params[:id]
+   record =  Admit.find params[:id]
 if record  
 %>
 
@@ -790,9 +796,9 @@ if record
 			
 			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],
 			groups:[{params:['pr','hr'],range:[0,200],range_auto:true,show:true},
-			{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
-			{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
-			{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
+					{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
+					{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
+					{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
 		],records:null};
 			
 			records = [];
@@ -805,7 +811,7 @@ if record
 				
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
 		    
-			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(1000).sort(:start_time=>-1).to_a.reverse
+			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
 			
 			
 		    
@@ -826,6 +832,8 @@ if record
 						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
 						bp = j['bp'].split("/")
 						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0, co2:j['co2']?j['co2']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+					
+					
 					    # list.push :time=>now-(senses.size-ii),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(ii*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
 				
 					end
@@ -841,7 +849,7 @@ if record
 			
 					# o = ActiveSupport::JSON.decode(i.data)
 					
-				list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
+				# list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
 				
 				# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
 				
@@ -872,11 +880,6 @@ if record
 				
 			}
 		
-			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
-			// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
-			// records.push({time:now+200000,hr:110,rr:20,bp_sys:163,bp_dia:120});
-			// records.push({time:now+300000,hr:90,rr:20,bp_sys:100,bp_dia:60});
-			// records.push({time:now+400000,hr:99,rr:20,bp_sys:103,bp_dia:90});
 			
 			
 			vs['records'] = records;
@@ -906,11 +909,18 @@ if record
 			records = [];
 			<% for i in meds 
 			
-				stop_time = Time.now
+				stop_time = nil
 				stop_time = i.stop_time if i.stop_time
 			%>
 			
-			records.push({time:new Date(<%=i.start_time.localtime.to_json%>),stop_time: new Date(<%=stop_time.localtime.to_json%>),'<%=i.name %>':{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
+			start_time = new Date(<%=i.start_time.localtime.to_json%>)
+			stop_time = null
+			<% if i.stop_time %>
+			stop_time = new Date(<%=i.stop_time.localtime.to_json%>)
+			<% end %>
+			
+			
+			records.push({time:start_time,tclass:'<%=i.id%>',stop_time: stop_time,'<%=i.name %>':{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
 			
 			<% end %>
 			
@@ -1011,7 +1021,7 @@ if record
 		else
 		if(lines[0].split(" ")[0]=='Zone.Message'){
 			
-		reload_message()
+		reload_message("<%=station.id%>")
 
 		
 		}
@@ -1114,7 +1124,7 @@ if record
 			
 			if(isNaN(temp))rr=0;
 			
-			console.log('ok')
+			// console.log('ok')
 			
 		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,co2:co2,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
 	

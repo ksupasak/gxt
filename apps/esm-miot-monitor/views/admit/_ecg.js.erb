@@ -164,7 +164,7 @@ function presetWave(div){
 		}
 			// genData(data);
 			data = lead_data[id];
-			console.log('all '+id+" "+second%show+' = '+data.length);
+			// console.log('all '+id+" "+second%show+' = '+data.length);
 			$('#wave-'+id+"-note").html(""+data.length);
 			if(data.length>show*n){
 				data.splice(0,data.length-n*2);
