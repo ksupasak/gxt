@@ -26,6 +26,16 @@
 					
 				end
 				
+				
+				
+				for m in admit.medication_records
+				
+					console << [m.start_time, :med, m]
+					
+					console << [m.stop_time, :med, m]
+					
+				end
+				
 				records = admit.records
 				for m in records
 				

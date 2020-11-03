@@ -86,7 +86,13 @@ if request.post?
 <%
 else 
 	key = Setting.get :google_map_key
-	ambulances = Ambulance.all
+	
+	
+	@current_zone = Zone.find session[:current_zone] if session[:current_zone]
+	
+	ambulances = []
+	
+	ambulances = Ambulance.where(:zone_id=>@current_zone.id).sort(:name=>1).all
 
 %>
 <style>
