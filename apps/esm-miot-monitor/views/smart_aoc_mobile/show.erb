@@ -120,7 +120,7 @@ station = Station.find ambu.station_id
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<%=link_to '<i class="fas fa-long-arrow-alt-left"></i>', "index",:class=>'btn btn-outline-primary' %>
 		<h4 class="text-uppercase font-weight-bold mb-0 ambu-name"><%=ambu.name%></h4>
-		<%= link_to '<i class="fas fa-phone-alt"></i>', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-primary'%>
+		<%= link_to '<i class="fas fa-phone-alt"></i> <i class="fas fa-hospital-user"></i>', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-primary'%>
 	</div>
 	<div class="row">
 		<div class="col-12 ">
@@ -129,7 +129,7 @@ station = Station.find ambu.station_id
 		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
 		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
 		
-		Contact : <v><%=patient.contact_name%> @ <a href="tel:<%=patient.contact_phone%>"><%=patient.contact_phone%></a></v>
+		Contact : <v><%=patient.contact_name%> @ <a href="tel:<%=patient.contact_phone%>"><i class="fas fa-phone-alt"></i> <%=patient.contact_phone%></a></v>
 		
 		</div>
 		
@@ -146,7 +146,9 @@ station = Station.find ambu.station_id
   		
 	last_log = AdmitLog.where(:admit_id=>admit.id, :status=>'PENDING').sort(:sort_order=>1).first
 	station = Station.find admit.station_id
-	
+	med_groups = MedGroup.all
+	meds = Medication.all
+	routes = MedRoute.all
 	
   	%>
   	
@@ -162,9 +164,99 @@ station = Station.find ambu.station_id
   	</div>
 	
 	<div class="col-3 text-right">
-	  	<%= link_to 'Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-success' if last_log%>
+	  	<%= link_to '<i class="fas fa-map-marker-alt"></i> Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-success' if last_log%>
 	</div>
 	</div>
+	<div class="row">
+		<div class="col-6">
+			<div class="btn btn-success w-100 p-4" id="med_add">+ <i class="fas fa-briefcase-medical"></i> Medication </div>
+		</div>
+
+		<div class="col-6">
+			<div class="btn btn-success w-100 p-4">+ <i class="fas fa-user-injured"></i> Treatment </div>
+		</div>
+	</div>
+
+	<div class="med_add">
+	<div class="med_group row">
+		<div class="col-sm-12 p-3">Select Medication Group : </div>
+		<% 	for g in med_groups %> 
+		<div class="col-sm "><div class="btn btn-secondary w-100 p-3 m-1 med-group" group="<%=g.id%>"><%=g.name%></div></div>
+		<%	end %>
+	</div>
+
+	<div class="medication row">
+		<div class="col-sm-12 p-3">Select Medication : </div>
+		<% 	for m in meds %> 
+		<div class="col-sm"><div class="btn btn-secondary w-100 p-3 m-1 med <%=m.medgroup_id%>"><%=m.name%></div></div>
+		<%	end %>
+	</div>
+
+	<div class="medication_record row">
+		<div class="col-sm-12 p-3">Adjust Medication : </div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1 medname">Name</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Volume</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Unit</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Route</div></div>
+		<div class="col-sm-12">
+		<% 	for r in routes %> 
+		<div class="btn btn-secondary p-2 m-1"><%=r.name%></div>
+		<%	end %>
+		</div>
+
+		<div class="col-sm-12">
+		<% 	for r in routes %> 
+		<div class="btn btn-secondary p-2 m-1"><%=r.name%></div>
+		<%	end %>
+		</div>
+
+		<div class="col-sm-12">
+		<% 	for r in routes %> 
+		<div class="btn btn-secondary p-2 m-1"><%=r.name%></div>
+		<%	end %>
+		</div>
+
+		<div class="col-sm-12">
+		<center>
+		<form id="form_med" action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
+			<input type="hidden" name="note" id="note"/>
+			<input type="hidden" name="medication_id" id="medication_id" />
+			<input type="hidden" name="medname" id="medname" />
+			<input type="hidden" name="volume" id="volume" />
+			<input type="hidden" name="unit_type" id="unit_type" />
+			<input type="hidden" name="route" id="route" />
+			<input type="submit" class="btn btn-primary p-3 m-1"  name="Submit" value=" + Submit" />
+			<div class="btn btn-danger p-3 m-1 btn-cancel"> Cancel </div>
+		</form>
+		</center>
+		</div>
+	</div>
+	</div>
+<script>
+$(document).ready(function(){
+	$(".med_add").hide()
+	$(".medication").hide()
+	$(".btn-cancel").click(function(){
+		$(".med_add").slideUp()
+	})
+	$("#med_add").click(function(){
+		$(".med_add").slideToggle()
+	})
+	$(".med-group").click(function(){
+		$(".med-group").parent().toggle()
+		$(this).parent().show()
+		gid = $(this).attr("group")
+		$(".med").parent().hide()
+		$("."+gid).parent().show()
+		$(".medication").show()
+	})
+	$(".med").click(function(){
+		name = $(this).html()
+		$(".medname").html(name)
+		$("#medname").html(name)
+	})
+})
+</script>
 	<div class="row">
 		<div class="col-6">
 		Monitor : 
@@ -217,7 +309,7 @@ station = Station.find ambu.station_id
 		<form action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
 		<textarea name="note" style="height:6em;width:100%" class="m-textarea"></textarea>
 		
-   	  	<input type="submit" class="btn-sm btn-primary"  name="Submit" value="Submit"  style="float:right"/>
+   	  	<input type="submit" class="btn-sm btn-primary"  name="Submit" value=" + Submit"  style="float:right"/>
             <a href="#" class="btn-sm btn-secondary d-flex align-items-center justify-content-center" style="float:left" id="image_capture_btn">
             <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:1.8em;fill:white;" alt="heart" class=" pulse"/>
         </a>
