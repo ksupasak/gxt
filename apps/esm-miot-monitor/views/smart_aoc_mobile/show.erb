@@ -188,16 +188,16 @@ station = Station.find ambu.station_id
 	<div class="medication row">
 		<div class="col-sm-12 p-3">Select Medication : </div>
 		<% 	for m in meds %> 
-		<div class="col-sm"><div class="btn btn-secondary w-100 p-3 m-1 med <%=m.medgroup_id%>"><%=m.name%></div></div>
+		<div class="col-sm"><div class="btn btn-secondary w-100 p-3 m-1 med <%=m.medgroup_id%>" v="<%=m.volume%>" u="<%=m.unit_type%>" r="<%=m.route%>"><%=m.name%></div></div>
 		<%	end %>
 	</div>
 
 	<div class="medication_record row">
 		<div class="col-sm-12 p-3">Adjust Medication : </div>
 		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1 medname">Name</div></div>
-		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Volume</div></div>
-		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Unit</div></div>
-		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1">Route</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1 volume">Volume</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1 unit_type">Unit</div></div>
+		<div class="col"><div class="btn btn-secondary w-100 p-3 m-1 route">Route</div></div>
 		<div class="col-sm-12">
 		<% 	for r in routes %> 
 		<div class="btn btn-secondary p-2 m-1"><%=r.name%></div>
@@ -233,6 +233,11 @@ station = Station.find ambu.station_id
 	</div>
 	</div>
 <script>
+function fillf(n,v){
+	$("."+n).html(v)
+	$("#"+n).val(v)
+}
+
 $(document).ready(function(){
 	$(".med_add").hide()
 	$(".medication").hide()
@@ -252,8 +257,14 @@ $(document).ready(function(){
 	})
 	$(".med").click(function(){
 		name = $(this).html()
-		$(".medname").html(name)
-		$("#medname").html(name)
+		u = $(this).attr("u")
+		v = $(this).attr("v")
+		r = $(this).attr("r")
+		fillf('medname',name)
+		fillf('unit_type',u)
+		fillf('volume',v)
+		fillf('route',r)
+		
 	})
 })
 </script>
