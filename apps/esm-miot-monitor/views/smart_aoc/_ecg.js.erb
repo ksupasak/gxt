@@ -36,6 +36,10 @@
 	// console.log(""+idx+" "+rawdata.length)
     osvg = d3.select("#"+idx+"-"+rdx);
 	
+	
+    // $("#"+idx).attr("width",  window.innerWidth/10);
+    // $("#"+idx+"-"+rdx).attr("height", window.innerHeight);
+	
 	if(osvg.size()==1){
 		osvg.selectAll("path").remove();
 		svg = osvg
@@ -128,14 +132,9 @@
 
 
 
-
-	// aniLine('line1')
-	// aniLine('line2')
-	// aniLine('line3')
-	// aniLine('line4')
     
 function presetWave(div){
-	var show = 8; //second
+	var show = 4; //second
 	for(var i=0;i<show;i++){
 		
 		preset(div,i);
@@ -144,7 +143,7 @@ function presetWave(div){
 	
 
 }
-	function showWave(div,data,id){
+	function showWave(div,lead_data,id){
 		// console.log(div+" "+data.length);
 	
 	
@@ -152,7 +151,7 @@ function presetWave(div){
 
 	
     var cut = 1;
-	var show = 8; //second
+	var show = 4; //second
 	var second = 0;
 	var lastdata = [];
 	

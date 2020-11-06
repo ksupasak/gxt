@@ -20,13 +20,27 @@
 					var bounds = null;
 					var set_bounds = null;
 					var icon
+					
+					var uluru  = null;
 
 					function initMapAllMap() {
 						
 						bounds = new google.maps.LatLngBounds();
 						
+					 <%
+						
+						latlng = Setting.get('aoc_center','13.740238222634025,100.73196802231529')
+						
+						lat = 13.740238222634025
+						lng = 100.73196802231529
+						
+						lat,lng = latlng.split(',') if latlng.index(',')
+						
+					%>
+						
+						
 					  // The location of Uluru
-					  var uluru = {lat: 15.8700, lng: 100.9925};
+					uluru = {lat: <%=lat%>, lng: <%=lng%>};
 					  // The map, centered at Uluru
 					  map_all = new google.maps.Map(document.getElementById('geo-all-map'), {zoom: 16, center: uluru});
 					  // The marker, positioned at Uluru
@@ -150,9 +164,12 @@
 		  // 						  })(marker, i));
 						}
 						}
+						
+						
+						bounds.extend(uluru);
 
 						//now fit the map to the newly inclusive bounds
-						if(set_bounds==null<%='||true' if params['operation'] == 'dashboard' %>){
+						if(true||set_bounds==null<%='||true' if params['operation'] == 'dashboard' %>){
 							map_all.fitBounds(bounds);
 							set_bounds = true;
 						}

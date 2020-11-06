@@ -1,0 +1,10 @@
+<%
+record = MedicationRecord.find(params[:id])
+now = Time.now
+
+est_intake = 0
+est_intake = (now - record.start_time)/1000/60*record.rate if record.rate
+ 
+
+record.update_attributes :status=>'OFF', :stop_time=>Time.now, :est_intake=>est_intake
+%>

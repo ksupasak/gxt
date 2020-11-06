@@ -379,8 +379,9 @@
 						
 						
 						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
-						
-						if(type=='med'){
+					
+					
+					if(type=='event'){
 							
 							
                 	g = svg.append("g")
@@ -418,10 +419,196 @@
 							 // console.log(""+coords[0]+","+coords[1])
 					});
 					
-					y = 30;
-					rowh = 40;
-					header = 0;
-					vmargin = 10;
+					
+					
+					
+					
+					console.log('render '+ c['records'].length);
+					
+					for(var ri in c['records']){
+
+					    r = c['records'][ri]	
+						
+						// alert(r)
+						stop_time = new Date()
+						if(r.stop_time!=null)
+						  stop_time = r.stop_time       
+						
+   					   
+							ry = 0 ;
+						
+						switch(r.name) {
+						  case 'nurse':
+							 if(r.description.length>20)
+						   	 ry = 20 
+						    break;
+						  case 'record':
+						     ry = 40
+							    break;
+					      case 'med':
+							  ry = 60
+							  break;
+						  case 'log':
+							  ry= 80
+						    break;
+						  default:
+						    // code block
+						}
+							
+						
+
+
+							xi = xscale_1(r.time)+h1w;
+							wi = xscale_1(stop_time)-xscale_1(r.time);
+							
+							if(xi+wi>h1w){
+							
+							
+							
+							
+							if(wi+xi>contentWidth/2+h1w)
+							wi = contentWidth/2-xi+h1w;
+								
+							
+							if(xi<h1w){
+								wi +=xi
+								xi = h1w;
+								
+							}
+							
+							
+							if(wi<0)wi=0;	
+	   					    g.append("rect")
+							.attr("x",xi)
+							.attr("y",(y+ry-20))
+	                        .attr("rx", 3)
+	                        .attr("ry", 3)
+	                        .attr("width", wi)
+	                        .attr("height", "24")
+							.attr("fill",randomColor)
+	                        .attr("fill-opacity", 0.25)
+	                        .attr("stroke", "#999999")
+	                        .attr("stroke-width", "2px");
+
+							if(false)
+							g.append("text")
+							.attr("transform", "translate("+(xi)+","+(y+ry-5)+")")
+							.text(""+r.name)
+							.style("font-size", "12px")
+							// .attr('text-anchor','middle')
+							.attr('stroke','#ccc')
+							
+							
+							}
+
+
+
+					   
+						
+						xi = xscale_2(r.time)+h1w;
+						wi = xscale_2(stop_time)-xscale_2(r.time)
+						
+						
+						
+						if(wi+xi>contentWidth/2+h1w){
+						
+						if(xi<contentWidth/2+h1w)
+							xi = contentWidth/2+h1w;
+						
+						
+						
+					
+						
+						if(wi>contentWidth+h1w);
+						// wi = contentWidth+h1w-xi;
+						
+						 // console.log(r)
+ // 						 console.log(""+xscale_2(r.time)+" "+wi)
+						
+						
+						
+						
+						g.append("rect")
+						.attr("x",xi)
+						.attr("y",(y+ry-20))
+                        .attr("rx", 3)
+                        .attr("ry", 3)
+                        .attr("width", wi)
+                        .attr("height", "24")
+						.attr("fill",randomColor)
+                        .attr("fill-opacity", 0.25)
+                        .attr("stroke", "#999999")
+                        .attr("stroke-width", "2px");
+
+
+						g.append("text")
+						.attr("transform", "translate("+(xi+5)+","+(y+ry-5)+")")
+						.text(""+r.name+" : "+r.description)
+						.style("font-size", "12px")
+						// .attr('text-anchor','middle')
+						.attr('stroke','#ccc')
+						}
+
+						
+					}
+					
+					
+					
+						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					
+					
+					
+					
+					}
+					else
+					
+					
+					
+					if(type=='med'){
+					
+					
+						y = 30;
+						rowh = 30;
+						header = 0;
+						vmargin = 10;
+						total_height = 20;		
+							
+                	g = svg.append("g")
+			            	.attr("class", "row")
+							.attr("transform", "translate(0," + currentY +")");
+					
+   					h1 = g.append("rect")
+   			        .attr("x", h1w)
+   			        .attr("rx", 0)
+   			        .attr("ry", 0)
+   			        .attr("width", contentWidth/2)
+   			        .attr("height", c['params'].length*rowh+c['params'].length*5)
+   					.attr("fill",fillcolor)
+   			        .attr("fill-opacity", 0.10)
+   			        .attr("stroke", "#999999")
+   			        .attr("stroke-width", "1px")
+					.on("click", function() {
+				             var coords = d3.mouse(this);
+							 // console.log(""+coords[0]+","+coords[1])
+					});
+					
+					
+   					h2 = g.append("rect")
+   			        .attr("x", h1w+contentWidth/2)
+   			        .attr("rx", 0)
+   			        .attr("ry", 0)
+   			        .attr("width", contentWidth/2)
+   			        .attr("height",  c['params'].length*rowh+c['params'].length*5)
+   					.attr("fill",fillcolor)
+   			        .attr("fill-opacity", 0.10)
+   			        .attr("stroke", "#999999")
+   			        .attr("stroke-width", "1px")
+					.on("click", function() {
+				             var coords = d3.mouse(this);
+							 // console.log(""+coords[0]+","+coords[1])
+					});
+					
 					
 					
 					for(var pi in c['params']){
@@ -454,7 +641,7 @@
 															
 															
 															if(wi+xi>contentWidth/2+h1w)
-															wi = contentWidth/2-xi+h1w;
+															wi = contentWidth/2-xi;
 																
 															
 															if(xi<h1w){
@@ -493,15 +680,18 @@
 															
 															if(wi+xi>contentWidth/2+h1w){
 															
-															if(xi<contentWidth/2+h1w)
+															if(xi<contentWidth/2+h1w){
+																// wi = wi-xi
 																xi = contentWidth/2+h1w;
+															
+															}
 															
 															
 															
 														
 															
-															if(wi>contentWidth+h1w);
-															wi = contentWidth+h1w-xi;
+															if(wi+xi>contentWidth+h1w)
+																wi = contentWidth-xi+h1w;
 															
 									   					    g.append("rect")
 															
@@ -528,18 +718,20 @@
 															}
 															
 															
-															
+														
 															
 															
 															
 															
 														}
+														
 													}
+														total_height+=rowh
 												}
 							
 						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
 							
-					currentY+=rowHeight;
+					currentY+=total_height
 							
 						}
 						else
@@ -1172,8 +1364,41 @@
     // 		    };
 			
 			
-	 
+	 	gfx.tick2 = function(data){
 			
+			//
+			// for(var i in data){
+			// 	obj = data[i];
+			// 	events.push({time:obj[0],tclass:obj[2]['_id'],stop_time: obj[0]+5, name:obj[1]})
+			// }
+			// alert(events.length)
+			//
+			// gfx.tick2({update:[{name:'events',list:events}]});
+			
+			
+			if(data['update']){
+				
+				for(var id in data['update'] ){
+					
+					i = data['update'][id];
+					
+					if(c = cmap[i['name']]){
+						
+						// alert(i['list'].length)
+						c['records'] = i['list']
+						
+					}
+					
+				}	
+				
+				gfx.render(true)
+				// alert('render')
+			
+			}
+			
+		
+			
+		}
 			gfx.tick = function(data){
 			
 				
@@ -1193,7 +1418,7 @@
 							
 							// console.log("r")
 							// cmap[i['name']]['records'].push()
-							gfx.render(true)
+							
 							
 							
 							
@@ -1206,6 +1431,8 @@
 					}
 					
 					
+					
+					gfx.render(true)
 					
 					
 					

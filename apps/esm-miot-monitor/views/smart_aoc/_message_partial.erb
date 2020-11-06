@@ -1,16 +1,13 @@
-			
-			
 			<%
 			
+				admit = Admit.find params[:admit_id]
 				
-			    station = Station.find params[:id]
+				# puts admit.inspect 
+				
+				
+			    station = admit.station
+				
 			    zone = station.zone
-			
-				admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
-			    
-				
-				
-				
 				
 				console = []
 				
@@ -32,7 +29,7 @@
 				
 					console << [m.start_time, :med, m]
 					
-					console << [m.stop_time, :med, m]
+					console << [m.stop_time, :med, m] if m.stop_time
 					
 				end
 				
@@ -49,11 +46,7 @@
 					console << [m.stamp, :log, m]
 					
 				end
-				
-				
-				# msgs = Message.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
 			
-				# msgs = admit.messages.where(:recipient=>"#{station.name}.#{zone.name.downcase}.#{@context.settings.name}").limit(10).sort(:created_at=>-1).all.reverse
 				msgs = admit.messages.desc(:created_at).all :limit=>10
 				
 				
@@ -64,16 +57,20 @@
 				end
 				
 				end
+				# puts console.inspect 
+				
+				console.collect!{|i| i if i[0]}.compact!
 			
 				console.sort!{|a,b| b[0]<=>a[0] }
 			
 			
 			%>
-		<%= puts msgs.inspect 
-		
-		%>
+
+
 			
 			<div class="container">
+				
+				
 			    <div class="row">
 			        <div class="col-12">
 			            <div class="panel panel-primary" id="panel-primary">
@@ -158,7 +155,7 @@
                                 <p>
 		  							
 							
-		  						<pre><%=i.description%></pre>
+		  						<p><%=i.description%></p>
 		  					
                                 </p>
                             </div>
@@ -170,13 +167,13 @@
                         	</span>
                             <div class="chat-body clearfix">
                                 <div class="msg-header"  style="">
-                                    <strong class="primary-font">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
+                                    <strong class="">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>
 		  							
 							
-		  						<p><%=i.inspect%></p>
+		  						<p><%=i.name%></p>
 		  					
                                 </p>
                             </div>
