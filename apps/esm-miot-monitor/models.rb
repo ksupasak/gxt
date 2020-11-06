@@ -421,6 +421,14 @@ class MedRoute  < GXTModel
     
 end
 
+class MedUnit  < GXTModel
+  include Mongoid::Document
+  
+  key :name,  String
+  include Mongoid::Timestamps
+    
+end
+
 class MedicationRecord  < GXTModel
   include Mongoid::Document
   
@@ -844,6 +852,10 @@ class MedDoseController < GXTDocument
 end
 
 class MedRouteController < GXTDocument
+  
+end
+
+class MedUnitController < GXTDocument
   
 end
 
