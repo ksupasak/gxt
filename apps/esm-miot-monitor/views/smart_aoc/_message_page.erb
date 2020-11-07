@@ -135,10 +135,8 @@
 </div>
 
 
-
 <div class="btn-group" role="group" aria-label="Basic example">
   <button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
-
   <select id="score_id" style="width:70px;padding:20px;background:#ccc;height:2.5em">
     <option value="">-</option>
 	<% 
@@ -147,9 +145,7 @@
    <% end %>
   </select>
   <button type="button"  id="nurse_note_add" class="btn btn-secondary">+</button>
-  
 </div>
-
 
 <div class="btn-group" role="group" aria-label="Basic example">
   <button type="button" id="msg-medication" class="msg-btn btn btn-secondary btn-pcm context">Med</button>
@@ -164,7 +160,7 @@
 
 
 </div>
-
+</div>
 
 <script>
 	var command = ["Ultra Sound","US", "Vital Sign", "VS", "CPR", "NEWS", "SOS"];
@@ -283,7 +279,6 @@
 
 
 <script>
-	
 
 	
 </script>
@@ -354,8 +349,14 @@ var message_admit_id = null;
 	
 
 	function reload_message(admit_id){
-
+		
+	
+		
 	message_admit_id = admit_id
+	
+	reload_nurse_note(admit_id)
+	reload_medication(admit_id)
+		
 		
 	$.ajax({
 	  url: "message_partial?admit_id="+message_admit_id,

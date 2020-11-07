@@ -813,9 +813,10 @@
 						$('.context-panel').addClass('station-<%=station_id%>')
 						$('.context-header').addClass('station-<%=station_id%>')
 
-						<% if station %>
+					
+						if(selected_admit_id!=null)
 						reload_message(selected_admit_id)
-						<% end %>
+						
 						if(selected_admit_id){
 					   	
 						widget_patient_update(selected_admit_id)
@@ -908,10 +909,11 @@
 	    <% end %>
 
 	<% if stations %>
+		  	
 			<% for i in stations.collect{|i| i.name}.sort %>
-		   
+			  
 			   i = "<%=i%>"
-		   
+		    
 			   wave_data[i] = [];
 			
 			  showWave('wave-<%=i%>',wave_data,i);
@@ -966,8 +968,8 @@
 			
 			if(lines[0].split(" ")[0]=='Zone.Message'){
 			
-				if(selected_station_id!=null)
-				reload_message(selected_station_id)
+				if(selected_admit_id!=null)
+				reload_message(selected_admit_id)
 
 		
 			}

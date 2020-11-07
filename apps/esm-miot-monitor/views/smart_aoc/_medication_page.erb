@@ -6,10 +6,12 @@
 
 <script>
 	
+	var medication_admit_id = null;
+	
 	function create_medication(event){
 		event.preventDefault();
 		
-		$.get( "medication_create?admit_id=<%=params[:id]%>",function(data,status){
+		$.get( "medication_create?admit_id="+medication_admit_id,function(data,status){
 		  $('.modal-content').html(data);
 		});
 		
@@ -25,7 +27,7 @@
 		
 		id = $(this).attr('id') 
 		
-		$.get( "medication_edit?admit_id=<%=params[:id]%>&id="+id,function(data,status){
+		$.get( "medication_edit?admit_id="+medication_admit_id+"&id="+id,function(data,status){
 		  $('.modal-content').html(data);
 		});
 		
@@ -35,10 +37,15 @@
   	 	})
 	}
 	
-	function reload_medication(){
+	$('#medication_add').click(create_medication);
+	
+	
+	function reload_medication(admit_id){
+	
+	medication_admit_id = admit_id
 	
 	$.ajax({
-	  url: "medication_partial?admit_id=<%=params[:id]%>",
+	  url: "medication_partial?admit_id="+medication_admit_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '#medication-partial' ).html(data);
@@ -46,9 +53,10 @@
 	
 	}
 	
-	$('#medication_add').click(create_medication);
 	
-	reload_medication();
+
+	
+	
 	
 	
 </script>
