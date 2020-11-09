@@ -1,0 +1,75 @@
+<h5>Nurse Note</h5>
+
+<div id="nurse_note-partial" style="overflow:auto">
+	
+</div>
+
+<script>
+		
+	var note_record_admit_id = null;	
+		
+	function create_nurse_note(event){
+	
+		event.preventDefault();
+		$.get( "nurse_note_create?admit_id="+note_record_admit_id,function(data,status){
+		  $('.modal-content').html(data);
+		});
+		
+  	  	$('#admit-modal').modal({
+  	    	backdrop: 'static',
+  	    	keyboard: false
+  	 	})
+	
+	}
+	
+	function edit_nurse_note(event){
+		event.preventDefault();
+		id = $(this).attr('id')
+
+		$.get( "nurse_note_edit?admit_id="+note_record_admit_id+"&id="+id,function(data,status){
+		  $('.modal-content').html(data);
+		});
+		
+  	  	$('#admit-modal').modal({
+  	    	backdrop: 'static',
+  	    	keyboard: false
+  	 	})
+	}
+	
+	
+	$('#nurse_note_add').click(function(event){
+		
+		score_id = $('#score_id  option:selected').val()
+		
+		if(score_id.length==0){
+			create_nurse_note(event);
+		}else{
+			call_submit(note_record_admit_id,score_id, 'ajax')
+			reload_nurse_note();
+		}
+		
+	});
+	
+	
+	function reload_nurse_note(admit_id){
+			
+			note_record_admit_id = admit_id
+			
+		$.ajax({
+		  url: "nurse_note_partial?admit_id="+admit_id,
+		  context: document.body
+		}).done(function(data) {
+		  $( '#nurse_note-partial' ).html(data);
+		});
+	
+	}
+	
+	
+
+	
+// })
+
+
+
+</script>
+	

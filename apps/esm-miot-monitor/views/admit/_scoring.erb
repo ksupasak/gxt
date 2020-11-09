@@ -60,7 +60,7 @@ No score selected.
 </style>
 
 
-<form action="../Admit/submit_data?id=<%=admit.id%>" method="post" enctype="multipart/form-data">
+<form action="../Admit/submit_data?id=<%=admit.id%>" id="form_score" method="post" enctype="multipart/form-data">
 <input type="hidden" name="score_id" value="<%=score.id%>" >
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle"><%=score.name%></h5>
@@ -275,3 +275,33 @@ if(value!="-"){
  </div>
 </form>
 <% end %>
+
+<script>
+
+	<% if params[:mode] == 'ajax'%>	
+	
+		$('#form_score').submit(function(event){
+			
+			event.preventDefault();
+			
+		    var form = $(this);
+	
+			var url = form.attr('action');
+
+		    $.ajax({
+		           type: "POST",
+		           url: url,
+		           data: form.serialize(), // serializes the form's elements.
+		           success: function(data)
+		           {
+		  
+		           }
+		    });
+	
+			
+			$('#scoring-modal').modal('hide');
+			
+		})
+	
+	<% end %>
+</script>

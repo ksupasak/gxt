@@ -961,13 +961,13 @@ MSG
       
       # Redis.new(url: c,:driver => :hiredis)
       
+      redis = Redis.new(url: c,:driver => :hiredis)
          
        
         EM.add_periodic_timer(1) do
           puts '. '
           if app.settings.apps_rv
           
-          redis = Redis.new(url: c,:driver => :hiredis)
           
             
           for name in redis.smembers('esm-miot-monitor')#app.settings.apps_rv['esm-miot-monitor']
