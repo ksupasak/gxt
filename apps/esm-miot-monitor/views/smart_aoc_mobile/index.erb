@@ -36,10 +36,10 @@ admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
 cls = 'm-admit'
 
 
-name = "#{i.name} #{i.plate_license}"
+name = "#{i.name} [ #{i.plate_license} ]"
 
 if admit
-	name = "#{i.name} #{i.plate_license} : #{admit.case_no}"
+	name = "#{i.name} [ #{i.plate_license} ] : #{admit.case_no}"
 	cls = 'm-allocate' 
 end
 
@@ -48,7 +48,7 @@ end
 <div class="row">
 	<div class="col-12 ">
 		<div class="px-3">
-			<%=link_to "#{name}", "show?id=#{i.id}",:class=>"btn #{cls}",:style=>''%><br/>
+			<%=link_to "<i class='fas fa-ambulance pr-2'></i> #{name}".html_safe, "show?id=#{i.id}",:class=>"btn #{cls}",:style=>''%><br/>
 		</div>
 	</div>
 </div>
