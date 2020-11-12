@@ -218,19 +218,24 @@ station = Station.find ambu.station_id
 					host = 'prod.vidyo.io'
 
 
-					display_name = "userAmbu#{rand(999)}"
+					display_name = "userDemo#{rand(999)}"
 					cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
 					out = `#{cmd}`
-					out = out.split("\n") if out
-					token = out[-1] if out
+					puts cmd
+					puts out
+					out = out.split("\n")
+					puts out.inspect
+		
+					puts 
+					token = out[-1]
 					@token = token
-	
-					resource_id= admit.ambulance.name
+
+					resource_id = ambu.name
 	
 	
 					%>
 					<%# link_to "Call CC","discharge?id=#{admit.id}",:class=>'btn hn btn-warning'  %>
-				     <a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-warning">Vidyo</a>
+				     <a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn">Vidyo</a>
 	
 					<% end %>
 					
