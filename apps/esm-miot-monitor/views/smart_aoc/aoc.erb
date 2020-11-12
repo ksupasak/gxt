@@ -1015,7 +1015,8 @@
 			
 			locations = []
 			
-
+			console.log(data);
+			
 			for(var id in data['list']){
 				i = data['list'][id]
 			
@@ -1023,10 +1024,13 @@
 				  obj = data['data'][i]
 				 
 				
-				 // console.log(obj)
+				 console.log(i)
+				 console.log(obj)
+				 console.log('-------------------')
 				if(obj){
 				  obj['title'] = i
 				  locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
+			
 				
 				  if(true){	
 
