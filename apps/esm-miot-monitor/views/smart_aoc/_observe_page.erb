@@ -282,6 +282,7 @@
 		<div class="conference">
 			
 			<%
+			if true 
 
 				host = 'prod.vidyo.io'
 
@@ -289,18 +290,13 @@
 				display_name = "userDemo#{rand(999)}"
 				cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
 				out = `#{cmd}`
-				puts cmd
-				puts out
 				out = out.split("\n") if out
-				puts out.inspect
-				
-				puts 
 				token = out[-1] if out
 				@token = token
 				
-				
 			%>
 			<%=inline(this,:'_vidyo')%>
+			<% end %>
 		</div>
 	</div>
 

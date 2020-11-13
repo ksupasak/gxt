@@ -187,7 +187,7 @@ a.link-info:hover{
 		<div class="col-12  col-sm-5 right float-right ">
 		
 		<% if admit.status!='Discharged'%>
-		<% if admit.ambulance  
+		<% if false and admit.ambulance  
 			
 			
 		host = 'prod.vidyo.io'
@@ -338,12 +338,20 @@ a.link-info:hover{
 						<div class="value">-</div>
 					</div>
 					 -->
+						
+					
+						
+						
+						
 					<div class="vs-val col-1 col-lg-1  col-sm-1 score">
 						<span class="label">Score</span>
 						<div class="value">&nbsp;</div>
 					</div>
 					
-					
+					<div class="vs-val col-2 col-lg-2  col-sm-2 mmsg">
+						<span class="label">MSG</span>
+						<div class="value" style="font-size:1.2em">&nbsp;</div>
+					</div>
 		
 	</div>
 	
@@ -810,7 +818,7 @@ if record
 				
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
 		    
-			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(1200).sort(:start_time=>-1).to_a.reverse
+			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
 			
 			
 		    
@@ -1137,7 +1145,7 @@ if record
 			$('#'+i+' .rr .value').html(obj['rr'])
 			$('#'+i+' .spo2 .value').html(obj['spo2'])
 			$('#'+i+' .co2 .value').html(obj['co2'])
-			
+			$('#'+i+' .mmsg .value').html(obj['msg'])
 			
 			$('#'+i+' .score .value').html(obj['score'])
 			
