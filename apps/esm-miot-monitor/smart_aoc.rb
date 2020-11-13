@@ -5,7 +5,7 @@ module EsmMiotMonitor
     
       def acl
     
-        return {:upload=>'*',:dashboard=>'*',:observe=>'*',:message_partial=>'*',:message_data=>'*'}
+        return {:upload=>'*',:dashboard=>'*',:observe=>'*',:message_partial=>'*',:message_data=>'*',:observer_index=>'*'}
     
       end
       
