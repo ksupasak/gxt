@@ -282,7 +282,7 @@
 		<div class="conference">
 			
 			<%
-			if true 
+			if params[:video] 
 
 				host = 'prod.vidyo.io'
 
@@ -297,6 +297,7 @@
 			%>
 			<%=inline(this,:'_vidyo')%>
 			<% end %>
+			<%#@token%>
 		</div>
 	</div>
 
