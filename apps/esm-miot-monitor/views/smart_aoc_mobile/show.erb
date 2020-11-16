@@ -55,6 +55,9 @@
 	w{
 		color:red;
 	}
+	.timer{
+		font-size:1.6em;
+	}
 	</style>
 <%
 	
@@ -119,27 +122,34 @@ station = Station.find ambu.station_id
 	<div class='clear'></div>
 	<div class="d-flex justify-content-between align-items-center mb-3">
 		<%=link_to '<i class="fas fa-long-arrow-alt-left"></i>', "index",:class=>'btn btn-outline-primary' %>
-		<h4 class="text-uppercase font-weight-bold mb-0 ambu-name"><%=ambu.name%></h4>
+		<h4 class="text-uppercase font-weight-bold mb-0 ambu-name"><i class="fas fa-ambulance"></i> <%=ambu.name%></h4>
 		<%= link_to '<i class="fas fa-phone-alt"></i> <i class="fas fa-hospital-user"></i>', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-pcm'%>
 	</div>
 	<div class="row">
 		<div class="col-12 ">
 		<div class="alert alert-patient">
-		Case No : <v><%=admit.case_no%></v> HN : <v><%=patient.hn%> </v> <br/>
-		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
-		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
-		
-		Contact : <v><%=patient.contact_name%> @ <a href="tel:<%=patient.contact_phone%>"><i class="fas fa-phone-alt"></i> <%=patient.contact_phone%></a></v>
-		
+			<div class="row">
+				<div class="col-12">Case No : <v><%=admit.case_no%></v> </div>
+				<div class="col-8">Name : <v><%=patient.first_name%> <%=patient.last_name%></v> </div>
+				<div class="col-4">CID : <v><%=patient.public_id%></v> </div>
+				<div class="col-4">Age : <v><%=patient.age%></v> </div>
+				<div class="col-4">Gender : <v><%=patient.gender%></v><br/></div>
+				<div class="col-4">HN : <v><%=patient.hn%> </v></div>
+				<div class="col-12">Contact : <a href="tel:<%=patient.contact_phone%>" class="btn btn-pcm"><v><%=patient.contact_name%> </v><i class="fas fa-phone-alt"></i> <%=patient.contact_phone%></a></div>
+				<div class="col-12">Note : <v><%=admit.note%></div>
+			</div>
 		</div>
 		
 		<div class="alert alert-patient">
-		<%=admit.note%>
+			<div class="row">
+				<div class="col-6 p-2 timer"><i class="fas fa-clock"></i> <span id="HH"></span>:<span id="MM"></span>:<span id="SS"></span></div>
+				<div class="col-6 p-2 timer"><v class="time-alert"><i class="fas fa-user-clock"></i> + <span id="admittime"><%= ((Time.now - admit.created_at)/60).to_i%>m</span></v></div>
+			</div>
 		</div>
 		
 		</div>
 	</div>
-	<div class="row d-flex justify-content-between ">
+	
 	
 
 	<%
@@ -153,7 +163,7 @@ station = Station.find ambu.station_id
 	doses = MedDose.all
 	
   	%>
-  	
+  	<!--<div class="row d-flex justify-content-between ">
 	
 	<div class="col-4 pl-3  " style="padding:5px">
 		<p>
@@ -168,15 +178,19 @@ station = Station.find ambu.station_id
 	<div class="col-3 text-right">
 	  	<%= link_to '<i class="fas fa-map-marker-alt"></i> Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-pcm' if last_log%>
 	</div>
-	</div>
+	</div>-->
 	<div class="row">
-		<div class="col-6">
-			<div class="btn btn-pcm w-100 p-4" id="med_add">+ <i class="fas fa-briefcase-medical"></i> Medication </div>
+		<div class="col-3">
+			<div class="btn btn-pcm w-100 p-4" id="med_add">+ <i class="fas fa-briefcase-medical"></i> Med </div>
 		</div>
 
-		<div class="col-6">
+		<div class="col-4">
 			<div class="btn btn-pcm w-100 p-4" id="treat_add">+ <i class="fas fa-user-injured"></i> Treatment </div>
 		</div>
+
+		<div class="col-5">
+			<div class="btn btn-pcm w-100 p-4" id="check_add">+ <i class="fas fa-map-marker-alt"></i> <%=last_log.name if last_log%> </div>
+		</div>		
 	</div>
 
 	<div class="med_add alert alert-patient">
@@ -249,6 +263,29 @@ station = Station.find ambu.station_id
 <script>
 $(".med_add").hide()
 $(".treat_add").hide()
+function getTime(){
+	let now = new Date()
+	$("#HH").html(('0' + now.getHours().toString()).slice(-2))
+	$("#MM").html(('0' + now.getMinutes().toString()).slice(-2))
+	$("#SS").html(('0' + now.getSeconds().toString()).slice(-2))
+	setTimeout(getTime,1000)
+}
+var timeadd=new Date(<%=admit.created_at.strftime("%Y,%m,%d,%H,%M,%S")%>)
+function admitTime(){
+	let now = new Date()
+	var diffMs = (now - timeadd); // milliseconds between now & admitTime
+	var diffDays = Math.floor(diffMs / 86400000); // days
+	var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+	var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); 
+	timetext=''
+	if(diffDays>0) timetext += diffDays+'d '
+	if(diffHrs>0) timetext += diffHrs+'h '
+	if(diffMins>0) timetext += diffMins+'m'
+	$("#admittime").html(timetext)
+	setTimeout(admitTime,60000)
+}
+admitTime()
+getTime()
 
 function fillf(n,v){
 	$("#"+n).val(v)
@@ -392,31 +429,57 @@ $(document).ready(function(){
 	</div>
 	</div>
 <br/>
-	<div class="row">
+<style>
+.c-bg{
+	background-image : url('data:image/svg+xml,<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="#C2C2C2" /></svg>');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding:1vh;
+	color:var(--primary-blue);
+}
+.bgline{
+	background-image: linear-gradient(#C2C2C2, #C2C2C2);
+	background-size: 2px 100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.chatbox{
+	background:black;
+	border-radius:15px;
+}
+.chatarea{
+	background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  	0% no-repeat padding-box;
+}
+</style>
+	<div class="row ">
 		<div class="col-12">
-			 History : 
+		<div class="alert chatarea">
+			 History 
 			<%
 				
 				notes = NurseRecord.where(:admit_id=>admit.id, :start_time=>{'$ne'=>nil}).sort(:start_time=>-1).all
 				
 			%>
-			
-			<table class='table mt-1'>
-				<tbody>
-					<% for i in notes %>
-					<tr>
-						<td>
-							<%=i.start_time.strftime("%H:%M")%> 
-							<v class="pl-3 time-alert">+<%=(Time.now-i.start_time).to_i/60%>m</v>
-						</th>
-						<td>
-							<v class="ambu-name"><%=i.description%></v>
-						</td>
-						
-					</tr>
-					<% end %>
-				</tbody>
-			</table>
+			<% for i in notes %>
+			<div class="row">
+				<div class="col-2 pt-4">
+					<%=i.start_time.strftime("%H:%M")%> 
+					<v class="time-alert">+<%=(Time.now-i.start_time).to_i/60%>m</v>
+				</div>		
+				
+				<div class="col-2 bgline pt-4 pb-4"><center><i class="fas fa-briefcase-medical c-bg"></i></center></div>
+
+				<div class="col p-2 mt-3">
+					<div class="chatbox p-3">
+					<v class="ambu-name"><%=i.description%></v>
+					</div>
+				</div>
+				
+		
+			</div>
+			<% end %>
+		</div>
 		</div>
 	</div>
 	

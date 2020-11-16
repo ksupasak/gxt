@@ -571,7 +571,25 @@ class ScoreCondition < GXTModel
 end
 
 
+class Treatment  < GXTModel
+  include Mongoid::Document
+  belongs_to :treatmentgroup, :class_name=>'EsmMiotMonitor::TreatmentGroup'
 
+  key :treatmentgroup_id, ObjectId
+  key :name,  String
+ 
+  include Mongoid::Timestamps
+   
+end
+
+class TreatmentGroup  < GXTModel
+  include Mongoid::Document
+  has_many :treatments, :class_name=>'EsmMiotMonitor::Treatment'
+
+  key :name,  String
+  include Mongoid::Timestamps
+
+end
 
 
 
@@ -864,6 +882,14 @@ class MedicationRecordController < GXTDocument
 end
 
 class ScoreConditionController < GXTDocument
+  
+end
+
+class TreatmentController < GXTDocument
+  
+end
+
+class TreatmentGroupController < GXTDocument
   
 end
 
