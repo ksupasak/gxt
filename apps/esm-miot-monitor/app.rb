@@ -73,6 +73,10 @@ class ErController < GXT
 
 end
 
+class SolutionController < GXT
+
+end
+
 class HomeController < GXT
   
   def acl
