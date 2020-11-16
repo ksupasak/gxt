@@ -810,6 +810,13 @@ class StationController < GXTDocument
 end
 
 class MessageController < GXTDocument
+  
+  def acl
+
+    return {:content=>'*'}
+
+  end
+  
   def content params
    
     message = model.find params[:id]

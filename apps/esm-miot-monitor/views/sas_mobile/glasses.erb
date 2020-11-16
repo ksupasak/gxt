@@ -209,7 +209,38 @@ station = Station.find ambu.station_id
 				<div class="col-12">
 					<!-- <a href="#" src="https://pcm-life.com/web2/#<%=ambu.name%>" id="assistant" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a> -->
 					
-					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a>
+					
+					
+	
+					<% if true or admit.ambulance  
+		
+		
+					host = 'prod.vidyo.io'
+
+
+					display_name = "userDemo#{rand(999)}"
+					cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+					out = `#{cmd}`
+					puts cmd
+					puts out
+					out = out.split("\n")
+					puts out.inspect
+		
+					puts 
+					token = out[-1]
+					@token = token
+
+					resource_id = ambu.name
+	
+	
+					%>
+					<%# link_to "Call CC","discharge?id=#{admit.id}",:class=>'btn hn btn-warning'  %>
+				     <a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn">Vidyo</a>
+	
+					<% end %>
+					
+					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label">OpenViu</span></a>
+					
 				 <div id="">
 				 	<%#link_to 'Button', "javascript:alert('ok')", :class=>'btn btn-success'%>
 				 </div>
@@ -493,6 +524,11 @@ station = Station.find ambu.station_id
 	</iframe>
 	<a href="" id="back"  style="display:none;">Back</a>
 	
+	
+
+	
+	
+	
 	<script>
 		
 		$('#back').click(function(event){
@@ -503,6 +539,26 @@ station = Station.find ambu.station_id
 			javascript:window.scrollTo(0, 0);
 			 event.preventDefault()
 		});
+		
+		
+		$('#assistant2').click(function(event){
+			if($('#iframe').attr('status')!='on'){
+				$('#iframe').attr('src','https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' );
+				$('#iframe').css("display","table")
+				$('#back').css("display","table")
+			    $("html, body").animate({ scrollTop: $(document).height() }, 600);
+			
+				$('#iframe').attr('status','on');
+			}else{
+				$('#iframe').css("display","none")
+				$('#back').css("display","none")
+				$('#iframe').attr('src',"");
+				$('#iframe').removeAttr('status');
+			}
+			 event.preventDefault()
+		});
+		
+		
 		
 		$('#assistant').click(function(event){
 			if($('#iframe').attr('status')!='on'){

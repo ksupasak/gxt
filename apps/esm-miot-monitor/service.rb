@@ -689,10 +689,13 @@ MSG
         
         json.each_pair do |k,v|
 
-          
            ambu = Ambulance.find k
+           puts "GPS #{k}"
           
+           puts v.inspect 
+           
           if ambu
+             
              
              ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
              
@@ -1045,7 +1048,7 @@ MSG
             if arg
             ambu = Ambulance.where(:station_id=>s.id).first
             # puts ambu.id if ambu
-            if ambu
+            if ambu and arg['lat']
               ambu.update_attributes :last_location=> "#{arg['lat']},#{arg['lng']}", :last_speed=>arg['dvr_sp']
             end
               

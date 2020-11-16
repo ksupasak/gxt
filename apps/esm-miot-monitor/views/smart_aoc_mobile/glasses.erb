@@ -209,7 +209,38 @@ station = Station.find ambu.station_id
 				<div class="col-12">
 					<!-- <a href="#" src="https://pcm-life.com/web2/#<%=ambu.name%>" id="assistant" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a> -->
 					
-					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a>
+					
+					 #<%=ambu.name%> : 
+	
+					<% if true or admit.ambulance  
+			
+					host = 'prod.vidyo.io'
+
+
+					display_name = "userDemo#{rand(999)}"
+					cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+					out = `#{cmd}`
+					puts cmd
+					puts out
+					out = out.split("\n")
+					puts out.inspect
+		
+					puts 
+					token = out[-1]
+					@token = token
+
+					resource_id = ambu.name
+		
+	
+					%>
+					<%# link_to "Call CC","discharge?id=#{admit.id}",:class=>'btn hn btn-warning'  %><%#@token%>
+				     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn "><span class="label">Video</span></a>
+	
+					<% end %>
+					
+					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label"> OpenVidu </span></a>
+					
+					
 				 <div id="">
 				 	<%#link_to 'Button', "javascript:alert('ok')", :class=>'btn btn-success'%>
 				 </div>

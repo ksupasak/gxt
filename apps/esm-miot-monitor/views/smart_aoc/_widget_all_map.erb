@@ -107,6 +107,10 @@
 						
 							if(locations[i][1]!=null&&locations[i][1]!=0){
 						
+						
+						console.log(locations)
+						console.log('GPS : '+locations[i][1])
+								
 						  var objs = marker_all[locations[i][0]]
 						 marker = null
 						 mlabel = null
@@ -116,7 +120,7 @@
 						 }
 							
 						 if(marker==null){
-						
+							 
 						  marker  = new google.maps.Marker({
 						    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
 						    map: map_all,

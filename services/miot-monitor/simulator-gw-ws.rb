@@ -30,7 +30,9 @@ port = 1792
 solution = host.split(".")[0]
 solution = ARGV[3] if ARGV[3] 
 
+gps = true
 
+gps = false if ARGV[4] == 'gps_dvr'
 
 
 
@@ -217,6 +219,8 @@ MSG
      
      data[:spo2] = 90+rand(10)
      
+     if gps
+     
      data[:lat] = 13.6908282+0.005*Math.cos((Time.now.to_i*2+sp)*Math::PI/180)+sx
      data[:lng] = 100.6987491+0.005*Math.sin((Time.now.to_i*2+sp)*Math::PI/180)+sy
      # puts Time.now.to_i%360+90
@@ -224,6 +228,7 @@ MSG
      data[:dvr_hx] = Time.now.to_i*2%360
      data[:dvr_ol] = 1
      
+     end
      
      data[:msg] = "ALERT:#{Time.now.inspect}"
      
