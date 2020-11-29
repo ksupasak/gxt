@@ -1,21 +1,18 @@
 <%
 
 	flowsheet = true
-	googlemap = false
-	videostream = false
+	googlemap = true
+	videostream = true
 	
-	
-
 %>
-   <script src="<%=url_for('hls/hls.js')%>"></script>
+
+<script src="<%=url_for('hls/hls.js')%>"></script>
 <style>
 body{
 	background:black;
 	
 }
-v{
-	
-}
+
 .container{
 	background:black;
 }
@@ -24,15 +21,21 @@ v{
 
 }
 .station .value{
-	font-size:1.5em;
+	font-size:3em;
 	text-align:center;
 	
 }
-.station .col-sm-3{
-	border:1px solid #333;border-radius: 4px;
-	min-height:4em;
+
+.station .alert-msg .value{
+	font-size:1em;
+	text-align:center;
 	
 }
+/*.station .col-sm-3{
+	border:1px solid #333;border-radius: 4px;
+	min-height:4em;
+
+}*/
 .station .pr{color:#00b3b7;
 
 }
@@ -60,6 +63,7 @@ v{
 .station .rr{color:#b7851d;
 
 }
+
 .station .col-6{
 		border:1px solid #333;
 		border-radius: 5px;
@@ -73,6 +77,11 @@ v{
 	color:#f937e2;
 
 }
+
+.station-top .value{
+	font-size:1.2em;
+}
+
 .btn {
 	color:#eee; 
 }
@@ -137,17 +146,11 @@ a.link-info:hover{
 
 
 
-
-
-
 <%
-	# station = Station.find params[:id]
-	
 	admit = Admit.find params[:id]
 	
 	@current_zone = admit.zone
 	
-	# .admits.where(:status=>'Admitted', :station_id=>station.id).last
 		
     station = nil
     station_id = 'NA'
@@ -169,6 +172,7 @@ a.link-info:hover{
 	
 %>
 
+<!-- Patient Identity -->
 
 	<div class="row" style="background:#666">
 		
@@ -237,14 +241,15 @@ a.link-info:hover{
 		</div>
 		
 
-	</div>		
+</div>		
+<!-- Patient Identity End -->
 
 <!-- Flow Sheet -->
 
 <div id="panel" class="row" style="border:0px solid blue;background:#111;color:#ddd;">
 
 
-<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-8 order-lg-1  " style="">
+<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
 
 
 		<style>
@@ -291,69 +296,76 @@ a.link-info:hover{
 
 		<div class="row">
 
-	<div id="<%=station_id%>"  class="col-12 station " style="border-right:0px solid #f00">
+
+
 	
-		<div class="row d-flex justify-content-center" style="padding:15px" >
-					<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
-						<span class="label">PR</span>
-						<div class="value">-</div>
-					</div>
-					<div class="vs-val col-1  col-lg-1 col-sm-1 spo2">
-						<span class="label">SpO2</span>
-						<div class="value">-</div>
-					</div>
-					<div class="vs-val col-1  col-lg-1 col-sm-1 bp">
-						<span class="label">BP</span>
-						<div class="value">-</div>
-					</div>
-					<div class="vs-val col-1  col-lg-1 col-sm-1 hr">
-						<span class="label">HR</span>
-						<div class="value">-</div>
-					</div>
-						<div class="vs-val col-1  col-lg-1 col-sm-1 temp">
-							<span class="label">Temp</span>
-							<div class="value">-</div>
-						</div>
-						<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
-							<span class="label">RR</span>
-							<div class="value">-</div>
-						</div>
+		<div class="col-8 "  >
+		<div class="row" style="my-2">
+			
+			<div id="<%=station_id%>"  class="col-12 station station-top " style="border-right:0px solid #f00;display:block;">
+	
+				<div class="row d-flex justify-content-center" style="padding:15px" >
+							<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
+								<span class="label">PR</span>
+								<div class="value">-</div>
+							</div>
+							<div class="vs-val col-1  col-lg-1 col-sm-1 spo2">
+								<span class="label">SpO2</span>
+								<div class="value">-</div>
+							</div>
+							<div class="vs-val col-1  col-lg-1 col-sm-1 bp">
+								<span class="label">BP</span>
+								<div class="value">-</div>
+							</div>
+							<div class="vs-val col-1  col-lg-1 col-sm-1 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>
+								<div class="vs-val col-1  col-lg-1 col-sm-1 temp">
+									<span class="label">Temp</span>
+									<div class="value">-</div>
+								</div>
+								<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
+									<span class="label">RR</span>
+									<div class="value">-</div>
+								</div>
 		
 				
 					
-					<div class="vs-val col-1 col-lg-1 col-sm-1 co2">
-		    			<span class="label">CO<sub>2</sub></span>
-						<div class="value">-</div> 
-					</div>
-					<!-- <div class="col-1 col-lg-1 col-sm-1 cc">
-					    <span class="label">LC</span>
-						<div class="value">-</div>
-					</div>
-					<div class="col-1 col-lg-1  col-sm-1 uc">
-						<span class="label">UO</span>
-						<div class="value">-</div>
-					</div>
-					 -->
-					<div class="vs-val col-1 col-lg-1  col-sm-1 score">
-						<span class="label">Score</span>
-						<div class="value">&nbsp;</div>
-					</div>
+							<div class="vs-val col-1 col-lg-1 col-sm-1 co2">
+				    			<span class="label">CO<sub>2</sub></span>
+								<div class="value">-</div> 
+							</div>
+	
+							<div class="vs-val col-1 col-lg-1  col-sm-1 score">
+								<span class="label">Score</span>
+								<div class="value">&nbsp;</div>
+							</div>
 					
-					
+							<div class="vs-val col-3 col-lg-3  col-sm-3 alert-msg" >
+								<span class="label">MSG</span>
+								<div class="value" style="">&nbsp;</div>
+							</div>
 		
-	</div>
+					 </div>
 	
-	</div>
-	
-	
-		<div class="col-12 "  >
-		<div class="row" style="my-2">
+			</div>
+			
+			
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
 			<%= inline(this,:'_flowsheet2')  %>
 			</div>
 	    </div>
 		</div>
+		<div class="col-4 "  >
+		<%= inline(this,:'_message_page') %>
 		
+		<script>
+			reload_message("<%=params[:id]%>")
+		</script>
+			
+		
+		</div>
 
 		<!-- <div class="col-12 col-sm-12  col-md-12 col-xl-4 col-lg-6 gxt-box my-2">
 
@@ -379,14 +391,14 @@ a.link-info:hover{
 			
 			
 				<!-- Nav tabs -->
-				<ul class="nav nav-tabs"  style="padding-top:10px"> 
+				<!-- <ul class="nav nav-tabs"  style="padding-top:10px">
 		  		  <li class="nav-item nav-itemx active">
 		  		    <a class="nav-link" data-toggle="tab" href="#menu1">ECG 12 leads & Monitor</a>
 				  </li>
 				  <li class="nav-item nav-itemx">
 				    <a class="nav-link" data-toggle="tab" href="#menu5">Video & Image</a>
 				  </li>
-				</ul>
+				</ul> -->
 
 				<!-- Tab panes -->
 				
@@ -394,59 +406,212 @@ a.link-info:hover{
 
 
 				<div class="tab-content">
-	 	<div id="menu5" class="col-12 order-3">
-			 
-		</div>
-			 	<div id="menu1" class="col-12 order-3 active">
-	 			
-			 		<div class="row">
-			 				<div class="col-12 right " style="padding:10px">
-				
-			 			     <span><%=link_to 'History', '#',:class=>'btn btn-pcm2', :id=>'ecg-history-btn' %></span>
-			 			    <span><%=link_to 'Print', "print_ecg?id=#{params[:id]}",:class=>'btn btn-pcm2',:target=>'_blank' %></span>
+	 
+		
+	
+			 	<div id="menu1" class="active ">
+	 				
+					<div class="row">
+						
+					<div  class="col-4 order-1 ">
+					
+					<h1>ECG &amp; Vital Sign</h1>
+					
+					</div>
+					</div>
+					
+					<div class="row">
+						
+					<div  class="col-4 order-1 ">
+					
+						<% if admit  %>
+						
+					
+					
+						<div class="row">
+							
+						<div class="col-12">
+							
+					
+						<div id="<%=station_id%>"  class="col-12 station " style="border:0px solid #f00">
+	
+							<div class="row d-flex justify-content-center"  >
+						
+						
+										<div class="vs-val col-6  pr">
+											<span class="label">PR</span>
+											<div class="value">-</div>
+										</div>
+										<div class="vs-val col-6  spo2">
+											<span class="label">SpO2</span>
+											<div class="value">-</div>
+										</div>
+							</div>
+							<div class="row d-flex justify-content-center"  >
+										<div class="vs-val col-6  bp">
+											<span class="label">BP</span>
+											<div class="value">-</div>
+										</div>
+										<div class="vs-val col-6 hr">
+											<span class="label">HR</span>
+											<div class="value">-</div>
+										</div>
+							</div>
+							<div class="row d-flex justify-content-center"  >
+						
+						
+										<div class="vs-val col-6 temp">
+											<span class="label">Temp</span>
+											<div class="value">-</div>
+										</div>
+										<div class="vs-val col-6 rr">
+											<span class="label">RR</span>
+											<div class="value">-</div>
+										</div>
+						</div>
+						<div class="row d-flex justify-content-center"  >
+										<div class="vs-val col-6 co2">
+							    			<span class="label">CO<sub>2</sub></span>
+											<div class="value">-</div> 
+										</div>
+	
+										<div class="vs-val col-6 score">
+											<span class="label">Score</span>
+											<div class="value">&nbsp;</div>
+										</div>
+							</div>
+							<div class="row d-flex justify-content-center"  >
+					
+										<div class="vs-val col-12 alert-msg" >
+											<span class="label">MSG</span>
+											<div class="value" style="">&nbsp;</div>
+										</div>
+						
+		
+							</div>
+	
+						</div>
+		</div></div>
 			
 			
-			 				</div>
-			 		</div>
-		
-			 				<script>
-			 					<% if admit %>
-			 							$('#ecg-history-btn').click(function(){
-						
-			 								$.ajax({
-			 								  url: "ecg_history?admit_id=<%=admit.id %>",
-			 								  context: document.body
-			 								}).done(function(content) {
-						
-			 								  $( '#ecg-history' ).html( content);
-						
-			 								  	$('#ecg-history').slideToggle();
-			 								});
-			 							})
-			 					<% end %>
-			 						</script>
-								
-			 						<div id="ecg-history" style="display:none;color:white">
-			 						</div>
+			<% if googlemap %>
+				<div class="row">
+					<div class="col-12  my-2" >
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #map {
+					        height: 250px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+					    <!--The div element for the map -->
+					    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <script>
 		
 		
-			 						<div id="ecg-result">
-			 						</div>
 		
+		
+					// Initialize and add the map
+					var marker = null;
+					var map = null;
+
+					function initMap() {
+					  // The location of Uluru
+					  var uluru = {lat: 15.8700, lng: 100.9925};
+					  // The map, centered at Uluru
+					  map = new google.maps.Map(
+					      document.getElementById('map'), {zoom: 16, center: uluru});
+					  // The marker, positioned at Uluru
+					  marker = new google.maps.Marker({position: uluru, map: map});
+
+					// var image="https://example.com/images/carnew.svg";
+
+					 // marker = new google.maps.Marker({
+					 // 			    position: uluru,
+					 // 			    icon: image,
+					 // 			    map: map
+					 // 			});
+					}
+
+					function goPosition(){
+							setPosition(53.345735,-6.259548)
+					}
+
+					function setPosition(lat,lng){
+	
+						// lat = 53.345735;
+						// 			lng = -6.259548;
+	
+						var new_marker_position = new google.maps.LatLng(lat, lng);
+
+					   marker.setPosition(new_marker_position);
+					   map.setCenter(new google.maps.LatLng( lat, lng ) );
+
+					}
+					    </script>
+					    <!--Load the API from the specified URL
+					    * The async attribute allows the browser to render the page while the API loads
+					    * The key parameter will contain your own API key (which is not needed for this tutorial)
+					    * The callback parameter executes the initMap() function
+					    -->
+					    <script async defer
+					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
+					    </script>
+					</div>
+
+				</div>
+
+				<% end %>
+				<div class="row">
+					<% if videostream and station.stream_url %>
+						<div class="col-12 my-2">
+							<% if station.stream_url.index('m3u8')%>
+							 <video id="video" width="100%" controls autoplay="true"></video>
+							<script>
+							  var video = document.getElementById('video');
+							  var videoSrc = '<%=station.stream_url%>';
+							  if (Hls.isSupported()) {
+							    var hls = new Hls();
+							    hls.loadSource(videoSrc);
+							    hls.attachMedia(video);
+							    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+							    //   video.play();
+							    });
+							  }
+
+							  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+							    video.src = videoSrc;
+							    video.addEventListener('loadedmetadata', function() {
+							      video.play();
+							    });
+							  }
+							</script>
+							<% else %>
+								<center><img src="<%= station.stream_url%>" height="300"></center>
+							<% end %>
+						</div>
+						<% end %>
+				</div>
+			
+			
+			
+							<% end  %>
+					</div>
+					
+					<div class="col-8">
+			 		
 		
 									<div class="col-12">
 			 				<% 
 	
 	 		
-		   			           lx = %w{31-1 25-22 6-1   1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48  95-54 95-55 95-57}
+		   			           lxi = %w{31-1 25-22 6-1   1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48  95-54 95-55 95-57}
+							   
+		   			           lx = %w{31-1 25-22 6-1   1-2 1-36 1-43 1-46   1-3 1-34 1-37 1-40  1-4 1-35 1-45 1-48    95-54 95-55 95-57}
+							   
 		   			           ll = {}
 					   			
-								# => 
-								
-								#. 1-2. 
-								
-								#
-   			           
 							   ll['31-1'] = 'CO2'
 		   			           ll['25-22'] = 'SpO2'
 		   			           ll['6-1'] = 'ART'
@@ -457,13 +622,16 @@ a.link-info:hover{
 					   
 		   					   ll['1-34'] = 'aVR'
 		   					   ll['1-36'] = 'aVL'
+		   					   ll['1-35'] = 'aVF'
+							   
 		   			           ll['1-37'] = 'V2'
 			           
 		   					   ll['1-40'] = 'V5'
+							   
 		   					   ll['1-43'] = 'dV1'
 		   					   ll['1-45'] = 'dV3'
 		   			           ll['1-46'] = 'dV4'
-		   					   ll['1-48'] = 'aVF'
+		   					   ll['1-48'] = 'aV6'
 					 
 		   					   ll['95-54'] = 'VenI'
 		   			           ll['95-55'] = 'VenII'
@@ -477,7 +645,7 @@ a.link-info:hover{
 							<div class="row">	
 							<%
 			
-			 				16.times do |w| %>
+			 				18.times do |w| %>
 	 			
 							<div class="col-12 col-sm-3">
 								<div class="row">	
@@ -504,14 +672,48 @@ a.link-info:hover{
 			 				<% end %>
 
 							</div>
-					
+							
+					 		<div class="row">
+					 				<div class="col-12 right " style="padding:10px">
+				
+					 			     <span><%=link_to 'History', '#',:class=>'btn btn-pcm2', :id=>'ecg-history-btn' %></span>
+					 			    <span><%=link_to 'Print', "../Admit/print_ecg?id=#{params[:id]}",:class=>'btn btn-pcm2',:target=>'_blank' %></span>
+			
+			
+					 				</div>
+					 		</div>
+		
+					 				<script>
+					 					<% if admit %>
+					 							$('#ecg-history-btn').click(function(){
+						
+					 								$.ajax({
+					 								  url: "../Admit/ecg_history?admit_id=<%=admit.id %>",
+					 								  context: document.body
+					 								}).done(function(content) {
+						
+					 								  $( '#ecg-history' ).html( content);
+						
+					 								  	$('#ecg-history').slideToggle();
+					 								});
+					 							})
+					 					<% end %>
+					 						</script>
+								
+					 						<div id="ecg-history" style="display:none;color:white">
+					 						</div>
+		
+		
+					 						<div id="ecg-result">
+					 						</div>
+							
 					
 						</div>
 	 				
 			 	</div>
 		
-		  
-		  		 
+		  </div>
+		  			  </div> 
 		  
 				</div> <!-- content -->
 		
@@ -535,105 +737,6 @@ a.link-info:hover{
 
 <div id="<%=station_id%>"  class="col-12 order-2 col-sm-12  order-sm-2 col-lg-4 order-lg-2 station " style="border-right:0px solid #f00">
 	
-	<% if googlemap %>
-		<div class="row">
-			<div class="col-12  my-2" >
-			<style>
-			       /* Set the size of the div element that contains the map */
-			      #map {
-			        height: 400px;  /* The height is 400 pixels */
-			        width: 100%;  /* The width is the width of the web page */
-			       }
-			    </style>
-
-			    <!--The div element for the map -->
-			    <div id="map"></div>	<%=link_to '', "javascript:goPosition()"%>
-			    <script>
-					
-					
-					
-					
-			// Initialize and add the map
-			var marker = null;
-			var map = null;
-			
-			function initMap() {
-			  // The location of Uluru
-			  var uluru = {lat: 15.8700, lng: 100.9925};
-			  // The map, centered at Uluru
-			  map = new google.maps.Map(
-			      document.getElementById('map'), {zoom: 16, center: uluru});
-			  // The marker, positioned at Uluru
-			  marker = new google.maps.Marker({position: uluru, map: map});
-			
-			// var image="https://example.com/images/carnew.svg";
-
-			 // marker = new google.maps.Marker({
-			 // 			    position: uluru,
-			 // 			    icon: image,
-			 // 			    map: map
-			 // 			});
-			}
-			
-			function goPosition(){
-					setPosition(53.345735,-6.259548)
-			}
-			
-			function setPosition(lat,lng){
-				
-				// lat = 53.345735;
-				// 			lng = -6.259548;
-				
-				var new_marker_position = new google.maps.LatLng(lat, lng);
-
-			   marker.setPosition(new_marker_position);
-			   map.setCenter(new google.maps.LatLng( lat, lng ) );
-			
-			}
-			    </script>
-			    <!--Load the API from the specified URL
-			    * The async attribute allows the browser to render the page while the API loads
-			    * The key parameter will contain your own API key (which is not needed for this tutorial)
-			    * The callback parameter executes the initMap() function
-			    -->
-			    <script async defer
-			    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMap">
-			    </script>
-			</div>
-		
-		</div>
-		
-		<% end %>
-		<div class="row">
-			<% if videostream and station.stream_url %>
-				<div class="col-12 my-2">
-					<% if station.stream_url.index('m3u8')%>
-					 <video id="video" width="100%" controls autoplay="true"></video>
-					<script>
-					  var video = document.getElementById('video');
-					  var videoSrc = '<%=station.stream_url%>';
-					  if (Hls.isSupported()) {
-					    var hls = new Hls();
-					    hls.loadSource(videoSrc);
-					    hls.attachMedia(video);
-					    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-					    //   video.play();
-					    });
-					  }
-
-					  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-					    video.src = videoSrc;
-					    video.addEventListener('loadedmetadata', function() {
-					      video.play();
-					    });
-					  }
-					</script>
-					<% else %>
-						<center><img src="<%= station.stream_url%>" height="300"></center>
-					<% end %>
-				</div>
-				<% end %>
-		</div>
 	
 		
 			<style>
@@ -678,7 +781,7 @@ a.link-info:hover{
 				.panel-body
 				{
 				    overflow-y: scroll;
-				    height: 500px;
+				    height: 600px;
 				}
 
 				::-webkit-scrollbar-track
@@ -702,20 +805,7 @@ a.link-info:hover{
 				</style>
 				
 				
-			<% if admit.ambulance %>
-			<%
-				# name = admit.ambulance.name
-				# msgs = Message.where(:recipient=>"#{@current_zone.name}|#{station.name}").all
-				
-			%>
-		
-			<%= inline(this,:'_message_page') %>
-			
-			<script>
-				reload_message("<%=params[:id]%>")
-			</script>
-			<% end  %>
-			
+
 			
 	
 			
@@ -738,8 +828,6 @@ a.link-info:hover{
 
 
 
-
-		vvv
 		
 	</div>
 		
@@ -759,8 +847,6 @@ if record
 
 <% end %><hr/>
 
-<%#link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn'%>
-<%#link_to 'Back', 'index',:class=>'btn'%>
 
 	<span class="col-sm-12 msg " style="color:gray;font-size:0.7em;<%='display:none' if params[:debug]!='1' %>" ></span>	
 
@@ -824,12 +910,8 @@ if record
 				if o
 					o.each do |j| 
 						
-						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
 						bp = j['bp'].split("/")
 						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0, co2:j['co2']?j['co2']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
-					
-					
-					    # list.push :time=>now-(senses.size-ii),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(ii*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
 				
 					end
 					
@@ -838,27 +920,27 @@ if record
 			end
 	
 			
-			else
+			# else
 			
-				for i in DataRecord.where(:admit_id=>params[:id]).all
-			
-					# o = ActiveSupport::JSON.decode(i.data)
-					
-				# list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
-				
-				# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
-				
-					# if o['vs']
-					# 	for j in o['vs']
-					#
-					# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
-					# 		bp = j['bp'].split("/")
-					# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
-					# 	end
-					#
-					# end
-				
-				end
+				# for i in DataRecord.where(:admit_id=>params[:id]).all
+			#
+			# 		# o = ActiveSupport::JSON.decode(i.data)
+			#
+			# 	# list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
+			#
+			# 	# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
+			#
+			# 		# if o['vs']
+			# 		# 	for j in o['vs']
+			# 		#
+			# 		# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+			# 		# 		bp = j['bp'].split("/")
+			# 		# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+			# 		# 	end
+			# 		#
+			# 		# end
+			#
+			# 	end
 			
 			end
 			
@@ -881,7 +963,7 @@ if record
 			
 			<%
 				
-				meds = admit.medication_records
+				meds = admit.medication_records 
 				med_map = {}
 				for i in meds
 					
@@ -1021,7 +1103,27 @@ if record
 	
    }
    
+	   <%
+   jix = {}
    
+
+   lxi = %w{31-1 25-22 6-1   1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48  95-54 95-55 95-57}
+   
+   lx = %w{31-1 25-22 6-1   1-2 1-36 1-43 1-46   1-3 1-34 1-37 1-40  1-4 1-35 1-45 1-48    95-54 95-55 95-57}
+   
+   for i in lx
+	  
+	   jix[i] = lxi.index(i)  if lxi.index(i) 
+	   
+   end
+   
+   
+   			
+   %>
+   		var lx = <%=lx.to_json.html_safe%>
+   		var jix = <%=jix.to_json.html_safe%>
+		console.log(jix)
+	
    ws.onmessage = function(m) { 
 	
 		active = $('.active-station').size()
@@ -1098,10 +1200,12 @@ if record
 			   for(var j=0;j<16;j++){
 				   
 				jid = ''+j
-				   
-			   	lead_data[jid] = lead_data[jid].concat(obj['leads'][jid])
-			
-			   // console.log(lead_data[jid].length)
+				ji = lx[j];   
+				jii = jix[ji];
+				  
+				if(obj['leads'][jii]){
+			   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
+				}
 				   
 			   }
 			
@@ -1137,6 +1241,7 @@ if record
 			
 			$('#'+i+' .score .value').html(obj['score'])
 			
+			$('#'+i+' .alert-msg .value').html(obj['msg'])
 			
 			<% if googlemap %>
 			if(obj['lat']!=''){

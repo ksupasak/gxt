@@ -18,16 +18,29 @@
 #   client.puts "Closing the connection. Bye!"
 #   client.close                 # Disconnect from the client
 # }
-
+require 'base64'
 
 require 'socket'        # Sockets are in standard library
 
-hostname = '192.168.1.202'
+hostname = '172.29.1.201'
 port = 9002
 
 msg = <<MSG
 \vMSH|^~\\&|NealTime Wave Test Client|HIS Send TEST|NealTime Wave Data Server|RCV TEST|20160331113440||OML^O21^OML_O21|20160331113440|P|2.4|||NE|AL||ASCII||\rPID|||111|||||\rORC|RE\rTQ1|1|||||||\rOBR|1|||WAVE^ECGI^ECGII^ECGIII^ECGaVR^ECGaVL^ECGaVF^ECGV1^ECGV2^ECGV3^ECGV4^ECGV5^ECGV6^RESP^RESPIMP^SPO2IRAC^SPO2IRACIRDC^ART1^ART2^CO2^CVP^PAP|||20201102095020|20201102095040|||||||||||||||||A\r\u001C\r
 MSG
+
+t = Time.now
+shift = 60
+stop = (t-shift).strftime("%Y%m%d%H%M%S")
+puts stop
+
+start = (t-2-shift).strftime("%Y%m%d%H%M%S")
+puts start
+
+msg = <<MSG
+\vMSH|^~\\&|NealTime Wave Test Client|HIS Send TEST|NealTime Wave Data Server|RCV TEST|20160331113440||OML^O21^OML_O21|20160331113440|P|2.4|||NE|AL||ASCII||\rPID|||1358|||||\rORC|RE\rTQ1|1|||||||\rOBR|1|||WAVE^ECGI^ECGII^ECGIII^ECGaVR^ECGaVL^ECGaVF^ECGV1^ECGV2^ECGV3^ECGV4^ECGV5^ECGV6^RESP^RESPIMP^SPO2IRAC^SPO2IRACIRDC^ART1^ART2^CO2^CVP^PAP|||#{start}|#{stop}|||||||||||||||||A\r\u001C\r
+MSG
+
 
 puts msg.size
 
@@ -48,8 +61,11 @@ puts 'sent'
 
 lines = s.readlines
 puts 'read'
+puts lines.size
+
 
 for i in lines 
+  puts i.size
   t = i.split("|")
   for j in t
     
@@ -57,10 +73,13 @@ for i in lines
     
   if k[0] == 'HL7Gateway'
     
-    puts k.inspect 
+
     
     
     content = k[4]
+    
+    puts content
+    
     
     out = File.open('out.mwf','w')
     out.write Base64.decode64(content)
