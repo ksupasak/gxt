@@ -302,7 +302,7 @@ a.link-info:hover{
 		<div class="col-8 "  >
 		<div class="row" style="my-2">
 			
-			<div id="<%=station_id%>"  class="col-12 station station-top " style="border-right:0px solid #f00;display:block;">
+			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 	
 				<div class="row d-flex justify-content-center" style="padding:15px" >
 							<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
@@ -433,7 +433,7 @@ a.link-info:hover{
 						<div class="col-12">
 							
 					
-						<div id="<%=station_id%>"  class="col-12 station " style="border:0px solid #f00">
+						<div class="<%=station_id%> col-12 station " style="border:0px solid #f00">
 	
 							<div class="row d-flex justify-content-center"  >
 						
@@ -1212,36 +1212,71 @@ if record
 		   }
 		    			
 			
-			 // console.log(obj)
-			$('#'+i+' .hn').html(obj['ref'])
+			//  // console.log(obj)
+			// $('#'+i+' .hn').html(obj['ref'])
+			//
+			// if($('#'+i+' .bp').html()!=obj['bp']){
+			// 	$('#'+i).addClass('bp_alert');
+			// 	$('#'+i).removeClass('bp_alert_2');
+			// 	$('#'+i+' .msg').html("-");
+			// }else{
+			// 	$('#'+i).removeClass('bp_alert');
+			// 	// $('#'+i).removeClass('bp_alert_2');
+			// 	// $('#'+i+' .msg').html("-");
+			// }
+			//
+			// $('#'+i+' .bp .value').html(obj['bp'])
+			//
+			// $('#'+i+' .temp .value').html(obj['temp'])
+			//
+			// $('#'+i+' .pr .value').html(obj['pr'])
+			// $('#'+i+' .hr .value').html(obj['hr'])
+			//
+			//
+			//
+			// $('#'+i+' .rr .value').html(obj['rr'])
+			// $('#'+i+' .spo2 .value').html(obj['spo2'])
+			// $('#'+i+' .co2 .value').html(obj['co2'])
+			//
+			//
+			// $('#'+i+' .score .value').html(obj['score'])
+			//
+			// $('#'+i+' .alert-msg .value').html(obj['msg'])
 			
-			if($('#'+i+' .bp').html()!=obj['bp']){
-				$('#'+i).addClass('bp_alert');
-				$('#'+i).removeClass('bp_alert_2');
-				$('#'+i+' .msg').html("-");
+			
+			 // console.log(obj)
+			$('.'+i+' .hn').html(obj['ref'])
+			
+			if($('.'+i+' .bp').html()!=obj['bp']){
+				$('.'+i).addClass('bp_alert');
+				$('.'+i).removeClass('bp_alert_2');
+				$('.'+i+' .msg').html("-");
 			}else{
-				$('#'+i).removeClass('bp_alert');
+				$('.'+i).removeClass('bp_alert');
 				// $('#'+i).removeClass('bp_alert_2');
 				// $('#'+i+' .msg').html("-");
 			}
 			
-			$('#'+i+' .bp .value').html(obj['bp'])
+			$('.'+i+' .bp .value').html(obj['bp'])
 			
-			$('#'+i+' .temp .value').html(obj['temp'])
+			$('.'+i+' .temp .value').html(obj['temp'])
 			
-			$('#'+i+' .pr .value').html(obj['pr'])
-			$('#'+i+' .hr .value').html(obj['hr'])
-			
-			
-			
-			$('#'+i+' .rr .value').html(obj['rr'])
-			$('#'+i+' .spo2 .value').html(obj['spo2'])
-			$('#'+i+' .co2 .value').html(obj['co2'])
+			$('.'+i+' .pr .value').html(obj['pr'])
+			$('.'+i+' .hr .value').html(obj['hr'])
 			
 			
-			$('#'+i+' .score .value').html(obj['score'])
 			
-			$('#'+i+' .alert-msg .value').html(obj['msg'])
+			$('.'+i+' .rr .value').html(obj['rr'])
+			$('.'+i+' .spo2 .value').html(obj['spo2'])
+			$('.'+i+' .co2 .value').html(obj['co2'])
+			
+			
+			$('.'+i+' .score .value').html(obj['score'])
+			
+			$('.'+i+' .alert-msg .value').html(obj['msg'])
+			
+			
+			
 			
 			<% if googlemap %>
 			if(obj['lat']!=''){
