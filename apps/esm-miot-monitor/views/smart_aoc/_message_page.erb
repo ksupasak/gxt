@@ -60,7 +60,10 @@
 				    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 				    background-color: #555;
 				}
-			
+				.element-tab {
+					height:650px;
+					overflow:scroll;
+				}
 				</style>
 				
 <style>
@@ -284,17 +287,18 @@
 </script>
 	
 
-<div class="col-12">
+<div class="" style="padding-top:10px">
 
-<div class="message-partial element-tab msg-dashboard-tab"  style="overflow:auto">
-	
+<div class="element-tab msg-dashboard-tab"  style="overflow:auto">
+<div class="message-partial ">
+</div>	
 </div>
 
-<div class="element-tab msg-note-tab" id="msg-note">
+<div class="element-tab msg-note-tab" id="msg-note" style="display:none">
 <%= inline(this,:'_nurse_note_page') %>
 </div>
 
-<div class="element-tab msg-medication-tab" >
+<div class="element-tab msg-medication-tab" style="display:none" >
 <%= inline(this,:'_medication_page') %>
 </div>
 
