@@ -1,0 +1,874 @@
+<%
+	
+	
+	admit = Admit.find params[:admit_id]
+	patient = admit.patient
+	
+	
+	if request.post?
+		
+		puts params.inspect 
+		
+		# {"admit_id"=>"5f4f13eb6906deb73f8a4626", "hn"=>"", "datetime"=>"2020-9-5T15:54:48", "score"=>"1", "rr"=>"20", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>"100", "pr"=>"80", "spo2"=>"99", "temp"=>"35.4", "weight"=>"", "height"=>"", "bmi"=>"", "device_id"=>"", "gxt"=>"miot", "service"=>"EsmMiotMonitor::SmartER", "operation"=>"connect"}
+		list = %w{bp bp_sys bp_dia bp_mean bp_pr pr spo2 temp rr score note eye motor verbal pupil}
+		
+		
+		px = {:admit_id=>params[:admit_id], :stamp=> params[:datetime]}
+		
+		px[:created_user_id ] = @current_user.id if @current_user
+		px[:updated_user_id ] = @current_user.id if @current_user
+		
+		
+		list.each do |i|
+			px[i] = params[i]
+		end
+		
+		record = DataRecord.create px
+		
+		if params[:note]!=""
+		
+		nurse_note = NurseRecord.create :admit_id=>params[:admit_id], :start_time=> Time.now, :description=> params[:note]
+			
+		end
+		
+		
+		
+%>
+<%= params.inspect%>
+<% else %>
+
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+<style>
+.human {
+  background: transparent url('<%=url_for('img/svg/human.svg')%>') 0% 0% no-repeat;
+  background-repeat: no-repeat, repeat;
+  background-position: center;
+  background-size:container;
+  opacity: 1;
+  height:60vh;
+}
+.human .col{
+    min-height:125px;
+    /* padding-bottom:1vh; */
+}
+.v-entry,.n-entry{
+    font-size: 2em;
+	color:var(--btn-green-main);
+	text-align :center;
+	display:inline-block;
+	width:100px;
+}
+
+</style>
+
+<form  action="connect?admit_id=<%=admit.id%>" method="post">
+   <!--Content-->
+    <section>
+        <div class="container">
+            <!--patient card-->
+            <div class="card patient-info">
+                <div class="card-body d-flex align-items-center">
+				 <div class="col">
+				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
+				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
+				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
+				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
+				     <span class="col p-0" id="gender">Complaint: <%=admit.note%></span>
+					 
+				 </div>
+				 <div class="col text-right">
+				     <h6 class="" id="arrival-time">Arrival:
+				         <span><%= admit.admit_stamp.strftime("%H:%M")%></span>
+				     </h6>
+				     <span id="duration">Duration:
+				         <span><%= admit.duration[0] %></span>
+				     </span>
+				 </div>
+                </div>
+            </div>
+            <!--end of patient card-->
+            <div class="human">
+                <h4 class="font-weight-bold mt-4 mb-4">Patient Data</h4>
+                <div class="row  mb-2">
+                    
+                    <div class="col p-0 d-flex flex-column" id="patient-neuro-sign">
+						
+                        <div class="col mb-2 ">
+							<div class="vital-card">
+                                <p>Eye Opening</p>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/eyeopen.svg')%>" alt="Eye Opening" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under eye"  name="eye" type="E" title="Eye Opening">
+									-
+									</div>
+								</div>
+							</div>
+                        </div>
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
+                                <p>Motor response</p>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/motor.svg')%>" alt="Motor responseg" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under motor"  name="motor" type="M" title="Motor response">
+									-
+									</div>
+								</div>
+							</div>
+                        </div>
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
+                                <p>Verbal Response</p>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/verbal.svg')%>" alt="Verbal Response" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under verbal"  name="verbal"  type="V" title="Verbal Response">
+									-
+									</div>
+								</div>
+							</div>
+                        </div>
+
+						<div class="col mb-2 ">
+							<div class="vital-card">
+                                <p>Pupil</p>
+								<div class="row">
+									<div class="col-3" >
+										<center>
+										<img src="<%=url_for('img/svg/pupil.svg')%>" alt="Pupil" />
+										</center>
+									</div>
+									<div class="col-8 n-entry v-under pupil"  name="pupil" type="P" title="Pupil">
+									-
+									</div>
+								</div>
+							</div>
+                        </div>
+
+                        <div class="col mb-2">     
+								<div class="vital-card">
+								 <p>Nurse Note  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
+								<textarea class="vital-card" style="height:auto" id="nurse-note"></textarea>
+								
+								</div>
+                        </div>
+                    </div>
+                    <div class="col p-0 d-flex flex-column" id="patient-vital-sign">
+                        <div class="col mb-2 ">
+                           	<div class="vital-card" style="border:0px solid red;padding:5px">
+                                <p>Blood Pressure</p>
+								<div class="row"  style="border:0px solid red;padding:0px">
+								<div class="col-3" style="border:0px solid">
+                                <center><img src="<%=url_for('img/svg/bp.svg')%>" alt="blood-pressure"  width="40" /></center>
+								</div>
+					            <div class="col-9 " style="border:0px solid">
+									
+									<div class="row">
+									
+									<div class="col-4 sys v-entry bp_sys"  style="border:0px solid;" label="Blood pressure - Systolic" name="bp_sys">-
+									</div>
+									
+									<div class="col-4 mean v-entry bp_mean" style="font-size:1.5em;" label="Blood pressure - Mean" name="bp_mean">-
+									</div>
+									<div class="col-4 dia v-entry  bp_dia"  style="text-align:left" label="Blood pressure - Diastolic" name="bp_dia">-
+									</div>
+									
+									</div>
+									
+										</div>
+								</div>
+                          </div>
+                        </div>
+                        <div class="col mb-2 ">
+                   		 	<div class="vital-card">
+                                <p>Pulse / SpO<sub>2</sub></p>
+                          
+				                <div class="row">
+				                    <div class="col-3">
+										<center>
+				                        <img src="<%=url_for 'img/svg/hr.svg'%>" width="40" style="padding-top:10px">
+									</center>
+				                    </div>
+				                    <div class="col-3 v-entry v-under  pr" label="Pulse (BPM)" name="pr" >
+				                    -
+				                    </div>
+				                    <div class="col-3">
+									<center>
+				                    <img src="<%=url_for 'img/svg/o2.svg'%>" width="40">
+								</center>
+									</div>
+				                    <div class="col-2 v-entry v-under spo2 " label="SpO2 %" name="spo2" >
+				                    -
+				                    </div>
+				                </div>
+                  		  </div>
+                        </div>
+                        <div class="col mb-2">
+                            	<div class="vital-card">
+                                <p>Body Temperature</p>
+				                <div class="row">
+				                    <div class="col-3" >
+										<center>
+				                        <img src="<%=url_for 'img/svg/bodytemp.svg'%>" width="40" >
+										</center>
+				                    </div>
+				                    <div class="col-8 v-entry v-under  temp"  name="temp">
+				                    -
+				                    </div>
+				                </div>
+                           </div>
+                        </div>
+                        <div class="col mb-2 ">
+								<div class="vital-card">
+                                <p>Respiratory Rate</p>
+		                <div class="row">
+		                    <div class="col-3" style="text-align:center">
+		                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
+		                    </div>
+		                    <div class="col-8 v-entry v-under  rr"  name="rr">
+		                    -
+		                    </div>
+		                </div>
+                        </div>
+						</div>
+						
+						
+                        <div class="col mb-2">
+						<div class="vital-card">
+                                <p>Score</p>
+		                <div class="row">
+		                    <div class="col-3"  style="text-align:center">
+		                        <center><img src="<%=url_for 'img/svg/score.svg'%>" width="40"></center>
+		                    </div>
+		                    <div class="col-8 v-entry v-under  score"  name="score">
+		                    -
+		                    </div>
+		                </div>
+						
+		                <div class="row">
+						<div class="col-12">
+						    <div class="alert">&nbsp;</div>
+		                </div>
+		                </div>
+						   </div>
+                        </div>
+						
+                    </div>
+                </div>
+				
+				<div class="row">
+					<div class="col-12">
+			        <div class="d-flex justify-content-center mt-5">
+			            <a href="#" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
+			                ยืนยัน
+			            </a>
+
+			        </div>
+			        <br>
+			        <a href="show?id=<%=admit.id%>" class="d-flex justify-content-center">
+			            <p>ยกเลิก</p>
+			        </a>
+		            <a href="#" id="beep" style="display:none">beep</a>
+		            <a href="#" id="ready" style="display:none">ready</a>
+			        </div>
+					</div>
+				</div>
+				
+            </div>
+
+			
+        </div>
+       
+	   
+	   
+	   
+        </div>
+    </section>
+</form>
+
+
+<!-- Modal for vital sign -->
+<div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="opdModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+        <div class="display-hn display-hn-pad">
+        -
+        </div>
+        <table width="300px">
+        <tr>
+            <td><div class="btn-hn">1</div></td>
+            <td><div class="btn-hn">2</div></td>
+            <td><div class="btn-hn">3</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">4</div></td>
+            <td><div class="btn-hn">5</div></td>
+            <td><div class="btn-hn">6</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">7</div></td>
+            <td><div class="btn-hn">8</div></td>
+            <td><div class="btn-hn">9</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">.</div></td>
+            <td><div class="btn-hn">0</div></td>
+            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
+        </tr>
+        </table>
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for neuro-sign -->
+<div class="modal fade" id="neuroModal" tabindex="-1" role="dialog" aria-labelledby="neuroModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="neuroModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <center>
+		<div id="neuroBody">
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="buffer">
+</div>
+
+<form id="form" action="post" method="post">
+
+<input class="hn_val" name="hn" value="" type="hidden"/>
+<input class="datetime_val" name="datetime" value="" type="hidden"/>
+<input class="bp_val" name="bp" value="" type="hidden"/>
+<input class="bp_sys_val" name="bp_sys" value="" type="hidden"/>
+<input class="bp_dia_val" name="bp_dia" value="" type="hidden"/>
+<input class="pr_val" name="pr" value="" type="hidden"/>
+<input class="spo2_val" name="spo2" value="" type="hidden"/>
+<input class="weight_val" name="weight" value="" type="hidden"/>
+<input class="height_val" name="height" value="" type="hidden"/>
+<input class="bmi_val" name="bmi" value="" type="hidden"/>
+<input class="temp_val" name="temp" value="" type="hidden"/>
+<input class="rr_val" name="rr" value="" type="hidden"/>
+<input class="score_val" name="score" value="" type="hidden"/>
+
+<input class="eye_val" name="eye" value="" type="hidden"/>
+<input class="motor_val" name="motor" value="" type="hidden"/>
+<input class="verbal_val" name="verbal" value="" type="hidden"/>
+<input class="pupil_val" name="pupil" value="" type="hidden"/>
+
+
+
+</form>
+
+
+<script>
+	
+	
+    function hnPush(s){
+        v = $(".display-hn").html().trim()
+        b = s.html()
+        if(b.indexOf("img")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)       
+    }
+
+    var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	for(var i=0;i<buffer;i++){
+		var myAudio = document.createElement('audio');
+		  myAudio.setAttribute("id","audio-"+i)
+		 if (myAudio.canPlayType('audio/mpeg')) {
+			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+		 }
+		 $('#buffer').append(myAudio);
+		  
+	}
+	  	  
+    $(".btn-hn").on('click',function(){
+        var myAudio = document.getElementById('audio-'+cur_buffer)
+        myAudio.play();
+        cur_buffer+=1;
+        if(cur_buffer==10)cur_buffer=0;
+        hnPush($(this))      
+        return false;
+    })
+	
+    function submitEntry(){
+		$('.btn-primary').html('Loading')
+		 $("#beep").click()
+        $.post( "connect", prepare() , function( data ) {         
+            // data.inspect 
+           <% if params[:return] %>
+            setTimeout(function(){ window.location.replace("edit?admit_id=<%=admit.id%>");  }, 1000);
+		   <% else %>
+            setTimeout(function(){ window.location.replace("show?id=<%=admit.id%>");  }, 1000);
+            <% end %>       
+        });
+    }
+
+    function checkInput(d){
+		// alert(d)
+        v = $("."+d).html().trim()
+        c = $("."+d).closest(".d-entry-dark,.d-entry")
+        prefix="de-"
+        if(c.hasClass("d-entry-dark")) prefix="dk-"
+        if(v!==''&&v!=='-'){              
+            c.addClass(prefix+"active").removeClass(prefix+"empty")      
+        }else{
+            c.addClass(prefix+"empty").removeClass(prefix+"active")
+        }
+        isComplete = true
+        $(".d-entry-dark,.d-entry").each(function(){
+            if($(this).attr('class').indexOf("empty")!==-1&&isComplete) isComplete=false;
+        })
+		
+		// if(v=='-')isComplete=true;
+
+        if(isComplete){
+            if($(".btn-entry").attr('class')){
+                $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+                $('.btn-opd').click(submitEntry)   
+                $("#ready").click() 
+            }
+        }else{
+            $('.btn-opd').unbind()
+            $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
+            
+        }
+    }
+
+	$('#bp_start').click(function(){
+		//alert('start')
+		if(typeof device_interface === 'undefined'){
+			
+		}else{
+			device_interface.bp_start();
+		}
+		
+		
+	})
+	$('.btn-clear').click(function(){
+		$(".display-hn").html('')
+        var myAudio = document.getElementById('audio-0')
+        myAudio.play();
+	})
+
+	function genList(t,v){
+		let map = new Map([
+			['E',['E1,ไม่ลืมตาเลย(none)','E2,ลืมตาเมื่อเจ็บ(pain)','E3,ลืมตาเมื่อเรียกชื่อ(speech)','E4,ลืมตาเอง(spontaneous)']],
+			['M',['M1,ไม่มีการเคลื่อนไหว','M2,แขนและขาเหยียดผิดปกติ','M3,แขนงอเข้าหาลำตัว ขา 2ข้างงอ','M4,เมื่อทำให้เจ็บชักแขนขาหนี','M5,ไม่ทำตามคำสั่งแต่ทราบตำแหน่งที่เจ็บ','M6,เคลื่อนไหวตามคำสั่งได้ถูกต้อง']],
+			['V',['V1,ไม่ส่งเสียง','V2,ส่งเสียงไม่เป็นคำพูด ครวญคราง','V3,ส่งเสียงเป็นคำๆ','V4,พูดได้เป็นประโยคแต่สับสน','V5,พูดตอบคำถามได้ปกติ/ถูกต้อง']],
+			['P',['R-Reaction,รูม่านตาหดเล็กลงทันที','S-Sluggish,รูม่านตาจะหดเล็กลงช้าๆกว่าปกติ','N-No reaction,รูม่านตาไม่มีปฏิกิริยาต่อแสงไฟ','C-Close,ตาบวมปิด']],
+		])
+		h = map.get(t)
+		let list = ''
+		h.forEach((v,i)=>{
+			try{
+				text = v.split(',') 
+				list += '<div class="row nlist" type="'+t+'" value="'+text[0]+' '+text[1]+'"><div class="col-5">'+text[0]+'</div><div class="col-7 nitem">'+text[1]+'</div></div>'
+			}catch(e){}
+		})
+
+		return list
+	}
+    
+    $(document).ready(function(){
+		
+		var current_modal ;
+
+        $(".n-entry").click(function(){
+		
+            v = $(this).html().trim()
+            if(v=='-')v = '' 
+			$(".display-hn").html(v)
+			t = $(this).attr('type')
+			current_modal = $(this).attr('name')
+			title = $(this).attr('title')
+            $("#neuroModalTitle").html(title)
+			$("#neuroBody").html(genList(t))
+			$(".nlist").click(function(){
+				$(".nlist").removeClass("nlist-sel")
+				$(this).addClass("nlist-sel")
+				// alert($("[title='"+title+"']").attr('class'))
+				$("[title='"+title+"']").html($(this).attr('value'))
+				$("."+$("[title='"+title+"']").attr('name')+"_val").val($(this).attr('value'))
+				// alert($("."+$("[title='"+title+"']").attr('name')+"_val").val())
+				$("#neuroModal").modal('toggle')
+			})
+            $("#neuroModal").modal('toggle')
+        })
+
+        $(".v-entry").click(function(){
+		
+            v = $(this).html().trim()
+            if(v=='-')v = '' 
+			$(".display-hn").html(v)
+			
+			current_modal = $(this).attr('name')
+            mname = $(this).parent("div").find(".l-entry").html()
+            $("#opdModalTitle").html($(this).attr('label'))
+            $("#opdModal").modal('toggle')
+        })	
+
+		$("#save-modal").click(function(){
+            value = $(".display-hn").html().trim()
+            if(value==='') value='-'
+			$('.'+current_modal).html(value)
+			
+			if(current_modal=='weight'||current_modal=='height'){
+				if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
+					weight = parseFloat($('.weight').html().trim())
+					height = parseFloat($('.height').html().trim())
+					bmi = weight /(height*height/10000.0)
+					bmi_text = bmi.toFixed(2);
+					
+                    $('.bmi').html(bmi_text)
+                    checkInput('bmi')
+				}
+				
+			}
+			checkInput(current_modal)
+			$("#opdModal").modal('toggle')
+			sos()
+			
+        })
+        var beep = document.createElement('audio');
+        if (beep.canPlayType('audio/mpeg')) {
+            beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+        }	
+        var ready = document.createElement('audio');
+        if (ready.canPlayType('audio/mpeg')) {
+            ready.setAttribute('src','<%=url_for 'sounds/Wood_Plank_Flicks.mp3'%>');
+        }	
+        
+        $("#beep").on("click",function(){
+            beep.play();       
+        })
+
+        $("#ready").on("click",function(){
+            ready.play();       
+        })
+		
+		
+		$('.btn-submit').click(submitEntry);
+		
+    })
+	
+	
+	
+
+	function prepare(){
+		var data = {};
+		hn = "<%=params[:hn]%>"
+		var device_id = "<%=params[:device_id]%>"
+		var today = new Date();
+		var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+		var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+		var datetime = date+'T'+time;
+		var bp=''
+		var bp_sys=''
+		var bp_dia=''
+		var bp_mean=''
+		var pr=''
+		var spo2=''
+		var temp=''
+		var weight=''
+		var height=''
+		var rr = ''
+		var score = ''
+		var bmi =''
+		
+		$('.bp_sys').each(function(){
+			bp_sys = $(this).html().trim();
+		})
+		$('.bp_dia').each(function(){
+			bp_dia = $(this).html().trim();
+		})
+		
+		$('.bp_mean').each(function(){
+			bp_mean = $(this).html().trim();
+		})
+		
+		$('.weight').each(function(){
+			weight = $(this).html().trim();
+		})
+		$('.height').each(function(){
+			height = $(this).html().trim();
+		})
+		$('.bmi').each(function(){
+			bmi = $(this).html().trim();
+		})
+		
+		
+		
+		$('.pr').each(function(){
+			pr = $(this).html().trim();
+		})
+		$('.spo2').each(function(){
+			spo2 = $(this).html().trim();
+		})
+		
+		$('.temp').each(function(){
+			temp = $(this).html().trim();
+		})
+		
+		$('.rr').each(function(){
+			rr = $(this).html().trim();
+		})
+		
+		$('.score').each(function(){
+			score = $(this).html().trim();
+		})
+
+		$('.eye').each(function(){
+			eye = $(this).html().trim();
+		})
+		$('.motor').each(function(){
+			motor = $(this).html().trim();
+		})
+		$('.verbal').each(function(){
+			verbal = $(this).html().trim();
+		})
+		$('.pupil').each(function(){
+			pupil = $(this).html().trim();
+		})
+		
+		
+		bp = ""+bp_sys+"/"+bp_dia
+		
+		note = $('#nurse-note').val()
+	
+		
+		
+		
+	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, eye:eye, motor:motor, verbal:verbal, pupil:pupil }
+		return data
+    }
+
+
+
+
+	var wait_monitor = true;
+	var wait_scaler = true; 
+	
+	// S0. S1
+	// M0. M1
+	
+	
+	function sos(){
+		
+		score = 0
+		count = 0 
+		list = ['spo2', 'bp_sys', 'temp', 'pr']
+		err = [];
+		for(var i=0;i<list.length;i++){
+			
+			v = list[i]
+			s = 0 
+			title = ""
+			t = $('.'+v).html().trim()
+			if(t!=''&&t!='-'&&t!='0'){
+				x = parseFloat(t)
+				count++;
+				if(v=='temp'){
+					title = "temp"
+					if(x<=35)s=-2;
+					if(x>=35.1&&x<=36)s=-1;
+					if(x>=36.1&&x<=38)s=0;
+					if(x>=38.1&&x<=38.4)s=1;
+					if(x>=38.5)s=2;
+					
+				}else
+				if(v=='bp_sys'){
+					title = "BP systolic"
+					if(x<=80)s=-3;
+					if(x>=81&&x<=90)s=-2;
+					if(x>=91&&x<=100)s=-1;
+					if(x>=101&&x<=180)s=0;
+					if(x>=181&&x<=199)s=1;
+					if(x>=200)s=2;
+					
+				}else
+				if(v=='pr'){
+					title = "Pulse rate"
+					if(x<=40)s=-3;
+					if(x>=41&&x<=50)s=-1;
+					if(x>=51&&x<=100)s=0;
+					if(x>=100&&x<=120)s=1;
+					if(x>=121&&x<=139)s=2;
+					if(x>=140)s=3;
+					
+				}
+				
+				if(s!=0){
+					score+=Math.abs(s)
+					if(s<0)
+						err.push("- Under "+title)
+					else
+						err.push("- Over "+title)
+					
+				}
+				
+			}
+			
+		}
+		console.log(err)
+		
+		if(count>0){
+			$('.score').html(score)
+ 	   		checkInput('score')
+		}
+		$('.alert').html(err.join('&nbsp;'))
+		
+		
+	}
+	
+	
+	function deviceSend(msg){
+	
+		$('#msg').html(msg);
+		
+		map = {}
+		
+		list = msg.split("|")
+		for(var i=0;i<list.length;i++){
+			p = list[i].split(":");
+			map[p[0]] = p[1];
+		}
+		
+		if(map['PR']=='-99'){
+			map['PR']='-'
+			map['SPO2']='-'
+		}	
+			
+		if(map['T1']&&map['T1']!=''){
+			alert('Demo')
+			c = parseFloat(map['T1']).toFixed(1)
+			$('.temp').html(c);
+			checkInput('temp')
+		}
+		
+		if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
+		    if(wait_monitor||map['STATUS']=='M1'){
+                $('.pr').html(map['PR'])
+                $('.spo2').html(map['SPO2'])
+                checkInput('pr')
+                checkInput('spo2')
+			
+			
+                $('.rr').html(map['RR'])
+                checkInput('rr')
+                // $('.temp').html(map['T1'])
+              
+                
+
+                if(map['STATUS']=='M1'){	
+                    $('.sys').html(map['SYS'])
+                    $('.dia').html(map['DIA'])
+                    $('.mean').html(map['MEAN'])
+                    
+					checkInput('sys')
+                    checkInput('dia')
+					
+                    wait_monitor = false;
+                    // $('.mean').html(map['MEAN'])
+                }
+            }
+		}
+		
+		if(map['STATUS']=='T1'){
+				c = parseFloat(map['T1']).toFixed(1)
+				$('.temp').html(c);
+				checkInput('temp')
+		}
+		
+		if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
+			
+			var w = parseFloat(map['WEIGHT'])
+			var h = parseFloat(map['HEIGHT'])
+			
+			
+			var bmi = (w/(h*h)).toFixed(2);
+
+			
+			if(map['STATUS']=='S1'){
+				$('.height').html((h*100).toFixed(1));
+				$('.weight').html(w);
+                $('.bmi').html(bmi);
+				
+                checkInput('height')
+                checkInput('weight')
+                checkInput('bmi')
+				wait_scaler=false;
+			}
+			
+			
+		}
+		
+		
+		sos()
+		
+	}
+
+	$('.p-name').click(function(){
+		
+		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100|RR:20')
+		// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+		deviceSend('STATUS:T1|T1:35.4')
+		
+		
+		
+	})
+    
+
+</script>
+
+	<% end %>

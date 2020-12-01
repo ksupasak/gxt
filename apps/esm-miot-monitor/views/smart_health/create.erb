@@ -1,0 +1,96 @@
+<%
+		
+admit = Admit.find params[:admit_id]
+patient = Patient.find admit.patient_id
+
+report = ERCaseReport.where(:admit_id=>admit.id).first 
+
+unless report
+	report = ERCaseReport.create :admit_id=>admit.id
+end
+
+if request.post? 
+
+	report.update_attributes params[:report]
+
+%>
+
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=admit.id %>">
+	
+<%
+	
+else
+			
+%>
+
+
+<form action="edit" method="post">
+
+	<input type="hidden" name="admit_id" value="<%=params[:admit_id]%>">
+	
+	<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+	<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
+	<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+	    <!--Content-->
+	    <section>
+	        <div class="container">
+	            <!--patient card-->
+	            <div class="card patient-info">
+	                <div class="card-body d-flex align-items-center">
+	                    <div class="col">
+	                        <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
+	                        <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
+	                        <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
+	                        <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span>
+	                    </div>
+	                    <div class="col text-right">
+	                        <h6 class="" id="arrival-time">Arrival:
+	                            <span><%= admit.admit_stamp.strftime("%H:%M")%></span>
+	                        </h6>
+	                        <span id="duration">Duration:
+	                            <span><%= admit.duration[0] %></span>
+	                        </span>
+	                    </div>
+	                </div>
+	            </div>
+	            <!--end of patient card-->
+	            <!--case report form-->
+	            <h4 class="font-weight-bold mt-4">Case Report
+	            <a href="connect?admit_id=<%=admit.id%>&return=case_report" class="btn btn-submit d-flex align-items-center justify-content-center" style="float:right">
+	                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	                วัดค่า
+	            </a>&nbsp;
+				</h4>
+				<div class="clear"></div>
+	         
+			 
+			 
+			    <%= inline(this, :'_form')%>
+			 
+				
+				
+	            <div class="d-flex justify-content-center mt-5">
+	           		
+						<button type="submit" class="btn btn-submit d-flex align-items-center justify-content-center">บันทึก</button>
+
+	            </div>
+	            <br>
+				<div class="btn-cancel">
+	            <a href="show?id=<%=admit.id%>" class="d-flex justify-content-center">
+	                <p>ยกเลิก</p>
+	            </a>
+				</div>
+	        </div>
+	        <!--end of trauma choice-->
+
+	        <!-- end of case report form-->
+
+	        </div>
+	    </section>
+	
+	
+
+	
+	
+</form>
+<% end %>

@@ -1,6 +1,6 @@
 
 require_relative 'models/er_models'
-
+require_relative 'models/health_models'
 require_relative 'models/aoc_models'
 
 module EsmMiotMonitor
@@ -480,6 +480,10 @@ class Patient  < GXTModel
   key :gender, String
   key :contact_name, String 
   key :contact_phone, String
+  
+  key :hospital_id, ObjectId
+  key :network_id, ObjectId
+  key :zone_id, ObjectId
   
   key :picture, ObjectId
   
