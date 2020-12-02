@@ -269,6 +269,9 @@ class Admit < GXTModel
   
   
   key :provider_id, ObjectId
+  key :provider_2_id, ObjectId
+  
+  
   key :procedure_id, ObjectId
   key :diagnosis_id, ObjectId
   
@@ -723,6 +726,11 @@ class DataRecord  < GXTModel
   key :rr, Integer
   key :temp, Float
   key :co2, Integer
+  
+  key :glucose, Integer
+  key :weight, Float
+  key :height, Float
+  
   
   key :eye, String
   key :motor, String

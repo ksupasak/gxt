@@ -6,16 +6,16 @@
     --main-select-color: #000;
     --normal-text:#7D889E;
     --body-bg: #FFFFFF;
-    --text-grey:  #dcdcdc;
+    --text-grey:  #333;
     --btn-green-main:#42b7ab;
     --btn-green-second:#2f867d;
     --btn-grey-main:#919191;
     --btn-grey-second:#BBB;
-    --btn-grey-text:#CCC;
+    --btn-grey-text:#333;
     --btn-lightblue-main:#BCD1E4;
     --btn-lightblue-second:#E2E2E2;
     --form-bg:#486178;
-    --er-room-bg:#334351;
+    --er-room-bg:#efefef;
     --er-room-hover:#054366;   
 
 
