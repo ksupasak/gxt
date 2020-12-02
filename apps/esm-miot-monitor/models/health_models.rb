@@ -50,7 +50,53 @@ end
 
 
 
+class SHOfficer < GXTModel
+  
+  include Mongoid::Document
+  belongs_to :network, :class_name=>'EsmMiotMonitor::SHNetwork'
+
+  key :name, String
+  key :address, String
+  key :phone, String
+  key :latlng, String
+  key :membered_at, Time
+  key :license_number, String
+  
+  key :network_id, ObjectId
+  key :user_id, ObjectId
+  
+end
+
+
+class SHVisit < GXTModel
+  
+  include Mongoid::Document
+  
+  key :start, Time
+  
+  key :title, String
+  
+  key :note, String
+  
+  key :patient_id, ObjectId
+  key :network_id, ObjectId
+  key :officer_id, ObjectId
+  
+  key :status, String
+  
+  
+end
+
+
+class SHVisitController < GXTDocument
+  
+end
+
 class SHUserNetworkController < GXTDocument
+  
+end
+
+class SHOfficerController < GXTDocument
   
 end
 
@@ -71,10 +117,6 @@ class SHHospitalController < GXTDocument
   
 end
 
-
-class SHVisit < GXTDocument 
-  
-end
 
 
 end

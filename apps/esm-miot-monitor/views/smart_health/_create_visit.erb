@@ -1,0 +1,40 @@
+<%
+	
+if params[:patient_id] and params[:officer_id] and params[:date]
+	
+	patient = Patient.find params[:patient_id]
+	
+	officer = SHOfficer.find params[:officer_id]
+	
+	network =  officer.network 
+	
+	admit = Admit.where(:patient_id=>patient.id).first
+	
+	unless admit.provider_2_id
+	
+		admit.update_attributes :provider_2_id=>officer.id 
+		
+	end
+	
+    # key :start, Time
+ #
+ #    key :title, String
+ #
+ #    key :note, String
+ #
+ #    key :patient_id, ObjectId
+ #    key :network_id, ObjectId
+ #    key :officer_id, ObjectId
+ #
+ #    key :status, String
+ 
+ 	title = "#{patient.hn}:#{patient.first_name} #{patient.last_name}" 
+	
+	network_id = network.id if network
+	
+ 
+	visit = SHVisit.create :patient_id=>patient.id, :officer_id=> params[:officer_id], :title=>title, :start=> params[:date], :network_id=>network_id
+	
+end 	
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=search_officer?patient_id=<%=params[:patient_id]%>&officer_id=<%=params[:officer_id]%>">
