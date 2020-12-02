@@ -1,0 +1,60 @@
+
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<style>
+.bg-panel{
+    margin:0.4vw;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="black" fill-opacity="0.3" x="0" y="0" width="1000" height="1000"/></svg>');
+} 
+input.date{
+    background:#093A54;
+	color:var(--text-grey);
+	border: 1px solid #446373;
+}
+</style>
+<%
+    admits = Admit.all
+    patients = Patient.all
+    ambulances = Ambulance.all
+    reports = AocCaseReport.all
+    mp = Hash[patients.collect{|i| [i.id,i]}]
+    ma = Hash[ambulances.collect{|i| [i.id,i]}]
+    mr = Hash[reports.collect{|i| [i.admit_id,i]}]
+    temp = admits.last
+%>
+<body class=" body-landing">
+<div class="container-fluid ">
+    <div class="row ">
+        <div class="p-4 col-12 bg-panel rounded" style='font-size:2.5vh;white-space:nowrap;'>
+            <div class="row">
+            <div class="col-md-2"><i class="fas fa-user-injured"></i> Patient: </div>
+            <div class="col-md"><input class="w-100 date" type="text" ></div>
+            <div class="col-md-2"><a href="#" class="btn btn-pcm w-100">Search</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="p-4 col-12 bg-panel rounded" style='font-size:2.5vh;white-space:nowrap;'>
+        <%=admits.inspect%>
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Ambulance</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><%=temp.created_at.strftime('%d/%m/%Y %H:%M')%></td>
+                <td><%=mp[temp.patient_id].first_name%></td>
+                <td><%=ma[temp.ambulance_id].name%></td>
+                <td><a href="#" class="btn btn-secondary" target="_blank">Print</a></td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
