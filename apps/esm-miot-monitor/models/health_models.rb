@@ -72,5 +72,9 @@ class SHHospitalController < GXTDocument
 end
 
 
+class SHVisit < GXTDocument 
+  
+end
+
 
 end
