@@ -1,0 +1,16 @@
+<%
+	
+patient = Patient.find params[:id]
+	
+hospital = SHHospital.find patient.hospital_id 
+	
+%>
+<h1>Profile</h1>
+
+
+<hr/>
+
+First name : <%=patient.first_name %><br/>
+
+
+Hospital : <%=hospital.name %><br/>

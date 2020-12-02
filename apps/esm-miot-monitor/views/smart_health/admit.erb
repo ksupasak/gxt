@@ -1,0 +1,478 @@
+<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+    <section>
+        <div class="container">
+                <header class=" d-flex align-items-center title-fill">
+                    <div class="col">
+                        <p class="mb-0"><strong>ลงทะเบียนผู้ป่วย NCDs</strong></p>
+                        <!-- <small>Patient Admit</small> -->
+                    </div>
+                    <!-- <div class="col d-flex justify-content-end">
+                        <button class=" btn  er-scan">
+                            <img src="<%=url_for('img/svg/scan.svg')%>" alt="scan" class="p-1" />
+                            Scan
+                        </button>
+                    </div> -->
+                </header>
+      </div>
+	    
+
+ <% if request.post? %>	
+ 
+ <% if params[:patient] 
+ 
+		patient = Patient.where(:hn=>params[:patient][:hn]).first	
+		params[:patient][:zone_id] = session[:current_zone]
+		
+		unless patient
+			
+			patient = Patient.create params[:patient]
+			
+		else
+			
+			patient.update_attributes params[:patient]	
+				
+		end	
+			#
+	
+		# params[:admit][:zone_id] = session[:current_zone]
+		# params[:admit][:status] = "Admitted"
+		# params[:admit][:admit_stamp] = Time.now
+		#
+		# admit = Admit.create params[:admit]
+			
+			
+			
+ %>
+ 		<%= redirect_to "index" %>	
+	<% end %>		
+ 	
+ <% else %>	
+
+    <div class="container">
+        <div class="row">
+            <div class="col title-fill ">
+     		   
+		<%
+			
+			
+			patient = Patient.where(:hn=>params[:hn]).first
+			
+			patient = Patient.new :hn=>params[:hn] unless patient
+			
+			admit = Admit.new :patient_id=>patient.id 
+			
+			
+		%>
+		<div class="card admit-form">
+            <div class="card-body d-flex">
+				<form action="admit" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+					<div class="form-group">
+		 				<%# <label for="product-name">Patient</label> %>
+		<div class='row'  style="border:0px solid gray">
+	
+		<div class="col-sm-4" > 
+		
+			<div class="row">
+				<div class="col-12" > 
+					<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
+					<a href="" class="mt-3 d-flex justify-content-center d-inline p-1">
+						<img src="<%=url_for 'img/ER/photo_camera.svg' %>" alt="upload-photo">
+						<span class="pl-1">อัพโหลดภาพ</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-sm-8 p-3">
+
+		
+			<div class="row">
+				<div class="col col-sm-6">
+		  			<label for="product-name">Hospital</label>
+					<%
+						
+					hospitals = SHHospital.all
+						
+					%>
+					<select id="record-hospital_id" name="patient[hospital_id]" class="form-control" value="">
+
+					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
+					  <option value="<%=j[0]%>" %><%=j[1]%></option>
+					<% end %>
+					</select>
+					
+				</div>
+
+				<div class="col col-sm-6">
+		  			<label for="product-name">Network</label>
+				<%
+					
+				networks = SHNetwork.all
+					
+				%>
+				<select id="record-network_id" name="patient[network_id]" class="form-control" value="">
+
+				<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
+				  <option value="<%=j[0]%>" %><%=j[1]%></option>
+				<% end %>
+				</select>
+		  		
+				
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col col-sm-6">
+		  			<label for="product-name">HN</label>
+		  			<input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" style="">
+				</div>
+
+<!--				<div class="col col-sm-6">
+		  			<label for="product-name">AN</label>
+		  			<input type="text" class="form-control" id="patient-hn" name="admit[an]" value="<%=admit.an%>" placeholder="HN" style="">
+				</div> -->
+			</div>
+
+
+
+		<hr class="hr-new">
+			
+			
+		<div class="row mt-1">
+			
+		<div class="col-4 col-sm-4">
+		<label for="patient-prefix_name">คำนำหน้า</label>
+		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="First Name" style="">
+		</div>
+	
+
+		<div class="col-4 col-sm-4">
+		<label for="patient-first_name">ชื่อ</label>
+		<input type="text" class="form-control" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="First Name" style="">
+		</div>
+
+		<div class="col-4 col-sm-4">
+			<label for="patient-last_name">นามสกุล</label>
+			
+		<input type="text" class="form-control" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="Last Name" style="">
+		</div>
+		
+		</div><!--row-->
+		
+		
+		<div class="row mt-1">
+			
+		<div class="col-4 col-sm-4">
+		<label for="patient-gener">เพศ</label>
+	    <input type="text" class="form-control" id="patient-gender" name="patient[gender]" value="<%=patient.gender%>" placeholder="M or FM" style="">
+	    </div>
+	
+		<div class="col-8 col-sm-4">
+		<label for="patient-dob">วัน-เดือน-ปี</label>
+		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
+		</div>
+		
+
+
+		</div><!--row-->
+		
+		
+		<div class="row mt-1">
+			
+		<div class="col-4 col-sm-4">
+		<label for="patient-gener">น้ำหนัก</label>
+	    <input type="text" class="form-control" id="patient-gender" name="admit[weight]" value="<%=admit.weight%>" placeholder="KG" style="">
+	    </div>
+	
+		<div class="col-8 col-sm-4">
+		<label for="patient-dob">ส่วนสูง</label>
+		<input type="text" class="form-control" id="patient-dob" name="admit[height]" value="<%=admit.height%>" placeholder="CM" style="">
+		</div>
+		
+
+
+		</div><!--row-->
+		
+		<div class="row mt-1">
+		
+
+
+		<div class="col-4 col-sm-4">
+		<label for="product-name">Bed No</label>
+		<input type="text" class="form-control" id="patient-first_name" name="admit[bed_no]" value="<%=admit.bed_no%>" placeholder="Bed No" style="">
+		</div>
+			
+		
+		<div class="col-12 col-sm-8">
+		<label for="product-name">Note</label>
+		<input type="text" class="form-control" id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
+		</div>
+			
+		</div><!--row-->
+			
+	
+		<hr>
+			<div class="row mt-3 "  style="border:0px solid gray">
+
+			<div class="col-md-4">
+      		
+		    <input type="submit" value="ยืนยัน" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" />			  
+       
+	 	 	</div>
+	   	   
+		    <div class="col-md-4 btn-cancel">
+            <a href="../Home/index" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
+                ยกเลิก
+            </a>
+		
+			</div>
+			
+		</div>
+		
+		</div> <!--col8-->
+		
+		
+		
+		</div> <!--row-->
+
+			
+		
+			
+		
+
+		</div>
+		</form>
+			</div>
+		</div><!--Card-->
+		
+		</div>
+        
+				
+		    </div>
+	    </div>
+    
+<%  end %>	
+
+		
+<% if false %>		
+    <div class="container">
+        <div class="row">
+			<form action="admit" id="hn-search" method="post"   method="post"  style="width:100%">
+			
+            <div class="col title-fill ">
+            
+                <div class="input-group">
+                    <!-- <input type="text" class="form-control text-center display-hn" autofocus  placeholder="" id="display-hn" aria-label="add-hn" aria-describedby="button-addon2"> -->
+						
+					<input type="hidden" name="hn" value="" class="value-hn">	
+				    <div class="text-center display-hn form-control " style="font-size:1em"  aria-label="add-hn">
+    						
+				    </div>
+					
+					
+                    <div class="input-group-append">
+                      <button class="btn btn-scan text-center btn-opd" type="button" id="button-addon2" style="border: none">
+                        <p class="mb-0">ค้นหา</p>
+                    </button>
+                    </div>
+				
+					
+					
+                  </div>
+            </div>
+			
+				</form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class=" col text-center">
+                <table class="d-flex justify-content-center dial-num">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn" style="padding-top: 7px;">1
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn" style="padding-top: 7px;">2</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">3</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">4</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">5</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">6</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">7</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">8</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">9</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">/</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">0</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;"><img src="<%=url_for 'img/svg/delete.svg'%>" class="nav-img ">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                <!-- <div class=" text-left">
+          <a href="log.html" class="btn btn-primary btn-report">รายงานการใช้งาน</a>
+        </div>-->
+            </div> 
+
+            </div>
+        </div>
+		
+		    </section>
+			<div id="buffer">
+			</div>
+			
+			<audio id="my-audio" preload="auto">
+			<source src="<%=url_for 'sounds/water_droplet.mp3'%>" type="audio/mpeg">
+			<!-- place fallback here as <audio> supporting browsers will ignore it -->
+			<p>Download<a href="<%=url_for 'sounds/water_droplet.mp3'%>">audiofile.mp3</a></p>
+			</audio>
+
+			<script>
+				function deviceSend(msg){
+		
+				}
+			    function hnPush(s){
+			        v = $(".display-hn").html().trim()
+			        b = s.html().trim()
+			        if(b.indexOf("img")!==-1){
+			            v = v.substr(0,v.length-1)
+			        }else{
+			            v+=b
+			        }
+					$('.value-hn').val(v)
+			        $(".display-hn").html(v)       
+			    }
+	
+				var buffer = 10;
+				var cur_buffer = 0 ;
+	
+				for(var i=0;i<buffer;i++){
+					var myAudio = document.createElement('audio');
+					  myAudio.setAttribute("id","audio-"+i)
+					 if (myAudio.canPlayType('audio/mpeg')) {
+						  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+					 }
+					 $('#buffer').append(myAudio);
+		  
+				}
+
+			    $(".number").on("click",function(){
+      				
+					hnPush($(this).find(".btn-hn"))  
+		
+			
+					var myAudio = document.getElementById('audio-'+cur_buffer)
+					myAudio.play();
+					cur_buffer+=1;
+					if(cur_buffer==10)cur_buffer=0;
+		
+			        return false;
+			    })
+
+			    var beep = document.createElement('audio');
+			    if (beep.canPlayType('audio/mpeg')) {
+			        beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+			    }	
+			    $("#beep").on("click",function(){
+			        beep.play();       
+			    })
+	
+				function submit(){
+		
+					$('.btn-opd').html('Loading')
+			        hn = $(".display-hn").html().trim()
+			        // $("#beep").click()
+					 beep.play();   
+					<%
+						device_id = '00000'
+			
+						device_id = params[:device_id] if params[:device_id]
+					%>
+								        setTimeout(function(){
+											
+						  			      $( "#hn-search" ).submit();
+				  
+					//
+					// 	window.location.replace("admit?hn="+hn+"&device_id=<%=device_id%>");
+					//
+					//
+					}, 1000);
+				}
+	
+				$('.btn-opd').click(function(){	
+			      	submit();
+			    })
+	
+				$(document).keypress(function(e){
+		
+				    if( event.which == 13 ) {
+				        submit();
+				     }else{
+			        v = $(".display-hn").html().trim()
+			        v+=String.fromCharCode(e.keyCode)
+        
+			        $(".display-hn").html(v.trim())   
+					 } 
+		
+				})
+		
+	     
+
+			</script>
+<% end %>				

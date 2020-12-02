@@ -1,1 +1,11 @@
-<h1> Smart health</h1>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<h1>Telehealth</h1>
+
+<%= @current_role%>
+<% if @current_role == 'hospital' %>
+<%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'network'  %>
+<%=inline(this,:'_index_network')%>
+<% end %>

@@ -36,8 +36,11 @@ end
 # 398 is device alert
 
 def self.parser l
+  
+  puts l.size
+  
   if l.size > 0 
-    debug = false
+   
     debug = (l.size!=602 and l.size!=302 and l.size!=398 and l.size!=1298 and l.size!=252 and l.size!=110)  
    debug = false
   # puts 'size '+ l.size.to_s + " ========================================="
@@ -56,7 +59,7 @@ def self.parser l
   
   # puts tag
   
-  if false #or l.size == 110 #l.size == 252 #l.size == 398 or l.size == 1298
+  if false or l.size == 248 #or l.size == 110 #l.size == 252 #l.size == 398 or l.size == 1298
     
     n = 30 
     r = l.size/n+1
@@ -77,7 +80,7 @@ def self.parser l
         
         # print ".#{l[j*n+i].chr}\t"
         
-        print "#{l[j*n+i]}\t"
+        print "#{l[j*n+i]}\t "
         
       
       end
@@ -99,7 +102,7 @@ def self.parser l
     key = nil
     len = nil
     res = ''
-     # puts 'cur '+tag + " pos "+pos.to_s if debug
+     puts 'cur '+tag + " pos "+pos.to_s if true
     if tag == '012'
       len = 12
     elsif tag == '0200' # range 40 values 
@@ -154,46 +157,17 @@ def self.parser l
          break if l[pos+i*2+5] == 0
          s<<l[pos+i*2+5].chr 
        end
-         # puts 'xxxx'+tag.to_s+" "+pos.to_s+" msg =  #{s.join()}"
+         puts 'xxxx'+tag.to_s+" "+pos.to_s+" msg =  #{s.join()}"
          if s.size > 0 
            
            map['msg'] = s.join()
          
          end
-           #
-       # n = 30
-       # r = l.size/n+1
-       #
-       # print "-\t"
-       #
-       # n.times do |i|
-       #
-       #   print "#{i}\t"
-       #
-       # end
-       # puts
-       # r.times do |j|
-       #
-       #   print "#{j*n}\t"
-       #
-       #   n.times do |i|
-       #
-       #     # print ".#{l[j*n+i].chr}\t"
-       #
-       #     print "#{l[j*n+i]}\t"
-       #
-       #
-       #   end
-       #
-       #   puts
-       #
-       #
-       # end
 
        
        
     elsif tag == '010'
-       
+
         # hn bed
         len = 116
         
@@ -203,23 +177,19 @@ def self.parser l
           break if l[i*2+65]==0
           s<<l[i*2+65].chr
         end
+        
+        puts "Bed #{s.join.strip}"
         map['bed'] = s.join.strip
         
-        # s = []
-  #       40.times do |i|
-  #         break if l[i*2+133]==0
-  #         s<<l[i*2+133].chr
-  #       end
-  #       map['msg'] = s.join.strip
-        
+
     elsif tag == '015'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s
+       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
         len = 252
     elsif tag == '024'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s
+       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
         len = 194
     elsif tag == '00'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s
+       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
       # puts "Tag : #{tag} " 
     else
       
@@ -287,6 +257,8 @@ end
 puts "Last Pos : #{pos} from #{l.size} " if debug
 
 map['wave_key'] = wave_key
+
+
 
   return map
 
