@@ -9,7 +9,8 @@
 	<link href="<%=url_for('css/main.css?=22')%>" rel="stylesheet">
     <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
     <script src="/vendor/d3/d3.min.cus.js"></script>
-
+<link href='/vendor/fullcalendar/main.css' rel='stylesheet' />
+<script src='/vendor/fullcalendar/main.js'></script>
     <title>Medical IOT Solution</title>
 
     <!-- Bootstrap core CSS -->
@@ -209,8 +210,12 @@ border-bottom: 2px solid #3147FF;
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
-		 		<a class="dropdown-item" href="../SHHospital/index">Hospital</a>
-		  		<a class="dropdown-item" href="../SHNetwork/index">Network</a>
+					
+		 		<a class="dropdown-item" href="../SHHospital/index">Hospital(โรงพยาบาล)</a>
+		  		<a class="dropdown-item" href="../SHNetwork/index">Network(รพสต)</a>
+		 		<a class="dropdown-item" href="../SHOfficer/index">Officer(อสม)</a>
+	 			<a class="dropdown-item" href="../SHVisit/index">Visit</a>
+				
 		  	  	<a class="dropdown-item" href="../SHUserHospital/index">UserHospital</a>
 		  		<a class="dropdown-item" href="../SHUserNetwork/index">UserNetwork</a>
 		 

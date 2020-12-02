@@ -1,0 +1,159 @@
+<%=inline(this,:'_layout')%>
+
+<%
+	
+	patient = Patient.find params[:patient_id]
+	admit = Admit.where(:patient_id=> patient.id).first
+	
+	officers = SHOfficer.all
+	
+	
+%>
+
+<div class="container">
+<h3>ระบบกระจ่ายงาน</h3>
+<div class="row">
+				 <div class="col">
+				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
+				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
+				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
+				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
+				     <span class="col p-0" id="gender">Complaint: <%=admit.note%></span>
+					 
+				 </div>
+</div>
+	
+	<%
+		
+		
+		
+	%>
+	<hr/>
+	<form action="search_officer" method="post">
+		<input name="patient_id" value="<%=params[:patient_id]%>" type="hidden" /> 
+		ค้นหา : <input name="query" value="" type="text" placeholder="รายชื่อ อสม ."/> 
+		
+		<input type="submit" value="ค้นหา"/>
+		
+		<br/><br/>
+	</form>
+	
+	<% if request.post? or params[:officer_id] %>
+	
+	
+		<table class="table table-striped table-bordered table-condensed" style="background:#FFF">
+	<thead>
+		<tr>
+			<th>
+				รหัส
+			</th>
+			<th>
+				ชื่อ-นามสกุล
+			</th>
+		
+		
+			<th>
+			</th>
+		
+		</tr>
+	</head>
+	<tbody>
+		<% for i in officers %>
+		<tr>
+			<td><%=i.license_number%></td>
+			<td><%=i.name%></td>
+			<td><%=link_to "แสดง", "#", :class=>"select_officer", :id=>"#{i.id}" %></td>
+			
+		</tr>
+		<% end %>
+	</tbody>
+	
+</table>
+
+<div id="calendar">Loading</div>
+
+
+<script>
+  	$('.select_officer').click(function(){
+	
+  		id = $(this).attr("id")
+	
+		window.location = "search_officer?patient_id=<%=patient.id%>&officer_id="+id
+		
+		
+		
+  	})
+<% if params[:officer_id] 
+
+	visits = SHVisit.where(:officer_id=>params[:officer_id]).all
+	
+	
+	visits.collect!{|i|
+	
+        {
+          title: i.title,
+          url: "../Visit/show?id=#{i.id}",
+          start: i.start.strftime("%Y-%m-%d")
+        }
+		
+	}
+%>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+	
+		
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        events: <%=visits.to_json.html_safe%>,
+		dateClick: function(info) {
+		    // alert('Clicked on: ' + info.dateStr);
+ // 		    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+ // 		    alert('Current view: ' + info.view.type);
+ // 		    // change the day's background color just for fun
+ // 		    info.dayEl.style.backgroundColor = 'red';
+ 
+ var myKeyVals = {'patient_id':'<%=params[:patient_id]%>','officer_id':'<%=params[:officer_id]%>','date':info.dateStr}
+ 
+ 
+ $.ajax({
+     type: "POST",
+     url: "_create_visit",
+     data: myKeyVals ,
+     dataType: "json",
+            success: function (result) {   // Result is not coming here please help
+                alert("before popup");                
+            },
+            failure: function (response) {
+                alert("sdfjsdjf2222");
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                window.location.reload();
+            }
+ });
+ 			
+ 
+		  }
+      });
+
+      calendar.render();
+    
+  	
+	
+	});
+	<% end %>
+
+</script>
+	<% end %>
+</div>
