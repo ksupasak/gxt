@@ -65,14 +65,51 @@ report = ERCaseReport.new unless report
                     <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
                     ถ่ายรูป
                 </a>
+				
+				
 			    <script>
 				    $('#image_capture_btn').click(function(){
-					
-					
 					device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
 				    })
 			    </script>
                 </div>
+				
+				<% if true
+		
+				host = 'prod.vidyo.io'
+
+
+				display_name = "userDemo#{rand(999)}"
+				cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+				out = `#{cmd}`
+				puts cmd
+				puts out
+				out = out.split("\n")
+				puts out.inspect
+	
+				puts 
+				token = out[-1]
+				@token = token
+
+				resource_id = "telehealth-#{format("%03d",rand(999))}"
+	
+
+				%>
+
+				
+			    &nbsp;
+                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+					
+   			     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn "><span class="label">
+                     <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                     หมอ
+					 </span></a>
+					
+                  
+                </div>
+				<% end %>
+				
+				
             </div>
             
 			<div class="clear"></div>

@@ -1,0 +1,121 @@
+
+<div class="container" style="background:none">
+<br/>
+<center>
+<h1>SMART TELEHEALTH</h1>
+<div>โรงพยาบาลส่งเสริมสุภภาพตำบล บ้านโคกสงวน ตำบลโคกสงวน</div>
+</center>
+
+<div class="row" style="border:0px solid">
+
+<div class="col">
+<h3>รายชื่อผู้ป่วย</h3>
+</div>
+<div class="col d-flex justify-content-end">
+
+            <div class=" d-flex justify-content-end btn-submit" >
+                <a href="./admit" class="btn  d-flex align-items-center justify-content-end">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                      </svg>
+                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
+                </a>
+            </div>
+</div>
+
+</div>			
+
+
+	<br/>				
+<div class="row" style="border:0px solid">
+
+<div class="col">
+สถานะเคส :  ทั้งหมด  
+</div>
+</div>	
+<hr/>
+
+<%
+
+zone = Zone.find session[:current_zone]
+patients = Patient.where(:zone_id=>session[:current_zone]).all
+
+admits = Admit.where(:zone_id=>session[:current_zone]).all
+	
+%>
+
+<table class="table table-striped table-bordered table-condensed" style="background:#FFF">
+<thead>
+	<tr>
+		<th>
+			รับเคส
+		</th>
+		<th>
+			วันที่
+		</th>
+		<th>
+			HN
+		</th>
+		<th>
+			ชื่อ-นามสกุล
+		</th>
+		<th>
+			แพทย์ผู้รักษา
+		</th>
+		
+		<th>
+			Visit
+		</th>
+		
+		<th>
+			อสม.
+		</th>
+		
+		<th>
+		</th>
+		
+	</tr>
+</head>
+<tbody>
+	<% for i in patients 
+	
+		admit = Admit.where(:patient_id=>i.id).first
+		provider = admit.provider
+		records = admit.records.size	
+		
+		provider_2 = '-'
+		if admit.provider_2_id
+			provider_2 = Provider.find admit.provider_2_id
+			provider_2 = provider_2.name
+		end
+		
+	%>
+	<tr>
+		<td><%=admit.status%></td>
+		
+		<td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td>
+		<td><%=i.first_name%> <%=i.last_name%></td> 
+		
+		<td><%=i.hn%></td> 
+		<td><%=provider.name if provider%></td> 
+		
+		<td><%=records%></td>
+		
+		<td><%=provider_2%></td>
+				
+		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
+			<%=link_to "กระจายงาน", "show?id=#{i.id}", :class=>'btn btn-warning' %>
+			<%=link_to "Profile", "profile?id=#{i.id}", :class=>'btn btn-info' %>
+			<%#link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
+		
+	</tr>
+	<% end %>
+</tbody>
+</table>
+<div class="row">
+	<div class="col">
+		ยอดรวม <%=patients.size%> คน
+	</div>
+</div>
+</div>

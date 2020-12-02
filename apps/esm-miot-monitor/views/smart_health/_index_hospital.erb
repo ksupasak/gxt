@@ -105,7 +105,6 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		<td><%=provider_2%></td>
 				
 		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
-			<%=link_to "กระจายงาน", "show?id=#{i.id}", :class=>'btn btn-warning' %>
 			<%=link_to "Profile", "profile?id=#{i.id}", :class=>'btn btn-info' %>
 			<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
 		
