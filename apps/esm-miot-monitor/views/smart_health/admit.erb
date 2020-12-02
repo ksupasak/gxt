@@ -1,5 +1,8 @@
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
     <section>
         <div class="container">
                 <header class=" d-flex align-items-center title-fill">
@@ -137,7 +140,7 @@
 				</div>
 				
 				<div class="col col-sm-6">
-		  			<label for="product-name">HN</label>
+		  			<label for="product-name">Provider</label>
 
 				<%
 					
@@ -199,12 +202,88 @@
 		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
-
+		<div class="col-8 col-sm-4">
+		<label for="patient-age">อายุ</label>
+		<input type="text" class="form-control" id="patient-age" name="patient[age]" value="<%=patient.age%>" placeholder="Age" style="">
+		</div>
 
 		</div><!--row-->
-		
-		
+
 		<div class="row mt-1">
+			
+		<div class="col-4 col-sm-4">
+		<label for="patient-blood">หมู่เลือด</label>
+	    <input type="text" class="form-control" id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
+	    </div>
+	
+		<div class="col-8 col-sm-4">
+		<label for="patient-status">สถานภาพสมรส</label>
+		<input type="text" class="form-control" id="patient-status" name="patient[status]" value="<%=patient.status%>" placeholder="Status" style="">
+		</div>
+		
+		<div class="col-8 col-sm-4">
+		<label for="patient-job">อาชีพ</label>
+		<input type="text" class="form-control" id="patient-job" name="patient[job]" value="<%=patient.job%>" placeholder="Occupation" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-race">เชื้อชาติ</label>
+		<input type="text" class="form-control" id="patient-race" name="patient[race]" value="<%=patient.race%>" placeholder="Race" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-nation">สัญชาติ</label>
+		<input type="text" class="form-control" id="patient-nation" name="patient[nation]" value="<%=patient.nation%>" placeholder="Nation" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-religion">ศาสนา</label>
+		<input type="text" class="form-control" id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
+		</div>
+
+		<div class="col-8 col-sm-6">
+		<label for="patient-public_id">เลขประจำตัวประชาชน</label>
+		<input type="text" class="form-control" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="ID" style="">
+		</div>
+
+		<div class="col-8 col-sm-6">
+		<label for="patient-passport">เลขที่หนังสือเดินทาง</label>
+		<input type="text" class="form-control" id="patient-passport" name="patient[passport]" value="<%=patient.passport%>" placeholder="Passport" style="">
+		</div>
+
+		<div class="col-8 col-sm-12">
+		<label for="patient-addr">ที่อยู่ตามบัตรประชาชน</label>
+		<input type="text" class="form-control" id="patient-addr" name="patient[addr]" value="<%=patient.addr%>" placeholder="Address" style="">
+		</div>
+
+		<div class="col-8 col-sm-12">
+		<label for="patient-addr_present">ที่อยู่จริง</label>
+		<input type="text" class="form-control" id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-contact_phone">โทร</label>
+		<input type="text" class="form-control" id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-parent">ผู้ปกครอง</label>
+		<input type="text" class="form-control" id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="Parents" style="">
+		</div>
+
+		<div class="col-8 col-sm-4">
+		<label for="patient-contact_name">ผู้ติดต่อได้</label>
+		<input type="text" class="form-control" id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="Contact" style="">
+		</div>
+
+		</div><!--row-->
+		<script>
+		$('#patient-dob').datepicker({
+			format: "dd/mm/yyyy"
+		});
+		</script>
+		
+		<!--<div class="row mt-1">
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-gener">น้ำหนัก</label>
@@ -216,9 +295,13 @@
 		<input type="text" class="form-control" id="patient-dob" name="admit[height]" value="<%=admit.height%>" placeholder="CM" style="">
 		</div>
 		
+		<div class="col-8 col-sm-4">
+		<label for="patient-dob">วัน-เดือน-ปี</label>
+		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
+		</div>
 
 
-		</div><!--row-->
+		</div>--><!--row-->
 		
 		<div class="row mt-1">
 		

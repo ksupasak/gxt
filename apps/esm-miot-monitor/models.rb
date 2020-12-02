@@ -489,6 +489,19 @@ class Patient  < GXTModel
   key :zone_id, ObjectId
   
   key :picture, ObjectId
+
+  key :blood, String 
+  key :status, String 
+  key :job, String 
+  key :race, String 
+  key :nation, String 
+  key :religion, String 
+  key :passport, String 
+  key :addr, String 
+  key :addr_present, String 
+  key :parent, String 
+  key :note, String 
+  
   
   include Mongoid::Timestamps
   def to_s

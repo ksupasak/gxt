@@ -13,6 +13,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   font-family: "Sarabun", sans-serif;
+  height:100vh;
 }
 
 
@@ -56,7 +57,7 @@ body {
   /* height: 90px;
   font-size: 65px; */
   height:auto;
-  color: var(--main-white-color);
+  color: var(--text-grey);
   background: var(--form-bg);
   border: none;
 }
@@ -598,7 +599,7 @@ a {
 
 /*Patient Admit Form*/
 .admit-form {
-  background-color: #07263b;
+  background-color: var(--body-bg);
   color: var(--text-grey);
   border: 1px solid var(--er-room-hover);
 }

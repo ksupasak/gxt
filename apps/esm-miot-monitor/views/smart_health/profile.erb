@@ -1,3 +1,33 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<style>
+.bg-panel{
+    margin:0.4vw;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.8" x="0" y="0" width="1000" height="1000"/></svg>');
+} 
+
+.main-panel{
+    background:#efefef;
+    height:100vh;
+}
+.head-panel{
+    margin:0.4vw;
+    background:#0066A8;
+    color:#efefef;
+}
+.pname{
+    color:#0066A8;
+    font-size:1.4em;
+}
+.btn-panel{
+    background:#179D92;
+}
+a.btn-panel{
+    color:#fff;
+}
+.val-panel{
+    color:#179D92;
+}
+</style>
 <%
 	
 patient = Patient.find params[:id]
@@ -5,12 +35,73 @@ patient = Patient.find params[:id]
 hospital = SHHospital.find patient.hospital_id 
 	
 %>
-<h1>Profile</h1>
 
 
-<hr/>
+<div class="container-fluid main-panel p-2 rounded">
+<div class="row head-panel p-4 rounded">
+    <div class="col">
+        <h3><center>ข้อมูลส่วนตัว</center></h3>
+    </div>
+</div>
 
-First name : <%=patient.first_name %><br/>
+<div class="row bg-panel p-4 mt-2 rounded">
+    <div class="col-1">
+    </div>
+    <div class="col">
+    <image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120">
+    </div>
+    <div class="col">
+        <span class="pname"><%="#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" %></span>
+        <br>HN: <%=patient.hn%>
+        <br>เพศ: <%=patient.gender%>
+        <br>อายุ: <%=patient.age%>
+        <br/>Hospital : <%=hospital.name %>
+    </div>
+</div>
 
+<div class="row bg-panel p-4 mt-2 rounded">
+    <div class="col-1">
+    </div>
+    <div class="col">
+        <i class="fas fa-tint"></i> กรุ๊ปเลือด
+    </div>
+    <div class="col">
+        <%=patient.blood%>
+    </div>
+</div>
+<div class="row bg-panel p-4 mt-2 rounded">
+    <div class="col-1">
+    </div>
+    <div class="col">
+        <i class="fas fa-weight"></i> น้ำหนัก
+    </div>
+    <div class="col">
+        <%=patient.blood%>
+    </div>
+</div>
+<div class="row bg-panel p-4 mt-2 rounded">
+    <div class="col-1">
+    </div>
+    <div class="col">
+        <i class="fas fa-arrows-alt-v"></i> ส่วนสูง
+    </div>
+    <div class="col">
+        <%=patient.blood%>
+    </div>
+</div>
+<div class="row">
+<div class="col  m-3">
+            <a href="index" class="btn btn-secondary w-100 p-3 ">
+                ย้อนกลับ
+            </a>
 
-Hospital : <%=hospital.name %><br/>
+</div>
+<div class="col  m-3">
+            <a href="admit?hn=<%=patient.hn%>" class="btn btn-panel w-100  p-3">
+                แก้ไขข้อมูล
+            </a>
+</div>
+
+</div>
+
+</div>
