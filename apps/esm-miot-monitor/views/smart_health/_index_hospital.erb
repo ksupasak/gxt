@@ -86,7 +86,7 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		
 		provider_2 = '-'
 		if admit.provider_2_id
-			provider_2 = Provider.find admit.provider_2_id
+			provider_2 = SHOfficer.find admit.provider_2_id
 			provider_2 = provider_2.name
 		end
 		
