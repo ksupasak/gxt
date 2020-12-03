@@ -112,6 +112,20 @@ body {
     border-color: #666;
 }
 
+.btn-health {
+  background: white
+    width: 150px;
+    height: 50px;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 10px;
+    border-color: var(--btn-green-main);
+    color: var(--btn-green-main); !important;
+  }
+
+  .btn-health a:hover{
+    color: var(--text-grey);
+    text-decoration: none;
+  }
 
 .btn-submit {
   background: transparent linear-gradient(180deg, var(--btn-green-main) 0%, var(--btn-green-second) 100%) 0%
@@ -121,11 +135,11 @@ body {
     box-shadow: 0px 3px 6px #00000029;
     border-radius: 10px;
     border-color: var(--btn-green-main);
-    color: var(--text-grey);
-}
+    color: white !important;
+  }
 
  .btn-submit a:hover{
-  color: white !important;
+  color: var(--text-grey);
   text-decoration: none;
 }
 
