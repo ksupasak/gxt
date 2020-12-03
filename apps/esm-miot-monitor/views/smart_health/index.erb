@@ -4,6 +4,8 @@
 
 <% if @current_role == 'hospital' or @current_role =='admin' %>
 <%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'network_admin'  %>
+<%=inline(this,:'_index_network_admin')%>
 <% elsif @current_role == 'network'  %>
 <%=inline(this,:'_index_network')%>
 <% end %>
