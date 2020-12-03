@@ -65,7 +65,12 @@ hospital = SHHospital.find patient.hospital_id
 officer = SHOfficer.where(:user_id=>session[:identity]).first
 visits = []
 visits = SHVisit.where(:officer_id=>officer.id).all if officer
-
+mv = {} 
+for v in visits
+	dd = v.start.strftime('%Y%m%d')
+	mv[dd] = [] unless mv[dd]
+	mv[dd] << v.patient_id
+end
 %>
 <div class="row">
 	<div class="col">
@@ -81,10 +86,15 @@ visits = SHVisit.where(:officer_id=>officer.id).all if officer
 	
 	while d<d_end
 		is_today = Time.now.strftime("%d")==d.strftime('%d')
+		dd = d.strftime('%Y%m%d')
+		vs = 0
+		vs = mv[dd].size if mv[dd]
 %>
-<div class="col day <%=(is_today)? "day-active" : "day-normal" %> rounded p-4 m-2 d-flex justify-content-center" id="<%=d.strftime('%Y%m%d')%>">
-<%=d_th[d.strftime('%w').to_i-1]%>
-<br><%=d.strftime('%d')%>
+<div class="col day <%=(is_today)? "day-active" : "day-normal" %> rounded p-4 m-2 d-flex justify-content-center" id="<%=dd%>">
+	<div class="row">
+		<div class="col-12"><%=d_th[d.strftime('%w').to_i-1]%><br><%=d.strftime('%d')%></div>
+		<%if vs>0 %> <div class="col-4" style="white-space:nowrap;font-size:0.7em;"><i class="fas fa-user-injured"></i></div><div class="col-8" style="white-space:nowrap;font-size:0.7em;">(<%=vs%>) </div> <% end %>
+	</div>
 </div>
 <%	
 		d += 1.day
