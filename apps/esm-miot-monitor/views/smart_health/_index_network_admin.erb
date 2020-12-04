@@ -135,4 +135,8 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		ยอดรวม <%=patients.size%> คน
 	</div>
 </div>
+
+<%=inline(this,:'_banner')%>
+
+
 </div>
