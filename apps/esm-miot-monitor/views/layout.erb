@@ -209,7 +209,12 @@ border-bottom: 2px solid #3147FF;
 		 		 </div>
 	          </li>
 <% end %>
-			  <% else %>
+			  <% end %>
+			  
+			  
+			  
+			   <% if @current_zone.mode=='smart_health' and @current_role=='admin' %>
+			   
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
