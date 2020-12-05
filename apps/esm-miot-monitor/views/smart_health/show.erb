@@ -190,10 +190,18 @@ report = ERCaseReport.new unless report
 						 	   
 						 data_records.each_with_index do |i,ix| 
 							
+							 distance = ""
+							 
+							 distance = "#{((Time.now-i.stamp)/86400).to_i} วัน" if (Time.now-i.stamp)/86400>1
+							 
+							 distance = "#{((Time.now-i.stamp)/86400/30).to_i} เดือน" if (Time.now-i.stamp)/86400/30 > 1 
+							 
+							 distance = "(#{distance})" if distance.size>0
+							
 						 %>
 						 
 						  <tr class="<%='last' if ix==data_records.size-1%>">
-                            <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%=distance_of_time_in_words i.stamp, Time.now %></th>
+                            <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%= distance %> <%#(Time.now-i.stamp)/86400/30%> </th>
                             <td class="bp"><%=i.bp%></td>
                             <td class="pr"><%=i.pr%> : <%=i.spo2%></td>
                             <td class="rr"><%=i.temp%></td>
