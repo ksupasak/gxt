@@ -743,6 +743,7 @@ class DataRecord  < GXTModel
   key :glucose, Integer
   key :weight, Float
   key :height, Float
+  key :bmi, Float
   
   
   key :eye, String

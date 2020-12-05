@@ -10,7 +10,7 @@
 		puts params.inspect 
 		
 		# {"admit_id"=>"5f4f13eb6906deb73f8a4626", "hn"=>"", "datetime"=>"2020-9-5T15:54:48", "score"=>"1", "rr"=>"20", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>"100", "pr"=>"80", "spo2"=>"99", "temp"=>"35.4", "weight"=>"", "height"=>"", "bmi"=>"", "device_id"=>"", "gxt"=>"miot", "service"=>"EsmMiotMonitor::SmartER", "operation"=>"connect"}
-		list = %w{bp bp_sys bp_dia bp_mean bp_pr pr spo2 temp rr score note eye motor verbal pupil}
+		list = %w{bp bp_sys bp_dia bp_mean bp_pr pr spo2 temp rr score note weight height bmi glucose}
 		
 		
 		px = {:admit_id=>params[:admit_id], :stamp=> params[:datetime]}
@@ -71,7 +71,7 @@
             <div class="card patient-info">
                 <div class="card-body d-flex align-items-center">
 				 <div class="col">
-				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
+				     <h6 class="font-weight-bold" id="patient-name" style="font-size:1.4em"><%=patient.to_s%></h6>
 				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
 				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age %> ปี</span>
 				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
@@ -95,7 +95,50 @@
                     
                     <div class="col p-0 d-flex flex-column" id="patient-neuro-sign">
 						
+						
                         <div class="col mb-2 ">
+							<div class="vital-card">
+	                            <p>Weight</p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/weight.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-8 v-entry v-under  weight"  name="weight">
+				                    -
+				                    </div>
+				                </div>
+	                        </div>
+						</div>
+						
+                        <div class="col mb-2 ">
+							<div class="vital-card">
+	                            <p>Height</p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/height.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-8 v-entry v-under  height"  name="height">
+				                    -
+				                    </div>
+				                </div>
+	                        </div>
+						</div>
+						
+                        <div class="col mb-2 ">
+							<div class="vital-card">
+	                            <p>BMI</p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/bmi.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-8 v-entry v-under  bmi"  name="bmi">
+				                    -
+				                    </div>
+				                </div>
+	                        </div>
+						</div>
+						
+                        <!-- <div class="col mb-2 ">
 							<div class="vital-card">
                                 <p>Eye Opening</p>
 								<div class="row">
@@ -125,9 +168,23 @@
 									</div>
 								</div>
 							</div>
+                        </div> -->
+						
+                    <div class="col mb-2 ">
+						<div class="vital-card">
+                            <p>Glucose</p>
+			                <div class="row">
+			                    <div class="col-3" style="text-align:center">
+			                        <center><img src="<%=url_for 'img/svg/glucose.svg'%>" width="40" ></center>
+			                    </div>
+			                    <div class="col-8 v-entry v-under  glucose"  name="glucose">
+			                    -
+			                    </div>
+			                </div>
                         </div>
+					</div>
 
-						<div class="col mb-2 ">
+						<!-- <div class="col mb-2 ">
 							<div class="vital-card">
                                 <p>Verbal Response</p>
 								<div class="row">
@@ -157,15 +214,32 @@
 									</div>
 								</div>
 							</div>
-                        </div>
-
-                        <div class="col mb-2">     
+                        </div> -->
+							
+	                        <div class="col mb-2">
 								<div class="vital-card">
-								 <p>Nurse Note  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
-								<textarea class="vital-card" style="height:auto" id="nurse-note"></textarea>
-								
+			                        <p>Score</p>
+					                <div class="row">
+					                    <div class="col-3"  style="text-align:center">
+					                        <center><img src="<%=url_for 'img/svg/score.svg'%>" width="40"></center>
+					                    </div>
+					                    <div class="col-8 v-entry v-under  score"  name="score">
+					                    -
+					                    </div>
+					                </div>
+						
+					                <div class="row">
+										<div class="col-12">
+										    <div class="alert">&nbsp;</div>
+						                </div>
+						            </div>
+						
 								</div>
-                        </div>
+	                        </div>
+						
+						
+							
+
                     </div>
                     <div class="col p-0 d-flex flex-column" id="patient-vital-sign">
                         <div class="col mb-2 ">
@@ -232,40 +306,32 @@
 				                </div>
                            </div>
                         </div>
+						
                         <div class="col mb-2 ">
-								<div class="vital-card">
-                                <p>Respiratory Rate</p>
-		                <div class="row">
-		                    <div class="col-3" style="text-align:center">
-		                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
-		                    </div>
-		                    <div class="col-8 v-entry v-under  rr"  name="rr">
-		                    -
-		                    </div>
-		                </div>
-                        </div>
+							<div class="vital-card">
+	                            <p>Respiratory Rate</p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-8 v-entry v-under  rr"  name="rr">
+				                    -
+				                    </div>
+				                </div>
+	                        </div>
 						</div>
 						
+                   
 						
-                        <div class="col mb-2">
-						<div class="vital-card">
-                                <p>Score</p>
-		                <div class="row">
-		                    <div class="col-3"  style="text-align:center">
-		                        <center><img src="<%=url_for 'img/svg/score.svg'%>" width="40"></center>
-		                    </div>
-		                    <div class="col-8 v-entry v-under  score"  name="score">
-		                    -
-		                    </div>
-		                </div>
-						
-		                <div class="row">
-						<div class="col-12">
-						    <div class="alert">&nbsp;</div>
-		                </div>
-		                </div>
-						   </div>
+
+                        <div class="col mb-2">     
+								<div class="vital-card">
+								 <p>Nurse Note  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
+								<textarea class="vital-card" style="height:auto" id="nurse-note"></textarea>
+								
+								</div>
                         </div>
+                    
 						
                     </div>
                 </div>
@@ -394,6 +460,8 @@
 <input class="temp_val" name="temp" value="" type="hidden"/>
 <input class="rr_val" name="rr" value="" type="hidden"/>
 <input class="score_val" name="score" value="" type="hidden"/>
+<input class="glucose_val" name="glucose" value="" type="hidden"/>
+
 
 <input class="eye_val" name="eye" value="" type="hidden"/>
 <input class="motor_val" name="motor" value="" type="hidden"/>
@@ -625,6 +693,7 @@
 		var rr = ''
 		var score = ''
 		var bmi =''
+		var glucose = ''
 		
 		$('.bp_sys').each(function(){
 			bp_sys = $(this).html().trim();
@@ -646,6 +715,12 @@
 		$('.bmi').each(function(){
 			bmi = $(this).html().trim();
 		})
+		
+		
+		$('.glucose').each(function(){
+			glucose = $(this).html().trim();
+		})
+		
 		
 		
 		
@@ -686,10 +761,11 @@
 		
 		note = $('#nurse-note').val()
 	
+	
 		
 		
+	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, glucose:glucose }
 		
-	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, eye:eye, motor:motor, verbal:verbal, pupil:pupil }
 		return data
     }
 
@@ -790,7 +866,7 @@
 		}	
 			
 		if(map['T1']&&map['T1']!=''){
-			alert('Demo')
+			
 			c = parseFloat(map['T1']).toFixed(1)
 			$('.temp').html(c);
 			checkInput('temp')
@@ -830,6 +906,21 @@
 				checkInput('temp')
 		}
 		
+		if(map['STATUS']=='G1'){	
+			
+			var g = parseFloat(map['GLUCOSE'])
+			
+			
+			if(map['STATUS']=='G1'){
+				$('.glucose').html(g);
+				
+                checkInput('glucose')
+				
+			}
+			
+			
+		}
+		
 		if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
 			
 			var w = parseFloat(map['WEIGHT'])
@@ -861,7 +952,8 @@
 	$('.p-name').click(function(){
 		
 		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100|RR:20')
-		// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+		deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+		deviceSend('STATUS:G1|GLUCOSE:120')
 		deviceSend('STATUS:T1|T1:35.4')
 		
 		

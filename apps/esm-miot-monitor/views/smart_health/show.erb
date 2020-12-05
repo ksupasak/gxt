@@ -168,14 +168,14 @@ report = ERCaseReport.new unless report
                     <strong> Vital Sign</strong>
                 </div>
                 <div class="card-body">
-                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:0.8em">
+                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em">
                         <thead>
                           <tr>
                             <th scope="col">วัน - เวลา</th>
                             <th scope="col">BP(Sys/Dia)</th>
-                            <th scope="col">Pulse/SpO<sub>2</sub></th>
+                            <th scope="col">Pulse : SpO<sub>2</sub></th>
                             <th scope="col">BT(C)</th>
-                    		<th scope="col">W(kg)/H(cm)</th>
+                    		<th scope="col">W(kg) : H(cm)</th>
             				<th scope="col">BMI</th>
             				<th scope="col">Glucose(mg/dL)</th>
                     		
@@ -193,12 +193,12 @@ report = ERCaseReport.new unless report
 						 %>
 						 
 						  <tr class="<%='last' if ix==data_records.size-1%>">
-                            <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%=Time.now-i.stamp%></th>
+                            <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%=distance_of_time_in_words i.stamp, Time.now %></th>
                             <td class="bp"><%=i.bp%></td>
-                            <td class="pr"><%=i.pr%>/<%=i.spo2%></td>
+                            <td class="pr"><%=i.pr%> : <%=i.spo2%></td>
                             <td class="rr"><%=i.temp%></td>
-                            <td class="rr"><%=i.weight%></td>
-                            <td class="rr"><%=i.height%></td>
+                            <td class="rr"><%=i.weight%> : <%=i.height%></td>
+                            <td class="rr"><%=i.bmi%></td>
                             <td class="rr"><%=i.glucose%></td>
 							
                             <td><%=i.score%></td>

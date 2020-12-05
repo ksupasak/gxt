@@ -99,6 +99,7 @@ border-bottom: 2px solid #3147FF;
           <li class="nav-item active">
 			  <%
 			  	name = 'Home'
+				@current_zone = nil
 				
 				unless session[:current_zone]
 				
@@ -110,7 +111,7 @@ border-bottom: 2px solid #3147FF;
 				if session[:current_zone]
 				
 					zone = Zone.find session[:current_zone]
-					
+					@current_zone = zone
 					name = zone.name if zone
 					
 				end
@@ -135,7 +136,7 @@ border-bottom: 2px solid #3147FF;
 	 
 		  <% if @current_user %>
         
-		  
+		  <% if @current_zone.mode!='smart_health' or @current_role=='admin'%>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/cms" >CMS </a>
 		  </li> -->
@@ -188,6 +189,8 @@ border-bottom: 2px solid #3147FF;
 	 		 </div>
           </li>
 
+		  <% if @current_zone.mode!='smart_aoc' or @current_role=='admin'%>
+         
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AOC</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -205,8 +208,8 @@ border-bottom: 2px solid #3147FF;
 				   <a class="dropdown-item" href="../Message/index">Messages</a>
 		 		 </div>
 	          </li>
-
-
+<% end %>
+			  <% else %>
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -221,6 +224,7 @@ border-bottom: 2px solid #3147FF;
 		 
 		 		 </div>
 	          </li>
+			  <% end %>
 
 	      <!-- <li class="nav-item dropdown hidden">
 	            <a class="nav-link dropdown-toggle" href="../Opd/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">OPD</a>
@@ -273,7 +277,21 @@ border-bottom: 2px solid #3147FF;
       </div>
 
     </nav>
+	
+	<% if @current_zone.mode == 'smart_health'%>
+	<script>
 
+		<% if @current_role == 'network' %>
+		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(93,30,119,1) 0%, rgba(38,15,70,1) 100%)"})
+		<% elsif @current_role == 'hospital' %>
+		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(50,122,186,1) 0%, rgba(31,81,124,1) 100%)"})
+		
+		<% end%>
+		
+		
+		
+	</script>
+	<% end %>
     <main role="main" class="main" style="border:0px solid red;">
    <div id="main-container" class="containerx" style="padding-left:15px;padding-right:15px;">
 	   

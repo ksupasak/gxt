@@ -64,7 +64,42 @@ last = DataRecord.where(:admit_id=>admit.id).last
 	            </div>
 	            <!--end of vital sign-->
 	            <!--neuro sign-->
-	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Neuro Sign</p>
+            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Physical</p>
+            <div class="row justify-content-between mb-2">
+                <div class="col-sm-6 col-md-3 mb-2">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Weight</p>
+						<center>
+							<span class="bp param-value" ><%=last.weight if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Height</p>
+						<center>
+							<span class="pr param-value" ><%=last.height if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2 ">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">BMI</p>
+						<center>
+							<span class="temp param-value" ><%=last.bmi if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2 ">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Glucose</p>
+						<center>
+							<span class="rr param-value" ><%=last.glucose if last%></span>
+						</center>
+                    </a>
+                </div>
+            </div>
+			    <!-- <p class="font-weight-bold mt-3" style="color: #42B7AB;">Neuro Sign</p>
 	            <div class="row justify-content-between mb-2">
 	                <div class="col-sm-6 col-md-3 mb-2">
 	                    <a href="#" class="btn vital-card text-left">
@@ -98,7 +133,7 @@ last = DataRecord.where(:admit_id=>admit.id).last
 							</center>
 	                    </a>
 	                </div>
-	            </div>
+	            </div> -->
 	            <!--end of neuro sign-->
            
 	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Chief Complaint</p>

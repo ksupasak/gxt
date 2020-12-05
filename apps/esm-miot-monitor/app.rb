@@ -11,8 +11,6 @@ require_relative 'smart_aoc'
 
 
 
-
-
 require 'active_support'
 
 require_relative 'models'
