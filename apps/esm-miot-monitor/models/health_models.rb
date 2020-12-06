@@ -9,7 +9,8 @@ class SHNetwork < GXTModel
   key :title, String
   key :address, String
   key :latlng, String
-  
+  key :phone, String
+  key :district, String
   
 end
 
@@ -22,6 +23,8 @@ class SHHospital < GXTModel
   key :title, String
   key :address, String
   key :latlng, String
+  key :phone, String
+  key :district, String
   
   
 end

@@ -160,7 +160,10 @@ class HomeController < GXT
            
            
            ws.onmessage do |msg_data|
-             begin 
+             
+             # puts msg_data
+             
+             # begin 
               
              name =  @context.settings.apps_ws_rv[ws.hash]
               
@@ -300,10 +303,10 @@ class HomeController < GXT
             end
            
            
-           rescue Exception=>e
-              puts e.inspect 
-
-           end
+           # rescue Exception=>e
+    #           puts e.inspect
+    #
+    #        end
            
            
            

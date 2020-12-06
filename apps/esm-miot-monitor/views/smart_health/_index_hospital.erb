@@ -1,4 +1,8 @@
-
+<%
+	
+	@current_zone = Zone.find session[:current_zone]
+	
+%>
 <div class="container" style="background:none">
 <br/>
 <center>
@@ -121,3 +125,62 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 <%=inline(this,:'_banner')%>
 
 </div>
+		  <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
+
+<script>
+	   	 
+
+	
+		
+	 var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
+		 
+		 
+		 
+		  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+		  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+	
+	
+	      ws.onopen    = function()  { show('websocket opened'); 
+		  
+		  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+			
+		  };
+    
+	
+		  ws.onclose   = function()  { show('websocket closed'); 
+		
+		 	setTimeout(function () {
+		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+		    }, 2000); //will call the function after 2 secs.
+	
+
+	      }
+	  
+	      ws.onmessage = function(m) { 
+
+			alert(m.data)
+			  
+			  
+
+			lines = m.data.split("\n")
+	
+			if(lines[0].split(" ")[0]=='Zone.Message'){
+	
+				// if(selected_station_id!=null)
+				alert(m.data)
+
+
+			}
+			  
+			  
+		  }
+		  
+		  
+		  
+			
+		
+</script>
+		  
+		  

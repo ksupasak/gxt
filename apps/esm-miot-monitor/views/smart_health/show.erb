@@ -92,7 +92,7 @@ report = ERCaseReport.new unless report
 				@token = token
 
 				resource_id = "telehealth-#{format("%03d",rand(999))}"
-	
+				resource_id = "#{params[:id]}"
 
 				%>
 
@@ -100,7 +100,7 @@ report = ERCaseReport.new unless report
 			    &nbsp;
                 <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
 					
-   			     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn "><span class="label">
+   			     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn video-call "><span class="label">
                      <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                      หมอ
 					 </span></a>
@@ -345,4 +345,76 @@ report = ERCaseReport.new unless report
 	    </div>
 	  </div>
 	</div>
+	
+  <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
+	
+	<script>
+	   	 
+		<%
+		
+		
+		@current_zone = Zone.find session[:current_zone]
+	
+		%>
+	
+		
+		 var show = function(el){
+	        return function(msg){ el.innerHTML = msg  }
+	      }(document.getElementById('msgs'));
+		 
+		 	  
+		 
+			  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+			  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+<%
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+				  
+			  
+%>	
+	
+			  function call(){
+			  	
+				alert('okf')
+				  sb = "Zone.Message <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>\n"
+				  sb += "OK\n"
+				 ws.send(sb) 
+			  }
+			  
+			  $('.video-call').click(function(e){
+				  
+				  // call();
+ //
+ // 				  e.preventDefault();
+			  });
+			  
+	
+		      ws.onopen    = function()  { show('websocket opened'); 
+		  
+			  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+			
+			  };
+    
+	
+			  ws.onclose   = function()  { show('websocket closed'); 
+		
+			 	setTimeout(function () {
+			       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+			    }, 2000); //will call the function after 2 secs.
+	
+
+		      }
+	  
+		      ws.onmessage = function(m) { 
+				  alert(m.data)
+			  
+			  }
+		  
+		  
+		  
+			
+		
+	</script>
+	
 	
