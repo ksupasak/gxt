@@ -285,8 +285,8 @@ class HomeController < GXT
          
              when 'Zone.Message'
          
-              puts "MSG Header : #{header}"
-              puts "MSG Body : #{body}"   
+               EsmMiotMonitor::dispatch cmd, path, body.to_json
+            
             
              when 'Data.Sensing'
                
