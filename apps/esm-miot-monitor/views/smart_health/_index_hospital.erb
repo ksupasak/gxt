@@ -160,14 +160,14 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 	  
 	      ws.onmessage = function(m) { 
 
-			alert(m.data)
+			
 			  
 			  
 
 			lines = m.data.split("\n")
 	
 			if(lines[0].split(" ")[0]=='Zone.Message'){
-	
+				
 				// if(selected_station_id!=null)
 				alert(m.data)
 
