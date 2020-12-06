@@ -55,9 +55,7 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		<th>
 			รับเคส
 		</th>
-		<th>
-			วันที่
-		</th>
+		
 		<th>
 			HN
 		</th>
@@ -98,10 +96,10 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 	<tr>
 		<td><%=admit.status%></td>
 		
-		<td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td>
-		<td><%=i.first_name%> <%=i.last_name%></td> 
-		
+		<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
 		<td><%=i.hn%></td> 
+		<td><%=i.prefix_name%><%=i.first_name%> <%=i.last_name%></td> 
+		
 		<td><%=provider.name if provider%></td> 
 		
 		<td><%=records%></td>
