@@ -847,8 +847,21 @@
 		
 	}
 	
+	var myVar 
+	
+	function deviceSendPost(msg){
+		
+	   $('.v-entry').css('display','block')
+		
+	}
 	
 	function deviceSend(msg){
+		
+	    clearTimeout(myVar);
+		
+	    myVar = setTimeout(deviceSendPost, 500);
+	
+		$('.v-entry').css('display','none')	
 	
 		$('#msg').html(msg);
 		
@@ -954,7 +967,7 @@
 		deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100|RR:20')
 		deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
 		deviceSend('STATUS:G1|GLUCOSE:120')
-		deviceSend('STATUS:T1|T1:35.4')
+		deviceSend('STATUS:T1|T1:36.4')
 		
 		
 		
