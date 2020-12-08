@@ -136,7 +136,7 @@ border-bottom: 2px solid #3147FF;
 	 
 		  <% if @current_user %>
         
-		  <% if @current_zone.mode!='smart_health' or @current_role=='admin'%>
+		  <% if  @current_zone and @current_zone.mode!='smart_health' or @current_role=='admin'%>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/cms" >CMS </a>
 		  </li> -->
@@ -189,7 +189,7 @@ border-bottom: 2px solid #3147FF;
 	 		 </div>
           </li>
 
-		  <% if @current_zone.mode!='smart_aoc' or @current_role=='admin'%>
+		  <% if @current_zone and  @current_zone.mode!='smart_aoc' or @current_role=='admin'%>
          
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AOC</a>
@@ -213,7 +213,7 @@ border-bottom: 2px solid #3147FF;
 			  
 			  
 			  
-			   <% if @current_zone.mode=='smart_health' and @current_role=='admin' %>
+			   <% if  @current_zone and @current_zone.mode=='smart_health' and @current_role=='admin' %>
 			   
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
@@ -283,7 +283,7 @@ border-bottom: 2px solid #3147FF;
 
     </nav>
 	
-	<% if @current_zone.mode == 'smart_health'%>
+	<% if  @current_zone and  @current_zone.mode == 'smart_health'%>
 	<script>
 
 		<% if @current_role == 'network' %>
