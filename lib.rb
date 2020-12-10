@@ -220,12 +220,25 @@ def process_request
     
       # puts "xxx " +session[:identity].inspect
     
-    unless session[:identity] 
+      puts  "Session #{session[:current_solution]} #{settings.name} #{params[:gxt]}"
+    
+    if session[:identity] == nil or settings.name != session[:current_solution]
       
-    session[:return_to] = request.fullpath 
+      return_to = true
+      
+    if  settings.name != session[:current_solution]
+      return_to = false
+    end
+      
+    session.delete :identity  
+    session.delete :current_solution  
+    session.delete :current_zone
+    
+    session[:return_to] = request.fullpath if return_to
       
     redirect  "#{params[:gxt]}/User/login"
     end
+    
     end
    
     # redirect  "#{params[:gxt]}/User/login"

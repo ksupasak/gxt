@@ -283,7 +283,7 @@ border-bottom: 2px solid #3147FF;
 
     </nav>
 	
-	<% if  @current_zone and  @current_zone.mode == 'smart_health'%>
+	<% if  @current_zone and  @current_zone.mode == 'smart_health' %>
 	<script>
 
 		<% if @current_role == 'network' %>
@@ -302,6 +302,9 @@ border-bottom: 2px solid #3147FF;
 	   
   <div class="row">
    <div class="col-12">
+	
+	<%#session.inspect%>
+	 
    <%=yield :content%>
    
    <%=session.inspect if params[:debug]%>

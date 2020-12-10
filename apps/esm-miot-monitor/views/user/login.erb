@@ -28,7 +28,14 @@ if request.post?
 		if user_login
 			user_login.login_perform
 			session[:identity] = user_login.id  if user_login
+			
 		end
+	end
+	
+	if session[:identity]
+	
+		session[:current_solution] = @context.settings.name
+		
 	end
 	
 	path = '../Home/index'

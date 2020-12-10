@@ -1402,25 +1402,25 @@ if record
 	    volume: 0.9
 	});
 
-	$('#search-form').submit(function(event){
-		
-		hn = $('#search').val()
-		
-		
-		$.ajax({
-		  url: "patient?station_id=<%=station.id if station%>&hn="+hn,
-		  context: document.body
-		}).done(function(data) {
-		  
-		$('#result').html(data)
-		
-		
-		});
-		
-		$('#search').val("");
-		event.preventDefault();
-	})	
-	
+	// $('#search-form').submit(function(event){
+	//
+	// 	hn = $('#search').val()
+	//
+	//
+	// 	$.ajax({
+	// 	  url: "patient?station_id=<%=station.id if station%>&hn="+hn,
+	// 	  context: document.body
+	// 	}).done(function(data) {
+	//
+	// 	$('#result').html(data)
+	//
+	//
+	// 	});
+	//
+	// 	$('#search').val("");
+	// 	event.preventDefault();
+	// })
+	//
 
 </script>	<i style="color:#666">  <div id="msgs" style="font-size:0.8em"></div></i>
 <%= inline(this,:'../home/_scoring') %>

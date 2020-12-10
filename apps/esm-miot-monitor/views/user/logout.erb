@@ -1,5 +1,7 @@
 <%
 session.delete :identity
+session.delete :current_solution
+session.delete :current_zone
 session.clear
 %>
 <%=redirect_to  "../Home/index" %>
