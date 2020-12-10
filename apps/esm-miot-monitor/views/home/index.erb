@@ -28,6 +28,10 @@ elsif @current_zone.mode == 'smart_ipd'
 	
 elsif @current_zone.mode == 'aoc'
 	redirect_home = "../SmartAOC/index"
+
+elsif @current_zone.mode == 'smart_opd'
+	redirect_home = "../OPD/index"
+	
 end
 
 if redirect_home
