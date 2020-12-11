@@ -40,20 +40,20 @@ end
 module Device
   
   
-def self.monitor_iacs_m540 ws
-  puts 'Start Comen NC3A'
+def self.monitor_comen_nc3a ws
+
+
 server = TCPServer.new 5001
+
+last = {}
+last_sec = Time.now.to_i
 
 loop do
   Thread.start(server.accept) do |client|
     puts 'connect '
-    while content = client.read(128)
+     
+      while content = client.read(128)
     
-
-      # callx content.each_byte.to_a.collect{|i| i.to_i}
-      
-      
-      #
       # OBX||NM|40^HR||-100|0002-4182^bpm^
       # OBX||NM|1000^ST2||-10000|NULL|<20||||FDIL|<10||||F
       # OBX||NM|1000^STVaVL||-10000|NULL|<20||||F
@@ -75,29 +75,62 @@ loop do
       # OBX||NM|1000^IT||-100|0002-4bb8^%^MDIL|0^70||||F
       # OBX||NM|44^PR||-100|0002-4182^bpm^MDIL|50^120||||F
       # PID||~\&|||||20201211162102||ORU^R01|202012111621024734|P|2.4
-      puts content.inspect 
-      list = content.split("\n").collect{|i| t = i.split("|");  [t[3],t[5]]}
-      puts 'ok'
-      puts list.inspect 
+      # callx content.each_byte.to_a.collect{|i| i.to_i}
+      # puts content.inspect 
+      list = content.split("\r").collect{|i| t = i.split("|");  [t[3].split("^")[-1],t[5]] if t.size>5 }.compact
       
-msg = <<EOM
-Monitor.Update zone_id=*
-STATUS:M1|PR:#{rand(80)}|SPO2:99|SYS:120|DIA:80|MEAN:100
-STATUS:S1|WEIGHT:90|HEIGHT:1.80
-STATUS:T1|T1:35.4
-EOM      
+      lines = []
       
-  puts msg
+      
+      
+      for i in list
   
-  ws.send msg
+      last[i[0]] = i[1]
+        
+      end
       
+      
+      t = Time.now.to_i
+      
+      
+      if last_sec != t 
+        
+        last_sec = t
+      
+        puts last.inspect
+      
+        lines = []
+       
+       lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
+       lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
+       lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
+       
+       
+       
+      if lines.size > 0
+      puts lines.inspect
+
+      msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+        puts msg
+
+     puts  ws.send(msg)
+ 
+    end
+      
+      end
       
       
     end
     
     client.close
   end
+
 end
 
+end
 
 end

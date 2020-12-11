@@ -22,6 +22,8 @@ require_relative 'devices/vista-120-S-v2-gw'
 require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
+require_relative 'devices/comen-nc3a-gw'
+
 require_relative 'devices/gps/gps'
 
 
@@ -57,9 +59,14 @@ ws = MIOT::connect
 # Device::monitor_vista_120_v1(ws)
 # }
 # 
+ # threads << Thread.new {
+ # Device::monitor_iacs_m540(ws)
+ # }
+ 
  threads << Thread.new {
- Device::monitor_iacs_m540(ws)
+ Device::monitor_comen_nc3a(ws)
  }
+ 
 
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)

@@ -671,6 +671,21 @@ MSG
        path = headers[1]
        
        case cmd 
+        
+       when 'Monitor.Update'
+         
+         
+#             # puts result.to_json
+#             path = "miot/monitor"
+#           # EM.next_tick do
+# msg = <<MSG
+# #{'Monitor.Update'} #{path}
+# #{body}
+# MSG
+#
+# # puts msg
+#             redis.publish(path, msg)
+       
          
          
        when 'Station.Update'

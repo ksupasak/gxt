@@ -7,6 +7,8 @@ patient = Patient.where(:hn=>params[:hn]).first
 
 patient = Patient.new :hn=>params[:hn] unless patient 
 
+@current_zone = Zone.find session[:current_zone]
+
 %>
 <style>
 	.v-entry{
@@ -327,7 +329,8 @@ patient = Patient.new :hn=>params[:hn] unless patient
 
 
 </form>
-
+ 
+<div id="msgs">..</div>
 <script>
 
 	$('#bp_start').click(function(){
@@ -646,6 +649,45 @@ patient = Patient.new :hn=>params[:hn] unless patient
 		
 		
 	})
+	
+ var show = function(el){
+       return function(msg){ el.innerHTML = msg  }
+     }(document.getElementById('msgs'));
+	
+	
+  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+ var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+
+ ws.onopen    = function()  { show('websocket openedf'); 
+
+ 	ws.send('WS.Select name=<%=session.id%>\n["Monitor.Update device_id=*", "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+ };
+
+
+ ws.onclose   = function()  { show('websocket closed'); 
+
+	setTimeout(function () {
+      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+   }, 2000); //will call the function after 2 secs.
+
+
+ }
+
+ ws.onmessage = function(m) { 
+	 show('websocket msg'); 
+ 
+ 	console.log(m.data)
+	 cmds = m.data.split("\n")
+	 for(var ii in cmds){
+		 i = cmds[ii]
+	 	deviceSend(i)
+	 }
+	 
+ }
+ 
     
 
 </script>
+ 

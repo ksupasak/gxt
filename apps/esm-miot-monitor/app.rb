@@ -200,8 +200,40 @@ class HomeController < GXT
              path = headers[1]
              
              case cmd 
+            
+            
+             when 'Monitor.Update'
                
                
+               
+               puts "MOnitor"
+               puts msg_data
+  #              puts @context.settings.cmd_map.inspect
+  #
+  #              # {"miot"=>{"Monitor.Update"=>{"zone_id=*"=>[-3100113279091852179]}, "ZoneUpdate"=>{"zone_id=*"=>[-3100113279091852179]}, "Alert"=>{"station_id=*"=>[-3100113279091852179]}, "Data.Image"=>{"station_id=*"=>[-3100113279091852179]}}}
+  #              puts name
+  #              puts name.class
+  #              puts @context.settings.cmd_map.keys.collect{|i| "#{i} #{i.class}"}.join(", ")
+  #  
+              
+               if @context.settings.cmd_map[name] and @context.settings.cmd_map[name]['Monitor.Update'] and wsnames = @context.settings.cmd_map[name]['Monitor.Update']['device_id=*']
+                 # puts wsnames.inspect
+                 for wsname in wsnames
+                   
+                   wss = @context.settings.ws_map[wsname]
+                   
+                   if wss
+                     # puts 'send...'
+                     wss.send msg_data.split("\n")[1..-1].join("\n")
+                   else
+                      @context.settings.ws_map.delete wsname
+                     
+                   end
+                   
+                 end
+               
+               
+               end
       # register message receiver 
                
              when 'WS.Select'
