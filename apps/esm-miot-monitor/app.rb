@@ -8,7 +8,7 @@ require_relative 'smart_health'
 require_relative 'smart_icu'
 require_relative 'smart_ipd'
 require_relative 'smart_aoc'
-
+require_relative 'smart_opd'
 
 
 require 'active_support'

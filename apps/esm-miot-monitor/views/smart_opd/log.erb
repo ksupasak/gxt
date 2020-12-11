@@ -1,0 +1,110 @@
+<% 
+records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
+%>
+<br/>
+<br/>
+<link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
+<svg width="0" height="0">
+    <defs>
+        <g id="t-up">
+        <polygon points="10,0 0,10 10,10" class="triangle" />
+        </g>
+        <g id="t-down">
+        <polygon points="0,0 10,0 10,10" class="triangle" />
+        </g>        
+    </defs>
+    <style>
+    .triangle{fill:#51A451;}
+    .symbol{height:20px;width:20px;}
+    </style>
+</svg>
+<h1><img src='<%= url_for('img/OPD_logo.png')%>'  height='50'>&nbsp;&nbsp;&nbsp;Data Logs</h1>
+
+<div class="row-fluid">
+    <div class="d-log">
+    <table class="table table-sm">
+    <thead>
+        <tr class="table-primary">
+            <th>Date</th>
+            <th>Device ID</th>
+		    <th>HN</th>
+            <th>Patient Name</th>
+			
+            <th>Weight</th>
+            <th>Height</th>
+            <th>BMI</th>
+			
+            <th>BP</th>
+            <th>PR</th>
+            <th>Spo2</th>
+			
+            <th>Scoring type</th>
+            <th>Scoring</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for i in records 
+        weight = '-'
+        height = '-'
+        bmi = '-'	
+		begin	
+            data = JSON.parse(i.data)
+            weight = data['weight'].strip
+            height = data['height'].strip
+            bmi = data['bmi'].strip		
+        rescue Exception=>e
+        end
+		admit = Admit.find i.admit_id
+        patient = Patient.find admit.patient_id if admit
+        score = 0
+        badge = 'badge-success'
+        begin
+            score = i.score.to_i 
+        rescue Exception=>e
+        end
+        badge = 'badge-warning' if score>1
+        badge = 'badge-danger' if score>3
+		%>
+		
+        <tr>
+             <td><%=i.stamp.localtime.strftime('%d/%m/%Y %H:%M')%></td>
+			 <td><%=data['device_id'] if data['device_id']%></td>
+             <td><%=link_to patient.hn, "result?hn=#{patient.hn}" %></td>
+	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>
+			
+			<td><%=weight%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
+            <td><%=height%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
+              <td><%= bmi %></td>
+			<td><%= i.bp %></td>
+            <td><%= i.pr %></td>
+            <td><%= i.spo2 %></td>
+          
+			    <td><%= 'OPD' %></td>
+			  
+            <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
+        </tr>
+        <%
+        
+        %>
+		<% end %>
+        <!-- <tr>
+            <td>19/04/2020</td>
+            <td>66.9 </td>
+            <td>120/80</td>
+            <td>NEWS</td>
+            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>
+        </tr> -->
+    </tbody>
+    </table>
+    </div>
+</div>
+<%= link_to '<< Home', 'index' ,{:class=>'btn-result-cancle'} %>
+<meta http-equiv="refresh" content="30">  
