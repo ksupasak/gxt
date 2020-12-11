@@ -1,3 +1,5 @@
+
+
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 
 <!-- <h1 style="color:white">OPD</h1> -->
@@ -5,14 +7,14 @@
 <div class="row">
 <div class="col">
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel"  style="padding-top:50px;">
-  <div class="carousel-inner">
+  <!-- <div class="carousel-inner">
     <div class="carousel-item active">
       <img src="<%=url_for 'img/OPD_ad1.png'%>" class="d-block w-100 rounded" alt="...">
     </div>
     <div class="carousel-item">
       <img src="<%=url_for 'img/OPD_ad2.png'%>" class="d-block w-100 rounded" alt="...">
     </div>
-  </div>
+  </div> -->
   
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -23,8 +25,14 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
+<center>
+<h1>
+	<%=Setting.get 'default_center_name'%><hr/>
+	Smart OPD</h1>
+</center>
 
 </div>
+
 <div class="col">
     <div class="row">
     <div class="col-12">
@@ -168,3 +176,33 @@
 	
 
 </script>
+	
+	<style>
+		.btn-hn{
+		    background-color: #6B98C1;
+		    color:#ffffff;
+		    border-radius: 100px;
+		    height:50px;
+		    width:80px;
+	
+		    text-align: center;
+		    font-size: 2.4em;
+		    padding-top:0px;
+		    margin:5px;
+		}
+		
+		.display-hn{
+		    border-radius: 20px;
+		    height:1em;
+		    text-align: center;
+		    vertical-align: middle;
+		    font-size: 3em;
+			padding:0px;
+			line-height:1;
+		    background: #BCD1E4;
+		    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+		    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		    color:#00517F;
+		    margin: 0px 20px 0px 20px;
+		}
+	</style>

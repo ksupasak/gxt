@@ -62,8 +62,29 @@ patient = Patient.new :hn=>params[:hn] unless patient
 
 </script>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
-<h1>&nbsp;</h1>
-<div class="row-fluid">
+<div class="row">
+<div class="col-12">
+    
+
+
+<div style="float:right">
+            <div class="p-date">
+            วันที่ <%=date.strftime("%d #{mon_th} %Y เวลา %H:%M น.")%>
+            </div>
+</div>
+
+  <div style="clear:both"></div>
+  
+<div style="">
+	<center>
+            <div class="p-name">
+            HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
+          </div>
+     </center>
+</div>
+ </div>
+</div>
+<div class="row">
     <div class="col-12">
     
     </div>
@@ -71,14 +92,14 @@ patient = Patient.new :hn=>params[:hn] unless patient
     <div class="col-12">
     <div class="row">
 
-        <div class="col-4">
+        <div class="col-6">
             <div class="d-entry-dark dk-empty">
                 <div class="l-entry">Blood Pressure</div> 
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-2">
                         <img src="<%=url_for 'img/svg/bp.svg'%>" id="bp_start" width="60" style="padding-top:10px">
                     </div>
-                    <div class="col-9 ">
+                    <div class="col-10 ">
 					<center>
                     <span class="sys v-entry bp_sys" label="Blood pressure - Systolic" name="bp_sys">-</span> 
                     <span style="font-size:3em;">/</span>
@@ -149,7 +170,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
             </div>
         </div> 
         
-        <div class="col-4">
+        <!-- <div class="col-4">
             <div class=""><center>
             <div class="p-name">
             HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
@@ -187,9 +208,9 @@ patient = Patient.new :hn=>params[:hn] unless patient
             <rect class="diamondMo" id="bg" y="0" width="100%" height="50" fill="url(#Gradient2)" />
             </svg>
             </center></div>
-        </div>
+        </div> -->
 
-        <div class="col-4">
+        <div class="col-6">
             <div class="row">
                 <div class="col-5 d-entry de-empty">
                 <div class="l-entry">ส่วนสูง (เซ็นติเมตร)</div>
@@ -690,4 +711,43 @@ patient = Patient.new :hn=>params[:hn] unless patient
     
 
 </script>
+ 
+
+<style>
+	.btn-hn{
+	    background-color: #6B98C1;
+	    color:#ffffff;
+	    border-radius: 100px;
+	    height:50px;
+	    width:80px;
+
+	    text-align: center;
+	    font-size: 2.4em;
+	    padding-top:0px;
+	    margin:5px;
+	}
+	
+	.display-hn{
+	    border-radius: 20px;
+	    height:1em;
+	    text-align: center;
+	    vertical-align: middle;
+	    font-size: 3em;
+		padding:0px;
+		line-height:1;
+	    background: #BCD1E4;
+	    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+	    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	    color:#00517F;
+	    margin: 0px 20px 0px 20px;
+		
+	}
+	.p-date{
+	    font-size: 1.2em;
+	    text-align: center;
+	    vertical-align: middle;
+	    color:#6B98C1;
+	    padding-bottom: 0px;
+	}
+</style>
  

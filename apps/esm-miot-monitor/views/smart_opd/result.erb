@@ -45,6 +45,14 @@ end
     .symbol{height:20px;width:20px;}
     </style>
 </svg>
+
+<div style="float:right">
+            <div class="p-date">
+            วันที่ <%=date.strftime("%d #{mon_th} %Y เวลา %H:%M น.")%>
+            </div>
+</div>
+
+  <div style="clear:both"></div>
 <div class="p-name" style="padding:20px">
 HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
 </div>
@@ -52,7 +60,7 @@ HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= pati
 <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
 <script src="/vendor/d3/d3.min.cus.js"></script>
 
-<div class="row">
+<div class="row" style="display:none">
     <div class="col-6">
     <div class="d-result ">
     Blood Pressure
@@ -277,5 +285,13 @@ var svgbar = d3.select("#barchart")
     </center>
     </div>
 </div>
-
+<style>
+	.p-date{
+	    font-size: 1.2em;
+	    text-align: center;
+	    vertical-align: middle;
+	    color:#6B98C1;
+	    padding-bottom: 0px;
+	}
+	</style>
 
