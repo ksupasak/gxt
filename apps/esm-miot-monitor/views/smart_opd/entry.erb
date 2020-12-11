@@ -661,7 +661,7 @@ patient = Patient.new :hn=>params[:hn] unless patient
 
  ws.onopen    = function()  { show('websocket openedf'); 
 
- 	ws.send('WS.Select name=<%=session.id%>\n["Monitor.Update device_id=*", "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+ 	ws.send('WS.Select name=<%=session.id%>\n["Monitor.Update device_id=*"]')
 
  };
 
