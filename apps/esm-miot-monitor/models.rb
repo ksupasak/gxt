@@ -64,9 +64,26 @@ class Role < GXTModel
   include Mongoid::Document
 
   key :name, String
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone' 
+  
+  key :zone_id, ObjectId
+  
   include Mongoid::Timestamps 
   timestamps!
 end
+
+# class UserZone < GXTModel
+#
+#   include Mongoid::Document
+#
+#   key :name, String
+#   key :default, Stri
+#   key :user_id, ObjectId
+#   key :zone_id, ObjectId
+#
+#
+# end
+
 class Provider < GXTModel
   include Mongoid::Document
   include Mongoid::Timestamps

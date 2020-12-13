@@ -7,7 +7,7 @@
 <br/>
 <center>
 <h1>SMART TELEHEALTH</h1>
-<div>โรงพยาบาลส่งเสริมสุภภาพตำบล บ้านโคกสงวน ตำบลโคกสงวน</div>
+<div><%=Setting.get :default_center_name%></div>
 </center>
 
 <div class="row" style="border:0px solid">
@@ -67,11 +67,11 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		</th>
 		
 		<th>
-			Visit
+			จำนวนครั้ง
 		</th>
 		
 		<th>
-			อสม.
+			เจ้าหน้าที่ออกตรวจ
 		</th>
 		
 		<th>
@@ -107,7 +107,7 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 		<td><%=provider_2%></td>
 				
 		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
-			<%=link_to "Profile", "profile?id=#{i.id}", :class=>'btn btn-info' %>
+			<%=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
 			<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
 		
 	</tr>
@@ -122,8 +122,11 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 
 <%=inline(this,:'_banner')%>
 
+<br/>
+ <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
+
 </div>
-		  <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
+		 
 
 <script>
 	   	 

@@ -64,6 +64,7 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
         end
         badge = 'badge-warning' if score>1
         badge = 'badge-danger' if score>3
+		if patient
 		%>
 		
         <tr>
@@ -94,7 +95,7 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
         <%
         
         %>
-		<% end %>
+		<% end %><% end %>
         <!-- <tr>
             <td>19/04/2020</td>
             <td>66.9 </td>

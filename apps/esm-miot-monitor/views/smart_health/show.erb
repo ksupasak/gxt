@@ -99,12 +99,20 @@ report = ERCaseReport.new unless report
 				
 			    &nbsp;
                 <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
-					
+			
+			
+			
+			
+	    	 <a target="_blank" href="https://localhost:1792/miot/Sas/tele?resourceId=<%=resource_id%>" class="btn video-call "><span class="label">
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                พบหมอ
+			 </span></a>
+			 <!--
    			     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn video-call "><span class="label">
                      <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                     หมอ
+                     พบหมอ
 					 </span></a>
-					
+					-->
                   
                 </div>
 				<% end %>
@@ -114,25 +122,25 @@ report = ERCaseReport.new unless report
             
 			<div class="clear"></div>
             <div class="card sum-report mt-3 station">
-                <div class="card-header card-vital">
+                <!-- <div class="card-header card-vital">
                     <strong> General Information</strong>
                 </div>
                 <div class="card-body">
                     <div class="row">
 						<%
 							weight = admit.weight
-							weight = ' - ' unless weight 
-							
+							weight = ' - ' unless weight
+
 							height = admit.height
-							height = ' - ' unless height 
-							 
-							
+							height = ' - ' unless height
+
+
 						%>
                         <div class="col-3">Weight : <%=weight%> kg.</div>
 						<div class="col-3">Height : <%=height%> cm.</div>
 					</div>
-					
-				</div>
+
+				</div> -->
                 <div class="card-header card-vital">
                     <strong> Triage Assessment</strong>
                 </div>

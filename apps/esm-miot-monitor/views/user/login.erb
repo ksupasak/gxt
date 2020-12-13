@@ -39,6 +39,14 @@ if request.post?
 	end
 	
 	path = '../Home/index'
+	if user_login and user_login.role 
+		if  user_login.role.zone
+			session[:current_zone] = user_login.role.zone_id
+		else
+			session[:current_zone] = Zone.first.id
+	
+		end
+	end
 	path = session[:return_to] if session[:return_to]
 	session.delete :return_to
 	
@@ -48,7 +56,7 @@ if request.post?
 
 <% else %>
 <div class="center">
-<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"> AOC</h3></center>
+<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>
 
 <form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
 
@@ -72,7 +80,7 @@ if request.post?
 </div>
 
 <button type="submit" class="btn btn-primary">Submit</button> 
-<%=link_to 'Back', "index" %> | 
+<%#link_to 'Back', "index" %>
 <a href="#" class="patternlock-toggle"> Login with Pattern </a>
 
 </div>
@@ -89,7 +97,7 @@ if request.post?
 <br/>
 <input type="submit" value="login" style="display: none;">
 
-<%=link_to 'Back', "index" %> | 
+<%#link_to 'Back', "index" %> 
 <a href="#" class="patternlock-toggle"> Login with User </a>
 </div>
 
