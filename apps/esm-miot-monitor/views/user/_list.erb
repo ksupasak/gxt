@@ -17,8 +17,12 @@
 %>
 <tr>
 	<% for j in keys %>
+	<% if j[0]=='role_id'%>
+		<td><%= i.role.name.humanize if i.role%></td>
+	
+	<% else%>
 		<td><%=i[j[0]] %></td>
-	<% end %>
+	<% end %>	<% end %>
 	<td>
 		
 	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default btn-small' %>

@@ -1,0 +1,95 @@
+<div id="calendar">Loading</div>
+
+
+
+<script>
+  
+<% if true
+
+	visits = SHVisit.all
+	
+	
+	visits.collect!{|i|
+		p = Patient.find(i.patient_id)
+		if p
+		title = "#{p.hn} : #{p.first_name} #{p.last_name}"
+			
+        {
+          title: title,
+          url: "../Visit/show?id=#{i.id}",
+          start: i.start.strftime("%Y-%m-%d")
+        }
+		else
+		nil
+		end
+		
+	}.compact!
+%>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+	
+		
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        events: <%=visits.to_json.html_safe%>,
+		dateClick: function(info) {
+
+
+<% if params[:patient_id] %>
+
+ var myKeyVals = {'patient_id':'<%=params[:patient_id]%>','date':info.dateStr}
+ 
+ 
+ $.ajax({
+     type: "POST",
+     url: "_create_visit",
+     data: myKeyVals ,
+     dataType: "json",
+            success: function (result) {   // Result is not coming here please help
+                alert("before popup");                
+            },
+            failure: function (response) {
+           
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                window.location.reload();
+            }
+ });
+ 
+ 
+ <% else %>
+
+window.location = "../SmartHealth/index?date="+info.dateStr
+ 
+ <% end  %>
+ 			
+ 
+		  }
+      });
+	  
+	  
+	  
+
+      calendar.render();
+    
+  	
+	
+	});
+	
+	
+	
+	<% end %>
+
+</script>

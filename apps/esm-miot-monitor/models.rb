@@ -547,7 +547,7 @@ class Patient  < GXTModel
     
     age = self.to_age date
     out = '-'
-    out = "#{format("%0.1f",age)}" if age
+    out = "#{format("%0.1f",age)}" if age and age!=""
     
     return out
     
