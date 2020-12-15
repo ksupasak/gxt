@@ -43,6 +43,193 @@ module Device
 def self.monitor_comen_nc3a ws
 
 
+  content = <<SECA
+
+  <!doctype html>
+  <html lang="de">
+  <head>
+      <title>Alibaba WebInterface</title>
+      <table>
+          <tr>
+              <td>WebServer</td>
+              <td>Version 1.1</td>
+          </tr>
+          <tr>
+              <td>
+                  <br>
+              </td>
+          </tr>
+          <tr>
+              <td>Name</td>
+              <td>scaler01</td>
+          </tr>
+          <tr>
+              <td>Scale Model</td>
+              <td>seca 797</td>
+              <td>05797254208950</td>
+          </tr>
+          <tr>
+              <td>
+                  <br>
+              </td>
+          </tr>
+          <tr>
+              <td>Current Weight</td>
+              <td>76.2</td>
+              <td>kg</td>
+          </tr>
+          <tr>
+              <td>Trig. Weight</td>
+              <td>0.0</td>
+              <td>kg</td>
+          </tr>
+          <tr>
+              <td>Height</td>
+              <td>0.000</td>
+              <td>m</td>
+          </tr>
+          <tr>
+              <td>Scan Value</td>
+              <td></td>
+          </tr>
+      </table>
+  </head>
+  <body>
+      <h3>CONFIG</h3>
+      <form method="get">
+          <p>
+              Login-Pwd 
+              <input type="password" name="LoginPwd" size=32 maxlength=59>
+          <p>
+              <input type="submit" value="Submit">
+      </form>
+  </body>
+  <br>
+  <br>
+  Copyright © 2018 seca gmbh & co. kg. All rights reserved.
+  </html>
+
+  
+
+SECA
+
+require 'nokogiri'
+
+
+  current_height = nil
+  current_weight = nil
+  tri_weight = nil
+  sent = false
+
+  seca = Thread.new {
+    
+     #
+    # 9 Current Weight
+    #
+    # 10 76.2
+    #
+    # 11 kg
+    #
+    # 12 Trig. Weight
+    #
+    # 13 0.0
+    #
+    # 14 kg
+    #
+    # 15 Height
+    #
+    # 16 0.000
+    #
+    # 17 m
+    #
+    # 18 Scan Value
+    
+    seca_uri = URI('http://192.168.4.1/')
+    
+    while true
+      puts 'seca'
+      
+      content = Net::HTTP.get(seca_uri)
+      
+      document = Nokogiri::HTML(content)
+      tags = document.xpath("//td")
+      tags.each_with_index do |t,ti|
+    
+        current_height = t.text.strip if ti==16
+        current_weight = t.text.strip if ti==13  
+        trig_weight = t.text.strip if ti==10
+        
+          
+        if current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+          
+          unless sent
+          
+            lines = []
+
+           lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
+
+       
+          if lines.size > 0
+          puts lines.inspect
+
+msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+            puts msg
+
+         puts  ws.send(msg)
+ 
+end
+          
+            sent = true          
+          else 
+            send = false
+          end
+          
+        elsif  trig_weight and trig_weight.to_f > 0 
+          
+          sent = false 
+          
+            lines = []
+
+           lines << "STATUS:S0|WEIGHT:#{trig_weight}"
+
+       
+          if lines.size > 0
+          puts lines.inspect
+
+msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+            puts msg
+
+         puts  ws.send(msg)
+           
+  end        
+          
+          
+        end
+          
+        
+      end
+      
+      puts "weight = #{current_weight}, height = #{current_height}"
+      
+      
+      sleep 1
+      # end
+    end
+  }
+
+  seca.run
+
+
+
+
 server = TCPServer.new 5001
 
 last = {}
@@ -100,6 +287,9 @@ loop do
         puts last.inspect
       
         lines = []
+
+       lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
+
        
        lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
        lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'

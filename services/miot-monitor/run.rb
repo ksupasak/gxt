@@ -34,11 +34,14 @@ end
 t = HOST_IP.split('.')
 HOST_NETWORK = t[0..2].join(".")+".1"
 
-unless ARGV[2]
+unless ARGV[3]
 HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
 else
-HOST_NETWORK_BOARDCAST = ARGV[2]
+HOST_NETWORK_BOARDCAST = ARGV[3]
 end
+
+select_monitor = ARGV[2]
+
 
 CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 MIOT::post_config
@@ -46,7 +49,7 @@ MIOT::post_config
 $global_position = ""
 
 threads = []
-
+puts ARGV.inspect 
 
 ws = MIOT::connect 
 
@@ -59,14 +62,21 @@ ws = MIOT::connect
 # Device::monitor_vista_120_v1(ws)
 # }
 # 
- # threads << Thread.new {
- # Device::monitor_iacs_m540(ws)
- # }
- 
+
+
+unless select_monitor
+ threads << Thread.new {
+ Device::monitor_iacs_m540(ws)
+ }
+end
+
+if select_monitor=='nc3a'
+  puts 'monitor select = nc3a'
  threads << Thread.new {
  Device::monitor_comen_nc3a(ws)
  }
  
+end
 
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
