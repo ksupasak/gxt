@@ -2,11 +2,14 @@
 		
 admit = Admit.find params[:admit_id]
 patient = Patient.find admit.patient_id
+sdate = Time.now
+sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
 
-report = ERCaseReport.where(:admit_id=>admit.id).first 
+
+report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first 
 
 unless report
-	report = ERCaseReport.create :admit_id=>admit.id
+	report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
 end
 
 if request.post? 
@@ -55,7 +58,7 @@ else
 	            </div>
 	            <!--end of patient card-->
 	            <!--case report form-->
-			     <h4 class="font-weight-bold mt-4">Case Report
+			     <h4 class="font-weight-bold mt-4">Case Report <%=sdate.strftime('%d/%m/%Y')%>
 			     <a href="connect?admit_id=<%=admit.id%>&return=case_report" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" style="float:right">
 			         <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
 			         วัดค่า

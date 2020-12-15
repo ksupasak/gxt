@@ -23,7 +23,8 @@ map[:citizen_id] = 'Citizen_id'
 
 
 end 
-
+    sdate = Time.now
+    sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
     admit = Admit.find params[:admit_id]
     # patient = admit.patient
 
@@ -33,7 +34,10 @@ end
     
     patient = Patient.find admit.patient_id
 
-    report = ERCaseReport.where(:admit_id=>admit.id).first
+    report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
+    unless report
+      report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
+    end
 
     last = DataRecord.where(:admit_id=>admit.id).last
 
@@ -75,40 +79,40 @@ th{
       <td class="table-style" width="30%">HN <label class="pr-2"><%=patient.hn if patient %></label></td>
     </tr>
     <tr>
-      <td class="table-style" >ที่อยู่</td>
-      <td class="table-style">เลขที่บัตรประชาชน</td>
-      <td class="table-style">โทร</td>
+      <td class="table-style" >ที่อยู่ <%=patient.addr if patient %></td>
+      <td class="table-style">เลขที่บัตรประชาชน <%=patient.public_id if patient %></td>
+      <td class="table-style">โทร <%=patient.contact_phone if patient %></td>
     </tr>
     <tr>
       <td class="table-style" colspan="3">
         <div class="pl-1">สิทธิการรักษา
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ไม่มี</label>
           </div>     
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">เบิกได้ข้าราชการ</label>
           </div> 
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">บัตรทอง</label>
           </div> 
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ประกันสังคม</label>
           </div> 
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ท.99</label>
           </div> 
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">รัฐวิสาหกิจ</label>
           </div> 
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline privilege">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">แรงงานต่างด้าว No</label>
+            <label class="form-check-label" for="defaultCheck1">แรงงานต่างด้าว</label>
           </div> 
         </div> 
       </td>
@@ -126,15 +130,15 @@ th{
         <table class="w-100">
           <tr>
             <td colspan="2"> 
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline appoint">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">นัดมา พบแพทย์/ฟังผลเลือด</label>
               </div> <br>
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline appoint">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">นัดมา รับยาเดิม</label>
               </div> <br>
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline appoint">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">อื่นๆ</label>
               </div> 
@@ -146,46 +150,46 @@ th{
         <table class="w-100  table-sub">
           <tr class="table-style">
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">I10</label>
               </div> 
             </td>
             <td class="td-small"><b>ความดันโลหิตสูง</b></td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">N18</label>
               </div> 
             </td>
             <td class="td-small" colspan="2"><b>ไตวายระยะ</b>
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline n18">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">3a</label>
               </div> 
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline n18">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">3b</label>
               </div> 
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline n18">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">4</label>
               </div> 
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline n18">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">5</label>
               </div> 
 
             </td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">I259</label>
               </div> 
             </td>
             <td class="td-small"><b>หัวใจขาดเลือดเรื้อรัง</b></td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">K30</label>
               </div> 
@@ -194,28 +198,28 @@ th{
           </tr>
           <tr class="table-style">
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">E785</label>
               </div> 
             </td>
             <td class="td-small"><b>ไขมันในเลือดสูง</b></td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">R731</label>
               </div> 
             </td>
             <td class="td-small"><b>น้ำตาลภาวะอดอาหารสูง</b></td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">I693</label>
               </div> 
             </td>
             <td class="td-small" colspan="2"><b>ผลจากโรคหลอดเลือดสมอง</b></td>
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">M6269</label>
               </div> 
@@ -224,37 +228,37 @@ th{
           </tr>
           <tr class="table-style">
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">E11</label>
               </div> 
             </td>
             <td class="td-small" colspan="8"><b>เบาหวานไม่พึ่งอินซูลิน</b> ภาวะแทรกซ้อน 
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">2.ไต</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">3.ตา</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">4.เส้นประสาท</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">5.หลอดเลือด</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">7.หลายอย่าง</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">8.อื่นๆ</label>
               </div>             
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline e11">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">9.ไม่มี</label>
               </div>             
@@ -262,7 +266,7 @@ th{
           </tr>
           <tr class="table-style">
             <td class="td-grey">
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline diag">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">อื่นๆ</label>
               </div> 
@@ -289,11 +293,11 @@ th{
     <tr class="">  
       <td class="text-right" width="120px">เป้าหมาย<br><br></td>
       <td>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline bp_target">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">Non CKD</label>
           </div> <br>
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline bp_target">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">CKD3+</label>
           </div> 
@@ -302,26 +306,26 @@ th{
         BP < 140/90<br>
         BP < 130/80
       </td>
-      <td width="300px">
-        <div class="form-check form-check-inline trauma_wound">
+      <td width="280px">
+        <div class="form-check form-check-inline bp_control">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1"><b>คุมได้</b></label>
           </div> <br>
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline bp_control">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1"><b>คุมไม่ได้</b></label>
           </div>  
           -->
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline bp_fix">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ปรับยา</label>
           </div>  
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline bp_fix">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ปรับพฤติกรรม</label>
           </div>       
       </td>
-      <td width="300px">
+      <td width="340px">
         <b>บุหรี่</b>
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
@@ -427,26 +431,26 @@ th{
   <table class="w-100 table-sub">
     <tr class="">  
       <td class="text-right" width="120px">เป้าหมาย<br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline glucose_target">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">ไม่ได้ตรวจ</label>
         </div> 
         <br><br><br>
       </td>
       <td>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline glucose_target">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">< 65 ปี ไม่มีโรคร่วม</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline glucose_target">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">< 65 ปี</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline glucose_target">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">> 65 ปี</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline glucose_target">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">CVD,Stroke,CKD3+</label>
         </div> 
@@ -457,8 +461,8 @@ th{
         FBS < 150<br>
         HbA<sub>1</sub>C < 8
       </td>
-      <td width="300px">
-        <div class="form-check form-check-inline trauma_wound">
+      <td width="280px">
+        <div class="form-check form-check-inline glucose_control">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1"><b>คุมได้</b></label>
           </div> 
@@ -476,54 +480,54 @@ th{
             <label class="form-check-label" for="defaultCheck1">น้อย</label>
           </div>            
           <br>
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline glucose_control">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1"><b>คุมไม่ได้</b></label>
           </div>  
           -->
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline glucose_fix">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ปรับยา</label>
           </div>  
-          <div class="form-check form-check-inline trauma_wound">
+          <div class="form-check form-check-inline glucose_fix">
             <input class="form-check-input " type="checkbox" value="">
             <label class="form-check-label" for="defaultCheck1">ปรับพฤติกรรม</label>
           </div>       
       </td>
-      <td width="300px">
+      <td width="340px">
         <b>ตรวจตา</b>
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">ไม่สูบ</label>
+            <label class="form-check-label" for="defaultCheck1">ทําภายใน 1 ปีน้ีแล้ว</label>
           </div> 
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">สูบ</label>
+            <label class="form-check-label" for="defaultCheck1">ปกติ</label>
           </div>       
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">ไม่ดื่ม</label>
+            <label class="form-check-label" for="defaultCheck1">ผิดปกติ</label>
           </div>
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">ดื่ม</label>
+            <label class="form-check-label" for="defaultCheck1">ยังไม่ได้ทำ</label>
           </div>   
         <br><b>ตรวจเท้า</b>
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">ปกติ</label>
+            <label class="form-check-label" for="defaultCheck1">ทําภายใน 1 ปีน้ีแล้ว</label>
           </div> 
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">เครียด</label>
+            <label class="form-check-label" for="defaultCheck1">ปกติ</label>
           </div>                       
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">นอนไม่หลับ</label>
+            <label class="form-check-label" for="defaultCheck1">ผิดปกติ</label>
           </div>                       
           <div class="form-check form-check-inline trauma_wound">
             <input class="form-check-input " type="checkbox" value="">
-            <label class="form-check-label" for="defaultCheck1">เบื่ออาหาร</label>
+            <label class="form-check-label" for="defaultCheck1">ยังไม่ได้ทำ</label>
           </div>                       
       </td>
     </tr>
@@ -544,22 +548,22 @@ th{
       <table class="w-100 table-sub">
         <tr class="">  
           <td class="text-right" width="120px">เป้าหมาย<br>
-            <div class="form-check form-check-inline trauma_wound">
+            <div class="form-check form-check-inline fat_target">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">ไม่ได้ตรวจ</label>
             </div> 
             <br><br><br><br><br>
           </td>
           <td>
-            <div class="form-check form-check-inline trauma_wound">
+            <div class="form-check form-check-inline fat_target">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">> 21 ปี</label>
             </div> <br>
-            <div class="form-check form-check-inline trauma_wound">
+            <div class="form-check form-check-inline fat_target">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">DM, CKD3+,High risk</label>
             </div> <br>
-            <div class="form-check form-check-inline trauma_wound">
+            <div class="form-check form-check-inline fat_target">
               <input class="form-check-input " type="checkbox" value="">
               <label class="form-check-label" for="defaultCheck1">Old MI, Stroke</label>
             </div> <br><br><br><br>
@@ -570,20 +574,20 @@ th{
             LDL < 70<br><br><br><br>
           </td>
           <td>
-            <div class="form-check form-check-inline trauma_wound">
+            <div class="form-check form-check-inline fat_control">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1"><b>คุมได้</b></label>
               </div> <br>
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline fat_control">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1"><b>คุมไม่ได้</b></label>
               </div>  
               -->
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline fat_fix">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">ปรับยา</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline fat_fix">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">ปรับพฤติกรรม</label>
               </div>  
@@ -601,42 +605,42 @@ th{
             RR = <%=rec.rr%> 
             <span class="td-small">
             <br>HEENT
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline heent">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">not pale</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline heent">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no blurred vision</label>
               </div>  
             <br>Heart
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline heart">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">regular rhythm, normal S1S2, no murmur Lung</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline heart">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">Clear,equal BS</label>
               </div>  
             <br>Ext
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline ext">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no skin ulcer</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline ext">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no pitting edema</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline ext">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no ecchymosis/petechiae</label>
               </div>  
             <br>Neuro
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline neuro">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no paresthesia</label>
               </div>  
-              <div class="form-check form-check-inline trauma_wound">
+              <div class="form-check form-check-inline neuro">
                 <input class="form-check-input " type="checkbox" value="">
                 <label class="form-check-label" for="defaultCheck1">no weakness</label>
               </div>  
@@ -677,19 +681,19 @@ th{
       </td>
       <td>
         <b>การให้คำแนะนำ</b><br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline egfr_fix">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">งดยาสมุนไพร ยาพื้นเมือง, จํากัดเกลือ < 1 ชช/วัน</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline egfr_fix">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">งดกินยาแก้ปวด NSAIDs</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline egfr_fix">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">ตรวจฟัน Ca PO4</label>
         </div> <br>
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline egfr_fix">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">CKD4 แจ้งข้อมูลการฟอกไต หากไตทํางานแย่ลง</label>
         </div> 
@@ -712,7 +716,7 @@ th{
     </tr>
     <tr>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Amlodipine(5)</label>
         </div>       
@@ -722,7 +726,7 @@ th{
       <td></td>
       <td></td>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Metformin(500)</label>
         </div>       
@@ -734,7 +738,7 @@ th{
     </tr>
     <tr>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Atenolol(50)</label>
         </div>       
@@ -744,7 +748,7 @@ th{
       <td></td>
       <td></td>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Glipizide(5)</label>
         </div>       
@@ -756,7 +760,7 @@ th{
     </tr>
     <tr>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Enalapril[ ]5[ ]20</label>
         </div>       
@@ -766,7 +770,7 @@ th{
       <td></td>
       <td></td>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Simvastatin(20)</label>
         </div>       
@@ -778,7 +782,7 @@ th{
     </tr>
     <tr>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">Losartan(50)</label>
         </div>       
@@ -788,7 +792,7 @@ th{
       <td></td>
       <td></td>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">ASA(81)</label>
         </div>       
@@ -800,7 +804,7 @@ th{
     </tr>
     <tr>
       <td class="td-grey">
-        <div class="form-check form-check-inline trauma_wound">
+        <div class="form-check form-check-inline med">
           <input class="form-check-input " type="checkbox" value="">
           <label class="form-check-label" for="defaultCheck1">HCTZ(25)</label>
         </div>       
