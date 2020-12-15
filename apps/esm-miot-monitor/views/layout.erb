@@ -257,6 +257,17 @@ border-bottom: 2px solid #3147FF;
 		    </div>
           </li>
 		    <% end %>
+			   	  <% if  @current_role == 'smarthealth_admin' %>
+			   
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="../SmartHealth/index">ลงทะเบียนผู้ป่วย</a>
+              <a class="dropdown-item" href="../Provider/index">รายชื่อแพทย์</a>
+              <a class="dropdown-item" href="../Score/index">Early Warning Score</a>
+		    </div>
+          </li>
+		    <% end %>
 		  <% end %>
 		  
 		  
@@ -287,7 +298,7 @@ border-bottom: 2px solid #3147FF;
 
 		<% if @current_role == 'network' %>
 		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(93,30,119,1) 0%, rgba(38,15,70,1) 100%)"})
-		<% elsif @current_role == 'hospital' %>
+		<% elsif @current_role == 'hospital' or @current_role == 'smarthealth_admin' %>
 		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(50,122,186,1) 0%, rgba(31,81,124,1) 100%)"})
 		
 		<% end%>
