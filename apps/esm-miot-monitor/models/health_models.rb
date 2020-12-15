@@ -90,6 +90,42 @@ class SHVisit < GXTModel
   
 end
 
+class SHCaseReport < GXTModel
+  
+  include Mongoid::Document
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  
+  key :center_name, String
+  key :date, Time
+  key :center_address, String
+  
+  key :admit_id, ObjectId
+  key :result, String
+  
+  
+  key :bp_sys, Integer
+  key :bp_dia, Integer
+  key :bp_mean, Integer
+  
+  key :spo2, Integer
+  key :pr, Integer
+  
+  key :temp, Integer
+  
+  key :rr, Integer
+  
+  
+  
+  include Mongoid::Timestamps
+  
+end
+
+
+
+class SHCaseReportController < GXTDocument
+  
+end
+
 
 class SHVisitController < GXTDocument
   
