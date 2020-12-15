@@ -84,11 +84,11 @@ report = ERCaseReport.new unless report
 				out = `#{cmd}`
 				puts cmd
 				puts out
-				out = out.split("\n") if out
+				out = out.split("\n")
 				puts out.inspect
 	
 				puts 
-				token = out[-1] if out
+				token = out[-1]
 				@token = token
 
 				resource_id = "telehealth-#{format("%03d",rand(999))}"
@@ -175,8 +175,8 @@ report = ERCaseReport.new unless report
                 <div class="card-header card-vital">
                     <strong> Vital Sign</strong>
                 </div>
-                <div class="card-body">
-                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em">
+                <div class="card-body col-12 " style="overflow:scroll">
+                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em; width:1280px">
                         <thead>
                           <tr>
                             <th scope="col">วัน - เวลา</th>
@@ -196,7 +196,7 @@ report = ERCaseReport.new unless report
                          
 						 <%
 						 	   
-						 data_records.each_with_index do |i,ix| 
+						 data_records.reverse.each_with_index do |i,ix| 
 							
 							 distance = ""
 							 
@@ -208,7 +208,7 @@ report = ERCaseReport.new unless report
 							
 						 %>
 						 
-						  <tr class="<%='last' if ix==data_records.size-1%>">
+						  <tr class="<%='last' if ix==0%>">
                             <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%= distance %> <%#(Time.now-i.stamp)/86400/30%> </th>
                             <td class="bp"><%=i.bp%></td>
                             <td class="pr"><%=i.pr%> : <%=i.spo2%></td>
