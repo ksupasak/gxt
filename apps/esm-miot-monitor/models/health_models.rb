@@ -114,7 +114,33 @@ class SHCaseReport < GXTModel
   
   key :rr, Integer
   
+  key :privilege, String
+  key :appoint, String
+  key :diag, String
+  key :n18, String
+  key :e11, String
+  key :diag_etc, String
   
+  key :bp_target, String
+  key :bp_control, String
+  key :bp_fix, String
+  key :glucose_target, String
+  key :glucose_control, String
+  key :glucose_fix, String
+  key :fat_target, String
+  key :fat_control, String
+  key :fat_fix, String
+
+  key :egfr, String
+  key :egfr_fix, String
+
+  key :heent, String
+  key :heart, String
+  key :ext, String
+  key :neuro, String
+  key :body_etc, String
+
+  key :med, String
   
   include Mongoid::Timestamps
   

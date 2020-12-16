@@ -84,11 +84,11 @@ report = ERCaseReport.new unless report
 				out = `#{cmd}`
 				puts cmd
 				puts out
-				out = out.split("\n")
+				out = out.split("\n") if out
 				puts out.inspect
 	
 				puts 
-				token = out[-1]
+				token = out[-1] if out
 				@token = token
 
 				resource_id = "telehealth-#{format("%03d",rand(999))}"
