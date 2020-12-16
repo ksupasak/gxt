@@ -149,7 +149,19 @@ require 'nokogiri'
     while true
       puts 'seca'
       
-      content = Net::HTTP.get(seca_uri)
+      begin
+      
+      req = Net::HTTP::Get.new(seca_uri.to_s)
+
+      # setting both OpenTimeout and ReadTimeout
+      res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 3, :read_timeout => 3) {|http|
+           
+           http.request(req)
+           
+      }
+      
+      
+      content = res.body
       
       document = Nokogiri::HTML(content)
       tags = document.xpath("//td")
@@ -209,7 +221,7 @@ EOM
 
          puts  ws.send(msg)
            
-  end        
+       end        
           
           
         end
@@ -220,8 +232,22 @@ EOM
       puts "weight = #{current_weight}, height = #{current_height}"
       
       
-      sleep 1
+     
       # end
+      
+    rescue Net::ReadTimeout => exception
+            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+            sleep 10 
+    rescue Net::OpenTimeout => exception
+            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+            sleep 10
+    rescue Exception =>exception        
+            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+            sleep 10 
+    end
+        
+         sleep 1
+      
     end
   }
 
@@ -293,7 +319,7 @@ loop do
        
        lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
        lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
-       lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
+       lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and last['PR'] and last['NIBP_S'][0]!='-'  and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
        
        
        
