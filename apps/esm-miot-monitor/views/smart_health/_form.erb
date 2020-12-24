@@ -9,7 +9,7 @@ sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
 
 report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
 
-last = DataRecord.where(:admit_id=>admit.id).last
+last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).last
 
 	
 %>

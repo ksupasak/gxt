@@ -30,7 +30,7 @@ end
 
     records = admit.records
 
-    rec = records.first
+    # rec = records.first
     
     patient = Patient.find admit.patient_id
 
@@ -39,7 +39,7 @@ end
       report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
     end
 
-    last = DataRecord.where(:admit_id=>admit.id).last
+    rec = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).last
 
 %>
 
@@ -121,8 +121,8 @@ th{
   <br>
   <table class="w-100 table-style">
     <tr class="table-style">  
-      <td class="td-grey">วันที่</td>
-      <td class="td-grey">เวลา</td>
+      <td class="td-grey">วันที่ <%=rec.stamp.strftime('%d/%m/%Y')%></td>
+      <td class="td-grey">เวลา <%=rec.stamp.strftime('%H:%M')%></td>
       <th class="fhead">วินิจฉัยโรค</th>
     </tr>
     <tr class="table-style">  

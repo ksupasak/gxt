@@ -60,7 +60,8 @@
 
 	unless params[:all]
 	
-		visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
+		#visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
+		visits = SHVisit.all
 		patients = visits.collect{|i| Patient.find(i.patient_id) }
 		
 		
