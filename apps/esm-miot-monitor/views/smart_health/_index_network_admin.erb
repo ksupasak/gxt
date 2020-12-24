@@ -12,11 +12,31 @@ body {
   height:100vh;
 }
 </style>
+<%
+
+zone = Zone.find session[:current_zone]
+
+network = SHNetwork.first
+un = SHUserNetwork.where(:user_id=>session[:identity]).first
+if un
+	network = SHNetwork.find un.network_id
+end
+netname = Setting.get :default_center_name
+netname = network.name if network
+
+if network
+	patients = Patient.where(:zone_id=>session[:current_zone],:network_id=>network.id).all
+else
+	patients = Patient.where(:zone_id=>session[:current_zone]).all
+end
+admits = Admit.where(:zone_id=>session[:current_zone]).all
+	
+%>
 <div class="container" style="background:none">
 <br/>
 <center>
 <h1>SMART TELEHEALTH</h1>
-<div>โรงพยาบาลส่งเสริมสุขภาพตำบล บ้านโคกสงวน ตำบลโคกสงวน</div>
+<div><%=netname%></div>
 </center>
 
 <div class="row" style="border:0px solid">
@@ -49,14 +69,7 @@ body {
 </div>	
 <hr/>
 
-<%
 
-zone = Zone.find session[:current_zone]
-patients = Patient.where(:zone_id=>session[:current_zone]).all
-
-admits = Admit.where(:zone_id=>session[:current_zone]).all
-	
-%>
 
 <table class="table table-striped table-bordered table-condensed table-network" style="background:#FFF">
 <thead>
