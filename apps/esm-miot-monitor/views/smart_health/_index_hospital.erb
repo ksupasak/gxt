@@ -1,13 +1,22 @@
 <%
 	
 	@current_zone = Zone.find session[:current_zone]
+
+	hospital = SHHospital.first
+	uh = SHUserHospital.where(:user_id=>session[:identity]).first
+	if uh
+		hospital = SHHospital.find uh.hospital_id
+	end
+
+	hosname = Setting.get :default_center_name
+	hosname = hospital.name if hospital
 	
 %>
 <div class="container" style="background:none">
 <br/>
 <center>
 <h1>SMART TELEHEALTH</h1>
-<div><%=Setting.get :default_center_name%></div>
+<div><%=hosname%></div>
 </center>
 
 <div class="row" style="border:0px solid">
@@ -48,7 +57,11 @@
 
 	zone = Zone.find session[:current_zone]
 
-	patients = Patient.where(:zone_id=>session[:current_zone]).all
+	if hospital
+		patients = Patient.where(:zone_id=>session[:current_zone],:hospital_id=>hospital.id).all
+	else
+		patients = Patient.where(:zone_id=>session[:current_zone]).all
+	end
 
 	# default today patient
 
@@ -60,9 +73,11 @@
 
 	unless params[:all]
 	
-		#visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
-		visits = SHVisit.all
-		patients = visits.collect{|i| Patient.find(i.patient_id) }
+		visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
+		# visits = SHVisit.all
+		# patients = visits.collect{|i| Patient.find(i.patient_id) }
+		v_pid = visits.collect{|i| i.patient_id}
+		patients = patients.collect{|i| i if v_pid.index i.id }.compact
 		
 		
 	end
@@ -108,7 +123,10 @@
 		<th>
 			จำนวนครั้ง
 		</th>
-		
+
+		<th>
+			เครือข่าย
+		</th>		
 		<th>
 			เจ้าหน้าที่ออกตรวจ
 		</th>
@@ -144,9 +162,12 @@
 		<td><%=records%></td>
 		
 		<td><%=provider_2%></td>
+
+		<td><%=provider_2%></td>
 				
 		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
 			<%=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
+			<%=link_to "เครือข่าย", "assign?id=#{i.id}", :class=>'btn btn-info' %>
 			<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
 		
 	</tr>
