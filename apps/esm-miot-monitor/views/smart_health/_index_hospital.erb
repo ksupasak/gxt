@@ -7,7 +7,7 @@
 	if uh
 		hospital = SHHospital.find uh.hospital_id
 	end
-
+	mnet = Hash[SHNetwork.all.collect{|i| [i.id,i.name]}]
 	hosname = Setting.get :default_center_name
 	hosname = hospital.name if hospital
 	
@@ -161,7 +161,7 @@
 		
 		<td><%=records%></td>
 		
-		<td><%=provider_2%></td>
+		<td><%=mnet[i.network_id]%></td>
 
 		<td><%=provider_2%></td>
 				
