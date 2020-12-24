@@ -167,7 +167,7 @@
 				
 		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
 			<%=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
-			<%=link_to "เครือข่าย", "assign?id=#{i.id}", :class=>'btn btn-info' %>
+			<%=link_to "เครือข่าย", "admit?id=#{admit.id}", :class=>'btn btn-info' %>
 			<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
 		
 	</tr>
