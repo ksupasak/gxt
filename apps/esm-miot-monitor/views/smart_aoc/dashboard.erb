@@ -263,11 +263,11 @@
 		<div class="row aoc-heading navbar-pcm"  style="height:4em">
 	
 			<div class="col-5" style="padding-top:1em">
-			<span class="">ศูนย์สั่งการหน่วย : โรงพยาบาลรามาธิบดี </span>
+			<span class=""> <%= Setting.get :default_center_name %></span>
 			</div>
 			
 			<div class="col-5" style="padding-top:1em">
-			<marquee> สถานะระบบปกติ </marquee>	
+			<marquee> <%= Setting.get :system_message %> </marquee>	
 			</div>
 		
 			
