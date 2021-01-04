@@ -70,7 +70,7 @@
 			
 			patient = Patient.where(:hn=>params[:hn]).first
 			
-			patient = Patient.new :hn=>params[:hn] unless patient
+			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' unless patient
 			
 			admit = Admit.new :patient_id=>patient.id 
 			
@@ -200,7 +200,7 @@
 	    </div>
 	
 		<div class="col-8 col-sm-4">
-		<label for="patient-dob">วัน-เดือน-ปี</label>
+		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
 		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
@@ -259,9 +259,12 @@
 		</div>
 
 		<div class="col-8 col-sm-12">
-		<label for="patient-addr_present">ที่อยู่จริง</label>
+		<label for="patient-addr_present">ที่อยู่จริง <input id="chk-addr" type="checkbox" <%=(patient.addr_present and patient.addr_present!='' and patient.addr_present==patient.addr)? "checked" : "" %>> ตามที่อยู่บัตรประชาชน</label>
 		<input type="text" class="form-control" id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
 		</div>
+		<script>
+		
+		</script>
 
 		<div class="col-8 col-sm-4">
 		<label for="patient-contact_phone">โทร</label>
@@ -269,13 +272,13 @@
 		</div>
 
 		<div class="col-8 col-sm-4">
-		<label for="patient-parent">ผู้ปกครอง</label>
-		<input type="text" class="form-control" id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="Parents" style="">
+		<label for="patient-parent">ผู้ปกครอง/ผู้ติดต่อได้</label>
+		<input type="text" class="form-control" id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="ชื่อ - สกุล" style="">
 		</div>
 
 		<div class="col-8 col-sm-4">
-		<label for="patient-contact_name">ผู้ติดต่อได้</label>
-		<input type="text" class="form-control" id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="Contact" style="">
+		<label for="patient-contact_name">เบอร์โทรผู้ติดต่อ</label>
+		<input type="text" class="form-control" id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="เบอร์โทร" style="">
 		</div>
 
 		</div><!--row-->
@@ -283,6 +286,34 @@
 		$('#patient-dob').datepicker({
 			format: "dd/mm/yyyy"
 		});
+		function dateDiffInYears(dateold, datenew) {
+            var ynew = datenew.getFullYear();
+            var mnew = datenew.getMonth();
+            var dnew = datenew.getDate();
+            var yold = dateold.getFullYear();
+            var mold = dateold.getMonth();
+            var dold = dateold.getDate();
+            var diff = ynew - yold;
+            if (mold > mnew) diff--;
+            else {
+                if (mold == mnew) {
+                    if (dold > dnew) diff--;
+                }
+            }
+            return diff;
+        }
+		$("#patient-dob").change(function(){
+			d = $(this).val()
+			ad = d.split('/')
+			bd = new Date()
+			now = new Date()
+			if(ad.length>2){ bd = new Date(ad[2]+'-'+ad[1]+'-'+ad[0])}
+			$("#patient-age").val(dateDiffInYears(bd,now))
+		})
+		$("#chk-addr").click(function(){
+			$("#patient-addr_present").val($("#patient-addr").val())
+		})
+		
 		</script>
 		
 		<!--<div class="row mt-1">
