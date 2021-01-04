@@ -73,9 +73,10 @@ if request.post?
 
 <div class="form-group">
   <label for="product-name">Password Confirmation</label>
-
+<div class="input-group mb-3">
     <input type="password" class="form-control" id="password" name="password" value="" placeholder="Password">
-	
+	<button class="btn btn-outline-secondary" type="button" id="btn-pass"><i class="fas fa-eye" id="i-pass"></i></button>
+	</div>
 
 </div>
 
@@ -114,6 +115,20 @@ if request.post?
 	<% else %>
 	$('.patternlock-panel').toggle();
 	<% end %>
+
+	$(document).ready(function(){
+		$("#btn-pass").click(function(){
+			t = $("#password").attr('type')
+			i = $("#i-pass")
+			$("#password").attr('type',(t=='password')?"text":"password")
+			if(i.hasClass("fa-eye")){
+				i.removeClass("fa-eye").addClass("fa-eye-slash")
+			}else{
+				i.removeClass("fa-eye-slash").addClass("fa-eye")
+			}
+		})
+	})
 </script>
 <% end %>
 	<script src="<%=url_for "PatternLock/_script/patternlock.js"%>"></script>
+	<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
