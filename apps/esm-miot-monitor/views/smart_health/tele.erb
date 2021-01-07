@@ -1,3 +1,6 @@
+<div class="conference">
+
+
 <%
 
 
@@ -48,7 +51,7 @@ invoke the VidyoConnector API. -->
 					$("#optionsVisibilityButton").addClass("showOptions").removeClass("hideOptions");
 					$("#renderer").addClass("rendererWithoutOptions").removeClass("rendererWithOptions");
 				// } else
-				// 	$("#options").removeClass("hidden");
+			// 		$("#options").removeClass("hidden");
 
 				// If WebRTC is being used, specify the screen share extension path.
 				if (VCUtils.params.webrtc === "true") {
@@ -115,7 +118,6 @@ invoke the VidyoConnector API. -->
 	}
 	function ShowFailed(status) {
 		var helperText = '';
-		alert('fail')
 		 // Display the error
 		helperText += '<h2>An error occurred, please reload</h2>';
 		helperText += '<p>' + status.description + '</p>';
@@ -320,10 +322,10 @@ invoke the VidyoConnector API. -->
 		}
 	});
 	</script>
-	<button id="optionsVisibilityButton" title="Toggle Options" class="optionsVisibiliyButtonElements showOptions hidden"></button>
-
 <!-- This is the div into which the Vidyo component will be inserted. -->
 <div class="row">
+	<button id="optionsVisibilityButton" title="Toggle Options" class="optionsVisibiliyButtonElements hideOptions hidden"></button>
+	
 <div id="renderer" class="rendererFullScreen pluginOverlay hidden col-12">
 </div>
 </div>
@@ -353,7 +355,8 @@ invoke the VidyoConnector API. -->
 <!-- This button toggles the visibility of the options. -->
 
 	<div id="options" class="options hidden">
-	<form>
+		
+		<form>
 		<div class="optionsParameters">
 		<p>
 			<!-- The host of our backend service. -->
@@ -431,3 +434,58 @@ $(document).ready(function(){
 
 })
 </script>
+
+
+		</div>
+		
+		<script>
+			$(document).ready(function(){
+				
+				function call(){
+					$('.callStart').click();
+					
+				}
+				
+				
+				$('.resourceId').val("<%=params[:resourceId]%>")
+				
+				
+
+				$('#main-container').removeClass('container')
+				$('nav').remove();
+				// $('.rendererFullScreen').css("position","absolute")
+		// 		$('.rendererFullScreen').css("bottom","0px")
+		// 		$('.rendererFullScreen').css("top","0px")
+		//
+				
+				
+				
+				setTimeout(function() { call(); }, 3000);
+				
+			})
+		</script>
+			
+<style>
+
+	.confernence{
+		position:absolute;
+		bottom:100px;
+	}
+	body{padding:0px;}
+	#renderer{
+		height:800px;
+	}
+	
+	#options {
+		position:   absolute;
+		top:        0px;
+		left:       0px;
+		bottom:     60px;
+		width:      375px;
+		text-align: center;
+		z-index:    99;
+		overflow-y: scroll;
+	}
+	
+	
+</style>

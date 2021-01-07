@@ -6,14 +6,20 @@ sdate = Time.now
 sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
 
 
-report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first 
 
+report = nil
+# report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
+
+report = SHCaseReport.find params[:record_id] if params[:record_id]
 unless report
-	report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
+	report = SHCaseReport.new :admit_id=>admit.id, :date=>sdate.beginning_of_day		
 end
 
-if request.post? 
 
+if request.post? 
+	unless report
+		report = SHCaseReport.create :admit_id=>admit.id, :date=>sdate.beginning_of_day
+	end
 	report.update_attributes params[:report]
 
 %>

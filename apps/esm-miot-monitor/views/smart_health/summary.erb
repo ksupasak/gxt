@@ -34,10 +34,12 @@ end
     
     patient = Patient.find admit.patient_id
 
-    report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
-    unless report
-      report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
-    end
+	report = SHCaseReport.find params[:record_id]
+
+    # report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
+    # unless report
+    #   report = SHCaseReport.create :admit_id=>admit.id,:date=>sdate.beginning_of_day
+    # end
 
     rec = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).last
 

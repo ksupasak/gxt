@@ -60,42 +60,62 @@ reportclass = "btn-secondary" unless report
             <!--nurse summary-->
             <div class="d-flex bd-highlight mb-3 align-items-center mt-3">
                 <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="border:0px solid">Nurse Report</h4></div>
-                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+                <!-- <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
                     <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
                         <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                         วัดค่า
                      </a>
-                </div>
+                </div> -->
+					
+			
+<!--
                 <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
                     <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
                     <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
                     ถ่ายรูป
                 </a>
-				
-				
+
+
 			    <script>
 				    $('#image_capture_btn').click(function(){
 					device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
 				    })
 			    </script>
-                </div>
+                </div> -->
 				
+				&nbsp;
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="calendar?patient_id=<%=patient.id%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                นัดหมาย
+	            </a>
+				</div>
+				&nbsp;
+				
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="summary?admit_id=<%=admit.id%>" class="btn d-flex align-items-center justify-content-center " style="float:right">
+	            <img src="<%=url_for('img/ER/description.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	                 Summary
+	            </a>&nbsp;
+				
+				</div>
+			
 				<% if true
 		
 				host = 'prod.vidyo.io'
 
-
-				display_name = "userDemo#{rand(999)}"
-				cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
-				out = `#{cmd}`
-				puts cmd
-				puts out
-				out = out.split("\n") if out
-				puts out.inspect
-	
-				puts 
-				token = out[-1] if out
-				@token = token
+				#
+				# display_name = "userDemo#{rand(999)}"
+				# cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+				# out = `#{cmd}`
+				# puts cmd
+				# puts out
+				# out = out.split("\n") if out
+				# puts out.inspect
+				#
+				# puts
+				# token = out[-1] if out
+				# @token = token
 
 				resource_id = "telehealth-#{format("%03d",rand(999))}"
 				resource_id = "#{params[:id]}"
@@ -107,18 +127,13 @@ reportclass = "btn-secondary" unless report
                 <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
 			
 			
+     
 			
-			
-	    	 <a target="_blank" href="../Sas/tele?resourceId=<%=resource_id%>" class="btn video-call "><span class="label">
+	    	 <a target="_blank" href="tele?resourceId=<%=resource_id%>" class="btn video-call "><span class="label">
                 <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                 พบหมอ
 			 </span></a>
-			 <!--
-   			     <a target="_blank" href="https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>" class="btn video-call "><span class="label">
-                     <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                     พบหมอ
-					 </span></a>
-					-->
+	
                   
                 </div>
 				<% end %>
@@ -182,7 +197,7 @@ reportclass = "btn-secondary" unless report
                     <strong> Vital Sign</strong>
                 </div>
                 <div class="card-body col-12 " style="overflow:scroll">
-                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em; width:1280px">
+                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em; width:100%">
                         <thead>
                           <tr>
                             <th scope="col">วัน - เวลา</th>
@@ -203,7 +218,7 @@ reportclass = "btn-secondary" unless report
                          
 						 <%
 						 	   
-						 data_records.reverse.each_with_index do |i,ix| 
+						 data_records.each_with_index do |i,ix| 
 							
 							 distance = ""
 							 
@@ -212,6 +227,10 @@ reportclass = "btn-secondary" unless report
 							 distance = "#{((Time.now-i.stamp)/86400/30).to_i} เดือน" if (Time.now-i.stamp)/86400/30 > 1 
 							 
 							 distance = "(#{distance})" if distance.size>0
+							 
+							 
+							 record = SHCaseReport.where(:admit_id=>admit.id, :date=>i.stamp.strftime("%Y-%m-%d")).first
+							 
 							
 						 %>
 						 
@@ -231,8 +250,11 @@ reportclass = "btn-secondary" unless report
 								
                             %><%=user.login if user%></td>
 							<td>
-							<a href="edit?admit_id=<%=admit.id%>&date=<%=i.stamp.strftime("%d/%m/%Y")%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Record</a>
-							<a href="summary?admit_id=<%=admit.id%>&date=<%=i.stamp.strftime("%d/%m/%Y")%>" class="btn btn-sm btn-action"><i class="fas fa-print"></i> Print</a>
+							<% if record %>
+							<a href="edit?admit_id=<%=admit.id%>&record_id=<%=record.id%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Record</a>
+							<a href="summary?admit_id=<%=admit.id%>&record_id=<%=record.id%>" class="btn btn-sm btn-action"><i class="fas fa-print"></i> Print</a>
+							<% end %>
+								
 							</td>
                           </tr>
                          
@@ -256,20 +278,31 @@ reportclass = "btn-secondary" unless report
                 Transfer
             </a>&nbsp; -->
 			
-            <a href="calendar?patient_id=<%=patient.id%>" class="btn btn-primary btn-action btn-submit d-flex align-items-center justify-content-center">
-                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
-                นัดหมาย
-            </a>&nbsp;
+       
 			
-            <a href="edit?admit_id=<%=admit.id%>" class="btn  btn-action <%=reportclass%>  d-flex align-items-center justify-content-center">
+            <a href="edit?admit_id=<%=admit.id%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
                 <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                  Record
             </a>&nbsp;
+			
+				
+				
+            <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+                <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
+                <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
+                ถ่ายรูป
+            </a>
+			
+			
+		    <script>
+			    $('#image_capture_btn').click(function(){
+				device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
+			    })
+		    </script>
+            </div>
+			&nbsp;
 
-            <a href="summary?admit_id=<%=admit.id%>" class="btn <%=reportclass%>  btn-action  d-flex align-items-center justify-content-center" style="float:right">
-            <img src="<%=url_for('img/ER/description.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                 Summary
-            </a>&nbsp;
+          
       
 <!--            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary  btn-action btn-danger d-flex align-items-center justify-content-center" style="float:right">
                 <img src="<%=url_for('img/ER/exit_to_app.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
@@ -337,7 +370,7 @@ reportclass = "btn-secondary" unless report
 			%>
 			<% for room in rooms %>
 			<div class="">
-				<%=link_to room.name, "transfer?id=#{admit.id}&room_id=#{room.id}" %>
+				<%=link_to room.name, "transfer?id=#{admit.id}&room_id=#{room.id}" if room %>
 			</div>
 			<div class=" row">
 			<% for bed in room.beds
@@ -392,8 +425,9 @@ reportclass = "btn-secondary" unless report
 			  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 
 <%
-
-path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+path = ""
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
+			  
 				  
 			  
 %>	

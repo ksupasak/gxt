@@ -1,31 +1,24 @@
-<%
+<!DOCTYPE html>
+<html>
+<head>
+	<title>VidyoConnector</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="jquery-3.1.1.min.js"><\/script>')</script>
+	<script>if (window.module) module = window.module;</script>
 
-display_name = "userDemo#{rand(999)}"
-cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
-out = `#{cmd}`
-puts cmd
-puts out
-out = out.split("\n") if out
-puts out.inspect
+	<!-- We've provide some simple styling to get you started. -->
+	<link href="VidyoConnector.css" rel="stylesheet" type="text/css" >
+	<link href="VidyoTextChat.css" rel="stylesheet" type="text/css" >
 
-puts 
-token = out[-1] if  out
-@token = token
-	
-%>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-
-<script>if (window.module) module = window.module;</script>
-
-<!-- We've provide some simple styling to get you started. -->
-<link href="<%=url_for 'vidyo/VidyoConnector.css'%>" rel="stylesheet" type="text/css" >
-
-<!-- Here we load the application which knows how to
-invoke the VidyoConnector API. -->
-<script src="<%=url_for 'vidyo/VidyoConnector.js'%>"></script>
-<script type="text/javascript">
+	<!-- Here we load the application which knows how to
+	invoke the VidyoConnector API. -->
+	<script src="VidyoConnector.js"></script>
+	<script src="VidyoTextChat.js"></script>
+	<script type="text/javascript">
 	var configParams = {};
 	var platformInfo = {};
 	var webrtcExtensionPath = "";
@@ -44,11 +37,11 @@ invoke the VidyoConnector API. -->
 				$("#toolbarRight").removeClass("hidden");
 
 				// If configured to autoJoin, then show video full screen immediately
-				// if (configParams.autoJoin === "1") {
+				if (configParams.autoJoin === "1") {
 					$("#optionsVisibilityButton").addClass("showOptions").removeClass("hideOptions");
 					$("#renderer").addClass("rendererWithoutOptions").removeClass("rendererWithOptions");
-				// } else
-				// 	$("#options").removeClass("hidden");
+				} else
+					$("#options").removeClass("hidden");
 
 				// If WebRTC is being used, specify the screen share extension path.
 				if (VCUtils.params.webrtc === "true") {
@@ -115,7 +108,6 @@ invoke the VidyoConnector API. -->
 	}
 	function ShowFailed(status) {
 		var helperText = '';
-		alert('fail')
 		 // Display the error
 		helperText += '<h2>An error occurred, please reload</h2>';
 		helperText += '<p>' + status.description + '</p>';
@@ -150,7 +142,6 @@ invoke the VidyoConnector API. -->
 		//We need to ensure we're loading the VidyoClient library and listening for the callback.
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
-					  // https://static.vidyo.io/latest/javascript/VidyoClient/VidyoClient.js?onload=onVidyoClientLoaded
 		script.src = 'https://static.vidyo.io/latest/javascript/VidyoClient/VidyoClient.js?onload=onVidyoClientLoaded&webrtc=' + webrtc + '&plugin=' + plugin + webrtcLogLevel;
 		document.getElementsByTagName('head')[0].appendChild(script);
 	}
@@ -293,7 +284,7 @@ invoke the VidyoConnector API. -->
 		configParams.returnURL = getUrlParameterByName("returnURL");
 		configParams.isIE = platformInfo.isIE;
 		var hideConfig = getUrlParameterByName("hideConfig");
-	
+
 		// If the parameters are passed in the URI, do not display options dialog
 		if (host && token && displayName && resourceId) {
 			$(".optionsParameters").addClass("hiddenPermanent");
@@ -320,40 +311,18 @@ invoke the VidyoConnector API. -->
 		}
 	});
 	</script>
-	<button id="optionsVisibilityButton" title="Toggle Options" class="optionsVisibiliyButtonElements showOptions hidden"></button>
+</head>
 
-<!-- This is the div into which the Vidyo component will be inserted. -->
-<div class="row">
-<div id="renderer" class="rendererFullScreen pluginOverlay hidden col-12">
-</div>
-</div>
-<div class="row" style="	background-color: rgb(19, 38, 58);">
-<div id="toolbarLeft" class="toolbar hidden col-2">
-	<span id="participantStatus"></span><span id="connectionStatus">Initializing</span>
-</div>
-<div id="toolbarCenter" class="toolbar hidden  col-6">
-	<!-- This button toggles the camera privacy on or off. -->
-	<button id="cameraButton" title="Camera Privacy" class="toolbarButton cameraOn"></button>
-
-	<!-- This button joins and leaves the conference. -->
-	<button id="joinLeaveButton" title="Join Conference" class="toolbarButton callStart"></button>
-
-	<!-- This button mutes and unmutes the users' microphone. -->
-	<button id="microphoneButton" title="Microphone Privacy" class="toolbarButton microphoneOn"></button>
-</div>
-<div id="toolbarRight" class="toolbar hidden  col-4">
-	
-	<span id="clientVersion"></span>
-</div>
-
-</div>
-
-
-
-<!-- This button toggles the visibility of the options. -->
+<!-- We execute the VidyoConnectorApp library on page load
+to hook up all of the events to elements. -->
+<body id="vidyoConnector">
+	<!-- This button toggles the visibility of the options. -->
+	<button id="optionsVisibilityButton" title="Toggle Options" class="optionsVisibiliyButtonElements hideOptions hidden"></button>
 
 	<div id="options" class="options hidden">
-	<form>
+		<img class="logo" src="Images/VidyoIcon.png"/>
+
+		<form>
 		<div class="optionsParameters">
 		<p>
 			<!-- The host of our backend service. -->
@@ -365,20 +334,20 @@ invoke the VidyoConnector API. -->
 			The token will contain its expiration date and the user ID.
 			For more information visit the developer section of http://vidyo.io -->
 			<label>Token</label>
-			<input type="text" id="token" class="token" placeholder="ACCESS-TOKEN" value="<%=@token%>">
+			<input type="text" id="token" class="token" placeholder="ACCESS-TOKEN" value="">
 		</p>
 		<p>
 			<!-- This is the display name that other users will see.
 			-->
 			<label for="displayName">Display Name</label>
-			<input id="displayName" class="displayName" type="text" placeholder="Display Name" value="User">
+			<input id="displayName" class="displayName" type="text" placeholder="Display Name" value="Guest">
 		</p>
 		<p>
 			<!-- This is the "room" or "space" to which you're connecting
 			the user. Other users who join this same Resource will be able to see and hear each other.
 			-->
 			<label for="resourceId">Resource ID</label>
-			<input id="resourceId" class="resourceId" type="text" placeholder="Conference Reference" value="sas">
+			<input id="resourceId" class="resourceId" type="text" placeholder="Conference Reference" value="demoRoom">
 		</p>
 		</div>
 		<p>
@@ -423,11 +392,218 @@ invoke the VidyoConnector API. -->
 			<span id="message"></span>
 		</div>
 	</div>
-<script>
-$(document).ready(function(){
-	
-	joinViaBrowser();
-	$('#optionsVisibilityButton').click();
+	<!-- This is the div into which the Vidyo component will be inserted. -->
+	<div id="renderer" class="rendererWithOptions pluginOverlay hidden rendererWithoutChat">
+	</div>
+	<div id="toolbarLeft" class="toolbar hidden">
+		<span id="participantStatus"></span>
+	</div>
+	<div id="toolbarRight" class="toolbar hidden">
+		<span id="connectionStatus">Initializing</span>
+		<span id="clientVersion"></span>
+	</div>
+	<div id="toolbarCenter" class="toolbar hidden">
+		<!-- This button toggles the speaker privacy on or off. -->
+		<button id="speakerButton" title="Speaker Privacy" class="toolbarButton speakerOn"></button>
 
-})
-</script>
+		<!-- This button mutes and unmutes the users' microphone. -->
+		<button id="microphoneButton" title="Microphone Privacy" class="toolbarButton microphoneOn"></button>
+
+		<!-- This button joins and leaves the conference. -->
+		<button id="joinLeaveButton" title="Join Conference" class="toolbarButton callStart"></button>
+
+		<!-- This button toggles the camera privacy on or off. -->
+		<button id="cameraButton" title="Camera Privacy" class="toolbarButton cameraOn"></button>
+
+		<!-- This button toggles the chat window. -->
+		<button id="chatButton" title="Toggle Chat" class="notification toolbarButton chaticon">
+			<span class="badge hidden" id="new-message-notification"></span>
+		</button>
+	</div>
+	<div id="helper">
+		<table>
+			<tr>
+				<td><img class="logo" src="Images/VidyoIO-LogoHorizontal-Dark@2x.png"/></td>
+			</tr>
+			<tr>
+				<td id="helperText">How would you like to join the call?</td>
+			</tr>
+			<tr id="helperPicker">
+				<td>
+					<table>
+						<tr>
+							<td id="joinViaBrowser" class="hidden">
+								<div class="helperHeader">
+									<img src="Images/web.svg" onclick="javascript:joinViaBrowser()"/>
+								</div>
+								<ul>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Join immediately
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										No install
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Good quality
+									</li>
+								</ul>
+								<div class="helperFooter">
+									<a href="javascript:joinViaBrowser()">Join via the browser</a>
+								</div>
+							</td>
+							<td id="joinViaPlugIn" class="hidden">
+								<div class="helperHeader">
+									<img src="Images/download.svg" onclick="javascript:joinViaPlugIn()"/>
+								</div>
+								<ul>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Join from the browser
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										One-time install
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Best quality
+									</li>
+								</ul>
+								<div class="helperFooter">
+									<a href="javascript:joinViaPlugIn()">Join via the plugin</a>
+								</div>
+							</td>
+							<td id="joinViaApp" class="hidden">
+								<div class="helperHeader">
+									<img src="Images/desktop.svg" onclick="javascript:joinViaApp()"/>
+								</div>
+								<ul>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Join with a click
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										One-time install
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Best quality
+									</li>
+								</ul>
+								<div class="helperFooter">
+									<a href="javascript:joinViaApp()">Join via the app</a>
+								</div>
+							</td>
+
+							<td id="joinViaOtherApp" class="hidden">
+								<div class="helperHeader">
+									<img src="Images/download.svg" onclick="javascript:joinViaOtherApp()"/>
+								</div>
+								<ul>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Join from any device
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Advanced installation
+									</li>
+									<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+										Best quality
+									</li>
+								</ul>
+								<div class="helperFooter">
+									<a href="javascript:joinViaOtherApp()">Join via the app</a>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr id="helperPlugIn" class="hidden">
+				<td>
+					<div class="helperHeader">
+						<img src="Images/download.svg" onclick="javascript:joinViaBrowser()"/>
+					</div>
+					<ul>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							Download and install it now
+						</li>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							The plugin will launch automatically once installed
+						</li>
+					</ul>
+					<div class="helperFooter">
+						<a id="helperPlugInDownload" href="">Download</a>
+					</div>
+				</td>
+			</tr>
+			<tr id="helperApp" class="hidden">
+				<td>
+					<div class="helperHeader">
+						<img src="Images/download.svg" onclick="javascript:joinViaApp()"/>
+					</div>
+					<ul>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							Download and install it now
+						</li>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							Launch once installed
+						</li>
+					</ul>
+					<div class="helperFooter helperFooterTwoButton">
+						<a id="helperAppDownload" href="">Download</a>
+						<a href="javascript:loadAppFromProtocolHandler(true)">Launch</a>
+					</div>
+				</td>
+			</tr>
+			<tr id="helperOtherApp" class="hidden">
+				<td>
+					<div class="helperHeader">
+						<img src="Images/download.svg" onclick="javascript:joinViaOtherApp()"/>
+					</div>
+					<ul>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							Build and install from the SDK
+						</li>
+						<li class="helperCheck"><img src="Images/checkmark.svg"/>&nbsp;&nbsp;
+							Launch once installed
+						</li>
+					</ul>
+					<div class="helperFooter">
+						<a href="javascript:loadAppFromProtocolHandler(true)">Launch</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="downloadContainerLegal">
+						By clicking &quot;Join&quot; or &quot;Download&quot;, you agree to our <a target="_blank" style="color: #6a6a6a;" href="http://www.vidyo.com/eula/">End-User License Agreement</a> & <a target="_blank" style="color: #6a6a6a;" href="http://www.vidyo.com/privacy-policy/">Privacy Policy</a>.
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="failed" class="hidden">
+		<table>
+			<tr>
+				<td><img class="logo" src="Images/VidyoIcon.png"/></td>
+			</tr>
+			<tr>
+				<td id="failedText">Error</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="chat-popup" id="myForm">
+		<button id="chatTabButton" class="tablink">Chat</button>
+		<button id="participantTabButton" class="tablink participantTabLink">Participants</button>
+		<div class="tabcontent", id="participantTab">
+			<table id="participantTable" class="ParticipantTable">
+			</table>
+		</div>
+		<div class="tabcontent" id="chatTab">
+			<div class="message-container" id="message-box">
+			</div>
+			<form onsubmit="return false;" id="messagingForm" class="form-container">
+				<textarea placeholder="Type message.." name="msg" id="msg" required></textarea>
+				<br/>
+				<button type="submit" class="btn">Send</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
