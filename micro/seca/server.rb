@@ -102,16 +102,16 @@ set :port, 3000
 
 SECA
     
-#    req = Net::HTTP::Get.new(seca_uri.to_s)
-#
-#    # setting both OpenTimeout and ReadTimeout
-#    res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
-#
-#         http.request(req)
-#
-#    }
-#
-# content = res.body
+   req = Net::HTTP::Get.new(seca_uri.to_s)
+
+   # setting both OpenTimeout and ReadTimeout
+   res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+
+        http.request(req)
+
+   }
+
+   content = res.body
     
     document = Nokogiri::HTML(content)
     tags = document.xpath("//td")
@@ -154,7 +154,7 @@ SECA
     end
         
       
-      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\"}"  	
+      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":`#{vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'}`}"  	
 
   end
 
