@@ -166,7 +166,12 @@
 		bclass = "b-wait"
 		bname = "รอตรวจ"
 		rs = admit.records
-		uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
+		if pdate!='all'
+			uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
+		else
+			uid = rs.collect{|i| i.created_user_id}.last
+		end
+
 		if uid 
 			bname = "ตรวจแล้ว"
 			if uns.index(uid)

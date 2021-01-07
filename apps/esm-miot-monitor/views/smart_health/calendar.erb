@@ -8,7 +8,7 @@
 
 	visits = SHVisit.all
 	
-	
+=begin
 	visits.collect!{|i|
 		p = Patient.find(i.patient_id)
 		if p
@@ -24,6 +24,29 @@
 		end
 		
 	}.compact!
+=end
+
+  visits.collect!{|i|
+		p = Patient.find(i.patient_id)
+		if p
+		title = "#{p.hn} : #{p.first_name} #{p.last_name}"
+			
+        {
+          title: title,
+          url: "index?date="+i.start.strftime("%Y-%m-%d"),
+          start: i.start.strftime("%Y-%m-%d")
+        }
+		else
+		nil
+		end
+		
+	}.compact!
+
+  pname=""
+  if params[:patient_id]
+    p = Patient.find(params[:patient_id])
+    pname="#{p.first_name} #{p.last_name}" 
+  end
 %>
 
 
@@ -49,7 +72,9 @@
 <% if params[:patient_id] %>
 
  var myKeyVals = {'patient_id':'<%=params[:patient_id]%>','date':info.dateStr}
- 
+ var da = info.dateStr.split('-')
+ var df = da[2]+'/'+da[1]+'/'+da[0]
+ if(confirm('ท่านต้องการเพิ่มนัดหมาย <%=pname%> วันที่ '+df+' ใช่หรือไม่?')){
  
  $.ajax({
      type: "POST",
@@ -64,11 +89,13 @@
                 console.log(response.responseText);
             },
             error: function (response) {
-                window.location.reload();
+                //window.location.reload();
+                window.location.href='index?date='+info.dateStr;
             }
  });
  
- 
+ }
+
  <% else %>
 
 window.location = "../SmartHealth/index?date="+info.dateStr

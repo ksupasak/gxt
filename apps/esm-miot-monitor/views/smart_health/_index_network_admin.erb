@@ -29,7 +29,26 @@ if network
 else
 	patients = Patient.where(:zone_id=>session[:current_zone]).all
 end
+
+# default today patient
+
+date = Time.now
+date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+
+pdate = date.strftime('%Y-%m-%d')
+pdate = params[:date] if params[:date] 
+
+visits = []
+
+unless pdate=='all' or params[:all]
+	visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
+	v_pid = visits.collect{|i| i.patient_id}
+	patients = patients.collect{|i| i if v_pid.index i.id }.compact
+end
+
 admits = Admit.where(:zone_id=>session[:current_zone]).all
+usernetworks = SHUserNetwork.all
+uns = usernetworks.collect{|i| i.user_id}
 	
 %>
 <div class="container" style="background:none">
@@ -66,6 +85,11 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 <div class="col">
 สถานะเคส :  ทั้งหมด  
 </div>
+<div class="col d-flex justify-content-end " >
+ประจำวันที่ : <%=(pdate!='all')? date.strftime("%d %B %Y") : "ทั้งหมด" %> &nbsp;
+<%=link_to '[ วันนี้ ]', "index" if pdate=='all' or date.strftime("%D") != Time.now.strftime("%D")%>
+<%=link_to '[ ทั้งหมด ]', "index?date=all" if pdate!='all'%>
+</div>
 </div>	
 <hr/>
 
@@ -75,7 +99,7 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 <thead>
 	<tr>
 		<th>
-			รับเคส
+			สถานะ
 		</th>
 		<th>
 			วันที่
@@ -119,10 +143,28 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 				
 			end
 		end
-		
+
+		bclass = "b-wait"
+		bname = "รอตรวจ"
+		rs = admit.records
+		if pdate!='all'
+			uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
+		else
+			uid = rs.collect{|i| i.created_user_id}.last
+		end
+
+		if uid 
+			bname = "ตรวจแล้ว"
+			if uns.index(uid)
+				bclass = "b-network"
+			else
+				bclass = "b-hos"
+			end
+		end		
 	%>
 	<tr>
-		<td><%=admit.status%></td>
+		<td><span class="badge <%=bclass%>"><%=bname%></span></td>
+		<!--<td><%=admit.status%></td>-->
 		
 		<td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td>
 		<td><%=i.hn%></td> 
@@ -146,6 +188,11 @@ admits = Admit.where(:zone_id=>session[:current_zone]).all
 <div class="row">
 	<div class="col">
 		ยอดรวม <%=patients.size%> คน
+	</div>
+	<div class="col">
+		<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
+		<span class="badge b-hos">&nbsp;&nbsp;</span> รพ.ตรวจแล้ว
+		<span class="badge b-network">&nbsp;&nbsp;</span> รพสต.ตรวจแล้ว
 	</div>
 </div>
 
