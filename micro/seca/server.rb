@@ -154,7 +154,7 @@ SECA
     end
         
       
-      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":`#{vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'}`}"  	
+      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":`vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'`}"  	
 
   end
 
