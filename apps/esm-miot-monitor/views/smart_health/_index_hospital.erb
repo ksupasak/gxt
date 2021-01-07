@@ -66,37 +66,51 @@
 	# default today patient
 
 	date = Time.now
+	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
 
-	date = Time.parse params[:date]  if params[:date]
+	pdate = date.strftime('%Y-%m-%d')
+	pdate = params[:date] if params[:date] 
+
+	pnet = 'all'
+	pnet = params[:n] if params[:n]
 
 	visits = []
 
-	unless params[:all]
-	
+	unless pdate=='all' or params[:all]
 		visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
-		# visits = SHVisit.all
-		# patients = visits.collect{|i| Patient.find(i.patient_id) }
 		v_pid = visits.collect{|i| i.patient_id}
 		patients = patients.collect{|i| i if v_pid.index i.id }.compact
-		
-		
 	end
+
+	patients = patients.collect{|i| i if i.network_id and i.network_id.to_s==pnet }.compact if pnet!='all'
 
 
 
 	admits = Admit.where(:zone_id=>session[:current_zone]).all
+	usernetworks = SHUserNetwork.all
+	uns = usernetworks.collect{|i| i.user_id}
+	networks = SHNetwork.all
 	
 	%>		
+<input type="hidden" id="p-date" value="<%=pdate%>">
+<input type="hidden" id="p-net" value="<%=pnet%>">	
 <div class="row" style="border:0px solid">
 
 
 
 <div class="col">
-สถานะเคส :  ทั้งหมด  
+เครือข่าย :  
+<select id="record-network_id" name="patient[network_id]"  value="" style="width:200px">
+<option value="all" %>ทั้งหมด</option>
+<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
+	<option value="<%=j[0]%>" <%=(pnet==j[0].to_s)? "selected" : "" %> ><%=j[1]%></option>
+<% end %>
+</select>
 </div>
 <div class="col d-flex justify-content-end " >
-ประจำวันที่ : <%=date.strftime("%d %B %Y")%> &nbsp;
-<%=link_to '[ วันนี้ ]', "index" if date.strftime("%D") != Time.now.strftime("%D")%>
+ประจำวันที่ : <%=(pdate!='all')? date.strftime("%d %B %Y") : "ทั้งหมด" %> &nbsp;
+<%=link_to '[ วันนี้ ]', "index" if pdate=='all' or date.strftime("%D") != Time.now.strftime("%D")%>
+<%=link_to '[ ทั้งหมด ]', "index?date=all" if pdate!='all'%>
 </div>
 </div>	
 <hr/>
@@ -107,7 +121,7 @@
 <thead>
 	<tr>
 		<th>
-			รับเคส
+			สถานะ
 		</th>
 		
 		<th>
@@ -148,10 +162,24 @@
 			provider_2 = SHOfficer.find admit.provider_2_id
 			provider_2 = provider_2.name
 		end
+
+		bclass = "b-wait"
+		bname = "รอตรวจ"
+		rs = admit.records
+		uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
+		if uid 
+			bname = "ตรวจแล้ว"
+			if uns.index(uid)
+				bclass = "b-network"
+			else
+				bclass = "b-hos"
+			end
+		end
 		
 	%>
 	<tr>
-		<td><%=admit.status%></td>
+		<td><span class="badge <%=bclass%>"><%=bname%></span></td>
+		<!--<td><%=admit.status%></td>-->
 		
 		<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
 		<td><%=i.hn%></td> 
@@ -178,6 +206,11 @@
 	<div class="col">
 		นัดวันนี้ <%=patients.size%> คน จาก <%=Patient.where(:zone_id=>session[:current_zone]).count %> คน
 	</div>
+	<div class="col">
+		<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
+		<span class="badge b-hos">&nbsp;&nbsp;</span> รพ.ตรวจแล้ว
+		<span class="badge b-network">&nbsp;&nbsp;</span> รพสต.ตรวจแล้ว
+	</div>
 </div>
 
 <%=inline(this,:'_banner')%>
@@ -186,7 +219,11 @@
  <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
 
 </div>
-		 
+<script>
+$("#record-network_id").change(function(){
+	document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
+})
+</script> 
 
 <script>
 	   	 

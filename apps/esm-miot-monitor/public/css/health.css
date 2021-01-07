@@ -717,3 +717,15 @@ th{
   background: linear-gradient(to bottom, #3D145A, #5F1C78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 	color:#eee;
 }
+.b-network{
+  background:#5F1C78;
+  color:#eee !important;
+}
+.b-hos{
+  background:#0066A8;
+  color:#eee !important;
+}
+.b-wait{
+  background:red;
+  color:#eee !important;
+}
