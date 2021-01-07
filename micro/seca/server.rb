@@ -153,7 +153,7 @@ SECA
           #   sleep 10
     end
         
-    temp = `vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'`
+    temp = `vcgencmd measure_temp`.split("=")[-1]
     
       return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":#{temp}}"  	
 
