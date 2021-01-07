@@ -153,8 +153,9 @@ SECA
           #   sleep 10
     end
         
-      
-      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":`vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'`}"  	
+    temp = `vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*'`
+    
+      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":#{temp}}"  	
 
   end
 
