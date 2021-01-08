@@ -189,3 +189,21 @@ div {
  
 }
 
+a:link {
+  text-decoration: none;
+  color:#333;
+}
+
+a:visited {
+  text-decoration: none;
+  color:#333;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:active {
+  text-decoration: underline;
+}
+

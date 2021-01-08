@@ -112,17 +112,17 @@ set :port, 3000
 SECA
    
  
-   
-   req = Net::HTTP::Get.new(seca_uri.to_s)
-
-   # setting both OpenTimeout and ReadTimeout
-   res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
-
-        http.request(req)
-
-   }
-
-   content = res.body
+   #
+   # req = Net::HTTP::Get.new(seca_uri.to_s)
+   #
+   # # setting both OpenTimeout and ReadTimeout
+   # res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+   #
+   #      http.request(req)
+   #
+   # }
+   #
+   # content = res.body
 	   
     document = Nokogiri::HTML(content)
     tags = document.xpath("//td")
@@ -196,7 +196,7 @@ SECA
     
 
 
-    uri = URI('http://192.168.88.249:8899/')
+    uri = URI('http://172.27.100.40:8899/')
     
     url = uri
     
@@ -219,11 +219,19 @@ SECA
       params[:vn] = params[:hn]
       params.delete :hn
 
-      http.request_post(url.path, JSON.generate(params)) do |response|
-        # do something with response
-        p response
+      # http.request_post(url.path, JSON.generate(params)) do |response|
+      #   # do something with response
+      #   p response
+      #
+      # end
+      
+      
+      request = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
+      request.set_form_data( params)
         
-      end
+      
+      response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+      
       
   
     rescue Exception => e
@@ -239,7 +247,7 @@ SECA
       
     else
       
-      redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
+      redirect "entry?hn=#{params[:vn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
       
     end
     
