@@ -1,43 +1,168 @@
-<html>
-<body>
+<div class="col">
+    <div class="row">
+    <div class="col-12">
+    <div class="head-hn">
+   <center> กรอกเลข HN ของท่าน</center>
+    </div>
+    </div>
+    <div class="col-12">
+    <div class="display-hn" >
+    
+    </div>
+    
+    </div>
+    <div class="col-12">
+    <div class="d-hn">
+    <center>
+    <table width="">
+    <tr>
+        <td><div class="btn-hn">1</div></td>
+        <td><div class="btn-hn">2</div></td>
+        <td><div class="btn-hn">3</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">4</div></td>
+        <td><div class="btn-hn">5</div></td>
+        <td><div class="btn-hn">6</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">7</div></td>
+        <td><div class="btn-hn">8</div></td>
+        <td><div class="btn-hn">9</div></td>
+    </tr>
+    <tr>
+        <td><div class="btn-hn">/</div></td>
+        <td><div class="btn-hn">0</div></td>
+        <td><div class="btn-hn"><img src="<%#url_for 'img/svg/delete.svg'%>"></div></td>
+    </tr>
+    </table>
+    <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
+    <a href="#" id="beep" style="display:none"></a>
+    </center> 
 
-<h1> Hello world</h1>
+    </div>
+	<a href="log" class="btn-result-cancle" style="float:right">View log</a> 
+    </div>
+    </div>
 
-<!-- <img src="/img/logo.png" width="100"> -->
-<script src="/js/jquery-1.9.1.min.js"></script>
+ 
+
+</div>
+</div>
 
 
-<form action="/send" method="post">
-  <label for="fname">Weight :</label><br>
-  <input type="text" id="weight" name="fname" value="John"><br>
-  <label for="lname">Height :</label><br>
-  <input type="text" id="height" name="lname" value="Doe"><br><br>
-  <input type="submit" value="Submit">
-</form> 
-
-<div id="out"></div>
 
 <script>
-
-	function fresh(){
-		
-		$.ajax({
-		  url: "/get",
-		  context: document.body
-		}).done(function(data) {
-			console.log(data)
-			obj = JSON.parse(data)
-			$('#weight').val(obj['weight'])
-			$('#height').val(obj['height'])
-			
-			$('#out').html(data);
-		});
+	function deviceSend(msg){
 		
 	}
+    function hnPush(s){
+        v = $(".display-hn").html().trim()
+        b = s.html()
+        if(b.indexOf("img")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)       
+    }
+	
+	var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	// for(var i=0;i<buffer;i++){
+// 		var myAudio = document.createElement('audio');
+// 		  myAudio.setAttribute("id","audio-"+i)
+// 		 if (myAudio.canPlayType('audio/mpeg')) {
+// 			  myAudio.setAttribute('src','<%#url_for 'sounds/water_droplet.mp3'%>');
+// 		 }
+// 		 $('#buffer').append(myAudio);
+//
+// 	}
 
-setInterval(fresh, 1000);
+    $(".btn-hn").on("click",function(){
+      			
+		  hnPush($(this))  
+		
+		// var myAudio = document.getElementById('audio-'+cur_buffer)
+		// myAudio.play();
+		cur_buffer+=1;
+		if(cur_buffer==10)cur_buffer=0;
+		
+        return false;
+    })
 
+    // var beep = document.createElement('audio');
+    // if (beep.canPlayType('audio/mpeg')) {
+    //     beep.setAttribute('src','<%#url_for 'sounds/Beep_Short.mp3'%>');
+    // }
+    // $("#beep").on("click",function(){
+    //     beep.play();
+    // })
+	
+	function submit(){
+		
+		$('.btn-opd').html('Loading')
+        hn = $(".display-hn").html().trim()
+        // $("#beep").click()
+		 // beep.play(); 
+		<%
+			device_id = '00000'
+			
+			device_id = params[:device_id] if params[:device_id]
+		%>
+        setTimeout(function(){ window.location.replace("entry?hn="+hn+"&device_id=<%=device_id%>");  }, 1000);
+	}
+	
+	$('.btn-opd').click(function(){	
+       submit()
+    })
+	
+	$(document).keypress(function(e){
+		
+	    if( event.which == 13 ) {
+	        submit();
+	     }else{
+        v = $(".display-hn").html().trim()
+        v+=String.fromCharCode(e.keyCode)
+        
+        $(".display-hn").html(v.trim())   
+		 } 
+		
+	})
+		
+	     
+	
+	
 
 </script>
-</body>
-</html>
+	
+	<style>
+		.btn-hn{
+		    background-color: #6B98C1;
+		    color:#ffffff;
+		    border-radius: 100px;
+		    height:50px;
+		    width:80px;
+	
+		    text-align: center;
+		    font-size: 2.4em;
+		    padding-top:0px;
+		    margin:5px;
+		}
+		
+		.display-hn{
+		    border-radius: 20px;
+		    height:1em;
+		    text-align: center;
+		    vertical-align: middle;
+		    font-size: 3em;
+			padding:0px;
+			line-height:1;
+		    background: #BCD1E4;
+		    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+		    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		    color:#00517F;
+		    margin: 0px 20px 0px 20px;
+		}
+	</style>

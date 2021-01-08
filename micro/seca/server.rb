@@ -152,10 +152,12 @@ SECA
             msg = exception.to_s
           #   sleep 10
     end
-        
+    temp = 'NA'
+    begin    
     temp = `vcgencmd measure_temp`.split("=")[-1].split("'")[0]
-    
-      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":#{temp}}"  	
+  rescue
+  end
+      return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":\"#{temp}\"}"  	
 
   end
 
@@ -164,6 +166,11 @@ SECA
       redirect "/"	
   end
 
+  get '/entry' do 
+      
+    erb :entry
+  end
+  
 #end
 
 
