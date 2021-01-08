@@ -4,6 +4,8 @@
 }
 body{
     font-family: THSarabun;
+	padding:10px;
+	margin:0px;
 }
 div {
     font-family: THSarabun;
@@ -13,38 +15,41 @@ div {
     background: -webkit-linear-gradient(to bottom, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to bottom, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 20px;
-    margin: 10px 20px 20px 20px;
+    margin: 10px 5px 20px 5px;
     padding-top:20px;
+	height:350px;
 }
 .head-hn{
     font-size: 2.4em;
     margin-left: 20px;
     color:#00517F;
 }
-.display-hn{
-    border-radius: 20px;
-    height:100px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 4em;
-    background: #BCD1E4;
-    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    color:#00517F;
-    margin: 0px 20px 5px 20px;
-}
 .btn-hn{
     background-color: #6B98C1;
     color:#ffffff;
     border-radius: 100px;
-  /*  height:80px;
-    width:80px;*/
-  width:2em;
-  width:1em;
+    height:50px;
+    width:80px;
+
     text-align: center;
     font-size: 2.4em;
-/*    padding-top:10px;*/
+    padding-top:0px;
     margin:5px;
+}
+
+.display-hn{
+    border-radius: 20px;
+    height:1em;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 3em;
+	padding:0px;
+	line-height:1;
+    background: #BCD1E4;
+    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    color:#00517F;
+    margin: 0px 5px 0px 5px;
 }
 .btn-hn:hover{
     background-color: #00517F;

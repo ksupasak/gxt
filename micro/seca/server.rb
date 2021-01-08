@@ -24,7 +24,7 @@ set :port, 3000
   get '/get' do 
 	
   
-  
+    
     seca_uri = URI('http://192.168.4.1/')
     
     
@@ -163,7 +163,69 @@ SECA
 
   post '/send' do 
 
-      redirect "/"	
+
+    
+    # req = Net::HTTP::Get.new(seca_uri.to_s)
+    #
+    # # setting both OpenTimeout and ReadTimeout
+    # res = Net::HTTP.start(seca_uri.host, seca_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+    #
+    #      http.request(req)
+    #
+    # }
+    #
+    # content = res.body
+    
+
+
+    uri = URI('http://192.168.88.249:8899/')
+    
+    
+    http = Net::HTTP.new(uri.host, uri.port)
+ 
+    request = Net::HTTP::Post.new(uri.path)
+
+    request['hn'] = params[:hn]
+    request['weight'] = params[:weight]
+    request['height'] = params[:height]
+    
+    error = false
+    
+    begin
+    
+    res = Net::HTTP.start(uri.host, uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+    
+      response = http.request(request)
+    
+      puts response.body
+    }
+    
+    rescue Exception => e
+      error = true
+    end
+    
+    if error==false
+      
+      redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
+      
+      # redirect :result
+      
+    else
+      
+      redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
+      
+    end
+    
+    
+    
+  end
+  
+  get "/result" do 
+    erb :result
+  end
+  
+  get "/error" do 
+    erb :error
   end
 
   get '/entry' do 

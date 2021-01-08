@@ -1,4 +1,4 @@
-<div class="col">
+<div class="col" style="width:300px;margin:0px;padding:0px">
     <div class="row">
     <div class="col-12">
     <div class="head-hn">
@@ -31,17 +31,18 @@
         <td><div class="btn-hn">9</div></td>
     </tr>
     <tr>
-        <td><div class="btn-hn">/</div></td>
+        <td><div class="btn-hn">-</div></td>
         <td><div class="btn-hn">0</div></td>
-        <td><div class="btn-hn"><img src="<%#url_for 'img/svg/delete.svg'%>"></div></td>
+        <td><div class="btn-hn">C</td>
     </tr>
     </table>
+	<br/>
     <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
-    <a href="#" id="beep" style="display:none"></a>
+    <!-- <a href="#" id="beep" style="display:none"></a> -->
     </center> 
 
     </div>
-	<a href="log" class="btn-result-cancle" style="float:right">View log</a> 
+	<!-- <a href="log" class="btn-result-cancle" style="float:right">View log</a>  -->
     </div>
     </div>
 
@@ -59,8 +60,9 @@
     function hnPush(s){
         v = $(".display-hn").html().trim()
         b = s.html()
-        if(b.indexOf("img")!==-1){
+        if(b.indexOf("C")!==-1){
             v = v.substr(0,v.length-1)
+			v = ""
         }else{
             v+=b
         }
@@ -138,31 +140,5 @@
 </script>
 	
 	<style>
-		.btn-hn{
-		    background-color: #6B98C1;
-		    color:#ffffff;
-		    border-radius: 100px;
-		    height:50px;
-		    width:80px;
 	
-		    text-align: center;
-		    font-size: 2.4em;
-		    padding-top:0px;
-		    margin:5px;
-		}
-		
-		.display-hn{
-		    border-radius: 20px;
-		    height:1em;
-		    text-align: center;
-		    vertical-align: middle;
-		    font-size: 3em;
-			padding:0px;
-			line-height:1;
-		    background: #BCD1E4;
-		    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
-		    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-		    color:#00517F;
-		    margin: 0px 20px 0px 20px;
-		}
 	</style>
