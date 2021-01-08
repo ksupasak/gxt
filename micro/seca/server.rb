@@ -112,7 +112,7 @@ set :port, 3000
 SECA
    
  
- 
+   
    req = Net::HTTP::Get.new(seca_uri.to_s)
 
    # setting both OpenTimeout and ReadTimeout
@@ -144,7 +144,7 @@ SECA
       
 	
 
-	puts "X #{current_weight} #{current_height} #{trig_weight} #{temp}"
+  # puts "X #{current_weight} #{current_height} #{trig_weight} #{temp}"
    
       if current_height and current_weight #and current_height.to_f > 0 and current_weight.to_f > 0
        
@@ -198,35 +198,44 @@ SECA
 
     uri = URI('http://192.168.88.249:8899/')
     
+    url = uri
     
-    http = Net::HTTP.new(uri.host, uri.port)
- 
-    request = Net::HTTP::Post.new(uri.path)
-
-    request['hn'] = params[:hn]
-    request['weight'] = params[:weight]
-    request['height'] = params[:height]
+    # uri = URI('http://www.example.com/search.cgi')
     
+    
+    
+   
     error = false
     
     begin
-    
-    res = Net::HTTP.start(uri.host, uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
-    
-      response = http.request(request)
-    
-      puts response.body
-    }
-    
+   
+      # res = Net::HTTP.post_form(uri, 'hn' => params[:hn], 'weight' => params[:weight], 'height'=>params[:height])
+      
+      
+
+      http = Net::HTTP.new(url.host, url.port)
+      http.read_timeout = 2 # seconds
+      
+      params[:vn] = params[:hn]
+      params.delete :hn
+
+      http.request_post(url.path, JSON.generate(params)) do |response|
+        # do something with response
+        p response
+        
+      end
+      
+  
     rescue Exception => e
+      puts e.inspect 
       error = true
     end
     
     if error==false
       
-      redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
       
-      # redirect :result
+      redirect '/result'
+
       
     else
       
