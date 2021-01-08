@@ -27,7 +27,16 @@ set :port, 3000
   
     seca_uri = URI('http://192.168.4.1/')
     
-    
+ 
+
+  temp = 'NA'
+    begin
+    temp = `vcgencmd measure_temp`.split("=")[-1].split("'")[0]
+
+   rescue
+
+   end
+   
     begin
     
 
@@ -101,7 +110,9 @@ set :port, 3000
   
 
 SECA
-    
+   
+ 
+ 
    req = Net::HTTP::Get.new(seca_uri.to_s)
 
    # setting both OpenTimeout and ReadTimeout
@@ -112,28 +123,33 @@ SECA
    }
 
    content = res.body
-    
+	   
     document = Nokogiri::HTML(content)
     tags = document.xpath("//td")
     
     current_height = nil
     current_weight = nil
     trig_weight = nil
-    
+
+   
+
     tags.each_with_index do |t,ti|
-     
+      
       current_height = t.text.strip if ti==16
-      current_weight = t.text.strip if ti==13  
-      trig_weight = t.text.strip if ti==10
+      current_weight = t.text.strip if ti==10  
+      trig_weight = t.text.strip if ti==13
       
-      
+ #puts "#{ti}\t#{t.text.strip}"    
     end
-        
       
-      if current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+	
+
+	puts "X #{current_weight} #{current_height} #{trig_weight} #{temp}"
+   
+      if current_height and current_weight #and current_height.to_f > 0 and current_weight.to_f > 0
+       
         
-        
-        return "{\"time\":#{Time.now.to_json},\"status\":\"ok\",\"weight\":#{current_weight},\"height\":#{current_height}}"
+        return "{\"time\":#{Time.now.to_json},\"status\":\"ok\",\"weight\":\"#{current_weight}\",\"height\":\"#{current_height}\",\"trig\":\"#{trig_weight}\",\"temp\":\"#{temp}\"}"
         
       end
       
@@ -152,11 +168,13 @@ SECA
             msg = exception.to_s
           #   sleep 10
     end
-    temp = 'NA'
-    begin    
-    temp = `vcgencmd measure_temp`.split("=")[-1].split("'")[0]
-  rescue
-  end
+  #  temp = 'NA'
+  #  begin    
+  #  temp = `vcgencmd measure_temp`.split("=")[-1].split("'")[0]
+   
+  # rescue
+  
+  # end
       return "{\"time\":#{Time.now.to_json},\"status\":\"error\",\"msg\":\"#{msg}\",\"temp\":\"#{temp}\"}"  	
 
   end
