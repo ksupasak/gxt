@@ -62,7 +62,7 @@
 	
 	
 	<form action="/send" method="post">
-  	  <input type="hidden" id="weight" name="hn" value="<%=params[:hn]%>">
+  	  <input type="hidden" id="hn" name="hn" value="<%=params[:hn]%>">
 	  <input type="hidden" id="weight" name="weight" value="<%=params[:weight]%>">
 	  <input type="hidden" id="height" name="height" value="<%=params[:height]%>">
 	<% unless params[:err] %>
@@ -104,7 +104,7 @@
 			$('.weight').html(obj['weight'])
 			$('.height').html(obj['height'])
 			
-			// $('#out').html(data);
+			$('#out').html(data);
 		});
 		
 	}
