@@ -83,7 +83,7 @@
     </div>
 
  <center><a href="/"><label>ยกเลิก</label></a></center>
-<div style='float:left'><div id="timer" style="color:#ddd;">- C</div></div>
+<div style='float:left'><div id="timer" style="color:#ddd;">- T</div></div>
 <div style='float:right'><div id="temp" style="color:#ddd;">- C</div></div>
 </div>
 </div>
@@ -127,14 +127,14 @@
 			if(obj['time']){
 				
 				t = obj['time'].split(' ')[1];
-				$('#timer').html(t)
+				$('#timer').html('T '+t)
 				
 			}
 			
 			if(obj['temp']){
 				
 				
-				$('#temp').html(obj['temp'])
+				$('#temp').html(obj['temp']+'C')
 				
 			}
 			
