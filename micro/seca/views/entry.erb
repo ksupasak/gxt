@@ -83,7 +83,8 @@
     </div>
 
  <center><a href="/"><label>ยกเลิก</label></a></center>
-
+<div style='float:left'><div id="timer" style="color:#ddd;">- C</div></div>
+<div style='float:right'><div id="temp" style="color:#ddd;">- C</div></div>
 </div>
 </div>
 
@@ -120,7 +121,21 @@
 		}).done(function(data) {
 			console.log(data)
 			obj = JSON.parse(data)
-		
+			
+			if(obj['time']){
+				
+				t = obj['time'].split(' ')[1];
+				$('#timer').html(t)
+				
+			}
+			
+			if(obj['temp']){
+				
+				
+				$('#temp').html(obj['temp'])
+				
+			}
+			
 			if(obj['weight']!=""&&obj['weight']!=null){
 				w = parseFloat(obj['weight'])
 				$('#weight').val(obj['weight'])
