@@ -93,7 +93,9 @@
 <div id="out" style="color:#333;"></div>
 <% end %>
 <script>
-
+	
+	var count = 0; 
+	
 	$('.pad').click(function(){
 		
 		px = $(this).attr('px')
@@ -150,6 +152,11 @@
 			
 			$('#out').html(data);
 		});
+		
+		if(count>300){
+			location.href = '/'
+		}
+		count++;
 		
 	}
 
