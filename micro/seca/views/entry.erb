@@ -12,13 +12,13 @@
     
     </div>
     <div class="col-12">
-	<label>น้ำหนัก (kg)</label>	
-    <div class="display-hn weight" >
+	<label>น้ำหนัก (kg)</label>
+	<div class="display-hn weight pad" px="weight" >
     <%=params[:weight]%>
     </div>
     
-	<label>ส่วนสูง (m)</label>	
-    <div class="display-hn height" >
+	<label>ส่วนสูง (cm)</label>	
+    <div class="display-hn height pad" px="height" >
     <%=params[:height]%>
     </div>
 	
@@ -63,13 +63,16 @@
 	
 	<form action="/send" method="post">
   	  <input type="hidden" id="hn" name="hn" value="<%=params[:hn]%>">
+  	  <input type="hidden" id="debug" name="debug" value="<%=params[:debug]%>"> 
 	  <input type="hidden" id="weight" name="weight" value="<%=params[:weight]%>">
 	  <input type="hidden" id="height" name="height" value="<%=params[:height]%>">
 	<% unless params[:err] %>
 	
 	<center>  <input type="submit" value="ส่งข้อมูล" class="btn btn-primary btn-opd"></center>
 	<% else %>
-	<center>  <input type="submit" value="ส่งใหม่" class="btn btn-primary btn-opd"></center>
+	<center>  <input type="submit" value="ส่งใหม่" class="btn btn-primary btn-opd">
+	<div  style="color:red;">Err : <%=params[:err_msg]%></div>
+	</center>
 	
 	
 	<% end %>
@@ -85,24 +88,50 @@
 </div>
 
 
-
-<!-- <div id="out" style="color:#333;"></div> -->
-
+<% if params[:debug]%>
+<div id="out" style="color:#333;"></div>
+<% end %>
 <script>
+
+	$('.pad').click(function(){
+		
+		px = $(this).attr('px')
+		
+		hn = $('#hn').val()
+		w = $('#weight').val()
+		h = $('#height').val()
+		
+		location.href = '/pad?hn='+hn+'&weight='+w+'&height='+h+'&select='+px;
+		
+	})
 
 	function fresh(){
 		
+		<% 
+			
+		url = "/get"
+		url = "/get?debug=1" if params[:debug]
+			
+		%>
+		
 		$.ajax({
-		  url: "/get",
+		  url: "<%=url%>",
 		  context: document.body
 		}).done(function(data) {
 			console.log(data)
 			obj = JSON.parse(data)
-			$('#weight').val(obj['weight'])
-			$('#height').val(obj['height'])
+		
+			if(obj['weight']!=""&&obj['weight']!=null){
+				w = parseFloat(obj['weight'])
+				$('#weight').val(obj['weight'])
+				$('.weight').html(obj['weight'])
+			}
 			
-			$('.weight').html(obj['weight'])
-			$('.height').html(obj['height'])
+			if(obj['height']!=""&&obj['height']!=null){
+				h = parseFloat(obj['height'])
+				$('.height').html(h*100)
+				$('#height').val(h*100)
+			}
 			
 			$('#out').html(data);
 		});

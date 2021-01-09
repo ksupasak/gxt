@@ -73,7 +73,7 @@ set :port, 3000
             </tr>
             <tr>
                 <td>Current Weight</td>
-                <td>76.2</td>
+                <td>73.2</td>
                 <td>kg</td>
             </tr>
             <tr>
@@ -83,7 +83,7 @@ set :port, 3000
             </tr>
             <tr>
                 <td>Height</td>
-                <td>107.000</td>
+                <td>1.700</td>
                 <td>m</td>
             </tr>
             <tr>
@@ -111,7 +111,7 @@ set :port, 3000
 
 SECA
    
- 
+   unless params[:debug]
  
    req = Net::HTTP::Get.new(seca_uri.to_s)
 
@@ -123,6 +123,8 @@ SECA
    }
 
    content = res.body
+    end
+
 	   
     document = Nokogiri::HTML(content)
     tags = document.xpath("//td")
@@ -148,6 +150,7 @@ SECA
    
       if current_height and current_weight #and current_height.to_f > 0 and current_weight.to_f > 0
        
+        
         
         return "{\"time\":#{Time.now.to_json},\"status\":\"ok\",\"weight\":\"#{current_weight}\",\"height\":\"#{current_height}\",\"trig\":\"#{trig_weight}\",\"temp\":\"#{temp}\"}"
         
@@ -206,7 +209,7 @@ SECA
     
    
     error = false
-    
+    err_msg = "NA"
     begin
    
       # res = Net::HTTP.post_form(uri, 'hn' => params[:hn], 'weight' => params[:weight], 'height'=>params[:height])
@@ -216,27 +219,37 @@ SECA
       http = Net::HTTP.new(url.host, url.port)
       http.read_timeout = 2 # seconds
       
-      params[:vn] = params[:hn]
-      params.delete :hn
-
-      # http.request_post(url.path, JSON.generate(params)) do |response|
-      #   # do something with response
-      #   p response
-      #
-      # end
+      px = params.clone
       
+      px[:vn] = px[:hn]
+      px.delete :hn
+
+      if px[:height] and h = px[:height].to_f == 0 
+        px.delete :height
+      end
+      if px[:weight] and h = px[:weight].to_f == 0 
+        px.delete :weight
+      end
+      
+      if (px[:weight] or px[:height] ) and px[:vn]!=""
       
       request = Net::HTTP::Post.new(uri.path, initheader = {'Content-Type' =>'application/json'})
-      request.set_form_data( params)
+      request.set_form_data(px)
         
       
       response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
       
-      
+      else
+    
+        error = true
+        err_msg = "Invalid Data!"
+        
+      end
   
     rescue Exception => e
       puts e.inspect 
       error = true
+      err_msg = "Server Timeout!"
     end
     
     if error==false
@@ -247,7 +260,7 @@ SECA
       
     else
       
-      redirect "entry?hn=#{params[:vn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1"
+      redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1&err_msg=#{err_msg}#{'&debug=1' if params[:debug]=='1'}"
       
     end
     
@@ -261,6 +274,10 @@ SECA
   
   get "/error" do 
     erb :error
+  end
+  
+  get "/pad" do
+    erb :pad
   end
 
   get '/entry' do 
