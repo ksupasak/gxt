@@ -42,8 +42,8 @@ if request.post?
 	if user_login and user_login.role 
 		if  user_login.role.zone
 			session[:current_zone] = user_login.role.zone_id
-		else
-			session[:current_zone] = Zone.first.id
+		elsif first = Zone.first
+			session[:current_zone] = first.id
 	
 		end
 	end
