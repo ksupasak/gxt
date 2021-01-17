@@ -7,25 +7,60 @@
 	
 	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id }
 	
+	
 		
 	visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
 	
+	
+	my_patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id, :hospital_doctor_id=> @current_provider.id).all.collect{|i| i.patient_id }
+	
+	
+	# visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+	
+	my_list = []
+	other_list = []
+	for i in visits
+	
+		if my_patient_ids.index(i.patient_id)
+			my_list << i
+		else
+			other_list << i
+		end
+		
+	end
+	
+	
 	count = 0 
 %>
-
-<%= tabular :data=>visits, :model=>%w{No hn name status} do|row,out| 
+My Patients
+<%= tabular :data=>my_list, :model=>%w{No hn name status} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
 	out[0] = count+=1
-	out[1] = link_to("#{patient.hn}","show?id=#{admit.id}")
-	out[2] = link_to("#{patient.first_name}","show?id=#{admit.id}")
+	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{patient.first_name}","admit?id=#{admit.id}")
 	status = ""
-	status = "นัดหมาย" if row.status==nil
-	out[3] = link_to("#{status}","show?id=#{admit.id}")
+	status = "ตรวจ" if row.status==nil
+	out[3] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
 	
 	out
 
 end
 %>
+Other Patients
+<%= tabular :data=>other_list, :model=>%w{No hn name status} do|row,out| 
+	
+	patient = Patient.find(row.patient_id)
+	admit = Admit.where(:patient_id=>patient.id).first
+	out[0] = count+=1
+	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{patient.first_name}","admit?id=#{admit.id}")
+	status = ""
+	status = "ตรวจ" if row.status==nil
+	out[3] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	
+	out
 
+end
+%>

@@ -29,19 +29,25 @@
  <% if request.post? %>	
  
  <% if params[:patient] 
- 			
-		patient = Patient.where(:hn=>params[:patient][:hn]).first	
+ 		
 		params[:patient][:zone_id] = session[:current_zone]
 		
-		unless patient
-			
-			patient = Patient.create params[:patient]
-			
-		else
-			
-			patient.update_attributes params[:patient]	
-				
-		end	
+		
+ if params[:id]
+	
+     admit = Admit.find(params[:id])
+	 patient = admit.patient
+	 patient.update_attributes params[:patient]	
+	
+ else
+	 
+	 patient = Patient.create params[:patient]
+	 
+ end
+	 
+
+		
+		
 		
 		if params[:relation]
 			
@@ -68,9 +74,17 @@
 		
 		if params[:admit]
 		
-			admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now
-			admit.update_attributes  :provider_id=> params[:admit][:provider_id]
-			
+		
+			if admit
+			   
+				admit.update_attributes  params[:admit]
+		
+			else
+		
+				admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now
+				admit.update_attributes  params[:admit]
+		
+			end
 		end
 		
 			
@@ -90,9 +104,8 @@
 		<%
 			
 		if params[:id]
-			
-			patient = Patient.find(:params[:id])
-			admit = Admit.where(:patient_id=>patient.id).first
+			admit = Admit.find(params[:id])
+			patient = admit.patient
 			relation = SHRelation.where(:patient_id=>patient.id).first
 			
 		else
@@ -108,7 +121,7 @@
 		%>
 		<div class="card admit-form">
             <div class="card-body d-flex">
-				<form action="admit" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
 					<div class="form-group">
 		 				<%# <label for="product-name">Patient</label> %>
 		<div class='row'  style="border:0px solid gray">

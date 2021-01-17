@@ -3,6 +3,8 @@
 	
 	admit = Admit.find params[:admit_id]
 	patient = admit.patient
+	record = nil
+	record = DataRecord.find params[:id] if params[:id]
 	
 	
 	if request.post?
@@ -336,6 +338,7 @@
                     </div>
                 </div>
 				
+				<% unless record %>
 				<div class="row">
 					<div class="col-12">
 			        <div class="d-flex justify-content-center mt-5">
@@ -354,6 +357,7 @@
 					</div>
 				</div>
 				
+				<% end %>
             </div>
 
 			
@@ -669,6 +673,33 @@
 		$('.btn-submit').click(submitEntry);
 		
     })
+	
+	
+	<% if record 
+	
+	bp = record.bp.split("/")
+	
+		%>
+	
+		
+		$('.bp_sys').html("<%=bp[0]%>")
+		$('.bp_dia').html("<%=bp[1]%>")
+		$('.bp_mean').html("<%=record.bp_mean%>")
+		
+		$('.weight').html("<%=record.weight%>")
+		$('.height').html("<%=record.height%>")
+		$('.bmi').html("<%=record.bmi%>")
+		$('.temp').html("<%=record.temp%>")
+		$('.glucose').html("<%=record.glucose%>")
+		
+		$('.spo2').html("<%=record.spo2%>")
+		$('.pr').html("<%=record.pr%>")
+		
+		$('.rr').html("<%=record.rr%>")
+		$('.score').html("<%=record.score%>")
+		
+		
+	<% end %>
 	
 	
 	
