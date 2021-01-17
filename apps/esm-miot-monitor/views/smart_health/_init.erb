@@ -1,0 +1,30 @@
+<%
+	
+
+@stamp = Time.now
+	
+@access_type = nil
+
+if @current_user 
+
+
+if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
+	@access_type = 'hospital'
+	@current_hospital = user_hospital.hospital
+	@access_title = @current_hospital.name		
+
+elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
+	@access_type = 'network'
+	@current_network = user_network.network
+	@access_title = @current_network.name		
+
+
+end
+	
+	
+	
+end	
+
+
+%>
+

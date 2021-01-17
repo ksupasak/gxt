@@ -284,6 +284,33 @@ helpers do
       settings.app
   end
   
+  
+
+  def tabular ps
+    
+    results = []
+    
+    for i in ps[:data]
+      
+    out = []
+		
+    for c in ps[:model]
+			out << i[c]
+		end
+    
+    out = yield i, out
+		
+    results << out
+    
+    end
+    
+  
+    ps[:out] = results
+  
+    path = File.join("..","..", "gxt" ,"views", "tabular") 
+    @context.erb :"#{path}", :locals=>{:this=>self, :ps=>ps}
+  end
+  
   def data_field model
       
       
@@ -337,6 +364,8 @@ class GXT
 def default_layout 
  true
 end
+
+
 
   
 attr_accessor :request  

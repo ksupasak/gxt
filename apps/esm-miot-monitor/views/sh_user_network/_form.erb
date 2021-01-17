@@ -1,0 +1,83 @@
+	<%
+
+	list = User.all
+		
+	%>
+  <div class="form-group">
+    <label for="">User</label>
+	
+	<select id="record-user" name="record[user_id]" class="form-control" value="<%=@record['user_id']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k.id,k.login]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['user_id']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+  
+	<%
+
+	list = SHNetwork.all
+		
+	%>
+  <div class="form-group">
+    <label for="">Network</label>
+	
+	<select id="record-user" name="record[network_id]" class="form-control" value="<%=@record['network_id']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k.id,k.name]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['network_id']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+	<%
+
+	list = Provider.all
+		
+	%>
+  <div class="form-group">
+    <label for="">Provider</label>
+	
+	<select id="record-user" name="record[provider_id]" class="form-control" value="<%=@record['provider_id']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k.id,k.name]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['provider_id']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+  
+	<%
+
+	list = %w{doctor nurse officer}
+		
+	%>
+  <div class="form-group">
+    <label for="">Provider Type</label>
+	
+	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k,k]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+  
+  

@@ -88,6 +88,12 @@ class Provider < GXTModel
   include Mongoid::Document
   include Mongoid::Timestamps
    key :name, String
+   key :department, String
+   key :phone, String
+   key :email, String
+   key :license, String
+   
+   
   
 end
 

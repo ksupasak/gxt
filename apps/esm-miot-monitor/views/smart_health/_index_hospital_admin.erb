@@ -1,0 +1,109 @@
+<%=inline(this,:'_init')%>
+
+<div class="container" style="background:none">
+<br/>
+<center>
+<h1>SMART TELEHEALTH</h1>
+<div><%=@access_title%></div>
+</center>
+
+<div class="row" style="border:0px solid">
+
+<div class="col">
+ระบบจัดการข้อมูลผู้ดูแลระบบ
+</div>
+
+<div class="col d-flex justify-content-end">
+Hospital Admin
+</div>
+</div>
+<hr/>
+<div class="row">
+
+<div class="col">
+	
+
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Doctor / Nurse</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Patient</a>
+	  </li>
+	</ul>
+	<div class="tab-content" id="pills-tabContent">
+	  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	  	<%
+	  		
+		if @current_hospital 
+			
+			list = SHUserHospital.where(:hospital_id=>@current_hospital.id).all
+			
+	  	%>
+			
+		<%= tabular :data=>list, :model=>%w{user hospital provider provider_type}, :ext_model=>%w{action} do |row,out|
+		
+		out[0] = row.user.login
+		
+		out[1] = row.hospital.name
+		
+		out[2] = row.provider.name
+		
+		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+link_to("Edit", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
+		
+		<%=link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
+		
+		
+	  </div>  <!-- End Doctor Section-->
+	  
+	  
+	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  	
+		
+	  	<%
+	  		
+		if @current_hospital 
+			
+			list = SHRelation.where(:hospital_id=>@current_hospital.id).all
+			 
+	  	%>
+		
+		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
+		
+		
+		out[0] = row.hn
+		
+		out[1] = row.name
+		
+		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+	  </div>
+	  	
+		
+		
+		<% end %>
+
+	</div>
+	
+</div>
+</div>	
+
+</div>
+</div>
+
+
+

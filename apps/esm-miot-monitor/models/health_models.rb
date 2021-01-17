@@ -35,8 +35,15 @@ class SHUserHospital < GXTModel
   
   include Mongoid::Document
   
+  belongs_to :hospital, :class_name=>'EsmMiotMonitor::SHHospital', :foreign_key=>:hospital_id
+  belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
+  belongs_to :user, :class_name=>'EsmMiotMonitor::User'
+  
+  
   key :user_id, ObjectId
   key :hospital_id, ObjectId
+  key :provider_id, ObjectId
+  key :provider_type, String
   
 end
 
@@ -45,12 +52,33 @@ class SHUserNetwork < GXTModel
   
   include Mongoid::Document
   
+  belongs_to :network, :class_name=>'EsmMiotMonitor::SHNetwork',  :foreign_key=>:network_id
+  belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
+  belongs_to :user, :class_name=>'EsmMiotMonitor::User'
+  
   key :user_id, ObjectId
   key :network_id, ObjectId
-  
+  key :provider_id, ObjectId
+   key :provider_type, String
   
 end
 
+class SHRelation < GXTModel
+  
+  include Mongoid::Document
+  
+  belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
+  
+  
+  key :hospital_doctor_id, ObjectId
+  key :hospital_nurse_id, ObjectId
+  key :network_doctor_id, ObjectId
+  key :network_nurse_id, ObjectId
+  key :network_officer_id, ObjectId
+  key :patient_id, ObjectId
+  
+  
+end
 
 
 class SHOfficer < GXTModel
@@ -152,6 +180,9 @@ class SHCaseReportController < GXTDocument
   
 end
 
+class SHRelationController < GXTDocument
+  
+end
 
 class SHVisitController < GXTDocument
   
