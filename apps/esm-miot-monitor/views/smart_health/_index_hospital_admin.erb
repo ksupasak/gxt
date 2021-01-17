@@ -49,7 +49,7 @@ Hospital Admin
 		
 		out[2] = row.provider.name
 		
-		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+link_to("Edit", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end
@@ -80,10 +80,11 @@ Hospital Admin
 		
 		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
 		
+		patient = Patient.find row.patient_id
 		
-		out[0] = row.hn
+		out[0] = patient.hn
 		
-		out[1] = row.name
+		out[1] = patient.name
 		
 		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		

@@ -1,3 +1,4 @@
+<%=inline(this,:'_init')%>
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
@@ -18,12 +19,17 @@
                     </div> -->
                 </header>
       </div>
-	    
+
+<%
+	
+		
+	
+%>	    
 
  <% if request.post? %>	
  
  <% if params[:patient] 
- 
+ 			
 		patient = Patient.where(:hn=>params[:patient][:hn]).first	
 		params[:patient][:zone_id] = session[:current_zone]
 		
@@ -37,20 +43,36 @@
 				
 		end	
 		
+		if params[:relation]
+			
+			params[:relation][:patient_id] = patient.id
+			params[:admit][:provider_id]  = params[:relation][:hospital_doctor_id]
+			params[:patient][:hospital_id]  = params[:relation][:hospital_id]
+			params[:patient][:network_id]  = params[:relation][:network_id]
+			
+			if params[:relation_id]
+			
+				relation = SHRelation.find params[:relation_id] 
+				
+				relation.update_attributes params[:relation] 
+				
+			else
+			
+				relation = SHRelation.create params[:relation]
+			
+			end
+			
+			
+		end
+		
+		
 		if params[:admit]
 		
 			admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now
 			admit.update_attributes  :provider_id=> params[:admit][:provider_id]
 			
 		end
-			#
-	
-		# params[:admit][:zone_id] = session[:current_zone]
-		# params[:admit][:status] = "Admitted"
-		# params[:admit][:admit_stamp] = Time.now
-		#
-		# admit = Admit.create params[:admit]
-			
+		
 			
 			
  %>
@@ -67,12 +89,20 @@
      		   
 		<%
 			
+		if params[:id]
 			
-			patient = Patient.where(:hn=>params[:hn]).first
+			patient = Patient.find(:params[:id])
+			admit = Admit.where(:patient_id=>patient.id).first
+			relation = SHRelation.where(:patient_id=>patient.id).first
 			
-			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' unless patient
+		else
 			
+			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' 
 			admit = Admit.new :patient_id=>patient.id 
+			relation = SHRelation.new :patient_id=>patient.id 
+		end	
+			
+		
 			
 			
 		%>
@@ -100,31 +130,59 @@
 		<div class="col-sm-8 p-3">
 
 		
-			<div class="row">
-				<div class="col col-sm-6">
-		  			<label for="product-name">Hospital</label>
+			<div class="row" style="background-color:#ffc;padding-bottom:20px">
+				
+				<div class="col col-sm-4">
+		  			<label for="product-name">HN</label>
+		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
+				</div>
+				
+				
+				<div class="col col-sm-4">
+			  		<label for="product-name">แพทย์ประจำผู้ป่วย</label>
 					<%
 						
-					hospitals = SHHospital.all
-						
+						providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'doctor').all.collect{|i| i.provider}
 					%>
-					<select id="record-hospital_id" name="patient[hospital_id]" class="form-control" value="">
-
-					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
+					<select id="record-hospital_doctor_id" name="relation[hospital_doctor_id]" class="form-control" value="">
+					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
 					  <option value="<%=j[0]%>" %><%=j[1]%></option>
 					<% end %>
 					</select>
-					
 				</div>
+				<div class="col col-sm-4">
+			  		<label for="product-name">พยาบาลประจำผู้ป่วย</label>
+					<%
+						providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'nurse').all.collect{|i| i.provider}
+					%>
+					<select id="record-provider_id" name="relation[hospital_nurse_id]" class="form-control" value="">
+					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+					  <option value="<%=j[0]%>"    %><%=j[1]%></option>
+					<% end %>
+					</select>
+				</div>
+			</div>
 
+			<div class="row" style="background-color:#ffc;padding-bottom:20px">
 				<div class="col col-sm-6">
-		  		<label for="product-name">Network</label>
+		  			<label for="product-name">โรงพยาบาลต้นสังกัด (Hospital)</label>
+					<%
+						hospitals = SHHospital.all
+					%>
+					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value="">
+					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
+					  <option value="<%=j[0]%>" <%='disabled' unless @current_hospital.id==j[0] %> <%="selected" if @current_hospital.id==j[0] %> %><%=j[1]%></option>
+					<% end %>
+					</select>
+				</div>
+				<div class="col col-sm-6">
+		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต (Network Hospital)</label>
 				<%
 					
 				networks = SHNetwork.all
 					
 				%>
-				<select id="record-network_id" name="patient[network_id]" class="form-control" value="">
+				<select id="record-network_id" name="relation[network_id]" class="form-control" value="">
 
 				<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
 				  <option value="<%=j[0]%>" %><%=j[1]%></option>
@@ -133,60 +191,31 @@
 		  		
 				
 				</div>
-			</div>
-
-			<div class="row">
-				<div class="col col-sm-6">
-		  			<label for="product-name">HN</label>
-		  			<input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" style="">
-				</div>
 				
-				<div class="col col-sm-6">
-		  			<label for="product-name">Provider</label>
-
-				<%
-					
-				providers = Provider.all
-					
-				%>
-				<select id="record-provider_id" name="admit[provider_id]" class="form-control" value="">
-
-				<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
-				  <option value="<%=j[0]%>" %><%=j[1]%></option>
-				<% end %>
-				</select>
-
-
-				</div>
-
-<!--				<div class="col col-sm-6">
-		  			<label for="product-name">AN</label>
-		  			<input type="text" class="form-control" id="patient-hn" name="admit[an]" value="<%=admit.an%>" placeholder="HN" style="">
-				</div> -->
+				
 			</div>
 
 
 
-		<hr class="hr-new">
 			
 			
 		<div class="row mt-1">
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-prefix_name">คำนำหน้า</label>
-		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="First Name" style="">
+		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
 		</div>
 	
 
 		<div class="col-4 col-sm-4">
 		<label for="patient-first_name">ชื่อ</label>
-		<input type="text" class="form-control" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="First Name" style="">
+		<input type="text" class="form-control validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
 		</div>
 
 		<div class="col-4 col-sm-4">
 			<label for="patient-last_name">นามสกุล</label>
 			
-		<input type="text" class="form-control" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="Last Name" style="">
+		<input type="text" class="form-control validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
 		</div>
 		
 		</div><!--row-->
@@ -196,8 +225,14 @@
 			
 		<div class="col-4 col-sm-4">
 		<label for="patient-gener">เพศ</label>
-	    <input type="text" class="form-control" id="patient-gender" name="patient[gender]" value="<%=patient.gender%>" placeholder="M or FM" style="">
-	    </div>
+		<select name="patient[gender]">
+		<option value="">ไม่ระบุ</option>
+		<option value="M">ชาย</option>
+		<option value="F">หญิง</option>
+		</select>	
+	    <!-- <input type="text" class="form-control" id="patient-gender" name="patient[gender]" value="<%=patient.gender%>" placeholder="M or FM" style=""> -->
+	    
+		</div>
 	
 		<div class="col-8 col-sm-4">
 		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
@@ -245,7 +280,7 @@
 
 		<div class="col-8 col-sm-6">
 		<label for="patient-public_id">เลขประจำตัวประชาชน</label>
-		<input type="text" class="form-control" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="ID" style="">
+		<input type="text" class="form-control validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="ID" >
 		</div>
 
 		<div class="col-8 col-sm-6">
@@ -346,7 +381,7 @@
 		</div>
 			 -->
 		
-		<div class="col-12 col-sm-8">
+		<div class="col-12 col-sm-12">
 		<label for="product-name">Note</label>
 		<input type="text" class="form-control" id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
 		</div>

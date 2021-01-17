@@ -69,9 +69,10 @@ class SHRelation < GXTModel
   
   belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
   
-  
+  key :hospital_id, ObjectId
   key :hospital_doctor_id, ObjectId
   key :hospital_nurse_id, ObjectId
+  key :network_id, ObjectId
   key :network_doctor_id, ObjectId
   key :network_nurse_id, ObjectId
   key :network_officer_id, ObjectId
@@ -167,8 +168,10 @@ class SHCaseReport < GXTModel
   key :ext, String
   key :neuro, String
   key :body_etc, String
-
+  
   key :med, String
+  
+  key :updated_user_id, ObjectId
   
   include Mongoid::Timestamps
   

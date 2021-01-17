@@ -36,7 +36,7 @@ reportclass = "btn-secondary" unless report
             <div class="card patient-info">
                 <div class="card-body d-flex align-items-center">
 				 <div class="col">
-				     <h6 class="font-weight-bold" id="patient-name"><%=patient.to_s%></h6>
+				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=patient.to_s%></h6>
 				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
 				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age_text %> ปี</span>
 				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
@@ -59,13 +59,13 @@ reportclass = "btn-secondary" unless report
             <!--end of patient card-->
             <!--nurse summary-->
             <div class="d-flex bd-highlight mb-3 align-items-center mt-3">
-                <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="border:0px solid">Nurse Report</h4></div>
-                <!-- <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+                <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="border:0px solid">ประวัติการรักษา</h4></div>
+                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
                     <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
                         <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                        วัดค่า
+                        ระบบ 3 หมอ
                      </a>
-                </div> -->
+                </div>
 					
 			
 <!--
@@ -83,13 +83,7 @@ reportclass = "btn-secondary" unless report
 			    </script>
                 </div> -->
 				
-				&nbsp;
-				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
-	            <a href="calendar?patient_id=<%=patient.id%>" class="btn d-flex align-items-center justify-content-center ">
-	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
-	                นัดหมาย
-	            </a>
-				</div>
+			
 				&nbsp;
 				
 				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
@@ -142,131 +136,272 @@ reportclass = "btn-secondary" unless report
             </div>
             
 			<div class="clear"></div>
+			
+			
+			
+	<div class="row">		
+			
+			<%
+				
+				map = {}
+				
+				key = "#{patient.created_at.strftime('%Y-%m-%d')}"
+				map[key] = [] unless map[key]
+				admit_start = NurseRecord.new :description=>"ลงทะเบียนเข้าระบบ"
+				map[key] << {:stamp=>patient.created_at, :type=>'note',:data=>admit_start}
+			
+				# data record
+				
+				data_records = admit.records
+				
+				for i in data_records
+					
+					key = "#{i.stamp.strftime('%Y-%m-%d')}"
+					stamp = i.stamp
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'vitalsign',:data=>i}
+						
+				end
+				
+				
+				visits = SHVisit.where(:patient_id=>patient.id).all
+				
+				for i in visits
+					
+					key = "#{i.start.strftime('%Y-%m-%d')}"
+					stamp = i.start
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'visit',:data=>i}
+						
+				end
+				
+			
+				
+				records = SHCaseReport.where(:admit_id=>admit.id).all
+				
+				for i in records
+					
+					key = "#{i.date.strftime('%Y-%m-%d')}"
+					stamp = i.date
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'case_record',:data=>i}
+						
+				end
+				
+				nurse_records = NurseRecord.where(:admit_id=>admit.id).all
+				
+				for i in nurse_records
+					
+					key = "#{i.start_time.strftime('%Y-%m-%d')}"
+					stamp = i.start_time
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'note',:data=>i}
+						
+				end
+				
+				
+				
+				msgs = Message.where(:admit_id=>admit.id).sort(:created_at=>-1).all.reverse 
+				
+				for i in msgs
+					
+					key = "#{i.created_at.strftime('%Y-%m-%d')}"
+					stamp = i.created_at
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'image',:data=>i}
+						
+				end
+				
+				
+				
+				
+				date_list = map.keys.sort(){|a,b| b<=>a} 
+				
+				
+				
+				
+				
+				
+			%>
+			
+			
+			
+			<div class="col-12 col-xl-6">
+			
+			<table class="table station">	
+			<thead>
+				<th>วันเวลา</th><th>กิจกรรม</th><th>สถานะ</th><th>BP</th><th>SPO2/Pulse</th><th>WH</th><th>T</th><th>Glu</th><th>ผู้ลงข้อมูล</th>
+			</thead>
+			<tbody>
+			<% for date in date_list 
+			
+				 stamp = map[date][0][:stamp]
+		
+				 distance = ""
+	 
+				 distance = "#{((Time.now-stamp)/86400).to_i.abs} วัน" if (Time.now-stamp).abs/86400>1
+	 
+				 distance = "#{((Time.now-stamp)/86400/30).to_i.abs} เดือน" if (Time.now-stamp).abs/86400/30 > 1 
+	 			
+				
+				 if distance.size>0
+		 
+					 distance = "(#{distance})" 
+			 	 else
+					 distance = "วันนี้"
+				
+				 end
+			
+				 
+			
+			%>	
+			
+			<tr class="card-header card-vital">
+			<td colspan="9">
+				<%=stamp.strftime("%d/%m/%y")%> <span style="float:right"><%=distance%></span>
+			</td>
+			</tr>
+			
+			<% for i in map[date].sort(){|a,b| a[:stamp]<=>b[:stamp]} 
+			
+			data = i[:data]
+			
+			
+			
+			%>
+			<tr>
+				<td style="font-size:0.8em">
+					<%=i[:stamp].strftime("%H:%M")%>
+				</td>
+				<td>
+					<%=i[:type]%>
+				</td>
+				
+				<% if i[:type]=='visit'%>
+				
+				<td><%=data.status%></td>
+				
+				
+				<% elsif i[:type] == 'case_record'
+					user = nil
+					editor = '-'
+					if data.updated_user_id
+						user = User.find data.updated_user_id  
+					end
+					if user 
+						editor = user.login
+					else
+						editor = "-"
+					end
+				%>
+				<td colspan="6">
+				<a href="edit?admit_id=<%=admit.id%>&record_id=<%=data.id%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Record</a>
+				<a href="summary?admit_id=<%=admit.id%>&record_id=<%=data.id%>" class="btn btn-sm btn-action"><i class="fas fa-print"></i> Print</a>
+				</td>
+				<td>
+					<%=editor %>
+				</td>
+				
+				<% elsif i[:type] =='vitalsign'
+				
+				i = data
+				%>
+				
+				
+				
+               
+                <td class="bp"><%=i.bp%></td>
+                <td class="pr"><%=i.spo2%> : <%=i.pr%> </td>
+                <td class="rr"><%=i.weight%> : <%=i.height%></td>
+				<td class="rr"><%=i.temp%></td>
+                <td class="rr"><%=i.glucose%></td>
+				
+                <td><%=i.score%></td>
+                <td><%
+                	user = '-'
+					user = User.find i.updated_user_id 
+					
+                %><%=user.login if user%></td>
+			
+				
+				<% elsif i[:type] =='note'%>
+				<td colspan="7">
+					<i><%=data.description%></i>
+				</td>
+				
+				<% elsif i[:type] =='image'%>
+				
+				<% 
+				
+				url  = "/miot/img/svg/aoc-icon.svg"
+				url = "../Message/content?id=#{data.id}" 
+				
+				%>
+				<td colspan="7">
+					<a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+				</td>
+				
+				
+				<% else %>
+				<% end %>
+				
+				
+				
+			</tr>
+			
+			<% end %>
+			
+			
+			
+			<% end %>
+			
+			</tbody>
+			</table>
+			
+			</div>
+			
+			
+			<div class="col-12 col-xl-6">
+			Detail
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	</div>		
+			
+			
             <div class="card sum-report mt-3 station">
-                <!-- <div class="card-header card-vital">
-                    <strong> General Information</strong>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-						<%
-							weight = admit.weight
-							weight = ' - ' unless weight
-
-							height = admit.height
-							height = ' - ' unless height
-
-
-						%>
-                        <div class="col-3">Weight : <%=weight%> kg.</div>
-						<div class="col-3">Height : <%=height%> cm.</div>
-					</div>
-
-				</div> -->
-                <div class="card-header card-vital">
-                    <strong> Triage Assessment</strong>
-                </div>
-                <div class="card-body">
-			        <div class="row">
-                        <div class="col-4"><%= admit.admit_stamp.strftime("%H:%M")  %></div>
-                        <div class="col-8">
-                         	
-							Admit เข้าระบบ
-						 
-                        </div>
-                    </div>
-					<%
-						
-					nurse_records = NurseRecord.where(:admit_id=>admit.id).all
-						
-						for i in nurse_records  
-							stamp =  i.start_time.strftime("%H:%M")
-					%>
-			        <div class="row">
-                        <div class="col-4"><%= stamp %></div>
-                        <div class="col-8">
-                         	
-							<%= i.description %>
-						 
-                        </div>
-                    </div>
-					<% end %>
             
-                </div>
-                <!--vital sign part-->
-                <div class="card-header card-vital">
-                    <strong> Vital Sign</strong>
-                </div>
-                <div class="card-body col-12 " style="overflow:scroll">
-                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:1em; width:100%">
-                        <thead>
-                          <tr>
-                            <th scope="col">วัน - เวลา</th>
-                            <th scope="col">BP(Sys/Dia)</th>
-                            <th scope="col">Pulse : SpO<sub>2</sub></th>
-                            <th scope="col">BT(C)</th>
-                    		<th scope="col">W(kg) : H(cm)</th>
-            				<th scope="col">BMI</th>
-            				<th scope="col">Glucose(mg/dL)</th>
-                    		
-							
-                            <th scope="col">Score</th>
-						    <th scope="col">Staff</th>
-						    <th scope="col">Record</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                         
-						 <%
-						 	   
-						 data_records.each_with_index do |i,ix| 
-							
-							 distance = ""
-							 
-							 distance = "#{((Time.now-i.stamp)/86400).to_i} วัน" if (Time.now-i.stamp)/86400>1
-							 
-							 distance = "#{((Time.now-i.stamp)/86400/30).to_i} เดือน" if (Time.now-i.stamp)/86400/30 > 1 
-							 
-							 distance = "(#{distance})" if distance.size>0
-							 
-							 
-							 record = SHCaseReport.where(:admit_id=>admit.id, :date=>i.stamp.strftime("%Y-%m-%d")).first
-							 
-							
-						 %>
-						 
-						  <tr class="<%='last' if ix==0%>">
-                            <th scope="row"><%=i.stamp.strftime("%d/%m/%y %H:%M")%> <%= distance %> <%#(Time.now-i.stamp)/86400/30%> </th>
-                            <td class="bp"><%=i.bp%></td>
-                            <td class="pr"><%=i.pr%> : <%=i.spo2%></td>
-                            <td class="rr"><%=i.temp%></td>
-                            <td class="rr"><%=i.weight%> : <%=i.height%></td>
-                            <td class="rr"><%=i.bmi%></td>
-                            <td class="rr"><%=i.glucose%></td>
-							
-                            <td><%=i.score%></td>
-                            <td><%
-                            	user = '-'
-								user = User.find i.updated_user_id 
-								
-                            %><%=user.login if user%></td>
-							<td>
-							<% if record %>
-							<a href="edit?admit_id=<%=admit.id%>&record_id=<%=record.id%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Record</a>
-							<a href="summary?admit_id=<%=admit.id%>&record_id=<%=record.id%>" class="btn btn-sm btn-action"><i class="fas fa-print"></i> Print</a>
-							<% end %>
-								
-							</td>
-                          </tr>
-                         
-						 <% end  %>
-						 
-                        </tbody>
-                      </table>
-
-
-
-
-                </div>
             </div>
 
 
@@ -279,14 +414,14 @@ reportclass = "btn-secondary" unless report
             </a>&nbsp; -->
 			
        
+            <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+                <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
+                    <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                    วัดค่า
+                 </a>
+            </div>&nbsp;
 			
-            <a href="edit?admit_id=<%=admit.id%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
-                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
-                 Record
-            </a>&nbsp;
 			
-				
-				
             <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
                 <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
                 <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
@@ -300,6 +435,20 @@ reportclass = "btn-secondary" unless report
 			    })
 		    </script>
             </div>
+				&nbsp;
+            <a href="edit?admit_id=<%=admit.id%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
+                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+                 Record
+            </a>&nbsp;
+			
+				
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="calendar?patient_id=<%=patient.id%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                นัดหมาย
+	            </a>
+				</div>
+		
 			&nbsp;
 
           

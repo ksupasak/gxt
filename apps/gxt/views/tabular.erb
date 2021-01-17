@@ -12,7 +12,9 @@
 					<%=col_header %>
 				</th>
 			<% end%>
-			<% for c in ps[:ext_model] 
+			<% 
+			if ps[:ext_model]
+			for c in ps[:ext_model] 
 			
 				col_header = c.humanize
 				col_header = ps[:label][c] if ps[:label] and ps[:label][c]
@@ -21,7 +23,7 @@
 				<th>
 					<%=col_header %>
 				</th>
-			<% end%>
+			<% end%><% end%>
 		</tr>
 	</thead>
 	<tbody>

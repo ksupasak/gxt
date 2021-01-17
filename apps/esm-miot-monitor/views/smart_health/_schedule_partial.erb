@@ -1,0 +1,31 @@
+<%=inline(this,:'_init')%>
+
+<%
+	date = Time.now
+	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+		
+	
+	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id }
+	
+		
+	visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+	
+	count = 0 
+%>
+
+<%= tabular :data=>visits, :model=>%w{No hn name status} do|row,out| 
+	
+	patient = Patient.find(row.patient_id)
+	admit = Admit.where(:patient_id=>patient.id).first
+	out[0] = count+=1
+	out[1] = link_to("#{patient.hn}","show?id=#{admit.id}")
+	out[2] = link_to("#{patient.first_name}","show?id=#{admit.id}")
+	status = ""
+	status = "นัดหมาย" if row.status==nil
+	out[3] = link_to("#{status}","show?id=#{admit.id}")
+	
+	out
+
+end
+%>
+
