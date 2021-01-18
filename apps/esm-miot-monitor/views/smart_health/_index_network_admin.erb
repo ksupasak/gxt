@@ -1,202 +1,109 @@
-<style>
-@font-face {
-  font-family: IBMPlex;
-  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
-}
-body { 
-  background-image: url("<%=url_for('img/health/bg-purple.png')%>");
-  color: var(--btn-grey-text);
-  background-repeat: no-repeat;
-  background-size: cover;
-  font-family: "IBMPlex", sans-serif;
-  height:100vh;
-}
-</style>
-<%
+<%=inline(this,:'_init')%>
 
-zone = Zone.find session[:current_zone]
-
-network = SHNetwork.first
-un = SHUserNetwork.where(:user_id=>session[:identity]).first
-if un
-	network = SHNetwork.find un.network_id
-end
-netname = Setting.get :default_center_name
-netname = network.name if network
-
-if network
-	patients = Patient.where(:zone_id=>session[:current_zone],:network_id=>network.id).all
-else
-	patients = Patient.where(:zone_id=>session[:current_zone]).all
-end
-
-# default today patient
-
-date = Time.now
-date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
-
-pdate = date.strftime('%Y-%m-%d')
-pdate = params[:date] if params[:date] 
-
-visits = []
-
-unless pdate=='all' or params[:all]
-	visits = SHVisit.where(:start=>{'$gte'=> date.beginning_of_day, '$lte'=>date.end_of_day}).all
-	v_pid = visits.collect{|i| i.patient_id}
-	patients = patients.collect{|i| i if v_pid.index i.id }.compact
-end
-
-admits = Admit.where(:zone_id=>session[:current_zone]).all
-usernetworks = SHUserNetwork.all
-uns = usernetworks.collect{|i| i.user_id}
-	
-%>
 <div class="container" style="background:none">
 <br/>
-<center>
-<h1>SMART TELEHEALTH</h1>
-<div><%=netname%></div>
-</center>
+
 
 <div class="row" style="border:0px solid">
 
 <div class="col">
-<h3>รายชื่อผู้ป่วย</h3>
+<div><%=@access_title%></div>
 </div>
+<div class="col  d-flex justify-content-center">
+<div> ระบบจัดการข้อมูลผู้ดูแลระบบ Network
+</div></div>
 <div class="col d-flex justify-content-end">
-
-            <div class=" d-flex justify-content-end  btn-success btn-submit" >
-                <a href="./admit" class="btn d-flex align-items-center justify-content-end">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
-                      </svg>
-                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
-                </a>
-            </div>
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Doctor / Nurse</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Patient</a>
+	  </li>
+	</ul>
+</div>
 </div>
 
-</div>			
-
-
-	<br/>				
-<div class="row" style="border:0px solid">
+<div class="row">
 
 <div class="col">
-สถานะเคส :  ทั้งหมด  
-</div>
-<div class="col d-flex justify-content-end " >
-ประจำวันที่ : <%=(pdate!='all')? date.strftime("%d %B %Y") : "ทั้งหมด" %> &nbsp;
-<%=link_to '[ วันนี้ ]', "index" if pdate=='all' or date.strftime("%D") != Time.now.strftime("%D")%>
-<%=link_to '[ ทั้งหมด ]', "index?date=all" if pdate!='all'%>
+	
+
+
+	<div class="tab-content" id="pills-tabContent">
+	  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	  	<%
+	  		
+		if @current_network 
+			
+			list = SHUserNetwork.where(:network_id=>@current_network.id).all
+			
+	  	%>
+			
+		<%= tabular :data=>list, :model=>%w{user hospital provider provider_type}, :ext_model=>%w{action} do |row,out|
+		
+		out[0] = row.user.login if row.user
+		
+		out[1] = row.network.name if row.network
+		
+		out[2] = row.provider.name if row.provider
+		
+		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%=link_to("เพิ่ม", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%>
+		
+		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_network.id.to_s}", :class=>'btn')%>
+		
+		
+	  </div>  <!-- End Doctor Section-->
+	  
+	  
+	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  	
+		
+	  	<%
+	  		
+		if @current_network 
+			
+			list = SHRelation.where(:network_id=>@current_network.id).all
+			 
+	  	%>
+		
+		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
+		
+		patient = Patient.find row.patient_id
+		
+		out[0] = patient.hn
+		
+		out[1] = patient.name
+		
+		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+	  </div>
+	  	
+		
+		
+		<% end %>
+
+	</div>
+	
 </div>
 </div>	
-<hr/>
-
-
-
-<table class="table table-striped table-bordered table-condensed table-network" style="background:#FFF">
-<thead>
-	<tr>
-		<th>
-			สถานะ
-		</th>
-		<th>
-			วันที่
-		</th>
-		<th>
-			HN
-		</th>
-		<th>
-			ชื่อ-นามสกุล
-		</th>
-		<th>
-			แพทย์ผู้รักษา
-		</th>
-		
-		<th>
-			Visit
-		</th>
-		
-		<th>
-			อสม.
-		</th>
-		
-		<th>
-		</th>
-		
-	</tr>
-</head>
-<tbody>
-	<% for i in patients 
-	
-		admit = Admit.where(:patient_id=>i.id).first
-		provider = admit.provider
-		records = admit.records.size	
-		
-		provider_2 = '-'
-		if admit.provider_2_id
-			provider_2 = SHOfficer.find admit.provider_2_id
-			if provider_2
-				provider_2 = provider_2.name 
-			else
-				
-			end
-		end
-
-		bclass = "b-wait"
-		bname = "รอตรวจ"
-		rs = admit.records
-		if pdate!='all'
-			uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
-		else
-			uid = rs.collect{|i| i.created_user_id}.last
-		end
-
-		if uid 
-			bname = "ตรวจแล้ว"
-			if uns.index(uid)
-				bclass = "b-network"
-			else
-				bclass = "b-hos"
-			end
-		end		
-	%>
-	<tr>
-		<td><span class="badge <%=bclass%>"><%=bname%></span></td>
-		<!--<td><%=admit.status%></td>-->
-		
-		<td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td>
-		<td><%=i.hn%></td> 
-		<td><%=i.first_name%> <%=i.last_name%></td> 
-		
-		<td><%=provider.name if provider%></td> 
-		
-		<td><%=records%></td>
-		
-		<td><%=provider_2%></td>
-				
-		<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
-			<%=link_to "กระจายงาน", "search_officer?patient_id=#{i.id}", :class=>'btn btn-warning' %>
-			<%=link_to "Profile", "profile?id=#{i.id}", :class=>'btn btn-info' %>
-			<%#link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
-		
-	</tr>
-	<% end %>
-</tbody>
-</table>
-<div class="row">
-	<div class="col">
-		ยอดรวม <%=patients.size%> คน
-	</div>
-	<div class="col">
-		<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
-		<span class="badge b-hos">&nbsp;&nbsp;</span> รพ.ตรวจแล้ว
-		<span class="badge b-network">&nbsp;&nbsp;</span> รพสต.ตรวจแล้ว
-	</div>
-</div>
-
-<%=inline(this,:'_banner')%>
-
 
 </div>
+</div>
+
+
+

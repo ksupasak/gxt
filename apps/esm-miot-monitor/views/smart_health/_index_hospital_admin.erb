@@ -42,11 +42,11 @@
 			
 		<%= tabular :data=>list, :model=>%w{user hospital provider provider_type}, :ext_model=>%w{action} do |row,out|
 		
-		out[0] = row.user.login
+		out[0] = row.user.login. if row.user
 		
-		out[1] = row.hospital.name
+		out[1] = row.hospital.name if row.hospital
 		
-		out[2] = row.provider.name
+		out[2] = row.provider.name if row.provider
 		
 		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		

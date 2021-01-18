@@ -1,0 +1,20 @@
+<%
+
+if request.post? and params[:relation]
+	
+	admit = Admit.find params[:id]
+	patient = admit.patient 
+	relation = SHRelation.where(:patient_id=>patient.id).first
+	
+	if relation
+	
+		relation.update_attributes params[:relation]
+		
+	end
+		
+	
+
+end	
+	
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=params[:id]%>">
