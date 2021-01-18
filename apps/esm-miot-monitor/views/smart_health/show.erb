@@ -311,7 +311,7 @@ reportclass = "btn-secondary" unless report
 				<%=stamp.strftime("%d/%m/%y")%> 
 			</th>
 			<th><span style=""><%=distance%></span></th>
-			<td>กิจกรรม</td><td>สถานะ</td><td>BP</td><td>SPO2/Pulse</td><td>WH</td><td>T</td><td>Glu</td><td>ผู้ลงข้อมูล</td>
+			<td>สถานะ</td><td>BP</td><td>O2:PR</td><td>W:H</td><td>Temp</td><td>Glu</td><td>ผู้ลงข้อมูล</td>
 			
 			
 			</tr>
@@ -372,14 +372,14 @@ reportclass = "btn-secondary" unless report
 				
 				
 				
-               
+                <td> Score <%=i.score%></td>
                 <td class="bp"><%=i.bp%></td>
                 <td class="pr"><%=i.spo2%> : <%=i.pr%> </td>
                 <td class="rr"><%=i.weight%> : <%=i.height%></td>
 				<td class="rr"><%=i.temp%></td>
                 <td class="rr"><%=i.glucose%></td>
 				
-                <td><%=i.score%></td>
+            
                 <td><%
                 	user = '-'
 					user = User.find i.updated_user_id 
