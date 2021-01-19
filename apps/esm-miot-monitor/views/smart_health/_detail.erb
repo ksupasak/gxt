@@ -7,7 +7,7 @@
 <iframe src="../SHVisit/show?admit_id=<%=params[:admit_id]%>&id=<%=params[:id]%>" width="100%" height="800">
 </iframe>
 <% elsif params[:ctype]=='case_record'%>
-<iframe src="summary?admit_id=<%=params[:admit_id]%>&record_id=<%=params[:id]%>" width="100%" height="800">
+<iframe src="summary_partial?admit_id=<%=params[:admit_id]%>&record_id=<%=params[:id]%>" width="100%" height="800">
 </iframe>
 <% elsif params[:ctype]=='vitalsign'%>
 <iframe src="connect?admit_id=<%=params[:admit_id]%>&id=<%=params[:id]%>" width="100%" height="800">
