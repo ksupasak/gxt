@@ -70,9 +70,7 @@ th{
 }
 
 </style>
-
-<div class="container summary-container">
-  <a href="#" class="btn btn-secondary btn-print" id="btn-print">Print</a>
+<div style="background-color:white">
   <table class="w-100 table-style">
     <tr class="table-style">
       <th class="text-center fhead" colspan="3">แบบบันทึกการตรวจผู้ป่วยโรคเรื้อรัง</th>
@@ -1027,8 +1025,8 @@ th{
       </td>
     </tr>
   </table>
-    </div>
-        <script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
+  </div>
+<script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
 
     <script>
       var t_map = <%= map.to_json.html_safe %>
