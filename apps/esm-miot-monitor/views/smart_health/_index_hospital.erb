@@ -16,18 +16,30 @@
 <div class="containerx" style="background:none">
 <br/>
 
+<div class="row" style="border:0px solid;">
 
-<div class="row" style="border:0px solid">
+<div class="col" style="background-color:#fff;margin-left:10px;margin-right:10px;border-radius:5px;">
+	
+<div class="row banner-header" style="">
 
 <div class="col">
-	<div><%=@access_title%></div>
+	<div>
+		ระบบตรวจ Smart TeleHeatlh
+		<br/>
+		<span class="banner-title"><%=@access_title%></span></div>
 </div>
 <div class="col  d-flex justify-content-center">
 	<div>ระบบตรวจ</div>
 </div>
 
-<div class="col d-flex justify-content-end" style="border:0px solid">
-	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+
+</div>
+
+
+<div class="row">
+
+<div class="col d-flex justify-content-center" style="border:0px solid">
+	<ul class="nav nav-pills " id="pills-tab" role="tablist" style="margin-bottom:0px">
 	  <li class="nav-item">
 	    <a class="nav-link <%='active' unless params[:query]%>" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
 	  </li>
@@ -37,8 +49,48 @@
 	</ul>
 </div>
 </div>
+</div>
+</div>
 
 
+<style>
+	
+	.banner-header{
+		font-size:1.2em;
+		color:white;
+		padding:20px;
+		border:0px solid;
+		border-radius:5px 5px 0px 0px;
+		margin-bottom:20px;
+		background: transparent linear-gradient(274deg, #18A79DBF 0%, #00598B 55%, #1C7CD5 100%) 0% 0% no-repeat padding-box;
+	}
+	
+	.banner-title{
+		font-size:1.4em;
+	}
+
+	.nav-pills {
+		font-size:1.2em;
+	}
+	.nav-pills .nav-link.active, .nav-pills{
+		color:gray;
+		background-color:rgba(0, 0, 0, 0.0);;
+	
+		
+	}
+	.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+		color:black;
+		background-color:rgba(0, 0, 0, 0.0);;
+		border-bottom:3px solid #2679c9;
+		
+	}
+	
+
+</style>
+
+
+
+<br/>
 
 
 <div class="row">
@@ -64,14 +116,22 @@
 			
 		  %>
 		  
-	<div class="row" style="border:0px solid">
+	<div class="row" style="border:0px solid;">
 
 	<div class="col">
 		<h3>ตารางนัดหมาย</h3>
 	</div>
 	<div class="col d-flex justify-content-end">
 
-	   
+       <div class=" d-flex justify-content-end btn-submit" >
+           <a href="./admit" class="btn  d-flex align-items-center justify-content-end">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มใหม่</span>
+           </a>
+       </div>&nbsp;
 	            <div class=" d-flex justify-content-end btn-submit" >
 	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +148,7 @@
 
 <div class="col-12 col-sm-6">
 <!-- <h4>ตารางนัดหมาย</h4> -->
-<div class="schedule-content">
+<div class="schedule-content" style="background-color:white;padding:5px;border-radius: 5px;font-size:0.8em">
 ...
 </div>
 
@@ -98,7 +158,7 @@
 <div class="col-12 col-sm-6">
 <!-- <h3>ตารางปฏิทิน</h3> -->
 
-<div id="calendar" style="font-size:0.8em"></div>
+<div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
 
 	<div class="row">
 		<div class="col">
@@ -367,6 +427,33 @@
 
 		patients = patients.collect{|i| i if i.network_id and i.network_id.to_s==pnet }.compact if pnet!='all'
 
+		unless params[:query]
+
+		if @current_hospital
+		
+		patients = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| Patient.find(i.patient_id)}
+		
+		else @current_hospital
+		
+		patients = SHRelation.all.collect{|i| Patient.find(i.patient_id)}
+		
+		end
+		
+		else
+		
+		
+		
+		if @current_hospital
+		
+			patients = Patient.where(:_id=>{'$in'=>SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}}, :hn=>params[:query]).all
+		
+		else @current_hospital
+		
+			patients = Patient.where(:_id=>{'$in'=>SHRelation.all.collect{|i| i.patient_id}}, :hn=>params[:query]).all
+		
+		end
+		
+		end
 
 
 		admits = Admit.where(:zone_id=>session[:current_zone]).all

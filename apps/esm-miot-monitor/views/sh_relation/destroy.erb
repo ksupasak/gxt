@@ -1,0 +1,14 @@
+<%
+	
+	record = this.model.find(params[:id])
+	
+	patient = Patient.find record.patient_id
+	
+	patient.destroy if patient
+	
+	record.destroy
+	
+	
+
+%>
+<%=redirect_to '../Home/index'%>

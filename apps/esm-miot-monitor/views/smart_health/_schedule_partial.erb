@@ -42,8 +42,8 @@
 	
 	count = 0 
 %>
-My Patients
-<%= tabular :data=>my_list, :model=>%w{No hn name status} do|row,out| 
+ผู้ป่วยของฉัน
+<%= tabular :data=>my_list, :model=>%w{No hn name status}, :label=>{'hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
@@ -58,7 +58,7 @@ My Patients
 
 end
 %>
-Other Patients
+ผู้ป่วยอื่น ๆ
 <%= tabular :data=>other_list, :model=>%w{No hn name status} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)

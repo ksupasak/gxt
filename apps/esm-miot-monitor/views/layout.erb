@@ -20,11 +20,11 @@
     <link href="" rel="stylesheet">
 	<script src="/vendor/jquery-1.9.1.min.js"></script>
 <style>
-.navbar-pcm {
+/*.navbar-pcm-tmp {
   /* background-color: #06202E; */
   background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
     0% no-repeat padding-box;
-}
+}*/
 /* change the brand and text color */
 .navbar-pcm .navbar-brand,
 .navbar-pcm .navbar-text{
@@ -80,7 +80,7 @@ border-bottom: 2px solid #3147FF;
 	   
 	   <div class="order-12" style="">
 	   
-	   <%=link_to "#{@current_user.login} !", "../User/logout", :class=>'btn btn-success'  %>	
+	   <%=link_to "#{@current_user.login} !", "../User/logout", :class=>'btn btn-primary'  %>	
 	
   	  </div>
   	   <div class="order-12 text-right" style="width:80px">
@@ -297,11 +297,12 @@ border-bottom: 2px solid #3147FF;
 	<script>
 
 		<% if @current_role == 'network' %>
-		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(93,30,119,1) 0%, rgba(38,15,70,1) 100%)"})
+		//$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(93,30,119,1) 0%, rgba(38,15,70,1) 100%)"})
 		<% elsif @current_role == 'hospital' or @current_role == 'smarthealth_admin' %>
-		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(50,122,186,1) 0%, rgba(31,81,124,1) 100%)"})
+		//$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(50,122,186,1) 0%, rgba(31,81,124,1) 100%)"})
 		
 		<% end%>
+		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(20,21,24,1) 100%)"})
 		
 		
 		

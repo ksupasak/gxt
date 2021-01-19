@@ -2,8 +2,10 @@
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
 
-<% if @current_role == 'hospital' or @current_role =='admin' or @current_role =='smarthealth_admin'%>
+<% if @current_role == 'hospital' or @current_role =='smarthealth_admin'%>
 <%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'admin'  %>
+<%=inline(this,:'_index_admin')%>
 <% elsif @current_role == 'hospital_admin'  %>
 <%=inline(this,:'_index_hospital_admin')%>
 <% elsif @current_role == 'network_admin'  %>

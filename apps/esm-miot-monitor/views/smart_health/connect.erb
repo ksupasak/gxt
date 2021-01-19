@@ -29,7 +29,7 @@
 		
 		if params[:note]!=""
 		
-		nurse_note = NurseRecord.create :admit_id=>params[:admit_id], :start_time=> Time.now, :description=> params[:note]
+		nurse_note = NurseRecord.create :admit_id=>params[:admit_id], :start_time=> Time.now, :description=> params[:note], :updated_user_id=> @current_user.id
 			
 		end
 		

@@ -15,10 +15,10 @@
 <div class="col d-flex justify-content-end">
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Doctor / Nurse</a>
+	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
 	  </li>
 	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Patient</a>
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
 	  </li>
 	</ul>
 </div>
@@ -40,15 +40,18 @@
 			
 	  	%>
 			
-		<%= tabular :data=>list, :model=>%w{user hospital provider provider_type}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
 		
-		out[0] = row.user.login if row.user
+		out[0] = row.hospital.name if row.hospital
 		
-		out[1] = row.hospital.name if row.hospital
 		
-		out[2] = row.provider.name if row.provider
+		out[1] = row.provider.name if row.provider
+	
+		out[2] = row.provider_type.humanize if row.provider_type
 		
-		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out[3] = row.user.login if row.user
+		
+		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end
@@ -81,11 +84,15 @@
 		
 		patient = Patient.find row.patient_id
 		
+		if patient
+		
 		out[0] = patient.hn
 		
 		out[1] = patient.name
 		
-		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		end
+		
+		out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end

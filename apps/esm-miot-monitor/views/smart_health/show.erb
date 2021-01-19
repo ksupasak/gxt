@@ -27,6 +27,9 @@ reportclass = "btn-secondary" unless report
 	.last{
 		background:#E2FFFA;
 	}
+	.table-head{
+		color:white;
+	}
 	</style>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
@@ -177,7 +180,7 @@ reportclass = "btn-secondary" unless report
 			
 			
 			
-	<div class="row">		
+	<div class="row" style="background:#fff;padding:10px">		
 			
 			<%
 				
@@ -311,7 +314,7 @@ reportclass = "btn-secondary" unless report
 				<%=stamp.strftime("%d/%m/%y")%> 
 			</th>
 			<th><span style=""><%=distance%></span></th>
-			<td>สถานะ</td><td>BP</td><td>O2:PR</td><td>W:H</td><td>Temp</td><td>Glu</td><td>ผู้ลงข้อมูล</td>
+			<td class="table-head">สถานะ</td><td class="table-head">BP</td><td class="table-head">O2:PR</td><td class="table-head">W:H</td><td class="table-head">Temp</td><td class="table-head">Glu</td><td class="table-head">ผู้ลงข้อมูล</td>
 			
 			
 			</tr>
@@ -388,10 +391,14 @@ reportclass = "btn-secondary" unless report
 			
 				
 				<% elsif i[:type] =='note'%>
-				<td colspan="7">
+				<td colspan="6">
 					<i><%=data.description%></i>
 				</td>
-				
+                <td><%
+                	user = '-'
+					user = User.find data.updated_user_id 
+					
+                %><%=user.login if user%></td>
 				<% elsif i[:type] =='image'%>
 				
 				<% 

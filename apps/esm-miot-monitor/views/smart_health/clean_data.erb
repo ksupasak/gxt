@@ -1,0 +1,43 @@
+<%
+	
+	
+visits = SHVisit.all
+
+visits.each do |i|
+
+	if patient = Patient.find(i.patient_id)
+		%>
+		<%=patient.id%>
+		<%
+		
+	else
+		i.destroy
+	end
+	
+end
+
+
+patients = Patient.all
+
+patients.each do |i|
+	
+	if admit = Admit.where(:patient_id=>i.id).first
+		
+		relation = SHRelation.where(:patient_id=>i.id).first
+		
+		unless relation
+		
+			i.destroy
+			admit.destroy
+			
+		end
+		
+	
+	else	
+		i.destroy
+	end
+	
+end
+	
+	
+%>

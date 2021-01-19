@@ -397,6 +397,9 @@ class NurseRecord  < GXTModel
   key :note, String
   
   key :tag, String
+  
+  key :updated_user_id, ObjectId
+  
   include Mongoid::Timestamps
   
 end
