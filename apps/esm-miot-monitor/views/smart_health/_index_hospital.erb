@@ -29,10 +29,10 @@
 <div class="col d-flex justify-content-end" style="border:0px solid">
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
+	    <a class="nav-link <%='active' unless params[:query]%>" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
 	  </li>
 	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#tab-patient" role="tab" aria-controls="pills-profile" aria-selected="false">รายชื่อผู้ป่วย</a>
+	    <a class="nav-link <%='active' if params[:query]%>" id="pills-profile-tab" data-toggle="pill" href="#tab-patient" role="tab" aria-controls="pills-profile" aria-selected="false">รายชื่อผู้ป่วย</a>
 	  </li>
 	</ul>
 </div>
@@ -48,7 +48,7 @@
 
 	
 	<div class="tab-content" id="pills-tabContent">
-	  <div class="tab-pane fade show active" id="tab-schedule" role="tabpanel" aria-labelledby="pills-home-tab">
+	  <div class="tab-pane fade show <%='active' unless params[:query]%>" id="tab-schedule" role="tabpanel" aria-labelledby="pills-home-tab">
 		  
 		  
 		  <%
@@ -116,10 +116,18 @@
   
 <% if true
 
-	visits = SHVisit.all
+  visits = SHVisit.all
   networks = SHNetwork.all
   patients = Patient.where(:zone_id=>session[:current_zone]).all
-  m_pn = Hash[patients.collect{|i| [i.id,i.network_id]}.compact]
+  m_pn = Hash[patients.collect{|i| 
+		  
+	  r = SHRelation.where(:patient_id=>i.id).first
+		  
+	  [i.id,r.network_id] if r
+  
+  	}.compact 
+  
+  ]
   m_nid_name = Hash[networks.collect{|i| [i.id,i.name]}]
   colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
   m_nid_c = {}
@@ -139,7 +147,7 @@
         title:"#{m_nid_name[n]} (#{map[d][n].size})",
         url:"index?date="+d,
         start:d,
-        color:m_nid_c[n],
+        color:m_nid_c[n]
       }
     end
   end
@@ -292,7 +300,7 @@
 	  </div> <!--End Sechudle-->
 	  
 	  
-	  <div class="tab-pane fade" id="tab-patient" role="tabpanel" aria-labelledby="pills-home-tab">
+	  <div class="tab-pane  <%=' active' if params[:query]%>" id="tab-patient" role="tabpanel" aria-labelledby="pills-home-tab">
 	
 	<div class="row" style="border:0px solid">
 

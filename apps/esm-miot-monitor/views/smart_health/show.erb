@@ -271,10 +271,10 @@ reportclass = "btn-secondary" unless report
 			
 			<div class="col-12 col-xl-6">
 			
-			<table class="table station">	
-			<thead>
+			<table class="table station" style="font-size:0.8em">	
+			<!-- <thead>
 				<th>วันเวลา</th><th>กิจกรรม</th><th>สถานะ</th><th>BP</th><th>SPO2/Pulse</th><th>WH</th><th>T</th><th>Glu</th><th>ผู้ลงข้อมูล</th>
-			</thead>
+			</thead> -->
 			<tbody>
 			<% for date in date_list 
 			
@@ -288,8 +288,15 @@ reportclass = "btn-secondary" unless report
 	 			
 				
 				 if distance.size>0
-		 
-					 distance = "(#{distance})" 
+		 			
+					 if (Time.now-stamp)>0
+						 
+					 	 distance = "#{distance}" 
+				 	 else
+						 distance = "(#{distance})" 
+				 	 
+					 end
+					 
 			 	 else
 					 distance = "วันนี้"
 				
@@ -300,9 +307,13 @@ reportclass = "btn-secondary" unless report
 			%>	
 			
 			<tr class="card-header card-vital">
-			<td colspan="9">
-				<%=stamp.strftime("%d/%m/%y")%> <span style="float:right"><%=distance%></span>
-			</td>
+			<th >
+				<%=stamp.strftime("%d/%m/%y")%> 
+			</th>
+			<th><span style=""><%=distance%></span></th>
+			<td>สถานะ</td><td>BP</td><td>O2:PR</td><td>W:H</td><td>Temp</td><td>Glu</td><td>ผู้ลงข้อมูล</td>
+			
+			
 			</tr>
 			
 			<% for i in map[date].sort(){|a,b| a[:stamp]<=>b[:stamp]} 
@@ -313,13 +324,13 @@ reportclass = "btn-secondary" unless report
 			
 			%>
 			<tr>
-				<td style="font-size:0.8em">
+				<td style="font-size:1em">
 					<%=i[:stamp].strftime("%H:%M")%>
 				</td>
 				<td>
 					
 					
-					<a href="#" class="btn detail" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type]%></a>
+					<a href="#" class=" detail" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
 					
 					
 				</td>
@@ -361,14 +372,14 @@ reportclass = "btn-secondary" unless report
 				
 				
 				
-               
+                <td> Score <%=i.score%></td>
                 <td class="bp"><%=i.bp%></td>
                 <td class="pr"><%=i.spo2%> : <%=i.pr%> </td>
                 <td class="rr"><%=i.weight%> : <%=i.height%></td>
 				<td class="rr"><%=i.temp%></td>
                 <td class="rr"><%=i.glucose%></td>
 				
-                <td><%=i.score%></td>
+            
                 <td><%
                 	user = '-'
 					user = User.find i.updated_user_id 
@@ -708,6 +719,8 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 	<div class="modal fade" id="doctor3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
+ 		   <form action="update_relation?id=<%=params[:id]%>" method="post">
+			
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">ระบบ 3 หมอ</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -715,12 +728,145 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        ...
+	       <%
+	       		
+		   	relation = SHRelation.where(:patient_id=>patient.id).first
+			
+	       %>
+		   
+  		  <div class="row">
+
+  		 		<div class="col">
+  		 		<label for="relation-hospital_id">โรงพยาบาลต้นสังกัด</label>
+				<br/>
+				<select name="relation[hospital_id]">
+				<option value="" ></option>
+				<% for i in SHHospital.all
+				
+				%>
+				<option value="<%=i.id%>" <%="selected" if i.id==relation.hospital_id %>><%=i.name%></option>
+				<% end %>
+				</select>
+				
+			
+				</div>
+				 
+ 	
+ 		
+				 
+  		 </div>
+		   
+		  <div class="row">
+
+		 		<div class="col">
+		 		<label for="relation-hospital_doctor_id">แพทย์</label>
+		 		<br/>
+				<select name="relation[hospital_doctor_id]">
+				<option value="" ></option>
+				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'doctor').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_doctor_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+				
+				</div>
+				 
+	 		<div class="col">
+	 		<label for="relation-hospital_nurse_id">พยาบาล</label>
+				<br/>
+				<select name="relation[hospital_nurse_id]">
+				<option value="" ></option>
+				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'nurse').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_nurse_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+		
+		    </div>
+			 
+		 		<div class="col">
+		 		</div>
+				 
+		 </div>
+		 <br/>
+  		  <div class="row">
+
+  		 		<div class="col">
+  		 		<label for="relation-network_id">โรงพยาบาลส่งเสริมสุขภาพตำบล</label>
+			
+				<br/>
+				<select name="relation[network_id]">
+				<option value="" ></option>
+				<% 
+				
+				@current_network = SHNetwork.find relation.network_id
+					
+				for i in SHNetwork.all
+			
+				%>
+				<option value="<%=i.id%>" <%="selected" if i.id==relation.network_id %>><%=i.name%></option>
+				<% end %>
+				</select>
+			
+			    </div>
+				 
+  	 	
+				 
+  		 </div>
+		 
+		  <div class="row">
+
+		 		<div class="col">
+		 		<label for="relation-network_doctor_id">แพทย์</label>
+				<br/>
+				<select name="relation[network_doctor_id]">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'doctor').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_doctor_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+			
+			    </div>
+				 
+		 		<div class="col">
+		 		<label for="relation-network_nurse_id">พยาบาล</label><br/>
+				<select name="relation[network_nurse_id]">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'nurse').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_nurse_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+				</div>
+			 
+		 		<div class="col">
+		 		<label for="relation-network_officer_id">อสม</label><br/>
+			
+				<select name="relation[network_officer_id]">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'officer').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_officer_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+			
+			
+			    </div>
+				 
+		 </div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
+	        <input type="submit" class="btn btn-primary" value='บันทึก' name='บันทึก'/>
 	      </div>
+		  
+		    </form>
 	    </div>
 	  </div>
 	</div>

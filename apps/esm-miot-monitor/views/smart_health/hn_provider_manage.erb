@@ -4,9 +4,9 @@
 @record = nil
 
 if params[:id]
-	@record = SHUserHospital.find params[:id]
+	@record = SHUserNetwork.find params[:id]
 else
-	@record = SHUserHospital.new :hospital_id=>params[:hospital_id]
+	@record = SHUserNetwork.new :network_id=>params[:network_id]
 end	
 
 
@@ -83,18 +83,17 @@ if request.post?
 %>
 Updating..
 <META HTTP-EQUIV="Refresh" CONTENT="0;URL=index">
-
 <% else %>
 
 
-<h1> Provider <%=(params[:id])? "Edit" : "Create" %> </h1>
+<h1> Provider Create </h1>
 
 <form action="" method="post">
 
-<%=inline(this,:'_ha_provider_form')%>
+<%=inline(this,:'_hn_provider_form')%>
 
 
-<input type="submit" value="Submit" class="btn btn-primary"/>
-<a class="btn btn-secondary" href="index">ย้อนกลับ</a>
+<input type="submit" value="Submit"/> <%= link_to 'ย้อนกลับ' ,"index"%>
+
 </form>
 <% end %>

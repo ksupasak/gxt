@@ -1,0 +1,140 @@
+
+<%
+	
+	
+	
+	
+	provider = Provider.find @record.provider_id
+	
+	provider = Provider.new unless provider
+	
+	
+	user = User.find @record.user_id
+	
+	user = User.new unless user
+	
+	
+	
+%>
+
+<input type="hidden" name="provider_id" value="<%=provider.id%>">
+<input type="hidden" name="user_id" value="<%=user.id%>">
+
+
+<div class="form-group">
+	  
+<label for="provider-name">Provider Name</label>
+	
+<input name="provider[name]" class="form-control" value="<%=provider.name%>">
+
+</div>
+
+
+<div class="form-group">
+	  
+<label for="provider-department">Provider Department</label>
+	
+<input name="provider[department]" class="form-control" value="<%=provider.department%>">
+
+</div>
+
+
+<div class="form-group">
+	  
+<label for="provider-license">Provider License</label>
+	
+<input name="provider[license]" class="form-control" value="<%=provider.license%>">
+
+</div>
+
+
+<div class="form-group">
+	  
+<label for="provider-phone">Provider Phone</label>
+	
+<input name="provider[phone]" class="form-control" value="<%=provider.phone%>">
+
+</div>
+
+
+<div class="form-group">
+	  
+<label for="provider-email">Provider Email</label>
+	
+<input name="provider[email]" class="form-control" value="<%=provider.email%>">
+
+</div>
+
+
+
+  
+  
+	<%
+
+	list = %w{doctor nurse officer}
+		
+	%>
+	
+	
+  <div class="form-group">
+    <label for="">Provider Type</label>
+	
+	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k,k]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+	<%
+
+	list = SHNetwork.all
+		
+	%>
+  <div class="form-group">
+    <label for="">Hospital</label>
+	
+	<select id="record-user" name="record[network_id]" class="form-control" value="<%=@record['network_id']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k.id,k.name]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['network_id']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+  
+  <div class="form-group">
+	  
+  <label for="user-login">User Login</label>
+	
+  <input name="user[login]" class="form-control" value="<%=user.login%>">
+
+  </div>
+
+
+  <div class="form-group">
+	  
+  <label for="">Password</label>
+	
+  <input name="password" type="password" class="form-control" value="">
+
+  </div>
+
+
+  <div class="form-group">
+	  
+  <label for="">Password Confirm</label>
+	
+  <input name="password_confirmation" type="password" class="form-control" value="">
+
+  </div>
+  
