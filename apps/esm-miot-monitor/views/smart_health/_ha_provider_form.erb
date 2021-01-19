@@ -1,4 +1,17 @@
 
+<style>
+body{
+background: #E0EAFC;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #CFDEF3, #E0EAFC);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.u-section{
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.5" x="0" y="0" width="1000" height="1000"/></svg>');
+
+
+}
+</style>
 <%
 	
 	
@@ -20,7 +33,10 @@
 <input type="hidden" name="provider_id" value="<%=provider.id%>">
 <input type="hidden" name="user_id" value="<%=user.id%>">
 
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
 
+<div class="col-sm-4">
 <div class="form-group">
 	  
 <label for="provider-name">Provider Name</label>
@@ -28,8 +44,8 @@
 <input name="provider[name]" class="form-control" value="<%=provider.name%>">
 
 </div>
-
-
+</div>
+<div class="col-sm-4">
 <div class="form-group">
 	  
 <label for="provider-department">Provider Department</label>
@@ -37,8 +53,8 @@
 <input name="provider[department]" class="form-control" value="<%=provider.department%>">
 
 </div>
-
-
+</div>
+<div class="col-sm-4">
 <div class="form-group">
 	  
 <label for="provider-license">Provider License</label>
@@ -46,8 +62,8 @@
 <input name="provider[license]" class="form-control" value="<%=provider.license%>">
 
 </div>
-
-
+</div>
+<div class="col-sm-4">
 <div class="form-group">
 	  
 <label for="provider-phone">Provider Phone</label>
@@ -55,8 +71,8 @@
 <input name="provider[phone]" class="form-control" value="<%=provider.phone%>">
 
 </div>
-
-
+</div>
+<div class="col-sm-4">
 <div class="form-group">
 	  
 <label for="provider-email">Provider Email</label>
@@ -64,17 +80,21 @@
 <input name="provider[email]" class="form-control" value="<%=provider.email%>">
 
 </div>
+</div>
 
+</div> <!--row-->
+</div> <!--u-section-->
 
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
 
-  
-  
 	<%
 
 	list = %w{doctor nurse officer}
 		
 	%>
 	
+<div class="col-sm-4">
 	
   <div class="form-group">
     <label for="">Provider Type</label>
@@ -90,12 +110,13 @@
 	<% end %>
 	</select>
   </div>
-  
+  </div> 
 	<%
 
 	list = SHHospital.all
 		
 	%>
+<div class="col-sm-4">
   <div class="form-group">
     <label for="">Hospital</label>
 	
@@ -111,7 +132,13 @@
 	</select>
   </div>
   
-  
+ </div> 
+ </div><!--row-->
+</div><!--u-section-->
+
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
+<div class="col-sm-4">
   <div class="form-group">
 	  
   <label for="user-login">User Login</label>
@@ -119,8 +146,9 @@
   <input name="user[login]" class="form-control" value="<%=user.login%>">
 
   </div>
+</div>
 
-
+<div class="col-sm-4">
   <div class="form-group">
 	  
   <label for="">Password</label>
@@ -128,8 +156,9 @@
   <input name="password" type="password" class="form-control" value="">
 
   </div>
+</div>
 
-
+<div class="col-sm-4">
   <div class="form-group">
 	  
   <label for="">Password Confirm</label>
@@ -137,4 +166,6 @@
   <input name="password_confirmation" type="password" class="form-control" value="">
 
   </div>
-  
+</div>
+</div><!--row-->
+</div><!--u-section-->

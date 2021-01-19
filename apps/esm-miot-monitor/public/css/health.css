@@ -5,6 +5,10 @@
 
 /*@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");*/
 
+@font-face {
+  font-family: IBMPlex;
+  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+}
 body { 
 	
 
@@ -12,7 +16,7 @@ body {
   color: var(--btn-grey-text);
   background-repeat: no-repeat;
   background-size: cover;
-  font-family: "Sarabun", sans-serif;
+  font-family: "IBMPlex","Sarabun", sans-serif;
   height:100vh;
 }
 
