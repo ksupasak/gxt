@@ -83,7 +83,8 @@
 		
 		out[0] = patient.hn
 		
-		out[1] = patient.name
+		# out[1] = patient.name
+		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
 		
 		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
