@@ -5,8 +5,39 @@
 	  min-width:300px;
 /*	  border: 1px solid #1e6dfB;*/
 	  padding: 10px;
-	}
-	</style>
+    }
+    @font-face {
+    font-family: IBMPlex;
+    src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+    }
+    body { 
+        background: transparent linear-gradient(274deg, #18A79DBF 0%, #1C7CD5 100%) 0% 0% no-repeat padding-box;
+        height:100vh;
+        font-family: "IBMPlex","Sarabun", sans-serif;
+    }    
+    .bg-all{
+        background-image: url("<%=url_for "img/svg/wave-login.svg"%>");
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position:bottom;
+        height:90vh;
+        display:flex;
+        align-items:center;
+        flex-direction:column;
+        
+    }
+    .login-contain{
+        background:#FFF;
+        /* margin:auto; */
+        min-width:400px;
+        width:30%;
+        /* padding:10px; */
+        /* padding-left:0px; */
+    }
+    .logo-img{
+        height:20vh;
+    }
+</style>
 	<link rel="stylesheet" type="text/css" href="<%=url_for "PatternLock/_style/patternlock.css"%>"/>
 	
 <%
@@ -55,8 +86,11 @@ if request.post?
 %>
 
 <% else %>
-<div class="center">
-<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>
+<div class="bg-all">
+<img src="<%=url_for "img/sammho-login.png"%>" class="logo-img">
+<div class="login-contain p-5 rounded">
+<!--<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>-->
+
 
 <form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
 
@@ -104,6 +138,7 @@ if request.post?
 
 </form>
 
+</div>
 </div>
 <script>
 	$('.patternlock-toggle').click(function(){

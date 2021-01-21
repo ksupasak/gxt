@@ -84,6 +84,10 @@
 		border-bottom:3px solid #2679c9;
 		
 	}
+	th{
+		background:#F1F1F1;
+		color:black;
+	}
 	
 
 </style>
@@ -146,7 +150,7 @@
 		 <br/>
 <div class="row" style="border:0px solid">
 
-<div class="col-12 col-sm-6">
+<div class="col-12 col-md-6">
 <!-- <h4>ตารางนัดหมาย</h4> -->
 <div class="schedule-content" style="background-color:white;padding:5px;border-radius: 5px;font-size:0.8em">
 ...
@@ -155,7 +159,7 @@
 
 </div> 
 
-<div class="col-12 col-sm-6">
+<div class="col-12 col-md-6">
 <!-- <h3>ตารางปฏิทิน</h3> -->
 
 <div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
@@ -450,6 +454,8 @@
 		usernetworks = SHUserNetwork.all
 		uns = usernetworks.collect{|i| i.user_id}
 		networks = SHNetwork.all
+
+		
 	
 		%>		
 	<input type="hidden" id="p-date" value="<%=pdate%>">
@@ -561,8 +567,8 @@
 			<td><%=provider_2%></td>
 				
 			<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
-				<%=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
-				<%=link_to "เครือข่าย", "admit?id=#{admit.id}", :class=>'btn btn-info' %>
+				<%#=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
+				<%#=link_to "เครือข่าย", "admit?id=#{admit.id}", :class=>'btn btn-info' %>
 				<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
 		
 		</tr>
