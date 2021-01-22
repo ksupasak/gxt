@@ -426,6 +426,10 @@
 		if @current_hospital
 		
 		patients = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| Patient.find(i.patient_id)}
+
+		elsif @current_network
+
+		patients = SHRelation.where(:network_id=>@current_network.id).all.collect{|i| Patient.find(i.patient_id)}
 		
 		else @current_hospital
 		
@@ -454,7 +458,9 @@
 		usernetworks = SHUserNetwork.all
 		uns = usernetworks.collect{|i| i.user_id}
 		networks = SHNetwork.all
-
+		pid=patients.collect{|i| i.id}
+		relations = SHRelation.where(:patient_id=>pid).all
+		m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 		
 	
 		%>		
@@ -465,6 +471,8 @@
 
 
 	<div class="col">
+
+	<%if @current_hospital %>
 	เครือข่าย :  
 	<select id="record-network_id" name="patient[network_id]"  value="" style="width:200px">
 	<option value="all" %>ทั้งหมด</option>
@@ -472,7 +480,10 @@
 		<option value="<%=j[0]%>" <%=(pnet==j[0].to_s)? "selected" : "" %> ><%=j[1]%></option>
 	<% end %>
 	</select>
+	<% end %>
 	</div>
+	
+
 	<div class="col d-flex justify-content-end " >
 	ประจำวันที่ : <%=(pdate!='all')? date.strftime("%d %B %Y") : "ทั้งหมด" %> &nbsp;
 	<!--
@@ -550,7 +561,7 @@
 			end
 		
 		%>
-		<tr>
+		<tr class="tr-network <%=m_pn[i.id]%>">
 			<td><span class="badge <%=bclass%>"><%=bname%></span></td>
 			<!--<td><%=admit.status%></td>-->
 		
@@ -562,7 +573,7 @@
 		
 			<td><%=records%></td>
 		
-			<td><%=mnet[i.network_id]%></td>
+			<td><%=mnet[m_pn[i.id]]%></td>
 
 			<td><%=provider_2%></td>
 				
@@ -628,8 +639,18 @@
 
 
 <script>
+function networkshow(id){
+	if(id=='all'){
+		$(".tr-network").show()
+	}else{
+		$(".tr-network").hide()
+		$("."+id).show()
+	}
+}
+
 $("#record-network_id").change(function(){
-	document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
+	networkshow($(this).val())
+	//document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
 })
 </script> 
 
