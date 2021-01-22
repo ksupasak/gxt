@@ -461,6 +461,9 @@
 		pid=patients.collect{|i| i.id}
 		relations = SHRelation.where(:patient_id=>pid).all
 		m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
+		m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
+		offs = Provider.where(:id=>relations.collect{|i| i.network_officer_id}.compact).all
+		m_on = Hash[offs.collect{|i| [i.id,i.name]}]
 		
 	
 		%>		
@@ -575,7 +578,7 @@
 		
 			<td><%=mnet[m_pn[i.id]]%></td>
 
-			<td><%=provider_2%></td>
+			<td><%=m_on[m_po[i.id]]%></td>
 				
 			<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
 				<%#=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
