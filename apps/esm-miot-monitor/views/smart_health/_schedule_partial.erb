@@ -44,7 +44,10 @@
 	
 	count = 0 
 %>
-วันที่ : <%=date.strftime("%d %B %Y") %> <br><br>
+<span style="font-size:1.2em;font-weight:bold">
+วันที่ : <%=date.strftime("%d %B %Y") %> 
+</span>
+<br><br>
 ผู้ป่วยของฉัน <%="(#{my_list.size})".html_safe if my_list.size>0%>
 <%= tabular :data=>my_list, :model=>%w{No hn name status}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>''} do|row,out| 
 	
@@ -73,7 +76,7 @@
 	out
 
 end
-%>
+%><br/>
 ผู้ป่วยอื่น ๆ
 <%= tabular :data=>other_list, :model=>%w{No hn name status}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>''} do|row,out| 
 	

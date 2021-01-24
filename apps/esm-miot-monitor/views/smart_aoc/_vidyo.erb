@@ -1,3 +1,4 @@
+
 <%
 
 
@@ -291,8 +292,8 @@ invoke the VidyoConnector API. -->
 		configParams.webrtcLogLevel = getUrlParameterByName("webrtcLogLevel");
 		configParams.returnURL = getUrlParameterByName("returnURL");
 		configParams.isIE = platformInfo.isIE;
-		var hideConfig = getUrlParameterByName("hideConfig");
-	
+		var hideConfig = true //getUrlParameterByName("hideConfig");
+		
 		// If the parameters are passed in the URI, do not display options dialog
 		if (host && token && displayName && resourceId) {
 			$(".optionsParameters").addClass("hiddenPermanent");

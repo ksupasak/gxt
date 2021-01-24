@@ -37,51 +37,98 @@ reportclass = "btn-secondary" unless report
     <!--Content-->
     <section>
         <div class="containerx">
-	<br/>		
-<div class="row" style="border:0px solid">
+	
+	
+	
+	
+	<div class="row">
+	
+	<div class="col" style="margin-left:0px;margin-right:0px;border-radius:0px;">
+	
+	<div class="row banner-header" style="">
 
-<div class="col">
-	<div><%=@access_title%></div>
-</div>
-<div class="col  d-flex justify-content-center">
-	<div>
-		
-		
-		<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name">ผู้ป่วย : <%=patient.to_s%> HN : <%=patient.hn%></h6>
-		
-		
+	<div class="col">
+		<div>
+			<span class="banner-title"><%=@access_title%>&nbsp; &nbsp; &gt; &nbsp; &nbsp; <%=patient.to_s%> HN : <%=patient.hn%></span> 
+	    </div>
 	</div>
-</div>
-
-<div class="col d-flex justify-content-end" style="border:0px solid">
-	<!-- <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#tab-patient" role="tab" aria-controls="pills-profile" aria-selected="false">รายชื่อผู้ป่วย</a>
-	  </li>
-	</ul> -->
-</div>
-</div>
-
+	
+	<div class="col  d-flex justify-content-end">
+		<div>
 			
+				<span class="banner-title">นัดหมายวันนี้</span>
+		</div>
+	</div>
+
+
+	</div>
+	
+    </div>
+	</div>
+	
 			
             <!--patient card-->
             <div class="card patient-info">
                 <div class="card-body d-flex align-items-center">
-				 <div class="col">
+				 <div class="col-3">
 				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=patient.to_s%></h6>
 				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
 				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age_text %> ปี</span>
-				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br>
-				     <span class="col p-0" id="gender">Complaint: <%=admit.note%></span>
+				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br/>
+				     <span class="col p-0" id="gender">อาการสำคัญ: <%=admit.note%></span><br/>
+					 &nbsp;
 					 
 				 </div>
-				 <div class="col text-right">
-				     <h6 class="" id="arrival-time">Registered at:
+				 
+				 <%
+				 	
+				 relation = SHRelation.where(:patient_id=>patient.id).first
+				 
+				 if relation 
+					
+					
+					 hospital = SHHospital.find relation.hospital_id
+					 
+					 hospital_doctor = Provider.find relation.hospital_doctor_id
+					 hospital_nurse = Provider.find relation.hospital_nurse_id
+					 
+					 network = SHNetwork.find relation.network_id
+					 
+					 network_doctor = Provider.find relation.network_doctor_id
+					 network_nurse = Provider.find relation.network_nurse_id
+					 network_officer = Provider.find relation.network_officer_id
+					 
+					 
+					 
+					
+				 %>
+				 
+				 
+				 <div class="col-3">
+				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=hospital.name if hospital%></h6>
+				     <span class="col p-0 " id="HN">แพทย์ประจำ : <%=hospital_doctor.name if hospital_doctor%></span><br/>
+				     <span class="col p-0 mr-3" id="age">พนายาล : <%=hospital_nurse.name if hospital_nurse %></span><br/>
+					 &nbsp;<br/>
+			
+		
+					 
+				 </div>
+				 
+				 <div class="col-4">
+					 
+				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=network.name if network%></h6>
+				     <span class="col p-0 " id="HN">แพทย์ประจำ : <%=network_doctor.name if network_doctor%></span><br/>
+				     <span class="col p-0 mr-3" id="age">พนายาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_officer and network_nurse.phone.size>0 %></span><br/>
+			    	 <span class="col p-0 mr-3" id="age">อสม : <%=network_officer.name if network_officer %>  <%=", T : "+network_officer.phone if network_officer and network_officer.phone.size>0 %></span><br/>
+				   
+				 </div>
+				 
+				 <% end %>
+				 
+				 <div class="col-2 text-right">
+				     <!-- <h6 class="" id="arrival-time">Registered at:
 				         <span><%= admit.admit_stamp.strftime("%d/%m/%Y - %H:%M")%></span>
-				     </h6>
+				     </h6> -->
 				
 			
 					

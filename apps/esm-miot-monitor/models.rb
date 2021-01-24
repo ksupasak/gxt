@@ -123,6 +123,9 @@ class Zone < GXTModel
   
   key :name, String 
   key :mode, String 
+  key :default, Boolean
+  
+  
     include Mongoid::Timestamps
 end
 
@@ -816,6 +819,7 @@ class UserController < GXTDocument
   def acl
     return {'*'=>'*'}
   end
+
 
 end
 

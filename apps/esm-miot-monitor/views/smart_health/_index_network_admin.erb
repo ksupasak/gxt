@@ -40,13 +40,17 @@
 			
 	  	%>
 			
-		<%= tabular :data=>list, :model=>%w{user hospital provider provider_type}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{ hospital provider provider_type phone user}, :ext_model=>%w{action} do |row,out|
 		
-		out[0] = row.user.login if row.user
 		
-		out[1] = row.network.name if row.network
+		out[0] = row.network.name if row.network
 		
-		out[2] = row.provider.name if row.provider
+		out[1] = row.provider.name if row.provider
+		
+		
+		out[-2] = row.provider.phone if row.provider
+	
+		out[-1] = row.user.login if row.user
 		
 		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		

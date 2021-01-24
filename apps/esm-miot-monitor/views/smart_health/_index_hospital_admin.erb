@@ -40,16 +40,17 @@
 			
 	  	%>
 			
-		<%= tabular :data=>list, :model=>%w{hospital provider provider_type user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
 		
 		out[0] = row.hospital.name if row.hospital
 		
 		
 		out[1] = row.provider.name if row.provider
-	
-		out[2] = row.provider_type.humanize if row.provider_type
 		
-		out[3] = row.user.login if row.user
+		
+		out[-2] = row.provider.phone if row.provider
+	
+		out[-1] = row.user.login if row.user
 		
 		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
