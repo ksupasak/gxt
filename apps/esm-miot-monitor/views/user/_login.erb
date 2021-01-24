@@ -55,8 +55,8 @@ if request.post?
 <% else 
 
    default_zone = Zone.where(:default=>true).first
-	
-   if File.exist?(File.join(__dir__,"..",default_zone.mode,"_login.erb"))
+   
+   if default_zone and  File.exist?(File.join(__dir__,"..",default_zone.mode,"_login.erb"))
 %>
 <%=inline(this,:"#{File.join("..",default_zone.mode,"_login")}")%>
 <% else %>
