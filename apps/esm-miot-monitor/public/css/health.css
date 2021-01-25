@@ -14,7 +14,7 @@ body {
 
   background-image: url("/esm-miot-monitor/health/bg.jpg");
   color: var(--btn-grey-text);
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
   font-family: "IBMPlex","Sarabun", sans-serif;
   height:100vh;
@@ -267,6 +267,20 @@ a {
   border: 1px solid #446373;
 }
 
+.mul-item {
+  background-color: #EEE;
+  color:#333;
+  border: 1px solid #446373;
+  padding:20px;
+}
+.mul-sel{
+  background-color: #83959F;
+  color:white;
+}
+.selected{
+  background-color: #83959F;
+  color:white;
+}
 .hr-trauma {
   border: 1px solid #446373;
   

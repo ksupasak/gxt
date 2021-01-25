@@ -153,24 +153,35 @@ last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_
 			</div>
 			<hr class="hr-trauma">
 			<div class="row no-gutters mt-3">
-				<div class="col-sm d-flex align-items-center justify-content-center">
+				<div class="col-12 d-flex align-items-center justify-content-center">
 					<h5 class="">วินิจฉัยโรค</h5>
 				</div>
-				<div class="col-sm">
-					<div class="card m-3"
-						style="color: #dcdcdc; background-color: #054366; ">
-						<ul class="list-group list-group-flush parameter" field="diag">
+				<div class="col-12">
+					<div class=" m-3">
+						<!--<ul class="list-group list-group-flush parameter" field="diag">
 							<input type="hidden" name="report[diag]" value="<%=report.diag%>" id="report_diag">
-							<li class="list-group-item">I10</li>
-							<li class="list-group-item">N18</li>
-							<li class="list-group-item">I259</li>
-							<li class="list-group-item">K30</li>
-							<li class="list-group-item">E785</li>
-							<li class="list-group-item">R731</li>
-							<li class="list-group-item">I693</li>
-							<li class="list-group-item">M6269</li>
-							<li class="list-group-item">E11</li>
-						</ul>
+							<li class="list-group-item">I10 ความดันโลหิตสูง</li>
+							<li class="list-group-item">N18 ไตวาย</li>
+							<li class="list-group-item">I259 หัวใจขาดเลือดเรื้อรัง</li>
+							<li class="list-group-item">K30 โรคกระเพาะอาหาร</li>
+							<li class="list-group-item">E785 ไขมันในเลือดสูง</li>
+							<li class="list-group-item">R731 น้ำตาลภาวะอดอาหารสูง</li>
+							<li class="list-group-item">I693 ผลจากโรคหลอดเลือดสมอง</li>
+							<li class="list-group-item">M6269 กล้ามเนื้ออักเสบ</li>
+							<li class="list-group-item">E11 เบาหวานไม่พึ่งอินซูลิน</li>
+						</ul>-->
+						<div class="row mul parameter" field="diag">
+							<input type="hidden" name="report[diag]" value="<%=report.diag%>" id="report_diag">
+							<div class="col-md-6 mul-item" value="I10">I10 ความดันโลหิตสูง</div>
+							<div class="col-md-6 mul-item" value="N18">N18 ไตวาย</div>
+							<div class="col-md-6 mul-item" value="I259">I259 หัวใจขาดเลือดเรื้อรัง</div>
+							<div class="col-md-6 mul-item" value="K30">K30 โรคกระเพาะอาหาร</div>
+							<div class="col-md-6 mul-item" value="E785">E785 ไขมันในเลือดสูง</div>
+							<div class="col-md-6 mul-item" value="R731">R731 น้ำตาลภาวะอดอาหารสูง</div>
+							<div class="col-md-6 mul-item" value="I693">I693 ผลจากโรคหลอดเลือดสมอง</div>
+							<div class="col-md-6 mul-item" value="M6269">M6269 กล้ามเนื้ออักเสบ</div>
+							<div class="col-md-6 mul-item" value="E11">E11 เบาหวานไม่พึ่งอินซูลิน</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -492,11 +503,11 @@ last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_
 
 			<hr class="hr-trauma">
 			<div class="row no-gutters mt-3">
-				<div class="col-sm d-flex align-items-center justify-content-center">
+				<div class="col-12 d-flex align-items-center justify-content-center">
 					<h5 class="">ยากลับบ้าน</h5>
 				</div>
-				<div class="col-sm">
-					<div class="card m-3"
+				<div class="col-12">
+					<!--<div class="card m-3"
 						style="color: #dcdcdc; background-color: #054366; ">
 						<ul class="list-group list-group-flush parameter" field="med">
 							<input type="hidden" name="report[med]" value="<%=report.med%>" id="report_med">
@@ -510,6 +521,21 @@ last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_
 							<li class="list-group-item">ASA(81)</li>
 							<li class="list-group-item">HCTZ(25)</li>
 						</ul>
+					</div>-->
+					<div class="m-3">
+						<div class="row mul parameter" field="diag">
+							<input type="hidden" name="report[med]" value="<%=report.med%>" id="report_med">
+							<div class="col-md-6 mul-item">Amlodipine(5)</div>
+							<div class="col-md-6 mul-item">Metformin(500)</div>
+							<div class="col-md-6 mul-item">Atenolol(50)</div>
+							<div class="col-md-6 mul-item">Glipizide(5)</div>
+							<div class="col-md-6 mul-item">Enalapril(5)</div>
+							<div class="col-md-6 mul-item">Enalapril(20)</div>
+							<div class="col-md-6 mul-item">Simvastatin(20)</div>
+							<div class="col-md-6 mul-item">Losartan(50)</div>
+							<div class="col-md-6 mul-item">ASA(81)</div>
+							<div class="col-md-6 mul-item">HCTZ(25)</div>
+						</div>
 					</div>
 				</div>
 			</div>			
@@ -577,17 +603,41 @@ last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_
 	
 					val = $(this).find('input').val()
 					if(val!=""){
-					$(this).find(".list-group-item").each(function(){
-						v = $(this).html().trim()
-						input = $(this).parent().find('input')
-						if(v!=input.val()){
-							$(this).slideUp();
-						}
-					});
+						$(this).find(".list-group-item").each(function(){
+							v = $(this).html().trim()
+							input = $(this).parent().find('input')
+							if(v!=input.val()){
+								$(this).slideUp();
+							}else{
+								$(this).addClass('selected')
+							}
+						});
+
+						$(this).find(".mul-item").each(function(i,v){
+							item = $(v).attr('value')
+							if(!item) item=$(v).html()
+							if(val.indexOf(item)!=-1){
+								$(v).addClass('mul-sel');
+							}
+						});
+						
 					}
 
-						
+					$(this).find(".mul-item").click(function(){
+						($(this).hasClass("mul-sel"))?$(this).removeClass("mul-sel"):$(this).addClass("mul-sel")
+						p = $(this).parent()
+						f = p.find("input[type=hidden]")
+						mul = ''
+						p.find(".mul-sel").each(function(i,v){
+							item = $(v).attr('value')
+							if(!item) item=$(v).html()
+							mul+=','+item
+						})
+						f.val(mul.substring(1))
 					})
+
+						
+					}) // parameter
 
 					
 
