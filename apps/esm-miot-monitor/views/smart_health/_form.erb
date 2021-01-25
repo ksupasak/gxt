@@ -112,7 +112,7 @@ last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_
                     </a>
                 </div>
             </div>
-
+			<input type="hidden" name="record_id" value="<%=report.id%>">
 			<hr class="hr-trauma">
 			<div class="row no-gutters mt-3">
 				<div class="col-sm d-flex align-items-center justify-content-center">
