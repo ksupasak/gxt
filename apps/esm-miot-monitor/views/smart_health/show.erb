@@ -71,14 +71,19 @@ reportid = "&record_id=#{report.id}" if report
             <!--patient card-->
             <div class="card patient-info">
                 <div class="card-body d-flex align-items-center">
-				 <div class="col-3">
-				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=patient.to_s%></h6>
-				     <span class="col p-0 " id="HN">HN: <%=patient.hn%></span>
-				     <span class="col p-0 mr-3" id="age">อายุ: <%=patient.to_age_text %> ปี</span>
-				     <span class="col p-0" id="gender">เพศ: <%=patient.gender%></span><br/>
-				     <span class="col p-0" id="gender">อาการสำคัญ: <%=admit.note%></span><br/>
-					 &nbsp;
-					 
+				<div class="row">
+				 <div class="col-12 col-md-3">
+				 	<div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=patient.to_s%></h6>
+						</div>
+						<div class="col">HN: <%=patient.hn%></div>
+						<div class="col">อายุ: <%=patient.to_age_text %> ปี</div>
+						<div class="col">เพศ: <%=patient.gender%></div>
+						<div class="col-12">
+							<span class=" p-0" id="gender">อาการสำคัญ: <%=admit.note%></span>
+						</div>
+					</div>	 
 				 </div>
 				 
 				 <%
@@ -105,38 +110,59 @@ reportid = "&record_id=#{report.id}" if report
 				 %>
 				 
 				 
-				 <div class="col-3">
-				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=hospital.name if hospital%></h6>
-				     <span class="col p-0 " id="HN">แพทย์ประจำ : <%=hospital_doctor.name if hospital_doctor%></span><br/>
-				     <span class="col p-0 mr-3" id="age">พนายาล : <%=hospital_nurse.name if hospital_nurse %></span><br/>
-					 &nbsp;<br/>
-			
-		
-					 
+				 <div class="col-4 col-md-3">
+				 	<div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=hospital.name if hospital%></h6>
+						</div>
+						<div class="col-12">
+							แพทย์ประจำ : <%=hospital_doctor.name if hospital_doctor%>
+						</div>
+						<div class="col-12">
+							พยาบาล : <%=hospital_nurse.name if hospital_nurse %>
+						</div>
+					</div>
 				 </div>
 				 
-				 <div class="col-4">
-					 
-				     <h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=network.name if network%></h6>
-				     <span class="col p-0 " id="HN">แพทย์ประจำ : <%=network_doctor.name if network_doctor%></span><br/>
-				     <span class="col p-0 mr-3" id="age">พนายาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_officer and network_nurse.phone.size>0 %></span><br/>
-			    	 <span class="col p-0 mr-3" id="age">อสม : <%=network_officer.name if network_officer %>  <%=", T : "+network_officer.phone if network_officer and network_officer.phone.size>0 %></span><br/>
-				   
+				 <div class="col-4 col-md-3">
+					 <div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=network.name if network%></h6>
+						</div>
+						<div class="col-12">
+							แพทย์ประจำ : <%=network_doctor.name if network_doctor%>
+						</div>
+						<div class="col-12">
+							พยาบาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_officer and network_nurse.phone.size>0 %>
+						</div>
+					</div>
+				 </div>
+
+				 <div class="col-4 col-md-3">
+					 <div class="row">
+						<div class="col-12">
+				     		<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name">อสม</h6>
+						</div>
+						<div class="col-12">
+			    	 		<%=network_officer.name if network_officer %>  <%=", T : "+network_officer.phone if network_officer and network_officer.phone.size>0 %>
+						</div>
+					</div>	 
 				 </div>
 				 
 				 <% end %>
 				 
-				 <div class="col-2 text-right">
-				     <!-- <h6 class="" id="arrival-time">Registered at:
+				 <!-- <div class="col-2 text-right">
+				     <h6 class="" id="arrival-time">Registered at:
 				         <span><%= admit.admit_stamp.strftime("%d/%m/%Y - %H:%M")%></span>
-				     </h6> -->
+				     </h6> 
 				
 			
 					
-					<!--<div class="level-content <%#=report.level if report%>" style="float:right">
+					<div class="level-content <%#=report.level if report%>" style="float:right">
 				
-					</div>-->
-				 </div>
+					</div>
+				 </div>-->
+				</div>
                 </div>
             </div>
             <!--end of patient card-->

@@ -33,7 +33,7 @@
 		params[:patient][:zone_id] = session[:current_zone]
 		
 		
- if params[:id]
+ if params[:id] and params[:id]!=''
 	
      admit = Admit.find(params[:id])
 	 patient = admit.patient
@@ -148,6 +148,7 @@
 				<div class=" col-md-4">
 		  			<label for="product-name">HN</label>
 		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
+					<input type="hidden" name="id" value="<%=admit.id%>">
 				</div>
 				
 				
@@ -249,7 +250,7 @@
 	
 		<div class="col-8 col-md-4">
 		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
-		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
+		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
 		<div class="col-8 col-md-4">
