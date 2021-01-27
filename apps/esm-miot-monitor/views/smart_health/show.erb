@@ -794,7 +794,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
   		 		<div class="col">
   		 		<label for="relation-hospital_id">โรงพยาบาลต้นสังกัด</label>
 				<br/>
-				<select name="relation[hospital_id]">
+				<select name="relation[hospital_id]" class="form-control">
 				<option value="" ></option>
 				<% for i in SHHospital.all
 				
@@ -816,7 +816,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 		<div class="col">
 		 		<label for="relation-hospital_doctor_id">แพทย์</label>
 		 		<br/>
-				<select name="relation[hospital_doctor_id]">
+				<select name="relation[hospital_doctor_id]"  class="form-control">
 				<option value="" ></option>
 				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'doctor').all
 				provider = i.provider
@@ -830,7 +830,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 	 		<div class="col">
 	 		<label for="relation-hospital_nurse_id">พยาบาล</label>
 				<br/>
-				<select name="relation[hospital_nurse_id]">
+				<select name="relation[hospital_nurse_id]"  class="form-control">
 				<option value="" ></option>
 				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'nurse').all
 				provider = i.provider
@@ -852,7 +852,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
   		 		<label for="relation-network_id">โรงพยาบาลส่งเสริมสุขภาพตำบล</label>
 			
 				<br/>
-				<select name="relation[network_id]">
+				<select name="relation[network_id]" class="form-control">
 				<option value="" ></option>
 				<% 
 				
@@ -876,7 +876,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 		<div class="col">
 		 		<label for="relation-network_doctor_id">แพทย์</label>
 				<br/>
-				<select name="relation[network_doctor_id]">
+				<select name="relation[network_doctor_id]" class="form-control">
 				<option value="" ></option>
 				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'doctor').all
 				provider = i.provider
@@ -889,7 +889,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				 
 		 		<div class="col">
 		 		<label for="relation-network_nurse_id">พยาบาล</label><br/>
-				<select name="relation[network_nurse_id]">
+				<select name="relation[network_nurse_id]" class="form-control">
 				<option value="" ></option>
 				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'nurse').all
 				provider = i.provider
@@ -902,7 +902,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 		<div class="col">
 		 		<label for="relation-network_officer_id">อสม</label><br/>
 			
-				<select name="relation[network_officer_id]">
+				<select name="relation[network_officer_id]" class="form-control">
 				<option value="" ></option>
 				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'officer').all
 				provider = i.provider

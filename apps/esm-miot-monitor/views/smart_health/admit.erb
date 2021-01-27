@@ -126,7 +126,7 @@
 		 				<%# <label for="product-name">Patient</label> %>
 		<div class='row'  style="border:0px solid gray">
 	
-		<div class="col-sm-4" > 
+		<div class="col-md-4" > 
 		
 			<div class="row">
 				<div class="col-12" > 
@@ -140,18 +140,18 @@
 		</div>
 
 
-		<div class="col-sm-8 p-3">
+		<div class="col-md-8 p-3">
 
 		
 			<div class="row" style="background-color:#ffc;padding-bottom:20px">
 				
-				<div class="col col-sm-4">
+				<div class=" col-md-4">
 		  			<label for="product-name">HN</label>
 		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
 				</div>
 				
 				
-				<div class="col col-sm-4">
+				<div class=" col-md-4">
 			  		<label for="product-name">แพทย์ประจำผู้ป่วย</label>
 					<%
 						
@@ -163,7 +163,7 @@
 					<% end %>
 					</select>
 				</div>
-				<div class="col col-sm-4">
+				<div class=" col-md-4">
 			  		<label for="product-name">พยาบาลประจำผู้ป่วย</label>
 					<%
 						providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'nurse').all.collect{|i| i.provider}
@@ -177,7 +177,7 @@
 			</div>
 
 			<div class="row" style="background-color:#ffc;padding-bottom:20px">
-				<div class="col col-sm-6">
+				<div class="col col-md-6">
 		  			<label for="product-name">โรงพยาบาลต้นสังกัด (Hospital)</label>
 					<%
 						hospitals = SHHospital.all
@@ -188,7 +188,7 @@
 					<% end %>
 					</select>
 				</div>
-				<div class="col col-sm-6">
+				<div class="col col-md-6">
 		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต (Network Hospital)</label>
 				<%
 					
@@ -214,18 +214,18 @@
 			
 		<div class="row mt-1">
 			
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-prefix_name">คำนำหน้า</label>
 		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
 		</div>
 	
 
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-first_name">ชื่อ</label>
 		<input type="text" class="form-control validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
 		</div>
 
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 			<label for="patient-last_name">นามสกุล</label>
 			
 		<input type="text" class="form-control validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
@@ -236,9 +236,9 @@
 		
 		<div class="row mt-1">
 			
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-gener">เพศ</label>
-		<select name="patient[gender]">
+		<select name="patient[gender]" class="form-control" >
 		<option value="">ไม่ระบุ</option>
 		<option value="M">ชาย</option>
 		<option value="F">หญิง</option>
@@ -247,12 +247,12 @@
 	    
 		</div>
 	
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
 		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-age">อายุ</label>
 		<input type="text" class="form-control" id="patient-age" name="patient[age]" value="<%=patient.age%>" placeholder="Age" style="">
 		</div>
@@ -261,52 +261,52 @@
 
 		<div class="row mt-1">
 			
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-blood">หมู่เลือด</label>
 	    <input type="text" class="form-control" id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
 	    </div>
 	
-		<div class="col-8 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-status">สถานภาพสมรส</label>
 		<input type="text" class="form-control" id="patient-status" name="patient[status]" value="<%=patient.status%>" placeholder="Status" style="">
 		</div>
 		
-		<div class="col-8 col-sm-4">
+		<div class="col-12 col-md-4">
 		<label for="patient-job">อาชีพ</label>
 		<input type="text" class="form-control" id="patient-job" name="patient[job]" value="<%=patient.job%>" placeholder="Occupation" style="">
 		</div>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-race">เชื้อชาติ</label>
 		<input type="text" class="form-control" id="patient-race" name="patient[race]" value="<%=patient.race%>" placeholder="Race" style="">
 		</div>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-nation">สัญชาติ</label>
 		<input type="text" class="form-control" id="patient-nation" name="patient[nation]" value="<%=patient.nation%>" placeholder="Nation" style="">
 		</div>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-religion">ศาสนา</label>
 		<input type="text" class="form-control" id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
 		</div>
 
-		<div class="col-8 col-sm-6">
+		<div class="col-8 col-md-6">
 		<label for="patient-public_id">เลขประจำตัวประชาชน</label>
 		<input type="text" class="form-control validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="ID" >
 		</div>
 
-		<div class="col-8 col-sm-6">
+		<div class="col-8 col-md-6">
 		<label for="patient-passport">เลขที่หนังสือเดินทาง</label>
 		<input type="text" class="form-control" id="patient-passport" name="patient[passport]" value="<%=patient.passport%>" placeholder="Passport" style="">
 		</div>
 
-		<div class="col-8 col-sm-12">
+		<div class="col-12 col-md-12">
 		<label for="patient-addr">ที่อยู่ตามบัตรประชาชน</label>
 		<input type="text" class="form-control" id="patient-addr" name="patient[addr]" value="<%=patient.addr%>" placeholder="Address" style="">
 		</div>
 
-		<div class="col-8 col-sm-12">
+		<div class="col-12 col-md-12">
 		<label for="patient-addr_present">ที่อยู่จริง <input id="chk-addr" type="checkbox" <%=(patient.addr_present and patient.addr_present!='' and patient.addr_present==patient.addr)? "checked" : "" %>> ตามที่อยู่บัตรประชาชน</label>
 		<input type="text" class="form-control" id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
 		</div>
@@ -314,17 +314,17 @@
 		
 		</script>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-contact_phone">โทร</label>
 		<input type="text" class="form-control" id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
 		</div>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-parent">ผู้ปกครอง/ผู้ติดต่อได้</label>
 		<input type="text" class="form-control" id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="ชื่อ - สกุล" style="">
 		</div>
 
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-contact_name">เบอร์โทรผู้ติดต่อ</label>
 		<input type="text" class="form-control" id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="เบอร์โทร" style="">
 		</div>
@@ -366,17 +366,17 @@
 		
 		<!--<div class="row mt-1">
 			
-		<div class="col-4 col-sm-4">
+		<div class="col-4 col-md-4">
 		<label for="patient-gener">น้ำหนัก</label>
 	    <input type="text" class="form-control" id="patient-gender" name="admit[weight]" value="<%=admit.weight%>" placeholder="KG" style="">
 	    </div>
 	
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-dob">ส่วนสูง</label>
 		<input type="text" class="form-control" id="patient-dob" name="admit[height]" value="<%=admit.height%>" placeholder="CM" style="">
 		</div>
 		
-		<div class="col-8 col-sm-4">
+		<div class="col-8 col-md-4">
 		<label for="patient-dob">วัน-เดือน-ปี</label>
 		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob%>" placeholder="DOB" style="">
 		</div>
@@ -388,13 +388,13 @@
 		
 
 
-		<!-- <div class="col-4 col-sm-4">
+		<!-- <div class="col-4 col-md-4">
 		<label for="product-name">Bed No</label>
 		<input type="text" class="form-control" id="patient-first_name" name="admit[bed_no]" value="<%=admit.bed_no%>" placeholder="Bed No" style="">
 		</div>
 			 -->
 		
-		<div class="col-12 col-sm-12">
+		<div class="col-12 col-md-12">
 		<label for="product-name">Note</label>
 		<input type="text" class="form-control" id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
 		</div>
@@ -405,13 +405,13 @@
 		<hr>
 			<div class="row mt-3 "  style="border:0px solid gray">
 
-			<div class="col-md-4">
+			<div class="col-4 col-md-4">
       		
 		    <input type="submit" value="ยืนยัน" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" />			  
        
 	 	 	</div>
 	   	   
-		    <div class="col-md-4 btn-cancel">
+		    <div class="col-4 col-md-4 btn-cancel">
             <a href="../Home/index" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
                 ยกเลิก
             </a>
