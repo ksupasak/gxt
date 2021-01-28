@@ -133,7 +133,7 @@
 			<div class="row">
 				<div class="col-12" > 
 					<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
-					<a href="" class="mt-3 d-flex justify-content-center d-inline p-1 image_capture_btn" >
+					<a href="#" class="mt-3 d-flex justify-content-center d-inline p-1 image_capture_btn" >
 						<img src="<%=url_for 'img/ER/photo_camera.svg' %>" alt="upload-photo">
 						<span class="pl-1">ถ่ายภาพ</span>
 					</a>
@@ -142,7 +142,7 @@
 		</div>
 
 		    <script>
-			    $('#image_capture_btn').click(function(){
+			    $('.image_capture_btn').click(function(){
 				device_interface.image_capture(window.location.origin+"<%=url_for("SmartHealth/patient_upload?patient_id=#{patient.id}")%>", "key")
 			    })
 		    </script>
