@@ -5,6 +5,11 @@
 	patient = Patient.find record.patient_id
 	
 	patient.destroy if patient
+
+	visits = SHVisit.where(:patient_id=>record.patient_id).all
+	for v in visits
+		v.destroy
+	end
 	
 	record.destroy
 	

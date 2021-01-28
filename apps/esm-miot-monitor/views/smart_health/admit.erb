@@ -55,10 +55,12 @@
 			params[:admit][:provider_id]  = params[:relation][:hospital_doctor_id]
 			params[:patient][:hospital_id]  = params[:relation][:hospital_id]
 			params[:patient][:network_id]  = params[:relation][:network_id]
+
+			relation = SHRelation.where(:patient_id=>patient.id).first
+			if relation
+			# if params[:relation_id] and params[:relation_id]!=''
 			
-			if params[:relation_id]
-			
-				relation = SHRelation.find params[:relation_id] 
+				# relation = SHRelation.find params[:relation_id] 
 				
 				relation.update_attributes params[:relation] 
 				
@@ -103,7 +105,7 @@
      		   
 		<%
 			
-		if params[:id]
+		if params[:id] and params[:id]!=''
 			admit = Admit.find(params[:id])
 			patient = admit.patient
 			relation = SHRelation.where(:patient_id=>patient.id).first
@@ -148,7 +150,8 @@
 				<div class=" col-md-4">
 		  			<label for="product-name">HN</label>
 		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
-					<input type="hidden" name="id" value="<%=admit.id%>">
+					<input type="hidden" name="id" value="<%=params[:id]%>">
+					<input type="hidden" name="relation_id" value="<%=params[:relation_id]%>">
 				</div>
 				
 				
