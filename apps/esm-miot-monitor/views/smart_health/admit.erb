@@ -151,8 +151,8 @@
 					
 					<center>
 						<% if url%>
-						<div style="width:150px;height:150px;overflow:hidden;border-radius: 50%; ;">
-						<a href="<%=url%>" target="_blank" ><img src="<%=url%>" width="250"  style="overflow:hidden;transform: rotate(90deg);transform-origin: center;"></a>
+						<div style="">
+						<a href="<%=url%>" target="_blank" ><img src="<%=url%>"  style="border-radius: 50%;width:150px;height:150px;overflow:hidden;transform: rotate(90deg);transform-origin: center;"></a>
 						</div>
 						<% else %>
 						<image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120">
