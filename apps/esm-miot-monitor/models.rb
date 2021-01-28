@@ -531,6 +531,9 @@ class Patient  < GXTModel
   key :parent, String 
   key :note, String 
   
+  key :image_id, ObjectId
+  
+  
   
   include Mongoid::Timestamps
   def to_s
