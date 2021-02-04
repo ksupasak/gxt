@@ -40,12 +40,14 @@
 	$('#nurse_note_add').click(function(event){
 	
 		score_id = $('#score_id  option:selected').val()
-		
+	
 		if(score_id.length==0){
+			
 			create_nurse_note(event);
 		}else{
+			
 			call_submit(note_record_admit_id,score_id, 'ajax')
-			reload_nurse_note();
+			reload_nurse_note(note_record_admit_id);
 		}
 		
 	});
