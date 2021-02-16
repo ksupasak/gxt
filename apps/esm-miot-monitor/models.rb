@@ -799,6 +799,9 @@ class DataRecord  < GXTModel
   key :note, String
   key :score_id, ObjectId
   
+  key :send_status, Boolean
+  key :send_msg, String
+  
   
   include Mongoid::Timestamps
   

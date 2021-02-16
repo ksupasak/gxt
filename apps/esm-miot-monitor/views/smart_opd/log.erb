@@ -40,6 +40,8 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 			
             <th>Scoring type</th>
             <th>Scoring</th>
+            <th>Sent</th>
+			
         </tr>
     </thead>
     <tbody>
@@ -91,6 +93,8 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 			    <td><%= 'OPD' %></td>
 			  
             <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
+            <td><%=i.send_status%></td>   
+			
         </tr>
         <%
         

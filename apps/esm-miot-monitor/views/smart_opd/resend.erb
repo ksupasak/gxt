@@ -1,0 +1,116 @@
+<% 
+
+records = DataRecord.where(:send_status=>{'$ne'=>true}).order(:created_at=>-1).limit(100).sort{|a,b| b.stamp<=>a.stamp}
+
+
+
+list = []
+
+for i in records
+
+
+
+
+##############################################################
+##############################################################
+##############################################################
+
+begin
+result = nil
+
+bp = i.bp
+bps = i.bp.split("/")
+bp_sys = bps[0]
+bp_dia = bps[1]
+
+pr = i.pr
+
+weight = i.weight
+height = i.height
+admit = Admit.find i.admit_id
+
+if admit
+	
+patient = Patient.find admit.patient_id
+
+if patient
+
+px = {:hn=>patient.hn, :weight=>weight, :height=>height, :bp=>bp, :pr=>pr}
+
+
+
+##############################################################
+
+
+his_post_opd_url = URI("http://localhost:9292/send")
+
+
+##############################################################
+
+url = his_post_opd_url
+
+
+error = false
+err_msg = "NA"
+
+
+
+
+  http = Net::HTTP.new(url.host, url.port)
+  http.read_timeout = 2 # seconds
+
+
+  request = Net::HTTP::Post.new(url.path, initheader = {'Content-Type' =>'application/json'})
+  request.set_form_data(px)
+
+
+  response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+
+
+  result = JSON.parse response.body
+
+
+  puts 'RESULT '+result.to_json
+
+ 
+
+  # if result['status'] == '200 OK'
+	 
+  i.update_attributes :send_status=>result['status']=='200 OK', :send_msg=>result.to_json
+  
+  result['id'] = i.id
+  
+  list << result
+	  
+  # end
+
+
+
+
+end
+
+end
+
+rescue Exception => e
+  puts e.to_s 
+  list << {:id=>i.id, :status=>'505 ERROR', :msg=> e.message  }
+  error = true
+  err_msg = "Server Timeout!"
+end
+
+
+
+end
+
+
+
+
+
+
+
+%><%=list%>
+
+    </table>
+    </div>
+</div>
+<meta http-equiv="refresh" content="30">  

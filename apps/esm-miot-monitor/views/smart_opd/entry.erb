@@ -1,11 +1,93 @@
 <%
+
 date = Time.now
+
 months = %w{มกราคม กุมภาพันธ์ มีนาคม เมษายน พฤษภาคม มิถุนายน กรกฎาคม สิงหาคม กันยายน ตุลาคม พฤศจิกายน ธันวาคม}
+
 mon_th = months[date.strftime("%m").to_i-1]
 
 patient = Patient.where(:hn=>params[:hn]).first
 
-patient = Patient.new :hn=>params[:hn] unless patient 
+unless patient 
+
+
+    ##############################################################  
+
+    his_get_patient_uri = URI("http://localhost:9292/get_patient_by_hn?hn=#{params[:hn]}")
+    
+    ##############################################################  
+  
+ 
+    
+    robj = {'hn'=>params[:hn]}
+  
+  
+    msg = nil
+  
+    begin
+  
+    content = "{}"    
+  
+  
+    req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
+
+    # setting both OpenTimeout and ReadTimeout
+    res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+
+         http.request(req)
+
+    }
+	
+	
+	content = res.body
+		
+	rx = JSON.parse(content)
+	
+	if rx['status'] == '200 OK'
+		
+		robj.merge! rx['record']
+		
+  
+	    # key :hn, String
+    # 	    key :name, String
+    # 	    key :public_id, String
+    # 	    key :prefix_name, String
+    # 	    key :first_name, String
+    # 	    key :last_name, String
+    # 	    key :dob, Time
+    # 	    key :age, String
+    # 	    key :gender, String
+    # 	    key :contact_name, String
+    # 	    key :contact_phone, String
+    #
+		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>robj['birth_date']
+	
+	else
+		
+		patient = Patient.new :hn=>params[:hn] unless patient 
+	
+	end
+	
+
+	rescue Net::ReadTimeout => exception
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+	        msg = "NOT reachable (ReadTimeout)"
+	   #      sleep 10
+	rescue Net::OpenTimeout => exception
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+	        msg = "NOT reachable (OpenTimeout)"
+	       #  sleep 10
+	rescue Exception =>exception        
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+	        msg = exception.to_s
+    end
+
+	puts msg
+	
+end
+
+
+
 
 @current_zone = Zone.find session[:current_zone]
 

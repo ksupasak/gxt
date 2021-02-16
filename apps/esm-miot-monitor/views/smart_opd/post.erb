@@ -12,37 +12,80 @@
 		
 	
   
-		DataRecord.create :admit_id=>admit.id, :data=>params.to_json, :bp=>params[:bp], 
-		:bp_sys=>params[:bp_sys], :bp_dia=>params[:bp_dia], :pr=>params[:pr], :spo2=>params[:spo2], 
+		record = DataRecord.create :admit_id=>admit.id, :data=>params.to_json, :bp=>params[:bp], 
+		:bp_sys=>params[:bp_sys], :bp_dia=>params[:bp_dia], :pr=>params[:pr], :spo2=>params[:spo2], :weight=>params[:weight], :height=>params[:height],
 		:temp=>params[:temp],:score=>params[:score],:stamp=>params[:datetime]
 		
 		
+	    ##############################################################
+	    ##############################################################
+	    ##############################################################
+		puts 'XXX' + params.inspect
+
+	    result = nil
+
+    
+	    bps = params[:bp].split('/')
+	    bp_sys = bps[0]
+	    bp_dia = bps[1]
+    
+	    pr = params[:pr]
+    
+	    weight = params[:weight]
+	    height = params[:height]
+    
+	
+		px = {:hn=>params[:hn], :weight=>weight, :height=>height, :bp=>params[:bp], :pr=>pr}
 		
 		
-	    # belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
-	    #
-	    # key :admit_id, ObjectId
-	    #
-	    # key :data, String
-	    # key :bp, String
-	    # key :bp_sys, Integer
-	    # key :bp_dia, Integer
-	    # key :pr, Integer
-	    # key :hr, Integer
-	    # key :spo2, Integer
-	    # key :rr, Integer
-	    # key :temp, Float
-	    # key :co2, Integer
-	    #
-	    # key :stamp, Time
-	    #
-	    # key :status, String
-	    #
-	    # key :score, Integer
-	    #
-	    # key :note, String
-	    # key :score_id, ObjectId
+	
+	    ##############################################################
+    
+    
+	    his_post_opd_url = URI("http://localhost:9292/send")
 		
+    
+	    ##############################################################
+
+	    url = his_post_opd_url
+    
+   
+	    error = false
+	    err_msg = "NA"
+	    begin
+   
+      
+
+	      http = Net::HTTP.new(url.host, url.port)
+	      http.read_timeout = 2 # seconds
+      
+      
+	      request = Net::HTTP::Post.new(url.path, initheader = {'Content-Type' =>'application/json'})
+	      request.set_form_data(px)
+        
+      
+	      response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+      
+      
+	      result = JSON.parse response.body
+      
+  
+		  puts 'RESULT '+result.to_json
+		
+		  # if result['status'] == '200 OK'
+			 
+		  record.update_attributes :send_status=>result['status']=='200 OK', :send_msg=>result.to_json
+			  
+		  # end
+		
+		
+	    rescue Exception => e
+	      puts e.to_s 
+	      error = true
+	      err_msg = "Server Timeout!"
+	    end
+    
+   		
 		
 		
 		
