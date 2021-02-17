@@ -5,6 +5,36 @@ require 'serialport'
 
 module Device
   
+
+def self.get_device device_select
+
+    list = `ls /dev/ttyUSB*`.split
+    puts list
+    map = {}
+
+    	for i in list
+	
+	device_id = i.split("/")[2]	
+	
+	cmd = `grep PRODUCT= /sys/bus/usb-serial/devices/#{device_id}/../uevent`
+
+	device_vendor =  cmd.split("=")[-1].split("/")[0..1].join(":")
+
+	map[device_vendor] = i 
+
+	end	
+
+   puts map.inspect 
+
+   result = map[device_select]
+
+    return result if result
+
+    return ""
+
+end
+
+
   
 def self.monitor_ids_combo ws
 
@@ -89,17 +119,27 @@ require 'nokogiri'
 
   seca = Thread.new {
     
+
+  loop do 
+   
+   puts 'starting ... seca'
+
+   begin
+   
    
    # seca_uri = URI('http://192.168.4.1/')
-    
-   serial = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
+   
+       
+   device_id = get_device "10c4:ea60"
+
+   serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
     
     while true
     
     
       puts 'seca'
       
-      begin
+   
            #
       # req = Net::HTTP::Get.new(seca_uri.to_s)
       #
@@ -116,7 +156,7 @@ require 'nokogiri'
       
       content = lines.split("\n")[4..-1].join("\n")
       
-      puts content
+#      puts content
 
       
       document = Nokogiri::HTML(content)
@@ -222,7 +262,7 @@ EOM
       
 end
 
-
+    end
 
      
       # end
@@ -238,28 +278,62 @@ end
             sleep 10 
     end
         
-         sleep 1
-      
-    end
+        
+
+
+   end
+
+
   }
 
   seca.run
   
   
 
-  seca = Thread.new {
+  omron  = Thread.new {
     
    
    # seca_uri = URI('http://192.168.4.1/')
-    
-   serial = SerialPort.new("/dev/ttyUSB1", 9600, 8, 1, SerialPort::NONE)
+  
+	
+    begin 
+
+   loop do
+  puts 'starting..omron'  
+
+  device_id = get_device "0483:5740" 
+
+  serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
     
     while true
      
       puts 'omron'
+
+          
+      
+      lines = []
+
+      lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['$
+
+     
+
+
+
       sleep(1)
     
     end
+
+    rescue Exception => e
+    
+  puts e.message
+	
+sleep(10)
+
+     end
+   
+  	
+ 
+   end
   }
 
   omron.join
