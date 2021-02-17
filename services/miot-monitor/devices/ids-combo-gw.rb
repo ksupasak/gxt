@@ -197,7 +197,7 @@ EOM
             STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
             sleep 10
     rescue Exception =>exception        
-            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+            STDERR.puts exception.message
             sleep 10 
     end
         
