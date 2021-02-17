@@ -16,8 +16,79 @@ set :port, 3000
 
 
   get '/' do 
-	puts params.inspect      
-      erb :index, :locals => {:params=> params}
+
+    content = <<SECA
+
+    <!doctype html>
+    <html lang="de">
+    <head>
+        <title>Alibaba WebInterface</title>
+        <table>
+            <tr>
+                <td>WebServer</td>
+                <td>Version 1.1</td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>scaler01</td>
+            </tr>
+            <tr>
+                <td>Scale Model</td>
+                <td>seca 797</td>
+                <td>05797254208950</td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>Current Weight</td>
+                <td>73.2</td>
+                <td>kg</td>
+            </tr>
+            <tr>
+                <td>Trig. Weight</td>
+                <td>100.0</td>
+                <td>kg</td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td>1.700</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td>Scan Value</td>
+                <td></td>
+            </tr>
+        </table>
+    </head>
+    <body>
+        <h3>CONFIG</h3>
+        <form method="get">
+            <p>
+                Login-Pwd 
+                <input type="password" name="LoginPwd" size=32 maxlength=59>
+            <p>
+                <input type="submit" value="Submit">
+        </form>
+    </body>
+    <br>
+    <br>
+    Copyright © 2018 seca gmbh & co. kg. All rights reserved.
+    </html>
+
+  
+
+SECA
+
+return content
+
 		
   end
 

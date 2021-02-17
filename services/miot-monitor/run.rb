@@ -23,7 +23,7 @@ require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
 require_relative 'devices/comen-nc3a-gw'
-
+require_relative 'devices/ids-combo-gw'
 require_relative 'devices/gps/gps'
 
 
@@ -75,9 +75,14 @@ if select_monitor=='nc3a'
  threads << Thread.new {
  Device::monitor_comen_nc3a(ws)
  }
- 
 end
 
+if select_monitor=='ids_serial'
+  puts 'monitor select = ids_serial'
+ threads << Thread.new {
+ Device::monitor_ids_combo(ws)
+ }
+end
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
 # }
