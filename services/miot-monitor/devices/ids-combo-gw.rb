@@ -116,7 +116,8 @@ require 'nokogiri'
       
       content = lines.split("\n")[3..-1].join("\n")
       
-      
+      puts content
+
       
       document = Nokogiri::HTML(content)
       tags = document.xpath("//td")
