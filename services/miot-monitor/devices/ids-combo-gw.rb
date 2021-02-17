@@ -114,7 +114,7 @@ require 'nokogiri'
     
       lines = serial.readline("\r")
       
-      content = lines.split("\n")[3..-1] 
+      content = lines.split("\n")[3..-1].join("\n")
       
       
       
