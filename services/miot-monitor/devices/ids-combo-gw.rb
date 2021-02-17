@@ -92,7 +92,7 @@ require 'nokogiri'
    
    # seca_uri = URI('http://192.168.4.1/')
     
-   serial = = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
+   serial = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
     
     while true
     
