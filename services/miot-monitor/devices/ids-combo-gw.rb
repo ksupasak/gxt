@@ -84,7 +84,7 @@ require 'nokogiri'
 
   current_height = nil
   current_weight = nil
-  tri_weight = nil
+  trig_weight = nil
   sent = false
 
   seca = Thread.new {
@@ -124,11 +124,12 @@ require 'nokogiri'
       tags.each_with_index do |t,ti|
     
         current_height = t.text.strip if ti==16
-        current_weight = t.text.strip if ti==13  
-        trig_weight = t.text.strip if ti==10
+        current_weight = t.text.strip if ti==10  
+        trig_weight = t.text.strip if ti==13
         
+       # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
           
-        if current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+        if false and current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
           
           unless sent
           
@@ -149,7 +150,7 @@ EOM
 
          puts  ws.send(msg)
  
-end
+	end
           
             sent = true          
           else 
@@ -165,7 +166,7 @@ end
            lines << "STATUS:S0|WEIGHT:#{trig_weight}"
 
        
-          if lines.size > 0
+          if false and  lines.size > 0
           puts lines.inspect
 
 msg = <<EOM
@@ -180,14 +181,49 @@ EOM
        end        
           
           
-        end
+       end
           
         
       end
       
-      puts "weight = #{current_weight}, height = #{current_height}"
+      puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight}"
+     
+   
+if current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+   
+      lines = []
+
+
+
+
+     # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
       
+        if trig_weight and trig_weight.to_f !=0
+		
+      	lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
       
+	else 
+ 	
+        
+	#lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
+
+	end
+        
+
+      puts lines.inspect
+
+msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+     puts  ws.send(msg)
+ 
+      
+end
+
+
+
      
       # end
       
