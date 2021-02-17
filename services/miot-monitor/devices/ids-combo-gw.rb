@@ -309,14 +309,51 @@ end
      
       puts 'omron'
 
-          
+      sys = nil
+
+      if false
       
+          lines = serial.readline("\r")
+      
+          last = lines.split(",")
+      
+          if last.size> 5
+      
+            sys = last[7]
+            dia = last[8]
+            pr = last[9]
+        
+          end
+      
+      else 
+      
+            sys = '120'
+            dia = '80'
+            pr = '79'
+        
+      
+       end
+    
+    
+       if sys
+    
+    
       lines = []
+      
+      lines << "STATUS:M1|SYS:#{sys}|DIA:#{dia}|PR:#{pr}"
 
-      lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['$
+    msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+       puts msg
 
+       puts  ws.send(msg)
      
-
+     
+      end      
+     
 
 
       sleep(1)
