@@ -12,10 +12,20 @@ set :port, 3000
   # and is responsible for handeling registration requests with the
   # BillCrux payment system.
   # The
- 
-
+  lm = Time.now.strftime("%m")
+  tw = 0
 
   get '/' do 
+
+
+    if true or  lm != Time.now.strftime("%m")
+    
+    #puts "Random"
+    tw = "#{rand(20)+100}" 
+    lm = Time.now.strftime("%m")
+    # tw = 0.0
+    end
+     
 
     content = <<SECA
 
@@ -49,12 +59,12 @@ set :port, 3000
             </tr>
             <tr>
                 <td>Current Weight</td>
-                <td>73.2</td>
+                <td>#{(rand(20)+100).to_f}</td>
                 <td>kg</td>
             </tr>
             <tr>
                 <td>Trig. Weight</td>
-                <td>100.0</td>
+                <td>#{tw.to_f}</td>
                 <td>kg</td>
             </tr>
             <tr>
