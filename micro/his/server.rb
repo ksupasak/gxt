@@ -113,6 +113,11 @@ return content
   his_get_patient_uri = URI("http://xxxx/patient/#{hn}")
     
   his_get_patient_uri = URI("http://localhost:9293/test_get_patient?hn=#{hn}")
+  
+  his_get_patient_uri = URI("http://10.99.0.109/systemx-poc/api/patient/#{hn}")
+ 
+  
+  
     
   ##############################################################  
   
@@ -158,7 +163,8 @@ CNX
   
   robj = {}
   
-  birth_date = Date.new obj['birth'][4..7].to_i-543, obj['birth'][2..3].to_i, obj['birth'][0..1].to_i
+  # birth_date = Date.new obj['birth'][4..7].to_i-543, obj['birth'][2..3].to_i, obj['birth'][0..1].to_i
+  birth_date = Date.new obj['birth'][0..3].to_i, obj['birth'][4..5].to_i, obj['birth'][6..7].to_i
   
   
   robj[:hn] = obj['hn']
@@ -204,6 +210,8 @@ CNX
 
   post '/send' do 
 
+    puts 'xxxxx'
+    puts params.inspect 
 
     result = {}
     
@@ -226,6 +234,16 @@ CNX
     
     his_post_opd_url = URI("http://localhost:9293/test_send?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
     
+    if weight !="-" and height !="-" and weight != '0.0' and height != '0.0'
+    his_post_opd_url = URI("http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
+    else
+    his_post_opd_url = URI("http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}")
+    end
+    puts 'yyyy'
+    puts his_post_opd_url
+   # http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=111&systolic=222&diastolic=333&pulse=444&weight=555&height=666&waist=777
+    
+    
     ##############################################################
 
     url = his_post_opd_url
@@ -240,8 +258,12 @@ CNX
       http = Net::HTTP.new(url.host, url.port)
       http.read_timeout = 2 # seconds
       
+      # --header 'Content-Type:application/json' --header 'Accept:application/json'
+      puts url.path
+      # puts url.full_path
+      puts "#{url.path}?#{url.query}"
       
-      request = Net::HTTP::Post.new(url.path, initheader = {'Content-Type' =>'application/json'})
+      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json', 'Accept'=>'application/json'})
       # request.set_form_data(px)
         
       
@@ -260,7 +282,7 @@ CNX
     end
     
    
-    if result['status'] == '200 OK'
+    if result['status'] == true
       
       return {:status=>"200 OK", :msg=>'SUCCESS'}.to_json
       
