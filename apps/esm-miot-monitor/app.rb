@@ -86,7 +86,7 @@ class HomeController < GXT
   
   def acl
     
-    return {}
+    return {:get_data=>'*'}
     
   end
     
