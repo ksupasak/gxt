@@ -763,6 +763,7 @@ class DataRecord  < GXTModel
   
   
   key :admit_id, ObjectId
+  key :station_id, ObjectId
   
   key :data, String
   key :bp, String
@@ -791,6 +792,7 @@ class DataRecord  < GXTModel
 
   
   key :stamp, Time
+  key :bp_stamp, String
   
   key :status, String
   

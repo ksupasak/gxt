@@ -6,6 +6,6 @@
 	
 	
 	record.destroy
-	
-%>
-<%=redirect_to '../Admit/show?id='+admit_id%>
+   if admit_id	
+%><%=redirect_to '../Admit/show?id='+admit_id %><% else %>
+<%=redirect_to 'index' %><% end %>

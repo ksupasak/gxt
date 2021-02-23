@@ -95,6 +95,8 @@ class HomeController < GXT
      stations = nil
      
      if params[:zone]
+       
+       
     
      zone = Zone.where(:name=>params[:zone]).first
      if zone
@@ -119,32 +121,112 @@ class HomeController < GXT
 
   def get_data params
      
-     if params[:zone]
-        
-        
-        if params[:name]
-          name = "#{params[:zone]}_#{params[:name]}"
-          station = Station.where(:name=>name).first
-        end
-        
-          
-     else
      
-     if params[:id]
-       station = Station.find(params[:id])
-     else
-       station = Station.where(:name=>params[:name]).first
+     
+    # if hn or patient_id
+  
+    patient = nil
+    station = nil
+    zone = nil
+    records = nil
+    last = nil
+    
+    if params[:zone]
+       
+       zone = Zone.where(:name=>params[:zone]).first
+       
      end
+    
+
+    if params[:hn] or params[:patient_id]
+     
+      
+      if params[:patient_id]
+        patient = Patient.find params[:patient_id]
+      else
+        patient = Patient.where(:hn=>params[:hn]).first
+      end
+        
+      puts 'ok'
+     
+     
+    elsif params[:name] or params[:id]
+      
+      if params[:id]
+        station = Station.find(params[:id])
+      
+      else
+      
+        if zone
+          station = Station.where(:zone_id=>zone.id, :name=>params[:name]).first
+        else
+          station = Station.where(:name=>params[:name]).first
+        end
+      
+      end
+      
+      
+    end
+    
+    
+    if patient or station
+
+    now = Time.now 
+    
+    from_time = now - 60
+    
+    if params[:form]
+        
+      from_time = Time.parse params[:form]
+      
+    end
+    
+    to_time = now
+    
+    if params[:to]
+        
+      to_time = Time.parse params[:to]
+      
+    end
+    
+    
+    if patient 
+      
+      admit = Admit.where(:patient_id=>patient.id).last
+      
+      if admit
+        records = DataRecord.where(:admit_id=>admit.id, :stamp=>{'$gte'=>from_time, '$lte'=>to_time}).all
+        last = DataRecord.where(:admit_id=>admit.id).last
+      end
+      
+      
+    elsif station
+        records = DataRecord.where(:station_id=>station.id, :stamp=>{'$gte'=>from_time, '$lte'=>to_time}).all
+        last = DataRecord.where(:station_id=>station.id).last
     end
      
+    query = {:from=>from_time, :to=>to_time}
+    if patient
+      query[:patient_id]=patient.id
+    end
+    if station
+      query[:station_id]=station.id
+    end
+    
      
-     if station
-        data = settings.senses[station.name]
-        return data.to_json
+     if records 
+        
+       last = last.attributes.compact if last
+        
+       return {:result=>200,:msg=>'OK',:query=>query, :list=>records.collect{|i|i.attributes.compact}, :last=>last}.to_json
+       
      else
-        return {:result=>404,:msg=>'Not found'}
+        return {:result=>404,:msg=>'Not found',:query=>query}.to_json
      end
-     
+   else
+      return {:result=>505,:msg=>'Error', :query=>params}.to_json
+   end
+   
   end   
     
 
@@ -206,7 +288,7 @@ class HomeController < GXT
                
                
                
-               puts "MOnitor"
+               puts "Monitor"
                puts msg_data
   #              puts @context.settings.cmd_map.inspect
   #
