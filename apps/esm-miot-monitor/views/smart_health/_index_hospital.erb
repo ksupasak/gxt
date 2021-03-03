@@ -415,6 +415,8 @@
 		end
 		
 		end
+		
+		patients.compact!
 
 
 		admits = Admit.where(:zone_id=>session[:current_zone]).all
