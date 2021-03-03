@@ -421,7 +421,7 @@
 		usernetworks = SHUserNetwork.all
 		uns = usernetworks.collect{|i| i.user_id}
 		networks = SHNetwork.all
-		pid=patients.collect{|i| i.id}
+		pid=patients.compact.collect{|i| i.id}
 		relations = SHRelation.where(:patient_id=>pid).all
 		m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 		m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
