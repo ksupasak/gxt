@@ -12,7 +12,12 @@
 		visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
 	
 		# my_patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id, :hospital_doctor_id=> @current_provider.id).all.collect{|i| i.patient_id }
-		my_patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_nurse_id==@current_provider.id}.compact
+		my_patient_ids = []
+		if @current_provider 
+			my_patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_nurse_id==@current_provider.id}.compact 
+		end
+		
+		
 	elsif @current_network
 		shrelations = SHRelation.where(:network_id=>@current_network.id).all
 		patient_ids = shrelations.collect{|i| i.patient_id }
@@ -20,8 +25,10 @@
 		visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
 	
 		# my_patient_ids = SHRelation.where(:network_id=>@current_network.id, :network_doctor_id=> @current_provider.id).all.collect{|i| i.patient_id }
-		my_patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
-	
+		my_patient_ids = []
+		if @current_provider 
+			my_patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+		end
 	end
 	
 	
