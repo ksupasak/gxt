@@ -6,6 +6,14 @@
 	record = nil
 	record = DataRecord.find params[:id] if params[:id]
 	
+	nurse = nil
+	
+	if record 
+		nurse = NurseRecord.where(:data_record_id=>record.id.to_s).first 
+	else
+		nurse = NurseRecord.new
+	end
+	
 	
 	if request.post?
 		
@@ -27,17 +35,19 @@
 		
 		record = DataRecord.create px
 		
-		if params[:note]!=""
+		if params[:note]!="" or params[:note_2]!=""
 		
-		nurse_note = NurseRecord.create :admit_id=>params[:admit_id], :start_time=> Time.now, :description=> params[:note], :updated_user_id=> @current_user.id
+		nurse_note = NurseRecord.create :data_record_id=> record.id, :admit_id=>params[:admit_id], :start_time=> Time.now, :description=> params[:note], :note=> params[:note], :note_2=>params[:note_2], :note_3=>params[:note_3], :note_4=>params[:note_4], :remark=>params[:remark], :updated_user_id=> @current_user.id
 			
 		end
 		
 		
 		
 %>
-<%= params.inspect%>
+
 <% else %>
+
+
 
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
@@ -91,9 +101,23 @@
                 </div>
             </div>
             <!--end of patient card-->
-            <div class="human">
-                <h4 class="font-weight-bold mt-4 mb-4">Patient Data</h4>
-                <div class="row  mb-2">
+            <div class="human"><br/>
+                <!-- <h4 class="font-weight-bold mt-4 mb-4">Patient Data</h4> -->
+				
+				
+				<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="font-size:1.2em">
+				  <li class="nav-item">
+				    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">ข้อมูลตรวจร่างกาย</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ข้อมูลซักประวัติ</a>
+				  </li>
+				
+				</ul>
+				<div class="tab-content" id="pills-tabContent">
+				  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+				
+                <div class="row  mb-2" style="border:0px solid">
                     
                     <div class="col p-0 d-flex flex-column" id="patient-neuro-sign">
 						
@@ -311,7 +335,7 @@
 						
                         <div class="col mb-2 ">
 							<div class="vital-card">
-	                            <p>Respiratory Rate</p>
+	                            <p>อัตราการหายใจ RR</p>
 				                <div class="row">
 				                    <div class="col-3" style="text-align:center">
 				                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
@@ -328,7 +352,7 @@
 
                         <div class="col mb-2">     
 								<div class="vital-card">
-								 <p>Nurse Note  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
+								 <p>บันทึกข้อความ  <span class="p-name" style="float:right;font-size:1em">Demo</span></p>
 								<textarea class="vital-card" style="height:auto" id="nurse-note"></textarea>
 								
 								</div>
@@ -337,13 +361,118 @@
 						
                     </div>
                 </div>
+				</div>
+				
+				
+				<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+					
+					
+                    
+                    <div class="col p-0 d-flex flex-column" >
+						
+						<div class="row">
+                        <div class="col mb-2 ">
+							<div class="">
+	                            <p>สถานภาพผู้ป่วย / อาการ </p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/weight.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-9 "  >
+				                    	
+									 <textarea class="vital-card" id="nurse-note_2" style="font-size:1.2em"  rows="4" cols="50"><%=nurse.note_2%></textarea>
+									 									 
+									 
+				                    </div>
+				                </div>
+	                        </div>
+						</div>
+					</div>
+
+						<div class="row">
+                        <div class="col mb-2 ">
+							<div class="">
+	                            <p>วินิจฉัย / กลุ่มอาการ / รักษา </p>
+				                <div class="row">
+				                    <div class="col-3" style="text-align:center">
+				                        <center><img src="<%=url_for 'img/svg/weight.svg'%>" width="40" ></center>
+				                    </div>
+				                    <div class="col-9 "  >
+				                    	
+									 <textarea class="vital-card" id="nurse-note_3" style="font-size:1.2em" rows="4" cols="50"><%=nurse.note_3%></textarea>
+									 									 
+									 
+				                    </div>
+				                </div>
+	                        </div>
+						</div>
+					    </div>
+
+
+					<div class="row">
+				    <div class="col mb-2 ">
+						<div class="">
+				            <p> คำแนะนำ / วิธีปฏิบัติ </p>
+				            <div class="row">
+				                <div class="col-3" style="text-align:center">
+				                    <center><img src="<%=url_for 'img/svg/weight.svg'%>" width="40" ></center>
+				                </div>
+				                <div class="col-9 "  >
+                	
+								 <textarea class="vital-card" id="nurse-note_4" style="font-size:1.2em" rows="4" cols="50"><%=nurse.note_4%></textarea>
+				 									 
+				 
+				                </div>
+				            </div>
+				        </div>
+					</div>
+				    </div>					
+						
+					<div class="row">
+				    <div class="col mb-2 ">
+						<div class="">
+				            <p> *** หมายเหตุ / แจ้งเตือน *** </p>
+				            
+							<span style="float:right"><a href="#" class="remark-btn"> เปิด </a>	</span>
+							<div class="row">
+				                <div class="col-3" style="text-align:center">
+				                    <center><img src="<%=url_for 'img/svg/weight.svg'%>" width="40" ></center>
+				                </div>
+								
+				                <div class="col-9 " id="remark" style="<%='display:none;' if nurse.remark and nurse.remark=="" %>" >
+            								
+								 <textarea class="vital-card" class='alert' id="nurse-remark" style="font-size:1.2em;background:#fdd" rows="4" cols="50" ><%=nurse.remark%></textarea>
+			 								 
+			 					<script>
+									$('.remark-btn').click(function(){
+										
+										$('#remark').toggle()
+									})
+									</script>
+				                </div>
+				            </div>
+				        </div>
+					</div>
+				    </div>		
+				 
+				 
+				 </div>
+					
+					
+				</div>
+				
+				
+				
+				
+				</div>
+				
 				
 				<% unless record %>
 				<div class="row">
 					<div class="col-12">
 			        <div class="d-flex justify-content-center mt-5">
 			            <a href="#" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
-			                ยืนยัน
+			                บันทึก
 			            </a>
 
 			        </div>
@@ -792,10 +921,14 @@
 		
 		note = $('#nurse-note').val()
 	
+		note_2 = $('#nurse-note_2').val()
+		note_3 = $('#nurse-note_3').val()
+		note_4 = $('#nurse-note_4').val()
+		remark = $('#nurse-remark').val()
 	
 		
 		
-	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, glucose:glucose }
+	 	data = { admit_id: '<%=params[:admit_id] %>',note: note ,note_2: note_2 ,note_3: note_3 ,note_4: note_4 ,remark: remark ,hn: hn, datetime: datetime,score:score,rr:rr, bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id, glucose:glucose }
 		
 		return data
     }

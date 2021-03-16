@@ -183,17 +183,17 @@ reportid = "&record_id=#{report.id}" if report
                      </a>
                 </div>
 -->					
-            <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
+            <!-- <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
                 <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                 แบบฟอร์ม
-            </a>&nbsp;
+            </a>&nbsp; -->
 
 			<div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
                 <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
                     <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                    วัดค่า
+                    ตรวจ
                  </a>
-            </div>&nbsp;
+            </div>
 
 
                 <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
@@ -211,7 +211,7 @@ reportid = "&record_id=#{report.id}" if report
                 </div> 
 				
 			
-				&nbsp;
+			
 				
 <!--				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
 	            <a href="summary?admit_id=<%=admit.id%>" class="btn d-flex align-items-center justify-content-center " style="float:right">

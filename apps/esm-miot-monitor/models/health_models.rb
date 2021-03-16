@@ -11,6 +11,7 @@ class SHNetwork < GXTModel
   key :latlng, String
   key :phone, String
   key :district, String
+  key :code, String
   
 end
 
@@ -25,6 +26,7 @@ class SHHospital < GXTModel
   key :latlng, String
   key :phone, String
   key :district, String
+  key :code, String
   
   
 end
@@ -71,6 +73,7 @@ class SHRelation < GXTModel
   
   key :hospital_id, ObjectId
   key :hospital_doctor_id, ObjectId
+  key :hospital_doctor_2_id, ObjectId
   key :hospital_nurse_id, ObjectId
   key :network_id, ObjectId
   key :network_doctor_id, ObjectId
@@ -115,6 +118,10 @@ class SHVisit < GXTModel
   key :officer_id, ObjectId
   
   key :status, String
+  
+  key :ordered_at, Time
+
+  key :app_id, String
   
   
 end
