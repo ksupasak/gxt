@@ -47,7 +47,7 @@
 	  </li>
 	  
 	  <!-- <li class="nav-item">
-	    <a class="nav-link <%='active' if params[:query]%>" id="pills-job-tab" data-toggle="pill" href="#tab-job" role="tab" aria-controls="pills-job" aria-selected="false">ระบบเยี่ยมบ้าน</a>
+	    <a class="nav-link <%='active' if params[:query]%>" id="pills-job-tab" data-toggle="pill" href="#tab-job" role="tab" aria-controls="pills-job" aria-selected="false">ระบบรับส่งงาน</a>
 	  </li> -->
 	  
 	  <li class="nav-item">
@@ -145,78 +145,160 @@
 </div> 
 
 <div class="col-12 col-md-6">
-<!-- <h3>ตารางปฏิทิน</h3> -->
+
 
 <div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
 
-<script>
-  
-<% if true
 
-  visits = SHVisit.all
-  networks = SHNetwork.all
-  patients = Patient.where(:zone_id=>session[:current_zone]).all
-  m_pn = Hash[patients.collect{|i| 
-		  
-	  r = SHRelation.where(:patient_id=>i.id).first
-		  
-	  [i.id,r.network_id] if r
-  
-  	}.compact 
-  
-  ]
-  m_nid_name = Hash[networks.collect{|i| [i.id,i.name]}]
-  colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
-  m_nid_c = {}
-  networks.each_with_index{|v,i| m_nid_c[v.id]=colors[i%6]}
-  map = {}
-  for v in visits
-  
-  if v.date
-    d = v.date.strftime("%Y-%m-%d")
-    n = m_pn[v.patient_id]
-    map[d] = {} unless map[d]
-    map[d][n] = [] unless map[d][n]
-    map[d][n] << v.patient_id
-  end
-		    end
+<% 
+
   netnum = []
-  for d in map.keys
-    for n in map[d].keys
-      netnum << {
-        title:"#{m_nid_name[n]} (#{map[d][n].size})",
-        url:"index?date="+d,
-        start:d,
-        color:m_nid_c[n]
-      }
-    end
-  end
+  map = {}
+  
+  
+visits = []
+visits_other = []
 
-
-	visits.collect!{|i|
-		p = Patient.find(i.patient_id)
-		if p
-		title = "#{p.hn} : #{p.first_name} #{p.last_name}"
-			
-        {
-          title: title,
-          url: "../Visit/show?id=#{i.id}",
-          start: i.date.strftime("%Y-%m-%d")
-        }
-		else
-		nil
-		end
+if @current_hospital
+	shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	patient_ids = shrelations.collect{|i| i.patient_id }
+	
+	# for doctor 
+	if @current_user_hospital.provider_type == 'doctor'  
 		
-	}.compact!
+		patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids},).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids} ).all
+		
+		
+	elsif @current_user_hospital.provider_type == 'nurse'  
+		
+		
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, ).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+
+	
+elsif @current_network
+	
+	
+	shrelations = SHRelation.where(:network_id=>@current_network.id).all
+	
 
 
-  pname=""
-  if params[:patient_id]
-    p = Patient.find(params[:patient_id])
-    pname="#{p.first_name} #{p.last_name}" 
-  end
+	if @current_provider 
+	
+		patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id).all
+		
+
+	else
+		
+		patient_ids = shrelations.collect{|i| i.patient_id }
+		
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+	
+
+
+end
+  
+  # visits= []
+ #
+ # 	if @current_hospital
+ #
+ # 		visits = SHVisit.where(:hospital_id=>@current_hospital.id, :provider_id=>@current_provider.id).all
+ #
+ # 	elsif @current_network
+ #
+ # 		visits = SHVisit.where(:network_id=>@current_network.id).all
+ #
+ # 	end
+ #
+ 	map = {}
+	
+	cmap = {}
+	
+	
+
+ 	for i in visits + visits_other
+
+ 		status = "W"
+ 		status = "C" if i.status == 'Completed'
+ 		date_key = i.date.strftime("%Y-%m-%d")
+ 		key = "-"
+
+		code = "00000"
+
+ 		if i.appoint_type=='1'
+
+			code = 'hos'
+ 			key = "#{date_key}:hos"
+
+ 		else
+
+
+ 			network = SHNetwork.find(i.network_id)
+
+ 			code = network.code if network and network.code and network.code !=''
+
+ 			key = "#{date_key}:#{code}"
+
+ 		end
+		
+		cmap[code] = 1 
+		
+
+ 		map[key] = {'W'=>[], 'C'=>[]} unless map[key]
+
+ 		map[key][status] << i
+
+ 	end
+
+ 	list = []
+    colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
+
+ 	map.keys.each_with_index do |k,id|
+
+ 		tk = k.split(":")
+ 		code = tk[1]
+ 		type = tk[2]
+		
+		color = colors[cmap.keys.index(code)%6]
+		color = '#015b9e'
+		color = '#21bca3' if code!='hos'
+		
+
+ 		title = "#{code} W:#{map[k]['W'].size} C:#{map[k]['C'].size}"
+ 		date = Date.parse(tk[0])
+ 		list <<    {
+ 			          title: title,
+ 			          url: "\#",
+ 			          start: date,
+					  color: color
+ 			        }
+
+ 	end
+
+ 	netnum = list
+	
+
 %>
-
+	
+	
+	<script>
+		
+		
 
     document.addEventListener('DOMContentLoaded', function() {
 	
@@ -280,7 +362,7 @@
 	
 	
 	
-	<% end %>
+
 	
 	
     var myKeyVals = {'date':'<%=date.strftime('%Y-%m-%d')%>'}
@@ -350,7 +432,7 @@
 	<div class="col d-flex justify-content-end">
 	        
 			
-			
+			<% unless @current_network %>
 			
 	            <div class=" d-flex justify-content-center btn-submit" >
 	                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
@@ -361,7 +443,7 @@
 	                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
 	                </a>
 	            </div>
-			
+			<% end %>
 
 	</div>
 

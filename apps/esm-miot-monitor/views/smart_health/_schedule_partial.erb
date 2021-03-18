@@ -33,11 +33,6 @@
 		end
 		
 		
-	
-		# visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-		
-	
-		# visits  = SHVisit.all
 		
 	elsif @current_network
 		
@@ -65,16 +60,7 @@
 			
 		end
 		
-		# if @current_user_network and @current_user_network.provider_type == 'officer'
-#
-# 			visits = SHVisit.where(:officer_id=> @current_user_network.id, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-#
-# 		else
-#
-# 			visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-#
-# 		end
-#
+	
 	
 	end
 	
