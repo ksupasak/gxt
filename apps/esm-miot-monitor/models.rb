@@ -414,6 +414,8 @@ class NurseRecord  < GXTModel
   key :data_record_id, ObjectId
   
   
+  key :sh_visit_id, ObjectId
+  
   include Mongoid::Timestamps
   
 end
@@ -814,6 +816,8 @@ class DataRecord  < GXTModel
   
   key :send_status, Boolean
   key :send_msg, String
+  
+  key :sh_visit_id, ObjectId
   
   
   include Mongoid::Timestamps

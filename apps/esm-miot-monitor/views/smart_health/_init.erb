@@ -1,4 +1,3 @@
-
 <%
 	
 
@@ -14,14 +13,14 @@ if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
 	@current_hospital = user_hospital.hospital
 	@access_title = @current_hospital.name
 	@current_provider = user_hospital.provider
-			
+	@current_user_hospital = user_hospital	
 
 elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@access_type = 'network'
 	@current_network = user_network.network
 	@access_title = @current_network.name
 	@current_provider = user_network.provider		
-
+	@current_user_ntework = user_network
 
 end
 	
@@ -106,3 +105,4 @@ body {
 	}
 
 </style>
+

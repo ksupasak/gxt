@@ -9,7 +9,8 @@
 	nurse = nil
 	
 	if record 
-		nurse = NurseRecord.where(:data_record_id=>record.id.to_s).first 
+		nurse = NurseRecord.where(:data_record_id=>record.id).first
+		nurse =  NurseRecord.new unless nurse
 	else
 		nurse = NurseRecord.new
 	end

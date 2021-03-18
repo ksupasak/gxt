@@ -1,0 +1,16 @@
+<%
+	
+visits = SHVisit.all
+
+for i in visits 
+	
+	if i.start
+		i.date = i.start 
+		i.save
+	end
+	
+end
+	
+	
+%>
+OK

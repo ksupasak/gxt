@@ -1,6 +1,10 @@
+<div class="container">
+	
+	
+
 <div id="calendar"></div>
 
-
+</div>
 
 <script>
   
@@ -16,7 +20,7 @@
   networks.each_with_index{|v,i| m_nid_c[v.id]=colors[i%6]}
   map = {}
   for v in visits
-    d = v.start.strftime("%Y-%m-%d")
+    d = v.date.strftime("%Y-%m-%d")
     n = m_pn[v.patient_id]
     map[d] = {} unless map[d]
     map[d][n] = [] unless map[d][n]
@@ -43,7 +47,7 @@
         {
           title: title,
           url: "../Visit/show?id=#{i.id}",
-          start: i.start.strftime("%Y-%m-%d")
+          start: i.date.strftime("%Y-%m-%d")
         }
 		else
 		nil

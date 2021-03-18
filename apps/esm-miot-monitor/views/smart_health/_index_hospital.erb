@@ -1,4 +1,5 @@
 <%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
 <%
 	
 	@current_zone = Zone.find session[:current_zone]
@@ -15,7 +16,6 @@
 %>
 <div class="containerx" style="background:none">
 
-
 <div class="row" style="border:0px solid;">
 
 <div class="col" style="background-color:#fff;margin-left:0px;margin-right:0px;border-radius:0px;">
@@ -24,13 +24,14 @@
 
 <div class="col">
 	<div>
-		ระบบตรวจ Smart TeleHeatlh
+		<span class="banner-title"><%=link_to @access_title, "index" %></span>
 		<br/>
-		<span class="banner-title"><%=@access_title%></span>
+		Smart Health
     </div>
 </div>
-<div class="col  d-flex justify-content-center">
-	<div>ยินดีต้อนรับ <%=@current_user.login if @current_user%></div>
+
+<div class="col  d-flex justify-content-end">
+	<div> <%=@current_provider.name if @current_provider%></div>
 </div>
 
 
@@ -44,6 +45,11 @@
 	  <li class="nav-item">
 	    <a class="nav-link <%='active' unless params[:query]%>" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
 	  </li>
+	  
+	  <li class="nav-item">
+	    <a class="nav-link <%='active' if params[:query]%>" id="pills-job-tab" data-toggle="pill" href="#tab-job" role="tab" aria-controls="pills-job" aria-selected="false">ระบบเยี่ยมบ้าน</a>
+	  </li>
+	  
 	  <li class="nav-item">
 	    <a class="nav-link <%='active' if params[:query]%>" id="pills-profile-tab" data-toggle="pill" href="#tab-patient" role="tab" aria-controls="pills-profile" aria-selected="false">รายชื่อผู้ป่วย</a>
 	  </li>
@@ -89,16 +95,32 @@
 		<h3>ตารางนัดหมาย</h3>
 	</div>
 	<div class="col d-flex justify-content-end">
-
+		
+		<% unless @current_network %>
        <div class=" d-flex justify-content-center btn-submit" >
+		   <a href="visit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มนัด</span>
+           </a>
+       </div>&nbsp;
+       
+	   <div class=" d-flex justify-content-center btn-submit" >
+		   
+		   
+		   
+		   
            <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                    <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                    <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
                  </svg>
-               <span class="pl-2 pb-0">เพิ่มใหม่</span>
+               <span class="pl-2 pb-0">เพิ่มผู้ป่วย</span>
            </a>
        </div>&nbsp;
+	   <% end %>
 	            <!--<div class=" d-flex justify-content-end btn-submit" >
 	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -149,7 +171,7 @@
   networks.each_with_index{|v,i| m_nid_c[v.id]=colors[i%6]}
   map = {}
   for v in visits
-    d = v.start.strftime("%Y-%m-%d")
+    d = v.date.strftime("%Y-%m-%d")
     n = m_pn[v.patient_id]
     map[d] = {} unless map[d]
     map[d][n] = [] unless map[d][n]
@@ -176,7 +198,7 @@
         {
           title: title,
           url: "../Visit/show?id=#{i.id}",
-          start: i.start.strftime("%Y-%m-%d")
+          start: i.date.strftime("%Y-%m-%d")
         }
 		else
 		nil
@@ -323,7 +345,10 @@
 	<h3>รายชื่อผู้ป่วย</h3>
 	</div>
 	<div class="col d-flex justify-content-end">
-
+	        
+			
+			
+			
 	            <div class=" d-flex justify-content-center btn-submit" >
 	                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -334,17 +359,7 @@
 	                </a>
 	            </div>
 			
-				&nbsp;
-	            <!--
-				<div class=" d-flex justify-content-end btn-submit" >
-	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
-	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-	                      </svg>
-	                    <span class="pl-2 pb-0">ตารางนัด</span>
-	                </a>
-	            </div>
-				-->
+
 	</div>
 
 	</div>			
@@ -548,7 +563,7 @@
 			<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
 				<%#=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
 				<%#=link_to "เครือข่าย", "admit?id=#{admit.id}", :class=>'btn btn-info' %>
-				<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
+				<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' unless @current_network %></td>
 		
 		</tr>
 		<% end %>
@@ -570,10 +585,56 @@
 	
 	
 	  </div>
+	  
+	  
+	
+	
+	  <div class="tab-pane fade show <%=' active' if params[:query]%>"  id="tab-job" role="tabpanel" aria-labelledby="pills-job-tab">
+ 	
+		<div class="row" style="border:0px solid">
+
+			<div class="col">
+				<h3>ระบบเยี่ยมบ้าน</h3>
+			</div>
+
+			<div class="col d-flex justify-content-end">
+				 สืบค้น สั่งงาน
+			</div>
+	
+		</div>
+	
+	  </div>
+	
+	
+	
+	
+	
+	  
 	</div>
 	
 	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+	
 	</div>
+	
+	
+
+	
+	
+	
 </div>
 
 
