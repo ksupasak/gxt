@@ -141,8 +141,10 @@
 			if(obj['weight']!=""&&obj['weight']!=null){
 				w = parseFloat(obj['weight'])
 				w = parseFloat(w.toFixed(1))
-				$('#weight').val(obj['weight'])
-				$('.weight').html(obj['weight'])
+				// $('#weight').val(obj['weight'])
+				// $('.weight').html(obj['weight'])
+				$('#weight').val(w)
+				$('.weight').html(w)
 			}
 			
 			if(obj['height']!=""&&obj['height']!=null){
