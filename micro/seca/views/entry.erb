@@ -140,12 +140,14 @@
 			
 			if(obj['weight']!=""&&obj['weight']!=null){
 				w = parseFloat(obj['weight'])
+				w = parseFloat(w.toFixed(1))
 				$('#weight').val(obj['weight'])
 				$('.weight').html(obj['weight'])
 			}
 			
 			if(obj['height']!=""&&obj['height']!=null){
 				h = parseFloat(obj['height'])
+				h = parseFloat(h.toFixed(1))
 				$('.height').html(h*100)
 				$('#height').val(h*100)
 			}
