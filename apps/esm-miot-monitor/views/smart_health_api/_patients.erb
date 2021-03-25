@@ -3,5 +3,88 @@
  # data = JSON.parse(params[:records])
  #
  # patients  = Patient.create
-	
-%><%='ok'%>
+    # key :hn, String 
+    # key :name, String 
+    # key :public_id, String
+    # key :prefix_name, String 
+    # key :first_name, String 
+    # key :last_name, String 
+    # key :dob, Time 
+    # key :age, String
+    # key :gender, String
+    # key :contact_name, String 
+    # key :contact_phone, String
+
+    # key :hospital_id, ObjectId
+    # key :network_id, ObjectId
+    # key :zone_id, ObjectId
+
+    # key :picture, ObjectId
+
+    # key :blood, String 
+    # key :status, String 
+    # key :job, String 
+    # key :race, String 
+    # key :nation, String 
+    # key :religion, String 
+    # key :passport, String 
+    # key :addr, String 
+    # key :addr_present, String 
+    # key :parent, String 
+    # key :note, String 	
+
+    m_field = {
+        'dhn'=>:hn,
+        'dname'=>:name,
+        'dfirst'=>:first_name,
+    }
+    result = {:status=>"error",:code=>406,:message=>"Not found parameter records"}
+    temprecords = params[:records]
+    temprecords = '[{"dhn":"64201","dname":"test1","dfirst":"ftest1"},{"dhn":"64202","dname":"test2","dfirst":"ftest2"}]' 
+    # temprecords = '{"dhn":"64201","dname":"test","dfirst":"ftesttt"}' 
+    # temprecords = 'aaaa' 
+    if temprecords
+        zone = Zone.where(:mode=>'smart_health').first
+        default_hos = SHHospital.all.last
+        begin
+            data = JSON.parse(temprecords)
+            data = [data] if !data.kind_of?(Array)
+            hns = []
+            data.each{|i|
+                rec = {}
+                for k in i.keys
+                    rec[m_field[k]]=i[k] if m_field[k]
+                end
+                if rec[:hn]
+                    #Patient
+                    rec[:zone_id]=zone.id if zone
+                    patients = Patient.where(:hn=>rec[:hn]).first
+                    if patients
+                        patients.update_attributes rec
+                    else
+                        patients  = Patient.create rec
+                    end
+                    hns << rec[:hn] if !hns.index rec[:hn]
+                    %><br><%=rec.inspect%><%
+
+                    #SHRelation
+                    rl = SHRelation.where(:patient_id=>patients.id).first
+                    if !rl
+                        SHRelation.create :patient_id=>patients.id,:hospital_id=>default_hos.id if default_hos
+                    end
+
+                    #Admit
+                    am = Admit.where(:patient_id=>patients.id).first
+                    if !am
+                        am = Admit.create :patient_id=>patients.id,:admit_stamp=>Time.now,:status=>'new'
+                        am.update_attributes :zone_id=>zone.id if zone
+                    end
+                end
+            }
+            result = {:status=>"success",:code=>200,:message=>"#{hns.size} patients import success"}
+        rescue Exception=>e
+            result = {:status=>"error",:code=>401,:message=>e.to_s}
+        end
+    end
+%>
+<%=result.inspect%>
