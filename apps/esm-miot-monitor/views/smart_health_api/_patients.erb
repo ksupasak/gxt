@@ -59,6 +59,10 @@
     # temprecords = '[
     #     {
     #         "pat_hn":"642001",
+    #         "pat_hos0mainid":"10912",
+    #         "pat_hos0mainn":"รพ.ชำนิ",
+    #         "pat_hos0subid":"03061",
+    #         "pat_hos0subn":"รพสต.ปราสาทพร",
     #         "pat_cid":"0193334445678",
     #         "pat_nameatc":"นาย",
     #         "pat_namefirst":"ดำรง",
@@ -80,6 +84,10 @@
     #     },
     #     {
     #         "pat_hn":"642002",
+    #         "pat_hos0mainid":"10912",
+    #         "pat_hos0mainn":"รพ.ชำนิ",
+    #         "pat_hos0subid":"03061",
+    #         "pat_hos0subn":"รพสต.ปราสาทพร",            
     #         "pat_cid":"0193334445679",
     #         "pat_nameatc":"นส.",
     #         "pat_namefirst":"ดำริ",
@@ -117,6 +125,8 @@
                 if rec[:hn]
                     #Patient
                     rec[:zone_id]=zone.id if zone
+                    rec[:gender] = 'M' if rec[:gender] and rec[:gender]=='ชาย'
+                    rec[:gender] = 'F' if rec[:gender] and rec[:gender]=='หญิง'
                     patients = Patient.where(:hn=>rec[:hn]).first
                     hns << rec[:hn] if !hns.index rec[:hn]
                     if patients
@@ -130,7 +140,17 @@
                     #SHRelation
                     rl = SHRelation.where(:patient_id=>patients.id).first
                     if !rl
-                        SHRelation.create :patient_id=>patients.id,:hospital_id=>default_hos.id if default_hos
+                        rl = SHRelation.create :patient_id=>patients.id,:hospital_id=>default_hos.id if default_hos
+                    end
+                    if i['pat_hos0mainid'] and i['pat_hos0mainid']!=''
+                        hospital = SHHospital.where(:code=>i['pat_hos0mainid']).first
+                        hospital = SHHospital.create :code=>i['pat_hos0mainid'],:name=>i['pat_hos0mainn'] if !hospital
+                        rl.update_attributes :hospital_id=>hospital.id
+                    end
+                    if i['pat_hos0subid'] and i['pat_hos0subid']!=''
+                        network = SHNetwork.where(:code=>i['pat_hos0subid']).first
+                        network = SHNetwork.create :code=>i['pat_hos0subid'],:name=>i['pat_hos0subn'] if !network 
+                        rl.update_attributes :network_id=>network.id
                     end
 
                     #Admit
