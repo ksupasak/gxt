@@ -1,4 +1,10 @@
 <%
-	result = {:result=>'200 OK'}
 
-%><%=result.to_json%>
+	api_token = Setting.get :api_token
+	if api_token == params[:token]
+		result = {:result=>'200 OK', :code=>200}
+	else
+		result = {:result=>'403 Forbidden',:code=>403}
+	end
+
+%><%=result.to_json%><%=%>

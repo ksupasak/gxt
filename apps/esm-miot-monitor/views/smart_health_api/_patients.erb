@@ -1,4 +1,12 @@
 <%
+	
+	api_token = Setting.get :api_token
+	
+	
+    result = {:result=>"406 Error",:code=>406,:message=>"Not found parameter records"}
+
+   if api_token == params[:token]
+	
     m_field = {
         'pat_hn'=>:hn,
         'pat_cid'=>:public_id,
@@ -20,60 +28,59 @@
         'pat_add1'=>:addr_present,
         'pat_note'=>:note,	        
     }
-    result = {:status=>"error",:code=>406,:message=>"Not found parameter records"}
     temprecords = params[:records]
     # temprecords = '[
-    #     {
-    #         "pat_hn":"642001",
-    #         "pat_hos0mainid":"10912",
-    #         "pat_hos0mainn":"รพ.ชำนิ",
-    #         "pat_hos0subid":"03061",
-    #         "pat_hos0subn":"รพสต.ปราสาทพร",
-    #         "pat_cid":"0193334445678",
-    #         "pat_nameatc":"นาย",
-    #         "pat_namefirst":"ดำรง",
-    #         "pat_namelast":"สังวาลรัตน์",
-    #         "pat_bdate":"1976-05-12",
-    #         "pat_gender":"ชาย",
-    #         "pat_pname":"นาย xxxx",
-    #         "pat_ptel0":"0994891212",
-    #         "pat_blood":"บี",
-    #         "pat_marr":"โสด",
-    #         "pat_occupat":"รับจ้าง",
-    #         "pat_race":"ไทย",
-    #         "pat_nation":"ไทย",
-    #         "pat_religion":"พุทธ",
-    #         "pat_pid":"0193334445678",
-    #         "pat_add0":"บ้านเลขที่ xxxx",
-    #         "pat_add1":"บ้านเลขที่ xxxx",
-    #         "pat_note":"หมายเหตุ..."
-    #     },
-    #     {
-    #         "pat_hn":"642002",
-    #         "pat_hos0mainid":"10912",
-    #         "pat_hos0mainn":"รพ.ชำนิ",
-    #         "pat_hos0subid":"03061",
-    #         "pat_hos0subn":"รพสต.ปราสาทพร",            
-    #         "pat_cid":"0193334445679",
-    #         "pat_nameatc":"นส.",
-    #         "pat_namefirst":"ดำริ",
-    #         "pat_namelast":"สังวาลรัตน์",
-    #         "pat_bdate":"1976-05-12",
-    #         "pat_gender":"หญิง",
-    #         "pat_pname":"นาย xxxx",
-    #         "pat_ptel0":"0994891212",
-    #         "pat_blood":"บี",
-    #         "pat_marr":"โสด",
-    #         "pat_occupat":"รับจ้าง",
-    #         "pat_race":"ไทย",
-    #         "pat_nation":"ไทย",
-    #         "pat_religion":"พุทธ",
-    #         "pat_pid":"0193334445679",
-    #         "pat_add0":"บ้านเลขที่ xxxx",
-    #         "pat_add1":"บ้านเลขที่ xxxx",
-    #         "pat_note":"หมายเหตุ..."
-    #     }        
-    # ]'
+ #        {
+ #            "pat_hn":"642001",
+ #            "pat_hos0mainid":"10912",
+ #            "pat_hos0mainn":"รพ.ชำนิ",
+ #            "pat_hos0subid":"03061",
+ #            "pat_hos0subn":"รพสต.ปราสาทพร",
+ #            "pat_cid":"0193334445678",
+ #            "pat_nameatc":"นาย",
+ #            "pat_namefirst":"ดำรง",
+ #            "pat_namelast":"สังวาลรัตน์",
+ #            "pat_bdate":"1976-05-12",
+ #            "pat_gender":"ชาย",
+ #            "pat_pname":"นาย xxxx",
+ #            "pat_ptel0":"0994891212",
+ #            "pat_blood":"บี",
+ #            "pat_marr":"โสด",
+ #            "pat_occupat":"รับจ้าง",
+ #            "pat_race":"ไทย",
+ #            "pat_nation":"ไทย",
+ #            "pat_religion":"พุทธ",
+ #            "pat_pid":"0193334445678",
+ #            "pat_add0":"บ้านเลขที่ xxxx",
+ #            "pat_add1":"บ้านเลขที่ xxxx",
+ #            "pat_note":"หมายเหตุ..."
+ #        },
+ #        {
+ #            "pat_hn":"642002",
+ #            "pat_hos0mainid":"10912",
+ #            "pat_hos0mainn":"รพ.ชำนิ",
+ #            "pat_hos0subid":"03061",
+ #            "pat_hos0subn":"รพสต.ปราสาทพร",
+ #            "pat_cid":"0193334445679",
+ #            "pat_nameatc":"นส.",
+ #            "pat_namefirst":"ดำริ",
+ #            "pat_namelast":"สังวาลรัตน์",
+ #            "pat_bdate":"1976-05-12",
+ #            "pat_gender":"หญิง",
+ #            "pat_pname":"นาย xxxx",
+ #            "pat_ptel0":"0994891212",
+ #            "pat_blood":"บี",
+ #            "pat_marr":"โสด",
+ #            "pat_occupat":"รับจ้าง",
+ #            "pat_race":"ไทย",
+ #            "pat_nation":"ไทย",
+ #            "pat_religion":"พุทธ",
+ #            "pat_pid":"0193334445679",
+ #            "pat_add0":"บ้านเลขที่ xxxx",
+ #            "pat_add1":"บ้านเลขที่ xxxx",
+ #            "pat_note":"หมายเหตุ..."
+ #        }
+ #    ]'
     if temprecords
         temprecords = params[:records] if params[:records]
         zone = Zone.where(:mode=>'smart_health').first
@@ -127,10 +134,14 @@
                     end
                 end
             }
-            result = {:status=>"success",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn.to_json}
+            result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn.to_json}
         rescue Exception=>e
-            result = {:status=>"error",:code=>401,:message=>e.to_s}
+            result = {:result=>"401 Error",:code=>401,:message=>e.to_s}
         end
     end
+	
+else
+	result = {:result=>'403 Forbidden', :code=>403}
+end
 %>
 <%=result.inspect%>
