@@ -134,7 +134,7 @@
                     end
                 end
             }
-            result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn.to_json}
+            result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn}
         rescue Exception=>e
             result = {:result=>"401 Error",:code=>401,:message=>e.to_s}
         end
@@ -144,4 +144,4 @@ else
 	result = {:result=>'403 Forbidden', :code=>403}
 end
 %>
-<%=result.inspect%>
+<%=result.to_json%>
