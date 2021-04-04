@@ -1,0 +1,121 @@
+<%
+	
+
+@relation = SHRelation.find params[:id]
+
+
+user = nil
+
+if @relation 
+	
+	user = User.find @relation.user_id
+	
+	unless user
+		user = User.new
+	end
+	
+end
+
+
+	
+if request.post?
+	
+	
+	
+	
+	
+ 	if params[:user]
+		
+		user = User.find params[:user_id]
+		
+		if user 
+			
+			user.update_attributes params[:user]
+		
+		else
+			
+			role = Role.where(:name=>'patient').first
+			
+			role = Role.create(:name=>'patient') unless role
+			
+			params[:user][:role_id] = role.id
+			
+			user = User.create params[:user]
+		
+			
+		end 
+		
+		if  params[:password].size > 0 and params[:password] == params[:password_confirmation]
+			user.password = params[:password]
+			user.save
+		end
+		
+		@relation.update_attributes :user_id=> user.id
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+	
+	end
+	
+	
+	
+	
+%>
+Updating..
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=index">
+
+<% else %>
+
+
+<h1> Patient <%=(params[:id])? "Edit" : "Create" %> </h1>
+
+<form action="" method="post">
+	
+<input type="hidden" name="id" value="<%=params[:id]%>">
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for="user-login">User Login</label>
+	
+  <input name="user[login]" class="form-control" value="<%=user.login%>">
+
+  </div>
+</div>
+
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for="">Password</label>
+	
+  <input name="password" type="password" class="form-control" value="">
+
+  </div>
+</div>
+
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for="">Password Confirm</label>
+	
+  <input name="password_confirmation" type="password" class="form-control" value="">
+
+  </div>
+</div>
+</div><!--row-->
+</div><!--u-section-->
+
+
+<input type="submit" value="Submit" class="btn btn-primary"/>
+<a class="btn btn-secondary" href="index">ย้อนกลับ</a>
+</form>
+<% end %>

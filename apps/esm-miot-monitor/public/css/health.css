@@ -7,11 +7,9 @@
 
 @font-face {
   font-family: IBMPlex;
-  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+  src: url('../../css/IBMPlexSansThai-Regular.ttf');
 }
 body { 
-	
-
   background-image: url("/esm-miot-monitor/health/bg.jpg");
   color: var(--btn-grey-text);
   background-repeat: repeat;

@@ -32,9 +32,8 @@ reportid = "&record_id=#{report.id}" if report
 		color:white;
 	}
 	</style>
-<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
-<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
-<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+
+
     <!--Content-->
     <section>
     
@@ -890,7 +889,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
  		 		<div class="col">
  		 		<label for="relation-hospital_doctor_id">แพทย์รอง</label>
  		 		<br/>
- 				<select name="relation[hospital_doctor_id]"  class="form-control">
+ 				<select name="relation[hospital_doctor_2_id]"  class="form-control">
  				<option value="" ></option>
  				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'doctor').all
  				provider = i.provider

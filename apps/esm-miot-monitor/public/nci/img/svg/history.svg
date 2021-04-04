@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="97" height="97" viewBox="0 0 97 97">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#c03875"/>
+      <stop offset="1" stop-color="#e99abd"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#c4427c"/>
+      <stop offset="1" stop-color="#d976a2"/>
+    </linearGradient>
+  </defs>
+  <g id="history" transform="translate(-261 -422)">
+    <circle id="Ellipse_396" data-name="Ellipse 396" cx="48.5" cy="48.5" r="48.5" transform="translate(261 422)" fill="url(#linear-gradient)"/>
+    <circle id="Ellipse_391" data-name="Ellipse 391" cx="42.5" cy="42.5" r="42.5" transform="translate(267 428)" fill="#fff"/>
+    <path id="Icon_awesome-notes-medical" data-name="Icon awesome-notes-medical" d="M25.1,4.781H19.126a4.781,4.781,0,1,0-9.563,0H3.586A3.587,3.587,0,0,0,0,8.367v26.3a3.587,3.587,0,0,0,3.586,3.586H25.1a3.587,3.587,0,0,0,3.586-3.586V8.367A3.587,3.587,0,0,0,25.1,4.781ZM14.344,2.988a1.793,1.793,0,1,1-1.793,1.793A1.789,1.789,0,0,1,14.344,2.988ZM21.516,25.7a.6.6,0,0,1-.6.6H16.735v4.184a.6.6,0,0,1-.6.6H12.551a.6.6,0,0,1-.6-.6V26.3H7.77a.6.6,0,0,1-.6-.6V22.114a.6.6,0,0,1,.6-.6h4.184V17.333a.6.6,0,0,1,.6-.6h3.586a.6.6,0,0,1,.6.6v4.184h4.184a.6.6,0,0,1,.6.6Zm0-14.344a.6.6,0,0,1-.6.6H7.77a.6.6,0,0,1-.6-.6v-1.2a.6.6,0,0,1,.6-.6H20.919a.6.6,0,0,1,.6.6Z" transform="translate(295.461 451.131)" fill="url(#linear-gradient-2)"/>
+  </g>
+</svg>

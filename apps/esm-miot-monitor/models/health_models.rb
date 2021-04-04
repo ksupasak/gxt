@@ -80,6 +80,7 @@ class SHRelation < GXTModel
   key :network_nurse_id, ObjectId
   key :network_officer_id, ObjectId
   key :patient_id, ObjectId
+  key :user_id, ObjectId
   
   
 end

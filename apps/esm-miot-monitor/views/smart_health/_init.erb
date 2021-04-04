@@ -22,6 +22,19 @@ elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@current_provider = user_network.provider		
 	@current_user_ntework = user_network
 
+else
+	
+	@access_type = "patient"
+	
+	@relation = SHRelation.where(:user_id=>@current_user.id).first
+	
+	if @relation
+	
+		@current_hospital = SHHospital.find @relation.hospital_id
+	    @access_title = @current_hospital.name
+	
+	
+	end
 end
 	
 	
@@ -30,79 +43,9 @@ end
 
 
 %>
-<style>
-@font-face {
-  font-family: IBMPlex;
-  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
-}
-body {
-  <% if @current_network %>
-  # background-image: url("<%=url_for('img/health/bg-purple.png')%>");
-  <% end %>
-  color: var(--btn-grey-text);
-  padding-top:3.8rem;
-  background-repeat: no-repeat;
-  background-size: cover;
-  font-family: "IBMPlex", sans-serif;
-  height:100vh;
-  font-size:1.2em;
-}
-</style>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
 <script>
 	$('#search-form').attr("action","index")
 </script>
-<style>
-	
-	.banner-header{
-		font-size:1.2em;
-		color:white;
-		padding:20px;
-		border:0px solid;
-		border-radius:0px 0px 0px 0px;
-		margin-bottom:20px;
-		background: transparent linear-gradient(274deg, #18A79DBF 0%, #00598B 55%, #1C7CD5 100%) 0% 0% no-repeat padding-box;
-	}
-	
-	.banner-title{
-		font-size:1.4em;
-	}
-	.banner-text{
-		font-size:1em;
-	}
-
-	.nav-pills {
-		font-size:1.2em;
-	}
-	.nav-pills .nav-link.active, .nav-pills{
-		color:gray;
-		background-color:rgba(0, 0, 0, 0.0);;
-	
-		
-	}
-	.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
-		color:black;
-		background-color:rgba(0, 0, 0, 0.0);;
-		border-bottom:3px solid #2679c9;
-		
-	}
-	th{
-		background:#F1F1F1;
-		color:black;
-	}
-
-	.dash-panel{
-		background:#F1F1F1;
-		min-height:10vh;
-		border-radius:15px;
-		padding:15px;
-		margin:5px;
-		/* color:white; */
-		border: 1px solid #446373;
-	}
-	.dash-num{
-		font-size:1.4em;
-		
-	}
-
-</style>
-
+<%=inline(this,:'../share/_theme')%>

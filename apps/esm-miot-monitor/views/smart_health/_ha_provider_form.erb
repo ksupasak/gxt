@@ -33,6 +33,59 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <input type="hidden" name="provider_id" value="<%=provider.id%>">
 <input type="hidden" name="user_id" value="<%=user.id%>">
 
+
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
+
+	<%
+
+	list = %w{admin doctor nurse officer}
+		
+	%>
+	
+<div class="col-sm-4">
+	
+  <div class="form-group">
+    <label for="">Provider Type</label>
+	
+	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k,k]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  </div> 
+	<%
+
+	list = SHHospital.all
+		
+	%>
+<div class="col-sm-4">
+  <div class="form-group">
+    <label for="">Hospital</label>
+	
+	<select id="record-user" name="record[hospital_id]" class="form-control" value="<%=@record['hospital_id']%>">
+	  <option value="" %></option>
+
+	<% for j in list.collect{|k| 
+		[k.id,k.name]
+	}
+		%>
+	  <option value="<%=j[0]%>" <%="selected" if @record['hospital_id']==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+  
+ </div> 
+ </div><!--row-->
+</div><!--u-section-->
+
+
 <div class="u-section rounded p-3 mb-3">
 <div class="row">
 
@@ -85,56 +138,6 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 </div> <!--row-->
 </div> <!--u-section-->
 
-<div class="u-section rounded p-3 mb-3">
-<div class="row">
-
-	<%
-
-	list = %w{doctor nurse officer}
-		
-	%>
-	
-<div class="col-sm-4">
-	
-  <div class="form-group">
-    <label for="">Provider Type</label>
-	
-	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
-	  <option value="" %></option>
-
-	<% for j in list.collect{|k| 
-		[k,k]
-	}
-		%>
-	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
-	<% end %>
-	</select>
-  </div>
-  </div> 
-	<%
-
-	list = SHHospital.all
-		
-	%>
-<div class="col-sm-4">
-  <div class="form-group">
-    <label for="">Hospital</label>
-	
-	<select id="record-user" name="record[hospital_id]" class="form-control" value="<%=@record['hospital_id']%>">
-	  <option value="" %></option>
-
-	<% for j in list.collect{|k| 
-		[k.id,k.name]
-	}
-		%>
-	  <option value="<%=j[0]%>" <%="selected" if @record['hospital_id']==j[0] %>><%=j[1]%></option>
-	<% end %>
-	</select>
-  </div>
-  
- </div> 
- </div><!--row-->
-</div><!--u-section-->
 
 <div class="u-section rounded p-3 mb-3">
 <div class="row">

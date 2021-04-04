@@ -127,7 +127,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.appointed_at%> 
+	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") %> 
 	
 </div>
 
@@ -145,7 +145,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.completed_at.strftime("%d/%m/%Y") if visit.completed_at%> 
+	<u>เมื่อ </u> : <%=visit.completed_at.strftime("%d/%m/%Y %H:%M") if visit.completed_at%> 
 </div>
 </div>
 
@@ -164,7 +164,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.appointed_at%> 
+	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") %> 
 	
 </div>
 
@@ -182,7 +182,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.dispatched_at.strftime("%d/%m/%Y") if visit.dispatched_at%> 
+	<u>เมื่อ </u> : <%=visit.dispatched_at.strftime("%d/%m/%Y %H:%M") if visit.dispatched_at%> 
 </div>
 </div>
 
@@ -198,7 +198,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.completed_at.strftime("%d/%m/%Y") if visit.completed_at%> 
+	<u>เมื่อ </u> : <%=visit.completed_at.strftime("%d/%m/%Y %H:%M") if visit.completed_at%> 
 </div>
 </div>
 

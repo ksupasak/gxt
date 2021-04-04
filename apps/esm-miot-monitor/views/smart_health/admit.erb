@@ -219,7 +219,7 @@
 					%>
 					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value="">
 					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
-					  <option value="<%=j[0]%>" <%='disabled' if true %> <%="selected" if relation.id==j[0] %> %><%=j[1]%></option>
+					  <option value="<%=j[0]%>"  <%="selected" if relation.id==j[0] %> %><%=j[1]%></option>
 					<% end %>
 					</select>
 				</div>
