@@ -560,7 +560,7 @@ class Patient  < GXTModel
     out = self.age
     
     if self.dob 
-      out = (date - self.dob)/31536000
+      out = ((date - self.dob)/31536000).to_i
     end 
     
     return out
