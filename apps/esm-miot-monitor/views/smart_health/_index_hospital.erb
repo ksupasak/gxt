@@ -1,4 +1,5 @@
 <%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
 <%
 	
 	@current_zone = Zone.find session[:current_zone]
@@ -15,7 +16,6 @@
 %>
 <div class="containerx" style="background:none">
 
-
 <div class="row" style="border:0px solid;">
 
 <div class="col" style="background-color:#fff;margin-left:0px;margin-right:0px;border-radius:0px;">
@@ -24,13 +24,14 @@
 
 <div class="col">
 	<div>
-		ระบบตรวจ Smart TeleHeatlh
+		<span class="banner-title"><%=link_to @access_title, "index" %></span>
 		<br/>
-		<span class="banner-title"><%=@access_title%></span>
+		Smart Health
     </div>
 </div>
-<div class="col  d-flex justify-content-center">
-	<div>ยินดีต้อนรับ <%=@current_user.login if @current_user%></div>
+
+<div class="col  d-flex justify-content-end">
+	<div> <%=@current_provider.name if @current_provider%></div>
 </div>
 
 
@@ -44,6 +45,11 @@
 	  <li class="nav-item">
 	    <a class="nav-link <%='active' unless params[:query]%>" id="pills-home-tab" data-toggle="pill" href="#tab-schedule" role="tab" aria-controls="pills-home" aria-selected="true">ตารางนัดหมาย</a>
 	  </li>
+	  
+	  <!-- <li class="nav-item">
+	    <a class="nav-link <%='active' if params[:query]%>" id="pills-job-tab" data-toggle="pill" href="#tab-job" role="tab" aria-controls="pills-job" aria-selected="false">ระบบรับส่งงาน</a>
+	  </li> -->
+	  
 	  <li class="nav-item">
 	    <a class="nav-link <%='active' if params[:query]%>" id="pills-profile-tab" data-toggle="pill" href="#tab-patient" role="tab" aria-controls="pills-profile" aria-selected="false">รายชื่อผู้ป่วย</a>
 	  </li>
@@ -89,16 +95,32 @@
 		<h3>ตารางนัดหมาย</h3>
 	</div>
 	<div class="col d-flex justify-content-end">
-
+		
+		<% unless @current_network %>
        <div class=" d-flex justify-content-center btn-submit" >
+		   <a href="visit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มนัด</span>
+           </a>
+       </div>&nbsp;
+       
+	   <div class=" d-flex justify-content-center btn-submit" >
+		   
+		   
+		   
+		   
            <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                    <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
                    <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
                  </svg>
-               <span class="pl-2 pb-0">เพิ่มใหม่</span>
+               <span class="pl-2 pb-0">เพิ่มผู้ป่วย</span>
            </a>
        </div>&nbsp;
+	   <% end %>
 	            <!--<div class=" d-flex justify-content-end btn-submit" >
 	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -123,75 +145,160 @@
 </div> 
 
 <div class="col-12 col-md-6">
-<!-- <h3>ตารางปฏิทิน</h3> -->
+
 
 <div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
 
-<script>
-  
-<% if true
 
-  visits = SHVisit.all
-  networks = SHNetwork.all
-  patients = Patient.where(:zone_id=>session[:current_zone]).all
-  m_pn = Hash[patients.collect{|i| 
-		  
-	  r = SHRelation.where(:patient_id=>i.id).first
-		  
-	  [i.id,r.network_id] if r
-  
-  	}.compact 
-  
-  ]
-  m_nid_name = Hash[networks.collect{|i| [i.id,i.name]}]
-  colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
-  m_nid_c = {}
-  networks.each_with_index{|v,i| m_nid_c[v.id]=colors[i%6]}
-  map = {}
-  for v in visits
-    d = v.start.strftime("%Y-%m-%d")
-    n = m_pn[v.patient_id]
-    map[d] = {} unless map[d]
-    map[d][n] = [] unless map[d][n]
-    map[d][n] << v.patient_id
-  end
+<% 
+
   netnum = []
-  for d in map.keys
-    for n in map[d].keys
-      netnum << {
-        title:"#{m_nid_name[n]} (#{map[d][n].size})",
-        url:"index?date="+d,
-        start:d,
-        color:m_nid_c[n]
-      }
-    end
-  end
+  map = {}
+  
+  
+visits = []
+visits_other = []
 
-
-	visits.collect!{|i|
-		p = Patient.find(i.patient_id)
-		if p
-		title = "#{p.hn} : #{p.first_name} #{p.last_name}"
-			
-        {
-          title: title,
-          url: "../Visit/show?id=#{i.id}",
-          start: i.start.strftime("%Y-%m-%d")
-        }
-		else
-		nil
-		end
+if @current_hospital
+	shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	patient_ids = shrelations.collect{|i| i.patient_id }
+	
+	# for doctor 
+	if @current_user_hospital.provider_type == 'doctor'  
 		
-	}.compact!
+		patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids},).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids} ).all
+		
+		
+	elsif @current_user_hospital.provider_type == 'nurse'  
+		
+		
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, ).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+
+	
+elsif @current_network
+	
+	
+	shrelations = SHRelation.where(:network_id=>@current_network.id).all
+	
 
 
-  pname=""
-  if params[:patient_id]
-    p = Patient.find(params[:patient_id])
-    pname="#{p.first_name} #{p.last_name}" 
-  end
+	if @current_provider 
+	
+		patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id).all
+		
+
+	else
+		
+		patient_ids = shrelations.collect{|i| i.patient_id }
+		
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+	
+
+
+end
+  
+  # visits= []
+ #
+ # 	if @current_hospital
+ #
+ # 		visits = SHVisit.where(:hospital_id=>@current_hospital.id, :provider_id=>@current_provider.id).all
+ #
+ # 	elsif @current_network
+ #
+ # 		visits = SHVisit.where(:network_id=>@current_network.id).all
+ #
+ # 	end
+ #
+ 	map = {}
+	
+	cmap = {}
+	
+	
+
+ 	for i in visits + visits_other
+
+ 		status = "W"
+ 		status = "C" if i.status == 'Completed'
+ 		date_key = i.date.strftime("%Y-%m-%d")
+ 		key = "-"
+
+		code = "00000"
+
+ 		if i.appoint_type=='1'
+
+			code = 'hos'
+ 			key = "#{date_key}:hos"
+
+ 		else
+
+
+ 			network = SHNetwork.find(i.network_id)
+
+ 			code = network.code if network and network.code and network.code !=''
+
+ 			key = "#{date_key}:#{code}"
+
+ 		end
+		
+		cmap[code] = 1 
+		
+
+ 		map[key] = {'W'=>[], 'C'=>[]} unless map[key]
+
+ 		map[key][status] << i
+
+ 	end
+
+ 	list = []
+    colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
+
+ 	map.keys.each_with_index do |k,id|
+
+ 		tk = k.split(":")
+ 		code = tk[1]
+ 		type = tk[2]
+		
+		color = colors[cmap.keys.index(code)%6]
+		color = '#015b9e'
+		color = '#21bca3' if code!='hos'
+		
+
+ 		title = "#{code} W:#{map[k]['W'].size} C:#{map[k]['C'].size}"
+ 		date = Date.parse(tk[0])
+ 		list <<    {
+ 			          title: title,
+ 			          url: "\#",
+ 			          start: date,
+					  color: color
+ 			        }
+
+ 	end
+
+ 	netnum = list
+	
+
 %>
-
+	
+	
+	<script>
+		
+		
 
     document.addEventListener('DOMContentLoaded', function() {
 	
@@ -255,7 +362,7 @@
 	
 	
 	
-	<% end %>
+
 	
 	
     var myKeyVals = {'date':'<%=date.strftime('%Y-%m-%d')%>'}
@@ -323,7 +430,10 @@
 	<h3>รายชื่อผู้ป่วย</h3>
 	</div>
 	<div class="col d-flex justify-content-end">
-
+	        
+			
+			<% unless @current_network %>
+			
 	            <div class=" d-flex justify-content-center btn-submit" >
 	                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -333,18 +443,8 @@
 	                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
 	                </a>
 	            </div>
-			
-				&nbsp;
-	            <!--
-				<div class=" d-flex justify-content-end btn-submit" >
-	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
-	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-	                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-	                      </svg>
-	                    <span class="pl-2 pb-0">ตารางนัด</span>
-	                </a>
-	            </div>
-				-->
+			<% end %>
+
 	</div>
 
 	</div>			
@@ -415,13 +515,15 @@
 		end
 		
 		end
+		
+		patients.compact!
 
 
 		admits = Admit.where(:zone_id=>session[:current_zone]).all
 		usernetworks = SHUserNetwork.all
 		uns = usernetworks.collect{|i| i.user_id}
 		networks = SHNetwork.all
-		pid=patients.collect{|i| i.id}
+		pid=patients.compact.collect{|i| i.id}
 		relations = SHRelation.where(:patient_id=>pid).all
 		m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 		m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
@@ -546,7 +648,7 @@
 			<td><%=link_to "ตรวจ", "show?id=#{admit.id}", :class=>'btn btn-success' %>
 				<%#=link_to "ประวัติ", "profile?id=#{i.id}", :class=>'btn btn-info' %>
 				<%#=link_to "เครือข่าย", "admit?id=#{admit.id}", :class=>'btn btn-info' %>
-				<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' %></td>
+				<%=link_to "ลบ", "destroy?id=#{i.id}", :class=>'btn btn-danger' unless @current_network %></td>
 		
 		</tr>
 		<% end %>
@@ -568,10 +670,56 @@
 	
 	
 	  </div>
+	  
+	  
+	
+	
+	  <div class="tab-pane fade show <%=' active' if params[:query]%>"  id="tab-job" role="tabpanel" aria-labelledby="pills-job-tab">
+ 	
+		<div class="row" style="border:0px solid">
+
+			<div class="col">
+				<h3>ระบบเยี่ยมบ้าน</h3>
+			</div>
+
+			<div class="col d-flex justify-content-end">
+				 สืบค้น สั่งงาน
+			</div>
+	
+		</div>
+	
+	  </div>
+	
+	
+	
+	
+	
+	  
 	</div>
 	
 	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+	
 	</div>
+	
+	
+
+	
+	
+	
 </div>
 
 

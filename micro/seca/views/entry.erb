@@ -140,14 +140,19 @@
 			
 			if(obj['weight']!=""&&obj['weight']!=null){
 				w = parseFloat(obj['weight'])
-				$('#weight').val(obj['weight'])
-				$('.weight').html(obj['weight'])
+				w = parseFloat(w.toFixed(1))
+				// $('#weight').val(obj['weight'])
+				// $('.weight').html(obj['weight'])
+				$('#weight').val(w)
+				$('.weight').html(w)
 			}
 			
 			if(obj['height']!=""&&obj['height']!=null){
 				h = parseFloat(obj['height'])
-				$('.height').html(h*100)
-				$('#height').val(h*100)
+				h = h*100
+				h = parseFloat(h.toFixed(1))
+				$('.height').html(h)
+				$('#height').val(h)
 			}
 			
 			$('#out').html(data);

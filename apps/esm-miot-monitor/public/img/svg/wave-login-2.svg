@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1929.37" height="307.081" viewBox="0 0 1929.37 307.081">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.489" y1="0.132" x2="0.518" y2="1.124" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#dbb0c4"/>
+      <stop offset="0" stop-color="#dcbccc"/>
+      <stop offset="0.297" stop-color="#dbb0c4"/>
+      <stop offset="0.515" stop-color="#dbb0c4"/>
+      <stop offset="0.697" stop-color="#dbb0c4"/>
+      <stop offset="0.836" stop-color="#dcbccc"/>
+      <stop offset="0.915" stop-color="#dbb0c4"/>
+      <stop offset="1" stop-color="#dcc4ce"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" y1="1" x2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#dbb0c4"/>
+      <stop offset="0.085" stop-color="#dbb0c4"/>
+      <stop offset="0.164" stop-color="#dbb0c4"/>
+      <stop offset="0.303" stop-color="#dbb0c4"/>
+      <stop offset="0.485" stop-color="#dcc4ce"/>
+      <stop offset="0.703" stop-color="#dbb0c4"/>
+      <stop offset="1" stop-color="#dbb0c4"/>
+      <stop offset="1" stop-color="#2390ff"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_904" data-name="Group 904" transform="translate(-14.202 -328.274)" style="mix-blend-mode: multiply;isolation: isolate">
+    <path id="Path_977" data-name="Path 977" d="M14.2,467.806c68.515-31.348,181.058-51.278,286.152-41.784,72.344,6.532,136.773,22.055,202.906,35.222s138.9,24.376,212.7,21.179c161.559-7,263.278-78.306,423.288-89.469,170.234-11.877,347.478,48.579,506.282,21.891,114.693-19.276,171.565-78.445,294.715-86.571V635.355H14.2Z" transform="translate(0)" opacity="0.3" fill="url(#linear-gradient)" style="mix-blend-mode: color-burn;isolation: isolate"/>
+    <path id="Path_978" data-name="Path 978" d="M45.2,394.147c103.33,2.423,160.6-.07,246.46-6.685,57.65-4.442,106.29-10.77,175.024-12.688,83.929-2.343,170.649,2.711,235.352,8.894s119.568,13.767,195.581,18.238c157.822,9.286,359.9,2.324,502.12-9.5,61.529-5.117,117.149-11.112,184.153-15.368s150.335-6.625,223.3-3.7c60.007,2.407,104.142,7.984,161.335,11.078v78.542H45.2Z" transform="translate(-24.954 172.399)" opacity="0.45" fill="url(#linear-gradient-2)" style="mix-blend-mode: color-burn;isolation: isolate"/>
+  </g>
+</svg>

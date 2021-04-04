@@ -62,15 +62,16 @@ border-bottom: 2px solid #3147FF;
 
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm">
+    <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm ">
 		
       <a class="navbar-brand" href="../Home/index" >
       <!--<image src="<%=url_for 'img/gxt-sos.png' %>" height="40">-->
       <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
       </a>
 			
-				<% if @current_user %>
-					<form class="form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
+	 <% if @current_user %>
+
+			<form class="control-area form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
 				<!--<%=link_to "+", "../Admit/create",:class=>'btn btn-outline-success mr-2 my-0 col-3 col-xs-2 col-sm-1 col-lg-1' %>	-->
 			    <input class="form-control mr-2  my-0 col-12 col-xs-6" name='query' id="search" type="text" placeholder="Search" aria-label="Search">
 				<!--	<button class="btn btn-outline-success my-0  col-3" type="submit">O</button>-->
@@ -87,8 +88,9 @@ border-bottom: 2px solid #3147FF;
 		   
   	   <%#link_to "Logout","../User/logout" %>	
 	 
-    	  </div>	
-		  <% end %>
+    	
+		    </div>	
+    <% end %>
 			
       <button class="navbar-toggler col-2" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -122,18 +124,7 @@ border-bottom: 2px solid #3147FF;
 			  %>
             <a class="nav-link" href="../Home/index"> <%= name %> </a>
           </li>
-		  
-		  <!--
-          <li class="nav-item">
-            <a class="nav-link" href="../Home/admit">Patient Admit</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../Score/index">Scoring</a>
-          </li>
 
-		-->
-		  
- 
 	 
 	 
 	 
@@ -152,19 +143,7 @@ border-bottom: 2px solid #3147FF;
 		  </li>
 		  
 		   
-		  
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link" href="../Home/sos" >SOS</a>
-		  </li> 
-		  
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admit</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="../Admit/create">Admit Patient</a>
-			  
-		    </div>
-          </li>
-		  -->
+	
 		  <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -236,7 +215,7 @@ border-bottom: 2px solid #3147FF;
 	 		  <a class="dropdown-item" href="../Opd/index">Station</a>
 		  </div>
 			  </li> -->
-  		    <li class="nav-item dropdown">
+  		    <li class="nav-item dropdown control-area">
                  <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Care Unit</a>
                  <div class="dropdown-menu" aria-labelledby="dropdown01">
   				 <% for i in Zone.all.collect{|i| i if i.name!='default'}.compact %>

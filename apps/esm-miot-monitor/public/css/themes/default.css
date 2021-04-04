@@ -1,0 +1,83 @@
+@font-face {
+  font-family: IBMPlex;
+  src: url("../../css/IBMPlexSansThai-Regular.ttf");
+}
+
+body {
+  color: var(--btn-grey-text);
+  padding-top:3.8rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "IBMPlex", sans-serif;
+  height:100vh;
+  font-size:1.2em;
+}
+
+.login-logo{
+	
+	background-image: url('../../img/sammho-login.png');
+	width:200px;
+    background-repeat: repeat;
+    background-size: cover;
+	
+}
+
+ .bg-all{
+	 background-image: url('../../img/svg/wave-login-2.svg');
+ }
+ 
+ .link-text{
+	 text-align: center;
+	 font-size:0.8em;
+ }
+
+.banner-header{
+	font-size:1.2em;
+	color:white;
+	padding:20px;
+	border:0px solid;
+	border-radius:0px 0px 0px 0px;
+	margin-bottom:20px;
+	background: transparent linear-gradient(274deg, #18A79DBF 0%, #00598B 55%, #1C7CD5 100%) 0% 0% no-repeat padding-box;
+}
+
+.banner-title{
+	font-size:1.4em;
+}
+.banner-text{
+	font-size:1em;
+}
+
+.nav-pills {
+	font-size:1.2em;
+}
+.nav-pills .nav-link.active, .nav-pills{
+	color:gray;
+	background-color:rgba(0, 0, 0, 0.0);;
+
+	
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+	color:black;
+	background-color:rgba(0, 0, 0, 0.0);;
+	border-bottom:3px solid #2679c9;
+	
+}
+th{
+	background:#F1F1F1;
+	color:black;
+}
+
+.dash-panel{
+	background:#F1F1F1;
+	min-height:10vh;
+	border-radius:15px;
+	padding:15px;
+	margin:5px;
+	/* color:white; */
+	border: 1px solid #446373;
+}
+.dash-num{
+	font-size:1.4em;
+	
+}

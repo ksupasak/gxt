@@ -12,3 +12,6 @@
     <!-- Custom styles for this template -->
     <link href="" rel="stylesheet">
 	<script src="/vendor/jquery-1.9.1.min.js"></script>
+	<%=inline(this,:'../share/_theme')%>
+	<link rel="stylesheet" type="text/css" href="<%=url_for(@theme_default_css) %>"/>
+	<link rel="stylesheet" type="text/css" href="<%=url_for(@theme_custom_css) %>"/>

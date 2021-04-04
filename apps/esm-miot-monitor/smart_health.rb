@@ -1,5 +1,22 @@
 module EsmMiotMonitor
   
+  
+  class SmartHealthApiController < GXT
+  
+         #
+    # register Sinatra::I18nSupport
+    #  load_locales './config/locales'
+    #  set :default_locale, 'en'  # Optional; defaults to 'en'
+  
+    def acl
+  
+      return {:index=>'*',:patients=>'*',:appoints=>'*'}
+  
+    end
+    
+    
+  end
+  
     class SmartHealthController < GXT
     
            #

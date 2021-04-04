@@ -112,7 +112,7 @@
 		<% end %>
 		
 		
-		<%#=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
+		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
 		
 		<%#=link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
 		

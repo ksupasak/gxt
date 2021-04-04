@@ -11,6 +11,7 @@ class SHNetwork < GXTModel
   key :latlng, String
   key :phone, String
   key :district, String
+  key :code, String
   
 end
 
@@ -25,6 +26,7 @@ class SHHospital < GXTModel
   key :latlng, String
   key :phone, String
   key :district, String
+  key :code, String
   
   
 end
@@ -71,12 +73,14 @@ class SHRelation < GXTModel
   
   key :hospital_id, ObjectId
   key :hospital_doctor_id, ObjectId
+  key :hospital_doctor_2_id, ObjectId
   key :hospital_nurse_id, ObjectId
   key :network_id, ObjectId
   key :network_doctor_id, ObjectId
   key :network_nurse_id, ObjectId
   key :network_officer_id, ObjectId
   key :patient_id, ObjectId
+  key :user_id, ObjectId
   
   
 end
@@ -104,18 +108,43 @@ class SHVisit < GXTModel
   
   include Mongoid::Document
   
+  
+  key :appoint_type, String # at hospital , at network order
+  key :date, Time
+  key :status, String
   key :start, Time
   
-  key :title, String
-  
-  key :note, String
   
   key :patient_id, ObjectId
+
+  
+  
+  key :title, String
+  key :note, String
+  
+  key :provider_id, ObjectId
+  key :hospital_id, ObjectId
   key :network_id, ObjectId
   key :officer_id, ObjectId
   
-  key :status, String
   
+  key :app_no, String
+  
+  key :appointed_at, Time
+  key :appointed_user, ObjectId # user
+  
+  key :dispatched_at, Time
+  key :dispatched_user, ObjectId # user
+  
+  key :completed_at, Time
+  key :completed_user, ObjectId # user
+  key :complated_by, String # 1 : hospital , 2 : network , 3 : officer
+
+  #
+  # def self.start
+  #   return self.date
+  # end
+
   
 end
 

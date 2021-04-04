@@ -399,9 +399,22 @@ class NurseRecord  < GXTModel
   
   key :note, String
   
+  key :note_2, String
+  
+  key :note_3, String
+  
+  key :note_4, String 
+  
+  key :remark, String 
+   
   key :tag, String
   
   key :updated_user_id, ObjectId
+  
+  key :data_record_id, ObjectId
+  
+  
+  key :sh_visit_id, ObjectId
   
   include Mongoid::Timestamps
   
@@ -547,7 +560,7 @@ class Patient  < GXTModel
     out = self.age
     
     if self.dob 
-      out = (date - self.dob)/31536000
+      out = ((date - self.dob)/31536000).to_i
     end 
     
     return out
@@ -763,6 +776,7 @@ class DataRecord  < GXTModel
   
   
   key :admit_id, ObjectId
+  key :station_id, ObjectId
   
   key :data, String
   key :bp, String
@@ -791,6 +805,7 @@ class DataRecord  < GXTModel
 
   
   key :stamp, Time
+  key :bp_stamp, String
   
   key :status, String
   
@@ -801,6 +816,8 @@ class DataRecord  < GXTModel
   
   key :send_status, Boolean
   key :send_msg, String
+  
+  key :sh_visit_id, ObjectId
   
   
   include Mongoid::Timestamps

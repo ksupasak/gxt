@@ -306,6 +306,7 @@ end
    loop do
   puts 'starting..omron'  
 
+
   #device_id = get_device "0483:5740" 
   
   device_id = '/dev/ttyACM0'

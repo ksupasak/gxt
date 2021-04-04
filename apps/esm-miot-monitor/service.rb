@@ -836,6 +836,28 @@ MSG
                 odata['vs'] << record 
                 
                 
+              else
+                
+                
+                old_stamp = odata['bp_stamp']
+                
+            
+                
+                if data['bp'] and (old_stamp == nil or old_stamp!=data['bp_stamp'])
+                  
+                  v = data #{:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:hr=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
+                  
+                  puts v.inspect 
+                  bp_sys,bp_dia = v['bp'].split('/')
+                  DataRecord.create :station_id=>station.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
+                
+                 
+                
+                
+                end
+                
+                
+                
               end
               
               

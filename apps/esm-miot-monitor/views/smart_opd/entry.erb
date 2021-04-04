@@ -48,18 +48,6 @@ unless patient
 		robj.merge! rx['record']
 		
   
-	    # key :hn, String
-    # 	    key :name, String
-    # 	    key :public_id, String
-    # 	    key :prefix_name, String
-    # 	    key :first_name, String
-    # 	    key :last_name, String
-    # 	    key :dob, Time
-    # 	    key :age, String
-    # 	    key :gender, String
-    # 	    key :contact_name, String
-    # 	    key :contact_phone, String
-    #
 		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>robj['birth_date']
 	
 	else
@@ -87,6 +75,7 @@ unless patient
 end
 
 
+patient = Patient.new :hn=>params[:hn] unless patient 
 
 
 @current_zone = Zone.find session[:current_zone]
@@ -762,7 +751,7 @@ end
  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 
 
- ws.onopen    = function()  { show('websocket openedf'); 
+ ws.onopen    = function()  { show('websocket opened'); 
 
  	ws.send('WS.Select name=<%=session.id%>\n["Monitor.Update device_id=*"]')
 

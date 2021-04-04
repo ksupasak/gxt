@@ -1,0 +1,114 @@
+	<%=inline(this,:'_init')%>
+<%
+		
+  relation = SHRelation.where(:user_id=>@current_user.id).first
+		
+  @patient = Patient.find relation.patient_id
+  
+  @admit = Admit.where(:patient_id=>@patient.id).first
+  
+
+%>
+
+<style>
+	.control-area{
+		display:none;
+	}
+</style>
+
+<div class="containerx" style="background:none">
+
+<div class="row" style="border:0px solid;">
+
+<div class="col" style="">
+	
+<div class="row banner-header" style="">
+
+<div class="col">
+	<div>
+		<span class="banner-title"><%=link_to @access_title, "index" %></span>
+		<br/>
+		ระบบบันทึกข้อมูลสุภาพ
+    </div>
+</div>
+
+<div class="col  d-flex justify-content-end">
+	<div> <%=@patient.to_s %>	<br/><%=@patient.hn%></div>
+</div>
+
+
+</div>
+
+<div class="container content-main" style="">
+
+<div class="row content-header" style="border-radius: 10px;">
+	<div class="col">
+		<div class=" " style="padding:15px;" >
+			<h4><%=@patient.to_s%></h4>
+			
+			<div class="row">
+			<div class="col-4"> HN <%=@patient.hn%> </div> 
+			<div class="col-4"> อายุ : <%=@patient.to_age%></div>
+			<div class="col-4"> เพศ: <%=@patient.gender%> </div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<br/>
+
+<div class="row " >
+	<div class="col">
+		<div class=" content-main row" >
+			
+			<div class="col-4 link-text " style=" ">
+			<a href="connect?admit_id=<%=@admit.id%>"><img src="../../nci/img/svg/vitalsign.svg" width="80"/><br/>
+			วัดค่าสัญญาณชีพ
+			</a>
+			</div>
+			
+			
+			<div class="col-4 link-text">
+			<a href=""><img src="../../nci/img/svg/history.svg" width="80"/><br/>
+			ประวัติการตรวจ
+			</a>
+			</div>
+			
+			<div class="col-4 link-text">
+			<a href=""><img src="../../nci/img/svg/telecon.svg" width="80"/><br/>
+			ติดต่อแพทย์
+			</a>
+			</div>
+		</div>
+	</div>
+</div>
+<br/>
+<div class="row " >
+	<div class="col">
+		<div class="  row" >
+			
+			<div class="col-6 " style="">
+			<div class="content-widget">
+				ความดันโลหิต
+			</div>
+			</div>
+			
+			<div class="col-6 " style="">
+		
+			<div class="content-widget">
+		   		 อุณหภูมิร่างกาย
+			 </div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+</div>

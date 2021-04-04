@@ -64,7 +64,7 @@
 		
 		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
 		
-		<%=link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
+		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
 		
 		
 	  </div>  <!-- End Doctor Section-->
@@ -81,7 +81,7 @@
 			 
 	  	%>
 		
-		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{hn name user}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id
 		
@@ -93,6 +93,15 @@
 		
 		end
 		
+		user = nil
+		
+		user = User.find row.user_id if row.user_id
+		
+		if user
+		out[-1] = link_to(user.login, "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+		else
+		out[-1] = link_to("ผู้ใช้", "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+		end
 		out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out

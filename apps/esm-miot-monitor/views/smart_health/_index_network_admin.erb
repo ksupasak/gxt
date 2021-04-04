@@ -1,24 +1,36 @@
 <%=inline(this,:'_init')%>
 
+
 <div class="container" style="background:none">
 <br/>
 
 
-<div class="row" style="border:0px solid">
+<div class="row" style="border:0px solid;background:#fff">
 
 <div class="col">
 <div><%=@access_title%></div>
 </div>
 <div class="col  d-flex justify-content-center">
-<div> ระบบจัดการข้อมูลผู้ดูแลระบบ Network
-</div></div>
-<div class="col d-flex justify-content-end">
-	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+<div> ระบบจัดการข้อมูลผู้ดูแลระบบ Network</div>
+</div>
+
+<div class="col  d-flex justify-content-center">
+<div> </div>
+</div>
+</div>
+<div class="row" style="border:0px solid">
+<div class="col d-flex justify-content-center">
+	<ul class="nav nav-pills mb-12" id="pills-tab" role="tablist">
+		
+  	  <li class="nav-item">
+  	    <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">ระบบจ่ายงาน</a>
+  	  </li>
+	  
 	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Doctor / Nurse</a>
+	    <a class="nav-link " id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
 	  </li>
 	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Patient</a>
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">รายการผู้ป่วย</a>
 	  </li>
 	</ul>
 </div>
@@ -31,7 +43,112 @@
 
 
 	<div class="tab-content" id="pills-tabContent">
-	  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+		
+		<div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
+		
+		
+		<%
+			
+		officers = SHUserNetwork.where(:network_id=>@current_network.id, :provider_type=>'officer').all	
+			
+		pending_visits = SHVisit.where(:appoint_type=>'3', :status=>'Pending', :network_id=>@current_network.id).all
+		
+		accepted_visits = SHVisit.where(:appoint_type=>'3', :status=>'Accepted', :network_id=>@current_network.id).limit(10).all
+		
+		completed_visits = SHVisit.where(:appoint_type=>'3', :status=>'Completed', :network_id=>@current_network.id).sort(:completed_at=>1).limit(10).all
+		
+		providers = []
+		
+		for i in officers 
+		
+			provider = Provider.find(i.provider_id)
+			providers << provider if provider 
+		
+		end
+		
+		
+			
+		%>
+<h4>รอจ่ายงาน - (Pending)</h4>		
+	<form action="assign" method="post">	
+
+	<%= tabular :data=>pending_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
+	
+	options = ['<option value=""></option>']
+	
+	for i in providers
+		options << "<option value='#{i.id}' >#{i.name}</option>"
+	end
+	
+	patient = Patient.find(row.patient_id)
+	
+	out[1] = patient.hn
+	out[2] = patient.to_s
+	
+	
+	out[-2] = SHHospital.find(row.hospital_id).name
+	
+	out[-1] =  "<select class='form-control' name='visit[#{row.id}][officer_id]'>#{options.join}</select>"
+		
+	
+	out
+	end %>
+	
+	<input type="submit" value="จ่ายงาน" class="btn btn-success" >
+		
+</form>
+<br/>
+
+<h4>จ่ายงานแล้ว - (Dispatched/Accepted)</h4>
+	<%= tabular :data=>accepted_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
+	
+	options = ['<option value=""></option>']
+	
+	for i in providers
+		options << "<option value='#{i.id}' >#{i.name}</option>"
+	end
+	
+	patient = Patient.find(row.patient_id)
+	
+	out[1] = patient.hn
+	out[2] = patient.to_s
+	
+	
+	out[-2] = SHHospital.find(row.hospital_id).name
+	
+	out[-1] = Provider.find(row.officer_id).name
+		
+	
+	out
+	end %>
+
+		
+<h4>ตรวจเสร็จล่าสุด (Completed)</h4>
+	<%= tabular :data=>completed_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
+	
+	options = ['<option value=""></option>']
+	
+	for i in providers
+		options << "<option value='#{i.id}' >#{i.name}</option>"
+	end
+	
+	patient = Patient.find(row.patient_id)
+	
+	out[1] = patient.hn
+	out[2] = patient.to_s
+	
+	
+	out[-2] = SHHospital.find(row.hospital_id).name
+	
+	out[-1] = Provider.find(row.officer_id).name
+		
+	
+	out
+	end %>
+
+	   </div>		
+		
+	  <div class="tab-pane fade show " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 	  	<%
 	  		
 		if @current_network 
@@ -85,12 +202,14 @@
 		
 		patient = Patient.find row.patient_id
 		
+		admit = Admit.where(:patient_id=>patient.id).last
+		
 		out[0] = patient.hn
 		
 		# out[1] = patient.name
 		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
 		
-		out<<link_to("Show", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("แสดง", "show?id=#{admit.id}", :class=>'btn btn-success') if admit
 		
 		out
 		end

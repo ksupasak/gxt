@@ -32,41 +32,42 @@ reportid = "&record_id=#{report.id}" if report
 		color:white;
 	}
 	</style>
-<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
-<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
-<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+
+
     <!--Content-->
     <section>
-        <div class="containerx">
+    
 	
-	
-	
-	
+	<div class="containerx">
 	<div class="row">
 	
 	<div class="col" style="margin-left:0px;margin-right:0px;border-radius:0px;">
 	
-	<div class="banner-header" style="">
+	<div class="row banner-header" style="">
+
+	<div class="col">
 	<div class="row">
 		<div class="col">
 			<div>
-				<span class="banner-title"><%=@access_title%>&nbsp; &nbsp; </span> 
+				<span class="banner-title"><%=link_to @access_title, "index" %>&nbsp; &nbsp; </span><br/>
+		Smart Health
 			</div>
 		</div>
 		
 		<div class="col  d-flex justify-content-end">
 			<div>
-				
-					<span class="banner-title">นัดหมายวันนี้</span>
+				<span class=""><%=@current_provider.name if @current_provider%></span><br/>
+				<span class="banner-text"> <%=patient.to_s%> [ HN : <%=patient.hn%> ]</span>
+			
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<span class="banner-text">&gt; &nbsp; <%=patient.to_s%> [ HN : <%=patient.hn%> ]</span>
+		
 		</div>
 	</div>
-
+</div>
 	</div>
 	
     </div>
@@ -101,6 +102,7 @@ reportid = "&record_id=#{report.id}" if report
 					 hospital = SHHospital.find relation.hospital_id
 					 
 					 hospital_doctor = Provider.find relation.hospital_doctor_id
+					 hospital_doctor_2 = Provider.find relation.hospital_doctor_2_id
 					 hospital_nurse = Provider.find relation.hospital_nurse_id
 					 
 					 network = SHNetwork.find relation.network_id
@@ -124,6 +126,9 @@ reportid = "&record_id=#{report.id}" if report
 							แพทย์ประจำ : <%=hospital_doctor.name if hospital_doctor%>
 						</div>
 						<div class="col-12"  style="font-size:0.8em">
+							แพทย์รอง : <%=hospital_doctor_2.name if hospital_doctor_2%>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
 							พยาบาล : <%=hospital_nurse.name if hospital_nurse %>
 						</div>
 					</div>
@@ -138,7 +143,7 @@ reportid = "&record_id=#{report.id}" if report
 							แพทย์ประจำ : <%=network_doctor.name if network_doctor%>
 						</div>
 						<div class="col-12"  style="font-size:0.8em">
-							พยาบาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_officer and network_nurse.phone.size>0 %>
+							พยาบาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_nurse and network_nurse.phone.size>0 %>
 						</div>
 					</div>
 				 </div>
@@ -183,17 +188,17 @@ reportid = "&record_id=#{report.id}" if report
                      </a>
                 </div>
 -->					
-            <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
+            <!-- <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
                 <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
                 แบบฟอร์ม
-            </a>&nbsp;
+            </a>&nbsp; -->
 
 			<div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
                 <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
                     <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                    วัดค่า
+                    ตรวจ
                  </a>
-            </div>&nbsp;
+            </div>
 
 
                 <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
@@ -211,7 +216,7 @@ reportid = "&record_id=#{report.id}" if report
                 </div> 
 				
 			
-				&nbsp;
+			
 				
 <!--				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
 	            <a href="summary?admit_id=<%=admit.id%>" class="btn d-flex align-items-center justify-content-center " style="float:right">
@@ -301,8 +306,8 @@ reportid = "&record_id=#{report.id}" if report
 				
 				for i in visits
 					
-					key = "#{i.start.strftime('%Y-%m-%d')}"
-					stamp = i.start
+					key = "#{i.date.strftime('%Y-%m-%d')}"
+					stamp = i.date
 					
 					map[key] = [] unless map[key]
 					map[key] << {:stamp=>stamp, :type=>'visit',:data=>i}
@@ -424,15 +429,19 @@ reportid = "&record_id=#{report.id}" if report
 				<td>
 					
 					
-					<a href="#" class=" detail" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
+		<a href="#" class="detail c<%=data.id%>" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
 					
 					
 				</td>
 				
-				<% if i[:type]=='visit'%>
+				<% if i[:type]=='visit'
+					user = nil
+					user = User.find data.completed_user if data.status=='Completed'
+				%>
 				
 				<td><%=data.status%></td>
-				
+				<td colspan="5"></td>
+				<td><%=user.login if user%></td>
 				
 				<% elsif i[:type] == 'case_record'
 					user = nil
@@ -469,9 +478,9 @@ reportid = "&record_id=#{report.id}" if report
                 <td> Score <%=i.score%></td>
                 <td class="bp"><%=i.bp%></td>
                 <td class="pr"><%=i.spo2%> : <%=i.pr%> </td>
-                <td class="rr"><%=i.weight%> : <%=i.height%></td>
-				<td class="rr"><%=i.temp%></td>
-                <td class="rr"><%=i.glucose%></td>
+                <td class="wh"><%=i.weight%> : <%=i.height%></td>
+				<td class="bt"><%=i.temp%></td>
+                <td class="glu"><%=i.glucose%></td>
 				
             
                 <td><%
@@ -499,7 +508,7 @@ reportid = "&record_id=#{report.id}" if report
 				
 				%>
 				<td colspan="7">
-					<a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+					<a href="javascript:$('.c<%=data.id%>').click()"><img src="<%=url%>" height="200">
 				</td>
 				
 				
@@ -523,7 +532,7 @@ reportid = "&record_id=#{report.id}" if report
 			
 			
 			<div class="col-12 col-xl-6">
-			<div class="content-detail">
+			<div class="content-detail" >
 	
 			
 			</div>
@@ -616,12 +625,20 @@ reportid = "&record_id=#{report.id}" if report
             </a>&nbsp;
 -->			
 				
-				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+				<!-- <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
 	            <a href="calendar?patient_id=<%=patient.id%>" class="btn d-flex align-items-center justify-content-center ">
 	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
 	                นัดหมาย
 	            </a>
+				</div> -->
+				<% unless @current_network %>
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="visit?admit_id=<%=params[:id]%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                นัดหมาย
+	            </a>
 				</div>
+				<% end %>
 		
 			&nbsp;
 
@@ -658,7 +675,9 @@ reportid = "&record_id=#{report.id}" if report
 			url = "../Message/content?id=#{i.id}" 
 		%>
 		
-		<div class="col-4"><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a></div>
+		<div class="col-4"><a href="#" target="_blank" >
+			<img src="<%=url%>" height="150"></a>
+		</div>
 		
 		<% end %>
 		<% end %>
@@ -732,27 +751,7 @@ reportid = "&record_id=#{report.id}" if report
 	   	 
 		 
 		 
-		 
-		 $('.detail').click(function(event){
-		 	
-			ctype = $(this).attr('ctype')
-			cid = $(this).attr('cid')
-			 
-			
-			 
-			 $.ajax({
-			   url: "detail?id="+cid+"&ctype="+ctype+"&admit_id=<%=params[:id]%>",
-			   context: document.body
-			 }).done(function(content) {
-			   $( '.content-detail' ).html( content );
-			 });
-			 
-			 event.preventDefault()
-			 
-			 
-			 
-		 })
-		 
+	
 		 
 		 
 		 
@@ -876,7 +875,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 		<br/>
 				<select name="relation[hospital_doctor_id]"  class="form-control">
 				<option value="" ></option>
-				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'doctor').all
+				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'doctor').all
 				provider = i.provider
 				%>
 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_doctor_id %>><%=provider.name%></option>
@@ -885,12 +884,28 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				
 				</div>
 				 
+				 
+
+ 		 		<div class="col">
+ 		 		<label for="relation-hospital_doctor_id">แพทย์รอง</label>
+ 		 		<br/>
+ 				<select name="relation[hospital_doctor_2_id]"  class="form-control">
+ 				<option value="" ></option>
+ 				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'doctor').all
+ 				provider = i.provider
+ 				%>
+ 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_doctor_2_id %>><%=provider.name%></option>
+ 				<% end %>
+ 				</select>
+				
+ 				</div>
+				
 	 		<div class="col">
 	 		<label for="relation-hospital_nurse_id">พยาบาล</label>
 				<br/>
 				<select name="relation[hospital_nurse_id]"  class="form-control">
 				<option value="" ></option>
-				<% for i in SHUserHospital.where(:hospital_id=>@current_hospital,:provider_type=>'nurse').all
+				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'nurse').all
 				provider = i.provider
 				%>
 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_nurse_id %>><%=provider.name%></option>
@@ -914,7 +929,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<option value="" ></option>
 				<% 
 				
-				@current_network = SHNetwork.find relation.network_id
+				# @current_network = SHNetwork.find relation.network_id
 					
 				for i in SHNetwork.all
 			
@@ -936,7 +951,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<br/>
 				<select name="relation[network_doctor_id]" class="form-control">
 				<option value="" ></option>
-				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'doctor').all
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id,:provider_type=>'doctor').all
 				provider = i.provider
 				%>
 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_doctor_id %>><%=provider.name%></option>
@@ -949,7 +964,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 		<label for="relation-network_nurse_id">พยาบาล</label><br/>
 				<select name="relation[network_nurse_id]" class="form-control">
 				<option value="" ></option>
-				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'nurse').all
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id,:provider_type=>'nurse').all
 				provider = i.provider
 				%>
 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_nurse_id %>><%=provider.name%></option>
@@ -962,7 +977,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 			
 				<select name="relation[network_officer_id]" class="form-control">
 				<option value="" ></option>
-				<% for i in SHUserNetwork.where(:network_id=>@current_network,:provider_type=>'officer').all
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id, :provider_type=>'officer').all
 				provider = i.provider
 				%>
 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_officer_id %>><%=provider.name%></option>
@@ -985,3 +1000,71 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 	</div>
 	
 	
+	<div class="feed" style=""></div>	
+	
+	
+
+	 
+	<div class="modal fade" id="modal-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <!-- <div class="modal-header">
+	       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times</span>
+	        </button>
+	      </div> -->
+	      <div class="modal-body">
+			  <div class="modal-detail">
+       		   </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+	        <!-- <button type="button" class="btn btn-info">Accept</button> -->
+	      </div>
+	    </div>
+	  </div>
+	</div>	 
+	<style>
+		.modal {
+		  width: 550px;
+		  margin: auto;
+		}
+		.modal-dialog {
+			max-width:550px;
+		}
+		</style>
+	
+	<script>
+	 
+	 $('.detail').click(function(event){
+	 	
+		ctype = $(this).attr('ctype')
+		cid = $(this).attr('cid')
+		 
+		 $.ajax({
+		   url: "detail?id="+cid+"&ctype="+ctype+"&admit_id=<%=params[:id]%>",
+		   context: document.body
+		 }).done(function(content) {
+		   
+			width =  $(window).width() 
+		
+			 if(width>1200){
+			 	 $( '.content-detail' ).html( content );
+			 }else{
+				 $( '.content-detail' ).html("");
+				 $( '.modal-detail' ).html( content );
+			 	 $("#modal-popup").modal()
+			 }
+			 
+		  
+		   
+		  
+		 });
+		 
+		 event.preventDefault()
+		 
+		 
+		 
+	 })
+	 
+		</script>

@@ -3,104 +3,169 @@
 <%
 	date = Time.now
 	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
-		
 	
+	visits = []
+	visits_other = []
+
 	if @current_hospital
 		shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+		
 		patient_ids = shrelations.collect{|i| i.patient_id }
 		
-		visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-	
-		# my_patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id, :hospital_doctor_id=> @current_provider.id).all.collect{|i| i.patient_id }
-		my_patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_nurse_id==@current_provider.id}.compact
-	elsif @current_network
-		shrelations = SHRelation.where(:network_id=>@current_network.id).all
-		patient_ids = shrelations.collect{|i| i.patient_id }
+		# for doctor 
+		if @current_user_hospital.provider_type == 'doctor'  
+			
+			patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
 		
-		visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-	
-		# my_patient_ids = SHRelation.where(:network_id=>@current_network.id, :network_doctor_id=> @current_provider.id).all.collect{|i| i.patient_id }
-		my_patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
-	
-	end
-	
-	
-	# visits = SHVisit.where(:patient_id=>{'$in'=>patient_ids}, :start=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
-	usernetworks = SHUserNetwork.all
-	uns = usernetworks.collect{|i| i.user_id}
-
-	my_list = []
-	other_list = []
-	for i in visits
-	
-		if my_patient_ids.index(i.patient_id)
-			my_list << i
-		else
-			other_list << i
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
+		elsif @current_user_hospital.provider_type == 'nurse'  
+			
+			
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
 		end
 		
+		
+		
+	elsif @current_network
+		
+		
+		shrelations = SHRelation.where(:network_id=>@current_network.id).all
+		
+	
+	
+		if @current_provider 
+		
+			patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+		
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			%>
+			here
+			<%
+		else
+			
+			patient_ids = shrelations.collect{|i| i.patient_id }
+			
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
+		end
+		
+	
+	
 	end
+	
+	
+	
+	# for doctor only
+	my_list = visits
+	
+	# for all
+	other_list = visits_other
+	
+	# for i in visits
+	#
+	# 	if i.appoint_type == '1'
+	# 		my_list << i
+	# 	else
+	# 		other_list << i
+	# 	end
+	#
+	# end
 	
 	
 	count = 0 
 %>
+
+
 <span style="font-size:1.2em;font-weight:bold">
 วันที่ : <%=date.strftime("%d %B %Y") %> 
 </span>
 <br><br>
 ผู้ป่วยของฉัน <%="(#{my_list.size})".html_safe if my_list.size>0%>
-<%= tabular :data=>my_list, :model=>%w{No hn name status}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>''} do|row,out| 
+<%= tabular :data=>my_list, :model=>%w{status hn name provider action}, :label=>{'provider'=>'แพทย์','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
+	
 	bname = "รอตรวจ"
 	bclass = "b-wait"
-	rs = admit.records
-	uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
-	if uid 
+	
+	if row.status=='Completed'
 		bname = "ตรวจแล้ว"
-		if uns.index(uid)
-			bclass = "b-network"
-		else
+		case row.complated_by
+		when '1'	
 			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
 		end
+		
 	end
-	#out[0] = count+=1
+	
 	out[0] = "<span class='badge #{bclass}'>#{bname}</span>"
 	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{patient.first_name}","admit?id=#{admit.id}")
+	out[2] = link_to("#{patient.first_name}  #{patient.last_name[0..3]}","admit?id=#{admit.id}")
+	provider = Provider.find(row.provider_id)
+	out[3] = provider.name if provider
+	
 	status = ""
-	status = "ตรวจ" if row.status==nil
-	out[3] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	status = "แสดง" # if row.status==nil
+	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
 	
 	out
 
 end
-%><br/>
-ผู้ป่วยอื่น ๆ
-<%= tabular :data=>other_list, :model=>%w{No hn name status}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>''} do|row,out| 
+%>
+<br/>
+ผู้ป่วยเยี่ยมบ้าน รพสต อสม
+<%= tabular :data=>other_list, :model=>%w{status hn name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
-	# out[0] = count+=1
+	
 	bname = "รอตรวจ"
 	bclass = "b-wait"
-	rs = admit.records
-	uid = rs.collect{|i| i.created_user_id if i.stamp.strftime('%d/%m/%Y')==date.strftime('%d/%m/%Y')}.compact.first
-	if uid 
+	
+	if row.status=='Completed'
 		bname = "ตรวจแล้ว"
-		if uns.index(uid)
-			bclass = "b-network"
-		else
+		case row.complated_by
+		when '1'	
 			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
 		end
+		
+	elsif row.status == 'Pending'
+		bname = "รอจ่ายงาน"	
+		bclass = "b-network"	
+	elsif row.status == 'Accepted'
+		bname = "รอตรวจ"	
+		bclass = "b-wait"	
 	end
-	out[0] = "<span class='badge #{bclass}'>#{bname}</span>"	
+	
+	out[0] = "<span class='badge #{bclass}'>#{bname}</span>"
 	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{patient.first_name}","admit?id=#{admit.id}")
+	out[2] = link_to("#{patient.first_name } #{patient.last_name[0..3]}","admit?id=#{admit.id}")
+	network = SHNetwork.find(row.network_id)
+	out[3] = link_to("#{network.name}","#")
+	
+	
 	status = ""
-	status = "ตรวจ" if row.status==nil
-	out[3] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	status = "แสดง" #if row.status==nil
+	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
 	
 	out
 
@@ -112,5 +177,8 @@ end
 		<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
 		<span class="badge b-hos">&nbsp;&nbsp;</span> รพ.ตรวจแล้ว
 		<span class="badge b-network">&nbsp;&nbsp;</span> รพสต.ตรวจแล้ว
+		<span class="badge b-officer">&nbsp;&nbsp;</span> อสม.ตรวจแล้ว
 	</div>
 </div>
+<br/>
+หมอ : <%= @current_provider.name if @current_provider %> รพ : <%= @current_hospital.name if @current_hospital  %> รพสต : <%= @current_network.name  if @current_network %>
