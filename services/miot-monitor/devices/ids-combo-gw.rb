@@ -384,6 +384,127 @@ sleep(10)
   omron.join
   
   
+  
+  
+  
+  # pi@raspberrypi:~ $ grep PRODUCT= /sys/bus/usb-serial/devices/ttyUSB1/../uevent
+ #  PRODUCT=10c4/ea60/100
+ #  pi@raspberrypi:~ $ grep PRODUCT= /sys/bus/usb-serial/devices/ttyUSB0/../uevent
+ #  PRODUCT=403/6001/600
+  
+  
+  
+  
+  
+
+  v100  = Thread.new {
+    
+   
+   # seca_uri = URI('http://192.168.4.1/')
+  
+	
+    begin 
+
+   loop do
+     
+  puts 'starting..v100'  
+
+  device_id = get_device "403:6001" 
+  device_id = "/dev/ttyACM0"
+# 
+  serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
+    
+    while true
+     
+      puts 'v100'
+
+      sys = nil
+
+      if true
+      
+        puts 'write'
+           serial.write " OA!3"
+        
+           puts 'read'
+          lines = serial.readline("\r")
+      
+          last = lines.split(",")
+      
+          if last.size> 5
+      
+            sys = last[7]
+            dia = last[8]
+            pr = last[9]
+        
+          end
+      
+      else 
+      
+            sys = '120'
+            dia = '80'
+            pr = '79'
+        
+      
+       end
+    
+    
+       if sys
+    
+    
+      lines = []
+      
+      lines << "STATUS:M1|SYS:#{sys}|DIA:#{dia}|PR:#{pr}"
+
+    msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+  
+       puts msg
+
+       puts  ws.send(msg)
+     
+     
+      end      
+     
+
+
+      sleep(1)
+    
+    end
+
+    rescue Exception => e
+    
+  puts e.message
+	
+sleep(10)
+
+     end
+   
+  	
+ 
+   end
+  }
+
+  v100.join
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
 #
 #
