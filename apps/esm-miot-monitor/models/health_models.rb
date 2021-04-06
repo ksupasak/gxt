@@ -1,6 +1,31 @@
 module EsmMiotMonitor
   
 
+class SHConference < GXTModel
+  
+    include Mongoid::Document
+  
+    key :status, String  # New (Waiting), Accepted, Finished, Cancelled
+    key :admit_id, ObjectId
+    key :resource_id, String
+    
+    key :sender_user_id, ObjectId
+    key :sender_role, String
+    key :receiver_user_id, ObjectId
+    key :receiver_role, String
+    
+    key :group_id, ObjectId
+    
+    key :title, String
+    key :schedule, Time
+    
+    key :note, String
+  
+    include Mongoid::Timestamps
+end
+
+
+
 class SHNetwork < GXTModel
   
   include Mongoid::Document
@@ -206,7 +231,9 @@ class SHCaseReport < GXTModel
   
 end
 
-
+class SHConferenceController < GXTDocument
+  
+end
 
 class SHCaseReportController < GXTDocument
   

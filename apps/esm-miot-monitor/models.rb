@@ -823,6 +823,113 @@ class DataRecord  < GXTModel
   include Mongoid::Timestamps
   
   timestamps!
+  
+  def self.get_sense_list
+    return %w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+  end
+  
+  def self.get_sense_label
+    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+  end
+  
+  def self.get_sense_unit
+    return %w{mmHg bpm % &#8451; kg cm}
+  end
+  
+  
+  def self.get_current_status admits
+  
+
+    now = Time.now 
+
+    from_time = (now-30*24*3600).beginning_of_day
+
+    sense_list = get_sense_list
+    sense_label = get_sense_label
+    sense_unit = get_sense_unit
+
+    maps = {}
+    alerts = []
+
+    for i in admits 
+    patient = i.patient
+
+
+		
+    	records = i.records.where(:stamp=>{'$gte'=>from_time, '$lte'=>now}).all
+
+    	map = {}
+	
+	
+
+    	for r in records
+    		sense_list.each_with_index do |t,ti| 
+    			value = r[t]
+    			if value and value!='-' and value.to_i>0
+    				map[t] = {:value=>value, :stamp=>r.stamp.strftime("%d/%m/%y %H:%M"), 
+    					    :unit=>sense_unit[ti], :label=>sense_label[ti]}
+				      
+              
+              
+              alert = nil
+              
+                  if t==:bp
+                    bp = value.split("/")
+                    if bp[0].to_i > 145
+                      alert = {:text=>'สูง',:class=>'warning'}
+                    end
+                    if bp[0].to_i > 200
+                      alert = {:text=>'สูงมาก',:class=>'danger'}
+                    end
+                  end
+            
+                  if t==:temp
+                    temp = value
+                    
+                    if temp > 37.5
+                      alert = {:text=>'สูงเล็กน้อย',:class=>'warning'}
+                    end
+                    
+                    if temp > 38.0
+                      alert = {:text=>'สูง',:class=>'danger'}
+                    end
+                    if temp < 35.5
+                      alert = {:text=>'ต่ำ',:class=>'warning'}
+                    end
+                    
+                    
+                  end
+            
+            
+    				if alert and alert[:class] == 'danger'
+    					alerts << {:i=>i, :t=>t, :patient=>patient, :v=>map[t]}
+    				end
+    				map[t][:alert] = alert
+					
+    			end
+    		end
+		
+    	end
+	
+    	maps[i.id] = map
+
+    end
+    
+    
+    return {:alerts=>alerts, :maps=>maps}
+  
+  end
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 end
 
 

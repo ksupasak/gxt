@@ -1,5 +1,6 @@
 
 			<%=inline(this,:'_init')%>
+				<%=inline(this,:'_feed')%>
 <%
 	
 admit = Admit.find params[:id]
@@ -95,6 +96,8 @@ reportid = "&record_id=#{report.id}" if report
 				 <%
 				 	
 				 relation = SHRelation.where(:patient_id=>patient.id).first
+				 
+				 relation = SHRelation.new(:patient_id=>patient.id) unless relation
 				 
 				 if relation 
 					
@@ -260,7 +263,7 @@ reportid = "&record_id=#{report.id}" if report
                 พบหมอ
 			 </span></a>-->
 	
-	 	    	 <a target="_blank" href="tele?resourceId=<%=resource_id%>" class="btn video-call detail" ctype="conference" cid="<%=admit.id%>"><span class="label">
+	 	    	 <a target="_blank" href="tele_create?admit_id=<%=resource_id%>" class="btn video-call detail" ctype="conference" cid="<%=admit.id%>"><span class="label">
 	                 <img src="<%=url_for('img/svg/video.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
 	                 พบหมอ
 	 			 </span></a>
@@ -842,7 +845,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 	      <div class="modal-body">
 	       <%
 	       		
-		   	relation = SHRelation.where(:patient_id=>patient.id).first
+		   	# relation = SHRelation.where(:patient_id=>patient.id).first
 			
 	       %>
 		   

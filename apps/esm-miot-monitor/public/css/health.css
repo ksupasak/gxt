@@ -1,14 +1,10 @@
-/* variables */
-:root {
-/*    --body-bg: #FFA;*/
-  }
 
-/*@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");*/
-
+/*
 @font-face {
   font-family: IBMPlex;
   src: url('../../css/IBMPlexSansThai-Regular.ttf');
-}
+}*/
+
 body { 
   background-image: url("/esm-miot-monitor/health/bg.jpg");
   color: var(--btn-grey-text);

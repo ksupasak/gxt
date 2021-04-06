@@ -489,3 +489,10 @@ $(document).ready(function(){
 	
 	
 </style>
+<% if params[:cid] %>
+<br/>
+<center>
+<a href="tele_update?cid=<%=params[:cid]%>&cmd=finish" class="btn btn-info">ออก</a>
+</center>
+<br/>
+<% end %>

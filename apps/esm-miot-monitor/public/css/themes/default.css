@@ -81,3 +81,49 @@ th{
 	font-size:1.4em;
 	
 }
+
+
+
+
+.content-header{
+	background:#fff;
+	border-radius: 10px;
+	box-shadow: 0px 3px 6px #00000019;
+}
+
+
+.content-main{
+	background:#fff8fb;
+	margin-bottom:10px;
+}
+
+.content-widget{
+	margin-bottom:10px;
+	padding:10px;
+	background:#fff;
+	border-radius: 10px;
+	box-shadow: 0px 3px 6px #00000019;
+}
+
+.med-value{
+	font-size:2em;
+	color: #4da49d;
+}
+	.patient-box{
+		background:#fafafa;
+/*		border:1px solid;*/
+		border-radius:10px;
+		margin-bottom:10px;
+	}
+	.patient-header{
+		border-radius:10px 10px 0px 0px;
+		background:#fafbfc;
+		padding:10px;
+		margin-bottom:10px;
+		box-shadow: 0px 3px 6px #00000019;
+	}
+	.patient-header span{
+		margin-right:10px;
+	}
+
+	

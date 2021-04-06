@@ -1,21 +1,39 @@
 <%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
 
-<div class="container" style="background:none">
-<br/>
-
-
-<div class="row" style="border:0px solid">
+<div class="row banner-header" style="">
 
 <div class="col">
-<div><%=@access_title%></div>
+	<div>
+		<span class="banner-title"><%=link_to @access_title, "index" %></span>
+		<br/>
+		<span style="font-size:0.8em">ระบบตรวจ SmartHealth</span>
+    </div>
 </div>
-<div class="col  d-flex justify-content-center">
-<div> ระบบจัดการข้อมูลผู้ดูแลระบบ
-</div></div>
-<div class="col d-flex justify-content-end">
-	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+
+<div class="col  d-flex justify-content-end">
+
+</div>
+
+
+</div>
+
+
+
+<div class="containerx" style="background:none">
+<div class="row" style="border:0px solid;">
+<div class="col-12 col-md-4  d-flex ">
+
+<div> <!-- ระบบจัดการข้อมูลผู้ดูแลระบบ -->
+</div>
+</div>
+<div class="col-12 col-md-6 d-flex ">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"  >
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
+      </li>	
 	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
+	    <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
 	  </li>
 	  <li class="nav-item">
 	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
@@ -31,7 +49,18 @@
 
 
 	<div class="tab-content" id="pills-tabContent">
-	  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+		
+     <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-home-tab">
+	    
+		
+		<%=inline(this,:'_patient_dashboard')%>
+		
+		
+		
+	 </div>	
+		
+		
+	  <div class="tab-pane fade show container " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 	  	<%
 	  		
 		if @current_hospital 
@@ -70,7 +99,7 @@
 	  </div>  <!-- End Doctor Section-->
 	  
 	  
-	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  <div class="tab-pane fade container" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	  	
 		
 	  	<%
@@ -87,24 +116,24 @@
 		
 		if patient
 		
-		out[0] = patient.hn
+			out[0] = patient.hn
 		
-		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+			out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
 		
 		end
 		
-		user = nil
+			user = nil
 		
-		user = User.find row.user_id if row.user_id
+			user = User.find row.user_id if row.user_id
 		
 		if user
-		out[-1] = link_to(user.login, "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+			out[-1] = link_to(user.login, "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
 		else
-		out[-1] = link_to("ผู้ใช้", "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+			out[-1] = link_to("ผู้ใช้", "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
 		end
-		out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
+			out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
-		out
+			out
 		end
 		 %>
 		

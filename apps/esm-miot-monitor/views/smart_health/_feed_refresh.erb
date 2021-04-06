@@ -1,10 +1,26 @@
-
-<!-- Button trigger modal -->
-
-<!-- Modal -->
-
+<%=inline(this,:'_init')%>
+<%
+	list = []
+	from_time = Time.now - 20 *60
+	confs = SHConference.where(:schedule=>{'$gte'=>from_time},:sender_user_id=>{'$ne'=>@current_user.id},:status=>{'$in'=>['New','Accepted']}).all
+	for i in confs
+		if i.receiver_role.index(@current_role) && i.group_id == @current_hospital.id
+			list << i
+		end
+	end
+%>
+<% for i in list %>
+<li>
+	<%= i.title %> (<%=(Time.now - i.schedule).to_i %> sec)
+	<%=link_to "Accept", "tele_update?cid=#{i.id}&cmd=accept", :class=>'btn btn-info' %> 
+	<%=link_to "Reject", "tele_update?cid=#{i.id}&cmd=reject", :class=>'btn btn-warning' %>
+</li>
+<% end %>
 <script>
 console.log("<%=Time.now%>")
-	// $("#exampleModal").modal()
+<% if list.size > 0 %>
+	 $("#exampleModal").modal()
+<% end %>
+	
 </script>
 	

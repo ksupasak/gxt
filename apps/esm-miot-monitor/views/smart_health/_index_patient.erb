@@ -1,4 +1,5 @@
-	<%=inline(this,:'_init')%>
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
 <%
 		
   relation = SHRelation.where(:user_id=>@current_user.id).first
@@ -70,13 +71,13 @@
 			
 			
 			<div class="col-4 link-text">
-			<a href=""><img src="../../nci/img/svg/history.svg" width="80"/><br/>
+			<a href="show?id=<%=@admit.id%>"><img src="../../nci/img/svg/history.svg" width="80"/><br/>
 			ประวัติการตรวจ
 			</a>
 			</div>
 			
 			<div class="col-4 link-text">
-			<a href=""><img src="../../nci/img/svg/telecon.svg" width="80"/><br/>
+			<a href="tele_create?admit_id=<%=@admit.id%>" ><img src="../../nci/img/svg/telecon.svg" width="80"/><br/>
 			ติดต่อแพทย์
 			</a>
 			</div>
@@ -84,22 +85,83 @@
 	</div>
 </div>
 <br/>
+
 <div class="row " >
 	<div class="col">
 		<div class="  row" >
+			<% 
 			
-			<div class="col-6 " style="">
+			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+			sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+
+			res = DataRecord.get_current_status [@admit]
+			
+			maps = res[:maps]
+			
+			map = maps[@admit.id]
+			
+			sense_list.each_with_index do |x,xi| 
+				
+				v = map[x]
+				
+				%>
+			<div class="col-md-6 col-lg-4 " style="">
 			<div class="content-widget">
-				ความดันโลหิต
-			</div>
-			</div>
-			
-			<div class="col-6 " style="">
+				
+				
+				
 		
-			<div class="content-widget">
-		   		 อุณหภูมิร่างกาย
-			 </div>
+				
+				<div class="row" style="font-size:0.8em">
+				<div class="col-8"  style="text-align:center">
+					<h4><%=sense_label[xi]%></h4>
+					<%=v[:stamp]%>
+				</div>	
+				<div class="col-4" style="text-align:center">
+					<% if v[:alert] %>
+					<div class="alert alert-<%=v[:alert][:class]%>">
+					<span >
+						<%=v[:alert][:text]%>
+					</span>
+					</div>
+					<% end %>
+				</div>	
+				</div>
+				
+				
+				
+				<div class="row">
+				<div class="col"  style="text-align:center">
+					<span class="med-value">
+					<%=v[:value]%>
+				    </span>
+					<span style="font-size:0.8em;color:#aaa"><%=sense_unit[xi]%></span>
+				
+				</div>
+						</div>
+				
+				
 			</div>
+			</div>
+			
+			<% end %>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 		</div>
 	</div>
