@@ -5,7 +5,7 @@
 	
 	title = "#{patient.hn} meeting"
 	
-	role = "hospital,hospital_admin"
+	role = "hospital,hospital_operator"
 	role = "patient" if @current_role!='patient'
 	
 	conference = SHConference.create :status=>'New',:admit_id=>params[:admit_id], :group_id=>relation.hospital_id , :sender_user_id=> @current_user.id, :sender_role=>@current_role, :resource_id=>params[:admit_id], :receiver_role=>role, :title=>title, :schedule=>Time.now
