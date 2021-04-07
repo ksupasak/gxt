@@ -107,7 +107,7 @@
 				v = map[x]
 				
 				%>
-			<div class="col-md-6 col-lg-4 " style="">
+			<div class="col-6 col-md-6 col-lg-4 " style="">
 			<div class="content-widget">
 				
 				
@@ -115,21 +115,11 @@
 		
 				
 				<div class="row" style="font-size:0.8em">
-				<div class="col-8"  style="text-align:center">
+				<div class="col"  style="text-align:center">
 					<h4><%=sense_label[xi]%></h4>
-					<%=v[:stamp]%>
-				</div>	
-				<div class="col-4" style="text-align:center">
-					<% if v[:alert] %>
-					<div class="alert alert-<%=v[:alert][:class]%>">
-					<span >
-						<%=v[:alert][:text]%>
-					</span>
-					</div>
-					<% end %>
+					
 				</div>	
 				</div>
-				
 				
 				
 				<div class="row">
@@ -140,8 +130,20 @@
 					<span style="font-size:0.8em;color:#aaa"><%=sense_unit[xi]%></span>
 				
 				</div>
-						</div>
-				
+				</div>
+				<div class="row" style="font-size:0.8em">
+				<div class="col-8"><span style=";color:#aaa"><%=v[:stamp]%></span>
+				</div>
+				<div class="col-4" style="text-align:center">
+					<% if v[:alert] %>
+					<div class=" alert-<%=v[:alert][:class]%>">
+					<span >
+						<%=v[:alert][:text]%>
+					</span>
+					</div>
+					<% end %>
+				</div>	
+				</div>
 				
 			</div>
 			</div>
