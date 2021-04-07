@@ -56,6 +56,8 @@ if request.post?
 			
 			role = 'hospital'
 			role = 'hospital_admin' if params[:record][:provider_type] == 'admin'
+			role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
+			
 			
 			
 			hospital_role = Role.where(:name=>role).first

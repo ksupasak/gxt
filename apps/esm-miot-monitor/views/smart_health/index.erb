@@ -4,6 +4,8 @@
 
 <% if @current_role == 'hospital' or @current_role =='smarthealth_admin'%>
 <%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'hospital_operator'  %>
+<%=inline(this,:'_index_operator')%>
 <% elsif @current_role == 'patient'  %>
 <%=inline(this,:'_index_patient')%>
 <% elsif @current_role == 'admin'  %>

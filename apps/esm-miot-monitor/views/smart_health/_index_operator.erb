@@ -1,5 +1,6 @@
-<%=inline(this,:'_init')%>
 
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
 
 <div class="row banner-header" style="">
 
@@ -29,15 +30,12 @@
 </div>
 <div class="col-12 col-md-6 d-flex ">
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"  >
-      <!-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
-      </li>	 -->
-	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
-	  </li>
+      </li>	
+  <li class="nav-item">
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+  </li>
 	</ul>
 </div>
 </div>
@@ -49,10 +47,18 @@
 
 
 	<div class="tab-content" id="pills-tabContent">
-
+		
+     <div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-home-tab">
+	    
+		
+		<%=inline(this,:'_patient_dashboard')%>
 		
 		
-	  <div class="tab-pane fade show container active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+		
+	 </div>	
+		
+		
+	  <div class="tab-pane fade show container " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 	  	<%
 	  		
 		if @current_hospital 
@@ -65,9 +71,7 @@
 		
 		out[0] = row.hospital.name if row.hospital
 		
-		
 		out[1] = row.provider.name if row.provider
-		
 		
 		out[-2] = row.provider.phone if row.provider
 	
@@ -91,7 +95,7 @@
 	  </div>  <!-- End Doctor Section-->
 	  
 	  
-	  <div class="tab-pane fade container" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  <div class="tab-pane fade " id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	  	
 		
 	  	<%
@@ -128,6 +132,7 @@
 			out
 		end
 		 %>
+		<%=link_to("เพิ่ม", "admit", :class=>'btn btn-success')%>
 		
 	  </div>
 	  	
