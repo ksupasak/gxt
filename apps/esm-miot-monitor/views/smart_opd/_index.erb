@@ -94,7 +94,7 @@
 		hn :
 	</div>
 	<div class="col v-entry hn" label="hn" name="hn" style="text-align:center">
-	-
+	
 	</div>
 </div>
 
@@ -286,6 +286,18 @@
             
         // }
     }
+	$(document).keypress(function(e){
+		
+	    if( event.which == 13 ) {
+	        //submit();
+	     }else{
+        v = $(".hn").html().trim()
+        v+=String.fromCharCode(e.keyCode)
+        
+        $(".hn").html(v.trim())   
+		 } 
+		
+	})	
 
 	$(document).ready(function(){
 		var current_modal ;
