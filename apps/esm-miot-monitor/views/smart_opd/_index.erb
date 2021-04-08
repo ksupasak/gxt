@@ -2,20 +2,70 @@
 	.header{
 /*		height:4em;*/
 		background:#eef;
-		font-size:2em;
+		font-size:6vh;
 		box-shadow: 0px 0px 15px #ccc;
 	}
 	.sense-panel{
-		font-size:1.5em;
-		height:5.2em;
+		/* font-size:1.5em; */
+		/* height:5.2em; */
+		height:24vh;
 		border-radius: 5px;
-		padding:10px;
+		/* padding:10px; */
+		padding:1vh;
 		border:1px solid #ccc;
 		vertical-align:baseline;
 		margin-bottom:0px;
-		margin-top:10px;
+		margin-top:1vh;
 	}
+	.sense-val{
+		font-size:8vh;
+		color:#0037aa !important;
+		text-align:center;
 	}
+	.sense-name{
+		font-size:3vh;
+		color:#999;
+	}
+	.footer{
+		font-size:4vh;
+	}
+	.btn-send{
+		font-size:3vh;
+		color:#E1E1E1;
+		background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+		0% no-repeat padding-box;
+		border-radius: 2vh;
+		padding:3vh;
+	}
+	.btn-hn{
+	    background-color: #6B98C1;
+	    color:#ffffff;
+	    border-radius: 100px;
+	    height:50px;
+	    width:80px;
+
+	    text-align: center;
+	    font-size: 2.4em;
+	    padding-top:0px;
+	    margin:5px;
+	}
+	
+	.display-hn{
+	    border-radius: 20px;
+	    height:1em;
+	    text-align: center;
+	    vertical-align: middle;
+	    font-size: 3em;
+		padding:0px;
+		line-height:1;
+	    background: #BCD1E4;
+	    background: -webkit-linear-gradient(to top, #E2E2E2, #BCD1E4);  /* Chrome 10-25, Safari 5.1-6 */
+	    background: linear-gradient(to top, #E2E2E2, #BCD1E4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	    color:#00517F;
+	    margin: 0px 20px 0px 20px;
+		
+	}
+
 </style>
 <div class="row header">
 	<div class="col">
@@ -46,22 +96,22 @@
 			<div class="col-3">
 				<div class="sense-panel">
 				<div class="row">
-					<div class="col-8" style="font-size:0.6em;color:#999">
+					<div class="col-8 sense-name" >
 					<%= x %>
 					</div>
-					<div class="col-4" style="font-size:0.6em;color:#999;text-align:right">
+					<div class="col-4 sense-name" style="text-align:right">
 					<%= sense_unit[xi] %>
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col" style="font-size:2em;color:#0037aa;text-align:center">
+					<div class="col sense-val v-entry" label="<%= x %>">
 					100
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col" style="font-size:0.6em;color:#999">
+					<div class="col sense-name" >
 					Notification
 					</div>
 					
@@ -78,7 +128,7 @@
 </div>
 <br/>
 
-<div class="row">
+<div class="row footer">
 	<div class="col">
 	menu
 	</div>
@@ -86,6 +136,110 @@
 	menu
 	</div>
 	<div class="col" style="text-align:right">
-	<%=link_to "ส่งข้อมูล", "#" , :class=>'btn btn-success ' %>
+	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn-send ' %>
 	</div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="opdModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+        <div class="display-hn">
+        -
+        </div>
+        <table width="300px">
+        <tr>
+            <td><div class="btn-hn">1</div></td>
+            <td><div class="btn-hn">2</div></td>
+            <td><div class="btn-hn">3</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">4</div></td>
+            <td><div class="btn-hn">5</div></td>
+            <td><div class="btn-hn">6</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">7</div></td>
+            <td><div class="btn-hn">8</div></td>
+            <td><div class="btn-hn">9</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">.</div></td>
+            <td><div class="btn-hn">0</div></td>
+            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
+        </tr>
+        </table>
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+<div id="buffer">
+</div>
+  <script>
+    function hnPush(s){
+        v = $(".display-hn").html().trim()
+        b = s.html()
+        if(b.indexOf("img")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)       
+    }
+
+    var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	for(var i=0;i<buffer;i++){
+		var myAudio = document.createElement('audio');
+		  myAudio.setAttribute("id","audio-"+i)
+		 if (myAudio.canPlayType('audio/mpeg')) {
+			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+		 }
+		 $('#buffer').append(myAudio);
+		  
+	}
+	  	  
+    $(".btn-hn").on('click',function(){
+        var myAudio = document.getElementById('audio-'+cur_buffer)
+        myAudio.play();
+        cur_buffer+=1;
+        if(cur_buffer==10)cur_buffer=0;
+        hnPush($(this))      
+        return false;
+    })
+    </script>
+</div>
+<!-- Modal -->
+
+<script>
+$(document).ready(function(){
+	var current_modal ;
+
+	$(".v-entry").click(function(){
+		v = $(this).html().trim()
+		if(v=='-')v = '' 
+		$(".display-hn").html(v)
+		
+		current_modal = $(this).attr('name')
+		mname = $(this).parent("div").find(".l-entry").html()
+		$("#opdModalTitle").html($(this).attr('label'))
+		$("#opdModal").modal('toggle')
+	})
+
+})
+</script>
