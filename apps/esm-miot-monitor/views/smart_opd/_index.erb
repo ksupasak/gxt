@@ -1,0 +1,91 @@
+<style>
+	.header{
+/*		height:4em;*/
+		background:#eef;
+		font-size:2em;
+		box-shadow: 0px 0px 15px #ccc;
+	}
+	.sense-panel{
+		font-size:1.5em;
+		height:5.2em;
+		border-radius: 5px;
+		padding:10px;
+		border:1px solid #ccc;
+		vertical-align:baseline;
+		margin-bottom:0px;
+		margin-top:10px;
+	}
+	}
+</style>
+<div class="row header">
+	<div class="col">
+		hn
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		
+		
+		<div class="row">
+			
+			
+			<%
+				
+
+			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+			sense_unit = DataRecord.get_sense_unit 
+				
+			sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}	
+			
+			sense_list.each_with_index do |x,xi| 	
+				
+			%>
+			
+			<div class="col-3">
+				<div class="sense-panel">
+				<div class="row">
+					<div class="col-8" style="font-size:0.6em;color:#999">
+					<%= x %>
+					</div>
+					<div class="col-4" style="font-size:0.6em;color:#999;text-align:right">
+					<%= sense_unit[xi] %>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col" style="font-size:2em;color:#0037aa;text-align:center">
+					100
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col" style="font-size:0.6em;color:#999">
+					Notification
+					</div>
+					
+				</div>
+			</div>
+		
+			</div>
+			
+			<% end %>
+	
+		</div>
+		
+	</div>
+</div>
+<br/>
+
+<div class="row">
+	<div class="col">
+	menu
+	</div>
+	<div class="col">
+	menu
+	</div>
+	<div class="col" style="text-align:right">
+	<%=link_to "ส่งข้อมูล", "#" , :class=>'btn btn-success ' %>
+	</div>
+</div>
