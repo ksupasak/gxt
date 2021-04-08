@@ -22,16 +22,26 @@
 		/* padding:10px; */
 		padding:1vh;
 		border:1px solid #000;
-		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
-		0% no-repeat padding-box;
+		/* background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
+		0% no-repeat padding-box; */
 
 		vertical-align:baseline;
 		margin-bottom:0px;
 		margin-top:1vh;
 	}
+	.s-active{
+		background: transparent linear-gradient(180deg, #13171D  0%, #000 100%) 0%
+		0% no-repeat padding-box;
+		color:#000 !important;
+		box-shadow: 0px 0px 15px #1A3388;
+	}
+	.s-empty{
+		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
+		0% no-repeat padding-box;
+	}
 	.sense-val{
 		font-size:8vh;
-		color:#0037aa !important;
+		color:#0037aa;
 		text-align:center;
 	}
 	.sense-name{
@@ -109,7 +119,7 @@
 			%>
 			
 			<div class="col-3">
-				<div class="sense-panel">
+				<div class="sense-panel s-empty">
 				<div class="row">
 					<div class="col-8 sense-name" >
 					<%= x %>
@@ -253,15 +263,15 @@
     }
 
     function checkInput(d){
-        // v = $("."+d).html().trim()
-        // c = $("."+d).closest(".d-entry-dark,.d-entry")
+        v = $("."+d).html().trim()
+        c = $("."+d).closest(".sense-panel")
         // prefix="de-"
         // if(c.hasClass("d-entry-dark")) prefix="dk-"
-        // if(v!==''&&v!=='-'){              
-        //     c.addClass(prefix+"active").removeClass(prefix+"empty")      
-        // }else{
-        //     c.addClass(prefix+"empty").removeClass(prefix+"active")
-        // }
+        if(v!==''&&v!=='-'){              
+            c.addClass("s-active").removeClass("s-empty")      
+        }else{
+            c.addClass("s-empty").removeClass("s-active")
+        }
         // isComplete = true
 
         // if(isComplete){
