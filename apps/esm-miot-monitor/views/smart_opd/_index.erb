@@ -1,9 +1,18 @@
 <style>
+	body{
+		background:#000;
+		background: transparent linear-gradient(180deg, #000  0%, #13171D 100%) 0%
+		0% no-repeat padding-box;
+		height:100vh;
+	}
 	.header{
 /*		height:4em;*/
-		background:#eef;
+		/* background:#eef; */
+		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
+		0% no-repeat padding-box;
 		font-size:6vh;
-		box-shadow: 0px 0px 15px #ccc;
+		box-shadow: 0px 0px 15px #1A3388;
+		color:#999;
 	}
 	.sense-panel{
 		/* font-size:1.5em; */
@@ -12,7 +21,10 @@
 		border-radius: 5px;
 		/* padding:10px; */
 		padding:1vh;
-		border:1px solid #ccc;
+		border:1px solid #000;
+		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
+		0% no-repeat padding-box;
+
 		vertical-align:baseline;
 		margin-bottom:0px;
 		margin-top:1vh;
@@ -68,8 +80,11 @@
 
 </style>
 <div class="row header">
-	<div class="col">
-		hn
+	<div class="col-2">
+		hn :
+	</div>
+	<div class="col v-entry hn" label="hn" name="hn" style="text-align:center">
+	-
 	</div>
 </div>
 
@@ -105,7 +120,7 @@
 				</div>
 				
 				<div class="row">
-					<div class="col sense-val v-entry" label="<%= x %>">
+					<div class="col sense-val v-entry <%=x%>" label="<%= x %>" name="<%=x%>">
 					100
 					</div>
 				</div>
@@ -227,19 +242,76 @@
 <!-- Modal -->
 
 <script>
-$(document).ready(function(){
-	var current_modal ;
+    function submitEntry(){
+		$('.btn-primary').html('Loading')
+        $.post( "post", prepare() , function( data ) {         
+            data.inspect 
+            $("#beep").click()
+            setTimeout(function(){ window.location.replace("result?hn=<%=params[:hn]%>");  }, 1000);
+                   
+        });
+    }
 
-	$(".v-entry").click(function(){
-		v = $(this).html().trim()
-		if(v=='-')v = '' 
-		$(".display-hn").html(v)
-		
-		current_modal = $(this).attr('name')
-		mname = $(this).parent("div").find(".l-entry").html()
-		$("#opdModalTitle").html($(this).attr('label'))
-		$("#opdModal").modal('toggle')
+    function checkInput(d){
+        // v = $("."+d).html().trim()
+        // c = $("."+d).closest(".d-entry-dark,.d-entry")
+        // prefix="de-"
+        // if(c.hasClass("d-entry-dark")) prefix="dk-"
+        // if(v!==''&&v!=='-'){              
+        //     c.addClass(prefix+"active").removeClass(prefix+"empty")      
+        // }else{
+        //     c.addClass(prefix+"empty").removeClass(prefix+"active")
+        // }
+        // isComplete = true
+
+        // if(isComplete){
+        //     if($(".btn-entry").attr('class')){
+        //         $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+        //         $('.btn-opd').click(submitEntry)   
+        //         $("#ready").click() 
+        //     }
+        // }else{
+        //     $('.btn-opd').unbind()
+        //     $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
+            
+        // }
+    }
+
+	$(document).ready(function(){
+		var current_modal ;
+
+		$(".v-entry").click(function(){
+			v = $(this).html().trim()
+			if(v=='-')v = '' 
+			$(".display-hn").html(v)
+			
+			current_modal = $(this).attr('name')
+			mname = $(this).parent("div").find(".l-entry").html()
+			$("#opdModalTitle").html($(this).attr('label'))
+			$("#opdModal").modal('toggle')
+		})
+		$("#save-modal").click(function(){
+			value = $(".display-hn").html().trim()
+			if(value==='') value='-'
+			$('.'+current_modal).html(value)
+			
+			if(current_modal=='weight'||current_modal=='height'){
+				if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
+					weight = parseFloat($('.weight').html().trim())
+					height = parseFloat($('.height').html().trim())
+					bmi = weight /(height*height/10000.0)
+					bmi_text = bmi.toFixed(2);
+					
+					$('.bmi').html(bmi_text)
+					checkInput('bmi')
+				}
+				
+			}
+			checkInput(current_modal)
+			$("#opdModal").modal('toggle')
+			// sos()
+			
+		})
+
 	})
-
-})
 </script>
