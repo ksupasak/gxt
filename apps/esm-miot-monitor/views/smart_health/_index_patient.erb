@@ -86,6 +86,7 @@
 </div>
 <br/>
 
+
 <div class="row " >
 	<div class="col">
 		<div class="  row" >
@@ -169,6 +170,16 @@
 	</div>
 </div>
 
+<div class="row">
+<div class="col">
+<%
+			
+params[:admit_id] = @admit.id
+		
+%>
+<%=inline(this,:'_chart')%>
+</div>
+</div>
 
 
 </div>
