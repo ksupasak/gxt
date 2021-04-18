@@ -69,6 +69,8 @@ alerts = res[:alerts]
 maps = res[:maps]
 
 
+alerts = SHAlert.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}, :status=>'Pending').all
+
 %>
 
 
@@ -79,15 +81,20 @@ maps = res[:maps]
 		
 		<div class="row">
 			<% for i in alerts 
-			    patient = i[:patient]
-				ti = sense_list.index(i[:t]) 
-				v = i[:v]
-				admit = i[:i]
-			%>
-			
+			    admit = Admit.find i.admit_id
+			    patient = admit.patient
+				ti = sense_list.index(i.sense.to_sym) 
 		
-			
-			<div class="col-6 col-sm-6 col-md-4 col-lg-4  col-xl-2">
+				v = i
+				
+			%>
+			<% if ti ==nil 
+			ti = 0 
+			%>
+			<%=i.sense %>
+			<% end %>
+		
+			<div class="col-6 col-sm-6 col-md-4 col-lg-4  col-xl-2" id="alert_<%=i.id%>">
 			
 					
 			
@@ -103,16 +110,16 @@ maps = res[:maps]
 						
 					<div class="col-7" ">
 					<h4 style="font-size:1.4em;"><%=sense_label[ti]%></h4>
-					      <span style=";color:#aaa">วันที่ <%=v[:stamp] if v %> <%= '-' unless v%></span>
+					      <span style=";color:#aaa">วันที่ <%=v.created_at.strftime("%d/%m/%y %H:%M") if v %> <%= '-' unless v%></span>
 					</div>	
 					<div class="col-5" style="text-align:center">
-						<% if v and v[:alert]  %>
-						<div class="alert alert-<%=v[:alert][:class]%>">
+					
+						<div class="alert alert-<%='warning'%>">
 							<span >
-							<%=v[:alert][:text]%>
+							<%=v.condition%>
 						</span>
 					</div>
-						<% end %>
+						
 			
 					</div>	
 					</div>
@@ -121,17 +128,22 @@ maps = res[:maps]
 					<div class="row">
 					<div class="col"  style="text-align:center">
 						<span class="med-value">
-						<%=v[:value] if v%>
+						<%=v.value if v%>
 						<%="-" unless v%>
 					    </span>
 	
 						<span style=";color:#aaa;font-size:0.8em">
-							<%=v[:unit] if v %>
+							<%= sense_unit[ti] if v %>
 						</span>
 					</div>	
 					
 					</div>
 		
+				<div class="row">
+				<div class="col"  style="text-align:center">
+						<%=link_to 'รับทราบ/ปิด', '#', :class=>'btn btn-info alert_ack', :alert_id=>v.id %>
+				</div>	
+				</div>
 				
 					
 				</div>
@@ -144,6 +156,24 @@ maps = res[:maps]
 		
 	</div>
 </div>
+<script>
+	
+	$('.alert_ack').click(function(){
+		
+		id = $(this).attr('alert_id')
+		
+		$.ajax({
+		  url: "alert_update?id="+id,
+		  context: document.body
+		}).done(function() {
+		  $('#alert_'+id).slideUp();
+		});
+		
+		
+		
+	})
+	
+</script>
 
 <div class="row">
 <%

@@ -24,6 +24,32 @@ class SHConference < GXTModel
     include Mongoid::Timestamps
 end
 
+class SHAlert < GXTModel
+  
+    include Mongoid::Document
+  
+    key :status, String  # New (Pending), OnHold, Closed
+    key :admit_id, ObjectId
+    key :patient_id, ObjectId
+    
+    key :sense, String
+    key :value, Float
+    key :condition, String
+    
+    key :patient_user_id, ObjectId
+    key :patient_ack, String
+    key :patient_ack_at, Time
+    
+    key :operator_user_id, ObjectId
+    key :operator_ack, String
+    key :operator_ack_at, Time
+
+    key :closed_at, Time
+    
+    key :note, String
+  
+    include Mongoid::Timestamps
+end
 
 
 class SHNetwork < GXTModel
@@ -266,6 +292,9 @@ class SHNetworkController < GXTDocument
   
 end
 
+class SHAlertController < GXTDocument
+  
+end
 
 
 class SHHospitalController < GXTDocument

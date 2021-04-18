@@ -825,15 +825,15 @@ class DataRecord  < GXTModel
   timestamps!
   
   def self.get_sense_list
-    return %w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+    return %w{bp pr spo2 temp weight height rr}.collect{|t| t.to_sym}
   end
   
   def self.get_sense_label
-    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง อัตราการหายใจ}
   end
   
   def self.get_sense_unit
-    return %w{mmHg bpm % &#8451; kg cm}
+    return %w{mmHg bpm % &#8451; kg cm bpm}
   end
   
   

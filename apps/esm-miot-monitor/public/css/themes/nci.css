@@ -46,23 +46,38 @@ body{
 }
 
 .body-login{
-	        background: transparent linear-gradient(321deg, #FDE0F2 0%, #F99BC7 55%, #C03170 100%) 0% 0% no-repeat padding-box;
+	        background: transparent linear-gradient(170deg, #FDE0F2 0%, #F99BC7 75%, #C03170 100%) 0% 0% no-repeat padding-box;
 	        height:100vh;
 	        font-family: "IBMPlex","Sarabun", sans-serif;
 	  
 }
 
-.login-logo{
-	
+/*.login-logo{
+
 	background-image: none;
 	width:200px;
     background-repeat: repeat;
     background-size: cover;
+
+}*/
+
+.login-logo{
+	
+	background-image: url('../../nci/img/nci-logo.png');
+	width:200px;
+	height:240px;
+    background-repeat: repeat;
+    background-size: cover;
 	
 }
-.logo-img{
-    height:auto;
+.login-header{
+	display:none;
 }
+
+.logo-img{
+    height:240px;
+}
+
  .bg-all{
 	 background-image: url('../../img/svg/wave-login-2.svg');
  }
