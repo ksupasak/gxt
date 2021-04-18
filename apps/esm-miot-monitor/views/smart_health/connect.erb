@@ -45,46 +45,61 @@
 		if alert_method == 'conditional'
 			
 			
-			if params[:temp] and temp = params[:temp].to_f
-				
-				if temp <= 36.5
-					alerts << [:temp, :low, temp]
-				elsif temp >=38
-					alerts << [:temp, :high, temp]
-				end
-				
-			end
+			# if params[:temp] and temp = params[:temp].to_f and temp != 0
+		#
+		# 		if temp <= 36.5
+		# 			alerts << [:temp, :low, temp]
+		# 		elsif temp >=38
+		# 			alerts << [:temp, :high, temp]
+		# 		end
+		#
+		# 	end
+		#
+			# if params[:pr] and pr = params[:pr].to_i and pr != 0
+#
+# 				if pr <= 60
+# 					alerts << [:pr, :low, pr]
+# 				elsif pr >=100
+# 					alerts << [:pr, :high, pr]
+# 				end
+#
+# 			end
+#
+#
+#
+# 			if params[:rr] and val = params[:rr].to_i and val != 0
+#
+# 				if val <= 14
+# 					alerts << [:rr, :low, val]
+# 				elsif val >= 22
+# 					alerts << [:rr, :high, val]
+# 				end
+#
+# 			end
+#
+#
+# 			if params[:spo2] and val = params[:spo2].to_i  and val != 0
+#
+# 				if val <= 95
+# 					alerts << [:spo2, :low, val]
+# 				end
+#
+# 			end
 			
-			if params[:pr] and pr = params[:pr].to_i
-				
-				if pr <= 60
-					alerts << [:pr, :low, pr]
-				elsif pr >=100
-					alerts << [:pr, :high, pr]
-				end
-				
-			end
+			alert = SHAlert.vs_condition(:temp, params[:temp])
+			alerts << alert if alert
+			
+			alert = SHAlert.vs_condition(:pr, params[:pr])
+			alerts << alert if alert
+			
+			alert = SHAlert.vs_condition(:rr, params[:rr])
+			alerts << alert if alert
+			
+			alert = SHAlert.vs_condition(:spo2, params[:spo2])
+			alerts << alert if alert
 			
 			
 			
-			if params[:rr] and val = params[:rr].to_i
-				
-				if val <= 14
-					alerts << [:rr, :low, val]
-				elsif pr >= 22
-					alerts << [:rr, :high, val]
-				end
-				
-			end
-			
-			
-			if params[:spo2] and val = params[:spo2].to_i
-				
-				if val <= 95
-					alerts << [:spo2, :low, val]
-				end
-				
-			end
 			
 			for i in alerts
 				alert = SHAlert.create :status=>'Pending',:patient_id=>patient.id,  :admit_id=>params[:admit_id], :sense=>i[0], :value=>i[2], :condition=>i[1], :patient_user_id=>@current_user.id
@@ -543,7 +558,7 @@
 				                    <center><img src="<%=url_for 'img/svg/alert-icon.svg'%>" width="40" ></center>
 				                </div>
 								
-				                <div class="col-9 " id="remark" style="<%='display:none;' if nurse.remark and nurse.remark=="" %>" >
+				                <div class="col-9 " id="remark" style="<%='display:none;' if nurse.remark == nil or nurse.remark=="" %>" >
             								
 								 <textarea class="vital-card" class='alert' id="nurse-remark" style="font-size:1.2em;background:#fdd" rows="4" cols="50" ><%=nurse.remark%></textarea>
 			 								 
@@ -581,7 +596,13 @@
 
 			        </div>
 			        <br>
-			        <a href="show?id=<%=admit.id%>" class="d-flex justify-content-center">
+					<%
+						
+					return_to = "show?id=#{admit.id}"
+					return_to = params[:return] if params[:return]
+						
+					%>
+			        <a href="<%=return_to%>" class="d-flex justify-content-center">
 			            <p>ยกเลิก</p>
 			        </a>
 		            <a href="#" id="beep" style="display:none">beep</a>
@@ -752,7 +773,7 @@
         $.post( "connect", prepare() , function( data ) {         
             // data.inspect 
            <% if params[:return] %>
-            setTimeout(function(){ window.location.replace("edit?admit_id=<%=admit.id%>");  }, 1000);
+            setTimeout(function(){ window.location.replace("<%=params[:return]%>");  }, 1000);
 		   <% else %>
             setTimeout(function(){ window.location.replace("show?id=<%=admit.id%>");  }, 1000);
             <% end %>       

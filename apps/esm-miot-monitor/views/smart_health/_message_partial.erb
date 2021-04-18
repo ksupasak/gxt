@@ -1,0 +1,88 @@
+<%
+	
+	
+admit = Admit.find params[:admit_id]
+patient = admit.patient 
+
+
+confs = SHConference.where(:admit_id=>admit.id).all
+
+messages = admit.messages.all
+
+list = []
+
+for i in messages
+	
+	if i.type=='text'
+	
+		list << {:type=>'text', :i=>i, :stamp=>i.created_at}
+		
+	end
+		
+end
+
+
+for i in confs
+	
+		list << {:type=>'conf', :i=>i, :stamp=>i.schedule}
+		
+end
+
+	
+list.sort!{|a,b| a[:stamp]<=>b[:stamp]}
+	
+
+	
+%>
+<% for i in list %>
+
+
+<%  if i[:type]=='text'
+    m = i[:i]
+	side = 'orange'
+	side = 'blue' if m.sender != @current_user.login
+
+%>
+    <div class="message-<%=side%>">
+        <p class="message-content"><%=m.content%></p>
+        <div class="message-timestamp-right"><%=m.created_at.strftime("%H:%M")%></div>
+    </div>
+
+<% elsif i[:type]=='conf' 
+
+    m = i[:i]
+	side = 'orange'
+	side = 'blue' if m.sender_user_id != @current_user.id
+	
+%>
+    <div class="message-<%=side%>">
+        <p class="message-content">Make Video Calling <%=m.status%></p>
+        <div class="message-timestamp-right"><%=m.schedule.strftime("%H:%M")%></div>
+    </div>
+<% elsif i[:type]=='image' 
+
+    m = i[:i]
+	side = 'orange'
+	# side = 'blue' if m.sender_user_id != @current_user.id
+	
+%>
+    <div class="message-<%=side%>">
+        <p class="message-content">
+        	
+			<% 
+			
+			url  = "/miot/img/svg/aoc-icon.svg"
+			url = "../Message/content?id=#{m.id}" 
+			
+			%>
+			<a href="javascript:$('.c<%=m.id%>').click()"><img src="<%=url%>" height="200">
+	    </p>
+        <div class="message-timestamp-right"><%=m.schedule.strftime("%H:%M")%></div>
+    </div>
+<% end %> 
+ 
+
+<% end %>
+<script>
+	$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+</script>

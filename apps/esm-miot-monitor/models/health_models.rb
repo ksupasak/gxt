@@ -49,6 +49,47 @@ class SHAlert < GXTModel
     key :note, String
   
     include Mongoid::Timestamps
+    
+    def self.vs_condition sense, val
+      
+      
+			if sense==:temp and temp = val.to_f and temp != 0 
+				
+				if temp <= 36.5
+					 return [:temp, :low, temp]
+				elsif temp >=38
+					 return [:temp, :high, temp]
+				end
+				
+      elsif sense==:pr and pr = val.to_i and pr != 0 
+				
+				if pr <= 60
+				  return [:pr, :low, pr]
+				elsif pr >=100
+					return [:pr, :high, pr]
+				end
+				
+      elsif sense == :rr and val = val.to_i and val != 0 
+				
+				if val <= 14
+					return [:rr, :low, val]
+				elsif val >= 22
+					return [:rr, :high, val]
+				end
+				
+      elsif sense == :spo2 and val = val.to_i  and val != 0 
+				
+				if val <= 95
+					return [:spo2, :low, val]
+				end
+				
+			end
+      
+      return nil
+      
+    end
+    
+    
 end
 
 

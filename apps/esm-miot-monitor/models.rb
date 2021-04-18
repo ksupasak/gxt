@@ -201,6 +201,7 @@ class Message < GXTModel
   key :media_type, String 
   key :content, String
   key :file_id, ObjectId
+  key :sender_user_id, ObjectId
   include Mongoid::Timestamps
 end
 
@@ -825,15 +826,15 @@ class DataRecord  < GXTModel
   timestamps!
   
   def self.get_sense_list
-    return %w{bp pr spo2 temp weight height rr}.collect{|t| t.to_sym}
+    return %w{bp pr spo2 temp weight height rr glucose}.collect{|t| t.to_sym}
   end
   
   def self.get_sense_label
-    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง อัตราการหายใจ}
+    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง อัตราการหายใจ ระดับน้ำตาล}
   end
   
   def self.get_sense_unit
-    return %w{mmHg bpm % &#8451; kg cm bpm}
+    return %w{mmHg bpm % &#8451; kg cm bpm mmol/L}
   end
   
   
@@ -871,37 +872,14 @@ class DataRecord  < GXTModel
 				      
               
               
-              alert = nil
-              
-                  if t==:bp
-                    bp = value.split("/")
-                    if bp[0].to_i > 145
-                      alert = {:text=>'สูง',:class=>'warning'}
-                    end
-                    if bp[0].to_i > 200
-                      alert = {:text=>'สูงมาก',:class=>'danger'}
-                    end
-                  end
-            
-                  if t==:temp
-                    temp = value
-                    
-                    if temp > 37.5
-                      alert = {:text=>'สูงเล็กน้อย',:class=>'warning'}
-                    end
-                    
-                    if temp > 38.0
-                      alert = {:text=>'สูง',:class=>'danger'}
-                    end
-                    if temp < 35.5
-                      alert = {:text=>'ต่ำ',:class=>'warning'}
-                    end
-                    
-                    
-                  end
+              alert = SHAlert.vs_condition(t, value)
+
+                  
+                  
             
             
-    				if alert and alert[:class] == 'danger'
+    				if alert 
+              alert = {:text=>alert[1], :class=>'warning'}
     					alerts << {:i=>i, :t=>t, :patient=>patient, :v=>map[t]}
     				end
     				map[t][:alert] = alert

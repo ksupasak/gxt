@@ -109,7 +109,7 @@ alerts = SHAlert.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}, :status=>'P
 					<div class="row" style="font-size:0.7em">
 						
 					<div class="col-7" ">
-					<h4 style="font-size:1.4em;"><%=sense_label[ti]%></h4>
+					<h4 style="font-size:1.4em;color:#aa0000"><%=sense_label[ti]%></h4>
 					      <span style=";color:#aaa">วันที่ <%=v.created_at.strftime("%d/%m/%y %H:%M") if v %> <%= '-' unless v%></span>
 					</div>	
 					<div class="col-5" style="text-align:center">
@@ -127,7 +127,7 @@ alerts = SHAlert.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}, :status=>'P
 		
 					<div class="row">
 					<div class="col"  style="text-align:center">
-						<span class="med-value">
+						<span class="med-value" style="color:#aa0000">
 						<%=v.value if v%>
 						<%="-" unless v%>
 					    </span>
