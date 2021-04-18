@@ -31,6 +31,7 @@ else
 	if @relation
 	
 		@current_hospital = SHHospital.find @relation.hospital_id
+		@current_network = SHNetwork.find @relation.network_id
 	    @access_title = @current_hospital.name
 	
 	

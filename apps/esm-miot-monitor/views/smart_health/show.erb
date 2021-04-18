@@ -1,6 +1,6 @@
-
-			<%=inline(this,:'_init')%>
-				<%=inline(this,:'_feed')%>
+<%=inline(this,:'_init')%>
+<% params[:admit_id] = params[:id]%>
+<%=inline(this,:'_feed')%>
 <%
 	
 admit = Admit.find params[:id]
@@ -276,11 +276,51 @@ reportid = "&record_id=#{report.id}" if report
             </div>
             
 			<div class="clear"></div>
-			
 	
-			 <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="border:0px solid">ประวัติการรักษา</h4></div>
-			
-			
+	
+	
+	<!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+	  </li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+	  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">.1</div>
+	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">..2.</div>
+	  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.3..</div>
+	</div> -->
+	
+	
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">ประวัติการตรวจ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">ภาพรวมสุขภาพ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">ศูนย์ข้อความ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab4-tab" data-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">คลังภาพ</a>
+	  </li>
+	</ul>
+	
+	
+	
+	<div class="tab-content" id="myTabContent">
+		
+	  <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab" style="border:0px solid red">
+	
+    <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ประวัติการรักษา</h4></div>
+	
+	
 	<div class="row" style="background:#fff;padding:10px">		
 			
 			<%
@@ -347,7 +387,7 @@ reportid = "&record_id=#{report.id}" if report
 				
 				
 				
-				msgs = Message.where(:admit_id=>admit.id).sort(:created_at=>-1).all.reverse 
+				msgs = Message.where(:admit_id=>admit.id,:type=>'image').sort(:created_at=>-1).all.reverse 
 				
 				for i in msgs
 					
@@ -551,14 +591,74 @@ reportid = "&record_id=#{report.id}" if report
 			
 			
 			
-	</div>			<%
-			
-			params[:admit_id] = admit.id
+	</div>	
+	
+	
+	
+	  </div>
+	  <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+	    
+		<div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ภาพรวมสุขภาพ</h4></div>
+	  	
+		<%
 		
-			%>
-			<%=inline(this,:'_chart')%>
+		params[:admit_id] = admit.id
+	
+		%>
+		
+		<%=inline(this,:'_chart')%>
+		
+	  </div>
+	  <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+	  	
+		
+  	  <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ศูนย์การสื่อสาร</h4></div>
+	  	<%=inline(this,:'_patient_message')%>
+	  </div>
+	  
+	
+	  
+	  
+	   <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+	   	
+    	  <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">คลังภาพ</h4></div>
+		
+   		<%
+			
+   		msgs = Message.where(:admit_id=>admit.id).sort(:created_at=>-1).all.reverse 
+			
+   		%>
+   	 <div class="card sum-report mt-4 station">
+           <div class="card-header card-vital">
+               <strong>Images</strong>
+           </div>
+           <div class="card-body">
+   		<div class='row'>
+   		<% for i in msgs %>
+   		<% if i.type == 'image' 
+
+   			url  = "/miot/img/svg/aoc-icon.svg"
+   			url = "../Message/content?id=#{i.id}" 
+   		%>
+		
+   		<div class="col-4"><a href="#" target="_blank" >
+   			<img src="<%=url%>" height="150"></a>
+   		</div>
+		
+   		<% end %>
+   		<% end %>
+   		</div>
+   	    </div>
+          </div>
+		
+	   </div>
+	</div>
+	
+	
+	
 			
 			
+	
 			
 			
             <div class="card sum-report mt-3 station">
@@ -567,6 +667,20 @@ reportid = "&record_id=#{report.id}" if report
 
 
         </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
         <div class="d-flex justify-content-center mt-5">
 			
             <!-- <a href="#" class="btn btn-primary btn-action btn-info d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#opdModal" style="float:right">
@@ -589,41 +703,9 @@ reportid = "&record_id=#{report.id}" if report
 			
 			</div>
        
-<!--            <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
-                <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
-                    <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
-                    วัดค่า
-                 </a>
-            </div>&nbsp;
-			
-			
-            <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
-                <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
-                <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
-                ถ่ายรูป
-            </a>
-			
-			
-		    <script>
-			    $('#image_capture_btn').click(function(){
-				device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
-			    })
-		    </script>
-            </div>
--->				
+
 				&nbsp;
-<!--            <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
-                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
-                 Record
-            </a>&nbsp;
--->			
-				
-				<!-- <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
-	            <a href="calendar?patient_id=<%=patient.id%>" class="btn d-flex align-items-center justify-content-center ">
-	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
-	                นัดหมาย
-	            </a>
-				</div> -->
+
 				<% unless @current_network %>
 				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
 	            <a href="visit?admit_id=<%=params[:id]%>" class="btn d-flex align-items-center justify-content-center ">
@@ -650,33 +732,7 @@ reportid = "&record_id=#{report.id}" if report
         </a>
 		</div>
         <br/>
-		<%
-			
-		msgs = Message.where(:admit_id=>admit.id).sort(:created_at=>-1).all.reverse 
-			
-		%>
-	 <div class="card sum-report mt-4 station">
-        <div class="card-header card-vital">
-            <strong>Images</strong>
-        </div>
-        <div class="card-body">
-		<div class='row'>
-		<% for i in msgs %>
-		<% if i.type == 'image' 
-
-			url  = "/miot/img/svg/aoc-icon.svg"
-			url = "../Message/content?id=#{i.id}" 
-		%>
-		
-		<div class="col-4"><a href="#" target="_blank" >
-			<img src="<%=url%>" height="150"></a>
-		</div>
-		
-		<% end %>
-		<% end %>
-			</div>
-	</div>
-       </div>
+	
         </div>
         </div>
     </section>

@@ -20,17 +20,9 @@ messages = admit.messages
 
 <div class="row" style="border:0px solid;width:100%">
 <div class="col">	
-<div class="" style="width:100%;">
-	<center>
-	<%=link_to 'หน้าแรก', "index", :class=>'btn btn-info'%>
-	</center>
+	
 
-</div>
-<div class="row">
-	<div class="col">
-<h3>ศูนย์ข้อความ</h3>
-	</div>
-</div>
+
 <div class="row">
 	<div class="col message-panel"  style="border:1px solid #ccc;height:400px;border-radius:5px;overflow:auto;padding:20px">
 <%=inline(this,:'_message_partial')%>
@@ -66,7 +58,7 @@ messages = admit.messages
 	
 	</div>
 
-<div class="col-8"  style="display: flex; justify-content: flex-end;">
+<div class="col-8"  style="display: flex; justify-content: flex-end;margin-bottom:200px">
 <form action="message_post?admit_id=<%=admit.id%>" class="message" method="post" >
 
 <!-- <textarea type="text" name="msg" value=""></textarea> -->
@@ -88,11 +80,16 @@ messages = admit.messages
            	$('.message-panel').html(data)
 		   
 		   $('#message-content').val("")
+			$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+			
+			
         });
 		
 		e.preventDefault();
 		
 	})
+	$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+	
 
 </script>
 

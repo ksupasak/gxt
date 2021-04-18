@@ -17,11 +17,30 @@ end
 
 @current_zone = Zone.find session[:current_zone]
 
-admits = Admit.where(:zone_id=>@current_zone.id, :status=>{'$in'=>%w{NEW Admitted}}).all
+patient_ids = []
+
+if @current_hospital
+	
+	relations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	patient_ids = relations.collect{|i| i.patient_id}
+	
+end
+
+if @current_network
+	
+	relations = SHRelation.where(:network_id=>@current_network.id).all
+	patient_ids = relations.collect{|i| i.patient_id}
+	
+end
+
+
+
+admits = Admit.where(:patient_id=>{'$in'=>patient_ids},:zone_id=>@current_zone.id, :status=>{'$in'=>%w{NEW Admitted}}).all
 
 admits = admits.collect{|i| i if i.patient }.compact
 
 %>
+
 <style>
 	.patient_box{
 		background:#fafafa;

@@ -7,7 +7,7 @@ patient = admit.patient
 
 confs = SHConference.where(:admit_id=>admit.id).all
 
-messages = admit.messages.all
+messages = admit.messages.order(:created_at=>-1).limit(10).all
 
 list = []
 
@@ -17,7 +17,14 @@ for i in messages
 	
 		list << {:type=>'text', :i=>i, :stamp=>i.created_at}
 		
+	
+	elsif i.type=='image'
+	
+		list << {:type=>'image', :i=>i, :stamp=>i.created_at}
+		
 	end
+		
+	
 		
 end
 
@@ -77,12 +84,10 @@ list.sort!{|a,b| a[:stamp]<=>b[:stamp]}
 			%>
 			<a href="javascript:$('.c<%=m.id%>').click()"><img src="<%=url%>" height="200">
 	    </p>
-        <div class="message-timestamp-right"><%=m.schedule.strftime("%H:%M")%></div>
+        <div class="message-timestamp-right"><%=m.created_at.strftime("%H:%M")%></div>
     </div>
 <% end %> 
  
 
 <% end %>
-<script>
-	$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
-</script>
+

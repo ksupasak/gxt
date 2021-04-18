@@ -998,6 +998,8 @@ class MessageController < GXTDocument
     ofile = grid.open_download_stream(message.file_id)
     
     info = ofile.file_info 
+    if info
+      
     filename = info.filename
    
    
@@ -1015,7 +1017,9 @@ class MessageController < GXTDocument
     
     return data
     
-    
+   else
+    return nil
+   end
     
   end
 end
