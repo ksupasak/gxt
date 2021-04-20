@@ -160,20 +160,20 @@
 				<div class="row">
 				<div class="col"  style="text-align:center">
 					<span class="med-value">
-					<%=v[:value]%>
+					<%=v[:value] if v%>
 				    </span>
 					<span style="font-size:0.8em;color:#aaa"><%=sense_unit[xi]%></span>
 				
 				</div>
 				</div>
 				<div class="row" style="font-size:0.8em">
-				<div class="col-8"><span style=";color:#aaa"><%=v[:stamp]%></span>
+				<div class="col-8"><span style=";color:#aaa"><%=v[:stamp] if  v%></span>
 				</div>
 				<div class="col-4" style="text-align:center">
-					<% if v[:alert] %>
-					<div class=" alert-<%=v[:alert][:class]%>">
+					<% if v and v[:alert]  %>
+					<div class=" alert-<%=v[:alert][:class] if v %>">
 					<span >
-						<%=v[:alert][:text]%>
+						<%=v[:alert][:text] if v%>
 					</span>
 					</div>
 					<% end %>

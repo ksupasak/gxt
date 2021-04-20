@@ -92,8 +92,11 @@
 			
 			
  %>
+ 	<% if params[:return] and params[:return]!="" %>
+		<%= redirect_to params[:return]%>
+	<% else %>
  		<%= redirect_to "show?id=#{admit.id}" %>	
-		
+	<% end %>
 		
 	<% end %>		
  	
@@ -124,6 +127,9 @@
 		<div class="card admit-form">
             <div class="card-body d-flex">
 				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+					<input type="hidden" name="return" value="<%=params[:return]%>">
+					
+					
 					<div class="form-group">
 		 				<%# <label for="product-name">Patient</label> %>
 		<div class='row'  style="border:0px solid gray">

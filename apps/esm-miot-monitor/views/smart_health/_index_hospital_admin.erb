@@ -33,10 +33,10 @@
         <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
       </li>	 -->
 	  <li class="nav-item">
-	    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
+	    <a class="nav-link  <%='active' unless params[:tab]%>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
 	  </li>
 	  <li class="nav-item">
-	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+	    <a class="nav-link <%='active' if params[:tab]%>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
 	  </li>
 	</ul>
 </div>
@@ -52,7 +52,7 @@
 
 		
 		
-	  <div class="tab-pane fade show container active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	  <div class="tab-pane fade show container  <%='active' unless params[:tab]%>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 	  	<%
 	  		
 		if @current_hospital 
@@ -91,7 +91,7 @@
 	  </div>  <!-- End Doctor Section-->
 	  
 	  
-	  <div class="tab-pane fade container" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  <div class="tab-pane fade container  <%='show active' if params[:tab]=='patient'%>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	  	
 		
 	  	<%
@@ -128,6 +128,7 @@
 			out
 		end
 		 %>
+		<%=link_to("เพิ่ม", "admit?return=index?tab=patient&hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
 		
 	  </div>
 	  	
