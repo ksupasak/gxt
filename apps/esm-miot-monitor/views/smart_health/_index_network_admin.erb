@@ -82,8 +82,8 @@
 	
 	patient = Patient.find(row.patient_id)
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
+	out[1] = patient.hn if patient and patient.hn
+	out[2] = patient.to_s if patient
 	
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
@@ -110,8 +110,8 @@
 	
 	patient = Patient.find(row.patient_id)
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
+	out[1] = patient.hn if patient and patient.hn
+	out[2] = patient.to_s if patient
 	
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
@@ -134,8 +134,8 @@
 	
 	patient = Patient.find(row.patient_id)
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
+	out[1] = patient.hn if patient and patient.hn
+	out[2] = patient.to_s if patient
 	
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
@@ -204,10 +204,10 @@
 		
 		admit = Admit.where(:patient_id=>patient.id).last
 		
-		out[0] = patient.hn
+		out[0] = patient.hn if patient and patient.hn
 		
 		# out[1] = patient.name
-		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" if patient
 		
 		out<<link_to("แสดง", "show?id=#{admit.id}", :class=>'btn btn-success') if admit
 		
