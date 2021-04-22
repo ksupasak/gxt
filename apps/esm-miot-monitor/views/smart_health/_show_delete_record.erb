@@ -1,0 +1,10 @@
+<%
+	
+record = DataRecord.find(params[:id])
+	
+record.destroy
+	
+%>
+<script>
+parent.location.reload();
+</script>
