@@ -202,7 +202,7 @@
 	
 		out[-1] = row.user.login if row.user
 		
-		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end
