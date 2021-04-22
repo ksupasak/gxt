@@ -611,6 +611,14 @@
 					</div>
 				</div>
 				
+				<% else %>
+				<div class="row">
+					<div class="col-12">
+			        <div class="d-flex justify-content-center mt-5">
+					<%= link_to 'ลบข้อมูล', "show_delete_record?id=#{params[:id]}&admit_id=#{params[:admit_id]}", :class=>'btn btn-danger' %>
+					</div>
+					</div>
+				</div>
 				<% end %>
             </div>
 
