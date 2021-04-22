@@ -81,7 +81,18 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
-	
+
+	bclass = "b-wait"
+	case row.status
+		when 'Pending'	
+			bclass = "b-hos"
+		when 'Accepted'
+			bclass = "b-network"	
+		when 'Completed'
+			bclass = "b-officer"
+		end
+	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
+
 	out[1] = patient.hn if patient and patient.hn
 	out[2] = patient.to_s if patient
 	
@@ -109,6 +120,16 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
+	bclass = "b-wait"
+	case row.status
+		when 'Pending'	
+			bclass = "b-hos"
+		when 'Accepted'
+			bclass = "b-network"	
+		when 'Completed'
+			bclass = "b-officer"
+		end
+	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
 	
 	out[1] = patient.hn if patient and patient.hn
 	out[2] = patient.to_s if patient
@@ -116,7 +137,8 @@
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
-	out[-1] = Provider.find(row.officer_id).name
+	pvtemp = Provider.find(row.officer_id)
+	out[-1] = pvtemp.name if pvtemp
 		
 	
 	out
@@ -133,6 +155,16 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
+	bclass = "b-wait"
+	case row.complated_by
+		when '1'	
+			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
+		end
+	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
 	
 	out[1] = patient.hn if patient and patient.hn
 	out[2] = patient.to_s if patient
@@ -140,7 +172,8 @@
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
-	out[-1] = Provider.find(row.officer_id).name
+	pvtemp = Provider.find(row.officer_id)
+	out[-1] = pvtemp.name if pvtemp
 		
 	
 	out
@@ -228,6 +261,5 @@
 
 </div>
 </div>
-
 
 

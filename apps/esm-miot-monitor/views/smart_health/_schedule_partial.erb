@@ -1,6 +1,7 @@
 <%=inline(this,:'_init')%>
 
 <%
+
 	date = Time.now
 	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
 	
@@ -96,7 +97,14 @@
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
-	
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn
+		pname = patient.first_name if patient.first_name
+		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
+	end
+
 	bname = "รอตรวจ"
 	bclass = "b-wait"
 	
@@ -113,9 +121,9 @@
 		
 	end
 	
-	out[0] = "<span class='badge #{bclass}'>#{bname}</span>"
-	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{patient.first_name}  #{patient.last_name[0..3]}","admit?id=#{admit.id}")
+	out[0] = "<a href='visit?admit_id=#{admit.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
 	provider = Provider.find(row.provider_id)
 	out[3] = provider.name if provider
 	
@@ -128,12 +136,19 @@
 end
 %>
 <br/>
-ผู้ป่วยเยี่ยมบ้าน รพสต อสม
+ผู้ป่วยเยี่ยมบ้าน รพสต อสม 
 <%= tabular :data=>other_list, :model=>%w{status hn name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
-	
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn
+		pname = patient.first_name if patient.first_name
+		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
+	end
+
 	bname = "รอตรวจ"
 	bclass = "b-wait"
 	
@@ -156,9 +171,9 @@ end
 		bclass = "b-wait"	
 	end
 	
-	out[0] = "<span class='badge #{bclass}'>#{bname}</span>"
-	out[1] = link_to("#{patient.hn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{patient.first_name } #{patient.last_name[0..3]}","admit?id=#{admit.id}")
+	out[0] = "<a href='visit?admit_id=#{admit.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
 	network = SHNetwork.find(row.network_id)
 	out[3] = link_to("#{network.name}","#")
 	

@@ -110,7 +110,7 @@ else
 
 
 <hr/>
-<h4>ประวัติ</h4>
+<h4>ประวัติ </h4>
 
 <%  if visit.appoint_type == '1' %>
 
@@ -173,7 +173,7 @@ else
 <div class="row">
 <div class="col">
 	<% 
-	user = User.find(visit.appointed_user)
+	user = User.find(visit.dispatched_user)
 	%>
 	<u>รพสต จ่ายงาน โดย</u> : <%=user.login if user%>
 	

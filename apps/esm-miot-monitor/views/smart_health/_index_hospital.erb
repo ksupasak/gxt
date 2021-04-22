@@ -10,6 +10,7 @@
 		hospital = SHHospital.find uh.hospital_id
 	end
 	mnet = Hash[SHNetwork.all.collect{|i| [i.id,i.name]}]
+	m_pvname = Hash[Provider.all.collect{|i| [i.id,i.name]}]
 	hosname = Setting.get :default_center_name
 	hosname = hospital.name if hospital
 	
@@ -435,13 +436,13 @@ end
 			<% unless @current_network %>
 			
 	            <div class=" d-flex justify-content-center btn-submit" >
-	                <!--<a href="./admit" class="btn  d-flex align-items-center justify-content-center">-->
-					<a href="visit" class="btn  d-flex align-items-center justify-content-center">
+	                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
+					<!--<a href="visit" class="btn  d-flex align-items-center justify-content-center">-->
 	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
 	                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
 	                      </svg>
-	                    <span class="pl-2 pb-0">เพิ่มนัด</span>
+	                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
 	                </a>
 	            </div>
 			<% end %>
@@ -526,6 +527,8 @@ end
 		networks = SHNetwork.all
 		pid=patients.compact.collect{|i| i.id}
 		relations = SHRelation.where(:patient_id=>pid).all
+		
+		m_pd = Hash[relations.collect{|i| [i.patient_id,i.hospital_doctor_id]}.compact]
 		m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 		m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
 		offs = Provider.where(:id=>relations.collect{|i| i.network_officer_id}.compact).all
@@ -602,7 +605,8 @@ end
 		<% for i in patients 
 	
 			admit = Admit.where(:patient_id=>i.id).first
-			provider = admit.provider
+			# provider = admit.provider
+			provider_name = m_pvname[m_pd[i.id]]
 			records = admit.records.size	
 		
 			provider_2 = '-'
@@ -638,7 +642,7 @@ end
 			<td><%=i.hn%></td> 
 			<td><%=i.prefix_name%><%=i.first_name%> <%=i.last_name%></td> 
 		
-			<td><%=provider.name if provider%></td> 
+			<td><%=provider_name if provider_name%></td> 
 		
 			<td><%=records%></td>
 		
