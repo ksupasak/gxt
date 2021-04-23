@@ -69,6 +69,13 @@
 		
 			
 		%>
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-p">
+	</div>
+	<div class="col"></div>
+</div>
 <h4>รอจ่ายงาน - (Pending)</h4>		
 	<form action="assign" method="post">	
 
@@ -91,11 +98,21 @@
 		when 'Completed'
 			bclass = "b-officer"
 		end
-	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
-
-	out[1] = patient.hn if patient and patient.hn
-	out[2] = patient.to_s if patient
+		
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
+
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
@@ -129,11 +146,20 @@
 		when 'Completed'
 			bclass = "b-officer"
 		end
-	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
-	out[1] = patient.hn if patient and patient.hn
-	out[2] = patient.to_s if patient
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
 	
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
@@ -164,12 +190,21 @@
 		when '3'
 			bclass = "b-officer"
 		end
-	out[0] = "<span class='badge #{bclass}'>#{row.status}</span>"
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
-	out[1] = patient.hn if patient and patient.hn
-	out[2] = patient.to_s if patient
-	
-	
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
+
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
+
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
 	pvtemp = Provider.find(row.officer_id)
@@ -262,4 +297,21 @@
 </div>
 </div>
 
-
+<script>
+function filter_p(s){
+	if(s&&s!=''){
+		$(".tr-p").closest('tr').hide()
+		$(".tr-p").each(function(i,v){
+			var t = $(v).attr("text")
+			if(t.indexOf(s)!=-1) $(v).closest('tr').show()
+		})
+	}else{
+		$(".tr-p").closest('tr').show()
+	}
+}
+$(document).ready(function(){
+	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+})
+</script>
