@@ -92,9 +92,12 @@
 		
 		
 		if  patient and admit
-		
-			visit = SHVisit.create :appoint_type=>params[:visit][:appoint_type],:status=> "Pending",:appointed_user=> @current_user.id, :appointed_at=> Time.now, :patient_id=>patient.id, :date=> params[:visit][:date], :provider_id=>params[:provider_id], :hospital_id=>params[:relation][:hospital_id], :network_id=>params[:relation][:network_id]
-		
+			if params[:vid]
+				visit = SHVisit.find params[:vid]
+				visit.update_attributes :appoint_type=>params[:visit][:appoint_type],:appointed_user=> @current_user.id, :date=> params[:visit][:date],:note=> params[:visit][:note], :provider_id=>params[:provider_id]
+			else		
+				visit = SHVisit.create :appoint_type=>params[:visit][:appoint_type],:status=> "Pending",:appointed_user=> @current_user.id, :appointed_at=> Time.now, :patient_id=>patient.id, :date=> params[:visit][:date], :provider_id=>params[:provider_id], :hospital_id=>params[:relation][:hospital_id], :network_id=>params[:relation][:network_id],:note=> params[:visit][:note]
+			end
 		end
 	
 		
@@ -118,12 +121,16 @@
             <div class="col title-fill ">
      		   
 		<%
-			
-		if params[:admit_id] and params[:admit_id]!=''
-			admit = Admit.find(params[:admit_id])
+		if params[:vid] and params[:vid]!=''
+			visit = SHVisit.find params[:vid]
+		end
+		# if params[:admit_id] and params[:admit_id]!=''
+		if params[:id] and params[:id]!=''
+			# admit = Admit.find(params[:admit_id])
+			admit = Admit.find(params[:id])
 			patient = admit.patient
 			relation = SHRelation.where(:patient_id=>patient.id).first
-			visit = SHVisit.new :patient_id=>patient.id, :date=> Time.now
+			visit = SHVisit.new :patient_id=>patient.id, :date=> Time.now if !visit
 			
 		else
 			
@@ -210,10 +217,33 @@
 				</div>
 				
 				<div class=" col-md-4"><br/>
-	            <a href="#" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
+	            <a id="btn-search" href="#" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
 	                ค้นหา
 	            </a>
 				</div>
+				<script>
+				function clicksearch(){
+					hn = $("#patient-hn").val()
+					cid = $("#patient-public_id").val()
+					$.ajax({
+						url:'visit_search',
+						data:{hn:hn,cid:cid},
+					}).done(function(data){
+						//alert('return :'+data)
+						if(data!=''){
+							v = data.trim()
+							document.location.href="./visit?id="+v
+						}else{
+							alert('Search not found add new patient.')
+						}
+					})
+				}
+				$(document).ready(function(){
+					$("#btn-search").click(function(){
+						clicksearch()
+					})
+				})
+				</script>
 				
 				
 	
@@ -461,23 +491,23 @@
 		
 		<h4>ข้อมูลนัดหมาย</h4>
 	<%
-		
-
-		
+		if params[:vid] and params[:vid]!=''
+			%><input type="hidden" name="vid" value="<%=params[:vid]%>"><%
+		end		
 	%>	
 		
 	<div class="row mt-1" style="background-color:#ffc;padding-bottom:20px">
 		
 	<div class="col-6 col-md-6">
 		<label for="visit-date">วันที่</label>
-		<input type="text" class="form-control" id="visit-date" name="visit[date]" value="<%=visit.date%>" placeholder="วันที่" style="">
+		<input type="text" class="form-control" id="visit-date" name="visit[date]" value="<%=visit.date.strftime('%d/%m/%Y') if visit.date%>" placeholder="วันที่" style="">
 	</div>
 
 	<div class="col-6 col-md-6">
 		<label for="visit-appoint_type">คลินิก</label>
 		<select name="visit[appoint_type]" class="form-control">
-			<option value="1">ตรวจที่โรงพยาบาล</option>
-			<option value="3">ตรวจที่เยี่ยมบ้าน (อสม)</option>
+			<option value="1" <%="selected".html_safe if visit.appoint_type=='1'%>>ตรวจที่โรงพยาบาล</option>
+			<option value="3" <%="selected".html_safe if visit.appoint_type=='3'%>>ตรวจที่เยี่ยมบ้าน (อสม)</option>
 		</select>
 	</div>
 
@@ -497,7 +527,7 @@
 			<select id="record-hospital_doctor_id" name="provider_id" class="form-control" value="">
 			<option value=""></option>
 			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
-			  <option value="<%=j[0]%>" %><%=j[1]%></option>
+			  <option value="<%=j[0]%>" <%="selected".html_safe if visit.provider_id==j[0]%>><%=j[1]%></option>
 			<% end %>
 			</select>
 		</div>
@@ -555,7 +585,7 @@
 	   	   
 		    <div class="col-4 col-md-4 btn-cancel">
             <a href="../Home/index" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
-                ยกเลิก
+                ย้อนกลับ
             </a>
 		
 			</div>

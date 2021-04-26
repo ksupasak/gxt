@@ -121,7 +121,7 @@
 		
 	end
 	
-	out[0] = "<a href='visit?admit_id=#{admit.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
 	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
 	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
 	provider = Provider.find(row.provider_id)
@@ -171,7 +171,7 @@ end
 		bclass = "b-wait"	
 	end
 	
-	out[0] = "<a href='visit?admit_id=#{admit.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
 	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
 	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
 	network = SHNetwork.find(row.network_id)

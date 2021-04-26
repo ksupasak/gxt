@@ -1,0 +1,15 @@
+<%
+    cid = params[:cid]
+    hn = params[:hn]
+    s = nil
+    admit = nil
+    if hn
+        s={:hn=>hn}
+    elsif cid
+        s={:cid=>cid}
+    end
+    if s
+        p = Patient.where(s).first
+        admit = Admit.where(:patient_id=>p.id).last if p
+    end
+%><%=admit.id if admit%>
