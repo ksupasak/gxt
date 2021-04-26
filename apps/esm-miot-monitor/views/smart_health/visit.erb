@@ -578,9 +578,9 @@
 			<div class="row mt-3 "  style="border:0px solid gray">
 
 			<div class="col-4 col-md-4">
-      		
+      		<% if visit.status != 'Completed' %>
 		    <input type="submit" value="ยืนยัน" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" />			  
-       
+			<% end %>
 	 	 	</div>
 	   	   
 		    <div class="col-4 col-md-4 btn-cancel">
