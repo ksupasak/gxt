@@ -71,7 +71,7 @@
 	  </li>
 	</ul>
 </div>
-</div>
+
 
 <div class="row">
 
@@ -82,12 +82,13 @@
 	<div class="tab-content" id="pills-tabContent">
 	  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 		  
+<h3>Hospital User</h3>
 		  
 	  	<%
 	  		
 		if true #@current_hospital 
 			
-			list = SHUserHospital.all
+			list = SHUserHospital.order(:hospital_id=>1).all
 			
 	  	%>
 			
@@ -115,6 +116,43 @@
 		
 		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
 		
+		<br/>
+		<br/>
+		
+		<h3>Network User</h3>
+		
+	  	<%
+	  		
+		if true #@current_hospital 
+			
+			list = SHUserNetwork.order(:network_id=>1).all
+			
+	  	%>
+			
+		<%= tabular :data=>list, :model=>%w{hospital network provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+		
+		
+		out[0] = row.network.hospital.name if row.network and row.network.hospital
+		
+		out[1] = row.network.name if row.network
+		
+		out[2] = row.provider.name if row.provider
+		
+	
+		out[-1] = row.user.login if row.user
+		
+		out<<link_to("แสดง", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%=link_to("เพิ่ม", "hn_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
+		
 		<%#=link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
 		
 		
@@ -131,7 +169,7 @@
 			list = SHRelation.all
 			 
 	  	%>
-		
+		<h3>Patient</h3>
 		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id
@@ -157,7 +195,7 @@
 		<% end %>
 
 	</div>
-	
+</div>	
 </div>
 </div>	
 

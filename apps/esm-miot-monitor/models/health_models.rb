@@ -96,6 +96,7 @@ end
 class SHNetwork < GXTModel
   
   include Mongoid::Document
+  belongs_to :hospital, :class_name=>'EsmMiotMonitor::SHHospital', :foreign_key=>:hospital_id
   
   key :name, String
   key :title, String
