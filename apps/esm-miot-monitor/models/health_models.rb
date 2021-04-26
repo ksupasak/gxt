@@ -105,6 +105,8 @@ class SHNetwork < GXTModel
   key :district, String
   key :code, String
   
+  key :hospital_id, ObjectId
+  
 end
 
 
