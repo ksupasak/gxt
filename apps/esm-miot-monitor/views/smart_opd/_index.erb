@@ -167,7 +167,7 @@
  </div>
 
  <div class="col-6 d-flex justify-content-center p-name">
- 	โรงพยาบาล
+ 	<%=Setting.get(:default_center_name)%>
  </div>
  <div class="col-3 d-flex justify-content-end" >
  	<div style="">00:00</div>
@@ -183,12 +183,12 @@
 	
 		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;" class="d-flex justify-content-between">
 			
-		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;<div class="d-inline-flex v-entry hn" label="hn" name="hn" style="text-align:center">3232</div></div>
+		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;<div class="d-inline-flex v-entry hn" label="hn" name="hn" style="text-align:center"></div></div>
 		
-		<div class="col  patient " label="patient" name="patient" style="text-align:center"> นายธนศักดิ์ เจริญพัฒนะ</div>
+		<div class="col  patient_name " label="patient" name="patient" style="text-align:center"></div>
 	
 	     <div style="color:var(--text-second); "class="col patient" label="patient" name="patient" style="text-align:center">
-			 เพศ ชาย,  อายุ : 54 ปี </div>
+			 เพศ <div class="d-inline-flex patient_gender">-</div>,  อายุ : <div class="d-inline-flex patient_age"> - </div> ปี </div>
 	
 		
 		</div>
@@ -426,14 +426,15 @@
 
 <div class="row footer">
 	<div class="col">
-	..
+	<%=link_to "...", "#" , :class=>' btn ' %>
 	</div>
 		
 	<div class="col">
-	<div id="msgs"></div>
+	<div id="msgs" style="font-size:0.5em"></div>
 	</div> 
 	<div class="col" style="text-align:right">
-	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn-send ' %>
+	<%=link_to "ยกเลิก", "index" , :class=>'btn' %>
+	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success' %>
 	</div>
 	
 </div>
@@ -487,6 +488,8 @@
   </div>
 <div id="buffer">
 </div>
+            <a href="#" id="beep" style="display:none">beep</a>
+            <a href="#" id="ready" style="display:none">ready</a>
   <script>
     function hnPush(s){
         v = $(".display-hn").html().trim()
@@ -560,9 +563,11 @@
 
         if(isComplete){
             if($(".btn-entry").attr('class')){
+				   $("#ready").click()
+				
                 $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
                 $('.btn-opd').click(submitEntry)
-                $("#ready").click()
+             
             }
         }else{
             $('.btn-opd').unbind()
@@ -573,7 +578,35 @@
 	$(document).keypress(function(e){
 		
 	    if( event.which == 13 ) {
-	        //submit();
+	       
+		    hn = $(".hn").html().trim()
+		   
+			$.ajax({
+			  url: "find_patient?hn="+hn,
+			  context: document.body
+			}).done(function(data) {
+			  
+			  patient = JSON.parse(data)
+				console.log(patient)
+				
+				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
+					
+				$('.patient_name').html(patient_name)	
+				$('.patient_gender').html(patient['gender'])	
+				$('.patient_age').html(patient['age'])	
+				
+				
+				$('#ready').click()
+				
+				
+			  // $( this ).addClass( "done" );
+			}); 
+		   
+		   
+		   
+		   
+		   
+		   
 	     }else{
         v = $(".hn").html().trim()
         v+=String.fromCharCode(e.keyCode)
