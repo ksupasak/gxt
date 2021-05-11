@@ -1,18 +1,43 @@
+
 <style>
+
+	:root {
+	    --bg-body: #00243E;
+	    --bg-nav: #002748;
+	    --bg-second-nav: #003357;
+	    --bg-content: #000C2A;
+	    --text-main:#E5E5E5;
+	    --text-second:  #88B1DA;
+	    --text-orange: #FFA200;
+	    --text-blue: #00B3FD;
+	    --text-yellow: #D2C406;
+	    --text-green: #32CE0B;
+	    --btn-blue: #034B87;
+	  }
+	  
 	body{
-		background:#000;
-		background: transparent linear-gradient(180deg, #000  0%, #13171D 100%) 0%
-		0% no-repeat padding-box;
+		background: var(--bg-body);
+/*		background: transparent linear-gradient(180deg, #000  0%, #13171D 100%) 0%
+		0% no-repeat padding-box;*/
 		height:100vh;
 	}
+	
+	.top-header{
+		background:#0a1320;
+		font-size:4vh;
+/*		box-shadow: 0px 0px 15px #1A3388;*/
+		color:var( --text-second);
+	}
+	
 	.header{
 /*		height:4em;*/
-		/* background:#eef; */
-		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
+		 background:#eef;
+		background: transparent linear-gradient(180deg,var(--bg-nav)   0%, var(--bg-second-nav) 100%) 0%
 		0% no-repeat padding-box;
-		font-size:6vh;
+		
+		font-size:5vh;
 		box-shadow: 0px 0px 15px #1A3388;
-		color:#999;
+		color:var(--text-main);
 	}
 	.sense-panel{
 		/* font-size:1.5em; */
@@ -89,13 +114,44 @@
 	}
 
 </style>
+<div class="row top-header">
+ 
+ <div class="col-3">
+ 	Smart OPD
+ </div>
+
+ <div class="col-6 d-flex justify-content-center">
+ 	โรงพยาบาล
+ </div>
+ <div class="col-3 d-flex justify-content-end" >
+ 	<div style="">00:00</div>
+ </div>
+ 
+</div>
+
 <div class="row header">
-	<div class="col-2">
-		hn :
-	</div>
-	<div class="col v-entry hn" label="hn" name="hn" style="text-align:center">
+	
+	
+	
+	<div class="col-12" >
+	
+		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;" class="d-flex justify-content-between">
+			
+		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;<div class="d-inline-flex v-entry hn" label="hn" name="hn" style="text-align:center">3232</div></div>
+		
+		<div class="col v-entry patient" label="patient" name="patient" style="text-align:center"> นายธนศักดิ์ เจริญพัฒนะ</div>
+	
+	     <div style="color:var(--text-second); "class="col v-entry patient" label="patient" name="patient" style="text-align:center">
+			 อายุ : 54 ปี คลินิกโรคเบาหวาน</div>
+	
+		
+		</div>
+	
 	
 	</div>
+	
+	
+	
 </div>
 
 <div class="row">
