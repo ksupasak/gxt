@@ -54,7 +54,23 @@ if request.post?
 		
 		else
 			
-			hospital_role = Role.where(:name=>'hospital').first
+			
+			
+			
+			
+			role = 'network'
+			role = 'network_admin' if params[:record][:provider_type] == 'admin'
+			role = 'network_operator' if params[:record][:provider_type] == 'operator'
+			
+			
+			
+			hospital_role = Role.where(:name=>role).first
+			
+			unless hospital_role
+				
+				hospital_role = Role.create :name=>role
+				
+			end
 			params[:user][:role_id] = hospital_role.id
 			user = User.create params[:user]
 			
@@ -63,6 +79,8 @@ if request.post?
 				user.password = params[:password]
 				user.save
 			end
+			
+			
 			
 		end 
 		

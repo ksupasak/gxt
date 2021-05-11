@@ -1,0 +1,18 @@
+<%
+	patient = Admit.find(params[:admit_id]).patient
+	 
+    relation = SHRelation.where(:patient_id=>patient.id).first
+	
+	title = "#{patient.hn} meeting"
+	
+	role = "hospital,hospital_operator"
+	role = "network,network_operator"
+	
+	role = "patient" if @current_role!='patient'
+	
+	conference = SHConference.create :status=>'New',:admit_id=>params[:admit_id], :group_id=>relation.network_id , :sender_user_id=> @current_user.id, :sender_role=>@current_role, :resource_id=>params[:admit_id], :receiver_role=>role, :title=>title, :schedule=>Time.now
+	
+    # key :status, String  # New (Waiting), Accepted, Finished, Cancelled
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=tele?resourceId=<%=conference.resource_id%>&cid=<%=conference.id%>">

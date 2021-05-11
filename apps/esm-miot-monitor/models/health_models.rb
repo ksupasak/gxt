@@ -1,9 +1,102 @@
 module EsmMiotMonitor
   
 
+class SHConference < GXTModel
+  
+    include Mongoid::Document
+  
+    key :status, String  # New (Waiting), Accepted, Finished, Cancelled
+    key :admit_id, ObjectId
+    key :resource_id, String
+    
+    key :sender_user_id, ObjectId
+    key :sender_role, String
+    key :receiver_user_id, ObjectId
+    key :receiver_role, String
+    
+    key :group_id, ObjectId
+    
+    key :title, String
+    key :schedule, Time
+    
+    key :note, String
+  
+    include Mongoid::Timestamps
+end
+
+class SHAlert < GXTModel
+  
+    include Mongoid::Document
+  
+    key :status, String  # New (Pending), OnHold, Closed
+    key :admit_id, ObjectId
+    key :patient_id, ObjectId
+    
+    key :sense, String
+    key :value, Float
+    key :condition, String
+    
+    key :patient_user_id, ObjectId
+    key :patient_ack, String
+    key :patient_ack_at, Time
+    
+    key :operator_user_id, ObjectId
+    key :operator_ack, String
+    key :operator_ack_at, Time
+
+    key :closed_at, Time
+    
+    key :note, String
+  
+    include Mongoid::Timestamps
+    
+    def self.vs_condition sense, val
+      
+      
+			if sense==:temp and temp = val.to_f and temp != 0 
+				
+				if temp <= 36.5
+					 return [:temp, :low, temp]
+				elsif temp >=38
+					 return [:temp, :high, temp]
+				end
+				
+      elsif sense==:pr and pr = val.to_i and pr != 0 
+				
+				if pr <= 60
+				  return [:pr, :low, pr]
+				elsif pr >=100
+					return [:pr, :high, pr]
+				end
+				
+      elsif sense == :rr and val = val.to_i and val != 0 
+				
+				if val <= 14
+					return [:rr, :low, val]
+				elsif val >= 22
+					return [:rr, :high, val]
+				end
+				
+      elsif sense == :spo2 and val = val.to_i  and val != 0 
+				
+				if val <= 95
+					return [:spo2, :low, val]
+				end
+				
+			end
+      
+      return nil
+      
+    end
+    
+    
+end
+
+
 class SHNetwork < GXTModel
   
   include Mongoid::Document
+  belongs_to :hospital, :class_name=>'EsmMiotMonitor::SHHospital', :foreign_key=>:hospital_id
   
   key :name, String
   key :title, String
@@ -12,6 +105,8 @@ class SHNetwork < GXTModel
   key :phone, String
   key :district, String
   key :code, String
+  
+  key :hospital_id, ObjectId
   
 end
 
@@ -206,7 +301,9 @@ class SHCaseReport < GXTModel
   
 end
 
-
+class SHConferenceController < GXTDocument
+  
+end
 
 class SHCaseReportController < GXTDocument
   
@@ -239,6 +336,9 @@ class SHNetworkController < GXTDocument
   
 end
 
+class SHAlertController < GXTDocument
+  
+end
 
 
 class SHHospitalController < GXTDocument

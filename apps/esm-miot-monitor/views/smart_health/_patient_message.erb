@@ -1,0 +1,98 @@
+<%
+	
+admit = Admit.find params[:admit_id]
+patient = admit.patient 
+
+res = DataRecord.get_current_status [admit]
+	
+sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+	
+records = admit.records.reverse
+
+alerts = SHAlert.where(:admit_id=>admit.id).all.reverse
+
+messages = admit.messages
+	
+%>
+
+<div class="row" style="border:0px solid;width:100%">
+<div class="col">	
+	
+
+
+<div class="row">
+	<div class="col message-panel"  style="border:1px solid #ccc;height:400px;border-radius:5px;overflow:auto;padding:20px">
+<%=inline(this,:'_message_partial')%>
+	</div>
+</div>
+
+<div class="row" style="margin-top:10px" >
+	<div class="col-4" style="border:0px solid">
+		
+	<table>
+		<tr>
+			<td>
+                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center " style="width:80px;">
+	 	    	<a target="_blank" href="tele_create?admit_id=<%=admit.id%>" class="btn video-call detail" ctype="conference" cid="<%=admit.id%>"><span class="label">
+	            <img src="<%=url_for('img/svg/video.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	 			</span></a>
+                </div>
+			</td>
+			<td>
+                <div class="p-2 btn-submit d-flex align-items-center justify-content-center" style="width:80px;">
+                <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
+                <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
+                </a>
+			    <script>
+				    $('#image_capture_btn').click(function(){
+					device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
+				    })
+			    </script>
+                </div> 
+			</td>
+		</tr>
+	</table>	
+	
+	</div>
+
+<div class="col-8"  style="display: flex; justify-content: flex-end;margin-bottom:200px">
+<form action="message_post?admit_id=<%=admit.id%>" class="message" method="post" >
+
+<!-- <textarea type="text" name="msg" value=""></textarea> -->
+<input type="text" name="msg" value="" id="message-content" placeholder="ข้อความ" style="width:75%"/>
+<input type="submit" name="Submit" value="ส่ง"  class="btn btn-submit" style="width:15%"/>
+</form>
+	</div>
+</div>
+<script>
+	
+	$('.message').submit(function(e){
+		
+
+		
+		msg = $('#message-content').val()
+		
+		
+        $.post( "message_post?admit_id=<%=admit.id%>", {msg:msg,type:'text',sender:'<%=@current_user.login%>'} , function( data ) {         
+           	$('.message-panel').html(data)
+		   
+		   $('#message-content').val("")
+			$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+			
+			
+        });
+		
+		e.preventDefault();
+		
+	})
+	$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+	
+
+</script>
+
+</div>
+</div>
+<br/><br/>

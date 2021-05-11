@@ -50,7 +50,15 @@ if request.post?
 	session.delete :return_to
 	
 %>
-<%= redirect_to path
+<script>
+	history.pushState(null, null, document.title);
+	window.addEventListener('popstate', function () {
+	    history.pushState(null, null, document.title);
+	});
+</script>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=<%=path%>">
+	Redirecting..
+<%# redirect_to path
 %>
 <% else 
 

@@ -26,6 +26,9 @@ require_relative 'devices/comen-nc3a-gw'
 require_relative 'devices/ids-combo-gw'
 require_relative 'devices/gps/gps'
 
+require_relative 'devices/nihon_defib_gw'
+
+
 
 unless HOST_IP
 HOST_IP = IPSocket.getaddress(Socket.gethostname)
@@ -83,6 +86,16 @@ if select_monitor=='ids_serial'
  Device::monitor_ids_combo(ws)
  }
 end
+
+
+if select_monitor=='nihon_defib'
+  puts 'monitor select = nihon_defib'
+ threads << Thread.new {
+ Device::defib_nihon(ws)
+ }
+end
+
+
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
 # }

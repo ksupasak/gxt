@@ -201,6 +201,7 @@ class Message < GXTModel
   key :media_type, String 
   key :content, String
   key :file_id, ObjectId
+  key :sender_user_id, ObjectId
   include Mongoid::Timestamps
 end
 
@@ -823,6 +824,90 @@ class DataRecord  < GXTModel
   include Mongoid::Timestamps
   
   timestamps!
+  
+  def self.get_sense_list
+    return %w{bp pr spo2 temp weight height rr glucose}.collect{|t| t.to_sym}
+  end
+  
+  def self.get_sense_label
+    return %w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง อัตราการหายใจ ระดับน้ำตาล}
+  end
+  
+  def self.get_sense_unit
+    return %w{mmHg bpm % &#8451; kg cm bpm mmol/L}
+  end
+  
+  
+  def self.get_current_status admits
+  
+
+    now = Time.now 
+
+    from_time = (now-30*24*3600).beginning_of_day
+
+    sense_list = get_sense_list
+    sense_label = get_sense_label
+    sense_unit = get_sense_unit
+
+    maps = {}
+    alerts = []
+
+    for i in admits 
+    patient = i.patient
+
+
+		
+    	records = i.records.where(:stamp=>{'$gte'=>from_time, '$lte'=>now}).all
+
+    	map = {}
+	
+	
+
+    	for r in records
+    		sense_list.each_with_index do |t,ti| 
+    			value = r[t]
+    			if value and value!='-' and value.to_i>0
+    				map[t] = {:value=>value, :stamp=>r.stamp.strftime("%d/%m/%y %H:%M"), 
+    					    :unit=>sense_unit[ti], :label=>sense_label[ti]}
+				      
+              
+              
+              alert = SHAlert.vs_condition(t, value)
+
+                  
+                  
+            
+            
+    				if alert 
+              alert = {:text=>alert[1], :class=>'warning'}
+    					alerts << {:i=>i, :t=>t, :patient=>patient, :v=>map[t]}
+    				end
+    				map[t][:alert] = alert
+					
+    			end
+    		end
+		
+    	end
+	
+    	maps[i.id] = map
+
+    end
+    
+    
+    return {:alerts=>alerts, :maps=>maps}
+  
+  end
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 end
 
 
@@ -913,6 +998,8 @@ class MessageController < GXTDocument
     ofile = grid.open_download_stream(message.file_id)
     
     info = ofile.file_info 
+    if info
+      
     filename = info.filename
    
    
@@ -930,7 +1017,9 @@ class MessageController < GXTDocument
     
     return data
     
-    
+   else
+    return nil
+   end
     
   end
 end

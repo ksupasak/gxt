@@ -1,0 +1,17 @@
+<%
+	
+if request.post?
+
+	user = User.where(:login=>params[:sender]).first
+	user_id = nil
+	user_id = user.id if user
+	
+	
+	message = Message.create :admit_id=> params[:admit_id], :sender=>params[:sender], :sender_user_id=>user_id, :content=>params[:msg], :type=>'text'
+	
+	
+end
+	
+	
+%>
+<%=inline(this,:'_message_partial')%>

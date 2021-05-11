@@ -64,7 +64,7 @@ border-bottom: 2px solid #3147FF;
 
     <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm ">
 		
-      <a class="navbar-brand" href="../Home/index" >
+      <a class="navbar-brand" href="../User/logout" >
       <!--<image src="<%=url_for 'img/gxt-sos.png' %>" height="40">-->
       <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
       </a>
@@ -81,7 +81,7 @@ border-bottom: 2px solid #3147FF;
 	   
 	   <div class="order-12" style="">
 	   
-	   <%=link_to "#{@current_user.login} !", "../User/logout", :class=>'btn btn-primary'  %>	
+	   <%=link_to "#{@current_user.login} >>", "../User/logout", :class=>'btn btn-primary'  %>	
 	
   	  </div>
   	   <div class="order-12 text-right" style="width:80px">
@@ -204,6 +204,7 @@ border-bottom: 2px solid #3147FF;
 				<a class="dropdown-item" href="../SHRelation/index">Relation</a>
 		  	  	<a class="dropdown-item" href="../SHUserHospital/index">UserHospital</a>
 		  		<a class="dropdown-item" href="../SHUserNetwork/index">UserNetwork</a>
+  				<a class="dropdown-item" href="../SHConference/index">Confernce</a>
 		 
 		 		 </div>
 	          </li>

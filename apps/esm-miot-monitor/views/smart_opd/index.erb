@@ -1,5 +1,6 @@
-
-
+<% if true %>
+<%=inline(this,:'_index')%>
+<% else %>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 
 <!-- <h1 style="color:white">OPD</h1> -->
@@ -31,6 +32,8 @@
 	Smart OPD</h1>
 </center>
 
+<a href="log" class="btn-result-cancle" style="float:left">View log</a> 
+
 </div>
 
 <div class="col">
@@ -47,7 +50,7 @@
     
     </div>
     <div class="col-12">
-    <div class="d-hn">
+    <div class="d-hn" style="margin-bottom:0px">
     <center>
     <table width="">
     <tr>
@@ -71,12 +74,12 @@
         <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
     </tr>
     </table>
-    <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a>
+    <a href="#" class="btn btn-primary btn-opd">ยืนยัน</a> 
     <a href="#" id="beep" style="display:none"></a>
     </center> 
 
     </div>
-	<a href="log" class="btn-result-cancle" style="float:right">View log</a> 
+	
     </div>
     </div>
 
@@ -206,3 +209,4 @@
 		    margin: 0px 20px 0px 20px;
 		}
 	</style>
+<% end %>

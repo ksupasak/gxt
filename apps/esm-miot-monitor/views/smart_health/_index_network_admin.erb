@@ -69,6 +69,13 @@
 		
 			
 		%>
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-p">
+	</div>
+	<div class="col"></div>
+</div>
 <h4>รอจ่ายงาน - (Pending)</h4>		
 	<form action="assign" method="post">	
 
@@ -81,10 +88,31 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
+
+	bclass = "b-wait"
+	case row.status
+		when 'Pending'	
+			bclass = "b-hos"
+		when 'Accepted'
+			bclass = "b-network"	
+		when 'Completed'
+			bclass = "b-officer"
+		end
+		
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
-	
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
+
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
@@ -109,14 +137,34 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
+	bclass = "b-wait"
+	case row.status
+		when 'Pending'	
+			bclass = "b-hos"
+		when 'Accepted'
+			bclass = "b-network"	
+		when 'Completed'
+			bclass = "b-officer"
+		end
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
 	
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
 	
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
-	out[-1] = Provider.find(row.officer_id).name
+	pvtemp = Provider.find(row.officer_id)
+	out[-1] = pvtemp.name if pvtemp
 		
 	
 	out
@@ -133,14 +181,34 @@
 	end
 	
 	patient = Patient.find(row.patient_id)
+	bclass = "b-wait"
+	case row.complated_by
+		when '1'	
+			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
+		end
+	phn = ''
+	pname = ''
+	if patient
+		phn = patient.hn if patient and patient.hn
+		pname = patient.to_s if patient
+	end
 	
-	out[1] = patient.hn
-	out[2] = patient.to_s
-	
-	
+	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
+
+	out[1] = phn
+	out[2] = pname
+
+	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
+	out[4] = row.date.strftime('%d/%m/%Y') if row.date
+
 	out[-2] = SHHospital.find(row.hospital_id).name
 	
-	out[-1] = Provider.find(row.officer_id).name
+	pvtemp = Provider.find(row.officer_id)
+	out[-1] = pvtemp.name if pvtemp
 		
 	
 	out
@@ -169,7 +237,7 @@
 	
 		out[-1] = row.user.login if row.user
 		
-		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end
@@ -197,17 +265,33 @@
 			list = SHRelation.where(:network_id=>@current_network.id).all
 			 
 	  	%>
-		
+	<div class="row p-3">
+		<div class="col"></div>
+		<div class="col">
+		ค้นหา <input type='text' id="search-p2">
+		</div>
+		<div class="col"></div>
+	</div>	
 		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id
+
+		admit = nil
 		
-		admit = Admit.where(:patient_id=>patient.id).last
+		phn = ''
+		pname = ''
+		if patient
+			admit = Admit.where(:patient_id=>patient.id).last
+			phn = patient.hn if patient.hn
+			pname = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" 
+		end
 		
-		out[0] = patient.hn
+		out[0] = "<span class='tr-p ' text='#{phn} #{pname}'></span>"+phn
+		out[1] = pname
+
+		# out[0] = patient.hn if patient and patient.hn
 		
-		# out[1] = patient.name
-		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		# out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" if patient
 		
 		out<<link_to("แสดง", "show?id=#{admit.id}", :class=>'btn btn-success') if admit
 		
@@ -229,5 +313,24 @@
 </div>
 </div>
 
-
-
+<script>
+function filter_p(s){
+	if(s&&s!=''){
+		$(".tr-p").closest('tr').hide()
+		$(".tr-p").each(function(i,v){
+			var t = $(v).attr("text")
+			if(t.indexOf(s)!=-1) $(v).closest('tr').show()
+		})
+	}else{
+		$(".tr-p").closest('tr').show()
+	}
+}
+$(document).ready(function(){
+	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+	$("#search-p2").keyup(function(){
+		filter_p($(this).val())
+	})
+})
+</script>
