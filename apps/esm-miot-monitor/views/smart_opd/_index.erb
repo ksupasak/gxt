@@ -22,6 +22,21 @@
 		height:100vh;
 	}
 	
+	.bp{
+		color:var( --text-orange);
+	}
+	
+	.pr,.spo2{
+		color:var(--text-blue);
+	}
+	.rr{
+		color:var(--text-yellow);
+	}
+	
+	.temp{
+		color:var(--text-green);
+	}
+	
 	.top-header{
 		background:#0a1320;
 		font-size:4vh;
@@ -36,7 +51,7 @@
 		0% no-repeat padding-box;
 		
 		font-size:5vh;
-		box-shadow: 0px 0px 15px #1A3388;
+/*		box-shadow: 0px 0px 15px #1A3388;*/
 		color:var(--text-main);
 	}
 	.sense-panel{
@@ -46,7 +61,7 @@
 		border-radius: 5px;
 		/* padding:10px; */
 		padding:1vh;
-		border:1px solid #000;
+		border:1px solid var(--bg-second-nav);
 		/* background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
 		0% no-repeat padding-box; */
 
@@ -55,18 +70,23 @@
 		margin-top:1vh;
 	}
 	.s-active{
-		background: transparent linear-gradient(180deg, #13171D  0%, #000 100%) 0%
+	/*	background: transparent linear-gradient(180deg, #13171D  0%, #000 100%) 0%
 		0% no-repeat padding-box;
 		color:#000 !important;
-		box-shadow: 0px 0px 15px #1A3388;
+		box-shadow: 0px 0px 15px #1A3388;*/
+		background-color: var(--bg-content);
 	}
 	.s-empty{
-		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
-		0% no-repeat padding-box;
+/*		background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%*/
+	
+/*		0% no-repeat padding-box;*/
+		
+		background-color: var(--bg-content);
+		
 	}
 	.sense-val{
 		font-size:8vh;
-		color:#0037aa;
+/*		color:#0037aa;*/
 		text-align:center;
 	}
 	.sense-name{
@@ -112,6 +132,10 @@
 	    margin: 0px 20px 0px 20px;
 		
 	}
+	
+	.main-value{
+		font-size:8vh;
+	}
 
 </style>
 <div class="row top-header">
@@ -142,7 +166,7 @@
 		<div class="col v-entry patient" label="patient" name="patient" style="text-align:center"> นายธนศักดิ์ เจริญพัฒนะ</div>
 	
 	     <div style="color:var(--text-second); "class="col v-entry patient" label="patient" name="patient" style="text-align:center">
-			 อายุ : 54 ปี คลินิกโรคเบาหวาน</div>
+			 เพศ ชาย,  อายุ : 54 ปี </div>
 	
 		
 		</div>
@@ -158,30 +182,195 @@
 	<div class="col">
 		
 		
-		<div class="row">
+		<div class="row no-gutters">
+			
+			
+			<div class="col-4">
+				<div class="sense-panel s-empty" style="height:35vh;">
+						<div class="row">
+								<div class="col-12 d-flex justify-content-center bp">
+									SYS/DIA
+								</div>
+						</div>
+						
+						<div class="row">
+								<div class="col-12 d-flex justify-content-center bp main-value">
+									144/80
+								</div>
+						</div>
+						<div class="row">
+								<div class="col-12 d-flex justify-content-center bp">
+									(101) <%='mmHg'%>
+								</div>
+						</div>
+				</div>
+				<div class="sense-panel header" style="height:13vh;">
+				</div>
+				
+			</div>
+			
+			
+			<div class="col-4">
+				<div class="row">
+						<div class="col-12">
+						<div class="sense-panel s-empty pr">
+							
+						<div class="row ">
+							<div class="col-8 " >
+							Pulse
+							</div>
+							<div class="col-4  " style="text-align:right">
+							bpm
+							</div>
+						</div>
+		
+						<div class="row">
+							<div class="col sense-val v-entry " label="pr" name="pr">
+							81
+							</div>
+						</div>
+		
+						<div class="row">
+							<div class="col " >
+							Notification
+							</div>
+			
+						</div>
+						
+						
+						</div>
+						</div>
+				</div>
+				<div class="row">
+						<div class="col-12">
+						<div class="sense-panel s-empty rr">
+							<div class="row ">
+								<div class="col-8 " >
+								Resp
+								</div>
+								<div class="col-4  " style="text-align:right">
+								bpm
+								</div>
+							</div>
+			
+							<div class="row">
+								<div class="col sense-val v-entry " label="rr" name="rr">
+								18
+								</div>
+							</div>
+			
+							<div class="row">
+								<div class="col " >
+								Notification
+								</div>
+				
+							</div>
+							
+						</div>
+						</div>
+				</div>
+				
+			</div>
+			
+			<div class="col-4">
+				<div class="row">
+						<div class="col-12">
+						<div class="sense-panel s-empty spo2">
+								
+								<div class="row ">
+									<div class="col-8 " >
+									SpO2
+									</div>
+									<div class="col-4  " style="text-align:right">
+									%
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col sense-val v-entry " label="spo2" name="spo2">
+									99
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col " >
+									Notification
+									</div>
+					
+								</div>
+								
+								
+								
+								
+								
+								
+								
+								
+						</div>
+						</div>
+				</div>
+				<div class="row">
+						<div class="col-12">
+						<div class="sense-panel s-empty temp">
+								
+								<div class="row ">
+									<div class="col-8 " >
+									Temp
+									</div>
+									<div class="col-4  " style="text-align:right">
+									C
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col sense-val v-entry " label="temp" name="temp">
+									35.6
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col " >
+									Notification
+									</div>
+					
+								</div>
+								
+								
+						</div>
+						</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
 			
 			
 			<%
-				
+			if false 	
 
-			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+			sense_template = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
 			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
 			sense_unit = DataRecord.get_sense_unit 
 				
-			sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}	
+			sense_list_custom = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}	
 			
-			sense_list.each_with_index do |x,xi| 	
+			sense_list_custom.each_with_index do |x,xi| 	
+				
+				ii = sense_list.index(x)
+				ii = 0 unless ii
 				
 			%>
-			
+			<%=sense_list.inspect %>
 			<div class="col-3">
 				<div class="sense-panel s-empty">
-				<div class="row">
+				<div class="row ">
 					<div class="col-8 sense-name" >
-					<%= x %>
+					<%= sense_label[ii] %>
 					</div>
 					<div class="col-4 sense-name" style="text-align:right">
-					<%= sense_unit[xi] %>
+					<%= sense_unit[ii] %>
 					</div>
 				</div>
 				
@@ -202,7 +391,7 @@
 			</div>
 			
 			<% end %>
-	
+		<% end %>
 		</div>
 		
 	</div>
@@ -294,7 +483,13 @@
 		 $('#buffer').append(myAudio);
 		  
 	}
-	  	  
+	$(".btn-clear").click(function(){
+		
+		$('.display-hn').html("");
+		
+	})  
+	
+		  
     $(".btn-hn").on('click',function(){
         var myAudio = document.getElementById('audio-'+cur_buffer)
         myAudio.play();
@@ -317,6 +512,10 @@
                    
         });
     }
+	
+	
+	
+	
 
     function checkInput(d){
         v = $("."+d).html().trim()
@@ -368,10 +567,12 @@
 			$("#opdModalTitle").html($(this).attr('label'))
 			$("#opdModal").modal('toggle')
 		})
+		
 		$("#save-modal").click(function(){
 			value = $(".display-hn").html().trim()
 			if(value==='') value='-'
-			$('.'+current_modal).html(value)
+				
+			$('.'+current_modal+" .v-entry").html(value)
 			
 			if(current_modal=='weight'||current_modal=='height'){
 				if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
