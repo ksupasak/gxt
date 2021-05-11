@@ -152,11 +152,16 @@ require 'nokogiri'
       #
       # content = res.body
     
-      lines = serial.readline("\r")
+      lines = serial.readline("\r").unpack("C*").pack("U*")
       
-      content = lines.split("\n")[4..-1].join("\n")
+      puts lines
+
       
-#      puts content
+
+      content = lines.split("\n")[-1]    
+    
+
+     # puts content
 
       
       document = Nokogiri::HTML(content)
@@ -301,8 +306,10 @@ end
    loop do
   puts 'starting..omron'  
 
-  # device_id = get_device "0483:5740" 
-  device_id = "/dev/ttyACM0"
+
+  #device_id = get_device "0483:5740" 
+  
+  device_id = '/dev/ttyACM0'
 
   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
     

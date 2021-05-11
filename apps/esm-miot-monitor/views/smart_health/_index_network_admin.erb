@@ -275,12 +275,13 @@
 		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id
-		
-		admit = Admit.where(:patient_id=>patient.id).last
+
+		admit = nil
 		
 		phn = ''
 		pname = ''
 		if patient
+			admit = Admit.where(:patient_id=>patient.id).last
 			phn = patient.hn if patient.hn
 			pname = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" 
 		end
