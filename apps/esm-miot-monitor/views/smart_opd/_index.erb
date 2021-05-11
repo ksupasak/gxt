@@ -138,6 +138,26 @@
 	.main-value{
 		font-size:8vh;
 	}
+	
+	/* width */
+	::-webkit-scrollbar {
+	  width: 4px;
+	}
+
+	/* Track */
+	::-webkit-scrollbar-track {
+	  background: var(--bg-second-nav); 
+	}
+ 
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+	  background: var(--text-second); 
+	}
+
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+	  background: var(--bg-second-nav); 
+	}
 
 </style>
 <div class="row top-header">
@@ -233,7 +253,7 @@
 						</div>
 		
 						<div class="row">
-							<div class="col " >
+							<div class="col sense-name" >
 							Notification
 							</div>
 			
@@ -262,7 +282,7 @@
 							</div>
 			
 							<div class="row">
-								<div class="col " >
+								<div class="col sense-name" >
 								Notification
 								</div>
 				
@@ -295,7 +315,7 @@
 								</div>
 				
 								<div class="row">
-									<div class="col " >
+									<div class="col sense-name" >
 									Notification
 									</div>
 					
@@ -331,7 +351,7 @@
 								</div>
 				
 								<div class="row">
-									<div class="col " >
+									<div class="col sense-name" >
 									Notification
 									</div>
 					
@@ -402,18 +422,20 @@
 		
 	</div>
 </div>
-<br/>
+
 
 <div class="row footer">
-	<!-- <div class="col">
-	menu
-	</div>
 	<div class="col">
-	menu
-	</div> -->
+	..
+	</div>
+		
+	<div class="col">
+	<div id="msgs"></div>
+	</div> 
 	<div class="col" style="text-align:right">
 	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn-send ' %>
 	</div>
+	
 </div>
 
 <!-- Modal -->
@@ -622,7 +644,7 @@
 
 	</form>
  
-	<div id="msgs">..</div>
+	
 	<script>
 
 		$('#bp_start').click(function(){
