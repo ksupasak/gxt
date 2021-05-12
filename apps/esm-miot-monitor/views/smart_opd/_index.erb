@@ -436,7 +436,7 @@
 	</div> 
 	<div class="col" style="text-align:right">
 	<%=link_to "ยกเลิก", "index" , :class=>'btn' %>
-	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success' %>
+	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success btn-primary' %>
 	</div>
 	
 </div>
@@ -537,6 +537,9 @@
 
 <script>
     function submitEntry(){
+		
+		
+		
 		$('.btn-primary').html('Loading')
         $.post( "post", prepare() , function( data ) {         
             data.inspect 
