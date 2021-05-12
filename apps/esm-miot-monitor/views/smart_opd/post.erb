@@ -20,23 +20,42 @@
 	    ##############################################################
 	    ##############################################################
 	    ##############################################################
-		puts 'XXX' + params.inspect
+		
 
 	    result = nil
-
+        i = record
     
 	    bps = params[:bp].split('/')
 	    bp_sys = bps[0]
 	    bp_dia = bps[1]
+        pr = params[:pr]
     
-	    pr = params[:pr]
-    
-	    weight = params[:weight]
-	    height = params[:height]
-    
+	    px = {:hn=>params[:hn], :weight=>'', :height=>'', :bmi=>'', :pr=>'', :rr=>'', :spo2=>'',:bp=>i.bp, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :bp_mean=>i.bp_mean}
+	    
+		px[:weight] = format("%.2f",params[:weight].to_f) if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+		px[:height] = format("%.2f",params[:height].to_f) if params[:height] and params[:height]!="" and params[:height]!="-"
+		 
 	
-		px = {:hn=>params[:hn], :weight=>weight, :height=>height, :bp=>params[:bp], :pr=>pr}
+		if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+			
+	    	weight = params[:weight].to_f
+	    	height = params[:height].to_f
+			
+			px.merge! :weight=>format("%.2f",weight),:height=>format("%.2f",height),:bmi=>format("%.2f",weight/height/height*10000) 
 		
+		end
+		
+		px[:pr] = params[:pr] if params[:pr]!='' and params[:pr]!='-'
+		px[:spo2] = params[:spo2] if params[:spo2]!='' and params[:spo2]!='-'
+		px[:temp] = params[:temp] if params[:temp]!='' and params[:temp]!='-'
+		px[:rr] = params[:rr] if params[:rr]!='' and params[:rr]!='-'
+		
+		px[:time] = Time.now.strftime("%H:%M:%S")
+		px[:date] = Time.now.strftime("%Y-%m-%d")
+		
+		px[:serial_number] = Setting.get(:serial_number,'00000')
+		
+		px[:serial_number] = params[:device_id] if params[:device_id]
 		
 	
 	    ##############################################################
@@ -60,7 +79,7 @@
 	      http.read_timeout = 2 # seconds
       
       
-	      request = Net::HTTP::Post.new(url.path, initheader = {'Content-Type' =>'application/json'})
+	      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json'})
 	      request.set_form_data(px)
         
       

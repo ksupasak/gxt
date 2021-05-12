@@ -92,7 +92,7 @@
 		text-align:center;
 	}
 	.sense-name{
-		font-size:3vh;
+		font-size:2.5vh;
 		color:#999;
 	}
 	.footer{
@@ -183,7 +183,8 @@
 	
 		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;" class="d-flex justify-content-between">
 			
-		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;<div class="d-inline-flex v-entry hn" label="hn" name="hn" style="text-align:center"></div></div>
+		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;
+		<div class="d-inline-flex hn v-entry-hn" label="hn" name="hn" style="text-align:center;min-width:150px;border:1px solid;min-height:4vh;border-radius: 1vh;"> <div class="hn-value v-entry"></div></div></div>
 		
 		<div class="col  patient_name " label="patient" name="patient" style="text-align:center"></div>
 	
@@ -253,8 +254,8 @@
 						</div>
 		
 						<div class="row">
-							<div class="col sense-name" >
-							Notification
+							<div class="col sense-name noti" >
+							
 							</div>
 			
 						</div>
@@ -282,8 +283,8 @@
 							</div>
 			
 							<div class="row">
-								<div class="col sense-name" >
-								Notification
+								<div class="col sense-name noti" >
+								
 								</div>
 				
 							</div>
@@ -315,8 +316,8 @@
 								</div>
 				
 								<div class="row">
-									<div class="col sense-name" >
-									Notification
+									<div class="col sense-name noti" >
+									
 									</div>
 					
 								</div>
@@ -351,8 +352,8 @@
 								</div>
 				
 								<div class="row">
-									<div class="col sense-name" >
-									Notification
+									<div class="col sense-name noti" >
+									
 									</div>
 					
 								</div>
@@ -379,7 +380,8 @@
 			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
 			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
 			sense_unit = DataRecord.get_sense_unit 
-				
+			
+			sense_unit = %w{kg cm &nbsp; mg/dL &nbsp;}	
 			# sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}
 			sense_list = %w{weight height bmi glucose score }.collect{|i| i.to_sym}	
 			
@@ -392,10 +394,10 @@
 			<div class="col-2">
 				<div class="sense-panel s-empty <%=x%> sense" style="height:18vh;">
 				<div class="row ">
-					<div class="col-8 sense-name" >
+					<div class="col-6 sense-name" >
 					<%= x %>
 					</div>
-					<div class="col-4 sense-name" style="text-align:right">
+					<div class="col-6 sense-name" style="text-align:right">
 					<%= sense_unit[ii] %>
 					</div>
 				</div>
@@ -426,7 +428,7 @@
 
 <div class="row footer">
 	<div class="col">
-	<%=link_to "...", "#" , :class=>' btn ' %>
+	<%=link_to "...", "log" , :class=>' btn ' %>
 	</div>
 		
 	<div class="col">
@@ -482,7 +484,7 @@
         <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
 		
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Submit</button>
       </div>
     </div>
   </div>
@@ -575,43 +577,63 @@
 
         }
     }
-	$(document).keypress(function(e){
-		
-	    if( event.which == 13 ) {
-	       
-		    hn = $(".hn").html().trim()
-		   
-			$.ajax({
-			  url: "find_patient?hn="+hn,
-			  context: document.body
-			}).done(function(data) {
-			  
-			  patient = JSON.parse(data)
-				console.log(patient)
+	
+	function getPatient(){
+	    hn = $(".hn-value").html().trim()
+	 
+		console.log(hn)
+		$.ajax({
+		  url: "find_patient?hn="+hn,
+		  context: document.body
+		}).done(function(data) {
+		  
+		   patient = JSON.parse(data)
+			console.log(patient)
+			
+			patient_name = "ไม่พบข้อมูล"
+			if(patient['first_name']&&patient['first_name'].length>0){
 				
 				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
-					
 				$('.patient_name').html(patient_name)	
 				$('.patient_gender').html(patient['gender'])	
 				$('.patient_age').html(patient['age'])	
+			
+				
+			}else{
+				$('.patient_name').html(patient_name)	
+				$('.patient_gender').html('-')	
+				$('.patient_age').html('-')	
+			}
 				
 				
-				$('#ready').click()
+		
+			
+			
+			$('#ready').click()
+			
+			
+		  // $( this ).addClass( "done" );
+		}); 
+	   
+	}
+	var will_reset_hn = false;
+	$(document).keypress(function(e){
+		
+	    if( event.which == 13 ) {
+	     getPatient();   
+		 will_reset_hn = true;
+		 }else{
+			 if(will_reset_hn){
+			 	will_reset_hn = false;
+			    $(".hn  .v-entry").html('')
 				
-				
-			  // $( this ).addClass( "done" );
-			}); 
-		   
-		   
-		   
-		   
-		   
-		   
-	     }else{
-        v = $(".hn").html().trim()
-        v+=String.fromCharCode(e.keyCode)
+			 }
+		$('.patient_name').html('...')			 
+        v = $(".hn  .v-entry").html().trim()
+        		 
+		v+=String.fromCharCode(e.keyCode)
         
-        $(".hn").html(v.trim())   
+        $(".hn .v-entry").html(v.trim())   
 		 } 
 		
 	})	
@@ -700,8 +722,19 @@
 		
 			var current_modal ;
 
+	        $(".v-entry-hn").click(function(){
+	            v = $(".hn .v-entry").html().trim()
+	            if(v=='-')v = '' 
+				$(".display-hn").html(v)
+			
+				current_modal = $(this).attr('name')
+	            mname = $(this).parent("div").find(".l-entry").html()
+	            $("#opdModalTitle").html($(this).attr('label'))
+	            $("#opdModal").modal('toggle')
+	        })
 	        $(".v-entry").click(function(){
 	            v = $(this).html().trim()
+				console.log(v)
 	            if(v=='-')v = '' 
 				$(".display-hn").html(v)
 			
@@ -715,7 +748,14 @@
 	            value = $(".display-hn").html().trim()
 	            if(value==='') value='-'
 				$('.'+current_modal+" .v-entry").html(value)
-			
+				
+				if(current_modal=='hn'){
+					
+					getPatient();
+					$("#opdModal").modal('toggle')
+				}	
+				else
+				{
 				if(current_modal=='weight'||current_modal=='height'){
 					if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
 						weight = parseFloat($('.weight').html().trim())
@@ -723,7 +763,7 @@
 						bmi = weight /(height*height/10000.0)
 						bmi_text = bmi.toFixed(2);
 					
-	                    $('.bmi').html(bmi_text)
+	                    $('.bmi .v-entry').html(bmi_text)
 	                    checkInput('bmi')
 					}
 				
@@ -731,6 +771,7 @@
 				checkInput(current_modal)
 				$("#opdModal").modal('toggle')
 				sos()
+				}
 			
 	        })
 	        var beep = document.createElement('audio');
@@ -755,8 +796,12 @@
 	
 		function prepare(){
 			var data = {};
-			hn = "<%=params[:hn]%>"
-			var device_id = "<%=params[:device_id]%>"
+			var hn = "<%=params[:hn]%>"
+		
+			var device_id = "<%=Setting.get :serial_number, "00000" %>"
+			<% if params[:device_id] %>
+			device_id = "<%=params[:device_id]%>"
+			<% end %>
 			var today = new Date();
 			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 			var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -772,6 +817,10 @@
 			var height=''
 			var score = ''
 			var bmi =''
+			
+			$('.hn .v-entry').each(function(){
+				hn = $(this).html().trim();
+			})
 		
 			$('.bp_sys .v-entry').each(function(){
 				bp_sys = $(this).html().trim();
