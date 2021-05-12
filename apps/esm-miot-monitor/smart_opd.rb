@@ -5,8 +5,9 @@ class SmartOPDController < GXT
  
   def acl
     
-    return {:index=>'*',:entry=>'*',:log=>'*',:result=>'*',:post=>'*'}
-
+    # return {:index=>'*',:entry=>'*',:log=>'*',:result=>'*',:post=>'*',:find_patient=>'*',:_find_patient=>'*'}
+    
+    return {'*'=>true}
     
   end
  
