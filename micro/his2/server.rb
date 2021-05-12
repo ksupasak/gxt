@@ -269,6 +269,32 @@ CNX
  
       px = params
  
+      ## modify bp
+      
+      sys = px['bp_sys']
+      dia = px['bp_dia']
+      mean = px['bp_mean']
+      
+      px.delete 'bp_sys'
+      px.delete 'bp_dia'
+      px.delete 'bp_mean'
+      px.delete 'bp'
+      
+      px['systolic'] = sys
+      px['diastolic'] = dia
+      px['mean'] = mean
+      
+      
+      px['rr'] = "" unless px['rr']
+      
+      
+      # {"hn"=>"280", "weight"=>"90.0", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>nil, "height"=>"180.0", "bmi"=>nil, "pr"=>"80",
+ #      "rr"=>nil, "spo2"=>"99", "temp"=>"35.4", "serial_number"=>"00000", "time"=>"00:26:14", "date"=>"2021-05-13"}
+ #
+ #
+      
+      
+ 
       request.set_form_data(px)
     
       

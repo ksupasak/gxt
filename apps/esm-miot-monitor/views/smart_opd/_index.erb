@@ -540,8 +540,11 @@
 		$('.btn-primary').html('Loading')
         $.post( "post", prepare() , function( data ) {         
             data.inspect 
+			
+			hn = $('.hn .v-entry').html().trim()
+			
             $("#beep").click()
-            setTimeout(function(){ window.location.replace("result?hn=<%=params[:hn]%>");  }, 1000);
+            setTimeout(function(){ window.location.replace("result?hn="+hn);  }, 1000);
                    
         });
     }

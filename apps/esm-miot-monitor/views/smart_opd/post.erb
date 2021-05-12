@@ -10,11 +10,21 @@
 		
 		admit = Admit.create :patient_id=>patient.id, :status=>'Discharged', :admit_stamp=>params[:datetime], :discharge_stamp=>params[:datetime]
 		
+		bmi = 0 
+	
+		if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+			
+	    	weight = params[:weight].to_f
+	    	height = params[:height].to_f
+			
+			bmi = format("%.2f",weight/height/height*10000)
+		
+		end
 	
   
 		record = DataRecord.create :admit_id=>admit.id, :data=>params.to_json, :bp=>params[:bp], 
-		:bp_sys=>params[:bp_sys], :bp_dia=>params[:bp_dia], :pr=>params[:pr], :spo2=>params[:spo2], :weight=>params[:weight], :height=>params[:height],
-		:temp=>params[:temp],:score=>params[:score],:stamp=>params[:datetime]
+		:bp_sys=>params[:bp_sys], :bp_dia=>params[:bp_dia], :bp_mean=>params[:bp_mean], :pr=>params[:pr], :spo2=>params[:spo2], :weight=>params[:weight], :height=>params[:height],
+		:temp=>params[:temp],:score=>params[:score],:stamp=>params[:datetime], :bmi=>bmi
 		
 		
 	    ##############################################################
@@ -112,4 +122,3 @@
 	
 	
 %>
-<%=params.inspect %>
