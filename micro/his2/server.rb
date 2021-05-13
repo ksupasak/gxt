@@ -274,15 +274,21 @@ CNX
       sys = px['bp_sys']
       dia = px['bp_dia']
       mean = px['bp_mean']
+      pr = px['pr']
+      
       
       px.delete 'bp_sys'
       px.delete 'bp_dia'
       px.delete 'bp_mean'
       px.delete 'bp'
+      px.delete 'pr'
+      
       
       px['systolic'] = sys
       px['diastolic'] = dia
       px['mean'] = mean
+      px['pulse'] = pr
+      
       
       
       px['rr'] = "" unless px['rr']
