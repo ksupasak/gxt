@@ -4,7 +4,7 @@ require 'sinatra/base'
 require 'net/http'
 require 'nokogiri'
 set :bind, '0.0.0.0'
-set :port, 3000
+set :port, 9292
 
 
 #class App < Sinatra::Base
@@ -231,7 +231,7 @@ CNX
     # his_post_opd_url = URI("http://xxxx/bloodpressure/obd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
     
     his_post_opd_url = URI("http://localhost:9292/test_send?hn=#{hn}")
-    his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
+    # his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
     
     
     
