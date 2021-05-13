@@ -112,7 +112,7 @@ return content
     
   his_get_patient_uri = URI("http://xxxx/patient/#{hn}")
     
-  his_get_patient_uri = URI("http://localhost:9292/test_get_patient?hn=#{hn}")
+  his_get_patient_uri = URI("http://172.20.10.5:9292/test_get_patient?hn=#{hn}")
   
   # his_get_patient_uri = URI("http://10.99.0.109/systemx-poc/api/patient/#{hn}")
  
@@ -231,6 +231,7 @@ CNX
     # his_post_opd_url = URI("http://xxxx/bloodpressure/obd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
     
     his_post_opd_url = URI("http://localhost:9292/test_send?hn=#{hn}")
+    his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
     
     
     
