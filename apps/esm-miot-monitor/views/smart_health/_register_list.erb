@@ -1,0 +1,47 @@
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
+<%
+    zone = Zone.find session[:current_zone]
+    hospital = SHHospital.first
+	uh = SHUserHospital.where(:user_id=>session[:identity]).first
+	if uh
+		hospital = SHHospital.find uh.hospital_id
+	end
+	mnet = Hash[SHNetwork.all.collect{|i| [i.id,i.name]}]
+	m_pvname = Hash[Provider.all.collect{|i| [i.id,i.name]}]
+	hosname = Setting.get :default_center_name
+	hosname = hospital.name if hospital
+		
+    
+    if hospital
+        patients = Patient.where(:zone_id=>session[:current_zone],:hospital_id=>hospital.id).all
+    else
+        patients = Patient.where(:zone_id=>session[:current_zone]).all
+    end
+
+    list = SHRelation.all
+    patient_ids = list.collect{|i| i.patient_id}.compact
+    m_re_pat = Hash[list.collect{|i| [i.patient_id,i.id]}]
+    patients = Patient.where(:id=>patient_ids).all
+
+%>
+<table class="table">
+<thead>
+    <tr>
+        <th>HN</th>
+        <th>Name</th>
+        <th>Passcode</th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+<% for p in patients%>
+    <tr class="tr-p" hn="<%=p.hn%>" text="<%=p.name%>">
+        <td><%=p.hn%></td>
+        <td><%=p.name%></td>
+        <td>&nbsp;</td>
+        <td><%=link_to("แสดง", "../SHRelation/show?id=#{m_re_pat[p.id]}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{m_re_pat[p.id]}", :class=>'btn btn-danger')%></td>
+    </tr>
+<% end %>
+</tbody>
+</table>

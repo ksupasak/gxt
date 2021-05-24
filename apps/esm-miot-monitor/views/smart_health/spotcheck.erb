@@ -1,0 +1,44 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
+<style>
+.data-panel{
+    background:white;
+    min-height:70vh;
+    margin-left:5vw;
+    margin-right:5vw;
+    box-shadow: 0px 3px 6px #00002950;
+
+}
+</style>
+<div class="containerx" style="background:none">
+
+<div class="row banner-header justify-content-md-center" style="padding-bottom:20vh">
+    <div class="col-12">
+    <center>
+    <%=link_to @access_title, "index" %>
+    <br>
+    <span style="font-size:0.6em">ระบบบันทึกข้อมูลสุขภาพ</span>
+    </center>
+    </div><!--col-->    
+</div><!--banner-header-->
+
+<div class="row justify-content-md-center" style="margin-top:-20vh">
+    <div class="data-panel col-md-10 col-11 rounded">
+        <div class="step step1 p-3">
+        <center>
+            1.กรุณาสแกนบาร์โค้ด
+        </center>
+        </div><!--step1-->
+    </div>
+</div>   
+
+<div class="row " style="padding-top:5vh">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4 col-12">
+        <a href="#" class="btn btn-lg btn-pcm">ต่อไป</a>
+    </div>
+</div> 
+</div><!--container-->
