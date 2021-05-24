@@ -12,6 +12,9 @@
     box-shadow: 0px 3px 6px #00002950;
 
 }
+.step{
+    font-size:3vh;
+}
 </style>
 <div class="containerx" style="background:none">
 
@@ -27,29 +30,66 @@
 
 <div class="row justify-content-md-center" style="margin-top:-20vh">
     <div class="data-panel col-md-10 col-11 rounded">
+        <input type="hidden" id="hidstep" value="1">
         <div class="step step1 p-3">
         <center>
             1.กรุณาสแกนบาร์โค้ด
         </center>
         </div><!--step1-->
+        <div class="step step2 p-3">
+        <center>
+            2.กรุณาวัดความดัน
+        </center>
+        </div><!--step2-->
+        <div class="step step3 p-3">
+        <center>
+            3.กรุณาวัดอุณหภูมิร่างกาย
+        </center>
+        </div><!--step3-->
+        <div class="step step4 p-3">
+        <center>
+            4.กรุณาวัดค่าออกซิเจนในเลือด
+        </center>
+        </div><!--step4-->
+        <div class="step step5 p-3">
+        <center>
+            5.สรุปผลการวัดค่า
+        </center>
+        </div><!--step5-->     
+        <div class="step step6 p-3">
+        <center>
+            ส่งผลตรวจร่างกายสำเร็จ
+        </center>
+        </div><!--step6-->              
     </div>
 </div>   
 
 <div class="row " style="padding-top:5vh">
     <div class="col-sm-4"></div>
     <div class="col-sm-4 col-12">
-        <a href="#" class="btn btn-lg btn-pcm" id="btn-next">ต่อไป</a>
+        <a href="#" class="btn btn-lg btn-primary" id="btn-next">ต่อไป</a>
     </div>
 </div> 
 </div><!--container-->
 
 <script>
 function nextstep(){
+    s = $("#hidstep").val()
+    try{
+        i = parseInt(s)
+        i++
+        if(i==7) i=1
+        $(".step").hide()
+        $(".step"+i).show()
+        $("#hidstep").val(i)
+    }catch(e){}
 
 }
 $(document).ready(function(){
     $("#btn-next").click(function(){
         nextstep()
     })
+    $(".step").hide()
+    $(".step1").show()
 })
 </script>
