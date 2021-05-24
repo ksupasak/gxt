@@ -231,6 +231,9 @@ CNX
     # his_post_opd_url = URI("http://xxxx/bloodpressure/obd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
     
     his_post_opd_url = URI("http://localhost:9292/test_send?hn=#{hn}")
+    
+    his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
+    
     # his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
     
     
@@ -255,14 +258,27 @@ CNX
     begin
    
       
+      # uri = URI.parse(encoded_url)
+   #      http = Net::HTTP.new(uri.host, uri.port)
+   #      http.use_ssl = true if uri.instance_of? URI::HTTPS
+   #      request = Net::HTTP::Post.new(uri.request_uri)
+      
 
       http = Net::HTTP.new(url.host, url.port)
-      http.read_timeout = 2 # seconds
+      http.use_ssl = true #if uri.instance_of? URI::HTTPS
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.read_timeout = 10 # seconds
       
       # --header 'Content-Type:application/json' --header 'Accept:application/json'
       # puts url.path
       # puts url.full_path
       # puts "#{url.path}?#{url.query}"
+      
+  
+     
+
+      # request = Net::HTTP::Post.new(uri.path, request_header)
+      
       
       request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json', 'Accept'=>'application/json'})
  
@@ -303,9 +319,19 @@ CNX
       
  
       request.set_form_data(px)
+      # puts px.to_json
+   #    request.body = px.to_json
     
       
-      response = Net::HTTP.start(url.host, url.port, :open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+      # response = Net::HTTP.start(url.host, url.port, :open_timeout => 5, :read_timeout => 10) {|http|
+      #
+      #
+      #    http.request(request)
+      #
+      #  }
+      
+      
+      response = http.request(request)
       
       puts "RESPONSE #{response.body}"
       
