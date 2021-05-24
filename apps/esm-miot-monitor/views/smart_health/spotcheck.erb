@@ -1,3 +1,13 @@
+<%
+	
+if @current_user
+	
+%>
+<script>
+	$('.navbar').remove()
+	$('body').css('padding','0px')	
+</script>
+<% end %>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">

@@ -27,7 +27,7 @@ module EsmMiotMonitor
     
       def acl
     
-        return {:patient_upload=>'*',:dashboard=>'*'}
+        return {:patient_upload=>'*',:dashboard=>'*',:spotcheck=>'*'}
     
       end
       

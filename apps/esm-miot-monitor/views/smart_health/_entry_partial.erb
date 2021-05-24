@@ -1,0 +1,725 @@
+
+<!-- Modal for vital sign -->
+<div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="opdModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+        <div class="display-hn display-hn-pad">
+        -
+        </div>
+        <table width="300px">
+        <tr>
+            <td><div class="btn-hn">1</div></td>
+            <td><div class="btn-hn">2</div></td>
+            <td><div class="btn-hn">3</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">4</div></td>
+            <td><div class="btn-hn">5</div></td>
+            <td><div class="btn-hn">6</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">7</div></td>
+            <td><div class="btn-hn">8</div></td>
+            <td><div class="btn-hn">9</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">.</div></td>
+            <td><div class="btn-hn">0</div></td>
+            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
+        </tr>
+        </table>
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for neuro-sign -->
+<div class="modal fade" id="neuroModal" tabindex="-1" role="dialog" aria-labelledby="neuroModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="neuroModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <center>
+		<div id="neuroBody">
+        </center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="buffer">
+</div>
+
+<form id="form" action="post" method="post">
+
+<input class="hn_val" name="hn" value="" type="hidden"/>
+<input class="datetime_val" name="datetime" value="" type="hidden"/>
+<input class="bp_val" name="bp" value="" type="hidden"/>
+<input class="bp_sys_val" name="bp_sys" value="" type="hidden"/>
+<input class="bp_dia_val" name="bp_dia" value="" type="hidden"/>
+<input class="pr_val" name="pr" value="" type="hidden"/>
+<input class="spo2_val" name="spo2" value="" type="hidden"/>
+<input class="weight_val" name="weight" value="" type="hidden"/>
+<input class="height_val" name="height" value="" type="hidden"/>
+<input class="bmi_val" name="bmi" value="" type="hidden"/>
+<input class="temp_val" name="temp" value="" type="hidden"/>
+<input class="rr_val" name="rr" value="" type="hidden"/>
+<input class="score_val" name="score" value="" type="hidden"/>
+<input class="glucose_val" name="glucose" value="" type="hidden"/>
+
+
+<input class="eye_val" name="eye" value="" type="hidden"/>
+<input class="motor_val" name="motor" value="" type="hidden"/>
+<input class="verbal_val" name="verbal" value="" type="hidden"/>
+<input class="pupil_val" name="pupil" value="" type="hidden"/>
+
+
+
+</form>
+
+
+  <script>
+	  var msg = "";
+
+    function hnPush(s){
+        v = $(".display-hn").html().trim()
+        b = s.html()
+        if(b.indexOf("img")!==-1){
+            v = v.substr(0,v.length-1)
+        }else{
+            v+=b
+        }
+        $(".display-hn").html(v)       
+    }
+
+    var buffer = 10;
+	var cur_buffer = 0 ;
+	
+	for(var i=0;i<buffer;i++){
+		var myAudio = document.createElement('audio');
+		  myAudio.setAttribute("id","audio-"+i)
+		 if (myAudio.canPlayType('audio/mpeg')) {
+			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+		 }
+		 $('#buffer').append(myAudio);
+		  
+	}
+	$(".btn-clear").click(function(){
+		
+		$('.display-hn').html("");
+		
+	})  
+	
+		  
+    $(".btn-hn").on('click',function(){
+        var myAudio = document.getElementById('audio-'+cur_buffer)
+        myAudio.play();
+        cur_buffer+=1;
+        if(cur_buffer==10)cur_buffer=0;
+        hnPush($(this))      
+        return false;
+    })
+    </script>
+</div>
+<!-- Modal -->
+
+<script>
+    function submitEntry(){
+		
+		
+		
+		$('.btn-primary').html('Loading')
+        $.post( "post", prepare() , function( data ) {         
+            data.inspect 
+			
+			hn = $('.hn .v-entry').html().trim()
+			
+            $("#beep").click()
+            // 
+        $(".step").hide()
+        $(".step6").show()
+			setTimeout(function(){ window.location.replace("index");  }, 1000);
+			       
+        });
+    }
+	
+	
+	
+	
+
+    function checkInput(d){
+		// alert(d)
+		
+		try {
+		console.log(d)
+        v = $("."+d +" .v-entry").html().trim()
+        c = $("."+d +" .v-entry").closest(".sense-panel")
+        // prefix="de-"
+        // if(c.hasClass("d-entry-dark")) prefix="dk-"
+        if(v!==''&&v!=='-'){              
+            c.addClass("s-active").removeClass("s-empty")      
+        }else{
+            c.addClass("s-empty").removeClass("s-active")
+        }
+        isComplete = true
+
+        if(isComplete){
+	
+            // if($(".btn-entry").attr('class')){
+				$("#ready").click()
+				$(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+                $('.btn-opd').click(submitEntry)
+             
+            // }
+        }else{
+            $('.btn-opd').unbind()
+            $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
+
+        }
+		
+		
+		
+	
+		}
+		catch(err) {
+			alert(err.message)
+		  // document.getElementById("demo").innerHTML = err.message;
+		}
+		
+    }
+	
+	function getPatient(){
+	    hn = $(".hn-value").html().trim()
+	 
+		console.log(hn)
+		$.ajax({
+		  url: "find_patient?hn="+hn,
+		  context: document.body
+		}).done(function(data) {
+		  
+		   patient = JSON.parse(data)
+			console.log(patient)
+			
+			patient_name = "ไม่พบข้อมูล"
+			if(patient['first_name']&&patient['first_name'].length>0){
+				
+				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
+				$('.patient_name').html(patient_name)	
+				$('.patient_gender').html(patient['gender'])	
+				$('.patient_age').html(patient['age'])	
+			
+				
+			}else{
+				$('.patient_name').html(patient_name)	
+				$('.patient_gender').html('-')	
+				$('.patient_age').html('-')	
+			}
+				
+				
+		
+			
+			
+			$('#ready').click()
+			
+			
+		  // $( this ).addClass( "done" );
+		}); 
+	   
+	}
+	var will_reset_hn = true;
+	$(document).keypress(function(e){
+		
+	    if( event.which == 13 ) {
+	     getPatient();   
+		 will_reset_hn = true;
+		 }else{
+			 if(will_reset_hn){
+			 	will_reset_hn = false;
+			    $(".hn  .v-entry").html('')
+				
+			 }
+		$('.patient_name').html('...')			 
+        v = $(".hn  .v-entry").html().trim()
+        		 
+		v+=String.fromCharCode(e.keyCode)
+        
+        $(".hn .v-entry").html(v.trim())   
+		 } 
+		
+	})	
+
+	$(document).ready(function(){
+		// var current_modal ;
+		//
+		// $(".v-entry").click(function(){
+		// 	v = $(this).html().trim()
+		// 	if(v=='-')v = ''
+		// 	$(".display-hn").html(v)
+		//
+		// 	current_modal = $(this).attr('name')
+		// 	mname = $(this).parent("div").find(".l-entry").html()
+		// 	$("#opdModalTitle").html($(this).attr('label'))
+		// 	$("#opdModal").modal('toggle')
+		// })
+		//
+		// $("#save-modal").click(function(){
+		// 	value = $(".display-hn").html().trim()
+		// 	if(value==='') value='-'
+		//
+		// 	$('.'+current_modal+" .v-entry").html(value)
+		//
+		// 	if(current_modal=='weight'||current_modal=='height'){
+		// 		if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
+		// 			weight = parseFloat($('.weight').html().trim())
+		// 			height = parseFloat($('.height').html().trim())
+		// 			bmi = weight /(height*height/10000.0)
+		// 			bmi_text = bmi.toFixed(2);
+		//
+		// 			$('.bmi').html(bmi_text)
+		// 			checkInput('bmi')
+		// 		}
+		//
+		// 	}
+		// 	checkInput(current_modal)
+		// 	$("#opdModal").modal('toggle')
+		// 	// sos()
+		//
+		// })
+
+	})
+</script>
+	
+	
+	<form id="form" action="post" method="post">
+
+	<input class="hn_val" name="hn" value="" type="hidden"/>
+	<input class="datetime_val" name="datetime" value="" type="hidden"/>
+	<input class="bp_val" name="bp" value="" type="hidden"/>
+	<input class="bp_sys_val" name="bp_sys" value="" type="hidden"/>
+	<input class="bp_dia_val" name="bp_dia" value="" type="hidden"/>
+	<input class="pr_val" name="pr" value="" type="hidden"/>
+	<input class="spo2_val" name="spo2" value="" type="hidden"/>
+	<input class="weight_val" name="weight" value="" type="hidden"/>
+	<input class="height_val" name="height" value="" type="hidden"/>
+	<input class="bmi_val" name="bmi" value="" type="hidden"/>
+	<input class="temp_val" name="temp" value="" type="hidden"/>
+	<input class="score_val" name="score" value="" type="hidden"/>
+
+
+
+	</form>
+ 
+	
+	<script>
+
+		$('#bp_start').click(function(){
+			//alert('start')
+			if(typeof device_interface === 'undefined'){
+			
+			}else{
+				device_interface.bp_start();
+			}
+		
+		
+		})
+		$('.btn-clear').click(function(){
+			$(".display-hn").html('')
+	        var myAudio = document.getElementById('audio-0')
+	        myAudio.play();
+		})
+    
+	    $(document).ready(function(){
+		
+			var current_modal ;
+
+	        $(".v-entry-hn").click(function(){
+	            v = $(".hn .v-entry").html().trim()
+	            if(v=='-')v = '' 
+				$(".display-hn").html(v)
+			
+				current_modal = $(this).attr('name')
+	            mname = $(this).parent("div").find(".l-entry").html()
+	            $("#opdModalTitle").html($(this).attr('label'))
+	            $("#opdModal").modal('toggle')
+	        })
+	        $(".v-entry").click(function(){
+	            v = $(this).html().trim()
+				console.log(v)
+	            if(v=='-')v = '' 
+				$(".display-hn").html(v)
+			
+				current_modal = $(this).attr('name')
+	            mname = $(this).parent("div").find(".l-entry").html()
+	            $("#opdModalTitle").html($(this).attr('label'))
+	            $("#opdModal").modal('toggle')
+	        })
+		
+			$("#save-modal").click(function(){
+	            value = $(".display-hn").html().trim()
+	            if(value==='') value='-'
+				$('.'+current_modal+" .v-entry").html(value)
+				
+				if(current_modal=='hn'){
+					
+					getPatient();
+					$("#opdModal").modal('toggle')
+				}	
+				else
+				{
+				if(current_modal=='weight'||current_modal=='height'){
+					if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
+						weight = parseFloat($('.weight').html().trim())
+						height = parseFloat($('.height').html().trim())
+						bmi = weight /(height*height/10000.0)
+						bmi_text = bmi.toFixed(2);
+					
+	                    $('.bmi .v-entry').html(bmi_text)
+	                    checkInput('bmi')
+					}
+				
+				}
+				checkInput(current_modal)
+				$("#opdModal").modal('toggle')
+				sos()
+				}
+			
+	        })
+	        var beep = document.createElement('audio');
+	        if (beep.canPlayType('audio/mpeg')) {
+	            beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+	        }	
+	        var ready = document.createElement('audio');
+	        if (ready.canPlayType('audio/mpeg')) {
+	            ready.setAttribute('src','<%=url_for 'sounds/Wood_Plank_Flicks.mp3'%>');
+	        }	
+        
+	        $("#beep").on("click",function(){
+	            beep.play();       
+	        })
+
+	        $("#ready").on("click",function(){
+	            ready.play();       
+	        })
+		
+		
+	    })
+	
+		function prepare(){
+			var data = {};
+			var hn = "<%=params[:hn]%>"
+		
+			var device_id = "<%=Setting.get :serial_number, "00000" %>"
+			<% if params[:device_id] %>
+			device_id = "<%=params[:device_id]%>"
+			<% end %>
+			var today = new Date();
+			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+			var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+			var datetime = date+'T'+time;
+			var bp=''
+			var bp_sys=''
+			var bp_dia=''
+			var bp_mean=''
+			var pr=''
+			var spo2=''
+			var temp=''
+			var weight=''
+			var height=''
+			var score = ''
+			var bmi =''
+			
+			$('.hn .v-entry').each(function(){
+				hn = $(this).html().trim();
+			})
+		
+			$('.bp_sys .v-entry').each(function(){
+				bp_sys = $(this).html().trim();
+			})
+			$('.bp_dia  .v-entry').each(function(){
+				bp_dia = $(this).html().trim();
+			})
+		
+			$('.bp_mean .v-entry').each(function(){
+				bp_mean = $(this).html().trim();
+			})
+		
+			$('.weight .v-entry').each(function(){
+				weight = $(this).html().trim();
+			})
+			$('.height .v-entry').each(function(){
+				height = $(this).html().trim();
+			})
+			$('.bmi .v-entry').each(function(){
+				bmi = $(this).html().trim();
+			})
+		
+		
+		
+			$('.pr .v-entry').each(function(){
+				pr = $(this).html().trim();
+			})
+			$('.spo2 .v-entry').each(function(){
+				spo2 = $(this).html().trim();
+			})
+		
+			$('.temp .v-entry').each(function(){
+				temp = $(this).html().trim();
+			})
+		
+			$('.score .v-entry').each(function(){
+				score = $(this).html().trim();
+			})
+		
+		
+			bp = ""+bp_sys+"/"+bp_dia
+		
+		
+		
+		
+		 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+			return data
+	    }
+
+
+
+
+		var wait_monitor = true;
+		var wait_scaler = true; 
+	
+		// S0. S1
+		// M0. M1
+	
+	
+		function sos(){
+		
+			score = 0
+			count = 0 
+			list = ['spo2', 'bp_sys', 'temp', 'pr']
+			err = [];
+			for(var i=0;i<list.length;i++){
+			
+				v = list[i]
+				s = 0 
+				title = ""
+				t = $('.'+v+" .v-entry").html().trim()
+				if(t!=''&&t!='-'&&t!='0'){
+					x = parseFloat(t)
+					count++;
+					if(v=='temp'){
+						title = "temp"
+						if(x<=35)s=-2;
+						if(x>=35.1&&x<=36)s=-1;
+						if(x>=36.1&&x<=38)s=0;
+						if(x>=38.1&&x<=38.4)s=1;
+						if(x>=38.5)s=2;
+					
+					}else
+					if(v=='bp_sys'){
+						title = "BP systolic"
+						if(x<=80)s=-3;
+						if(x>=81&&x<=90)s=-2;
+						if(x>=91&&x<=100)s=-1;
+						if(x>=101&&x<=180)s=0;
+						if(x>=181&&x<=199)s=1;
+						if(x>=200)s=2;
+					
+					}else
+					if(v=='pr'){
+						title = "Pulse rate"
+						if(x<=40)s=-3;
+						if(x>=41&&x<=50)s=-1;
+						if(x>=51&&x<=100)s=0;
+						if(x>=100&&x<=120)s=1;
+						if(x>=121&&x<=139)s=2;
+						if(x>=140)s=3;
+					
+					}
+				
+					if(s!=0){
+						score+=Math.abs(s)
+						if(s<0)
+							err.push("- Under "+title)
+						else
+							err.push("- Over "+title)
+					
+					}
+				
+				}
+			
+			}
+			console.log(err)
+		
+			if(count>0){
+				$('.score .v-entry').html(score)
+	 	   		checkInput('score')
+			}
+			$('.alert').html(err.join('&nbsp;'))
+		
+		
+		}
+	
+	
+		function deviceSend(msg){
+	
+			$('#msg').html(msg);
+		
+			map = {}
+		
+			list = msg.split("|")
+			for(var i=0;i<list.length;i++){
+				p = list[i].split(":");
+				map[p[0]] = p[1];
+			}
+		
+			if(map['PR']=='-99'){
+				map['PR']='-'
+				map['SPO2']='-'
+			}	
+			
+			if(map['T1']&&map['T1']!=''){
+				c = parseFloat(map['T1']).toFixed(1)
+				$('.temp .v-entry').html(c);
+				checkInput('temp')
+			}
+		
+			if(map['STATUS']=='M0'||map['STATUS']=='M1'){		
+			    if(wait_monitor||map['STATUS']=='M1'){
+	                $('.pr .v-entry').html(map['PR'])
+	                $('.spo2 .v-entry').html(map['SPO2'])
+	                checkInput('pr')
+	                checkInput('spo2')
+			
+	                // $('.temp').html(map['T1'])
+              
+                
+
+	                if(map['STATUS']=='M1'){	
+	                    $('.bp_sys .v-entry').html(map['SYS'])
+	                    $('.bp_dia .v-entry').html(map['DIA'])
+	                    $('.bp_mean .v-entry').html(map['MEAN'])
+                    
+						checkInput('bp_sys')
+	                    checkInput('bp_dia')
+					
+	                    wait_monitor = false;
+	                    // $('.mean').html(map['MEAN'])
+	                }
+	            }
+			}
+		
+			if(map['STATUS']=='T1'){
+					c = parseFloat(map['T1']).toFixed(1)
+					$('.temp .v-entry').html(c);
+					checkInput('temp')
+			}
+		
+			if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
+			
+				var w = parseFloat(map['WEIGHT'])
+				var h = parseFloat(map['HEIGHT'])
+			
+			
+				var bmi = (w/(h*h)).toFixed(2);
+				// if(map['STATUS']=='S0'&&wait_scaler){
+	// 				w = parseFloat(map['CWEIGHT'])
+	// 				bmi = 'Processing'
+	// 			}else{
+	//
+	// 			}
+			
+				if(map['STATUS']=='S1'){
+					$('.height .v-entry').html((h*100).toFixed(1));
+					$('.weight .v-entry').html(w);
+	                $('.bmi .v-entry').html(bmi);
+				
+	                // checkInput('height')
+ // 	                checkInput('weight')
+ // 	                checkInput('bmi')
+					wait_scaler=false;
+				}
+			
+			
+			}
+		
+		
+			sos()
+		
+		}
+
+		$('.demo').click(function(){
+		
+			deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
+			deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			deviceSend('STATUS:T1|T1:35.4')
+		
+		
+		
+		})
+	
+	 var show = function(el){
+	       return function(msg){ el.innerHTML = msg  }
+	     }(document.getElementById('msgs'));
+	
+	
+	  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+	 var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+
+	 ws.onopen    = function()  { show('websocket opened'); 
+
+	 	ws.send('WS.Select name=<%=session.id%>\n["Monitor.Update device_id=*"]')
+
+	 };
+
+
+	 ws.onclose   = function()  { show('websocket closed'); 
+
+		setTimeout(function () {
+	      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	   }, 2000); //will call the function after 2 secs.
+
+
+	 }
+
+	 ws.onmessage = function(m) { 
+		 show('websocket msg'); 
+ 
+	 	console.log(m.data)
+		 cmds = m.data.split("\n")
+		 for(var ii in cmds){
+			 i = cmds[ii]
+		 	deviceSend(i)
+		 }
+	 
+	 }
+ 
+    
+
+	</script>

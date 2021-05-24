@@ -57,6 +57,8 @@ if request.post?
 			role = 'hospital'
 			role = 'hospital_admin' if params[:record][:provider_type] == 'admin'
 			role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
+			role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
+			
 			
 			
 			
