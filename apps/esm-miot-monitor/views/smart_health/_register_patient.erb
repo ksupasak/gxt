@@ -12,16 +12,20 @@
 	hosname = Setting.get :default_center_name
 	hosname = hospital.name if hospital
 		
-    
-    if hospital
-        patients = Patient.where(:zone_id=>session[:current_zone],:hospital_id=>hospital.id).all
-    else
-        patients = Patient.where(:zone_id=>session[:current_zone]).all
-    end
+    id = params[:id]
+    hn = params[:hn]
+    name = params[:name]
+    passport = params[:passport]
 
-    list = SHRelation.all
-    patient_ids = list.collect{|i| i.patient_id}.compact
-    m_re_pat = Hash[list.collect{|i| [i.patient_id,i.id]}]
-    patients = Patient.where(:id=>patient_ids).all
+    if id and id!=''
+        patient = Patient.find id
+        patient.update_attributes :hn=>hn,:name=>name,:passport=>passport
+    else
+        patient = Patient.create :hn=>hn,:name=>name,:passport=>passport
+        relation = SHRelation.create :patient_id=>patient.id,:hospital_id=>uh.hospital_id
+        admit = Admit.create :patient_id=>patient.id , :status=>'NEW', :zone_id=> session[:current_zone], :admit_stamp=>Time.now
+    end
+ 
+
 
 %>

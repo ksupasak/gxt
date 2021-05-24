@@ -727,7 +727,11 @@ reportid = "&record_id=#{report.id}" if report
         </div>
 		<br/>
 		<div class="btn-noline">
-        <a href="index" class="d-flex justify-content-center">
+		<%
+			return_url='index'
+			return_url= params[:return] if params[:return]
+		%>
+        <a href="<%=return_url%>" class="d-flex justify-content-center">
             <p>กลับสู่หน้าหลัก</p>
         </a>
 		</div>

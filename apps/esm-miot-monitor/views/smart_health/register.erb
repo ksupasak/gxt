@@ -13,7 +13,7 @@
         Name <input type="text" class="form-control" id="patient-name" name="patient[name]" value="" placeholder="ชื่อ นามสกุล" style="">
     </div><!--col-->
     <div class="col-sm-4">
-        Passcode <input type="text" class="form-control" id="patient-note" name="patient[note]" value="" placeholder="วันเดือนปีเกิด ตัวอย่าง 31022564" style="">
+        Passcode <input type="text" class="form-control" id="patient-passport" name="patient[passport]" value="" placeholder="วันเดือนปีเกิด ตัวอย่าง 31022564" style="">
     </div><!--col-->
     <div class="col-md-6 col-12 pt-4">
         <div class="row">
@@ -25,7 +25,7 @@
 
 
 
-<div class="div-patient bg-panel">	
+<div class="div-patient bg-panel" id="div-patient">	
 <%=inline(this,:'_register_list')%>	  
 </div><!--div-patient-->
 
@@ -34,13 +34,20 @@
 
 <script>
 function add_patient(){
-    $.ajax({
-        url:"register_patient",
-        data:{}
-    }).done(function(data){
-        alert("เพิ่มผู้ป่วยใหม่สำเร็จ")
-        reload_patient()
-    })    
+    hn = $("#patient-hn").val()
+    name = $("#patient-name").val()
+    passport = $("#patient-passport").val()
+    if(hn==''){alert('กรุณากรอกเลข HN')}
+    else if(name==''){alert('กรุณากรอก ชื่อ นามสกุล')}
+    else{
+        $.ajax({
+            url:"register_patient",
+            data:{hn:hn,name:name,passport:passport}
+        }).done(function(data){
+            alert("เพิ่มผู้ป่วยใหม่สำเร็จ")
+            reload_patient()
+        })    
+    }
 }
 function reload_patient(){
     $.ajax({

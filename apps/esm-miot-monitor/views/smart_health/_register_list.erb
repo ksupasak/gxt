@@ -19,10 +19,12 @@
         patients = Patient.where(:zone_id=>session[:current_zone]).all
     end
 
-    list = SHRelation.all
+    # list = SHRelation.all
+    list = SHRelation.where(:hospital_id=>uh.hospital_id).all
     patient_ids = list.collect{|i| i.patient_id}.compact
     m_re_pat = Hash[list.collect{|i| [i.patient_id,i.id]}]
-    patients = Patient.where(:id=>patient_ids).all
+    m_admit = Hash[Admit.where(:patient_id=>patient_ids).all.collect{|i| [i.patient_id,i.id]}]
+    patients = Patient.where(:id=>patient_ids).all.sort{|a,b| b.created_at<=>a.created_at}
 
 %>
 <table class="table">
@@ -39,9 +41,21 @@
     <tr class="tr-p" hn="<%=p.hn%>" text="<%=p.name%>">
         <td><%=p.hn%></td>
         <td><%=p.name%></td>
-        <td>&nbsp;</td>
-        <td><%=link_to("แสดง", "../SHRelation/show?id=#{m_re_pat[p.id]}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{m_re_pat[p.id]}", :class=>'btn btn-danger')%></td>
+        <td><%=p.passport%></td>
+        <td>
+        <%=link_to("แสดง", "show?id=#{m_admit[p.id]}&return=register", :class=>'btn btn-success')%>
+        <a href="#" class="btn btn-danger" pid="<%=m_re_pat[p.id]%>">ลบ</a>
+        </td>
     </tr>
 <% end %>
 </tbody>
 </table>
+<script>
+$(document).ready(function(){
+    $(".btn-danger").click(function(){
+        if(confirm('ท่านยืนยันการลบรายชื่อผู้ป่วยใช่หรือไม่?')){
+            document.location.href="../SHRelation/destroy?id="+$(this).attr('pid')+"&return=../SmartHealth/register"
+        }
+    })
+})
+</script>
