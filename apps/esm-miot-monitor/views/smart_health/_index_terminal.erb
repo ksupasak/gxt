@@ -83,7 +83,7 @@ if @current_user
           <!-- <div class="entry  hn" style="height:100px;font-size:0.5em">
 			<div class="col-12  v-entry px-0 patient_name"  style="border:0px solid;" label="HN" name="patient"></div>
 		</div> -->
-			<img src="<%=url_for('../../miot/img/health/fh-p2.png') %>" width="100%">
+			<img src="<%=url_for('../../miot/img/health/barcodescan.png') %>" style="height:30vh">
         </center>
         </div><!--step1-->
         <div class="step step2 p-3">
@@ -187,7 +187,7 @@ if @current_user
 	<div class="row">
 		<div class="col-12">
         <div class="d-flex justify-content-center mt-5">
-            <a href="#" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center btn-opd">
+            <a href="#" class="btn btn-lg btn-primary btn-submit d-flex align-items-center justify-content-center btn-opd">
                 บันทึก
             </a>
 
@@ -224,20 +224,21 @@ if @current_user
         <div class="step step6 p-3">
         <center>
             ส่งผลตรวจร่างกายสำเร็จ
-			<br><span style="color:green;font-size:30vh;"><i class="fas fa-check-circle"></i></span>
+			<br><!--<span style="color:green;font-size:30vh;"><i class="fas fa-check-circle"></i></span>-->
+			<img src="<%=url_for('../../miot/img/svg/check-circle-solid.svg') %>"  style="height:40vh;padding-top:5vh">
         </center>
         </div><!--step6-->              
     </div>
 </div>   
 
 <div class="row justify-content-center" style="padding-top:5vh;">
-    <div class="col-sm-4 col-6 ">
-		<a href="#" class="btn btn-lg " id="btn-back">ย้อนกลับ</a>
+    <div id="div-back" class="col-sm-4 col-6 ">
+		<a href="#" class="btn btn-lg btn-primary" id="btn-back">ย้อนกลับ</a>
 
    </div>
-    <div class="col-sm-4 col-6">
+    <div id="div-next" class="col-sm-4 col-6">
 		
-        <a href="#" class="btn btn-lg " id="btn-next">ต่อไป</a>
+        <a href="#" class="btn btn-lg btn-primary" id="btn-next">ต่อไป</a>
     </div>
 </div> 
 </div><!--container-->
@@ -245,16 +246,28 @@ if @current_user
 <script>
 
 function backstep(){
-	    s = $("#hidstep").val()
-	    try{
-	        i = parseInt(s)
-	        i--
-	        if(i==7) i=1
-        $(".step").slideUp()
-        $(".step"+i).slideDown()
-	        
-	        $("#hidstep").val(i)
-	    }catch(e){}
+	s = $("#hidstep").val()
+	try{
+		i = parseInt(s)
+		i--
+		if(i<1){ 
+			i=1
+		}else{
+			$(".step").slideUp()
+			$(".step"+i).slideDown()
+		}
+		$("#hidstep").val(i)
+		if(i==1||i==6){
+			$("#div-back").hide()
+			$("#div-next").show()
+		}else if(i==5){
+			$("#div-next").hide()
+			$("#div-back").show()
+		}else{
+			$("#div-back").show()
+			$("#div-next").show()
+		} 
+	}catch(e){}
 
 }
 function nextstep(){
@@ -266,6 +279,16 @@ function nextstep(){
         $(".step").slideUp()
         $(".step"+i).slideDown()
         $("#hidstep").val(i)
+		if(i==1||i==6){
+			$("#div-back").hide()
+			$("#div-next").show()
+		}else if(i==5){
+			$("#div-next").hide()
+			$("#div-back").show()
+		}else{
+			$("#div-back").show()
+			$("#div-next").show()
+		} 
     }catch(e){}
 
 }
@@ -278,6 +301,7 @@ $(document).ready(function(){
     })
     $(".step").hide()
     $(".step1").show()
+	$("#div-back").hide()
 })
 </script>
 
