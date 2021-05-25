@@ -39,10 +39,10 @@
         </center>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+        <button type="button" class="btn btn-clear " style="float:left" >ล้างข้อมูล</button>
 		
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิืด</button>
+        <button type="button" class="btn btn-success" id="save-modal">บันทึกข้อมูล</button>
       </div>
     </div>
   </div>
@@ -195,6 +195,7 @@
             // if($(".btn-entry").attr('class')){
 				$("#ready").click()
 				$(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+				$('.btn-opd').unbind()
                 $('.btn-opd').click(submitEntry)
              
             // }
@@ -231,10 +232,12 @@
 			if(patient['first_name']&&patient['first_name'].length>0){
 				
 				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
-				$('.patient_name').html(patient_name)	
+				$('.patient_name').html("ชื่อ ​: "+patient_name+" hn ​: "+hn)	
+				$('.patient_hn').html("hn ​: "+hn)	
+				
 				$('.patient_gender').html(patient['gender'])	
 				$('.patient_age').html(patient['age'])	
-			
+				nextStep
 				
 			}else{
 				$('.patient_name').html(patient_name)	

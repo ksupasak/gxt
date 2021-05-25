@@ -69,12 +69,20 @@ if @current_user
 <div class="row justify-content-md-center" style="margin-top:-20vh">
     <div class="data-panel col-md-10 col-11 rounded">
         <input type="hidden" id="hidstep" value="1">
+		
+		<center class="entry">
+	   <div class="col-12  v-entry px-0 patient_name"  style="border:0px solid;font-size:1.5em;margin-top:10px" label="HN" name="patient"></div>
+	   	</center>
+	
         <div class="step step1 p-3">
         <center>
             1.กรุณาสแกนบาร์โค้ด
           <div class="entry  hn" style="">
 			<div class="col-12  v-entry px-0 hn-value"  style="border:0px solid;" label="HN" name="hn">-</div>
 		</div>
+          <!-- <div class="entry  hn" style="height:100px;font-size:0.5em">
+			<div class="col-12  v-entry px-0 patient_name"  style="border:0px solid;" label="HN" name="patient"></div>
+		</div> -->
 			<img src="<%=url_for('../../miot/img/health/fh-p2.png') %>" width="100%">
         </center>
         </div><!--step1-->
@@ -222,23 +230,41 @@ if @current_user
     </div>
 </div>   
 
-<div class="row " style="padding-top:5vh">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4 col-12">
-        <a href="#" class="btn btn-lg btn-primary" id="btn-next">ต่อไป</a>
+<div class="row justify-content-center" style="padding-top:5vh;">
+    <div class="col-sm-4 col-6 ">
+		<a href="#" class="btn btn-lg " id="btn-back">ย้อนกลับ</a>
+
+   </div>
+    <div class="col-sm-4 col-6">
+		
+        <a href="#" class="btn btn-lg " id="btn-next">ต่อไป</a>
     </div>
 </div> 
 </div><!--container-->
 	<div id="msgs" style="font-size:0.5em"></div>
 <script>
+
+function backstep(){
+	    s = $("#hidstep").val()
+	    try{
+	        i = parseInt(s)
+	        i--
+	        if(i==7) i=1
+        $(".step").slideUp()
+        $(".step"+i).slideDown()
+	        
+	        $("#hidstep").val(i)
+	    }catch(e){}
+
+}
 function nextstep(){
     s = $("#hidstep").val()
     try{
         i = parseInt(s)
         i++
         if(i==7) i=1
-        $(".step").hide()
-        $(".step"+i).show()
+        $(".step").slideUp()
+        $(".step"+i).slideDown()
         $("#hidstep").val(i)
     }catch(e){}
 
@@ -246,6 +272,9 @@ function nextstep(){
 $(document).ready(function(){
     $("#btn-next").click(function(){
         nextstep()
+    })
+    $("#btn-back").click(function(){
+        backstep()
     })
     $(".step").hide()
     $(".step1").show()
