@@ -2,7 +2,7 @@ module BLE
 
 
 
-def self.start 
+def self.start ws
 
 
 # Selecter adapter
@@ -67,7 +67,29 @@ for i in $a.devices
 		 
 	     d.subscribe(s,uuid) do |raw|
 		puts 'notify'
-		puts raw.inspect 
+		puts raw.inspect
+		
+		puts raw.size
+
+		puts raw.bytes.inspect 
+		
+		temp = format('%0.1f',(raw.bytes[4]*255+raw.bytes[5])/100.0+0.14)
+
+		lines = []
+
+      		lines << "STATUS:T1|T1:#{temp}"
+
+    		msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+
+                puts msg
+
+                puts  ws.send(msg)
+
+
+ 
              end
 
           end
@@ -99,4 +121,4 @@ end
 
 
 
-BLE::start()
+#BLE::start()
