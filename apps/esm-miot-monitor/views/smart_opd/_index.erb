@@ -194,7 +194,7 @@
  	<%=Setting.get(:default_center_name)%>
  </div>
  <div class="col-3 d-flex justify-content-end" >
- 	<div style="">00:00</div>
+ 	<div class="timer"style="">00:00</div>
  </div>
  
 </div>
@@ -1274,6 +1274,11 @@
 	 }
  
     
+	 var myVar = setInterval(myTimer, 1000);
 
+	 function myTimer() {
+	   var d = new Date();
+	   $('.timer').html(d.toLocaleTimeString());
+	 }
 	</script>
 	
