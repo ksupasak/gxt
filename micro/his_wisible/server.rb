@@ -234,6 +234,9 @@ CNX
     
     his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
     
+    his_post_opd_url = URI("https://api-covid.wisible.com/v2/addVitalSigns")
+    
+    
     # his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
     
     
@@ -263,7 +266,10 @@ CNX
    #      http.use_ssl = true if uri.instance_of? URI::HTTPS
    #      request = Net::HTTP::Post.new(uri.request_uri)
       
-
+   
+   
+   
+   
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = true #if uri.instance_of? URI::HTTPS
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -280,35 +286,50 @@ CNX
       # request = Net::HTTP::Post.new(uri.path, request_header)
       
       
-      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json', 'Accept'=>'application/json'})
+      # request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json', 'Accept'=>'application/json'})
  
+ 
+      # request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'x-api-key'=>'DCTIoTCovid19','Content-Type' =>'application/json'})
+    
+      
+      request = Net::HTTP::Post.new(url, {'x-api-key'=>'DCTIoTCovid19','Content-Type' =>'application/json','User-Agent'=>"Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0"})
+      
+      # request['x-api-key'] = 'DCTIoTCovid19'
+      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
       # {"hn"=>"", "weight"=>"90.00", "height"=>"180.00", "bmi"=>"27.78", "pr"=>"80", "rr"=>nil, "spo2"=>"99", "temp"=>"35.4", "time"=>"23:44:41", "date"=>"2021-05-12", "serial_number"=>"00000"}
  
       px = params
  
       ## modify bp
-      
-      sys = px['bp_sys']
-      dia = px['bp_dia']
-      mean = px['bp_mean']
-      pr = px['pr']
-      
-      
-      px.delete 'bp_sys'
-      px.delete 'bp_dia'
-      px.delete 'bp_mean'
-      px.delete 'bp'
-      px.delete 'pr'
-      
-      
-      px['systolic'] = sys
-      px['diastolic'] = dia
-      px['mean'] = mean
-      px['pulse'] = pr
-      
+
       
       
       px['rr'] = "" unless px['rr']
+      
+      
+      
+      pd = {}
+      # pd['x-api-key'] = 'DCTIoTCovid19'
+      pd['FHN'] = px['hn']
+      pd['FHN'] = '2021000008'
+      pd['date'] = px['date']
+      pd['time'] = px['time']
+      pd['round'] = "0"
+      # pd['doci'] = "0"
+      pd['temperature'] = px['temp'].to_f
+      # pd['respiration_rate'] = nil
+      pd['pulse_rate'] = px['pr'].to_i
+      
+      pd['systolic_blood_pressure'] = px['bp_sys'].to_i
+      pd['diastolic_blood_pressure'] = px['bp_dia'].to_i
+      
+      pd['oxygen_saturation'] = px['spo2'].to_i
+      pd['oxygen_saturation3min'] = px['spo2'].to_i
+      
+      
+      
+      puts pd.inspect 
+      
       
       
       # {"hn"=>"280", "weight"=>"90.0", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>nil, "height"=>"180.0", "bmi"=>nil, "pr"=>"80",
@@ -318,7 +339,7 @@ CNX
       
       
  
-      request.set_form_data(px)
+      request.set_form_data(pd)
       # puts px.to_json
    #    request.body = px.to_json
     
@@ -332,6 +353,17 @@ CNX
       
       
       response = http.request(request)
+      
+      
+      
+      
+      
+      
+
+      
+      
+      
+      
       
       puts "RESPONSE #{response.body}"
       

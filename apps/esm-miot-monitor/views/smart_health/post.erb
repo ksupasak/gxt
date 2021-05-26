@@ -1,0 +1,124 @@
+<%
+	
+	if request.post?
+		
+		# {"hn"=>"12345/56", "datetime"=>"2020-5-20T14:57:50", "score"=>"-", "bp"=>"/", "bp_sys"=>"", "bp_dia"=>"", "pr"=>"-", "spo2"=>"-", "temp"=>"-", "weight"=>"-", "height"=>"-", "splat"=>[], "captures"=>["miot", "Opd", "post"], "gxt"=>"miot", "service"=>"Opd", "operation"=>"post", :service=>"EsmMiotMonitor::Opd"}
+		
+		patient = Patient.where(:hn=>params[:hn]).first
+		
+		patient = Patient.create :hn=>params[:hn] unless patient 
+		
+		admit = Admit.create :patient_id=>patient.id, :status=>'Discharged', :admit_stamp=>params[:datetime], :discharge_stamp=>params[:datetime]
+		
+		bmi = 0 
+	
+		if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+			
+	    	weight = params[:weight].to_f
+	    	height = params[:height].to_f
+			
+			bmi = format("%.2f",weight/height/height*10000)
+		
+		end
+	
+  
+		record = DataRecord.create :admit_id=>admit.id, :data=>params.to_json, :bp=>params[:bp], 
+		:bp_sys=>params[:bp_sys], :bp_dia=>params[:bp_dia], :bp_mean=>params[:bp_mean], :pr=>params[:pr], :spo2=>params[:spo2], :weight=>params[:weight], :height=>params[:height],
+		:temp=>params[:temp],:score=>params[:score],:stamp=>params[:datetime], :bmi=>bmi
+		
+		
+	    ##############################################################
+	    ##############################################################
+	    ##############################################################
+		
+
+	    result = nil
+        i = record
+    
+	    bps = params[:bp].split('/')
+	    bp_sys = bps[0]
+	    bp_dia = bps[1]
+        pr = params[:pr]
+    
+	    px = {:hn=>params[:hn], :weight=>'', :height=>'', :bmi=>'', :pr=>'', :rr=>'', :spo2=>'',:bp=>i.bp, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :bp_mean=>i.bp_mean}
+	    
+		px[:weight] = format("%.2f",params[:weight].to_f) if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+		px[:height] = format("%.2f",params[:height].to_f) if params[:height] and params[:height]!="" and params[:height]!="-"
+		 
+	
+		if params[:weight] and params[:weight]!="" and params[:weight]!="-"
+			
+	    	weight = params[:weight].to_f
+	    	height = params[:height].to_f
+			
+			px.merge! :weight=>format("%.2f",weight),:height=>format("%.2f",height),:bmi=>format("%.2f",weight/height/height*10000) 
+		
+		end
+		
+		px[:pr] = params[:pr] if params[:pr]!='' and params[:pr]!='-'
+		px[:spo2] = params[:spo2] if params[:spo2]!='' and params[:spo2]!='-'
+		px[:temp] = params[:temp] if params[:temp]!='' and params[:temp]!='-'
+		px[:rr] = params[:rr] if params[:rr]!='' and params[:rr]!='-'
+		
+		px[:time] = Time.now.strftime("%H:%M:%S")
+		px[:date] = Time.now.strftime("%Y-%m-%d")
+		
+		px[:serial_number] = Setting.get(:serial_number,'00000')
+		
+		px[:serial_number] = params[:device_id] if params[:device_id]
+		
+	
+	    ##############################################################
+    
+    
+	    his_post_opd_url = URI("http://#{Setting.get(:gateway,'localhost')}:9292/send")
+		
+    
+	    ##############################################################
+
+	    url = his_post_opd_url
+    
+   
+	    error = false
+	    err_msg = "NA"
+	    begin
+   
+      
+
+	      http = Net::HTTP.new(url.host, url.port)
+	      http.read_timeout = 2 # seconds
+      
+      
+	      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json'})
+	      request.set_form_data(px)
+        
+      
+	      response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+      
+      
+	      result = JSON.parse response.body
+      
+  
+		  puts 'RESULT '+result.to_json
+		
+		  # if result['status'] == '200 OK'
+			 
+		  record.update_attributes :send_status=>result['status']=='200 OK', :send_msg=>result.to_json
+			  
+		  # end
+		
+		
+	    rescue Exception => e
+	      puts e.to_s 
+	      error = true
+	      err_msg = "Server Timeout!"
+	    end
+    
+   		
+		
+		
+		
+	end
+	
+	
+%>

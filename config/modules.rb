@@ -7,4 +7,5 @@
 
 # require_relative '../apps/esm-media-stream/app'
 require_relative '../apps/esm-miot-monitor/app'
+require_relative '../apps/esm-bot/app'
 require_relative '../apps/gxt-console/app'

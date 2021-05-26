@@ -16,5 +16,7 @@
 <%=inline(this,:'_index_network_admin')%>
 <% elsif @current_role == 'network'  %>
 <%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'hospital_terminal'  %>
+<%=inline(this,:'_index_terminal')%>
 <%#=inline(this,:'_index_network')%>
 <% end %>

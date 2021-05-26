@@ -13,7 +13,8 @@
 	
 	record.destroy
 	
-	
+	return_url = '../Home/index'
+	return_url = params[:return] if params[:return] 
 
 %>
-<%=redirect_to '../Home/index'%>
+<%=redirect_to return_url%>

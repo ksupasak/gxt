@@ -746,3 +746,7 @@ th{
   background:red;
   color:#eee !important;
 }
+.bg-panel{
+  /*margin:0.4vw;*/
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.5" x="0" y="0" width="1000" height="1000"/></svg>');
+}

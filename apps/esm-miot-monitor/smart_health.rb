@@ -10,7 +10,8 @@ module EsmMiotMonitor
   
     def acl
   
-      return {:index=>'*',:patients=>'*',:appoints=>'*'}
+      # return {:index=>'*',:patients=>'*',:appoints=>'*'}
+        return {'*'=>true}
   
     end
     
@@ -26,7 +27,7 @@ module EsmMiotMonitor
     
       def acl
     
-        return {:patient_upload=>'*',:dashboard=>'*'}
+        return {:patient_upload=>'*',:dashboard=>'*',:spotcheck=>'*'}
     
       end
       
