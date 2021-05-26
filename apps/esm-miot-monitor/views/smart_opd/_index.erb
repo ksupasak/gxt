@@ -1,4 +1,16 @@
-
+    <!-- Modal -->
+    <div class="modal fade" id="scoring-panel" tabindex="-1" role="dialog" aria-labelledby="ScoreModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+      
+	  
+	  
+	 
+      </div> 
+    </div>  
+   </div>
+   
+   
 <style>
 
 	:root {
@@ -107,6 +119,18 @@
 		padding:3vh;
 	}
 	.btn-hn{
+	    background-color: #6B98C1;
+	    color:#ffffff;
+	    border-radius: 100px;
+	    height:50px;
+	    width:80px;
+
+	    text-align: center;
+	    font-size: 2.4em;
+	    padding-top:0px;
+	    margin:5px;
+	}
+	.btn-score{
 	    background-color: #6B98C1;
 	    color:#ffffff;
 	    border-radius: 100px;
@@ -229,7 +253,7 @@
 				</div>
 				<div class="sense-panel header" style="height:13vh;">
 				</div>
-				
+				 
 			</div>
 			
 			
@@ -419,6 +443,36 @@
 			</div>
 			
 			<% end %>
+			
+			
+			<div class="col-2">
+				<div class="sense-panel s-empty select-score sense" style="height:18vh;">
+				<div class="row ">
+					<div class="col-6 sense-name" >
+					<%=  %>Score 
+					</div>
+					<div class="col-6 sense-name" style="text-align:right">
+					<%= %>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col sense-val v-score " label="<%= %>" name="<%=%>" style="overflow:hidden;">
+					-
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col sense-name" >
+					<!-- Notification -->
+					</div>
+					
+				</div>
+			</div>
+		
+			</div>
+			
+			
 		<% end %>
 		</div>
 		
@@ -490,53 +544,166 @@
       </div>
     </div>
   </div>
+  
+ 
+ 
+  
 <div id="buffer">
 </div>
             <a href="#" id="beep" style="display:none">beep</a>
             <a href="#" id="ready" style="display:none">ready</a>
-  <script>
-    function hnPush(s){
-        v = $(".display-hn").html().trim()
-        b = s.html()
-        if(b.indexOf("img")!==-1){
-            v = v.substr(0,v.length-1)
-        }else{
-            v+=b
-        }
-        $(".display-hn").html(v)       
-    }
 
-    var buffer = 10;
-	var cur_buffer = 0 ;
-	
-	for(var i=0;i<buffer;i++){
-		var myAudio = document.createElement('audio');
-		  myAudio.setAttribute("id","audio-"+i)
-		 if (myAudio.canPlayType('audio/mpeg')) {
-			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
-		 }
-		 $('#buffer').append(myAudio);
-		  
-	}
-	$(".btn-clear").click(function(){
-		
-		$('.display-hn').html("");
-		
-	})  
-	
-		  
-    $(".btn-hn").on('click',function(){
-        var myAudio = document.getElementById('audio-'+cur_buffer)
-        myAudio.play();
-        cur_buffer+=1;
-        if(cur_buffer==10)cur_buffer=0;
-        hnPush($(this))      
-        return false;
-    })
-    </script>
 </div>
 <!-- Modal -->
+ <!-- Modal -->
+ <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="ScoreModalTitle" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="opdModalTitle">Score</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <center>
+         <div class="display-score">
+         -
+         </div>
+         <table width="300px">
+       
+	   <%
+	   	
+	   scores = Score.all
+		
+	   for s in scores
+	   %>
+         <tr>
+             <td><div class="btn-score-select" sid="<%=s.id%>" style="width:100%;font-size:3vh"><%=s.name%></div></td>
+           
+         </tr>
+       <% end %>
+	   
+	   
+	   
+	   
+	    </table>
+         </center>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="button" class="btn btn-primary" id="save-modal">Submit</button>
+       </div>
+     </div>
+   </div>
+  </div>
+   
 
+
+
+  
+   <script>
+
+
+
+
+   function call_score(div_class, score_id, mode,data){
+	   
+
+   	$.ajax({
+   	  url: "scoring?score_id="+score_id+"&mode="+mode+"&data="+JSON.stringify(data)+"&v-entry="+div_class,
+   	  context: document.body,
+   		method: 'post'
+   	}).done(function(data) {
+   	  $('.modal-content').html(data);
+   	  $('#scoring-panel').modal('show')
+   	});
+   }
+
+
+   </script>
+   
+   <script>
+     function hnPush(s){
+         v = $(".display-hn").html().trim()
+         b = s.html()
+         if(b.indexOf("img")!==-1){
+             v = v.substr(0,v.length-1)
+         }else{
+             v+=b
+         }
+         $(".display-hn").html(v)       
+     }
+
+     var buffer = 10;
+ 	var cur_buffer = 0 ;
+	
+ 	for(var i=0;i<buffer;i++){
+ 		var myAudio = document.createElement('audio');
+ 		  myAudio.setAttribute("id","audio-"+i)
+ 		 if (myAudio.canPlayType('audio/mpeg')) {
+ 			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+ 		 }
+ 		 $('#buffer').append(myAudio);
+		  
+ 	}
+ 	$(".btn-clear").click(function(){
+		
+ 		$('.display-hn').html("");
+		
+ 	})  
+	
+ //
+     $(".v-score").on('click',function(){
+		
+		$('#scoring-panel').modal('hide')
+ 		 $("#scoreModal").modal('show')
+		 
+ 		 // text = $(this).html()
+ // 		 $('.display-score').html(text)
+ //
+ // 		 score_id = $(this).attr('sid')
+ //
+ // 		 $('.select-score .v-score').html(text.split(" ")[0])
+ //
+ // 		 data = prepare()
+ // 		 // call_submit(note_record_admit_id,score_id, 'ajax')
+ // 		 call_score('.score .v-entry',score_id, 'ajax', data)
+ //
+
+         return false;
+     })
+	
+     $(".btn-score-select").on('click',function(){
+         var myAudio = document.getElementById('audio-'+cur_buffer)
+         myAudio.play();
+ 		 $("#scoreModal").modal('hide')
+		 text = $(this).html()
+		 $('.display-score').html(text)
+		 
+		 score_id = $(this).attr('sid')
+		
+		 $('.select-score .v-score').html(text.split(" ")[0])
+         
+		 data = prepare()
+		 // call_submit(note_record_admit_id,score_id, 'ajax')
+		 call_score('.score .v-entry',score_id, 'ajax', data)
+		 
+		 
+         return false;
+     })	
+		  
+     $(".btn-hn").on('click',function(){
+         var myAudio = document.getElementById('audio-'+cur_buffer)
+         myAudio.play();
+         cur_buffer+=1;
+         if(cur_buffer==10)cur_buffer=0;
+         hnPush($(this))      
+         return false;
+     })
+     </script>
 <script>
     function submitEntry(){
 		
@@ -751,6 +918,21 @@
 	            $("#opdModalTitle").html($(this).attr('label'))
 	            $("#opdModal").modal('toggle')
 	        })
+			
+	  				//       $(".v-score").click(function(){
+				//
+				// // v = $(this).html().trim()
+				//   			  	//	console.log(v)
+				// 	   				//          if(v=='-')v = ''
+				// // $(".score-hn").html(v)
+				// //
+				// // current_modal = $(this).attr('name')
+				// // 	            mname = $(this).parent("div").find(".l-entry").html()
+				// // 	            // $("#opdModalTitle").html($(this).attr('label'))
+				// 	            $("#scoreModal").modal('toggle')
+				// 	        })
+			
+			
 		
 			$("#save-modal").click(function(){
 	            value = $(".display-hn").html().trim()

@@ -29,6 +29,37 @@ for i in ws
     weight_cmp = weight_int
 end
 %>
+
+<style>
+
+	:root {
+	    --bg-body: #00243E;
+	    --bg-nav: #002748;
+	    --bg-second-nav: #003357;
+	    --bg-content: #000C2A;
+	    --text-main:#E5E5E5;
+	    --text-second:  #88B1DA;
+	    --text-orange: #FFA200;
+	    --text-blue: #00B3FD;
+	    --text-yellow: #D2C406;
+	    --text-green: #32CE0B;
+	    --btn-blue: #034B87;
+	  }
+	  
+	body{
+		background: var(--bg-body);
+/*		background: transparent linear-gradient(180deg, #000  0%, #13171D 100%) 0%
+		0% no-repeat padding-box;*/
+		height:100vh;
+	}
+	
+	.top-header{
+		background:#0a1320;
+		font-size:4vh;
+/*		box-shadow: 0px 0px 15px #1A3388;*/
+		color:var( --text-second);
+	}
+</style>
 <link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
 <svg width="0" height="0">
     <defs>
@@ -53,7 +84,7 @@ end
 </div>
 
   <div style="clear:both"></div>
-<div class="p-name" style="padding:20px">
+<div class="p-name top-header" style="padding:20px">
 HN <%=patient.hn%>: <%= patient.prefix_name %><%= patient.first_name %> <%= patient.last_name %>
 </div>
 
