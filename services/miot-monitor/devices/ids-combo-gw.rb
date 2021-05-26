@@ -174,7 +174,7 @@ require 'nokogiri'
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
           
-        if false and current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+        if false and   current_weight and current_weight.to_f > 0
           
           unless sent
           
@@ -234,7 +234,7 @@ EOM
       puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight}"
      
    
-if current_height and current_weight and current_height.to_f > 0 and current_weight.to_f > 0
+if current_weight  and current_weight.to_f > 0
    
       lines = []
 
@@ -293,7 +293,7 @@ end
 
   seca.run
   
-  
+  if false
 
   omron  = Thread.new {
     
@@ -381,10 +381,10 @@ sleep(10)
    end
   }
 
-  omron.join
+#  omron.join
   
   
-  
+ end 
   
   
   # pi@raspberrypi:~ $ grep PRODUCT= /sys/bus/usb-serial/devices/ttyUSB1/../uevent
@@ -410,10 +410,11 @@ sleep(10)
   puts 'starting..v100'  
 
   device_id = get_device "403:6001" 
-  device_id = "/dev/ttyACM0"
+#  device_id = "/dev/ttyACM0"
 # 
+  puts device_id
   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
-    
+    serial.read_timeout = 100
     while true
      
       puts 'v100'
@@ -422,38 +423,79 @@ sleep(10)
 
       if true
       
-        puts 'write'
-           serial.write " OA!3"
+          puts 'v100 query'
+
+
+	  spo2 = nil
+          pr = nil
+	  bp = nil
+          dia = nil
+          mean = nil
+           
+          serial.write " OA!3\r\n"         
+          
+          line = serial.readline("\r")
+	 
+          puts line
+
+          if line[3]=='1'
+		
+           spo2 = line[4..6].to_i
+
+	  end
+
+# OA0000012#-
+# OA1099712#G
+# OA1099212#B
+# OA1099912#I
+# OA1098812#G
+
+
+          serial.write " RA!6\r\n"
+
+          line = serial.readline("\r")
+          
+          puts line   
+
+          if line[3]=='2'
+
+           pr = line[4..7].to_i
+
+          end           
+
         
-           puts 'read'
-          lines = serial.readline("\r")
-      
-          last = lines.split(",")
-      
-          if last.size> 5
-      
-            sys = last[7]
-            dia = last[8]
-            pr = last[9]
-        
+          serial.write " NA!2\r\n"
+           
+          line = serial.readline("\r")
+
+          puts line
+
+          if line[3]=='1'
+
+           sys = line[10..12].to_i
+	   dia = line[13..15].to_i
+	   mean = line[16..18].to_i
+
+          puts "Sys:#{sys} Dia:#{dia} Mean:#{mean}"
+
           end
+
+
+          last = line.split(",")
       
-      else 
-      
-            sys = '120'
-            dia = '80'
-            pr = '79'
-        
-      
-       end
     
+    end
     
        if sys
     
     
       lines = []
-      
-      lines << "STATUS:M1|SYS:#{sys}|DIA:#{dia}|PR:#{pr}"
+     
+      x = "STATUS:M1|SYS:#{sys}|DIA:#{dia}|MEAN:#{mean}"
+      x += "|PR:#{pr}|SPO2:#{spo2}" if pr and spo2      
+
+  
+      lines <<  x #"STATUS:M1|SYS:#{sys}|DIA:#{dia}|MEAN:#{mean}|PR:#{pr}|SPO2:#{spo2}"
 
     msg = <<EOM
 Monitor.Update zone_id=*
