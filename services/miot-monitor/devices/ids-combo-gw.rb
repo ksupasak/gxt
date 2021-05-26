@@ -385,13 +385,39 @@ sleep(10)
   
   
   
+  ########################################################################################################################################
   
   
-  # pi@raspberrypi:~ $ grep PRODUCT= /sys/bus/usb-serial/devices/ttyUSB1/../uevent
- #  PRODUCT=10c4/ea60/100
- #  pi@raspberrypi:~ $ grep PRODUCT= /sys/bus/usb-serial/devices/ttyUSB0/../uevent
- #  PRODUCT=403/6001/600
+  require 'ble'
+  require_relative 'gxt_ble'
+
+  ble  = Thread.new {
+    
+   
+   
+    begin
+   
+   
+   
+   BLE::start()
+   
+   
+   
+    rescue Exception => e
+    
+      puts e.message
+	
+     sleep(10)
+
+     end
+   
+  	
+ 
+  }
+
+  ble.join
   
+  ########################################################################################################################################
   
   
   
