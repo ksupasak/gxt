@@ -168,9 +168,9 @@ require 'nokogiri'
       tags = document.xpath("//td")
       tags.each_with_index do |t,ti|
     
-        current_height = t.text.strip if ti==16
-        current_weight = t.text.strip if ti==10  
-        trig_weight = t.text.strip if ti==13
+        current_height = t.text.strip if ti==20
+        current_weight = t.text.strip if ti==14  
+        trig_weight = t.text.strip if ti==17
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
           
