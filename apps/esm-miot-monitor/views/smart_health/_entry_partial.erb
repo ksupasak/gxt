@@ -250,7 +250,7 @@
 				
 				$('.patient_gender').html(patient['gender'])	
 				$('.patient_age').html(patient['age'])	
-				nextStep
+				nextstep()
 				
 			}else{
 				$('.patient_name').html(patient_name)	
@@ -275,19 +275,31 @@
 	    if( event.which == 13 ) {
 	     getPatient();   
 		 will_reset_hn = true;
-		 }else{
-			 if(will_reset_hn){
+		}else if(event.which == 8){
+			
+	        v = $(".hn  .v-entry").html().trim()
+    		 
+			v = v.substring(0, v.length-1);
+    
+	        $(".hn .v-entry").html(v.trim())   
+	
+			
+		}else{
+			if(will_reset_hn){
 			 	will_reset_hn = false;
 			    $(".hn  .v-entry").html('')
 				
-			 }
-		$('.patient_name').html('...')			 
-        v = $(".hn  .v-entry").html().trim()
-        		 
-		v+=String.fromCharCode(e.keyCode)
-        
-        $(".hn .v-entry").html(v.trim())   
-		 } 
+			}
+		
+			$('.patient_name').html('...')			 
+	        v = $(".hn  .v-entry").html().trim()
+    		 
+			v+=String.fromCharCode(e.keyCode)
+    
+	        $(".hn .v-entry").html(v.trim())   
+	
+		
+		} 
 		
 	})	
 
@@ -386,6 +398,12 @@
 	            $("#opdModal").modal('toggle')
 	        })
 	        $(".v-entry").click(function(){
+				
+				
+				if($(this).hasClass('v-null')) return;
+					
+				
+					
 	            v = $(this).html().trim()
 				console.log(v)
 	            if(v=='-')v = '' 
@@ -535,18 +553,23 @@
 	
 		function sos(){
 		
+			
+		
 			score = 0
 			count = 0 
-			list = ['spo2', 'bp_sys', 'temp', 'pr']
+			values = {}
+			list = ['spo2', 'bp_sys','bp_dia', 'temp', 'pr']
 			err = [];
 			for(var i=0;i<list.length;i++){
 			
 				v = list[i]
 				s = 0 
 				title = ""
+				values[v] = null;
 				t = $('.'+v+" .v-entry").html().trim()
 				if(t!=''&&t!='-'&&t!='0'){
 					x = parseFloat(t)
+					values[v] = x;
 					count++;
 					if(v=='temp'){
 						title = "temp"
@@ -598,10 +621,44 @@
 			}
 			$('.alert').html(err.join('&nbsp;'))
 		
+			console.log(values)
+			state = null;
+			
 		
+			
+		
+			
+			if(values['temp']==null){
+				state = 4;
+			}
+			
+			if(values['spo2']==null||values['pr']==null){
+				state = 3;
+			}
+			
+			if(values['bp_sys']==null||values['bp_dia']==null){
+				state = 2;
+			}
+			
+			if(values['temp']!=null&&values['bp_sys']!=null&&values['bp_dia']!=null&&values['spo2']!=null&&values['pr']!=null){
+				state = 5;
+			}
+			
+			var current_state = parseInt($("#hidstep").val());
+			
+			console.log(state)
+			if(state!=null&&current_state!=state){
+				
+				gostep(state)
+						//
+				//         		$(".step").slideUp()
+				//         		$(".step"+state).slideDown()
+				// $("#hidstep").val(state)
+			}
+			
+			
 		}
-	
-	
+		
 		var myVar 
 		
 		var last_values = {};
@@ -649,6 +706,7 @@
 			console.log(last_values)
 			console.log('act '+ msg);
 			
+		
 			
 			$('#msg').html(msg);
 		
@@ -732,6 +790,19 @@
 		
 		
 			sos()
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		
 		}
 

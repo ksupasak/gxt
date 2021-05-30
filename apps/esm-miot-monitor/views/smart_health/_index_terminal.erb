@@ -52,6 +52,11 @@ if @current_user
 	border-radius: 5px;
 	
 }
+.v-entry{
+	border:0px solid #ccc;
+	border-radius: 5px;
+
+}
 
 </style>
 <div class="containerx" style="background:none">
@@ -61,7 +66,7 @@ if @current_user
     <center>
     <%= link_to Setting.get(:default_center_name),"index"%>
 	<br/>
-    <span style="font-size:0.6em" class="demo">ระบบบันทึกข้อมูลสุขภาพ</span>
+    <!-- <span style="font-size:0.6em" class="demo">ระบบบันทึกข้อมูลสุขภาพ</span> -->
     </center>
     </div><!--col-->    
 </div><!--banner-header-->
@@ -91,9 +96,11 @@ if @current_user
             2.กรุณาวัดความดัน
             <div class="entry" style="">
 			<div class="row " >
-				<div class="col-6 sys  bp_sys px-0"  style="border:0px solid;text-align:right" label="Blood pressure - Systolic" ><div class="v-entry" name="bp_sys">-</div></div>
-				<div class="col-1 v-entry  px-0">/</div>
-				<div class="col-5 dia  bp_dia  px-0"  style="text-align:left" label="Blood pressure - Diastolic"><div  name="bp_dia" class="v-entry">-</div></div>
+				<div class="col-6 sys  bp_sys px-0"  style="border:0px solid;text-align:right" label="Blood pressure - Systolic" ><div class="v-entry" name="bp_sys" label="Blood pressure - Systolic">-</div>
+	
+			 </div>
+				<div class="col-1 v-entry  px-0 v-null" >/</div>
+				<div class="col-5 dia  bp_dia  px-0"  style="text-align:left" ><div  name="bp_dia" class="v-entry" label="Blood pressure - Diastolic">-</div></div>
 			</div>
 				
 			</div>
@@ -107,9 +114,9 @@ if @current_user
             3.กรุณาวัดค่าออกซิเจนในเลือด
             <div class="entry" style="">
 				<div class="row " >
-					<div class="col-6 sys  spo2 px-0"  style="border:0px solid;text-align:right" label="SpO2" name="spo2"><div class="v-entry" name="spo2">-</div></div>
-					<div class="col-1 v-entry  px-0">, </div>
-					<div class="col-5 dia  pr  px-0"  style="text-align:left" label="Pulse" name="pr"><div class="v-entry" name="pr">-</div></div>
+					<div class="col-6 sys  spo2 px-0"  style="border:0px solid;text-align:right"  name="spo2"><div class="v-entry" name="spo2" label="SpO2 (%)">-</div></div>
+					<div class="col-1 v-entry  px-0 v-null"> &nbsp; </div>
+					<div class="col-5 dia  pr  px-0"  style="text-align:left"  name="pr"><div class="v-entry" name="pr" label="Pulse rate (Bpm)">-</div></div>
 				</div>
 			</div>
 			<img src="<%=url_for('../../miot/img/health/fh-p3.png') %>" width="100%">
@@ -119,9 +126,9 @@ if @current_user
 		
         <div class="step step4 p-3">
         <center>
-            4.กรุณาวัดอุณหภูมิร่างกาย
+            4.กรุณาวัดอุณหภูมิร่างกาย (&#8451;)
             <div class="entry" style="">
-				<div class="col-12 sys temp px-0"  style="border:0px solid;" label="Temperature" name="temp"><div class="v-entry" name="temp">-</div></div>
+				<div class="col-12 sys temp px-0"  style="border:0px solid;"name="temp"><div class="v-entry" name="temp"  label="Temperature (&#8451;)" >-</div></div>
 			</div>
 			<img src="<%=url_for('../../miot/img/health/fh-p4.png') %>" width="100%">
 			
@@ -139,23 +146,23 @@ if @current_user
 		   
 			   <div class="col-6 entry2">
    			<div class="row " >
-   				<div class="col-6 sys  bp_sys px-0"  style="border:0px solid;text-align:right" label="Blood pressure - Systolic" name="bp_sys"><div class="v-entry" name="bp_sys">-</div></div>
-   				<div class="col-1 v-entry  px-0">/</div>
-   				<div class="col-5 dia   bp_dia  px-0"  style="text-align:left" label="Blood pressure - Diastolic" name="bp_dia"><div class="v-entry" name="bp_dia">-</div></div>
+   				<div class="col-6 sys  bp_sys px-0"  style="border:0px solid;text-align:right"  name="bp_sys"><div class="v-entry" name="bp_sys" label="Blood pressure - Systolic">-</div></div>
+   				<div class="col-1 v-entry  px-0 v-null">/</div>
+   				<div class="col-5 dia   bp_dia  px-0"  style="text-align:left"  name="bp_dia"><div class="v-entry" name="bp_dia" label="Blood pressure - Diastolic">-</div></div>
    			</div>
 			   </div>
 		   </div>
 		   
 		   <div class="row" style="margin-bottom:10px">
 			   <div class="col-6 ">
-			   ออกซิเจนในเลือด
+			   ออกซิเจนในเลือด <span style="font-size:0.6em">SpO<sub>2</sub> (%), Pulse (Bpm)</span>
 			   </div>
 		   
 			   <div class="col-6 entry2">
 			<div class="row">	   
-			<div class="col-6 sys spo2 px-0"  style="border:0px solid;text-align:right" label="SpO2" name="spo2"><div class="v-entry" name="spo2">-</div></div>
-			<div class="col-1 v-entry  px-0">, </div>
-			<div class="col-5 dia  pr  px-0"  style="text-align:left" label="Pulse" name="pr"><div class="v-entry" name="pr">-</div></div>
+			<div class="col-6 sys spo2 px-0"  style="border:0px solid;text-align:right"  name="spo2"><div class="v-entry" name="spo2" label="SpO<sub>2</sub>(%)">-</div></div>
+			<div class="col-1 v-entry  px-0 v-null"> &nbsp; </div>
+			<div class="col-5 dia  pr  px-0"  style="text-align:left"  name="pr"><div class="v-entry" name="pr" label="Pulse (bpm)">-</div></div>
 		</div>
 			   </div>
 		   </div>
@@ -164,11 +171,11 @@ if @current_user
 		   
 		   <div class="row">
 			   <div class="col-6">
-			     อุณหภูมิร่างกาย
+			     อุณหภูมิร่างกาย<br/><span style="font-size:0.6em">(&#8451;)</span>
 			   </div>
 		   
 			   <div class="col-6 entry2 ">
-			   <div class="col-12 sys temp px-0"  style="border:0px solid;" label="Temperature" name="temp"><div class="v-entry" name="temp">-</div></div>
+			   <div class="col-12 sys temp px-0"  style="border:0px solid;"  name="temp"><div class="v-entry" name="temp" label="Temperature (&#8451;)">-</div></div>
 			   </div>
 		   </div>
 		   
@@ -233,12 +240,12 @@ if @current_user
 
 <div class="row justify-content-center" style="padding-top:5vh;">
     <div id="div-back" class="col-sm-4 col-6 ">
-		<a href="#" class="btn btn-lg btn-primary" id="btn-back">ย้อนกลับ</a>
+		<a href="#" class="btn btn-lg " id="btn-back">ย้อนกลับ</a>
 
    </div>
     <div id="div-next" class="col-sm-4 col-6">
 		
-        <a href="#" class="btn btn-lg btn-primary" id="btn-next">ต่อไป</a>
+        <a href="#" class="btn btn-lg " id="btn-next">ต่อไป</a>
     </div>
 </div> 
 </div><!--container-->
@@ -270,6 +277,29 @@ function backstep(){
 	}catch(e){}
 
 }
+
+function gostep(step){
+    s = $("#hidstep").val()
+    try{
+        i = step
+        if(i==7) i=1
+        $(".step").slideUp()
+        $(".step"+i).slideDown()
+        $("#hidstep").val(i)
+		if(i==1||i==6){
+			$("#div-back").hide()
+			$("#div-next").show()
+		}else if(i==5){
+			$("#div-next").hide()
+			$("#div-back").show()
+		}else{
+			$("#div-back").show()
+			$("#div-next").show()
+		} 
+    }catch(e){}
+}
+
+
 function nextstep(){
     s = $("#hidstep").val()
     try{
