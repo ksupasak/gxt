@@ -2,7 +2,7 @@
 	
 	
 	
-	user_login = User.where(:login=>params[:login]).first
+	user_login = User.where(:login=>params[:device_id]).first
 	
 
 		
@@ -48,6 +48,6 @@
 			<%
 		else
 %>
-Not allow
+Not allow <%=params.inspect %>
 <META HTTP-EQUIV="Refresh" CONTENT="5;URL=login">
 <% end %>
