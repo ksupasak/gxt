@@ -41,7 +41,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-clear " style="float:left" >ล้างข้อมูล</button>
 		
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิืด</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
         <button type="button" class="btn btn-success" id="save-modal">บันทึกข้อมูล</button>
       </div>
     </div>
@@ -106,6 +106,19 @@
 
 
   <script>
+	  
+	  var removeItem = function (object, key, value) {
+	      if (value == undefined)
+	          return;
+
+	      for (var i in object) {
+	          if (object[i][key] == value) {
+	              object.splice(i, 1);
+	          }
+	      }
+	  };
+	  
+	  
 	  var msg = "";
 
     function hnPush(s){
@@ -589,8 +602,54 @@
 		}
 	
 	
-		function deviceSend(msg){
+		var myVar 
+		
+		var last_values = {};
 	
+		function deviceSendPost(){
+		
+		
+			Object.keys(last_values).forEach(function(key) {
+			   
+				console.log(key, last_values[key]);
+				
+				deviceSendFinal(last_values[key]);
+				// last_values.removeItem(key)
+				
+				removeItem(last_values,key)
+				
+				delete last_values[key]
+				
+			});
+		
+		}
+	
+		function deviceSend(msg){
+		
+		    clearTimeout(myVar);
+		
+		    myVar = setTimeout(deviceSendPost, 500);
+			
+			map = {}
+		
+			list = msg.split("|")
+			
+			cmd = list[0];
+			
+			last_values[cmd] = msg;
+			
+			
+		}
+		
+		
+	
+		function deviceSendFinal(msg){
+			
+			
+			console.log(last_values)
+			console.log('act '+ msg);
+			
+			
 			$('#msg').html(msg);
 		
 			map = {}
