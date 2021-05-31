@@ -648,17 +648,29 @@
 			
 			console.log(state)
 			if(state!=null&&current_state!=state){
+				jumpVarx = state
+				jumpVar = setTimeout(jumpVarfunc, 800);
 				
-				gostep(state)
-						//
-				//         		$(".step").slideUp()
-				//         		$(".step"+state).slideDown()
-				// $("#hidstep").val(state)
+
 			}
 			
 			
 		}
 		
+		
+		var jumpVarx ;
+		
+		
+		function jumpVarfunc(){
+			
+			
+			gostep(jumpVarx)
+			
+			
+		}
+		
+		
+		var jumpVar;
 		var myVar 
 		
 		var last_values = {};

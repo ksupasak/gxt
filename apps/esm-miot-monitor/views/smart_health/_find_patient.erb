@@ -1,6 +1,6 @@
 <%
-	
-patient = Patient.where(:hn=>params[:hn]).first
+params[:hn] = params[:hn].strip
+patient = Patient.where(:hn=>params[:hn].strip).first
 
 unless patient 
 
@@ -45,6 +45,8 @@ unless patient
 		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>robj['birth_date']
 	
 	else
+	
+		patient = Patient.where(:hn=>params[:hn]).first 
 		
 		patient = Patient.new :hn=>params[:hn] unless patient 
 	
