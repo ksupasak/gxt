@@ -78,5 +78,5 @@ patient = Patient.new :hn=>params[:hn] unless patient
 
 
 @current_zone = Zone.find session[:current_zone]
-	
+puts patient.inspect 
 %><%=patient.to_json%>
