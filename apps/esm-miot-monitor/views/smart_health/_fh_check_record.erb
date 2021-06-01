@@ -1,0 +1,9 @@
+<%
+    numrec = 0
+    nowdate = Time.now
+
+    # Admit
+    records = DataRecord.where(:created_at=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).all
+    numrec = records.size if records
+%>
+<%=numrec%>
