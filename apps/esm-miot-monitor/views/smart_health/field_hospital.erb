@@ -25,6 +25,9 @@ if @current_user
 .step{
     font-size:3vh;
 }
+.dshadow{
+    box-shadow: 0px 3px 6px #00002950;    
+}
 #daylist{
     height:70vh;
     max-height:70vh;
@@ -62,12 +65,12 @@ if @current_user
 <!--left-->
 <div class="col-md-6">
     <div class="row m-2">
-        <div class="col-12 p-3 m-1 banner-header rounded">
+        <div class="col-12 p-3 m-1 banner-header dshadow rounded">
         <center>
          <%=link_to @access_title, "index" %> <%=nowdate%>
         </center>
         </div>
-        <div class="col-12 p-3 m-1 bg-panel rounded">
+        <div class="col-12 p-3 m-1 bg-panel dshadow rounded">
         <div id="daylist"></div>
         </div>        
     </div><!--row-->
@@ -76,7 +79,7 @@ if @current_user
 <!--right-->
 <div class="col-md-6">
     <div class="row m-2">
-        <div class="col-12 p-3 m-1 bg-panel rounded">
+        <div class="col-12 p-3 m-1 bg-panel dshadow rounded">
         <center>
         <img src="<%=url_for('img/svg/clock-regular.svg') %>" style="height:2vh"> <span id="nowtime"></span>
         <input type="hidden" id="hid_numrec" value="0">
