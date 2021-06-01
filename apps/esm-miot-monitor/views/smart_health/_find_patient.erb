@@ -1,8 +1,9 @@
 <%
 params[:hn] = params[:hn].strip
-patient = Patient.where(:hn=>params[:hn].strip).first
+patient = Patient.where(:hn=>params[:hn]).first
 
 puts Patient.all.inspect 
+puts patient.inspect 
 
 unless patient 
 
