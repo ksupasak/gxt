@@ -1,13 +1,10 @@
 <%
     nowdate = Time.now
 
-    admits = Admit.all
-    admits = admits.collect{|i| i if i.status and i.status.downcase!='discharged'}.compact
+    admit_alls = Admit.all
     patients = Patient.all
-    m_admit_p = Hash[admits.collect{|i| [i.id,i.patient_id]}]
     m_p_name = Hash[patients.collect{|i| [i.id,i.first_name]}]
     m_p_hn = Hash[patients.collect{|i| [i.id,i.hn]}]
-    admits = admits.collect{|i| i if m_p_hn[m_admit_p[i.id]]}.compact
     records = DataRecord.where(:stamp=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:stamp=>'desc').all
 
     check1 = 0
@@ -15,9 +12,9 @@
     check_score = {}
     midday = 1200
     for p in patients
-        admits = Admit.where(:patient_id=>p.id).all
+        admits = admit_alls.collect{|i| i if i.patient_id==p.id}.compact
         admit_ids = admits.collect{|i| i.id}
-        arecs = DataRecord.where(:admit_id=>admit_ids,:stamp=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:stamp=>'desc').all
+        arecs = records.collect{|i| i if admit_ids.index i.admit_id}.compact
         check_score[p.id] = 0 unless check_score[p.id]
         tmax = 2400
         for r in arecs
