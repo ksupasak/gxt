@@ -824,7 +824,8 @@ if record
 					o.each do |j| 
 						
 						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
-						bp = j['bp'].split("/")
+						bp = "-/-"
+						bp = j['bp'].split("/") if j['bp']
 						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0, co2:j['co2']?j['co2']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
 					    # list.push :time=>now-(senses.size-ii),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(ii*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
 				
