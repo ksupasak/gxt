@@ -51,6 +51,13 @@ if request.post?
 		if user 
 			
 			user.update_attributes params[:user]
+			
+			
+			if  params[:password].size > 0 and params[:password] == params[:password_confirmation]
+				user.password = params[:password]
+				user.save
+			end
+			
 		
 		else
 			

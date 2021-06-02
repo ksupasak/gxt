@@ -13,7 +13,7 @@
         'pat_nameatc'=>:prefix_name,
         'pat_namefirst'=>:first_name,
         'pat_namelast'=>:last_name,
-        'pat_bdate'=>:dob, 
+        'pat_bdate'=>:dob,    
         'pat_gender'=>:gender,
         'pat_pname'=>:contact_name,
         'pat_ptel0'=>:contact_phone,
@@ -95,44 +95,116 @@
                 for k in i.keys
                     rec[m_field[k]]=i[k] if m_field[k]
                 end
-                if rec[:hn]
-                    #Patient
-                    rec[:zone_id]=zone.id if zone
-                    rec[:gender] = 'M' if rec[:gender] and rec[:gender]=='ชาย'
-                    rec[:gender] = 'F' if rec[:gender] and rec[:gender]=='หญิง'
-                    patients = Patient.where(:hn=>rec[:hn]).first
-                    hns << rec[:hn] if !hns.index rec[:hn]
-                    if patients
-                        patients.update_attributes rec
-                        datareturn << {:hn=>rec[:hn],:action=>'update'}
-                    else
-                        patients  = Patient.create rec
-                        datareturn << {:hn=>rec[:hn],:action=>'insert'}
-                    end
-                    
-                    #SHRelation
-                    rl = SHRelation.where(:patient_id=>patients.id).first
-                    if !rl
-                        rl = SHRelation.create :patient_id=>patients.id,:hospital_id=>default_hos.id if default_hos
-                    end
-                    if i['pat_hos0mainid'] and i['pat_hos0mainid']!=''
-                        hospital = SHHospital.where(:code=>i['pat_hos0mainid']).first
-                        hospital = SHHospital.create :code=>i['pat_hos0mainid'],:name=>i['pat_hos0mainn'] if !hospital
-                        rl.update_attributes :hospital_id=>hospital.id
-                    end
-                    if i['pat_hos0subid'] and i['pat_hos0subid']!=''
-                        network = SHNetwork.where(:code=>i['pat_hos0subid']).first
-                        network = SHNetwork.create :code=>i['pat_hos0subid'],:name=>i['pat_hos0subn'] if !network 
-                        rl.update_attributes :network_id=>network.id
-                    end
-
-                    #Admit
-                    am = Admit.where(:patient_id=>patients.id).first
-                    if !am
-                        am = Admit.create :patient_id=>patients.id,:admit_stamp=>Time.now,:status=>'new'
-                        am.update_attributes :zone_id=>zone.id if zone
-                    end
-                end
+                # if rec[:hn]
+             #        #Patient
+             #        rec[:zone_id]=zone.id if zone
+             #        rec[:gender] = 'M' if rec[:gender] and rec[:gender]=='ชาย'
+             #        rec[:gender] = 'F' if rec[:gender] and rec[:gender]=='หญิง'
+             #        patient = Patient.where(:hn=>rec[:hn]).first
+             #        hns << rec[:hn] if !hns.index rec[:hn]
+             #        if patient
+             #            patient.update_attributes rec
+             #            datareturn << {:hn=>rec[:hn],:action=>'update'}
+             #        else
+             #            patient  = Patient.create rec
+             #            datareturn << {:hn=>rec[:hn],:action=>'insert'}
+             #        end
+             #
+             #        #SHRelation
+             #        rl = SHRelation.where(:patient_id=>patient.id).first
+             #        if !rl
+             #            rl = SHRelation.create :patient_id=>patient.id,:hospital_id=>default_hos.id if default_hos
+             #        end
+             #        if i['pat_hos0mainid'] and i['pat_hos0mainid']!=''
+             #            hospital = SHHospital.where(:code=>i['pat_hos0mainid']).first
+             #            hospital = SHHospital.create :code=>i['pat_hos0mainid'],:name=>i['pat_hos0mainn'] if !hospital
+             #            rl.update_attributes :hospital_id=>hospital.id
+             #        end
+             #        if i['pat_hos0subid'] and i['pat_hos0subid']!=''
+             #            network = SHNetwork.where(:code=>i['pat_hos0subid']).first
+             #            network = SHNetwork.create :code=>i['pat_hos0subid'],:name=>i['pat_hos0subn'] if !network
+             #            rl.update_attributes :network_id=>network.id
+             #        end
+             #
+             #        #Admit
+             #        am = Admit.where(:patient_id=>patient.id).first
+             #        if !am
+             #            am = Admit.create :patient_id=>patient.id,:admit_stamp=>Time.now,:status=>'new'
+             #            am.update_attributes :zone_id=>zone.id if zone
+             #        end
+             #    end
+             #
+				
+				
+			 patient = Patient.where(:hn=>i['pat_hn']).first
+			 
+			 if patient
+				 
+				 relation = SHRelation.where(:patient_id=>patient.id).first
+				 
+				 visit = SHVisit.where(:app_no=>i['app_no']).first
+				 
+				 
+				 if visit
+					 
+					 time = "00:00:00"
+					 time = i['app_time'] if i['app_time']
+					 
+					 date = Date.parse("#{i['app_date']}T#{time}")
+					 
+					 visit.update_attributes :date=>date
+					 
+				  	 datareturn << {:hn=>i['pat_hn'], :app_no=>i['app_no'], :action=>'update'}
+					 	 
+					 
+				 else
+					 time = "00:00:00"
+					 time = i['app_time'] if i['app_time']
+					 
+					 date = Date.parse("#{i['app_date']}T#{time}")
+					 
+					 hospital_id = relation.hospital_id
+					 network_id = relation.network_id
+					 
+					 
+					 
+					 if i['app_hos0mainid']
+						
+					    hospital = SHNetwork.where(:code=>i['app_hos0mainid']).first
+						
+						hospital_id = hospital_id.id if network
+						
+					 end
+					 
+					 if i['app_hos0subid']
+						
+					    network = SHNetwork.where(:code=>i['app_hos0subid']).first
+						
+						network_id = network.id if network
+						
+					 end
+					 
+					 
+				     visit = SHVisit.create :status=>'Pending', :date=>date, :patient_id=>patient.id, :hospital_id=>hospital_id, :network_id=>network_id, :app_no=>i['app_no']
+					 
+				  	 datareturn << {:hn=>i['pat_hn'], :app_no=>i['app_no'], :action=>'insert'}	
+					 
+				 end
+				 
+				
+			else
+				
+				  datareturn << {:hn=>i['pat_hn'],:action=>'not_found'}	
+				 
+			end
+				
+				
+				
+				
+				
+				
+				
+				
             }
             result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn}
         rescue Exception=>e
