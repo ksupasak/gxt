@@ -206,7 +206,7 @@
 				
 				
             }
-            result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} patients import success",:data=>datareturn}
+            result = {:result=>"200 OK",:code=>200,:message=>"#{hns.size} visit import success",:data=>datareturn}
         rescue Exception=>e
             result = {:result=>"401 Error",:code=>401,:message=>e.to_s}
         end
