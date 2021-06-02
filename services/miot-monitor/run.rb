@@ -80,6 +80,14 @@ if select_monitor=='nc3a'
  }
 end
 
+if select_monitor=='nc3a_live'
+  puts 'monitor select = nc3a live'
+ threads << Thread.new {
+ Device::monitor_comen_nc3a_live(ws)
+ }
+end
+
+
 if select_monitor=='ids_serial'
   puts 'monitor select = ids_serial'
  threads << Thread.new {

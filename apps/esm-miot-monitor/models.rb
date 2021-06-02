@@ -925,7 +925,9 @@ end
 class UserController < GXTDocument
   
   def acl
-    return {:login=>'*',:auto=>'*'}
+    # return {:login=>'*',:auto=>'*'}
+    return {'*'=>'*'}
+    
   end
 
 
