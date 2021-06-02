@@ -7,7 +7,7 @@
     m_admit_p = Hash[admits.collect{|i| [i.id,i.patient_id]}]
     m_p_name = Hash[patients.collect{|i| [i.id,i.first_name]}]
     m_p_hn = Hash[patients.collect{|i| [i.id,i.hn]}]
-    admits = admits.collect{|i| i if m_p_name[m_admit_p[i.id]]}.compact
+    admits = admits.collect{|i| i if m_p_hn[m_admit_p[i.id]]}.compact
     records = DataRecord.where(:stamp=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:stamp=>'desc').all
     temp = records.last.admit_id
 
