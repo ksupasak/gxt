@@ -106,7 +106,7 @@ module Device
       
             lines = []
             
-            name = client.peeraddr
+            name = client.peeraddr[2]
             
             bp_stamp = Time.now
             stamp = Time.now
