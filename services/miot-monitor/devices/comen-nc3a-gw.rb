@@ -105,24 +105,48 @@ module Device
             puts last.inspect
       
             lines = []
+            
+            data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}"
+            data[:bp_sys] = last['NIBP_S']
+            data[:bp_dia] = last['NIBP_D']
+            data[:bp_mean] = last['NIBP_M']
+            
+            data[:pr] = last['PR']
+            data[:hr] = last['HR']
+            data[:rr] = last['RR']
+            
+            data[:temp] = last['T1'].to_i/10.0
+            data.delete :temp if data[:temp] < 0 
+            
+            data[:spo2] = last['SPO2']
+            data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+            msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+            # puts msg
 
-           lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
-           lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
-           lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and last['PR'] and last['NIBP_S'][0]!='-'  and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
-       
-       
-       
-          if lines.size > 0
-          puts lines.inspect
+            puts 'Start Sent Data '+msg
 
-          msg = <<EOM
-    Monitor.Update zone_id=*
-    #{lines.join("\n")}
-EOM
-  
-            puts msg
+            ws.send(msg)  
 
-         puts  ws.send(msg)
+           # lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
+           # lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
+           # lines << "STATUS:M1|SYS:#{last['NIBP_S']}|DIA:#{last['NIBP_D']}|MEAN:#{last['NIBP_M']}|PR:#{}|SPO2:#{last['SPO2']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and last['PR'] and last['NIBP_S'][0]!='-'  and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
+#
+#
+#
+#           if lines.size > 0
+#           puts lines.inspect
+#
+#           msg = <<EOM
+#     Monitor.Update zone_id=*
+#     #{lines.join("\n")}
+# EOM
+#
+#             puts msg
+#
+#          puts  ws.send(msg)
  
         end
       
