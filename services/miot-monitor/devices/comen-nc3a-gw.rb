@@ -109,6 +109,7 @@ module Device
             name = client.peeraddr
             
             bp_stamp = Time.now
+            stamp = Time.now
             
             data = {}
             
