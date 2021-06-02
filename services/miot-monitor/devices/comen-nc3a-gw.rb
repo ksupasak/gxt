@@ -108,6 +108,8 @@ module Device
             
             name = client.peeraddr
             
+            bp_stamp = Time.now
+            
             data = {}
             
             data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}"
