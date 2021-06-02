@@ -55,7 +55,7 @@ module Device
     loop do
       
       Thread.start(server.accept) do |client|
-        puts 'connect '
+        puts 'connect f'
      
           while content = client.read(128)
     
