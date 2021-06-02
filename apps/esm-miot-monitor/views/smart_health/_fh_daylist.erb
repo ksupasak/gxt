@@ -15,8 +15,8 @@
     check_score = {}
     midday = 1200
     for a in admits
-        arecs = records.collect{|i| i if i.admit_id==a.id}.compact
-        arecs = a.records
+        arecs = records.collect{|i| i if i.hn==m_p_hn[m_admit_p[a.id]}.compact
+    
         %><!--<%="#{m_p_hn[m_admit_p[a.id]]} #{arecs.size} #{records.inspect}"%>--><%
         check_score[a.id] = 0 unless check_score[a.id]
         tmax = 2400
