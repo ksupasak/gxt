@@ -568,7 +568,7 @@ MSG
 
           end 
 
-
+          ref = '-'
 
           data[:bp] = '120/90'
           data[:pr] = 60 + rand(60)
