@@ -115,19 +115,19 @@ module Device
             ref = '-'
             data = {}
             
-            data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and  last['NIBP_S'].to_i>10
-            data[:bp_sys] = last['NIBP_S'] if last['NIBP_S'] and last['NIBP_S'].to_i > 10
-            data[:bp_dia] = last['NIBP_D'] if last['NIBP_D'] and last['NIBP_D'].to_i > 10
-            data[:bp_mean] = last['NIBP_M'] if last['NIBP_M'] and last['NIBP_M'].to_i > 10
+            data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and  last['NIBP_S'].to_i>11
+            data[:bp_sys] = last['NIBP_S'] if last['NIBP_S'] and last['NIBP_S'].to_i > 11
+            data[:bp_dia] = last['NIBP_D'] if last['NIBP_D'] and last['NIBP_D'].to_i > 11
+            data[:bp_mean] = last['NIBP_M'] if last['NIBP_M'] and last['NIBP_M'].to_i > 11
             
-            data[:pr] = last['PR'] if last['PR'] and last['PR'].to_i > 10
-            data[:hr] = last['HR'] if last['HR'] and last['HR'].to_i > 10
-            data[:rr] = last['RR'] if last['RR'] and last['RR'].to_i > 10
+            data[:pr] = last['PR'] if last['PR'] and last['PR'].to_i > 11
+            data[:hr] = last['HR'] if last['HR'] and last['HR'].to_i > 11
+            data[:rr] = last['RR'] if last['RR'] and last['RR'].to_i > 11
             
-            data[:temp] = last['T1'].to_i/10.0 if last['T1'] and last['T1'].to_i > 10
+            data[:temp] = last['T1'].to_i/10.0 if last['T1'] and last['T1'].to_i > 11
             # data.delete :temp if data[:temp] < 0 
             
-            data[:spo2] = last['SPO2'] if last['SPO2'] and last['SPO2'].to_i > 10
+            data[:spo2] = last['SPO2'] if last['SPO2'] and last['SPO2'].to_i > 11
             data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
             msg = <<MSG
 Data.Sensing device_id=#{name}
