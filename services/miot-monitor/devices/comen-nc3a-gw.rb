@@ -110,7 +110,7 @@ module Device
             
             bp_stamp = Time.now
             stamp = Time.now
-            
+            ref = '-'
             data = {}
             
             data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}"
