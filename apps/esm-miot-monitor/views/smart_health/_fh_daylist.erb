@@ -17,6 +17,7 @@
     midday = 1200
     for a in admits
         arecs = records.collect{|i| i if i.admit_id==a.id}.compact
+        arecs = DataRecord.where(:admit_id=>a.id,:stamp=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:stamp=>'desc').all
         %><!--<%="#{m_p_hn[m_admit_p[a.id]]} #{arecs.size} #{records.inspect}"%>--><%
         %><!--admit===========> <%=Admit.find(temp).inspect %><%#="#{admits.inspect}"%>--><%
         %><!--patient===========> <%="#{patients.inspect}"%>--><%
