@@ -125,7 +125,7 @@ module Device
             data[:temp] = last['T1'].to_i/10.0
             data.delete :temp if data[:temp] < 0 
             
-            data[:spo2] = last['SPO2']
+            data[:spo2] = last['SPO2'] if last['SPO2'] and last['SPO2'].to_i > 0
             data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
             msg = <<MSG
 Data.Sensing device_id=#{name}
