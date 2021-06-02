@@ -86,7 +86,7 @@ module Device
       
           lines = []
       
-      
+          
       
           for i in list
   
@@ -105,6 +105,10 @@ module Device
             puts last.inspect
       
             lines = []
+            
+            name = client.peeraddr
+            
+            data = {}
             
             data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}"
             data[:bp_sys] = last['NIBP_S']
