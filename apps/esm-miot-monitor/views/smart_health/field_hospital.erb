@@ -101,7 +101,7 @@ function updatetime(){
 }
 function updatedaylist(){
     $.ajax({
-        url:'fh_daylist',
+        url:'fh_daylist_p',
     }).done(function(data){
         $("#daylist").html(data.trim())
     })    
