@@ -113,7 +113,7 @@ module Device
             ref = '-'
             data = {}
             
-            data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}"
+            data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and  last['NIBP_S'].to_i>0
             data[:bp_sys] = last['NIBP_S'] if last['NIBP_S'] and last['NIBP_S'].to_i > 0
             data[:bp_dia] = last['NIBP_D'] if last['NIBP_D'] and last['NIBP_D'].to_i > 0
             data[:bp_mean] = last['NIBP_M'] if last['NIBP_M'] and last['NIBP_M'].to_i > 0
