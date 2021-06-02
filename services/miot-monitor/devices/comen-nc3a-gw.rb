@@ -118,9 +118,9 @@ module Device
             data[:bp_dia] = last['NIBP_D']
             data[:bp_mean] = last['NIBP_M']
             
-            data[:pr] = last['PR'] if last['PR'] and last['PR']> 0
-            data[:hr] = last['HR'] if last['HR'] and last['HR'] > 0
-            data[:rr] = last['RR'] if last['RR'] and last['RR'] > 0
+            data[:pr] = last['PR'] if last['PR'] and last['PR'].to_i > 0
+            data[:hr] = last['HR'] if last['HR'] and last['HR'].to_i > 0
+            data[:rr] = last['RR'] if last['RR'] and last['RR'].to_i > 0
             
             data[:temp] = last['T1'].to_i/10.0
             data.delete :temp if data[:temp] < 0 
