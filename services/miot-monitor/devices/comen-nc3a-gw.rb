@@ -107,6 +107,8 @@ module Device
             lines = []
             
             name = client.peeraddr[2].gsub(".","-")
+            name = "49-230-20-94"
+            
             
             bp_stamp = Time.now
             stamp = Time.now
