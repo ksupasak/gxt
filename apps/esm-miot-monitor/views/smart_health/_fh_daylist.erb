@@ -8,7 +8,7 @@
     m_p_name = Hash[patients.collect{|i| [i.id,i.first_name]}]
     m_p_hn = Hash[patients.collect{|i| [i.id,i.hn]}]
     admits = admits.collect{|i| i if m_p_name[m_admit_p[i.id]]}.compact
-    records = DataRecord.where(:created_at=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:created_at=>'desc').all
+    records = DataRecord.where(:stamp=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:stamp=>'desc').all
 
     check1 = 0
     check2 = 0
@@ -16,8 +16,8 @@
     midday = 1200
     for a in admits
         arecs = records.collect{|i| i if i.admit_id==a.id}.compact
-    
-        %><!--<%="#{m_p_hn[m_admit_p[a.id]]} #{arecs.size} #{records.inspect}"%>--><%
+        %><!--<%="#{m_p_hn[m_admit_p[a.id]]} #{arecs.size} #{records.last.inspect}"%>--><%
+        %><!--admit===========> <%="#{admits.last.inspect}"%>--><%
         check_score[a.id] = 0 unless check_score[a.id]
         tmax = 2400
         for r in arecs
