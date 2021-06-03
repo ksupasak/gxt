@@ -137,12 +137,12 @@ Data.Sensing device_id=#{name}
 MSG
             # puts msg
 
-            puts 'Start Sent Data '+msg
+            puts 'Start Sent Dataf '+msg
 
             begin
   
-            ws.send(msg)  
-            
+           a =  ws.send(msg)  
+           puts a.inspect 
             
           rescue Exception=>e
             puts e.inspect 
