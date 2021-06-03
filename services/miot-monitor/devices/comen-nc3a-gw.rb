@@ -146,15 +146,7 @@ MSG
            if a == nil
              puts 'Cannot connect server'
              sleep 2
-             
-             while ws.open? == false
-               
-                sleep 2
-                puts 'reconnect ws'
-                ws = MIOT::connect
-                puts ws
-                
-             end
+             ws = MIOT::connect
              
              a =  ws.send(msg)  
              
