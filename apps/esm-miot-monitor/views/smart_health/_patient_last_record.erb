@@ -1,0 +1,196 @@
+<style>
+.div-patient{
+	max-width:100%;
+	max-height:60vh;
+	overflow:auto;
+}
+</style>
+<%
+    nowdate = Time.now
+    date = Time.now
+    date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+
+    pdate = date.strftime('%Y-%m-%d')
+    pdate = params[:date] if params[:date] 
+    		
+    unless @current_hospital
+        
+        
+        networks = SHNetwork.all
+    
+    else
+    
+        networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+    
+    end
+
+    sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+    sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+    sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+    patients = Patient.all
+    
+    unless params[:query]
+
+    if @current_hospital
+    
+    patients = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| Patient.find(i.patient_id)}
+
+    elsif @current_network
+
+    patients = SHRelation.where(:network_id=>@current_network.id).all.collect{|i| Patient.find(i.patient_id)}
+    
+    else @current_hospital
+    
+    # patients = SHRelation.all.collect{|i| Patient.find(i.patient_id) if i.patient_id}
+    
+    end
+    
+    else
+    
+    
+    
+    if @current_hospital
+    
+        patients = Patient.where(:_id=>{'$in'=>SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}}, :hn=>params[:query]).all
+    
+    else @current_hospital
+    
+        patients = Patient.where(:_id=>{'$in'=>SHRelation.all.collect{|i| i.patient_id}}, :hn=>params[:query]).all
+    
+    end
+    
+    end
+
+    pid=patients.compact.collect{|i| i.id}
+    relations = SHRelation.where(:patient_id=>pid).all
+    rel_pid = relations.compact.collect{|i| i.patient_id}
+    patients = patients.collect{|i| i if rel_pid.index i.id}.compact
+
+    m_pd = Hash[relations.collect{|i| [i.patient_id,i.hospital_doctor_id]}.compact]
+    m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
+    m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
+    offs = Provider.where(:id=>relations.collect{|i| i.network_officer_id}.compact).all
+    m_on = Hash[offs.collect{|i| [i.id,i.name]}]
+
+    patients = patients.sort{|a,b| a.hn<=>b.hn}
+ 
+    c_success = 'badge badge-pill badge-success'
+    c_danger = 'badge badge-pill badge-danger'
+%>
+	<div class="row" style="border:0px solid">
+
+
+
+	<div class="col">
+
+	<%if @current_hospital %>
+	เครือข่าย :  
+	<select id="record-network_id" name="patient[network_id]"  value="" style="width:200px">
+	<option value="all" %>ทั้งหมด</option>
+	<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
+		<option value="<%=j[0]%>" <%=(pnet==j[0].to_s)? "selected" : "" %> ><%=j[1]%></option>
+	<% end %>
+	</select>
+	<% end %>
+	</div>
+
+	
+	<div class="col">
+	ค้นหา <input type='text' id="search-p">
+	</div>
+	
+	
+
+	<div class="col d-flex justify-content-end " >
+	    <% unless @current_network %>	
+            <div class=" d-flex justify-content-center btn-submit" >
+                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
+                <!--<a href="visit" class="btn  d-flex align-items-center justify-content-center">-->
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                        </svg>
+                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
+                </a>
+            </div>
+        <% end %>
+	</div>
+	</div>	
+	<hr/>
+
+
+<div class="div-patient">
+<table class="table table-striped table-bordered table-condensed" style="background:#FFF">
+<thead>
+<tr>
+<th>No.</th>
+<th>CID</th>
+<th>HN</th>
+<th>ชื่อ-สกุล</th>
+<% sense_list.each_with_index do |i,ix| %>
+<th><%=i%>(<%=sense_unit[ix]%>)</th>
+<% end %>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<%#=admits.inspect%>
+<%  patients.each_with_index do |p,ix| %>
+<%
+    a = Admit.where(:patient_id=>p.id).last
+    r = nil
+    r = DataRecord.where(:admit_id=>a.id).last if a
+%>
+<tr class="tr-p tr-network <%=m_pn[p.id]%>" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
+<td><%=ix+1%></td>
+<td><%=p.public_id if p.public_id%></td>
+<td><%=p.hn if p.hn%></td>
+<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
+<% for s in sense_list %>
+<td><%=r[s.to_sym] if r and r[s.to_sym]%> &nbsp; </td>
+<% end %>
+<td>
+<%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success' %>
+<%=link_to "ลบ", "destroy?id=#{p.id}", :class=>'btn btn-danger' unless @current_network %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+</div>
+
+<script>
+function networkshow(id){
+	if(id=='all'){
+		$(".tr-network").show()
+		$(".count").html($(".tr-network").length)
+	}else{
+		$(".tr-network").hide()
+		$("."+id).show()
+		
+		$(".count").html($("."+id).length)
+	}
+}
+function filter_p(s){
+	if(s&&s!=''){
+		$(".tr-p").hide()
+		$(".tr-p").each(function(i,v){
+			var t = $(v).attr("text")
+			if(t.indexOf(s)!=-1) $(v).show()
+		})
+	}else{
+		$(".tr-p").show()
+	}
+}
+$(document).ready(function(){
+	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+
+	$("#record-network_id").change(function(){
+		networkshow($(this).val())
+		//document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
+	})
+})
+
+</script> 
