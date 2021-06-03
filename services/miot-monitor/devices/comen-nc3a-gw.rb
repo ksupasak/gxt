@@ -139,7 +139,24 @@ MSG
 
             puts 'Start Sent Data '+msg
 
+            begin
+  
             ws.send(msg)  
+            
+            
+          rescue Exception=>e
+            puts e.inspect 
+            
+            unless ws.open?
+              puts 'error ws'
+              sleep 5
+              ws.close
+              puts 'reconnect ws'
+              ws = MIOT::connect
+            end
+      
+          end
+  
 
            # lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
            # lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
