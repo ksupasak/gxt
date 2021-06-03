@@ -589,15 +589,17 @@ end
 	<table class="table table-striped table-bordered table-condensed" style="background:#FFF">
 	<thead>
 		<tr>
-			<th>
+			<!-- <th>
 				สถานะ
-			</th>
-		
+			</th> -->
+		<th>
+			CID
+		</th>
+		<th>
+			No.
+		</th>
 			<th>
 				HN
-			</th>
-			<th>
-				CID
 			</th>
 			
 			<th>
@@ -624,7 +626,7 @@ end
 		</tr>
 	</head>
 	<tbody>
-		<% for i in patients 
+		<%  patients.each_with_index do |i,ti| 
 	
 			admit = Admit.where(:patient_id=>i.id).first
 			# provider = admit.provider
@@ -657,13 +659,15 @@ end
 		
 		%>
 		<tr class="tr-p tr-network <%=m_pn[i.id]%>" text='<%="#{i.hn} #{i.public_id} #{i.prefix_name} #{i.first_name} #{i.last_name} #{provider_name}"%> '>
+			<!--
 			<td><span class="badge <%=bclass%>"><%=bname%></span></td>
-			<!--<td><%=admit.status%></td>-->
-		
-			<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
-			<td><%=i.hn%></td> 
+			<td><%=admit.status%></td>-->
+			<td><%=ti+1%>.</td>
+			
 			
 			<td><%=i.public_id%></td> 
+			<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
+			<td><%=i.hn%></td>
 			
 			<td><%=i.prefix_name%><%=i.first_name%> <%=i.last_name%></td> 
 		
@@ -689,7 +693,7 @@ end
 
 	<div class="row">
 		<div class="col">
-			นัดวันนี้ <%=patients.size%> คน จาก <%=Patient.where(:zone_id=>session[:current_zone]).count %> คน
+			<span class="count"><%=SHRelation.where(:hospital_id=>@current_hospital.id).count %></span> จาก <%= SHRelation.where(:hospital_id=>@current_hospital.id).count %> คน
 		</div>
 		<div class="col">
 			<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
@@ -786,9 +790,12 @@ end
 function networkshow(id){
 	if(id=='all'){
 		$(".tr-network").show()
+		$(".count").html($(".tr-network").length)
 	}else{
 		$(".tr-network").hide()
 		$("."+id).show()
+		
+		$(".count").html($("."+id).length)
 	}
 }
 function filter_p(s){
