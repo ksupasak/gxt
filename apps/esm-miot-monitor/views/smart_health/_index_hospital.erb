@@ -695,7 +695,13 @@ end
 
 	<div class="row">
 		<div class="col">
+			<% if @current_hospital %>
 			<span class="count"><%=SHRelation.where(:hospital_id=>@current_hospital.id).count %></span> จาก <%= SHRelation.where(:hospital_id=>@current_hospital.id).count %> คน
+			<% end %>
+			
+			<% if @current_network %>
+			<span class="count">จาก <%= SHRelation.where(:hospital_id=>@current_network.id).count %> คน
+			<% end %>
 		</div>
 		<div class="col">
 			<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
