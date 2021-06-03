@@ -170,19 +170,25 @@
 			 
 	  	%>
 		<h3>Patient</h3>
-		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{hn cid name}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id
-		
+		admit_id = nil
 		if patient
 		
-		out[0] = patient.hn
 		
-		out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		out[0] = (patient.hn and patient.hn!="" )? patient.hn : '-'
+		
+		out[1] = (patient.public_id and patient.public_id!="")? patient.public_id : '-'
+		
+		out[2] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		
+		admit = Admit.where(:patient_id=>patient.id).last
+		admit_id = admit.id if admit
 		
 		end
 		
-		out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("แสดง", "show?id=#{admit_id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
 		
 		out
 		end

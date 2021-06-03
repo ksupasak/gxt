@@ -23,7 +23,13 @@
 
  <% if request.post? %>	
  
- <% if params[:patient] 
+ <% 
+ 	
+ puts "xxxxxx"
+ puts params.inspect 
+ puts Patient.count
+ 
+ if params[:patient] 
  		
 		params[:patient][:zone_id] = session[:current_zone]
 		
@@ -35,15 +41,20 @@
  	 patient.update_attributes params[:patient]
 
  else
-
- 	 patient = Patient.create params[:patient]
+	 
+	 # patient = Patient.where(:public_id=>params[:patient][:public_id]).first
+	 #
+	 #  	 patient = Patient.create params[:patient]
 
  end
  #
 	 
 	 	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}
+	    
+		cond = [{:public_id=> params[:patient][:public_id]}]
+		cond << {[:hn]=> params[:patient][[:hn]]} if params[:patient][:hn] and params[:patient][:hn]!=""
 	 
- 		patient  = Patient.where(:hn=> params[:patient][:hn], :_id=>{'$in'=>patient_ids}).first
+ 		patient  = Patient.where('$or'=>cond, :_id=>{'$in'=>patient_ids}).first
 		
 		if patient 
 		
@@ -51,40 +62,20 @@
 			
 		else
 		
-		patient = Patient.create params[:patient]
+		     patient = Patient.create params[:patient]
 		
-		# if params[:relation]
-			
 		
-			
-			# params[:relation][:patient_id] = patient.id
-		# 	params[:admit][:provider_id]   = params[:relation][:hospital_doctor_id]
-		# 	params[:patient][:hospital_id] = @current_hospital params[:relation][:hospital_id]
-		# 	params[:patient][:network_id]  = params[:relation][:network_id]
 			params[:relation][:patient_id] = patient.id
-			# params[:admit][:provider_id]   = params[:relation][:hospital_doctor_id]
 			params[:relation][:hospital_id] = @current_hospital.id 
 			
-			params[:patient][:network_id]  = params[:relation][:network_id]
-
-			relation = SHRelation.where(:patient_id=>patient.id).first
-			
-			if relation
-	
-				relation.update_attributes params[:relation] 
-				
-			else
-			
-				relation = SHRelation.create params[:relation]
-			
-			end
+			relation = SHRelation.create params[:relation]
 			
 		
 		
 		if params[:admit]
 		
-				admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now
-				admit.update_attributes  params[:admit]
+				admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now, :note=> params[:admit][:note]
+			
 		
 		end
 		
@@ -121,6 +112,9 @@
             <div class="col title-fill ">
      		   
 		<%
+		
+		found = false
+		
 		if params[:vid] and params[:vid]!=''
 			visit = SHVisit.find params[:vid]
 		end
@@ -129,6 +123,7 @@
 			# admit = Admit.find(params[:admit_id])
 			admit = Admit.find(params[:id])
 			patient = admit.patient
+			found = true if patient
 			relation = SHRelation.where(:patient_id=>patient.id).first
 			visit = SHVisit.new :patient_id=>patient.id, :date=> Time.now if !visit
 			
@@ -145,6 +140,15 @@
 			
 			
 		%>
+		
+		<% if found %>
+			<style>
+				.form-patient{
+					background:#ddffdd;
+					border:1px solid #ccc;
+				}
+				</style>
+		<% end %>
 		<div class="card admit-form">
             <div class="card-body d-flex">
 				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
@@ -202,24 +206,33 @@
 		
 			<div class="row" style="background-color:#ffc;padding-bottom:20px">
 				
+		
+				
+
+				<div class="col-md-4">
+				<label for="patient-public_id">เลขประจำตัวประชาชน</label>
+				<input type="text" class="form-control form-patient validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="CID" >
+				</div>
+				
 				<div class=" col-md-4">
 		  			<label for="product-name">HN</label>
-		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
+		  			<input type="text" class="form-control form-patient  validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
 					<input type="hidden" name="id" value="<%=params[:id]%>">
 					<input type="hidden" name="relation_id" value="<%=params[:relation_id]%>">
 	            
 				</div>
 				
-
-				<div class="col-md-4">
-				<label for="patient-public_id">เลขประจำตัวประชาชน</label>
-				<input type="text" class="form-control validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="CID" >
-				</div>
-				
-				<div class=" col-md-4"><br/>
-	            <a id="btn-search" href="#" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
+				<div class=" col-md-2"><br/>
+	            <a id="btn-search" href="#" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel" style="width:100px">
 	                ค้นหา
 	            </a>
+			</div>
+				<div class=" col-md-2"><br/>
+			
+	            <a id="btn-clean" href="visit" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel " style="width:60px" >
+	                ล้าง
+	            </a> 
+				
 				</div>
 				<script>
 				function clicksearch(){
@@ -261,19 +274,19 @@
 			
 		<div class="col-4 col-md-4">
 		<label for="patient-prefix_name">คำนำหน้า</label>
-		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
+		<input type="text" class="form-control form-patient " id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
 		</div>
 	
 
 		<div class="col-4 col-md-4">
 		<label for="patient-first_name">ชื่อ</label>
-		<input type="text" class="form-control validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
+		<input type="text" class="form-control form-patient  validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
 		</div>
 
 		<div class="col-4 col-md-4">
 			<label for="patient-last_name">นามสกุล</label>
 			
-		<input type="text" class="form-control validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
+		<input type="text" class="form-control  form-patient  validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
 		</div>
 		
 		</div><!--row-->
@@ -283,7 +296,7 @@
 			
 		<div class="col-4 col-md-4">
 		<label for="patient-gener">เพศ</label>
-		<select name="patient[gender]" class="form-control" >
+		<select name="patient[gender]" class="form-control form-patient " >
 		<option value="">ไม่ระบุ</option>
 		<option value="M">ชาย</option>
 		<option value="F">หญิง</option>
@@ -294,12 +307,12 @@
 	
 		<div class="col-8 col-md-4">
 		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
-		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
+		<input type="text" class="form-control form-patient " id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
 		<div class="col-8 col-md-4">
 		<label for="patient-age">อายุ</label>
-		<input type="text" class="form-control" id="patient-age" name="patient[age]" value="<%=patient.age%>" placeholder="Age" style="">
+		<input type="text" class="form-control form-patient " id="patient-age" name="patient[age]" value="<%=patient.age%>" placeholder="Age" style="">
 		</div>
 
 		</div><!--row-->
@@ -309,48 +322,48 @@
 			
 		<div class="col-4 col-md-4">
 		<label for="patient-blood">หมู่เลือด</label>
-	    <input type="text" class="form-control" id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
+	    <input type="text" class="form-control form-patient " id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
 	    </div>
 	
 		<div class="col-4 col-md-4">
 		<label for="patient-status">สถานภาพสมรส</label>
-		<input type="text" class="form-control" id="patient-status" name="patient[status]" value="<%=patient.status%>" placeholder="Status" style="">
+		<input type="text" class="form-control form-patient "  id="patient-status" name="patient[status]" value="<%=patient.status%>" placeholder="Status" style="">
 		</div>
 		
 		<div class="col-12 col-md-4">
 		<label for="patient-job">อาชีพ</label>
-		<input type="text" class="form-control" id="patient-job" name="patient[job]" value="<%=patient.job%>" placeholder="Occupation" style="">
+		<input type="text" class="form-control form-patient " id="patient-job" name="patient[job]" value="<%=patient.job%>" placeholder="Occupation" style="">
 		</div>
 
 		<div class="col-4 col-md-4">
 		<label for="patient-race">เชื้อชาติ</label>
-		<input type="text" class="form-control" id="patient-race" name="patient[race]" value="<%=patient.race%>" placeholder="Race" style="">
+		<input type="text" class="form-control form-patient " id="patient-race" name="patient[race]" value="<%=patient.race%>" placeholder="Race" style="">
 		</div>
 
 		<div class="col-4 col-md-4">
 		<label for="patient-nation">สัญชาติ</label>
-		<input type="text" class="form-control" id="patient-nation" name="patient[nation]" value="<%=patient.nation%>" placeholder="Nation" style="">
+		<input type="text" class="form-control form-patient " id="patient-nation" name="patient[nation]" value="<%=patient.nation%>" placeholder="Nation" style="">
 		</div>
 
 		<div class="col-4 col-md-4">
 		<label for="patient-religion">ศาสนา</label>
-		<input type="text" class="form-control" id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
+		<input type="text" class="form-control form-patient " id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
 		</div>
 
 
 		<div class="col-8 col-md-6">
 		<label for="patient-passport">เลขที่หนังสือเดินทาง</label>
-		<input type="text" class="form-control" id="patient-passport" name="patient[passport]" value="<%=patient.passport%>" placeholder="Passport" style="">
+		<input type="text" class="form-control form-patient " id="patient-passport" name="patient[passport]" value="<%=patient.passport%>" placeholder="Passport" style="">
 		</div>
 
 		<div class="col-12 col-md-12">
 		<label for="patient-addr">ที่อยู่ตามบัตรประชาชน</label>
-		<input type="text" class="form-control" id="patient-addr" name="patient[addr]" value="<%=patient.addr%>" placeholder="Address" style="">
+		<input type="text" class="form-control form-patient " id="patient-addr" name="patient[addr]" value="<%=patient.addr%>" placeholder="Address" style="">
 		</div>
 
 		<div class="col-12 col-md-12">
 		<label for="patient-addr_present">ที่อยู่จริง <input id="chk-addr" type="checkbox" <%=(patient.addr_present and patient.addr_present!='' and patient.addr_present==patient.addr)? "checked" : "" %>> ตามที่อยู่บัตรประชาชน</label>
-		<input type="text" class="form-control" id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
+		<input type="text" class="form-control form-patient " id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
 		</div>
 		<script>
 		
@@ -358,17 +371,17 @@
 
 		<div class="col-8 col-md-4">
 		<label for="patient-contact_phone">โทร</label>
-		<input type="text" class="form-control" id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
+		<input type="text" class="form-control form-patient " id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
 		</div>
 
 		<div class="col-8 col-md-4">
 		<label for="patient-parent">ผู้ปกครอง/ผู้ติดต่อได้</label>
-		<input type="text" class="form-control" id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="ชื่อ - สกุล" style="">
+		<input type="text" class="form-control form-patient " id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="ชื่อ - สกุล" style="">
 		</div>
 
 		<div class="col-8 col-md-4">
 		<label for="patient-contact_name">เบอร์โทรผู้ติดต่อ</label>
-		<input type="text" class="form-control" id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="เบอร์โทร" style="">
+		<input type="text" class="form-control form-patient " id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="เบอร์โทร" style="">
 		</div>
 
 		</div><!--row-->
@@ -409,7 +422,7 @@
 		<div class="row mt-1"  style="padding-bottom:20px">
 		<div class="col-12 col-md-12">
 		<label for="product-name">หมายเหตุ</label>
-		<input type="text" class="form-control" id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
+		<input type="text" class="form-control form-patient " id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
 		</div>			
 		</div><!--row-->
 		

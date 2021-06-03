@@ -79,12 +79,20 @@
 	  	  case 'temp':
 			return '#00b3f7'
 		    break;
-  	  case 'rr':
-		return '#fdd245'
-	    break;
-  	  case 'co2':
-	return '#bcaf06'
-    break;
+  	      case 'rr':
+		    return '#fdd245'
+	        break;
+  	      case 'co2':
+	        return '#bcaf06'
+            break;
+	      case 'weight':
+	    return '#fd4545'
+        break;
+	      case 'height':
+        return '#43a442'
+          break;
+		
+			
 		  default:
 		    return 'blue'
 		}
@@ -108,7 +116,7 @@ var div = d3.select("body").append("div")
 
 <%
 	
-	charts = %w{bp_sys,bp_mean,bp_dia pr,spo2 temp,rr}
+	charts = %w{bp_sys,bp_mean,bp_dia pr,spo2 temp,rr weight,height}
 	# charts = %w{bp_sys,bp_dia,bp_mean,pr,spo2,temp,rr,weight}
 	
 	

@@ -470,13 +470,18 @@ reportid = "&record_id=#{report.id}" if report
 			<tr>
 				<td style="font-size:1em">
 					<%=i[:stamp].strftime("%H:%M")%>
+					<% if @current_role.index('admin') %>	
+   		     
+				     <a href="#" class="detail_delete c<%=data.id%> " style="font-size:1em;color:red" ctype="<%=i[:type]%>" cid="<%=data.id%>">Del</a>
+					
+					<% end %>
 				</td>
 				<td>
 					
 					
-		<a href="#" class="detail c<%=data.id%>" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
-					
-					
+		         <a href="#" class="detail c<%=data.id%>" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
+				
+			
 				</td>
 				
 				<% if i[:type]=='visit'
@@ -1108,16 +1113,42 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				 $( '.modal-detail' ).html( content );
 			 	 $("#modal-popup").modal()
 			 }
-			 
-		  
-		   
-		  
+			
 		 });
 		 
 		 event.preventDefault()
 		 
+	 })
+	 
+	 
+	 
+	 $('.detail_delete').click(function(event){
+	 	
+		ctype = $(this).attr('ctype')
+		cid = $(this).attr('cid')
 		 
+		 $.ajax({
+		   url: "detail_delete?id="+cid+"&ctype="+ctype+"&admit_id=<%=params[:id]%>",
+		   context: document.body
+		 }).done(function(content) {
+		
+			 location.reload();
+		   
+			// width =  $(window).width()
+	//
+	// 		 if(width>1200){
+	// 		 	 $( '.content-detail' ).html( content );
+	// 		 }else{
+	// 			 $( '.content-detail' ).html("");
+	// 			 $( '.modal-detail' ).html( content );
+	// 		 	 $("#modal-popup").modal()
+	// 		 }
+	//
+		 });
+		 
+		 event.preventDefault()
 		 
 	 })
+	 
 	 
 		</script>

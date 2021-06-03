@@ -524,7 +524,19 @@ end
 		admits = Admit.where(:zone_id=>session[:current_zone]).all
 		usernetworks = SHUserNetwork.all
 		uns = usernetworks.collect{|i| i.user_id}
-		networks = SHNetwork.all
+		
+		
+		unless @current_hospital
+			
+			
+			networks = SHNetwork.all
+		
+		else
+		
+			networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+		
+		end
+		
 		pid=patients.compact.collect{|i| i.id}
 		relations = SHRelation.where(:patient_id=>pid).all
 		
@@ -584,6 +596,10 @@ end
 			<th>
 				HN
 			</th>
+			<th>
+				CID
+			</th>
+			
 			<th>
 				ชื่อ-นามสกุล
 			</th>
@@ -646,6 +662,9 @@ end
 		
 			<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
 			<td><%=i.hn%></td> 
+			
+			<td><%=i.public_id%></td> 
+			
 			<td><%=i.prefix_name%><%=i.first_name%> <%=i.last_name%></td> 
 		
 			<td><%=provider_name if provider_name%></td> 

@@ -93,14 +93,16 @@
 </span>
 <br><br>
 ผู้ป่วยของฉัน <%="(#{my_list.size})".html_safe if my_list.size>0%>
-<%= tabular :data=>my_list, :model=>%w{status hn name provider action}, :label=>{'provider'=>'แพทย์','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
+<%= tabular :data=>my_list, :model=>%w{status hn cond name provider action}, :label=>{'provider'=>'แพทย์','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
-	phn = ''
-	pname = ''
+	phn = '-'
+	pname = '-'
+	cid = '-'
 	if patient
-		phn = patient.hn
+		phn = patient.hn if patient.hn and patient.hn.size>0
+		cid = patient.public_id  if patient.public_id and patient.public_id.size>0
 		pname = patient.first_name if patient.first_name
 		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
 	end
@@ -123,9 +125,11 @@
 	
 	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
 	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
+	out[2] = link_to("#{cid}","admit?id=#{admit.id}")
+	
+	out[3] = link_to("#{pname}","admit?id=#{admit.id}")
 	provider = Provider.find(row.provider_id)
-	out[3] = provider.name if provider
+	out[4] = provider.name if provider
 	
 	status = ""
 	status = "แสดง" # if row.status==nil
@@ -137,14 +141,17 @@ end
 %>
 <br/>
 ผู้ป่วยเยี่ยมบ้าน รพสต อสม 
-<%= tabular :data=>other_list, :model=>%w{status hn name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
+<%= tabular :data=>other_list, :model=>%w{status hn public_id name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
-	phn = ''
-	pname = ''
+	phn = '-'
+	pname = '-'
+	cid = '-'
 	if patient
-		phn = patient.hn
+		phn = patient.hn if patient.hn and patient.hn.size>0
+		cid = patient.public_id  if patient.public_id and patient.public_id.size>0
+		pname = patient.first_name if patient.first_name
 		pname = patient.first_name if patient.first_name
 		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
 	end
@@ -173,9 +180,10 @@ end
 	
 	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
 	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
-	out[2] = link_to("#{pname}","admit?id=#{admit.id}")
+	out[2] = link_to("#{cid}","admit?id=#{admit.id}")
+	out[3] = link_to("#{pname}","admit?id=#{admit.id}")
 	network = SHNetwork.find(row.network_id)
-	out[3] = link_to("#{network.name}","#")
+	out[4] = link_to("#{network.name}","#")
 	
 	
 	status = ""

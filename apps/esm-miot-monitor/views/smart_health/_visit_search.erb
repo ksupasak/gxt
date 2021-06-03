@@ -1,15 +1,31 @@
-<%
+<% inline(this,:'_init')
+
     cid = params[:cid]
     hn = params[:hn]
-    s = nil
-    admit = nil
-    if hn
-        s={:hn=>hn}
-    elsif cid
-        s={:cid=>cid}
-    end
-    if s
-        p = Patient.where(s).first
-        admit = Admit.where(:patient_id=>p.id).last if p
-    end
+    # s = nil
+#     admit = nil
+#     if hn
+#         s={:hn=>hn}
+#     elsif cid
+#         s={:cid=>cid}
+#     end
+#
+	cond = []
+	cond << {:public_id=>cid} if cid!="" and cid.size>0
+	cond << {:hn=>hn} if hn!="" and hn.size>0
+	
+		
+	puts @current_hospital
+	
+	relations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	puts relations.collect{|i| i.patient_id }.inspect 
+	
+	p = Patient.where('$or'=>cond ).first
+	puts p.inspect 
+	
+	
+    p = Patient.where('$or'=>cond, :_id=>{'$in'=>relations.collect{|i| i.patient_id }}).first
+    admit = Admit.where(:patient_id=>p.id).last if p
+   
 %><%=admit.id if admit%>
