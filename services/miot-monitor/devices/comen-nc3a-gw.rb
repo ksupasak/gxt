@@ -144,10 +144,10 @@ MSG
            a =  ws.send(msg)  
            
            if a == nil
-             
+             puts 'Cannot connect server'
              sleep 5
              
-             while ws.open?
+             while ws.open? == false
                
                 sleep 5
                 puts 'reconnect ws'
