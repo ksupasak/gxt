@@ -911,7 +911,13 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<br/>
 				<select name="relation[hospital_id]" class="form-control">
 				<option value="" ></option>
-				<% for i in SHHospital.all
+				<%
+				
+				
+				hospitals = SHHospital.where(:_id=>relation.hospital_id).all
+				
+				%>
+				<% for i in hospitals
 				
 				%>
 				<option value="<%=i.id%>" <%="selected" if i.id==relation.hospital_id %>><%=i.name%></option>
@@ -987,9 +993,9 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<option value="" ></option>
 				<% 
 				
-				# @current_network = SHNetwork.find relation.network_id
+				@current_network = SHNetwork.find relation.network_id
 					
-				for i in SHNetwork.all
+				for i in SHNetwork.where(:hospital_id=>@current_network.hospital_id).all
 			
 				%>
 				<option value="<%=i.id%>" <%="selected" if i.id==relation.network_id %>><%=i.name%></option>
