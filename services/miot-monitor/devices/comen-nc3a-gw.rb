@@ -90,7 +90,7 @@ module Device
       
           for i in list
   
-          last[i[0]] = i[1]
+          last[i[0]] = i[1] if i[1][0..3]!='2021'
         
           end
       
