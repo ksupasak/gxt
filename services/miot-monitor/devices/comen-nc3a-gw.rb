@@ -54,6 +54,8 @@ module Device
 
     loop do
       
+      begin
+      
       Thread.start(server.accept) do |client|
         puts 'connect f'
      
@@ -169,6 +171,18 @@ MSG
         
       end  # thread
   
+  
+    rescue Exception=>e
+      
+      unless ws.open?
+        puts 'error ws'
+        sleep 5
+        ws.close
+        puts 'reconnect ws'
+        ws = MIOT::connect
+      end
+      
+    end
   
   end # loop
 
