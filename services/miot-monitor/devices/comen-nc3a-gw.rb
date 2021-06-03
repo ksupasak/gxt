@@ -48,7 +48,7 @@ module Device
 
 
     server = TCPServer.new 5001
-
+    @ws = ws
     last = {}
     last_sec = Time.now.to_i
 
@@ -141,14 +141,14 @@ MSG
 
            
   
-           a =  ws.send(msg)  
+           a =   @ws.send(msg)  
            
            if a == nil
              puts 'Cannot connect server'
              sleep 2
-             ws = MIOT::connect
+              @ws = MIOT::connect
              
-             a =  ws.send(msg)  
+             a =   @ws.send(msg)  
              
            end
            
