@@ -139,23 +139,39 @@ MSG
 
             puts 'Start Sent Dataf '+msg
 
-            begin
+           
   
            a =  ws.send(msg)  
-           puts a.inspect 
+           
+           if a == nil
+             
+             sleep 5
+             
+             while ws.open?
+               
+                sleep 5
+                puts 'reconnect ws'
+                ws = MIOT::connect
+                
+             end
+             
+             a =  ws.send(msg)  
+             
+           end
+           
             
-          rescue Exception=>e
-            puts e.inspect 
-            
-            unless ws.open?
-              puts 'error ws'
-              sleep 5
-              ws.close
-              puts 'reconnect ws'
-              ws = MIOT::connect
-            end
-      
-          end
+          # rescue Exception=>e
+#             puts e.inspect
+#
+#             unless ws.open?
+#               puts 'error ws'
+#               sleep 5
+#               ws.close
+#               puts 'reconnect ws'
+#               ws = MIOT::connect
+#             end
+#
+#           end
   
 
            # lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
