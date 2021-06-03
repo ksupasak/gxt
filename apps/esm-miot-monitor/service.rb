@@ -1224,7 +1224,7 @@ MSG
                  
                  px[:bp_stamp] = v['bp_stamp']
                  
-                 if v['bp'].index('/')
+                 if v['bp'] and v['bp'].index('/')
                    
                    t = v['bp'].split('/')
                    px[:bp_sys] = t[0].to_i

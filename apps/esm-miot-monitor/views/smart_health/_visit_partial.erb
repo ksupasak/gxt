@@ -127,7 +127,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") %> 
+	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") if visit.appointed_at %> 
 	
 </div>
 
@@ -164,7 +164,7 @@ else
 	<% 
 	
 	%> 
-	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") %> 
+	<u>เมื่อ </u> : <%=visit.appointed_at.strftime("%d/%m/%Y %H:%M") if visit.appointed_at  %> 
 	
 </div>
 

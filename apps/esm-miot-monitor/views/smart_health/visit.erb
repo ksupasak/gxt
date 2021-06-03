@@ -52,7 +52,7 @@
 	 	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}
 	    
 		cond = [{:public_id=> params[:patient][:public_id]}]
-		cond << {[:hn]=> params[:patient][[:hn]]} if params[:patient][:hn] and params[:patient][:hn]!=""
+		cond << {[:hn]=> params[:patient][:hn]} if params[:patient][:hn] and params[:patient][:hn]!=""
 	 
  		patient  = Patient.where('$or'=>cond, :_id=>{'$in'=>patient_ids}).first
 		

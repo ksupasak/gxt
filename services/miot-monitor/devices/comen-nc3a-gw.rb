@@ -48,16 +48,20 @@ module Device
 
 
     server = TCPServer.new 5001
-
+    @ws = ws
     last = {}
     last_sec = Time.now.to_i
 
     loop do
       
+      begin
+      
       Thread.start(server.accept) do |client|
         puts 'connect f'
      
           while content = client.read(128)
+            
+            
     
           # OBX||NM|40^HR||-100|0002-4182^bpm^
           # OBX||NM|1000^ST2||-10000|NULL|<20||||FDIL|<10||||F
@@ -90,7 +94,7 @@ module Device
       
           for i in list
   
-          last[i[0]] = i[1]
+          last[i[0]] = i[1] if i[1][0..3]!='2021'
         
           end
       
@@ -114,7 +118,7 @@ module Device
             stamp = Time.now
             ref = '-'
             data = {}
-            
+            data[:bp] = "-/-"
             data[:bp] = "#{last['NIBP_S']}/#{last['NIBP_D']}" if last['NIBP_S'] and last['NIBP_D'] and last['NIBP_M'] and  last['NIBP_S'].to_i>11
             data[:bp_sys] = last['NIBP_S'] if last['NIBP_S'] and last['NIBP_S'].to_i > 11
             data[:bp_dia] = last['NIBP_D'] if last['NIBP_D'] and last['NIBP_D'].to_i > 11
@@ -135,9 +139,35 @@ Data.Sensing device_id=#{name}
 MSG
             # puts msg
 
-            puts 'Start Sent Data '+msg
+            puts 'Start Sent Dataf '+msg
 
-            ws.send(msg)  
+           
+  
+           a =   @ws.send(msg)  
+           
+           if a == nil
+             puts 'Cannot connect server'
+             sleep 2
+              @ws = MIOT::connect
+             
+             a =   @ws.send(msg)  
+             
+           end
+           
+            
+          # rescue Exception=>e
+#             puts e.inspect
+#
+#             unless ws.open?
+#               puts 'error ws'
+#               sleep 5
+#               ws.close
+#               puts 'reconnect ws'
+#               ws = MIOT::connect
+#             end
+#
+#           end
+  
 
            # lines << "STATUS:T1|T1:#{last['T1'].to_i/10.0}" if last['T1']
            # lines << "STATUS:M0|PR:#{last['PR']}|SPO2:#{last['SPO2']}" if last['PR'] and last['SPO2'] and last['PR'][0]!='-' and  last['SPO2'][0]!='-'
@@ -169,6 +199,18 @@ MSG
         
       end  # thread
   
+  
+    rescue Exception=>e
+      
+      unless ws.open?
+        puts 'error ws'
+        sleep 5
+        ws.close
+        puts 'reconnect ws'
+        ws = MIOT::connect
+      end
+      
+    end
   
   end # loop
 
