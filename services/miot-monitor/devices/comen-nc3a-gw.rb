@@ -60,6 +60,8 @@ module Device
         puts 'connect f'
      
           while content = client.read(128)
+            
+            
     
           # OBX||NM|40^HR||-100|0002-4182^bpm^
           # OBX||NM|1000^ST2||-10000|NULL|<20||||FDIL|<10||||F

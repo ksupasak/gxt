@@ -223,7 +223,7 @@ end
 		
 		<%
 		if admit
-		senses = Sense.where(:admit_id=>admit.id).limit(99999).sort(:start_time.desc).all.reverse
+		senses = Sense.where(:admit_id=>admit.id).limit(3000).sort(:start_time.desc).all.reverse
 	    
 		
 		
