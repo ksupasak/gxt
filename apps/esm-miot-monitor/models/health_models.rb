@@ -206,6 +206,7 @@ class SHVisit < GXTModel
   
   key :appoint_type, String # at hospital , at network order
   key :date, Time
+  key :appointed_date, Time
   key :status, String
   key :start, Time
   
