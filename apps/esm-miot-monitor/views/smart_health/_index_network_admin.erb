@@ -315,23 +315,23 @@
 </div>
 
 <script>
-function filter_p(s){
-	if(s&&s!=''){
-		$(".tr-p").closest('tr').hide()
-		$(".tr-p").each(function(i,v){
-			var t = $(v).attr("text")
-			if(t.indexOf(s)!=-1) $(v).closest('tr').show()
-		})
-	}else{
-		$(".tr-p").closest('tr').show()
-	}
-}
+// function filter_p(s){
+// 	if(s&&s!=''){
+// 		$(".tr-p").closest('tr').hide()
+// 		$(".tr-p").each(function(i,v){
+// 			var t = $(v).attr("text")
+// 			if(t.indexOf(s)!=-1) $(v).closest('tr').show()
+// 		})
+// 	}else{
+// 		$(".tr-p").closest('tr').show()
+// 	}
+// }
 $(document).ready(function(){
 	$("#search-p").keyup(function(){
 		filter_p($(this).val())
 	})
-	$("#search-p2").keyup(function(){
-		filter_p($(this).val())
-	})
+	// $("#search-p2").keyup(function(){
+	// 	filter_p($(this).val())
+	// })
 })
 </script>

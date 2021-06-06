@@ -610,9 +610,11 @@ end
 		<th>
 			CID
 		</th>
+			<!--
 			<th>
 				HN
 			</th>
+			-->
 			
 			<th>
 				ชื่อ-นามสกุล
@@ -620,17 +622,19 @@ end
 			<th>
 				แพทย์ผู้รักษา
 			</th>
-		
+			<!--
 			<th>
 				จำนวนครั้ง
 			</th>
-
+			-->
 			<th>
 				เครือข่าย
-			</th>		
+			</th>
+			<!--		
 			<th>
 				เจ้าหน้าที่ออกตรวจ
 			</th>
+			-->
 		
 
 			<% sense_list.each_with_index do |i,ix| %>
@@ -685,17 +689,17 @@ end
 			
 			<td><%=i.public_id%></td> 
 			<!-- <td><%=admit.admit_stamp.strftime("%d/%m/%Y")%></td> -->
-			<td><%=i.hn%></td>
+			<!--<td><%=i.hn%></td>-->
 			
 			<td><%=i.prefix_name%><%=i.first_name%> <%=i.last_name%></td> 
 		
 			<td><%=provider_name if provider_name%></td> 
 		
-			<td><%=records%></td>
+			<!--<td><%=records%></td>-->
 		
 			<td><%=mnet[m_pn[i.id]]%></td>
 
-			<td><%=m_on[m_po[i.id]]%></td>
+			<!--<td><%=m_on[m_po[i.id]]%></td>-->
 				
 			<% for s in sense_list %>
 			<td><%=r[s.to_sym] if r and r[s.to_sym]%> &nbsp; </td>
