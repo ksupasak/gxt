@@ -456,7 +456,10 @@ end
      ws.on :message do |msg|
 
        if  msg.data.index('Start')
+        puts "==================================== Start"
         serial.write " NC0!E\r\n"
+        line = serial.readline("\r")
+        puts line
        end
 
      end
