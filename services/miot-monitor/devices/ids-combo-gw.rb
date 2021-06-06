@@ -448,10 +448,11 @@ end
     
     
     
-    puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs"
     
     ws.on :message do |msg|
+      puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs"
       puts msg.inspect 
+      
       lines = msg.data.split("\n")
       cmds = lines[0].split()
       cmd = cmds[0]
