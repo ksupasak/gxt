@@ -30,6 +30,9 @@
 	    <a class="nav-link " id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
 	  </li>
 	  <li class="nav-item">
+	    <a class="nav-link " id="pills-schedule-tab" data-toggle="pill" href="#pills-schedule" role="tab" aria-controls="pills-schedule" aria-selected="true">ตารางนัดหมาย</a>
+	  </li>
+	  <li class="nav-item">
 	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">รายการผู้ป่วย</a>
 	  </li>
 	</ul>
@@ -254,6 +257,329 @@
 		
 	  </div>  <!-- End Doctor Section-->
 	  
+	  <div class="tab-pane fade" id="pills-schedule" role="tabpanel" aria-labelledby="pills-schedule-tab">
+		  
+		  <%
+		  	
+  		# default today patient
+
+  		date = Time.now
+  		date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+
+  		pdate = date.strftime('%Y-%m-%d')
+  		pdate = params[:date] if params[:date] 
+			
+			
+		  %>
+		  
+	<div class="row" style="border:0px solid;">
+
+	<div class="col">
+		<h3>ตารางนัดหมาย</h3>
+	</div>
+	<div class="col d-flex justify-content-end">
+		
+		<% unless @current_network %>
+       <div class=" d-flex justify-content-center btn-submit" >
+		   <a href="visit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มนัด</span>
+           </a>
+       </div>&nbsp;
+       
+	   <!--<div class=" d-flex justify-content-center btn-submit" >
+		   
+		   
+		   
+		   
+           <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มผู้ป่วย</span>
+           </a>
+       </div>&nbsp;-->
+	   <% end %>
+	            <!--<div class=" d-flex justify-content-end btn-submit" >
+	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
+	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+	                      </svg>
+	                    <span class="pl-2 pb-0">ตารางนัด</span>
+	                </a>
+	            </div>-->
+	</div>
+
+	</div>					  
+		 <br/>
+<div class="row" style="border:0px solid">
+
+<div class="col-12 col-md-6">
+<!-- <h4>ตารางนัดหมาย</h4> -->
+<div class="schedule-content" style="background-color:white;padding:5px;border-radius: 5px;font-size:0.8em">
+...
+</div>
+
+
+</div> 
+
+<div class="col-12 col-md-6">
+
+
+<div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
+
+
+<% 
+
+  netnum = []
+  map = {}
+  
+  
+visits = []
+visits_other = []
+
+if @current_hospital
+	shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	patient_ids = shrelations.collect{|i| i.patient_id }
+	
+	# for doctor 
+	if @current_user_hospital.provider_type == 'doctor'  
+		
+		patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids},).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids} ).all
+		
+		
+	elsif @current_user_hospital.provider_type == 'nurse'  
+		
+		
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, ).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+
+	
+elsif @current_network
+	
+	
+	shrelations = SHRelation.where(:network_id=>@current_network.id).all
+	
+
+
+	if @current_provider 
+	
+		patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id).all
+		
+
+	else
+		
+		patient_ids = shrelations.collect{|i| i.patient_id }
+		
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+	
+
+
+end
+  
+  # visits= []
+ #
+ # 	if @current_hospital
+ #
+ # 		visits = SHVisit.where(:hospital_id=>@current_hospital.id, :provider_id=>@current_provider.id).all
+ #
+ # 	elsif @current_network
+ #
+ # 		visits = SHVisit.where(:network_id=>@current_network.id).all
+ #
+ # 	end
+ #
+ 	map = {}
+	
+	cmap = {}
+	
+	
+
+ 	for i in visits + visits_other
+
+ 		status = "W"
+ 		status = "C" if i.status == 'Completed'
+ 		date_key = i.date.strftime("%Y-%m-%d")
+ 		key = "-"
+
+		code = "00000"
+
+ 		if i.appoint_type=='1'
+
+			code = 'hos'
+ 			key = "#{date_key}:hos"
+
+ 		else
+
+
+ 			network = SHNetwork.find(i.network_id)
+
+ 			code = network.code if network and network.code and network.code !=''
+
+ 			key = "#{date_key}:#{code}"
+
+ 		end
+		
+		cmap[code] = 1 
+		
+
+ 		map[key] = {'W'=>[], 'C'=>[]} unless map[key]
+
+ 		map[key][status] << i
+
+ 	end
+
+ 	list = []
+    colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
+
+ 	map.keys.each_with_index do |k,id|
+
+ 		tk = k.split(":")
+ 		code = tk[1]
+ 		type = tk[2]
+		
+		color = colors[cmap.keys.index(code)%6]
+		color = '#015b9e'
+		color = '#21bca3' if code!='hos'
+		
+
+ 		title = "#{code} W:#{map[k]['W'].size} C:#{map[k]['C'].size}"
+ 		date = Date.parse(tk[0])
+ 		list <<    {
+ 			          title: title,
+ 			          url: "\#",
+ 			          start: date,
+					  color: color
+ 			        }
+
+ 	end
+
+ 	netnum = list
+	
+
+%>
+	
+	
+	<script>
+		
+		
+
+    document.addEventListener('DOMContentLoaded', function() {
+	
+		
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        events: <%=netnum.to_json.html_safe%>,
+		dateClick: function(info) {
+			$('.schedule-content').fadeOut("fast", function(){
+				
+			    var myKeyVals = {'date':info.dateStr}
+
+			    $.ajax({
+
+			        url: "schedule_partial",
+			        data: myKeyVals ,
+	
+			               success: function (result) {   // Result is not coming here please help
+			                   $('.schedule-content').html(result);
+							   $('.schedule-content').fadeIn();              
+			               },
+			               failure: function (response) {
+           
+			                   console.log(response.responseText);
+			               },
+			               error: function (response) {
+			                   //window.location.reload();
+							   // alert('')
+			                   // window.location.href='index?date='+info.dateStr;
+			               }
+			    });
+				
+				
+				
+			});
+		    
+			
+
+ 
+		  }
+      });
+	  
+	  
+	  
+
+      calendar.render();
+    
+  	
+	
+	});
+	
+	
+	
+
+	
+	
+    var myKeyVals = {'date':'<%=date.strftime('%Y-%m-%d')%>'}
+
+    $.ajax({
+
+        url: "schedule_partial",
+        data: myKeyVals ,
+
+               success: function (result) {   // Result is not coming here please help
+                   $('.schedule-content').html(result);              
+               },
+               failure: function (response) {
+   
+                   console.log(response.responseText);
+               },
+               error: function (response) {
+                   //window.location.reload();
+					//alert('err')
+                   // window.location.href='index?date='+info.dateStr;
+               }
+    });
+	
+
+</script>
+
+
+</div> 
+
+
+</div>
+
+
+	  </div>  <!-- End schedule Section-->
 	  
 	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	  	
