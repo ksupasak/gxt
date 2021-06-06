@@ -1315,15 +1315,7 @@
 		})
 		
 		
-		$('.start_bp').click(function(){
-			
-			
-			ws.send('Monitor.StartBP name=<%=session.id%>\nStart')
-			
-			alert('ok')
-			
-			
-		})
+
 	
 	 var show = function(el){
 	       return function(msg){ el.innerHTML = msg  }
@@ -1362,7 +1354,17 @@
 	 
 	 }
  
-    
+	$('.start_bp').click(function(){
+		
+		
+		ws.send('Monitor.StartBP name=<%=session.id%>\nStart')
+		
+		alert('ok')
+		
+		
+	})
+	
+	
 	 var myVar = setInterval(myTimer, 1000);
 
 	 function myTimer() {
