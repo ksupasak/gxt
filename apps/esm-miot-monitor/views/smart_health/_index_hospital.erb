@@ -549,6 +549,15 @@ end
 		sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
 		sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
 		sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+		m_p_r = {}
+		for p in patients
+			# a = Admit.where(:patient_id=>p.id).last
+			a = Admit.where(:patient_id=>p.id).first
+			r = nil
+			r = DataRecord.where(:admit_id=>a.id).last if a
+			m_p_r[p.id] = r if r
+		end
 		
 	
 		%>		
@@ -653,7 +662,9 @@ end
 			# provider = admit.provider
 			provider_name = m_pvname[m_pd[i.id]]
 			records = admit.records.size	
-			r = DataRecord.where(:admit_id=>admit.id).last if admit
+			# r = DataRecord.where(:admit_id=>admit.id).last if admit
+			r = nil
+    		r = m_p_r[p.id] if m_p_r[p.id]
 
 			provider_2 = '-'
 			if admit.provider_2_id

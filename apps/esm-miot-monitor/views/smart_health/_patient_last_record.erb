@@ -77,6 +77,14 @@
  
     c_success = 'badge badge-pill badge-success'
     c_danger = 'badge badge-pill badge-danger'
+
+    m_p_r = {}
+    for p in patients
+        a = Admit.where(:patient_id=>p.id).first
+        r = nil
+        r = DataRecord.where(:admit_id=>a.id).last if a
+        m_p_r[p.id] = r if r
+    end
 %>
 	<div class="row" style="border:0px solid">
 
@@ -114,6 +122,8 @@
                     <span class="pl-2 pb-0">เพิ่มใหม่</span>
                 </a>
             </div>
+        <% else %>
+        [ ตรวจแล้ว <%=m_p_r.size%> / <%=patients.size%>]    
         <% end %>
 	</div>
 	</div>	
@@ -138,9 +148,11 @@
 <%#=admits.inspect%>
 <%  patients.each_with_index do |p,ix| %>
 <%
-    a = Admit.where(:patient_id=>p.id).last
+    # a = Admit.where(:patient_id=>p.id).last
+    # r = nil
+    # r = DataRecord.where(:admit_id=>a.id).last if a
     r = nil
-    r = DataRecord.where(:admit_id=>a.id).last if a
+    r = m_p_r[p.id] if m_p_r[p.id]
 %>
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
 <td><%=ix+1%></td>
