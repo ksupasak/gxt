@@ -252,6 +252,7 @@
 						</div>
 				</div>
 				<div class="sense-panel header" style="height:13vh;">
+					<center ><a href="#" class=".start_bp">Start</a></center>
 				</div>
 				 
 			</div>
@@ -1311,6 +1312,17 @@
 		
 		
 		
+		})
+		
+		
+		$('.start_bp').click(function(){
+			
+			
+			
+			ws.send('Monitor.StartBP name=<%=session.id%>\nStart')
+			
+			
+			
 		})
 	
 	 var show = function(el){
