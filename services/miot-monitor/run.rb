@@ -65,18 +65,18 @@ ws = MIOT::connect
 # Device::monitor_vista_120_v1(ws)
 # }
 # 
-sleep 1
-# puts 'send'
+# sleep 1
+# # puts 'send'
+# #
+# ws.send("WS.Select name=local\n[\"Monitor.StartBP device_id=*\"]")
+# #
+#  ws.on :message do |msg|
 #
-ws.send("WS.Select name=local\n[\"Monitor.StartBP device_id=*\"]")
+#    puts msg.data
 #
- ws.on :message do |msg|
-
-   puts msg.data
-
- end
+#  end
+# #
 #
- 
  
 unless select_monitor
  threads << Thread.new {
