@@ -449,13 +449,9 @@ end
     
     
     
-    ws.onmessage do |msg_data|
-        
-      puts  "ws in"
-      puts  msg_data
-    
+    ws.on :message do |msg|
+      puts msg.data
     end
-    
     
     
     
