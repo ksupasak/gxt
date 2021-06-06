@@ -448,6 +448,7 @@ end
     
     
     
+    puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs"
     
     ws.on :message do |msg|
       puts msg.inspect 
@@ -464,7 +465,7 @@ end
       
     end
     
-    
+    puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss"
     
     while true
      
