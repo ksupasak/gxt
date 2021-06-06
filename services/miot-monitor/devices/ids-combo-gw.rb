@@ -461,6 +461,14 @@ end
         line = serial.readline("\r")
         puts line
        end
+       
+       
+       if  msg.data.index('Stop')
+        puts "==================================== Stop"
+        serial.write " ND!5\r\n"
+        line = serial.readline("\r")
+        puts line
+       end
 
      end
     

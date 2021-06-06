@@ -252,7 +252,7 @@
 						</div>
 				</div>
 				<div class="sense-panel header" style="height:13vh;">
-					<center ><a href="#" class="start_bp">Start</a></center>
+					<center ><a href="#" class="start_bp">Start</a> <a href="#" class="stop_bp">Stop</a></center>
 				</div>
 				 
 			</div>
@@ -1358,6 +1358,16 @@
 		
 		
 		ws.send('Monitor.StartBP device_id=*\nStart')
+		
+		// alert('ok')
+		
+		
+	})
+	
+	$('.stop_bp').click(function(){
+		
+		
+		ws.send('Monitor.StartBP device_id=*\nStop')
 		
 		// alert('ok')
 		
