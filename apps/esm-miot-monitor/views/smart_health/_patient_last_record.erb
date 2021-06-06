@@ -126,7 +126,7 @@
 <tr>
 <th>No.</th>
 <th>CID</th>
-<th>HN</th>
+<!--<th>HN</th>-->
 <th>ชื่อ-สกุล</th>
 <% sense_list.each_with_index do |i,ix| %>
 <th><%=i%>(<%=sense_unit[ix]%>)</th>
@@ -145,7 +145,7 @@
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
 <td><%=ix+1%></td>
 <td><%=p.public_id if p.public_id%></td>
-<td><%=p.hn if p.hn%></td>
+<!--<td><%=p.hn if p.hn%></td>-->
 <td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
 <% for s in sense_list %>
 <td><%=r[s.to_sym] if r and r[s.to_sym]%> &nbsp; </td>
