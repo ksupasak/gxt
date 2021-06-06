@@ -449,24 +449,6 @@ end
     
     
     
-    ws.on :message do |msg|
-      puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs"
-      puts msg.inspect 
-      
-      lines = msg.data.split("\n")
-      cmds = lines[0].split()
-      cmd = cmds[0]
-   
-      if cmd=='Monitor.StartBP'
-        
-          serial.write " NC0!E\r\n"         
-        
-      end
-      
-      
-    end
-    
-    puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss"
     
     while true
      
