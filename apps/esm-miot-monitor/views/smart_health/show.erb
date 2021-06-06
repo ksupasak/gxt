@@ -197,7 +197,7 @@ reportid = "&record_id=#{report.id}" if report
             </a>&nbsp; -->
 
 			<div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
-                <a href="connect?admit_id=<%=admit.id%>" class="btn  d-flex align-items-center justify-content-center " style="float:right">
+                <a href="connect?admit_id=<%=admit.id%>" class="connect-btn btn  d-flex align-items-center justify-content-center " style="float:right">
                     <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
                     ตรวจ
                  </a>
@@ -218,7 +218,36 @@ reportid = "&record_id=#{report.id}" if report
 			    </script>
                 </div> 
 				
+			<script>
+				
+				$('.connect-btn').click(function(e){
+					
+					<%
+					dob = '00000000'
+					dob = patient.dob.strftime('%d%m')+format('%04d',patient.dob.year+543) if patient.dob
+					
+					if dob =="00000000"
+						
+					%>
+					
+					alert('ไม่ได้ระบุวันเดือนปีเกิดผู้ป่วย')
+					
+					<% else %>
+					
+					var dob = prompt("กรุณาใส่วันเดือนปีเกิดเป็น DDMMYYYY ในปี พศ. ", "");
+					
+					if (dob != null && dob=='<%=dob%>') {
+					  
+					}else{
+						e.preventDefault();
+					}
+					
+					<% end %>
+				})
+				
 			
+				
+			</script>
 			
 				
 <!--				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
