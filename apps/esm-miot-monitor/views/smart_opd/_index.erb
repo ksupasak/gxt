@@ -1357,9 +1357,9 @@
 	$('.start_bp').click(function(){
 		
 		
-		ws.send('Monitor.StartBP name=<%=session.id%>\nStart')
+		ws.send('Monitor.StartBP device_id=*\nStart')
 		
-		alert('ok')
+		// alert('ok')
 		
 		
 	})

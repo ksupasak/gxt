@@ -57,23 +57,6 @@ puts ARGV.inspect
 ws = MIOT::connect 
 
 
-ws.on :message do |msg|
-  puts "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs"
-  puts msg.inspect 
-  
-  lines = msg.data.split("\n")
-  cmds = lines[0].split()
-  cmd = cmds[0]
-
-  if cmd=='Monitor.StartBP'
-      
-      # serial.write " NC0!E\r\n"      
-    
-  end
-  
-  
-end
-#
 # threads << Thread.new {
 # Device::monitor_b450_v1(ws)
 # }
@@ -82,8 +65,19 @@ end
 # Device::monitor_vista_120_v1(ws)
 # }
 # 
+sleep 1
+# puts 'send'
+#
+ws.send("WS.Select name=local\n[\"Monitor.StartBP device_id=*\"]")
+#
+ ws.on :message do |msg|
 
+   puts msg.data
 
+ end
+#
+ 
+ 
 unless select_monitor
  threads << Thread.new {
  Device::monitor_iacs_m540(ws)
@@ -144,6 +138,7 @@ for i in threads
   i.run
 end
 
+#
 for i in threads
   i.join
 end

@@ -447,9 +447,22 @@ end
     serial.read_timeout = 100
     
     
+
+    sleep 1
+    # puts 'send'
+    #
+    ws.send("WS.Select name=local\n[\"Monitor.StartBP device_id=*\"]")
+    #
+     ws.on :message do |msg|
+
+       if  msg.data.index('Start')
+        serial.write " NC0!E\r\n"
+       end
+
+     end
     
-    
-    
+
+
     while true
      
       puts 'v100'

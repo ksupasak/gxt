@@ -238,11 +238,13 @@ class HomeController < GXT
 
       
            ws.onopen do
-             puts "open websocket for #{@context.settings.name} on #{ws.hash}"
+             puts "open websockets for #{@context.settings.name} on #{ws.hash}"
              # ws.send("websocket opened")
              @context.settings.apps_ws[@context.settings.name] = [] unless @context.settings.apps_ws[@context.settings.name] 
              @context.settings.apps_ws[@context.settings.name] << ws
              @context.settings.apps_ws_rv[ws.hash] = @context.settings.name
+             
+         
            end
 
 
@@ -250,7 +252,7 @@ class HomeController < GXT
            
            ws.onmessage do |msg_data|
              
-             # puts msg_data
+             puts msg_data
              
              # begin 
               
@@ -283,13 +285,33 @@ class HomeController < GXT
              
              case cmd 
             
-            
+             when 'Monitor.StartBP'
+               puts 'Monitor.StartBP'
+               if @context.settings.cmd_map[name] and @context.settings.cmd_map[name]['Monitor.StartBP'] and wsnames = @context.settings.cmd_map[name]['Monitor.StartBP']['device_id=*']
+                 # puts wsnames.inspect
+                 for wsname in wsnames
+                   
+                   wss = @context.settings.ws_map[wsname]
+                   
+                   if wss
+                     # puts 'send...'
+                     wss.send msg_data.split("\n")[1..-1].join("\n")
+                   else
+                      @context.settings.ws_map.delete wsname
+                     
+                   end
+                   
+                 end
+               
+               
+               end
+               
              when 'Monitor.Update'
                
                
                
-               puts "Monitor"
-               puts msg_data
+               # puts "Monitor"
+               # puts msg_data
   #              puts @context.settings.cmd_map.inspect
   #
   #              # {"miot"=>{"Monitor.Update"=>{"zone_id=*"=>[-3100113279091852179]}, "ZoneUpdate"=>{"zone_id=*"=>[-3100113279091852179]}, "Alert"=>{"station_id=*"=>[-3100113279091852179]}, "Data.Image"=>{"station_id=*"=>[-3100113279091852179]}}}
