@@ -556,17 +556,16 @@ class Patient  < GXTModel
   
   def to_age date = Time.now
     
-    if self.age
+    if self.dob
     
-    out = self.age
-    
-    if self.dob 
-      out = ((date - self.dob)/31536000).to_i
-    end 
+    out = ((date - self.dob)/31536000).to_i
     
     return out
     
+    elsif self.age
+      return self.age
     else
+      
       return nil
     end
     

@@ -208,7 +208,7 @@
 		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;" class="d-flex justify-content-between">
 			
 		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;
-		<div class="d-inline-flex hn v-entry-hn" label="hn" name="hn" style="text-align:center;min-width:150px;border:1px solid;min-height:4vh;border-radius: 1vh;"> <div class="hn-value v-entry"></div></div></div>
+		<div class="d-inline-flex hn v-entry-hn" label="hn" name="hn" style="text-align:center;min-width:150px;border:1px solid;min-height:4vh;border-radius: 1vh;"> <div label="Patient ID" class="hn-value v-entry">-</div></div></div>
 		
 		<div class="col  patient_name " label="patient" name="patient" style="text-align:center"></div>
 	
@@ -242,16 +242,17 @@
 						
 						<div class="row">
 								<div class="col-12 d-flex justify-content-center bp main-value ">
-									<div class="bp_sys"><div class="col sense-val v-entry " label="bp_sys" name="bp_sys"> - </div></div> / <div class="bp_dia"> <div class="col sense-val v-entry  " label="bp_dia" name="bp_dia"> - </div></div>
+									<div class="bp_sys"><div class="col sense-val v-entry " label="BP Systolic" name="bp_sys"> - </div></div> / <div class="bp_dia"> <div class="col sense-val v-entry  " label="BP Diastolic" name="bp_dia"> - </div></div>
 								</div>
 						</div>
 						<div class="row">
 								<div class="col-12 d-flex justify-content-center bp">
-									(<div class="bp_mean"><div class=" v-entry " label="bp_mean" name="bp_mean"> - </div></div> ) <%='mmHg'%>
+									(<div class="bp_mean"><div class=" v-entry " label="BP Mean" name="bp_mean"> - </div></div> ) <%='mmHg'%>
 								</div>
 						</div>
 				</div>
 				<div class="sense-panel header" style="height:13vh;">
+					<center ><a href="#" class="start_bp">Start</a> <a href="#" class="stop_bp">Stop</a></center>
 				</div>
 				 
 			</div>
@@ -272,7 +273,7 @@
 						</div>
 		
 						<div class="row">
-							<div class="col sense-val v-entry " label="pr" name="pr">
+							<div class="col sense-val v-entry " label="Pulse rate (bpm)" name="pr">
 							-
 							</div>
 						</div>
@@ -301,7 +302,7 @@
 							</div>
 			
 							<div class="row">
-								<div class="col sense-val v-entry " label="rr" name="rr">
+								<div class="col sense-val v-entry " label="Respiratory rate (bpm)" name="rr">
 								-
 								</div>
 							</div>
@@ -334,7 +335,7 @@
 								</div>
 				
 								<div class="row">
-									<div class="col sense-val v-entry " label="spo2" name="spo2">
+									<div class="col sense-val v-entry " label="SpO<sub>2</sub> (%)" name="spo2">
 									-
 									</div>
 								</div>
@@ -370,7 +371,7 @@
 								</div>
 				
 								<div class="row">
-									<div class="col sense-val v-entry " label="temp" name="temp">
+									<div class="col sense-val v-entry " label="Body Temperature (C)" name="temp">
 									-
 									</div>
 								</div>
@@ -626,83 +627,7 @@
    </script>
    
    <script>
-     function hnPush(s){
-         v = $(".display-hn").html().trim()
-         b = s.html()
-         if(b.indexOf("img")!==-1){
-             v = v.substr(0,v.length-1)
-         }else{
-             v+=b
-         }
-         $(".display-hn").html(v)       
-     }
 
-     var buffer = 10;
- 	var cur_buffer = 0 ;
-	
- 	for(var i=0;i<buffer;i++){
- 		var myAudio = document.createElement('audio');
- 		  myAudio.setAttribute("id","audio-"+i)
- 		 if (myAudio.canPlayType('audio/mpeg')) {
- 			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
- 		 }
- 		 $('#buffer').append(myAudio);
-		  
- 	}
- 	$(".btn-clear").click(function(){
-		
- 		$('.display-hn').html("");
-		
- 	})  
-	
- //
-     $(".v-score").on('click',function(){
-		
-		$('#scoring-panel').modal('hide')
- 		 $("#scoreModal").modal('show')
-		 
- 		 // text = $(this).html()
- // 		 $('.display-score').html(text)
- //
- // 		 score_id = $(this).attr('sid')
- //
- // 		 $('.select-score .v-score').html(text.split(" ")[0])
- //
- // 		 data = prepare()
- // 		 // call_submit(note_record_admit_id,score_id, 'ajax')
- // 		 call_score('.score .v-entry',score_id, 'ajax', data)
- //
-
-         return false;
-     })
-	
-     $(".btn-score-select").on('click',function(){
-         var myAudio = document.getElementById('audio-'+cur_buffer)
-         myAudio.play();
- 		 $("#scoreModal").modal('hide')
-		 text = $(this).html()
-		 $('.display-score').html(text)
-		 
-		 score_id = $(this).attr('sid')
-		
-		 $('.select-score .v-score').html(text.split(" ")[0])
-         
-		 data = prepare()
-		 // call_submit(note_record_admit_id,score_id, 'ajax')
-		 call_score('.score .v-entry',score_id, 'ajax', data)
-		 
-		 
-         return false;
-     })	
-		  
-     $(".btn-hn").on('click',function(){
-         var myAudio = document.getElementById('audio-'+cur_buffer)
-         myAudio.play();
-         cur_buffer+=1;
-         if(cur_buffer==10)cur_buffer=0;
-         hnPush($(this))      
-         return false;
-     })
      </script>
 <script>
     function submitEntry(){
@@ -769,10 +694,14 @@
 			if(patient['first_name']&&patient['first_name'].length>0){
 				
 				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
+		
 				$('.patient_name').html(patient_name)	
 				$('.patient_gender').html(patient['gender'])	
-				$('.patient_age').html(patient['age'])	
-			
+				age = parseFloat(patient['age'])
+				$('.patient_age').html(parseInt(age))	
+				$('.hn').html(patient['hn'])	
+				
+			     
 				
 			}else{
 				$('.patient_name').html(patient_name)	
@@ -791,67 +720,8 @@
 		}); 
 	   
 	}
-	var will_reset_hn = false;
-	$(document).keypress(function(e){
-		
-	    if( event.which == 13 ) {
-	     getPatient();   
-		 will_reset_hn = true;
-		 }else{
-			 if(will_reset_hn){
-			 	will_reset_hn = false;
-			    $(".hn  .v-entry").html('')
-				
-			 }
-		$('.patient_name').html('...')			 
-        v = $(".hn  .v-entry").html().trim()
-        		 
-		v+=String.fromCharCode(e.keyCode)
-        
-        $(".hn .v-entry").html(v.trim())   
-		 } 
-		
-	})	
 
-	$(document).ready(function(){
-		// var current_modal ;
-		//
-		// $(".v-entry").click(function(){
-		// 	v = $(this).html().trim()
-		// 	if(v=='-')v = ''
-		// 	$(".display-hn").html(v)
-		//
-		// 	current_modal = $(this).attr('name')
-		// 	mname = $(this).parent("div").find(".l-entry").html()
-		// 	$("#opdModalTitle").html($(this).attr('label'))
-		// 	$("#opdModal").modal('toggle')
-		// })
-		//
-		// $("#save-modal").click(function(){
-		// 	value = $(".display-hn").html().trim()
-		// 	if(value==='') value='-'
-		//
-		// 	$('.'+current_modal+" .v-entry").html(value)
-		//
-		// 	if(current_modal=='weight'||current_modal=='height'){
-		// 		if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
-		// 			weight = parseFloat($('.weight').html().trim())
-		// 			height = parseFloat($('.height').html().trim())
-		// 			bmi = weight /(height*height/10000.0)
-		// 			bmi_text = bmi.toFixed(2);
-		//
-		// 			$('.bmi').html(bmi_text)
-		// 			checkInput('bmi')
-		// 		}
-		//
-		// 	}
-		// 	checkInput(current_modal)
-		// 	$("#opdModal").modal('toggle')
-		// 	// sos()
-		//
-		// })
 
-	})
 </script>
 	
 	
@@ -895,7 +765,210 @@
     
 	    $(document).ready(function(){
 		
+		
+	        function hnPush(s){
+	            v = $(".display-hn").html().trim()
+	            b = s.html()
+	            if(b.indexOf("img")!==-1){
+	                v = v.substr(0,v.length-1)
+	            }else{
+	                v+=b
+	            }
+	            $(".display-hn").html(v)       
+	        }
+
+	        var buffer = 10;
+	    	var cur_buffer = 0 ;
+	
+	    	for(var i=0;i<buffer;i++){
+	    		var myAudio = document.createElement('audio');
+	    		  myAudio.setAttribute("id","audio-"+i)
+	    		 if (myAudio.canPlayType('audio/mpeg')) {
+	    			  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+	    		 }
+	    		 $('#buffer').append(myAudio);
+		  
+	    	}
+	    	$(".btn-clear").click(function(){
+		
+	    		$('.display-hn').html("");
+		
+	    	})  
+	
+	    //
+	        $(".v-score").on('click',function(){
+		
+	   		$('#scoring-panel').modal('hide')
+	    		 $("#scoreModal").modal('show')
+		 
+
+
+	   	
+
+	            return false;
+	        })
+	
+	        $(".btn-score-select").on('click',function(){
+	            var myAudio = document.getElementById('audio-'+cur_buffer)
+	            myAudio.play();
+	    		 $("#scoreModal").modal('hide')
+	   		 text = $(this).html()
+	   		 $('.display-score').html(text)
+		 
+	   		 score_id = $(this).attr('sid')
+		
+	   		 $('.select-score .v-score').html(text.split(" ")[0])
+         
+	   		 data = prepare()
+	   		 // call_submit(note_record_admit_id,score_id, 'ajax')
+	   		 call_score('.score .v-entry',score_id, 'ajax', data)
+		 
+		 
+	            return false;
+	        })	
+		  
+	        $(".btn-hn").on('click',function(){
+	            var myAudio = document.getElementById('audio-'+cur_buffer)
+	            myAudio.play();
+	            cur_buffer+=1;
+	            if(cur_buffer==10)cur_buffer=0;
+	            hnPush($(this))
+				checkRange();      
+	            return false;
+	        })
+		
 			var current_modal ;
+			
+			
+			var will_reset_hn = false;
+			var target_key = 'hn';
+			
+			
+			function checkRange(){
+			
+				
+				v = $('.display-hn').html().trim();
+				
+				if(current_modal=='pr'){
+					i = parseInt(v);
+				
+					if(i>300){
+						v = 300
+					}
+					if(i<0){
+						v = 0
+					}
+				}
+				if(current_modal=='bp_sys'){
+					i = parseInt(v);
+				
+					if(i>400){
+						v = 400
+					}
+					if(i<0){
+						v = 0
+					}
+				}
+				
+				if(current_modal=='spo2'){
+					i = parseInt(v);
+				
+					if(i>100){
+						v = 100
+					}
+					if(i<0){
+						v = 0
+					}
+					
+					
+				}
+				
+				if(current_modal=='temp'){
+					i = parseInt(v);
+				
+					if(i>99){
+						v = 99
+					}
+					if(i<0){
+						v = 0
+					}
+					
+					
+				}
+				
+				
+			$('.display-hn').html(v)				
+			}
+			
+			$(document).keypress(function(e){
+		 
+		 
+		        // if($('.display-hn').html()=='-')$('.display-hn').html("")
+			
+				if(target_key=='hn'){
+					
+				
+				 
+				 
+			     if( event.which == 13 ) {
+			     	getPatient();   
+				 	will_reset_hn = true;
+				 }
+				 if( event.which == 8){
+					 $('.patient_name').html('...')			 
+		        	 v = $("."+target_key+"  .v-entry").html().trim()
+					 v = v.substring(0,v.length-1);
+					 $("."+target_key+" .v-entry").html(v.trim())   
+				 }
+				 else{
+					 if(will_reset_hn){
+					 	will_reset_hn = false;
+					    $("."+target_key+"  .v-entry").html('')
+				
+					 }
+					 $('.patient_name').html('...')			 
+		        	 v = $("."+target_key+"  .v-entry").html().trim()
+        		 
+					 v+=String.fromCharCode(e.keyCode)
+        
+		        	 $("."+target_key+" .v-entry").html(v.trim())   
+				 } 
+		 			
+					
+				 $('.display-hn').html($("."+target_key+" .v-entry").html());
+				 
+		 		}else{
+		 		
+				
+					 
+   			     if( event.which == 13 ) {
+					 $('#save-modal').click();
+   				 }
+				 else
+				 if( event.which == 8){
+   					 v = $('.display-hn').html().trim()
+   					 v = v.substring(0,v.length-1);
+   					 $("."+target_key+" .v-entry").html(v.trim())   
+   				 }
+   				 else{
+   					 v = $(".display-hn").html().trim()
+        		 
+   					 v+=String.fromCharCode(e.keyCode)
+        
+   		        	 $('.display-hn').html(v.trim())   
+   				 } 
+		 			
+					
+				 
+					
+					
+		 		}
+				
+				checkRange();	
+				
+				
+			})	
+			
 
 	        $(".v-entry-hn").click(function(){
 	            v = $(".hn .v-entry").html().trim()
@@ -914,6 +987,7 @@
 				$(".display-hn").html(v)
 			
 				current_modal = $(this).attr('name')
+				target_key = current_modal
 	            mname = $(this).parent("div").find(".l-entry").html()
 	            $("#opdModalTitle").html($(this).attr('label'))
 	            $("#opdModal").modal('toggle')
@@ -939,6 +1013,10 @@
 	            if(value==='') value='-'
 				$('.'+current_modal+" .v-entry").html(value)
 				
+				target_key = 'hn'
+				will_reset_hn = true
+					
+						
 				if(current_modal=='hn'){
 					
 					getPatient();
@@ -1235,6 +1313,9 @@
 		
 		
 		})
+		
+		
+
 	
 	 var show = function(el){
 	       return function(msg){ el.innerHTML = msg  }
@@ -1273,7 +1354,27 @@
 	 
 	 }
  
-    
+	$('.start_bp').click(function(){
+		
+		
+		ws.send('Monitor.StartBP device_id=*\nStart')
+		
+		// alert('ok')
+		
+		
+	})
+	
+	$('.stop_bp').click(function(){
+		
+		
+		ws.send('Monitor.StartBP device_id=*\nStop')
+		
+		// alert('ok')
+		
+		
+	})
+	
+	
 	 var myVar = setInterval(myTimer, 1000);
 
 	 function myTimer() {

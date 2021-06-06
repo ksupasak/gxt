@@ -42,7 +42,7 @@ unless patient
 		robj.merge! rx['record']
 		
   
-		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>robj['birth_date']
+		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>Date.parse(robj['birth_date'])
 	
 	else
 		
@@ -70,6 +70,13 @@ end
 
 
 patient = Patient.new :hn=>params[:hn] unless patient 
+
+
+patient.age = patient.to_age_text
+
+puts "xxxxxxxxxxxxxxxxxx"
+puts patient.age
+
 
 
 @current_zone = Zone.find session[:current_zone]
