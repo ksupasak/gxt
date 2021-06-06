@@ -435,7 +435,7 @@ end
 	
     begin 
 
-   loop do
+  loop do
      
   puts 'starting..v100'  
 
@@ -445,6 +445,20 @@ end
   puts device_id
   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
     serial.read_timeout = 100
+    
+    
+    
+    
+    ws.onmessage do |msg_data|
+        
+      puts  "ws in"
+      puts  msg_data
+    
+    end
+    
+    
+    
+    
     while true
      
       puts 'v100'
@@ -456,9 +470,9 @@ end
           puts 'v100 query'
 
 
-	  spo2 = nil
+	        spo2 = nil
           pr = nil
-	  bp = nil
+	        bp = nil
           dia = nil
           mean = nil
            
@@ -472,13 +486,9 @@ end
 		
            spo2 = line[4..6].to_i
 
-	  end
+	   end
 
-# OA0000012#-
-# OA1099712#G
-# OA1099212#B
-# OA1099912#I
-# OA1098812#G
+
 
 
           serial.write " RA!6\r\n"
@@ -489,7 +499,7 @@ end
 
           if line[3]=='2'
 
-           pr = line[4..7].to_i
+             pr = line[4..7].to_i
 
           end           
 
@@ -502,11 +512,11 @@ end
 
           if line[3]=='1'
 
-           sys = line[10..12].to_i
-	   dia = line[13..15].to_i
-	   mean = line[16..18].to_i
+               sys = line[10..12].to_i
+	             dia = line[13..15].to_i
+	             mean = line[16..18].to_i
 
-          puts "Sys:#{sys} Dia:#{dia} Mean:#{mean}"
+               puts "Sys:#{sys} Dia:#{dia} Mean:#{mean}"
 
           end
 
