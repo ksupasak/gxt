@@ -69,16 +69,16 @@
 		color:var(--text-main);
 	}
 	.sense-panel{
-		/* font-size:1.5em; */
+		
 		/* height:5.2em; */
-		height:24vh;
+		height:20vh;
 		border-radius: 5px;
 		/* padding:10px; */
 		padding:1vh;
 		border:1px solid var(--bg-second-nav);
 		/* background: transparent linear-gradient(180deg, #151C26  0%, #17222F 100%) 0%
 		0% no-repeat padding-box; */
-
+		
 		vertical-align:baseline;
 		margin-bottom:0px;
 		margin-top:1vh;
@@ -100,6 +100,11 @@
 	}
 	.sense-val{
 		font-size:9vh;
+/*		color:#0037aa;*/
+		text-align:center;
+	}
+	.sense-val-mini{
+		font-size:7vh;
 /*		color:#0037aa;*/
 		text-align:center;
 	}
@@ -214,8 +219,16 @@
 	
 	     <div style="color:var(--text-second); "class="col patient" label="patient" name="patient" style="text-align:center">
 			 เพศ <div class="d-inline-flex patient_gender">-</div>,  อายุ : <div class="d-inline-flex patient_age"> - </div> ปี </div>
-	
-		
+	     
+		 
+		 Staff:<div class="d-inline-flex staff_id"> 
+			 <%
+			 staff_id = '-'
+			 staff_id = session[:staff_id] if session[:staff_id] and session[:staff_id].size>0 
+			 %>
+		<div class="d-inline-flex staff_id v-entry" label="Staff ID" name="staff_id" style="text-align:center;min-width:50px;padding-left:10px;padding-right:10px;border:1px solid #aaa;min-height:4vh;border-radius: 1vh;"> <div label="Staff ID" class=" v-entry"><%=staff_id%></div></div></div>
+		</div>
+		</div>
 		</div>
 	
 	
@@ -428,7 +441,7 @@
 				</div>
 				
 				<div class="row">
-					<div class="col sense-val v-entry " label="<%= x %>" name="<%=x%>">
+					<div class="col sense-val-mini v-entry " label="<%= x %>" name="<%=x%>">
 					-
 					</div>
 				</div>
@@ -475,6 +488,11 @@
 			
 			
 		<% end %>
+		
+		
+		
+		
+		
 		</div>
 		
 	</div>
@@ -630,97 +648,7 @@
 
      </script>
 <script>
-    function submitEntry(){
-		
-		
-		
-		$('.btn-primary').html('Loading')
-        $.post( "post", prepare() , function( data ) {         
-            data.inspect 
-			
-			hn = $('.hn .v-entry').html().trim()
-			
-            $("#beep").click()
-            setTimeout(function(){ window.location.replace("result?hn="+hn);  }, 1000);
-                   
-        });
-    }
-	
-	
-	
-	
-
-    function checkInput(d){
-		// alert(d)
-        v = $("."+d +" .v-entry").html().trim()
-        c = $("."+d +" .v-entry").closest(".sense-panel")
-        // prefix="de-"
-        // if(c.hasClass("d-entry-dark")) prefix="dk-"
-        if(v!==''&&v!=='-'){              
-            c.addClass("s-active").removeClass("s-empty")      
-        }else{
-            c.addClass("s-empty").removeClass("s-active")
-        }
-        isComplete = true
-
-        if(isComplete){
-            if($(".btn-entry").attr('class')){
-				   $("#ready").click()
-				
-                $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
-                $('.btn-opd').click(submitEntry)
-             
-            }
-        }else{
-            $('.btn-opd').unbind()
-            $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
-
-        }
-    }
-	
-	function getPatient(){
-	    hn = $(".hn-value").html().trim()
-	 
-		console.log(hn)
-		$.ajax({
-		  url: "find_patient?hn="+hn,
-		  context: document.body
-		}).done(function(data) {
-		  
-		   patient = JSON.parse(data)
-			console.log(patient)
-			
-			patient_name = "ไม่พบข้อมูล"
-			if(patient['first_name']&&patient['first_name'].length>0){
-				
-				patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
-		
-				$('.patient_name').html(patient_name)	
-				$('.patient_gender').html(patient['gender'])	
-				age = parseFloat(patient['age'])
-				$('.patient_age').html(parseInt(age))	
-				$('.hn').html(patient['hn'])	
-				
-			     
-				
-			}else{
-				$('.patient_name').html(patient_name)	
-				$('.patient_gender').html('-')	
-				$('.patient_age').html('-')	
-			}
-				
-				
-		
-			
-			
-			$('#ready').click()
-			
-			
-		  // $( this ).addClass( "done" );
-		}); 
-	   
-	}
-
+  
 
 </script>
 	
@@ -747,6 +675,9 @@
 	
 	<script>
 
+
+
+
 		$('#bp_start').click(function(){
 			//alert('start')
 			if(typeof device_interface === 'undefined'){
@@ -762,8 +693,110 @@
 	        var myAudio = document.getElementById('audio-0')
 	        myAudio.play();
 		})
+		
+	    function checkInput(d){
+			// alert(d)
+	        v = $("."+d +" .v-entry").html().trim()
+	        c = $("."+d +" .v-entry").closest(".sense-panel")
+	        // prefix="de-"
+	        // if(c.hasClass("d-entry-dark")) prefix="dk-"
+	        if(v!==''&&v!=='-'){              
+	            c.addClass("s-active").removeClass("s-empty")      
+	        }else{
+	            c.addClass("s-empty").removeClass("s-active")
+	        }
+	        isComplete = true
+
+	        if(isComplete){
+	            if($(".btn-entry").attr('class')){
+					   $("#ready").click()
+			
+	                $(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
+	                $('.btn-opd').click(submitEntry)
+         
+	            }
+	        }else{
+	            $('.btn-opd').unbind()
+	            $(".btn-opd").addClass("btn-entry").removeClass("btn-opd")
+
+	        }
+	    }
+		
+	    function submitEntry(){
+	
+	
+	
+			$('.btn-primary').html('Loading')
+	        $.post( "post", prepare() , function( data ) {         
+	            data.inspect 
+		
+				hn = $('.hn .v-entry').html().trim()
+		
+	            $("#beep").click()
+	            setTimeout(function(){ window.location.replace("result?hn="+hn);  }, 1000);
+               
+	        });
+	    }
+
+		
     
 	    $(document).ready(function(){
+
+		
+			var current_modal ;
+			var will_reset_hn = true;
+			var target_key = 'hn';
+		
+		  
+	
+	
+
+		
+	
+			function getPatient(){
+			    hn = $(".hn-value").html().trim()
+	 
+				console.log(hn)
+				$.ajax({
+				  url: "find_patient?hn="+hn,
+				  context: document.body
+				}).done(function(data) {
+		  
+				   patient = JSON.parse(data)
+					console.log(patient)
+			
+					patient_name = "ไม่พบข้อมูล"
+					if(patient['first_name']&&patient['first_name'].length>0){
+				
+						patient_name = patient['prefix_name']+patient['first_name']+" "+patient['last_name']
+		
+						$('.patient_name').html(patient_name)	
+						$('.patient_gender').html(patient['gender'])	
+						age = parseFloat(patient['age'])
+						$('.patient_age').html(parseInt(age))	
+						$('.hn .v-entry').html(patient['hn'])	
+				
+						will_reset_hn = true
+			     
+				
+					}else{
+						$('.patient_name').html(patient_name)	
+						$('.patient_gender').html('-')	
+						$('.patient_age').html('-')	
+					}
+				
+				
+		
+			
+			
+					$('#ready').click()
+			
+			
+				  // $( this ).addClass( "done" );
+				}); 
+	   
+			}
+		
 		
 		
 	        function hnPush(s){
@@ -837,11 +870,6 @@
 	            return false;
 	        })
 		
-			var current_modal ;
-			
-			
-			var will_reset_hn = false;
-			var target_key = 'hn';
 			
 			
 			function checkRange(){
@@ -902,7 +930,7 @@
 			
 			$(document).keypress(function(e){
 		 
-		 
+		 	   console.log('key')
 		        // if($('.display-hn').html()=='-')$('.display-hn').html("")
 			
 				if(target_key=='hn'){
@@ -1024,15 +1052,16 @@
 				}	
 				else
 				{
+		
 				if(current_modal=='weight'||current_modal=='height'){
-					if($('.weight').html().trim()!="-"&&$('.height').html().trim()!="-"){
-						weight = parseFloat($('.weight').html().trim())
-						height = parseFloat($('.height').html().trim())
+					if($('.weight .v-entry').html().trim()!="-"&&$('.height .v-entry').html().trim()!="-"){
+						weight = parseFloat($('.weight .v-entry').html().trim())
+						height = parseFloat($('.height .v-entry').html().trim())
 						bmi = weight /(height*height/10000.0)
 						bmi_text = bmi.toFixed(2);
 					
 	                    $('.bmi .v-entry').html(bmi_text)
-	                    checkInput('bmi')
+	                    
 					}
 				
 				}
@@ -1085,6 +1114,7 @@
 			var height=''
 			var score = ''
 			var bmi =''
+			var staff_id = ''
 			
 			$('.hn .v-entry').each(function(){
 				hn = $(this).html().trim();
@@ -1128,13 +1158,16 @@
 				score = $(this).html().trim();
 			})
 		
+			$('.staff_id .v-entry').each(function(){
+				staff_id = $(this).html().trim();
+			})
 		
 			bp = ""+bp_sys+"/"+bp_dia
 		
 		
 		
 		
-		 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+		 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
 			return data
 	    }
 
@@ -1379,6 +1412,22 @@
 
 	 function myTimer() {
 	   var d = new Date();
+	   var n = d.getSeconds();
+	   if(n%20==1){
+	   	
+		   $.ajax({
+		       url: "resend",
+		       error: function(){
+		           //do something
+		       },
+		       success: function(){
+		           console.log('Call resend')
+		       }
+		   });
+		
+	   }
+	   
+	   
 	   $('.timer').html(d.toLocaleTimeString());
 	 }
 	</script>

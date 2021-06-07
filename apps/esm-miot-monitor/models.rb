@@ -824,6 +824,102 @@ class DataRecord  < GXTModel
   
   timestamps!
   
+  
+  def send_record url
+    
+    
+    i = self
+    
+    
+    begin
+ 
+    data = {}
+    
+    
+    
+    
+    data = JSON.parse i.data if i.data
+  
+    px = {:hn=>data['hn'], :weight=>'', :height=>'', :bmi=>'', :pr=>'', :rr=>'', :spo2=>'',:bp=>i.bp, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :bp_mean=>i.bp_mean}
+    
+	  px[:weight] = format("%.2f",i[:weight].to_f) if i[:weight] and i[:weight]!="" and i[:weight]!="-"
+	  px[:height] = format("%.2f",i[:height].to_f) if i[:height] and i[:height]!="" and i[:height]!="-"
+	 
+
+	if i[:weight] and i[:weight]!="" and i[:weight]!="-"
+		
+    	weight = i[:weight].to_f
+    	height = i[:height].to_f
+		
+		  px.merge! :weight=>format("%.2f",weight),:height=>format("%.2f",height),:bmi=>format("%.2f",weight/height/height*10000) 
+	
+	end
+	
+	px[:pr] = i[:pr] if i[:pr]!='' and i[:pr]!='-'
+	px[:spo2] = i[:spo2] if i[:spo2]!='' and i[:spo2]!='-'
+	px[:temp] = i[:temp] if i[:temp]!='' and i[:temp]!='-'
+	px[:rr] = i[:rr] if i[:rr]!='' and i[:rr]!='-'
+	
+	px[:time] = Time.now.strftime("%H:%M:%S")
+	px[:date] = Time.now.strftime("%Y-%m-%d")
+	
+	px[:serial_number] = Setting.get(:serial_number,'00000')
+	
+	
+  px[:serial_number] = i[:device_id] if i[:device_id]
+	
+	
+	px[:record_id] = i.id
+	px[:record_at] = i.created_at
+	px[:staff_id] = data['staff_id']
+	
+    
+    
+    
+
+      http = Net::HTTP.new(url.host, url.port)
+      http.read_timeout = 2 # seconds
+    
+    
+      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json'})
+      request.set_form_data(px)
+      
+    
+      response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}
+      result = JSON.parse response.body
+    
+
+	    puts 'RESULT '+result.to_json
+	
+    
+      # i.update_attributes :send_status=>result['status']=='200 OK', :send_msg=>result.to_json
+		  if result['status']=='200 OK'
+        i.send_status = result['status']=='200 OK'
+        i.send_msg = result.to_json 
+		  else
+        i.send_status = false
+        i.send_msg = result.to_json 
+      end
+      i.save
+      
+      
+      
+      return result['status']=='200 OK'
+    
+	
+    rescue Exception => e
+      puts e.message 
+      puts  e.backtrace
+      error = true
+      err_msg = "Server Timeout!"
+      puts err_msg
+      return false
+    end
+  
+    
+  end
+  
+  
   def self.get_sense_list
     return %w{bp pr spo2 temp weight height rr glucose}.collect{|t| t.to_sym}
   end

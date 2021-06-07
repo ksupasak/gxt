@@ -70,7 +70,7 @@ records = DataRecord.all.sort{|a,b| b.stamp<=>a.stamp}
 		%>
 		
         <tr>
-             <td><%=i.stamp.localtime.strftime('%d/%m/%Y %H:%M')%></td>
+             <td><%=link_to i.stamp.localtime.strftime('%d/%m/%Y %H:%M'), "test_send?id=#{i.id}"%></td>
 			 <td><%=data['device_id'] if data['device_id']%></td>
              <td><%=link_to patient.hn, "result?hn=#{patient.hn}" %></td>
 	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>

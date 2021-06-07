@@ -90,9 +90,6 @@ CNX
       
       uri = URI("#{settings.endpoint}/api/MR/Patients/GetPatientProfileByMrn")
     
-      
-      headers = {'Content-Type' =>'application/json'}
-      
       data = {}
       
       content = <<CNX
@@ -116,6 +113,8 @@ CNX
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
+      request["Authorization"] = settings.token
+      
 
       puts '============= DEBUG ==================='
     
@@ -190,10 +189,174 @@ puts result.inspect
   
 end
  
-  
-
+ 
+ 
+ 
+ 
+ 
+ 
+# service to get patient data
 
   post '/send' do 
+  
+  hn = params[:hn]  
+  
+  ##############################################################
+  
+  puts 'Call send'
+
+  begin    
+
+  if login
+  
+      
+      uri = URI("#{settings.endpoint}/api/VitalSign/SaveVitalSigns")
+      
+      data = {}
+      
+      content = <<CNX
+      {
+      "mrn": "4210003"
+      }
+CNX
+   
+   
+   
+   
+# [{
+# "mrn": "0000001",
+# "locationId": "",
+# "machineId": "110021082417", "physicalExamId": 1,
+# "value": "116",
+# "unit": "mmHg",
+# "recordBy": "machine",
+# "recordDate": "15/03/2020 13:26:22.767", "staffId": "",
+# "remark": ""
+# },{...},{...}]
+   
+   
+      senses = {'pr'=>['PR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
+      
+      senses['pr']=['PR','bpm']
+      senses['rr']=['RR','bpm']
+      senses['spo2']=['SPO2','%']
+      senses['bp_sys']=['SBP','mmHg']
+      senses['bp_dia']=['DBP','mmHg']
+      senses['bp_mean']=['MBP','mmHg']
+      senses['temp']=['BT','C']
+      senses['score']=['SCORE','']
+      senses['weight']=['W','kg']
+      senses['height']=['H','cm']
+      
+      list = []
+      
+      mrn = params[:hn]
+      location_id = ''
+      exam_id = params[:record_id]
+      record_at = Date.parse(params[:record_at])
+      staff_id = params[:staff_id]
+      
+      for s in senses.keys
+        v = senses[s]
+        if params[s] and params[s].size>0 
+            
+          data = {}
+          data['mrn'] = mrn
+          data['locationId'] = location_id
+          data['phycialExamId'] = exam_id
+          data['phycialExamcode'] = v[0]
+          data['value'] = params[s]
+          data['unit'] = v[1]
+          data['recordBy'] = 'machine'
+          data['recordDate'] = record_at.strftime("%d/%m/%Y %H:%M:%S")
+          data['staffId'] = staff_id
+          data['remark'] = ""  
+          
+          list << data   
+        
+        end
+      end
+   
+       
+   
+   
+      data = list
+      
+      puts data.inspect
+    
+
+      # Full control
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true if uri.instance_of? URI::HTTPS
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.read_timeout = 10 # seconds
+
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.set_form_data(data)
+
+      # Tweak headers, removing this will default to application/x-www-form-urlencoded
+      request["Content-Type"] = "application/json"
+      request["Authorization"] = settings.token
+
+      puts '============= DEBUG ==================='
+    
+      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+
+      response = http.request(request)
+    
+      puts '============= FINISH ==================='
+    
+    
+      
+      dobj = JSON.parse(response.body)
+  
+      
+      puts dobj.inspect 
+
+
+      
+      if dobj['success']==true 
+        
+        result = {:status=>'200 OK', :msg=>dobj.to_json}      
+      else
+        result = {:status=>'404 ERROR', :msg=>dobj.to_json}
+      end
+      
+  
+
+      return result.to_json
+	
+        
+  
+  else
+    
+       return "Error Login"
+  
+  end  
+  
+rescue Net::ReadTimeout => exception
+        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+        msg = "NOT reachable (ReadTimeout)"
+         result = {:status=>'404 ERROR', :msg=>msg}
+   #      sleep 10
+rescue Net::OpenTimeout => exception
+        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+        msg = "NOT reachable (OpenTimeout)"
+         result = {:status=>'404 ERROR', :msg=>msg}
+       #  sleep 10
+rescue Exception =>exception        
+        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+        msg = exception.to_s
+        puts msg
+        result = {:status=>'404 ERROR', :msg=>msg}
+end
+  
+puts result.inspect 
+  
+end
+
+
+  post '/send2' do 
 
 
     puts params.inspect 

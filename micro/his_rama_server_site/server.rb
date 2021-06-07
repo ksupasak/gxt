@@ -70,4 +70,27 @@ CNX
     
   end
 
+  
+  post '/api/VitalSign/SaveVitalSigns' do 
+
+    puts '============== Header ================'
+    
+    request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+    
+
+    
+    puts params.inspect
+    
+    content = <<CNX
+    {
+    "success": true,
+    "errorTexts": [],
+    "data": [] }
+CNX
+
+     
+     
+     return content   
+    
+  end
 
