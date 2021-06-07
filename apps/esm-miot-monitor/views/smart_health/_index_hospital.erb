@@ -231,7 +231,7 @@ end
 	cmap = {}
 	
 	%>
-	v = <%=visits.size%> <%=@current_provider.id%>
+	v = <%=visits.size%> <%=@current_provider.id%> <%= SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id).all.size %>
 	<%
 
  	for i in visits + visits_other
