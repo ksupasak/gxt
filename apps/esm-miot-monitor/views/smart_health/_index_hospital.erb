@@ -231,7 +231,7 @@ end
 	cmap = {}
 	
 	%>
-	v = <%=visits.size%>
+	v = <%=visits.size%> <%=@current_provider.id%>
 	<%
 
  	for i in visits + visits_other
