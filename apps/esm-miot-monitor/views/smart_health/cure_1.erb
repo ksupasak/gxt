@@ -13,15 +13,51 @@
 	end
 	
 	
+	visits = SHVisit.where(:visit_type=>'3').all
+	
+	for i in visits
+	
+		provider = Provider.find(i.officer_id)
+		
+		unet = SHUserNetwork.where(:provider_id=>provider.id).first
+		
+		unless unet
+				
+			i.update_attributes :officer_id=>nil, :status=>'Pending'   if params[:commit]
+				
+		end
+		
+		
+	end
+	
+	
+	
+	
 	for k in umap.keys
 		
 		users = umap[k]
+		
 		if users.size > 1
 		
 			users.sort!{|a,b| a.updated_at<=>b.updated_at}
 		
 			select_user = users[-1]
 			del_users = users[0..-2]
+			
+			
+		    
+			other_users = User.where(:login=>select_user.login, :_id=>{'$nin'=>users.collect{|i| i.id}}).all
+			
+		
+			
+			other_users.each do |u| 
+			
+				u.destroy if params[:commit]
+			
+			end
+		
+			
+			
 			
 			select_user_network = SHUserNetwork.where(:user_id=>select_user.id).first
 			
@@ -46,11 +82,13 @@
 				
 				provider = user_network.provider
 				
-				user_network
+				provider.destroy  if params[:commit]
+				
+				user_network.destroy if params[:commit]
 				
 				end
 				
-				u
+				u.destroy if params[:commit]
 				
 				
 			end
