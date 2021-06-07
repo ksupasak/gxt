@@ -29,6 +29,7 @@
 				
 				user_network = SHUserNetwork.where(:user_id=>u.id).first
 				
+				if user_network
 					
 				for v in SHVisit.where(:officer_id=>user_network.provider_id).all
 					
@@ -38,11 +39,14 @@
 			
 				end
 				
+			
 				##
 				
 				provider = user_network.provider
 				
 				user_network
+				
+				end
 				
 				u
 				
