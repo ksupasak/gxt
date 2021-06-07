@@ -7,7 +7,7 @@ unless patient
 
     ##############################################################  
 
-    his_get_patient_uri = URI("http://#{Setting.get(:gateway,'localhost')}:9292/get_patient_by_hn?hn=#{params[:hn]}")
+    his_get_patient_uri = URI("#{Setting.get(:gateway,'localhost')}/get_patient_by_hn?hn=#{params[:hn]}")
     
     ##############################################################  
   
