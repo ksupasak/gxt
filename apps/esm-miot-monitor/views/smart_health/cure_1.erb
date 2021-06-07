@@ -1,0 +1,58 @@
+<%
+	
+	
+	users = User.all
+
+	umap = {}
+	
+	for i in users
+	
+		umap[i.login] = [] unless umap[i.login] 
+		umap[i.login] << i
+		
+	end
+	
+	
+	for k in umap.keys
+		
+		users = umap[k]
+		if users.size > 1
+		
+			users.sort!{|a,b| a.updated_at<=>b.updated_at}
+		
+			select_user = users[-1]
+			del_users = users[0..-2]
+			
+			select_user_network = SHUserNetwork.where(:user_id=>select_user.id).first
+			
+			for u in del_users
+				
+				user_network = SHUserNetwork.where(:user_id=>u.id).first
+				
+					
+				for v in SHVisit.where(:officer_id=>user_network.provider_id).all
+					
+					
+					v.update_attributes :officer_id=> select_user_network.provider_id
+					
+			
+				end
+				
+				##
+				
+				provider = user_network.provider
+				
+				user_network
+				
+				u
+				
+				
+			end
+		
+		end
+		
+	end
+	
+%>
+
+<%=umap.inspect %>

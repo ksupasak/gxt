@@ -230,9 +230,7 @@ end
 	
 	cmap = {}
 	
-	%>
-	v = <%=visits.size%> <%=@current_provider.id%> <%=SHVisit.count%> <%=SHVisit.where(:appoint_type=>{'$in'=>['3']} ).all.size%> <%= SHVisit.where( :officer_id=>@current_provider.id).all.size %>
-	<%
+
 
  	for i in visits + visits_other
 
