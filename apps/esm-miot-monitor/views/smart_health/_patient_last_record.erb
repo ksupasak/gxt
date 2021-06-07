@@ -153,14 +153,33 @@
     # r = DataRecord.where(:admit_id=>a.id).last if a
     r = nil
     r = m_p_r[p.id] if m_p_r[p.id]
+    status_sign = ''
+    highlight = {}
+    if r 
+        status_sign = '<span style="color:green"><i class="fas fa-smile"></i></span>'
+        is_normal = true
+        for s in sense_list
+            highlight[s.to_sym]=''
+            v = r[s.to_sym]
+            if v
+                highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+            end
+            is_normal = (highlight[s.to_sym]=='') if is_normal
+        end
+        status_sign = '<span style="color:red"><i class="fas fa-frown"></i></span>' if !is_normal
+    end
+    
 %>
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
-<td><%=ix+1%></td>
+<td><%=ix+1%> <%=status_sign%></td>
 <td><%=p.public_id if p.public_id%></td>
 <!--<td><%=p.hn if p.hn%></td>-->
 <td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
 <% for s in sense_list %>
-<td><%=r[s.to_sym] if r and r[s.to_sym]%> &nbsp; </td>
+<td><span style="<%=highlight[s.to_sym]%>"><%=r[s.to_sym] if r and r[s.to_sym]%></span> &nbsp; </td>
 <% end %>
 <td>
 <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success' %>
