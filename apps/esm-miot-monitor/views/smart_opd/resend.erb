@@ -31,7 +31,7 @@ patient = Patient.find admit.patient_id
 ##############################################################
 
 
-url =  URI("http://#{Setting.get(:gateway,'localhost')}:9292/send")
+url =  URI("#{Setting.get(:gateway,'localhost')}/send")
 
 result = i.send_record url 
 
