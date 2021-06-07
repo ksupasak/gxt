@@ -1,7 +1,7 @@
 <%
 	
 	
-	users = User.all
+	users = User.where(:_id=>{'$in'=>SHUserNetwork.all.collect{|s| s.user_id }})
 
 	umap = {}
 	
@@ -24,6 +24,8 @@
 			del_users = users[0..-2]
 			
 			select_user_network = SHUserNetwork.where(:user_id=>select_user.id).first
+			
+			if select_user_network
 			
 			for u in del_users
 				
@@ -50,6 +52,15 @@
 				
 				u
 				
+				
+			end
+			
+			else
+			
+				# select_user.destory
+# 				del_users.each do |i|
+# 					i.destroy
+# 				end
 				
 			end
 		
