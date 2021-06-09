@@ -252,7 +252,7 @@ class HomeController < GXT
            
            ws.onmessage do |msg_data|
              
-             puts msg_data
+             # puts msg_data
              
              # begin 
               
