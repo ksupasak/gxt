@@ -1,0 +1,169 @@
+<%
+	
+	
+list = SHAddressBook.getList @current_user
+	
+	
+	
+%>
+<style>
+ul {
+	list-style-type: none; /* Remove bullets */
+    padding: 0;
+	padding-left:10px; /* Remove padding */
+     margin: 0; /* Remove margins */
+	 margin-left:10px;
+}	
+</style>
+<h2> ศูนย์การสื่อสาร</h2>
+<div class="containerx" >
+
+
+<div class="row">
+<div class="col-12 col-md-4">
+
+
+<% for l in list %>
+<ul>
+	
+	<li> 
+		
+		<div style="border-bottom:1px solid #aae;padding:5px;margin-bottom:5px;border-radius: 5px;"><%=l[:name]%></div> 
+	
+<% 
+
+if  l[:list].size > 0 
+
+for u in l[:list] 
+	
+provider = nil
+name = u[:user].login
+provider =u[:provider]
+
+if provider 
+
+	name = "#{provider.name } " if provider.name and provider.name.size > 0 
+	
+end
+
+
+%>
+<ul>
+	<li>
+		<div style="border:1px solid #ccc;padding:5px;margin-bottom:5px;border-radius: 5px;font-size:0.8em" class="row">
+			
+			<div class="col-8 d-flex justify-content-center" ><div class=""><%= name %><span style="display:inline-block;color:#aaa;font-size:0.8em"> : <%=u[:user].login%> </span></div> </div> 
+			<div  class="col-4 d-flex justify-content-end"  style="text-align:right" >
+		
+	 	    	<a target="_blank" style="background:#aaa" href="tele_create?sender=<%=@current_user.id%>&receiver=<%=u[:user].id%>" class="btn video-call detail" ctype="conference" cid="<%=u[:user].id%>"><span class="label">
+	            <img src="<%=url_for('img/svg/video.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	 			</span></a>
+				
+ 	    
+				
+				
+			</div> 
+		</div>
+	</li>
+</ul>
+
+<% end %>
+	<% else %>
+
+	 <center style="color:#aaa">ไม่มีสมาชิก</center>
+	
+	<% end %>
+	</li>
+</ul>
+
+<% end %>
+</div>
+<div class="col-12 col-md-8">
+
+	<div class="row">
+		<div class="col-12 placeholder" style="">
+			<div style="text-align:center;padding:40%;color:#ccc;border:1px solid #ccc;  border-radius: 15px;background:#fff;max-height:800px">
+			Video Conference
+			</div>
+		</div>
+		
+		<div class="col-12 iframe content-detail" style="text-align:center;display:none">
+			iframe
+		</div>
+	</div>
+</div>
+
+
+</div>
+
+</div>
+
+	<div class="modal fade" id="modal-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <!-- <div class="modal-header">
+	       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times</span>
+	        </button>
+	      </div> -->
+	      <div class="modal-body">
+			  <div class="modal-detail">
+       		   </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+	        <!-- <button type="button" class="btn btn-info">Accept</button> -->
+	      </div>
+	    </div>
+	  </div>
+	</div>	 
+	<style>
+		.modal {
+		  width: 550px;
+		  margin: auto;
+		}
+		.modal-dialog {
+			max-width:550px;
+		}
+		</style>
+	
+<script>
+$(document).ready(function(){	
+	
+	
+	 window.callback = function (){
+	 $(".placeholder").show()
+	 $(".iframe").hide()
+	}
+	
+ $('.detail').click(function(event){
+ 		
+	ctype = $(this).attr('ctype')
+	cid = $(this).attr('cid')
+	 $(".placeholder").hide()
+	 $(".iframe").show()
+	 $.ajax({
+	   url: "detail?ctype="+ctype+"&sender=<%=@current_user.id%>&receiver="+cid,
+	   context: document.body
+	 }).done(function(content) {
+	     
+		 
+		 
+		 width =  $(window).width() 
+		 
+		 if(width>1200){
+		 	 $( '.content-detail' ).html( content );
+		 }else{
+			 $( '.content-detail' ).html("");
+			 $( '.modal-detail' ).html( content );
+		 	 $("#modal-popup").modal()
+		 }
+		
+	 });
+	 
+	 event.preventDefault()
+	 
+ })
+ 
+ })
+ </script>

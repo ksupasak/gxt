@@ -13,8 +13,15 @@
 <iframe src="connect?admit_id=<%=params[:admit_id]%>&id=<%=params[:id]%>" width="100%" height="800">
 </iframe>
 <% elsif params[:ctype]=='conference'%>
+<% if params[:admit_id]%>
 <iframe src="tele_create?admit_id=<%=params[:admit_id]%>" width="100%" height="800">
 </iframe>
+<% else %>
+ <iframe src="tele_create?sender=<%=params[:sender]%>&receiver=<%=params[:receiver]%>" width="100%" height="800">
+</iframe>
+<%# inline(this,:'_tele_create')%>
+
+<% end %>
 <% elsif params[:ctype]=='image'
 
 url = "../Message/content?id=#{params[:id]}"

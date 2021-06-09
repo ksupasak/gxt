@@ -26,4 +26,12 @@ end
 	
 	
 %>
-<META HTTP-EQUIV="Refresh" CONTENT="0;URL=<%=rt%>">
+<script>
+	if (typeof window.parent.callback !== "undefined") { 
+		window.parent.callback()
+	}else{
+		window.location="<%=rt%>"
+	}
+</script>
+<!-- <META HTTP-EQUIV="Refresh" CONTENT="0;URL=<%=rt%>"> -->
+	

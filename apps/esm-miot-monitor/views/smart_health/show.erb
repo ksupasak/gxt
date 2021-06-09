@@ -87,6 +87,8 @@ reportid = "&record_id=#{report.id}" if report
 						<div class="col" style="font-size:0.8em">HN: <%=patient.hn%></div>
 						<div class="col" style="font-size:0.8em">อายุ: <%=patient.to_age_text %> ปี</div>
 						<div class="col" style="font-size:0.8em">เพศ: <%=patient.gender%></div>
+						<div class="col" style="font-size:0.8em">DOB: <%=patient.dob.strftime("%d/%m")+"/"+(patient.dob.year+543).to_s if patient.dob%></div>
+						
 						<div class="col-12" style="font-size:0.8em">
 							<span class=" p-0" id="gender">อาการสำคัญ: <%=admit.note%></span>
 						</div>

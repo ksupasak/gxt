@@ -1,5 +1,159 @@
 module EsmMiotMonitor
+
+
+class SHAddressBook < GXTModel
   
+  
+  def self.getList user
+      
+      
+      # determine user role
+      
+      role = Role.find user.role
+      
+      
+      case role
+        
+      when 'hospitat' 
+        
+      end
+      
+      user_hospital = SHUserHospital.where(:user_id=>user.id).first
+      user_network  = SHUserNetwork.where(:user_id=>user.id).first
+      
+      providers = Provider.all
+      
+      pmap = {}
+      
+      for i in providers
+          
+        pmap[i.id] = i
+      end
+      
+      list = []
+      
+      
+      
+      if user_hospital
+        
+        hospital = SHHospital.find user_hospital.hospital_id
+        
+        networks = SHNetwork.where(:hospital_id=>hospital.id).all
+        
+        # find all network operator of sub network
+        hlist = []
+        
+        for u in SHUserHospital.where(:hospital_id=>hospital.id).all
+          
+          if u.id != user_hospital.id and u.provider_type=='operator'
+            
+            us = User.find(u.user_id)  
+            role = Role.find us.role_id
+            udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name, :provider=>pmap[u.provider_id]}
+            
+             hlist << udata  
+            
+          end
+          
+        end
+        
+         list << {:name=>hospital.name, :code=>hospital.code, :list=>hlist, :type=>'hospital'}
+        
+        
+        for n in networks
+            
+          nlist = []
+          
+          for u in SHUserNetwork.where(:network_id=>n.id).all
+            
+            if u.provider_type == 'operator' || u.provider_type == 'officer'  
+              us = User.find(u.user_id)  
+              role = Role.find us.role_id
+              udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name, :provider=>pmap[u.provider_id]}
+            
+              nlist << udata  
+            
+            end
+            
+          end
+            
+          list << {:name=>n.name, :code=>n.code, :list=>nlist, :type=>'network'}
+          
+          
+        end  
+        
+      elsif user_network
+        
+        
+        network = SHNetwork.find user_network.network_id
+        
+        
+        hospital = SHHospital.find network.hospital_id
+        
+       
+        
+        # find all network operator of sub network
+        hlist = []
+        
+        for u in SHUserHospital.where(:hospital_id=>hospital.id).all
+          
+        
+            if u.provider_type == 'operator' 
+            
+            us = User.find(u.user_id)  
+            role = Role.find us.role_id
+            udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name,:provider=>pmap[u.provider_id]}
+            
+             hlist << udata  
+            
+             end
+          
+        end
+        
+         list << {:name=>hospital.name, :code=>hospital.code, :list=>hlist, :type=>'hospital'}
+        
+        
+           n = network
+            
+          nlist = []
+          
+          for u in SHUserNetwork.where(:network_id=>n.id).all
+              
+              
+          if u.id != user_network.id 
+              
+            us = User.find(u.user_id)  
+            role = Role.find us.role_id
+            udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name,:provider=>pmap[u.provider_id]}
+            
+            nlist << udata  
+          end
+            
+          end
+            
+          list << {:name=>n.name, :code=>n.code, :list=>nlist, :type=>'network'}
+          
+          
+       
+        
+      end
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      return list 
+      
+      
+      
+      
+  end
+  
+end  
 
 class SHConference < GXTModel
   
