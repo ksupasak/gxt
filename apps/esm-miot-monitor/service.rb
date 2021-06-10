@@ -800,7 +800,7 @@ MSG
              end  
 
              # if data['pr'] 
-                 data['ref'] = ref
+              data['ref'] = ref
              # end
              
              data['score'] = 0
@@ -809,9 +809,40 @@ MSG
              
              # inject last score
              
-             if admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
+             if ref and ref!="" and ref !="-"
+               
+               patient = Patient.where(:hn=>ref).first
+               
+               unless patient 
+                 
+                 # previous_admit = Admit.where(:station_id=>station.id,:status=>'Admitted').first
+              
+                 
+                 patient = Patient.create :hn=>ref
+                 admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now)
+                 
+              else
+                
+                 admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
+                
+                 unless admit
+                   admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                 elsif admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+                   admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+                   admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                 end
+                
+              end
+               
+               
+             end
+             
+             
+             if admit 
                data['score'] = admit.current_score
              end
+             
+             
              
               settings.senses[name] = {} unless  settings.senses[name] 
               
@@ -835,6 +866,12 @@ MSG
                 
                 odata['vs'] << record 
                 
+                if data['spot']
+                  v = data
+                  DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
+              
+                end
+                
                 
               else
                 
@@ -847,7 +884,7 @@ MSG
                   
                   v = data #{:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:hr=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
                   
-                  puts v.inspect 
+                  #puts v.inspect 
                   bp_sys,bp_dia = v['bp'].split('/')
                   DataRecord.create :station_id=>station.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
                 
