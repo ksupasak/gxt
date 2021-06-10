@@ -27,6 +27,7 @@ require_relative 'devices/ids-combo-gw'
 require_relative 'devices/gps/gps'
 
 require_relative 'devices/nihon_defib_gw'
+require_relative 'devices/xovic_hl7_gw'
 
 
 
@@ -114,6 +115,13 @@ if select_monitor=='nihon_defib'
  }
 end
 
+
+if select_monitor=='xovic_hl7'
+  puts 'monitor select = xovic_hl7'
+ threads << Thread.new {
+ Device::monitor_xovic_hl7_live(ws)
+ }
+end
 
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)

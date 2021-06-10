@@ -45,7 +45,7 @@ class SHAddressBook < GXTModel
         
         for u in SHUserHospital.where(:hospital_id=>hospital.id).all
           
-          if u.id != user_hospital.id and u.provider_type=='operator'
+          if u.id != user_hospital.id and ( u.provider_type=='operator' || u.provider_type == 'doctor' )
             
             us = User.find(u.user_id)  
             role = Role.find us.role_id
@@ -98,7 +98,7 @@ class SHAddressBook < GXTModel
         for u in SHUserHospital.where(:hospital_id=>hospital.id).all
           
         
-            if u.provider_type == 'operator' 
+            if u.provider_type == 'operator' || u.provider_type == 'doctor' 
             
             us = User.find(u.user_id)  
             role = Role.find us.role_id
