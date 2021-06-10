@@ -312,6 +312,13 @@ t_data = completed_visits
 	   </div>		
 		
 	  <div class="tab-pane fade show " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-off">
+	</div>
+	<div class="col"></div>
+</div>	  
 	  	<%
 	  		
 		if @current_network 
@@ -319,25 +326,46 @@ t_data = completed_visits
 			list = SHUserNetwork.where(:network_id=>@current_network.id).all
 			
 	  	%>
-			
-		<%= tabular :data=>list, :model=>%w{ hospital provider provider_type phone user}, :ext_model=>%w{action} do |row,out|
+<%
+v_cols = %w{  provider provider_type phone user action}
+t_data = list
+%>
+<table class="table" >
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		pname = row.provider.name if row.provider
+%>
+<tr class="tr-p" text='<%="#{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		out = row.network.name if c=='hospital' and row.network
+		
+		out = row.provider.name if c=='provider' and row.provider
 		
 		
-		out[0] = row.network.name if row.network
-		
-		out[1] = row.provider.name if row.provider
-		
-		
-		out[-2] = row.provider.phone if row.provider
+		out = row.provider.phone if c=='phone' and row.provider
 	
-		out[-1] = row.user.login if row.user
+		out = row.user.login if c=='user' and row.user
 		
-		#out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
-		out<<link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out = link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
 		
-		out
-		end
-		 %>
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	end #for row %>
+</tbody>
+</table>			
+
 		
 		
 		<% end %>
@@ -747,6 +775,9 @@ end
 // }
 $(document).ready(function(){
 	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+	$("#search-off").keyup(function(){
 		filter_p($(this).val())
 	})
 	// $("#search-p2").keyup(function(){
