@@ -827,9 +827,11 @@ MSG
                 
                  unless admit
                    admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-                 elsif admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
-                   admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
-                   admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                 else
+                   if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+                     admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+                     admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                   end
                  end
                 
               end
