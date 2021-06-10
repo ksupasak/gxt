@@ -79,147 +79,246 @@
 	</div>
 	<div class="col"></div>
 </div>
+<style>
+.div-datatable{
+	max-height:30vh;
+	max-width:100%;
+	overflow:auto;
+}
+</style>
 <h4>รอจ่ายงาน - (Pending)</h4>		
-	<form action="assign" method="post">	
-
-	<%= tabular :data=>pending_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
-	
-	options = ['<option value=""></option>']
-	
-	for i in providers
-		options << "<option value='#{i.id}' >#{i.name}</option>"
-	end
-	
-	patient = Patient.find(row.patient_id)
-
-	bclass = "b-wait"
-	case row.status
-		when 'Pending'	
-			bclass = "b-hos"
-		when 'Accepted'
-			bclass = "b-network"	
-		when 'Completed'
-			bclass = "b-officer"
+	<form action="assign" method="post">
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+t_data = pending_visits
+%>
+<div class="div-datatable">
+<table class="table">
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		if patient
+			phn = ''
+			pname = ''
+			if patient
+				phn = patient.hn if patient and patient.hn
+				pname = patient.to_s if patient
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
+		
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
 		end
 		
-	phn = ''
-	pname = ''
-	if patient
-		phn = patient.hn if patient and patient.hn
-		pname = patient.to_s if patient
-	end
-	
-	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
-
-	out[1] = phn
-	out[2] = pname
-
-	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
-	out[4] = row.date.strftime('%d/%m/%Y') if row.date
-	
-	out[-2] = SHHospital.find(row.hospital_id).name
-	
-	out[-1] =  "<select class='form-control' name='visit[#{row.id}][officer_id]'>#{options.join}</select>"
 		
-	
-	out
-	end %>
-	
+
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+
+		out = "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+
+		out = phn if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		
+		out =  "<select class='form-control' name='visit[#{row.id}][officer_id]'>#{options.join}</select>" if c=='officer_id'
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>	
 	<input type="submit" value="จ่ายงาน" class="btn btn-success" >
 		
 </form>
 <br/>
 
 <h4>จ่ายงานแล้ว - (Dispatched/Accepted)</h4>
-	<%= tabular :data=>accepted_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
-	
-	options = ['<option value=""></option>']
-	
-	for i in providers
-		options << "<option value='#{i.id}' >#{i.name}</option>"
-	end
-	
-	patient = Patient.find(row.patient_id)
-	bclass = "b-wait"
-	case row.status
-		when 'Pending'	
-			bclass = "b-hos"
-		when 'Accepted'
-			bclass = "b-network"	
-		when 'Completed'
-			bclass = "b-officer"
-		end
-	phn = ''
-	pname = ''
-	if patient
-		phn = patient.hn if patient and patient.hn
-		pname = patient.to_s if patient
-	end
-	
-	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
-
-	out[1] = phn
-	out[2] = pname
-	
-	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
-	out[4] = row.date.strftime('%d/%m/%Y') if row.date
-	
-	out[-2] = SHHospital.find(row.hospital_id).name
-	
-	pvtemp = Provider.find(row.officer_id)
-	out[-1] = pvtemp.name if pvtemp
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+t_data = accepted_visits
+%>
+<div class="div-datatable">
+<table class="table">
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		if patient
+			phn = ''
+			pname = ''
+			if patient
+				phn = patient.hn if patient and patient.hn
+				pname = patient.to_s if patient
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
 		
-	
-	out
-	end %>
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
+		end
+		
+		patient = Patient.find(row.patient_id)
 
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+		
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+
+		out = phn if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		
+		pvtemp = Provider.find(row.officer_id)
+		out = pvtemp.name if c=='officer_id' and pvtemp
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>
 		
 <h4>ตรวจเสร็จล่าสุด (Completed)</h4>
-	<%= tabular :data=>completed_visits, :model=>%w{ status hn patient appointed_at date hospital_id officer_id } do |row,out|
-	
-	options = ['<option value=""></option>']
-	
-	for i in providers
-		options << "<option value='#{i.id}' >#{i.name}</option>"
-	end
-	
-	patient = Patient.find(row.patient_id)
-	bclass = "b-wait"
-	case row.complated_by
-		when '1'	
-			bclass = "b-hos"
-		when '2'
-			bclass = "b-network"	
-		when '3'
-			bclass = "b-officer"
-		end
-	phn = ''
-	pname = ''
-	if patient
-		phn = patient.hn if patient and patient.hn
-		pname = patient.to_s if patient
-	end
-	
-	out[0] = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>"
-
-	out[1] = phn
-	out[2] = pname
-
-	out[3] = row.appointed_at.strftime('%d/%m/%Y %H:%M') if row.appointed_at
-	out[4] = row.date.strftime('%d/%m/%Y') if row.date
-
-	out[-2] = SHHospital.find(row.hospital_id).name
-	
-	pvtemp = Provider.find(row.officer_id)
-	out[-1] = pvtemp.name if pvtemp
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+t_data = completed_visits
+%>
+<div class="div-datatable">
+<table class="table" >
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		if patient
+			phn = ''
+			pname = ''
+			if patient
+				phn = patient.hn if  patient.hn
+				pname = patient.to_s 
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
 		
-	
-	out
-	end %>
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
+		end
+		
+		patient = Patient.find(row.patient_id)
+
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+			
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+
+		out = phn if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		
+		pvtemp = Provider.find(row.officer_id)
+		out = pvtemp.name if c=='officer_id' and pvtemp
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>
 
 	   </div>		
 		
 	  <div class="tab-pane fade show " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-off">
+	</div>
+	<div class="col"></div>
+</div>	  
 	  	<%
 	  		
 		if @current_network 
@@ -227,25 +326,46 @@
 			list = SHUserNetwork.where(:network_id=>@current_network.id).all
 			
 	  	%>
-			
-		<%= tabular :data=>list, :model=>%w{ hospital provider provider_type phone user}, :ext_model=>%w{action} do |row,out|
+<%
+v_cols = %w{  provider provider_type phone user action}
+t_data = list
+%>
+<table class="table" >
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		pname = row.provider.name if row.provider
+%>
+<tr class="tr-p" text='<%="#{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		out = row.network.name if c=='hospital' and row.network
+		
+		out = row.provider.name if c=='provider' and row.provider
 		
 		
-		out[0] = row.network.name if row.network
-		
-		out[1] = row.provider.name if row.provider
-		
-		
-		out[-2] = row.provider.phone if row.provider
+		out = row.provider.phone if c=='phone' and row.provider
 	
-		out[-1] = row.user.login if row.user
+		out = row.user.login if c=='user' and row.user
 		
-		#out<<link_to("Show", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
-		out<<link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out = link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
 		
-		out
-		end
-		 %>
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	end #for row %>
+</tbody>
+</table>			
+
 		
 		
 		<% end %>
@@ -655,6 +775,9 @@ end
 // }
 $(document).ready(function(){
 	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+	$("#search-off").keyup(function(){
 		filter_p($(this).val())
 	})
 	// $("#search-p2").keyup(function(){

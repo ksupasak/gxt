@@ -1,7 +1,7 @@
 <%=inline(this,:'_init')%>
 
 <%
-
+begin	
 	date = Time.now
 	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
 	
@@ -64,7 +64,10 @@
 	
 	
 	end
-	
+
+	p_all = Patient.all.collect{|i| i.id}.compact
+	visits = visits.collect{|i| i if p_all.index(i.patient_id)}.compact
+	visits_other = visits_other.collect{|i| i if p_all.index(i.patient_id)}.compact
 	
 	
 	# for doctor only
@@ -96,11 +99,11 @@
 <%= tabular :data=>my_list, :model=>%w{status hn cond name provider action}, :label=>{'provider'=>'แพทย์','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
 	
 	patient = Patient.find(row.patient_id)
-	admit = Admit.where(:patient_id=>patient.id).first
 	phn = '-'
 	pname = '-'
 	cid = '-'
 	if patient
+		admit = Admit.where(:patient_id=>patient.id).first 
 		phn = patient.hn if patient.hn and patient.hn.size>0
 		cid = patient.public_id  if patient.public_id and patient.public_id.size>0
 		pname = patient.first_name if patient.first_name
@@ -123,6 +126,7 @@
 		
 	end
 	
+	if admit
 	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
 	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
 	out[2] = link_to("#{cid}","admit?id=#{admit.id}")
@@ -134,7 +138,8 @@
 	status = ""
 	status = "แสดง" # if row.status==nil
 	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
-	
+	end
+
 	out
 
 end
@@ -142,7 +147,7 @@ end
 <br/>
 ผู้ป่วยเยี่ยมบ้าน รพสต อสม 
 <%= tabular :data=>other_list, :model=>%w{status hn public_id name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
-	
+
 	patient = Patient.find(row.patient_id)
 	admit = Admit.where(:patient_id=>patient.id).first
 	phn = '-'
@@ -192,6 +197,12 @@ end
 	
 	out
 
+end
+
+%>
+
+<%
+rescue Exception=>e
 end
 %>
 
