@@ -151,7 +151,11 @@
 </thead>
 <tbody>
 <%#=admits.inspect%>
-<%  patients.each_with_index do |p,ix| %>
+<%  patients.each_with_index do |p,ix| 
+	
+	a = Admit.where(:patient_id=>p.id).first
+
+%>
 <%
     # a = Admit.where(:patient_id=>p.id).last
     # r = nil
@@ -188,6 +192,7 @@
 <% end %>
 <td>
 <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success' %>
+<%=link_to "แก้ไข", "admit?id=#{a.id}", :class=>'btn btn-success' %>
 <%=link_to "ลบ", "destroy?id=#{p.id}", :class=>'btn btn-danger' unless @current_network %></td>
 </tr>
 <% end %>
