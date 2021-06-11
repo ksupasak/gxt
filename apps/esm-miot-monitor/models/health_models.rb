@@ -95,6 +95,8 @@ class SHAddressBook < GXTModel
         # find all network operator of sub network
         hlist = []
         
+        if hospital
+        
         for u in SHUserHospital.where(:hospital_id=>hospital.id).all
           
         
@@ -110,8 +112,10 @@ class SHAddressBook < GXTModel
           
         end
         
+        
          list << {:name=>hospital.name, :code=>hospital.code, :list=>hlist, :type=>'hospital'}
         
+       end
         
            n = network
             
