@@ -76,6 +76,14 @@
 	
 	end
 	
+	
+	unless relations
+		
+		relations =  SHRelation.all
+		
+	end
+	
+	
 	if relations 
 		
 		if params[:query] and params[:query]!=""
