@@ -56,9 +56,9 @@
 			
 		pending_visits = SHVisit.where(:appoint_type=>'3', :status=>'Pending', :network_id=>@current_network.id).all
 		
-		accepted_visits = SHVisit.where(:appoint_type=>'3', :status=>'Accepted', :network_id=>@current_network.id).limit(10).all
+		accepted_visits = SHVisit.where(:appoint_type=>'3', :status=>'Accepted', :network_id=>@current_network.id).sort(:updated_at=>1).limit(20).all
 		
-		completed_visits = SHVisit.where(:appoint_type=>'3', :status=>'Completed', :network_id=>@current_network.id).sort(:completed_at=>1).limit(10).all
+		completed_visits = SHVisit.where(:appoint_type=>'3', :status=>'Completed', :network_id=>@current_network.id).sort(:completed_at=>1).limit(20).all
 		
 		providers = []
 		

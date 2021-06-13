@@ -51,8 +51,12 @@
 	 
 	 	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}
 	    
-		cond = [{:public_id=> params[:patient][:public_id]}]
-		cond << {[:hn]=> params[:patient][:hn]} if params[:patient][:hn] and params[:patient][:hn]!=""
+		cond = []
+		
+
+		cond << {:public_id=>params[:patient][:public_id]} if params[:patient][:public_id] and params[:patient][:public_id]!=""
+	 
+		cond << {:hn=> params[:patient][:hn]} if params[:patient][:hn] and params[:patient][:hn]!=""
 	 
  		patient  = Patient.where('$or'=>cond, :_id=>{'$in'=>patient_ids}).first
 		
@@ -152,6 +156,9 @@
 		<div class="card admit-form">
             <div class="card-body d-flex">
 				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+					
+					
+					
 					<div class="form-group">
 		 				<%# <label for="product-name">Patient</label> %>
 		<div class='row'  style="border:0px solid gray">
