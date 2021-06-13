@@ -100,7 +100,8 @@
 			list = SHRelation.where(:hospital_id=>@current_hospital.id).all
 			 
 	  	%>
-		<%=inline(this,:'_patient_last_record')%>
+		<%#inline(this,:'_patient_last_record')%>
+		<%=inline(this,:'_patient_record')%>	 
 		<!--<%= tabular :data=>list, :model=>%w{hn name user}, :ext_model=>%w{action} do |row,out|
 		
 		patient = Patient.find row.patient_id

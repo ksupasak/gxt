@@ -67,7 +67,10 @@
 		</div>
 		
 	  <div class="tab-pane fade show container " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-	  	<%
+	  	
+		  
+	
+		<%
 	  		
 		if @current_hospital 
 			
@@ -104,7 +107,7 @@
 	  
 	  
 	  <div class="tab-pane fade " id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-	  	
+	  		<%=inline(this,:'_patient_record')%>
 		
 	  	<%
 	  		
