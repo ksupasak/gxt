@@ -46,6 +46,9 @@
 	.rr{
 		color:var(--text-yellow);
 	}
+	.score{
+		color:white;
+	}
 	
 	.temp{
 		color:var(--text-green);
@@ -81,7 +84,7 @@
 		
 		vertical-align:baseline;
 		margin-bottom:0px;
-		margin-top:1vh;
+		margin-top:0.5vh;
 	}
 	.s-active{
 	/*	background: transparent linear-gradient(180deg, #13171D  0%, #000 100%) 0%
@@ -97,6 +100,9 @@
 		
 		background-color: var(--bg-content);
 		
+	}
+	.act-score{
+		background-color:#0b2548;
 	}
 	.sense-val{
 		font-size:9vh;
@@ -126,9 +132,21 @@
 	.btn-hn{
 	    background-color: #6B98C1;
 	    color:#ffffff;
-	    border-radius: 100px;
+	    border-radius: 15px;
 	    height:50px;
 	    width:80px;
+
+	    text-align: center;
+	    font-size: 2.4em;
+	    padding-top:0px;
+	    margin:5px;
+	}
+	.btn-hn-option{
+	    background-color: #6B98C1;
+	    color:#ffffff;
+	    border-radius: 15px;
+	    height:50px;
+	 
 
 	    text-align: center;
 	    font-size: 2.4em;
@@ -210,7 +228,7 @@
 	
 	<div class="col-12" >
 	
-		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;" class="d-flex justify-content-between">
+		<div style="border:1px solid var(--text-second) ;padding:5px;border-radius: 1vh;font-size:0.8em" class="d-flex justify-content-between">
 			
 		<div style="color:var(--text-second)"><div class="d-inline-flex">HN : </div>&nbsp;
 		<div class="d-inline-flex hn v-entry-hn" label="hn" name="hn" style="text-align:center;min-width:150px;border:1px solid;min-height:4vh;border-radius: 1vh;"> <div label="Patient ID" class="hn-value v-entry">-</div></div></div>
@@ -246,7 +264,7 @@
 			
 			
 			<div class="col-4">
-				<div class="sense-panel s-empty" style="height:35vh;">
+				<div class="sense-panel s-empty" style="height:40vh">
 						<div class="row">
 								<div class="col-12 d-flex justify-content-center bp">
 									SYS/DIA
@@ -263,15 +281,25 @@
 									(<div class="bp_mean"><div class=" v-entry " label="BP Mean" name="bp_mean"> - </div></div> ) <%='mmHg'%>
 								</div>
 						</div>
+						
+						<div class="sense-panel header" style="height:13vh;">
+							<center ><a href="#" class="start_bp btn btn-success">Start</a>  <a href="#" class="auto_bp btn btn-info ">Auto</a>  <a href="#" class="stop_bp btn btn-warning">Stop</a></center>
+						  <div class="auto" ><div class="v-entry"></div></div>
+						</div>
+						
+						
 				</div>
-				<div class="sense-panel header" style="height:13vh;">
-					<center ><a href="#" class="start_bp btn btn-info">Start</a> &nbsp; <a href="#" class="stop_bp btn btn-info">Stop</a></center>
-				</div>
+				
+				
+				
+			
+			
+			
 				 
 			</div>
 			
 			
-			<div class="col-4">
+			<div class="col-3">
 				<div class="row">
 						<div class="col-12">
 						<div class="sense-panel s-empty pr">
@@ -333,7 +361,7 @@
 				
 			</div>
 			
-			<div class="col-4">
+			<div class="col-3">
 				<div class="row">
 						<div class="col-12">
 						<div class="sense-panel s-empty spo2">
@@ -403,14 +431,80 @@
 			</div>
 			
 			
-			<div class="row no-guitter">
+			
+			
 			
 			<div class="col-2">
+				<div class="row">
+						<div class="col-12">
+						<div class="sense-panel s-empty score">
+								
+								<div class="row ">
+									<div class="col-8 " >
+									Score
+									</div>
+									<div class="col-4  " style="text-align:right">
+									
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col sense-val v-entry " label="Score" name="score">
+									-
+									</div>
+								</div>
+				
+								<div class="row">
+									<div class="col sense-name noti" >
+									
+									</div>
+					
+								</div>
+								
+								
+								
+						</div>
+						</div>
+				</div>
+				<div class="row">
+					
+					<div class="col-12">
+						<div class="sense-panel s-empty select-score sense">
+						<div class="row ">
+							<div class="col-6 sense-name" >
+							Select 
+							</div>
+							<div class="col-6 sense-name" style="text-align:right">
+							<%= %>
+							</div>
+						</div>
+				
+						<div class="row">
+							<div class="col sense-val v-score " label="<%= %>" name="<%=%>" style="overflow:hidden;font-size:5vh">
+							-
+							</div>
+						</div>
+				
+						<div class="row">
+							<div class="col sense-name g-0" >
+							<!-- Notification -->
+							</div>
+					
+						</div>
+					</div>
+		
+					</div>
+					
+		
+				</div>
 			</div>
 			
 			
-			</div>
 			
+			
+			<div class="col-12 sense-container ">
+			
+			<div class="row  no-gutters">
 			
 			<%
 			if true 	
@@ -419,17 +513,17 @@
 			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
 			sense_unit = DataRecord.get_sense_unit 
 			
-			sense_unit = %w{kg cm &nbsp; mg/dL &nbsp;}	
+			sense_unit = %w{kg cm &nbsp;  &nbsp;  &nbsp;   &nbsp;   &nbsp; }	
 			# sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}
-			sense_list = %w{weight height bmi glucose score }.collect{|i| i.to_sym}	
-			
+			sense_list = %w{weight height bmi  }.collect{|i| i.to_sym}	
+			# glucose mg/dL
 			sense_list.each_with_index do |x,xi| 	
 				
 				ii = xi
 				
 			%>
 			
-			<div class="col-2">
+			<div class="col-2 " >
 				<div class="sense-panel s-empty <%=x%> sense" style="height:18vh;">
 				<div class="row ">
 					<div class="col-6 sense-name" >
@@ -457,21 +551,37 @@
 			</div>
 			
 			<% end %>
+			<% end %>
+			<%
+			if true 	
+
+			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+			sense_unit = DataRecord.get_sense_unit 
 			
+			sense_unit = %w{&nbsp;  &nbsp;   &nbsp;   &nbsp; }	
+			# sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}
+			sense_list = %w{}.collect{|i| i.to_sym}	
+			# glucose mg/dL
+			sense_list.each_with_index do |x,xi| 	
+				
+				ii = xi
+				
+			%>
 			
-			<div class="col-2">
-				<div class="sense-panel s-empty select-score sense" style="height:18vh;">
+			<div class="col-2 sense-x" >
+				<div class="sense-panel s-empty <%=x%> sense" style="height:18vh;">
 				<div class="row ">
 					<div class="col-6 sense-name" >
-					<%=  %>Score 
+					<%= x %>
 					</div>
 					<div class="col-6 sense-name" style="text-align:right">
-					<%= %>
+					<%= sense_unit[ii] %>
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col sense-val v-score " label="<%= %>" name="<%=%>" style="overflow:hidden;">
+					<div class="col sense-val-mini v-entry " label="<%= x %>" name="<%=x%>">
 					-
 					</div>
 				</div>
@@ -487,10 +597,14 @@
 			</div>
 			
 			
+			<% end %>
+			
+		
+			
 		<% end %>
 		
 		
-		
+	</div>	</div>
 		
 		
 		</div>
@@ -559,27 +673,99 @@
         <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
 		
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="save-modal">Submit</button>
+        <button type="button" class="btn btn-primary save-modal">Submit</button>
       </div>
     </div>
-  </div>
-  
- 
- 
-  
+	</div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="opdModal2" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title opdModalTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <center>
+		<div class="row">
+			<div class="col">
+			<div class="display-hn ">
+	        -
+	        </div>
+			</div>
+		</div>
+		<div class="row no-gutters">
+			
+		<div class="col opdModal2-op">
+	        <table class="opdModal2-options">
+	    
+	    	</table>
+			
+		</div>
+		
+		<div class="col opdModal2-scale">
+		
+        <table width="200px">
+        <tr>
+            <td><div class="btn-hn">1</div></td>
+            <td><div class="btn-hn">2</div></td>
+            <td><div class="btn-hn">3</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">4</div></td>
+            <td><div class="btn-hn">5</div></td>
+            <td><div class="btn-hn">6</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">7</div></td>
+            <td><div class="btn-hn">8</div></td>
+            <td><div class="btn-hn">9</div></td>
+        </tr>
+        <tr>
+            <td><div class="btn-hn">.</div></td>
+            <td><div class="btn-hn">0</div></td>
+            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
+        </tr>
+        </table>
+		</div>
+		</div>
+		
+		</center>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save-modal">Submit</button>
+      </div>
+    </div>
+	</div>
+
+</div>
+
+
+
+
+
+
 <div id="buffer">
 </div>
             <a href="#" id="beep" style="display:none">beep</a>
             <a href="#" id="ready" style="display:none">ready</a>
 
-</div>
 <!-- Modal -->
  <!-- Modal -->
  <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="ScoreModalTitle" aria-hidden="true">
    <div class="modal-dialog modal-dialog-centered" role="document">
      <div class="modal-content">
        <div class="modal-header">
-         <h5 class="modal-title" id="opdModalTitle">Score</h5>
+         <h5 class="modal-title" id="opdModalTitle">Select Score</h5>
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
            <span aria-hidden="true">&times;</span>
          </button>
@@ -598,7 +784,7 @@
 	   for s in scores
 	   %>
          <tr>
-             <td><div class="btn-score-select" sid="<%=s.id%>" style="width:100%;font-size:3vh"><%=s.name%></div></td>
+             <td><div class=" btn btn-info btn-score-select" sid="<%=s.id%>" style="width:100%;font-size:3vh"><%=s.name%></div></td>
            
          </tr>
        <% end %>
@@ -622,38 +808,38 @@
 
 
 
-  
-   <script>
+
+
+	<div class="col-2 sense-template sense-x" style="display:none">
+		<div class="sense-panel s-empty sense" style="height:18vh;">
+		<div class="row ">
+			<div class="col-9 sense-name sense-title" >
+			-
+			</div>
+			<div class="col-3 sense-name sense-unit" style="text-align:right">
+			
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col sense-val-mini v-entry " label="" name="">
+			-
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col sense-name" >
+			<!-- Notification -->
+			</div>
+			
+		</div>
+	</div>
+
+	</div>
 
 
 
-
-   function call_score(div_class, score_id, mode,data){
-	   
-
-   	$.ajax({
-   	  url: "scoring?score_id="+score_id+"&mode="+mode+"&data="+JSON.stringify(data)+"&v-entry="+div_class,
-   	  context: document.body,
-   		method: 'post'
-   	}).done(function(data) {
-   	  $('.modal-content').html(data);
-   	  $('#scoring-panel').modal('show')
-   	});
-   }
-
-
-   </script>
-   
-   <script>
-
-     </script>
-<script>
-  
-
-</script>
-	
-	
-	<form id="form" action="post" method="post">
+<!--	<form id="form" action="post" method="post">
 
 	<input class="hn_val" name="hn" value="" type="hidden"/>
 	<input class="datetime_val" name="datetime" value="" type="hidden"/>
@@ -671,7 +857,7 @@
 
 
 	</form>
- 
+  -->
 	
 	<script>
 
@@ -746,9 +932,289 @@
 			var current_modal ;
 			var will_reset_hn = true;
 			var target_key = 'hn';
-		
+			var score_model = null;
+		    var score_map = {};
 		  
+		  
+			function setup_sense(sn){
+				
+				
+				// alert('setup ' +sn)
+				
+				s = score_map[sn]
+				
+			
+				
+				
+				
+				if(s!=null){
+					
+					$("#opdModal2 .opdModalTitle ").html(s['label'])
+			     
+					console.log("Setup score for : " + s['name'])
+					
+					the_modal = "opdModal2"
+					$('.opdModal2-scale').hide();
+					$('.opdModal2-op').hide();
+					
+					
+					if(s['options']!=null&&s['options'].length>0){
+						$('.opdModal2-options').empty()
+						
+						$('.opdModal2-op').show();	
+						
+						for(var id in s['options'] ){
+							v = s['options'][id]
+							
+							$('.opdModal2-options').append('<tr><td><div class="btn-hn-option col" score="'+v['s']+'" map="'+v['k']+'" style="">'+v['v']+'</div></td></tr>');
+							
+						}
+						
+				        $(".btn-hn-option").on('click',function(){
+				            var myAudio = document.getElementById('audio-'+cur_buffer)
+				            myAudio.play();
+							k = $(this).attr('map')
+							$('.display-hn').html(k)
+							$('#opdModal2 .save-modal').click();
+							
+				            return false;
+				        })
+	     				
+					}
+					
+					if(s['scales']!=null&&s['scales'].length>0){
+					// alert('scal')
+						$('.opdModal2-scale').show();	
+						
+					}
+					
+					
+				}else{
+					
+					d = $('.'+sn+" .v-entry").attr('label')
+					
+					$("#opdModal2 .opdModalTitle ").html(d)
+					
+					$('.opdModal2-scale').show();
+					$('.opdModal2-op').hide();
+					
+				}
+				
+			}
+
+
+		    function call_score(div_class, score_id, mode,data){
+	   
+		 	   // alert(score_id)
+		 	   score_model = {};
+			   
+			   $('.act-score').removeClass("act-score")
+	   
+		 	   score_model['senses'] = [];
+	   
+		 	   $('.sense-container .sense-x').remove();
+	   			
+						   //
+			   // s = {name:'rr',label:'RR',unit:'bpm'}
+			   //
+			   // 	   		   scores = []
+			   // scores.push({min:null,max:-1,s:3,t:"Error"});
+			   // scores.push({min:0,max:8,s:3,t:"very low"});
+			   // scores.push({min:9,max:20,s:0,t:"low"});
+			   // scores.push({min:21,max:25,s:1,t:"normal"});
+			   // scores.push({min:26,max:35,s:2,t:"high"});
+			   // scores.push({min:36,max:99,s:3,t:"very high"});
+			   // scores.push({min:100,max:null,s:-1,t:"Error"});
+			   //
+			   // s['scales'] = scores
+			   //
+			   // 	   		   options = []
+			   // options.push({k:'Tube',v:'Airtube',s:1,t:""});
+			   // options.push({k:'Room',v:'RoomAir',s:0,t:""});
+			   //
+			   // 	   		   s['options'] = options
+			   //
+			   //
+			   // 	   		   score_model['senses'].push(s);
+			   // score_map[s['name']] = s;
+			   //
+			   //
+			   // s = {name:'temp',label:'Temperature',unit:'C'}
+			   //
+			   // 	   		   scores = []
+			   // scores.push({min:null,max:0,s:-1,t:"Error"});
+			   // scores.push({min:0,max:35,s:2,t:"very low"});
+			   // scores.push({min:35.1,max:36,s:1,t:"low"});
+			   // scores.push({min:36.1,max:37.5,s:0,t:"normal"});
+			   // scores.push({min:37.6,max:38.4,s:1,t:"high"});
+			   // scores.push({min:38.5,max:99,s:2,t:"very high"});
+			   // scores.push({min:100,max:null,s:-1,t:"Error"});
+			   //
+			   // s['scales'] = scores
+			   //
+			   //
+			   //
+			   // 	   		   score_model['senses'].push(s);
+			   // 	   		   score_map[s['name']] = s;
+			   //
+			   //
+			   // s = {name:'glucose',label:'Glucose',unit:'mg/L'}
+			   //
+			   // 	   		   scores = []
+			   // scores.push({min:null,max:-1,s:3,t:"Error"});
+			   // scores.push({min:0,max:8,s:3,t:"very low"});
+			   // scores.push({min:9,max:20,s:3,t:"low"});
+			   // scores.push({min:21,max:25,s:3,t:"normal"});
+			   // scores.push({min:26,max:35,s:3,t:"high"});
+			   // scores.push({min:36,max:99,s:3,t:"very high"});
+			   // scores.push({min:100,max:null,s:-1,t:"Error"});
+			   //
+			   // s['scales'] = scores
+			   //
+			   // 	   		   score_model['senses'].push(s);
+			   // score_map[s['name']] = s;
+			   //
+			   //
+			   //
+			   //
+			   // s = {name:'bp_sys',label:'BP Sys',unit:'mg/L'}
+			   //
+			   // 	   		   scores = []
+			   // scores.push({min:null,max:-1,s:3,t:"Error"});
+			   // scores.push({min:0,max:8,s:3,t:"very low"});
+			   // scores.push({min:9,max:20,s:3,t:"low"});
+			   // scores.push({min:21,max:25,s:3,t:"normal"});
+			   // scores.push({min:26,max:35,s:3,t:"high"});
+			   // scores.push({min:36,max:99,s:3,t:"very high"});
+			   // scores.push({min:100,max:null,s:-1,t:"Error"});
+			   //
+			   // s['scales'] = scores
+			   //
+			   // 	   		   score_model['senses'].push(s);
+			   // score_map[s['name']] = s;
+			   //
+			   //
+			   //
+			   //
+			   // s = {name:'concious',label:'Concious',unit:''}
+			   //
+			   // 	   		   options = []
+			   // 	   		   options.push({k:'C01',v:'รู้สึกตัว',s:0,t:""});
+			   // 	   		   options.push({k:'C02',v:'สับสน',s:1,t:""});
+			   //
+			   // 	   		   s['options'] = options
+			   //
+			   //
+			   // 	   		   score_model['senses'].push(s);
+			   // score_map[s['name']] = s;
+			   //
+			   //
+			   
+			   
+			   
+	    	$.ajax({
+	   	   	  url: "get_score?score_id="+score_id,
+	   	   	  context: document.body,
+	   	   		method: 'get'
+	   	   	}).done(function(data) {
+				
+	   	   		
+				score_model = JSON.parse(data);
+				// alert(score_model['name'])
+				
+				
+				  console.log(score_model);
+				
+				
+				
+			   
+			   
+		 		 for(var si in score_model['senses']){
+			   	
+				
+				
+		 				s = score_model['senses'][si]
+		 				score_map[s['name']] = s;
+				
+		 			   d = $('.'+s['name']+" .v-entry")
+		 				   // alert(d.html())
+		 				   if(d!=null&&d.html()!=undefined){
+				   	
+					
+		 					console.log("Exist "+s['name'])
+					   
+					   
+		 					$('.'+s['name']).addClass('act-score')   
+					   
+					   
+					   
+		 				   }else{
+				   
+				   	
+				
+				   	
+				
+		 		 	   x = s['name']
+		 			   x_label = s['label']
+			   
+	   
+	   
+		 		 	   template = $('.sense-template').clone();
+	   
+		 		 	   template.removeClass('sense-template');
+	   
+		 		 	   template.find('.sense-title').html(x_label)
+		 		 	   template.find('.sense').addClass(x)
+		 		 	   template.find('.v-entry').attr('name',x)
+		 	           template.find('.v-entry').attr('label',x_label)
+	   
+		 		 	   template.show();
+	   
+		 		 	   template.appendTo('.sense-container .no-gutters')
+	   
 	
+		 
+		   		     template.find(".v-entry").click(function(){
+		   		         v = $(this).html().trim()
+		   		 		console.log(v)
+		   		         if(v=='-')v = '' 
+		   		 		$(".display-hn").html(v)
+
+		   		 		 current_modal = $(this).attr('name')
+		   		 		 target_key = current_modal
+	         
+			 
+		   		         setup_sense(current_modal)
+		   				 $("#opdModal2").modal('toggle')
+				 
+				 
+				 
+		   		     })
+			    
+		 				template.find('.sense').addClass("act-score");
+			 
+			 
+		 			    }
+			 
+			 
+		
+		 	   			}
+			 
+   		   
+			 
+				
+			
+	   	   	});
+			   
+			   
+			   
+			   
+			   
+			 
+		
+	
+	
+		    }
 	
 
 		
@@ -799,6 +1265,7 @@
 		
 		
 		
+		
 	        function hnPush(s){
 	            v = $(".display-hn").html().trim()
 	            b = s.html()
@@ -812,6 +1279,7 @@
 
 	        var buffer = 10;
 	    	var cur_buffer = 0 ;
+			var the_modal = "" ;
 	
 	    	for(var i=0;i<buffer;i++){
 	    		var myAudio = document.createElement('audio');
@@ -830,32 +1298,31 @@
 	
 	    //
 	        $(".v-score").on('click',function(){
-		
-	   		$('#scoring-panel').modal('hide')
-	    		 $("#scoreModal").modal('show')
-		 
-
-
-	   	
-
-	            return false;
+				
+	   			$('#scoring-panel').modal('hide')
+	    		$("#scoreModal").modal('show')
+				$('.act-score').removeClass("act-score")
+		        return false;
 	        })
 	
 	        $(".btn-score-select").on('click',function(){
+				
 	            var myAudio = document.getElementById('audio-'+cur_buffer)
 	            myAudio.play();
-	    		 $("#scoreModal").modal('hide')
-	   		 text = $(this).html()
-	   		 $('.display-score').html(text)
-		 
-	   		 score_id = $(this).attr('sid')
-		
-	   		 $('.select-score .v-score').html(text.split(" ")[0])
+				
+				
+	    	
+	   		 	text = $(this).html()
+	   		 	
+				$('.display-score').html(text)
+	   		 	$('.select-score .v-score').html(text.split(" ")[0])
          
-	   		 data = prepare()
-	   		 // call_submit(note_record_admit_id,score_id, 'ajax')
-	   		 call_score('.score .v-entry',score_id, 'ajax', data)
-		 
+	   		 	score_id = $(this).attr('sid')
+			
+				$("#scoreModal").modal('hide')
+	   		 	
+	   			data = prepare()
+	   		 	call_score('.score .v-entry',score_id, 'ajax', data)
 		 
 	            return false;
 	        })	
@@ -870,7 +1337,17 @@
 	            return false;
 	        })
 		
-			
+	        $(".btn-hn-option").on('click',function(){
+	            var myAudio = document.getElementById('audio-'+cur_buffer)
+	            myAudio.play();
+				
+	            // cur_buffer+=1;
+   // 	            if(cur_buffer==10)cur_buffer=0;
+   // 	            hnPush($(this))
+   // 				checkRange(); 
+	            return false;
+	        })
+		
 			
 			function checkRange(){
 			
@@ -928,6 +1405,9 @@
 			$('.display-hn').html(v)				
 			}
 			
+			
+			
+			
 			$(document).keypress(function(e){
 		 
 		 	   console.log('key')
@@ -970,7 +1450,7 @@
 				
 					 
    			     if( event.which == 13 ) {
-					 $('#save-modal').click();
+					 $('#'+the_modal+' .save-modal').click();
    				 }
 				 else
 				 if( event.which == 8){
@@ -1005,20 +1485,27 @@
 			
 				current_modal = $(this).attr('name')
 	            mname = $(this).parent("div").find(".l-entry").html()
+				the_modal = 'opdModal'
 	            $("#opdModalTitle").html($(this).attr('label'))
 	            $("#opdModal").modal('toggle')
 	        })
+			
+			
 	        $(".v-entry").click(function(){
 	            v = $(this).html().trim()
 				console.log(v)
 	            if(v=='-')v = '' 
 				$(".display-hn").html(v)
-			
+				the_modal = 'opdModal'
 				current_modal = $(this).attr('name')
 				target_key = current_modal
-	            mname = $(this).parent("div").find(".l-entry").html()
+	            // mname = $(this).parent("div").find(".l-entry").html()
 	            $("#opdModalTitle").html($(this).attr('label'))
-	            $("#opdModal").modal('toggle')
+	            
+				setup_sense(current_modal);
+				$("#opdModal2").modal('toggle')
+					
+					
 	        })
 			
 	  				//       $(".v-score").click(function(){
@@ -1036,19 +1523,31 @@
 			
 			
 		
-			$("#save-modal").click(function(){
+			$(".save-modal").click(function(){
+	
 	            value = $(".display-hn").html().trim()
+				
+				// alert('value')
+				
 	            if(value==='') value='-'
 				$('.'+current_modal+" .v-entry").html(value)
 				
 				target_key = 'hn'
 				will_reset_hn = true
 					
+				if(the_modal!="opdModal2"){
 						
 				if(current_modal=='hn'){
 					
 					getPatient();
-					$("#opdModal").modal('toggle')
+					$("#opdModal").modal('hide')
+				}	
+				else
+				if(current_modal=='auto'){
+					
+					v = parseInt($(".auto .v-entry").html());
+					start_auto_bp(v);
+					$("#opdModal2").modal('hide')
 				}	
 				else
 				{
@@ -1065,9 +1564,22 @@
 					}
 				
 				}
+				
 				checkInput(current_modal)
-				$("#opdModal").modal('toggle')
+				
+				$("#opdModal").modal('hide')
+				$("#opdModal2").modal('hide')
+				
 				sos()
+				
+				
+				}
+				
+				}else{
+					
+					$("#opdModal2").modal("hide")
+					sos();
+					
 				}
 			
 	        })
@@ -1089,166 +1601,257 @@
 	        })
 		
 		
-	    })
-	
-		function prepare(){
-			var data = {};
-			var hn = "<%=params[:hn]%>"
+			function prepare(){
+				var data = {};
+				var hn = "<%=params[:hn]%>"
 		
-			var device_id = "<%=Setting.get :serial_number, "00000" %>"
-			<% if params[:device_id] %>
-			device_id = "<%=params[:device_id]%>"
-			<% end %>
-			var today = new Date();
-			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-			var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-			var datetime = date+'T'+time;
-			var bp=''
-			var bp_sys=''
-			var bp_dia=''
-			var bp_mean=''
-			var pr=''
-			var spo2=''
-			var temp=''
-			var weight=''
-			var height=''
-			var score = ''
-			var bmi =''
-			var staff_id = ''
+				var device_id = "<%=Setting.get :serial_number, "00000" %>"
+				<% if params[:device_id] %>
+				device_id = "<%=params[:device_id]%>"
+				<% end %>
+				var today = new Date();
+				var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+				var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+				var datetime = date+'T'+time;
+				var bp=''
+				var bp_sys=''
+				var bp_dia=''
+				var bp_mean=''
+				var pr=''
+				var spo2=''
+				var temp=''
+				var weight=''
+				var height=''
+				var score = ''
+				var bmi =''
+				var staff_id = ''
 			
-			$('.hn .v-entry').each(function(){
-				hn = $(this).html().trim();
-			})
+				$('.hn .v-entry').each(function(){
+					hn = $(this).html().trim();
+				})
 		
-			$('.bp_sys .v-entry').each(function(){
-				bp_sys = $(this).html().trim();
-			})
-			$('.bp_dia  .v-entry').each(function(){
-				bp_dia = $(this).html().trim();
-			})
+				$('.bp_sys .v-entry').each(function(){
+					bp_sys = $(this).html().trim();
+				})
+				$('.bp_dia  .v-entry').each(function(){
+					bp_dia = $(this).html().trim();
+				})
 		
-			$('.bp_mean .v-entry').each(function(){
-				bp_mean = $(this).html().trim();
-			})
+				$('.bp_mean .v-entry').each(function(){
+					bp_mean = $(this).html().trim();
+				})
 		
-			$('.weight .v-entry').each(function(){
-				weight = $(this).html().trim();
-			})
-			$('.height .v-entry').each(function(){
-				height = $(this).html().trim();
-			})
-			$('.bmi .v-entry').each(function(){
-				bmi = $(this).html().trim();
-			})
-		
-		
-		
-			$('.pr .v-entry').each(function(){
-				pr = $(this).html().trim();
-			})
-			$('.spo2 .v-entry').each(function(){
-				spo2 = $(this).html().trim();
-			})
-		
-			$('.temp .v-entry').each(function(){
-				temp = $(this).html().trim();
-			})
-		
-			$('.score .v-entry').each(function(){
-				score = $(this).html().trim();
-			})
-		
-			$('.staff_id .v-entry').each(function(){
-				staff_id = $(this).html().trim();
-			})
-		
-			bp = ""+bp_sys+"/"+bp_dia
+				$('.weight .v-entry').each(function(){
+					weight = $(this).html().trim();
+				})
+				$('.height .v-entry').each(function(){
+					height = $(this).html().trim();
+				})
+				$('.bmi .v-entry').each(function(){
+					bmi = $(this).html().trim();
+				})
 		
 		
 		
+				$('.pr .v-entry').each(function(){
+					pr = $(this).html().trim();
+				})
+				$('.spo2 .v-entry').each(function(){
+					spo2 = $(this).html().trim();
+				})
 		
-		 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
-			return data
-	    }
+				$('.temp .v-entry').each(function(){
+					temp = $(this).html().trim();
+				})
+		
+				$('.score .v-entry').each(function(){
+					score = $(this).html().trim();
+				})
+		
+				$('.staff_id .v-entry').each(function(){
+					staff_id = $(this).html().trim();
+				})
+		
+				bp = ""+bp_sys+"/"+bp_dia
+		
+		
+		
+		
+			 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+				return data
+		    }
 
 
 
+
+	
+			// S0. S1
+			// M0. M1
+	
+	
+			function sos(){
+		
+					
+				err = [];
+		
+				score = 0
+				count = 0 
+		
+				console.log(score_model)
+		
+				if(score_model!=null){
+					
+					// score = 99
+			
+					
+					
+		   		 
+				 for(var si in score_model['senses']){
+			   	
+					 i_score= 0;
+		   			   s = score_model['senses'][si]
+					   d = $('.'+s['name']+" .v-entry").html()
+					 	dv = parseFloat(d);
+					
+					 if(s['scales']){
+					
+						 for(var ii in s['scales']){
+						 	
+							i = s['scales'][ii]
+							
+							 min = i['min']
+							 max = i['max']
+							 
+							 if(min==null) min = -999999;
+							 if(max==null) max = -999999;
+							 console.log("min "+i['min']+" max "+i['max']+" "+dv +" s "+i['s']) 
+							 
+							 if(dv>=min&&dv<=max){
+								 
+							 	// alert("min "+i['min']+" max "+i['max']+' s '+i['s'])
+								i_score = i['s']
+								 count++;
+								 
+							 }
+							 
+							
+						 }
+							
+					 } 
+					 
+					 if(s['options']){
+					
+						 for(var ii in s['options']){
+						 	
+							i = s['options'][ii]
+							
+							 k = i['k']
+							 
+							 if(d.trim()==k){
+								 
+							 	// alert("min "+i['min']+" max "+i['max']+' s '+i['s'])
+								i_score = i['s']
+								 count++;
+								 
+							 }
+							 
+							
+						 }
+							
+					 } 
+					 
+					 
+					 
+					 
+					 
+					 
+					 score += i_score;
+					   
+					   
+					 
+					 
+				 }
+					 
+					 
+					 
+					 
+					
+					
+					
+				}else{
+		
+				
+				list = ['spo2', 'bp_sys', 'temp', 'pr']
+			
+				for(var i=0;i<list.length;i++){
+			
+					v = list[i]
+					s = 0 
+					title = ""
+					t = $('.'+v+" .v-entry").html().trim()
+					if(t!=''&&t!='-'&&t!='0'){
+						x = parseFloat(t)
+						count++;
+						if(v=='temp'){
+							title = "temp"
+							if(x<=35)s=-2;
+							if(x>=35.1&&x<=36)s=-1;
+							if(x>=36.1&&x<=38)s=0;
+							if(x>=38.1&&x<=38.4)s=1;
+							if(x>=38.5)s=2;
+					
+						}else
+						if(v=='bp_sys'){
+							title = "BP systolic"
+							if(x<=80)s=-3;
+							if(x>=81&&x<=90)s=-2;
+							if(x>=91&&x<=100)s=-1;
+							if(x>=101&&x<=180)s=0;
+							if(x>=181&&x<=199)s=1;
+							if(x>=200)s=2;
+					
+						}else
+						if(v=='pr'){
+							title = "Pulse rate"
+							if(x<=40)s=-3;
+							if(x>=41&&x<=50)s=-1;
+							if(x>=51&&x<=100)s=0;
+							if(x>=100&&x<=120)s=1;
+							if(x>=121&&x<=139)s=2;
+							if(x>=140)s=3;
+					
+						}
+				
+						if(s!=0){
+							score+=Math.abs(s)
+							if(s<0)
+								err.push("- Under "+title)
+							else
+								err.push("- Over "+title)
+					
+						}
+				
+					}
+					}
+			
+				}
+				console.log(err)
+		
+				if(count>0){
+					$('.score .v-entry').html(score)
+		 	   		checkInput('score')
+				}
+				$('.alert').html(err.join('&nbsp;'))
+		
+		
+			}
+	
+		
+	
+	
 
 		var wait_monitor = true;
 		var wait_scaler = true; 
-	
-		// S0. S1
-		// M0. M1
-	
-	
-		function sos(){
-		
-			score = 0
-			count = 0 
-			list = ['spo2', 'bp_sys', 'temp', 'pr']
-			err = [];
-			for(var i=0;i<list.length;i++){
-			
-				v = list[i]
-				s = 0 
-				title = ""
-				t = $('.'+v+" .v-entry").html().trim()
-				if(t!=''&&t!='-'&&t!='0'){
-					x = parseFloat(t)
-					count++;
-					if(v=='temp'){
-						title = "temp"
-						if(x<=35)s=-2;
-						if(x>=35.1&&x<=36)s=-1;
-						if(x>=36.1&&x<=38)s=0;
-						if(x>=38.1&&x<=38.4)s=1;
-						if(x>=38.5)s=2;
-					
-					}else
-					if(v=='bp_sys'){
-						title = "BP systolic"
-						if(x<=80)s=-3;
-						if(x>=81&&x<=90)s=-2;
-						if(x>=91&&x<=100)s=-1;
-						if(x>=101&&x<=180)s=0;
-						if(x>=181&&x<=199)s=1;
-						if(x>=200)s=2;
-					
-					}else
-					if(v=='pr'){
-						title = "Pulse rate"
-						if(x<=40)s=-3;
-						if(x>=41&&x<=50)s=-1;
-						if(x>=51&&x<=100)s=0;
-						if(x>=100&&x<=120)s=1;
-						if(x>=121&&x<=139)s=2;
-						if(x>=140)s=3;
-					
-					}
-				
-					if(s!=0){
-						score+=Math.abs(s)
-						if(s<0)
-							err.push("- Under "+title)
-						else
-							err.push("- Over "+title)
-					
-					}
-				
-				}
-			
-			}
-			console.log(err)
-		
-			if(count>0){
-				$('.score .v-entry').html(score)
-	 	   		checkInput('score')
-			}
-			$('.alert').html(err.join('&nbsp;'))
-		
-		
-		}
-	
 	
 		function deviceSend(msg){
 	
@@ -1387,18 +1990,98 @@
 	 
 	 }
  
-	$('.start_bp').click(function(){
+   
+	 function start_auto_bp(min){
+	 	
+		auto_bp = min;
 		
+		auto_bp_count = auto_bp*60;
+		
+	    bpTimer = setInterval(auto_bp_refresh, 1000);
+		
+	 }
+	 
+	 function auto_bp_refresh(){
+	 	
+		console.log('ok')
+		
+		min = parseInt(auto_bp_count/60);
+		sec = auto_bp_count%60;
+		
+		text = ""+min+":"+sec 
+		 
+		$('.auto_bp').html(text)
+		 
+		auto_bp_count--;
+		
+		if(auto_bp_count<0){
+			ws.send('Monitor.StartBP device_id=*\nStart')
+			auto_bp_count = auto_bp*60;
+		} 
+		 
+		
+	 }
+ 
+ 
+	$('.start_bp').click(function(){
 		
 		ws.send('Monitor.StartBP device_id=*\nStart')
 		
-		// alert('ok')
+		if(auto_bp!=null){
+			
+			auto_bp_count = auto_bp*60;
+		
+		}
+		
+	})
+	
+	var auto_bp = null;
+	var auto_bp_count = 0;
+	var bpTimer;
+	
+	
+	
+	$('.auto_bp').click(function(){
+		
+		current_modal = 'auto'
+		$('.display-hn').html("");
+		
+		$("#opdModal2 .opdModalTitle ").html("Auto BP interval")
+		
+		$('.opdModal2-options').empty()
+		
+		$('.opdModal2-op').show();	
+		
+		for(var id in ['5','15','60','120'] ){
+			v = ['5','15','60','120'][id]
+			$('.opdModal2-options').append('<tr><td><div class="btn-hn-option col" score="'+v+'" map="'+v+'" style="">'+v+'</div></td></tr>');
+			
+		}
+		
+		
+        $(".btn-hn-option").on('click',function(){
+            var myAudio = document.getElementById('audio-'+cur_buffer)
+            myAudio.play();
+			k = $(this).attr('map')
+			$('.display-hn').html(k)
+			$('#opdModal2 .save-modal').click();
+			
+            return false;
+        })
+		
+		$("#opdModal2").modal('show')
+	
 		
 		
 	})
 	
 	$('.stop_bp').click(function(){
 		
+		auto_bp = null;
+		auto_bp_count = 0;
+		$('.auto_bp').html("Auto")
+		$('.auto .v-entry').html("")
+		clearInterval(bpTimer);
 		
 		ws.send('Monitor.StartBP device_id=*\nStop')
 		
@@ -1430,5 +2113,8 @@
 	   
 	   $('.timer').html(d.toLocaleTimeString());
 	 }
+	 
+	     });  // end ready
+	 
 	</script>
 	

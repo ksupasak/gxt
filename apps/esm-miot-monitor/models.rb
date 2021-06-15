@@ -612,10 +612,11 @@ class ScoreItem  < GXTModel
   
   key :name, String # key value
   key :title, String # key value
+  key :source, String
   
   key :sort_order, Integer
   key :score_id, ObjectId
-  include Mongoid::Timestamps
+  # include Mongoid::Timestamps
   
 end
 

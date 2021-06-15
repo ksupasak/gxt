@@ -1,0 +1,168 @@
+<%
+	
+score_model = {}
+
+score_model['senses'] = [];
+
+score = Score.find params[:score_id]
+
+
+score_model['name'] = score.name
+score_model['version'] = score.name
+score_model['description'] = score.name
+
+
+
+items = ScoreItem.where(:score_id=>score.id).sort(:sort_order=>1).all
+
+
+for i in items
+	
+	conds = ScoreCondition.where(:score_item_id=>i.id).sort(:sort_order=>1).all
+
+	scores = []
+	options = []
+	
+	s = {name:i.name,label:i.title,unit:''}
+	
+	for j in conds
+		
+		if j['min'] or j['max']
+			
+			scores << {min:j[:min],max:j[:max],s:j[:score],t:j[:alert_msg]}
+			
+		end
+		
+			
+		if j['option'] and j['option'].size>0
+			
+			options << {k:j['option'],v:j['option'],s:j[:score],t:j[:alert_msg]}
+			
+		end
+		
+		
+	end	
+		
+	
+	s['scales'] = scores if scores.size>0
+	s['options'] = options if options.size>0
+	
+	
+	
+	
+	 score_model['senses'] << s;
+    # key :sort_order, Integer
+#
+# 	    key :score_item_id, ObjectId
+#
+# 	    key :min, Float # key value
+# 	    key :max, Float # key value
+#
+# 	    key :option, String # key value
+#     	key :description, String # key value
+# 	    key :score, Integer # key value
+#
+# 	    key :alert_msg, String
+# 	    key :alert_tag, String
+# 	    include Mongoid::Timestamps
+	
+	
+end
+
+#
+#
+# s = {name:'rr',label:'RR',unit:'bpm'}
+#
+# scores = []
+# scores.push({min:null,max:-1,s:3,t:"Error"});
+# scores.push({min:0,max:8,s:3,t:"very low"});
+# scores.push({min:9,max:20,s:0,t:"low"});
+# scores.push({min:21,max:25,s:1,t:"normal"});
+# scores.push({min:26,max:35,s:2,t:"high"});
+# scores.push({min:36,max:99,s:3,t:"very high"});
+# scores.push({min:100,max:null,s:-1,t:"Error"});
+#
+# s['scales'] = scores
+#
+# options = []
+# options.push({k:'Tube',v:'Airtube',s:1,t:""});
+# options.push({k:'Room',v:'RoomAir',s:0,t:""});
+#
+# s['options'] = options
+#
+#
+# score_model['senses'].push(s);
+# score_map[s['name']] = s;
+#
+#
+# s = {name:'temp',label:'Temperature',unit:'C'}
+#
+# scores = []
+# scores.push({min:null,max:0,s:-1,t:"Error"});
+# scores.push({min:0,max:35,s:2,t:"very low"});
+# scores.push({min:35.1,max:36,s:1,t:"low"});
+# scores.push({min:36.1,max:37.5,s:0,t:"normal"});
+# scores.push({min:37.6,max:38.4,s:1,t:"high"});
+# scores.push({min:38.5,max:99,s:2,t:"very high"});
+# scores.push({min:100,max:null,s:-1,t:"Error"});
+#
+# s['scales'] = scores
+#
+#
+#
+# score_model['senses'].push(s);
+# score_map[s['name']] = s;
+#
+#
+# s = {name:'glucose',label:'Glucose',unit:'mg/L'}
+#
+# scores = []
+# scores.push({min:null,max:-1,s:3,t:"Error"});
+# scores.push({min:0,max:8,s:3,t:"very low"});
+# scores.push({min:9,max:20,s:3,t:"low"});
+# scores.push({min:21,max:25,s:3,t:"normal"});
+# scores.push({min:26,max:35,s:3,t:"high"});
+# scores.push({min:36,max:99,s:3,t:"very high"});
+# scores.push({min:100,max:null,s:-1,t:"Error"});
+#
+# s['scales'] = scores
+#
+# score_model['senses'].push(s);
+# score_map[s['name']] = s;
+#
+#
+#
+#
+# s = {name:'bp_sys',label:'BP Sys',unit:'mg/L'}
+#
+# scores = []
+# scores.push({min:null,max:-1,s:3,t:"Error"});
+# scores.push({min:0,max:8,s:3,t:"very low"});
+# scores.push({min:9,max:20,s:3,t:"low"});
+# scores.push({min:21,max:25,s:3,t:"normal"});
+# scores.push({min:26,max:35,s:3,t:"high"});
+# scores.push({min:36,max:99,s:3,t:"very high"});
+# scores.push({min:100,max:null,s:-1,t:"Error"});
+#
+# s['scales'] = scores
+#
+# score_model['senses'].push(s);
+# score_map[s['name']] = s;
+#
+#
+#
+#
+# s = {name:'concious',label:'Concious',unit:''}
+#
+# options = []
+# options.push({k:'C01',v:'รู้สึกตัว',s:0,t:""});
+# options.push({k:'C02',v:'สับสน',s:1,t:""});
+#
+# s['options'] = options
+#
+#
+# score_model['senses'].push(s);
+# score_map[s['name']] = s;
+
+	
+%><%=score_model.to_json%>
