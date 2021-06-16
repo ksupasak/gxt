@@ -28,8 +28,11 @@ for i in items
 	for j in conds
 		
 		if j['min'] or j['max']
-			
-			scores << {min:j[:min],max:j[:max],s:j[:score],t:j[:alert_msg]}
+			min = j['min']
+			max = j['max']
+			min = -99999 unless min
+			max = 999999 unless max
+			scores << {min:min,max:max,s:j[:score],t:j[:alert_msg]}
 			
 		end
 		

@@ -59,13 +59,13 @@ Version : <%=record.version%>
 					<th>Maximum</th>
 					<th>Option</th>
 					<th>Score</th>
-					<th></th>
+					<th>Alert</th>
 				</tr>
 			</thead>
 			<tbody>
 			<% for j in conds%>
 			<tr><td><%=j.sort_order%></td>
-				<td><%=j.min%></td><td><%=j.max%></td><td><%=j.option%></td><td><%=j.score%></td>
+				<td><%=j.min%></td><td><%=j.max%></td><td><%=j.option%></td><td><%=j.score%></td><td><%=j.alert_msg%></td>
 				<td><%=link_to 'Edit',"../ScoreCondition/edit?id=#{j.id}" %></td>
 			</tr>
 			<% end %>
