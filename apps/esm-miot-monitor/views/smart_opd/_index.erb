@@ -1955,8 +1955,7 @@
                 
 
 	                if(map['STATUS']=='M1'){	
-						if(map['SYS']&&map['SYS'].length>0&&parseIn(map['SYS'])>0){
-							
+						// if(map['SYS']&&map['SYS'].length>0&&parseIn(map['SYS'])>0){
 	                    $('.bp_sys .v-entry').html(map['SYS'])
 	                    $('.bp_dia .v-entry').html(map['DIA'])
 	                    $('.bp_mean .v-entry').html(map['MEAN'])
@@ -1965,7 +1964,7 @@
 	                    checkInput('bp_dia')
 					
 	                    wait_monitor = false;
-						}
+					// }
 	                    // $('.mean').html(map['MEAN'])
 	                }
 	            }
