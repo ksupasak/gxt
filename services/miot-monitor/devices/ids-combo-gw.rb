@@ -132,7 +132,7 @@ require 'nokogiri'
        
    device_id = get_device "10c4:ea60"
 
-   serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
+   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
     
     while true
     
@@ -151,11 +151,18 @@ require 'nokogiri'
       # }
       #
       # content = res.body
-    
-      lines = serial.readline("\r").unpack("C*").pack("U*")
-      
-      puts lines
+       
+   
 
+      raw = serial.readline("\r")
+      
+#	puts raw.inspect 
+      
+      lines = raw.unpack("C*").pack("U*")
+
+      puts '====================================='
+      puts lines
+      puts '================================='
       
 
       content = lines.split("\n")[-1]    
@@ -166,11 +173,24 @@ require 'nokogiri'
       
       document = Nokogiri::HTML(content)
       tags = document.xpath("//td")
+      
+tags.each_with_index do |t,ti|
+	puts "#{ti} #{t.text.strip}"
+end
+
       tags.each_with_index do |t,ti|
+
+		
     
-        current_height = t.text.strip if ti==20
-        current_weight = t.text.strip if ti==14  
-        trig_weight = t.text.strip if ti==17
+        #current_height = t.text.strip if ti==20
+        #current_weight = t.text.strip if ti==14  
+        #trig_weight = t.text.strip if ti==17
+
+	current_height = t.text.strip if ti==16
+        current_weight = t.text.strip if ti==10  
+        trig_weight = t.text.strip if ti==13
+	
+
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
           
