@@ -23,14 +23,14 @@
 	<ul class="nav nav-pills mb-12" id="pills-tab" role="tablist">
 		
   	  <li class="nav-item">
-  	    <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">ระบบจ่ายงาน</a>
+  	    <a class="nav-link " id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">ระบบจ่ายงาน</a>
   	  </li>
 	  
 	  <li class="nav-item">
 	    <a class="nav-link " id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
 	  </li>
 	  <li class="nav-item">
-	    <a class="nav-link " id="pills-schedule-tab" data-toggle="pill" href="#pills-schedule" role="tab" aria-controls="pills-schedule" aria-selected="true">ตารางนัดหมาย</a>
+	    <a class="nav-link active " id="pills-schedule-tab" data-toggle="pill" href="#pills-schedule" role="tab" aria-controls="pills-schedule" aria-selected="true">ตารางนัดหมาย</a>
 	  </li>
 	  <li class="nav-item">
 	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">รายการผู้ป่วย</a>
@@ -47,7 +47,7 @@
 
 	<div class="tab-content" id="pills-tabContent">
 		
-		<div class="tab-pane fade show active" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
+		<div class="tab-pane fade show " id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
 		
 		
 		<%
@@ -378,7 +378,7 @@ t_data = list
 		
 	  </div>  <!-- End Doctor Section-->
 	  
-	  <div class="tab-pane fade" id="pills-schedule" role="tabpanel" aria-labelledby="pills-schedule-tab">
+	  <div class="tab-pane fade show active" id="pills-schedule" role="tabpanel" aria-labelledby="pills-schedule-tab">
 		  
 		  <%
 		  	
@@ -400,7 +400,7 @@ t_data = list
 	</div>
 	<div class="col d-flex justify-content-end">
 		
-		<% unless @current_network %>
+		<% if @current_network %>
        <div class=" d-flex justify-content-center btn-submit" >
 		   <a href="visit" class="btn  d-flex align-items-center justify-content-center">
                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -783,5 +783,7 @@ $(document).ready(function(){
 	// $("#search-p2").keyup(function(){
 	// 	filter_p($(this).val())
 	// })
+		
+		$('#pills-dashboard-tab').click();	
 })
 </script>

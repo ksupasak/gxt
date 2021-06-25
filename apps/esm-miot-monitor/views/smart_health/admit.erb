@@ -237,9 +237,9 @@
 					
 				%>
 				<select id="record-network_id" name="relation[network_id]" class="form-control" value="">
-
+					<option value="" ></option>
 				<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
-				  <option value="<%=j[0]%>" %><%=j[1]%></option>
+				  <option value="<%=j[0]%>" <%="selected=true" if j[0]==relation.network_id %> ><%=j[1]%></option>
 				<% end %>
 				</select>
 		  		

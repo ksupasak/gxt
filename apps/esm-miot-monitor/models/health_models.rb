@@ -394,6 +394,8 @@ class SHVisit < GXTModel
   key :completed_user, ObjectId # user
   key :complated_by, String # 1 : hospital , 2 : network , 3 : officer
 
+
+  key :data_record_id, ObjectId # user
   #
   # def self.start
   #   return self.date

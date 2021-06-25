@@ -1025,11 +1025,13 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<% 
 				
 				@current_network = SHNetwork.find relation.network_id
+				if @current_network
 					
 				for i in SHNetwork.where(:hospital_id=>@current_network.hospital_id).all
 			
 				%>
 				<option value="<%=i.id%>" <%="selected" if i.id==relation.network_id %>><%=i.name%></option>
+				<% end %>
 				<% end %>
 				</select>
 			
