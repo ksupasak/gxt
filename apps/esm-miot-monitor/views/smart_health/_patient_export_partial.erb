@@ -1,0 +1,389 @@
+<style>
+.div-patient{
+	max-width:100%;
+	max-height:60vh;
+	overflow:auto;
+}
+</style>
+<%
+    nowdate = Time.now
+	
+	
+	hospital_id = nil
+	hospital_id = params[:hospital_id] if params[:hospital_id] and params[:hospital_id]!=''
+	
+	
+	network_id = nil
+	network_id = params[:network_id] if params[:network_id] and params[:network_id]!=''
+	
+	
+	provider_id = nil
+	provider_type = nil
+	
+	provider_id = params[:provider_id] if params[:provider_id] and params[:provider_id]!=''
+	provider_type = params[:provider_type] if params[:provider_type] and  params[:provider_type]
+	
+	from = params[:from]
+	to = params[:to]
+	
+	
+	query = {}
+	
+	if provider_id
+		
+		query[:provider_id] = provider_id
+		query[:provider_type] = provider_type
+	
+	elsif network_id
+	
+		query[:network_id] = network_id
+		query[:network_id] = params[:network_id] if params[:network_id]
+		
+		
+	elsif hospital_id
+		
+		query[:hospital_id] = hospital_id
+		
+	
+		
+	end
+	
+	
+	relations = nil
+	
+	patients = []
+	
+	
+	if query[:provider_id] 
+		if query[:provider_type] == 'hospital'
+			
+			relations = SHRelation.where('$or'=>[{:hospital_doctor_id=>query[:provider_id]},{:hospital_doctor_2_id=>query[:provider_id]},{:hospital_nurse_id=>query[:provider_id]}]).all
+			
+		elsif query[:provider_type] == 'network'
+			
+			relations = SHRelation.where('$or'=>[{:network_doctor_id=>query[:provider_id]},{:network_nurse_id=>query[:provider_id]},{:network_officer_id=>query[:provider_id]}]).all
+			
+		end
+	
+	
+	elsif query[:network_id]
+		
+		relations = SHRelation.where(:network_id=>query[:network_id]).all
+		
+		
+	elsif query[:hospital_id]
+	
+		relations = SHRelation.where(:hospital_id=>query[:hospital_id]).all
+	
+	end
+	
+	
+	unless relations
+		
+		relations =  SHRelation.all
+		params[:manage]  = 'true'
+		
+	end
+	
+	
+	if relations 
+		
+		if params[:query] and params[:query]!=""
+			
+			exp_query = /#{params[:query]}/ 
+		
+			patients = Patient.where('_id'=>{'$in'=>relations.collect{|i| i.patient_id} }, '$or'=>[{:first_name=>exp_query},{:last_name=>exp_query},{:public_id=>exp_query},{:hn=>exp_query} ]).all			
+				
+		else 
+		
+			patients = Patient.find relations.collect{|i| i.patient_id} 
+	
+		end
+		
+		
+		if params[:sort] and params[:sort]!=""
+			
+			case params[:sort]
+				
+			when 'patient_name'
+				patients = patients.sort{|a,b| "#{a['first_name']} #{a['last_name']}"<=>"#{b['first_name']} #{b['last_name']}" }
+			when 'status'
+				
+				
+				
+			else
+				patients = patients.sort{|a,b| a[params[:sort]]<=>b[params[:sort]] }
+			end
+			
+		end
+		
+		
+		if params[:row] and row = params[:row].to_i and row!=0
+			
+			patients = patients[0..row-1].compact
+			
+		end
+	
+	
+	
+	
+		
+	end
+	
+	    sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+	    sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+	    sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+	    m_pd = Hash[relations.collect{|i| [i.patient_id,i.hospital_doctor_id]}.compact]
+	    m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
+	    m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
+	    offs = Provider.where(:id=>relations.collect{|i| i.network_officer_id}.compact).all
+
+	    m_p_r = {}
+		m_p_f = {}
+		m_p_t = {}
+		m_p_s = {}
+	
+		
+	    for p in patients
+	        a = Admit.where(:patient_id=>p.id).first
+	        r = nil
+			if a
+				
+			
+		    r = DataRecord.where(:admit_id=>a.id).first 
+		    m_p_f[p.id] = r if r
+				
+				
+	        r = DataRecord.where(:admit_id=>a.id).last 
+	        m_p_r[p.id] = r if r
+		
+		
+			is_normal = true
+			
+			if r
+			highlight = {}
+	        
+	        for s in sense_list
+	            highlight[s.to_sym]=''
+	            v = r[s.to_sym]
+	            if v
+	                highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+	                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+	                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+	                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+	            end
+	            is_normal = (highlight[s.to_sym]=='') if is_normal
+	        end
+			
+			m_p_s[p.id] = (is_normal==true)?0:1
+			
+			else
+			m_p_s[p.id] = -1
+			end
+			
+			
+			
+			end
+			
+			m_p_t[p.id] = DataRecord.where(:admit_id=>a.id).count
+			
+	    end
+		
+		
+		if params[:sort] and params[:sort]!=""
+			
+			case params[:sort]
+			when 'exam'
+				patients = patients.sort{|a,b| t = 0 ; t = m_p_t[b.id]<=>m_p_t[a.id] if m_p_t[a.id] and m_p_t[b.id] ; t }
+			when 'status'
+				patients = patients.sort{|a,b| t = 0 ; t = m_p_s[b.id]<=>m_p_s[a.id] if m_p_s[a.id] and m_p_s[b.id] ; t }
+				
+			end
+			
+		end	
+				
+			
+		
+	#
+	# pnet = nil
+	#
+	# pnet = params[:patient][:network_id] if params[:patient] and params[:patient][:network_id]
+	
+%>
+<div  id="data">
+<%=params[:from]%> <%=params[:to]%> <%=params[:status]%> <%=params[:pstatus]%>
+<table class="table table-striped table-bordered table-condensed" style="background:#FFF;font-size:0.8em">
+<thead>
+<tr style="text-align:center">
+<th>No.</th>
+<th>CID</th>
+<th>HN</th>
+<th>ชื่อ-สกุล</th>
+<th>สถานะ</th>
+<th>สถานะคนไข้</th>
+<th>วัดครั้งแรก</th>
+<% sense_list[0..2].each_with_index do |i,ix| %>
+<th><%=i%><br/>(<%=sense_unit[ix]%>)</th>
+<% end %>
+<th>วัดล่าสุด</th>
+<% sense_list.each_with_index do |i,ix| %>
+<th><%=i%><br/>(<%=sense_unit[ix]%>)</th>
+<% end %>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<%#=admits.inspect%>
+<%  patients.each_with_index do |p,ix| 
+	
+	a = Admit.where(:patient_id=>p.id).first
+
+%>
+<%
+    # a = Admit.where(:patient_id=>p.id).last
+    # r = nil
+    # r = DataRecord.where(:admit_id=>a.id).last if a
+    r = nil
+    r = m_p_r[p.id] if m_p_r[p.id]
+    status_sign = ''
+    status_check = 'รอตรวจ'
+    status_text = ''
+    highlight = {}
+    sfilter = true
+
+    if r 
+        status_sign = '<span style="color:green"><i class="fas fa-smile"></i></span>'
+        status_check = 'ตรวจแล้ว'
+        status_text = 'ปกติ'
+        is_normal = true
+        for s in sense_list
+            highlight[s.to_sym]=''
+            v = r[s.to_sym]
+            if v
+                highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+            end
+            is_normal = (highlight[s.to_sym]=='') if is_normal
+        end
+        status_sign = '<span style="color:red"><i class="fas fa-frown"></i></span>' if !is_normal
+        status_text = 'ผิดปกติ' if !is_normal
+        if to and to!=''
+            begin
+                dt = Time.strptime(to,'%d/%m/%Y')
+                sfilter = false if dt<r.stamp
+            rescue => exception
+             
+            end
+        end
+
+
+    end
+	
+    f = nil
+    f = m_p_f[p.id] if m_p_f[p.id]
+    status_sign_2 = ''
+    highlight_2 = {}
+    if f 
+        status_sign_2 = '<span style="color:green"><i class="fas fa-smile"></i></span>'
+        is_normal = true
+        for s in sense_list
+            highlight_2[s.to_sym]=''
+            v = f[s.to_sym]
+            if v
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+            end
+            is_normal = (highlight_2[s.to_sym]=='') if is_normal
+        end
+        status_sign_2 = '<span style="color:red"><i class="fas fa-frown"></i></span>' if !is_normal
+
+        if from and from!=''
+            begin
+                df = Time.strptime(from,'%d/%m/%Y')
+                sfilter = false if df>f.stamp
+            rescue => exception
+             
+            end
+        end
+
+    end
+	
+	t = 0 
+	t = m_p_t[p.id] if m_p_t[p.id]
+    sfilter = false if params[:status]=='finished' and status_check!='ตรวจแล้ว'
+    sfilter = false if params[:status]=='wait' and status_check!='รอตรวจ'
+    sfilter = false if params[:pstatus]=='normal' and status_text!='ปกติ'
+    sfilter = false if params[:pstatus]=='abnormal' and status_text!='ผิดปกติ'
+
+    if sfilter
+%>
+<tr class="tr-p tr-network <%=m_pn[p.id]%>" style="text-align:center" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
+<td style="text-align:left"><%=ix+1%>.   </td>
+
+<td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%></td>
+<td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
+<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
+<td><%=status_check%></td>
+<td><%=status_text%></td>
+<td><%=f.stamp.strftime("%d/%m/%y %H:%M") if f%><br/>
+	<%=((Time.now - f.stamp.to_datetime)/86400).to_i.to_s+" วัน" if f%>
+</td>
+<% for s in sense_list[0..2] %>
+<td><span style="<%=highlight_2[s.to_sym]%>"><%=f[s.to_sym] if f and f[s.to_sym]%></span> &nbsp; </td>
+<% end %>
+<td>
+	<% if t!=0 %>
+	<%=r.stamp.strftime("%d/%m/%y %H:%M") if r%><br/><%=status_sign%>
+	<%=((Time.now - r.stamp.to_datetime)/86400).to_i.to_s+" วัน" if r%>
+	จาก <%= t %> ครั้ง 
+	<% else %>
+	-
+	<% end %>
+</td>
+<% for s in sense_list %>
+<td><span style="<%=highlight[s.to_sym]%>"><%=r[s.to_sym] if r and r[s.to_sym]%></span> &nbsp; </td>
+<% end %>
+
+
+
+<td>
+
+</td>
+</tr>
+<% end # if sfilter%>
+<% end %>
+</tbody>
+</table>
+</div>
+<!--<a href="#" class="btn" id="btnExport">Export excel</a>-->
+<script>
+	$("#btnExport").click(function(e) {
+	    tableToExcel('data', 'patient')
+	    e.preventDefault();
+	});
+
+	var tableToExcel = (function() {
+		a = $("#data").clone();
+		a.find('.btn').remove();
+		
+		
+		
+		
+		
+	    var uri = 'data:application/vnd.ms-excel;base64,'
+	        , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>patient</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta charset="UTF-8"></head><body><table>'+a.html()+'</table></body></html>'
+	        , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+	        , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+	    return function(table, name) {
+	        if (!table.nodeType) table = document.getElementById(table)
+	        var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+	        window.open( uri + base64(format(template, ctx)) )
+	    }
+	})()
+	</script>   
+
