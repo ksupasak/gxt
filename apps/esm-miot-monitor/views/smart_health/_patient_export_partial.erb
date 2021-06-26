@@ -232,7 +232,13 @@
 
 <th>เลขประจำตัวประชาชน</th>
 <th>รหัสผู้ป่วย</th>
-<th>ชื่อ-สกุล</th>
+<!--<th>ชื่อ-สกุล</th>-->
+
+<th>คำนำหน้า</th>
+<th>ชื่อ</th>
+<th>ชื่อกลาง</th>
+<th>นามสกุล</th>
+
 
 <th>อายุ</th>
 <th>แพทย์ประจำ</th>
@@ -362,7 +368,11 @@
 
 <td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%></td>
 <td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
-<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
+<!--<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>-->
+<td><%=p.prefix_name%></td>
+<td><%=p.first_name%></td>
+<td></td>
+<td><%=p.last_name%></td>
 
 <td><%=p.age%> </td>
 
