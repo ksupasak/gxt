@@ -750,6 +750,18 @@ reportid = "&record_id=#{report.id}" if report
 	            </a>
 				</div>
 				<% end %>
+				
+				&nbsp;
+				<% if @current_hospital %>
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="manage_patient_user?id=<%=relation.id%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                Login ผู้ป่วย
+	            </a>
+				</div>
+				<% end %>
+				
+				
 		
 			&nbsp;
 
