@@ -131,10 +131,14 @@ class SHAddressBook < GXTModel
           if u.id != user_network.id 
               
             us = User.find(u.user_id)  
+            if us
             role = Role.find us.role_id
             udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name,:provider=>pmap[u.provider_id]}
             
             nlist << udata  
+            else
+              u.destroy
+            end 
           end
             
           end
