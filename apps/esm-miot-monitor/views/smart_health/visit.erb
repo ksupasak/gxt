@@ -62,7 +62,7 @@
 		temp_ps=Patient.where(:id=>patient_ids).all.collect{|i| i.id}
 		if temp_ps.size!=patient_hos.size
 			for ph in patient_hos
-				ph.destroy if !temp_ps.index(ph.pateint_id)
+				ph.destroy if !temp_ps.index(ph.patient_id)
 			end
 			patient_hos = SHRelation.where(:hospital_id=>hos_id).all
 			patient_ids = patient_hos.collect{|i| i.patient_id}
