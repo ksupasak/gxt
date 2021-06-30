@@ -159,6 +159,37 @@ class SHAddressBook < GXTModel
   
 end  
 
+class SHCluster < GXTModel
+    
+    include Mongoid::Document
+  
+    key :name, String  
+    key :title, String
+    key :address, String  
+    key :phone, String  
+    key :code, String
+    key :latlng, String
+      
+    include Mongoid::Timestamps
+end
+
+
+
+class SHUserCluster < GXTModel
+  
+  include Mongoid::Document
+  
+  belongs_to :cluster, :class_name=>'EsmMiotMonitor::SHCluster', :foreign_key=>:cluster_id
+  belongs_to :user, :class_name=>'EsmMiotMonitor::User'
+  
+  key :user_id, ObjectId
+  key :cluster_id, ObjectId
+  key :provider_type, String
+  
+end
+
+
+
 class SHConference < GXTModel
   
     include Mongoid::Document
@@ -264,6 +295,8 @@ class SHNetwork < GXTModel
   key :district, String
   key :code, String
   
+
+  
   key :hospital_id, ObjectId
   
 end
@@ -280,6 +313,8 @@ class SHHospital < GXTModel
   key :phone, String
   key :district, String
   key :code, String
+  
+  key :cluster_id, ObjectId
   
   
 end
@@ -491,7 +526,9 @@ class SHUserHospitalController < GXTDocument
   
 end
 
-
+class SHClusterController < GXTDocument
+  
+end
 
 class SHNetworkController < GXTDocument
   
