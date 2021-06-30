@@ -25,13 +25,18 @@
 	case j[0]
 		
 	when 'network_id'
+		begin
 		text=SHNetwork.find(i.network_id).name
+		rescue Exception=>e
+		end
 	when 'provider_id'
 		provider =Provider.find(i.provider_id)
 		text = provider.name if provider
 	when 'user_id'
+		begin
 		text=User.find(i.user_id).login
-		
+		rescue Exception=>e
+		end
 	else
 		text=i[j[0]]
 	end
