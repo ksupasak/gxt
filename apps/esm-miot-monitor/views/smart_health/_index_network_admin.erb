@@ -144,7 +144,11 @@ t_data = pending_visits
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
 		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
 		
-		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		if c=='hospital_id'
+			out = ''
+			temp_hos = SHHospital.find(row.hospital_id)
+			out = temp_hos.name  if temp_hos
+		end
 		
 		out =  "<select class='form-control' name='visit[#{row.id}][officer_id]'>#{options.join}</select>" if c=='officer_id'
 %>

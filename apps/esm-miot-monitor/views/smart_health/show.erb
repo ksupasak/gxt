@@ -6,6 +6,16 @@
 admit = Admit.find params[:id]
 patient = admit.patient
 
+#fix duplicate patient
+allpatients = Patient.where(:hn=>patient.hn).all #.collect{|i| i.id}
+allpatients_id = allpatients.collect{|i| i.id}
+allrelations = SHRelation.where(:patient_id=>allpatients_id).all.collect{|i| i.patient_id if i.hospital_id}.compact
+allpatients2 = allpatients.collect{|i| i.id if !allrelations.index(i.id)}.compact
+for ap in allpatients
+	 ap.destroy if !allrelations.index(ap.id)
+end
+allpatients = Patient.where(:hn=>patient.hn).all.collect{|i| i.id}
+
 data_records = admit.records
 
 
@@ -1055,7 +1065,8 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 
 		  <div class="row">
 
-		 		<div class="col">
+		 		<!--
+				 <div class="col">
 		 		<label for="relation-network_doctor_id">แพทย์</label>
 				<br/>
 				<select name="relation[network_doctor_id]" class="form-control">
@@ -1080,6 +1091,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<% end %>
 				</select>
 				</div>
+				-->
 			 
 		 		<div class="col">
 		 		<label for="relation-network_officer_id">อสม</label><br/>

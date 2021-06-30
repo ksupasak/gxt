@@ -22,7 +22,10 @@
 
 <%
 	
-		
+	hos_id = nil
+	hos_id = @current_hospital.id if @current_hospital
+	hos_id = @current_network.hospital_id if @current_network
+ 		
 	
 %>	    
 
@@ -222,12 +225,16 @@
 		  			<label for="product-name">โรงพยาบาลต้นสังกัด (Hospital)</label>
 					<%
 						hospitals = SHHospital.all
-					%>
-					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value="">
+						h_sel = hos_id
+						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id)
+
+					%><%#="(#{hos_id}) #{relation.id} #{h_sel} #{hospitals.inspect}"%>
+					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value=""  >
 					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
-					  <option value="<%=j[0]%>"  <%="selected" if relation.id==j[0] %> %><%=j[1]%></option>
+					  <option value="<%=j[0]%>"  <%="selected" if j[0]==h_sel %> <%="disabled" if hos_id!=nil and j[0]!=h_sel%> ><%=j[1]%></option>
 					<% end %>
 					</select>
+					
 				</div>
 				<div class="col col-md-6">
 		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต (Network Hospital)</label>
