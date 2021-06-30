@@ -25,6 +25,7 @@
 	
 	from = params[:from]
 	to = params[:to]
+	offname = params[:offname]
 	
 	
 	query = {}
@@ -368,6 +369,9 @@
     sfilter = false if params[:status]=='wait' and status_check!='รอตรวจ'
     sfilter = false if params[:pstatus]=='normal' and status_text!='ปกติ'
     sfilter = false if params[:pstatus]=='abnormal' and status_text!='ผิดปกติ'
+	if offname and offname!=''
+		sfilter = false if !m_off_name[m_po[p.id]] or (m_off_name[m_po[p.id]] and !m_off_name[m_po[p.id]].index(offname))
+	end
 
 	visit = m_p_v[p.id]
 	nr = m_p_nr[p.id]
