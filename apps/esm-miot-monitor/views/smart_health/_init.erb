@@ -6,6 +6,8 @@
 @access_type = nil
 
 if @current_user 
+	
+	@access_title = 'Super Admin'
 
 
 if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
@@ -18,10 +20,16 @@ if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
 elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@access_type = 'network'
 	@current_network = user_network.network
-	@access_title = @current_network.name
+	@access_title = "#{@current_network.name}(#{@current_network.code})"
 	@current_provider = user_network.provider		
-	@current_user_ntework = user_network
-
+	@current_user_network = user_network
+	
+elsif user_cluster = SHUserCluster.where(:user_id=>session[:identity]).first
+	@access_type = 'cluster'
+	@current_cluster = user_cluster.cluster
+	@access_title =  "#{@current_cluster.name}(#{@current_cluster.code})"
+	@current_provider = nil		
+	@current_user_cluster = user_cluster
 else
 	
 	@access_type = "patient"

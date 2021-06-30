@@ -10,6 +10,8 @@
 <%=inline(this,:'_index_patient')%>
 <% elsif @current_role == 'admin'  %>
 <%=inline(this,:'_index_admin')%>
+<% elsif @current_role == 'cluster_admin'  %>
+<%=inline(this,:'_index_cluster')%>
 <% elsif @current_role == 'hospital_admin'  %>
 <%=inline(this,:'_index_hospital_admin')%>
 <% elsif @current_role == 'network_admin'  %>
