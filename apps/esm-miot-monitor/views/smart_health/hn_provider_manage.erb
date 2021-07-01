@@ -20,7 +20,7 @@ end
 if request.post?
 	 
 	 
-	@record = SHUserNetwork.create params[:record]
+	@record = SHUserNetwork.create params[:record] unless @record
 	
 	
 	# {"hospital_id"=>"5fccadccc0a7942e37d735f4", "provider_id"=>"60030e21c0a7947625dc3e36", "user_id"=>"60030e21c0a7947625dc3e37", "provider"=>{"name"=>"adf", "department"=>"asdf", "license"=>"asdf", "phone"=>"adsf", "email"=>"asdfadf"}, "record"=>{"provider_type"=>"doctor", "hospital_id"=>"5fccadccc0a7942e37d735ef"}, "user"=>{"login"=>"dfdfdf"}, "password"=>"", "password_confirm"=>"", "gxt"=>"miot", "service"=>"EsmMiotMonitor::SmartHealth", "operation"=>"ha_provider_create"}
