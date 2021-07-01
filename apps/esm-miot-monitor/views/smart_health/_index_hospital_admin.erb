@@ -104,9 +104,10 @@
 	out[1] = row.code
 	
 	un = SHUserNetwork.where(:network_id=>row.id).first
+	un_id = un.id if un
 	out[-1] = SHUserNetwork.where(:network_id=>row.id).count
 	
-	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un.id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger')
+	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un_id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger')
 	
 	out
 	end

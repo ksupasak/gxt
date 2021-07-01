@@ -24,6 +24,10 @@ if request.post?
  
  	provider = nil
 	user = nil
+	
+	
+	
+	
  
  	if params[:provider]
 		
@@ -94,6 +98,7 @@ if request.post?
 	params[:record][:provider_id] = provider.id if provider
 	params[:record][:user_id] = user.id if user
 	
+
 	@record.update_attributes params[:record]
 		
  
