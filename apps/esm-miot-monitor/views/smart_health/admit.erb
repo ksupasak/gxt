@@ -121,6 +121,14 @@
 			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' 
 			admit = Admit.new :patient_id=>patient.id 
 			relation = SHRelation.new :patient_id=>patient.id 
+			relation.hospital_id = @current_hospital.id if @current_hospital
+			if @current_network
+			relation.network_id = @current_network.id 
+			relation.hospital_id = @current_network.hospital.id 
+			
+			end
+			
+			
 		end	
 			
 		
@@ -197,9 +205,11 @@
 				
 				<div class=" col-md-4">
 			  		<label for="product-name">แพทย์ประจำผู้ป่วย</label>
+					<%#relation.to_json%>
+					<%#providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'doctor').all.to_json%>
 					<%
 						
-						providers = SHUserHospital.where(:hospital_id=>relation.id, :provider_type=>'doctor').all.collect{|i| i.provider}
+						providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'doctor').all.collect{|i| i.provider}
 					%>
 					<select id="record-hospital_doctor_id" name="relation[hospital_doctor_id]" class="form-control" value="">
 					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
@@ -210,7 +220,7 @@
 				<div class=" col-md-4">
 			  		<label for="product-name">พยาบาลประจำผู้ป่วย</label>
 					<%
-						providers = SHUserHospital.where(:hospital_id=>relation.id, :provider_type=>'nurse').all.collect{|i| i.provider}
+						providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'nurse').all.collect{|i| i.provider}
 					%>
 					<select id="record-provider_id" name="relation[hospital_nurse_id]" class="form-control" value="">
 					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
@@ -239,8 +249,18 @@
 				<div class="col col-md-6">
 		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต (Network Hospital)</label>
 				<%
-					
-				networks = SHNetwork.all
+				
+				if @current_hospital
+						
+				networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+				
+				elsif @current_network
+				
+					networks = [@current_network]
+				
+				end
+				
+				
 					
 				%>
 				<select id="record-network_id" name="relation[network_id]" class="form-control" value="">
