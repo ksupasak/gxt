@@ -151,7 +151,6 @@
  	
  <% end %>	
 
-<%= patient.to_json if patient%>
 
 <% if true %>
     <div class="container">
@@ -400,8 +399,8 @@
 		<div class="row mt-1">
 			
 		<div class="col-4 col-md-4">
-		<label for="patient-gener">เพศ</label>
-		<select name="patient[gender]" class="form-control" >
+		<label for="patient-gener">เพศ <v>*</v></label>
+		<select name="patient[gender]" class="form-control validate" id="patient-gender">
 		<option value="">ไม่ระบุ</option>
 		<option value="M">ชาย</option>
 		<option value="F">หญิง</option>
@@ -859,6 +858,10 @@ $('.patient').submit(function(e){
 			}
 			if(id=='patient-hn'){
 				text = 'หมายเลขโรงพยาบาล'
+			}
+
+			if(id=='patient-gender'){
+				text = 'เพศ'
 			}
 			if(noti==false)
 			alert(text+' ห้ามเว้นว่าง')
