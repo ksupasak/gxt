@@ -167,6 +167,7 @@
 
 	<div class="col">
 	แสดง <select type='select' name="query[row]" id="query_row">
+		<option vlaue="5">5</option>
 		<option vlaue="20">20</option>
 		<option vlaue="50">50</option>
 		<option vlaue="100">100</option>
@@ -221,7 +222,17 @@
 	
 	<script>
 		
-		$(document).ready(function(){
+		// $(document).ready(function(){
+			
+		
+			var page = 0;	
+			
+		function selectPage(i){
+		
+				page = i
+	
+			queryPatient();
+		}	
 			
 		
 		function queryPatient(event){
@@ -235,13 +246,15 @@
 			provider_id=$('#query_provider_id').val()
 			provider_type=$('#query_provider_type').val()
 			
+			
+			
 			sort=$('#query_sort').val()
 			manage = false;
 			<% if @current_hospital %>
 			manage = true;
 			<% end %>
 			
-		    $.get( "patient_record_partial", {manage: manage, query: query, sort: sort,  provider_id: provider_id, provider_type:provider_type, hospital_id:hospital_id, network_id: network_id,cluster_id:cluster_id, row:row} )
+		    $.get( "patient_record_partial", {page: page, manage: manage, query: query, sort: sort,  provider_id: provider_id, provider_type:provider_type, hospital_id:hospital_id, network_id: network_id,cluster_id:cluster_id, row:row} )
 		    .done(function( data ) {
 				$('#patient-query').html(data);
 			
@@ -261,7 +274,7 @@
 		
 		queryPatient();
 		
-	})
+	// })
 		
 	</script>
 	

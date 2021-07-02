@@ -234,7 +234,24 @@
 				<div class="col col-md-6">
 		  			<label for="product-name">โรงพยาบาลต้นสังกัด (Hospital)</label>
 					<%
-						hospitals = SHHospital.all
+					if @current_hospital
+						
+						hospitals = [@current_hospital]
+						
+					elsif @current_network 
+						
+						hospitals = [@current_network.hospital]
+						
+					elsif @current_cluster
+						
+						hospitals = SHHospital.where(:cluster_id=>@current_cluster.id).all
+							
+					else
+							
+						hopsitals = SHHospital.all	
+						
+					end
+						
 						h_sel = hos_id
 						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id)
 
@@ -252,12 +269,16 @@
 				
 				if @current_hospital
 						
-				networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+					networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
 				
 				elsif @current_network
 				
 					networks = [@current_network]
 				
+				elsif @current_cluster
+					
+					networks = SHNetwork.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id}}).all	
+					
 				end
 				
 				

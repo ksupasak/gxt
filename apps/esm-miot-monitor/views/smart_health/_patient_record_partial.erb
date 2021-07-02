@@ -117,10 +117,14 @@
 			
 		end
 		
+		p = 0 
+		p = params[:page].to_i if params[:page]
+		page = p
+		all_patients = patients 
 		
 		if params[:row] and row = params[:row].to_i and row!=0
 			
-			patients = patients[0..row-1].compact
+			patients = all_patients[p*row..(p+1)*row-1].compact
 			
 		end
 	
@@ -288,7 +292,7 @@
     
 %>
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" style="text-align:center" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
-<td style="text-align:left"><%=ix+1%>. <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success btn-sm' %>  </td>
+<td style="text-align:left"><%=ix+1+row*page%>. <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success btn-sm' %>  </td>
 
 <td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%></td>
 <td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
@@ -325,9 +329,50 @@
 <% end %>
 </tbody>
 </table>
+
+
+<% if row > 0 %>
+Pages : 
+<% if page !=0 %>
+<a href="#" class="page" p="0">&lt;&lt;</a> 
+<% end %>
+<%
+	
+n = (all_patients.size.to_f/row).ceil
+	
+n.times do |ni|
+%>
+
+<a href="#" class="page btn <%='btn-info' if ni==page %>" p="<%=ni%>"><%=ni+1%></a> 
+
+<% end %>
+<% if page!=n-1%>
+<a href="#" class="page" p="<%=n-1%>">>></a> 
+<% end %>
+
+<% end %>
+<div class="" style="float:right">
+	
+	<% if row > 0 %>
+	<%= row %> / <%= all_patients.size %> Patients
+	<% else %>
+	<%= all_patients.size %> Patients
+
+	<% end %>
+<a href="#" class="btn btn-warning" id="btnExport">Export excel</a>
 </div>
-<a href="#" class="btn" id="btnExport">Export excel</a>
+</div>
+
+
 <script>
+	
+	$('.page').click(function(e){
+		p = $(this).attr('p')
+		// alert(p)
+		selectPage(p)
+		e.preventDefault();
+	})
+	
 	$("#btnExport").click(function(e) {
 	    tableToExcel('data', 'patient')
 	    e.preventDefault();
