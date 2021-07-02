@@ -16,7 +16,7 @@ if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
 	@access_title = @current_hospital.name
 	@current_provider = user_hospital.provider
 	@current_user_hospital = user_hospital	
-	@current_hospital_id = @@current_hospital.id
+	@current_hospital_id = @current_hospital.id
 
 elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@access_type = 'network'
