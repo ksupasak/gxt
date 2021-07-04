@@ -13,7 +13,9 @@ gem 'puma'
 gem 'mqtt'
 gem 'thin'
 
-gem 'ble'
+
+#gem 'ble'
+gem 'ble', :path => 'lib/ruby-ble'
 
 gem 'pusher'
 
@@ -58,3 +60,6 @@ gem 'rest-graph'
 gem 'eventmachine'
 
 gem 'rack-ssl-enforcer'
+
+
+gem 'nokogiri'

@@ -36,10 +36,73 @@ sleep(2)
 
 #puts BLE::Adapter.list
 
+
+address = ['C0:26:DA:01:DA:F0']
+
+
 begin
 
 for i in $a.devices
+  
+  if address.index(i)
+    
+    d = $a[i]
 
+      if  (d.alias=='TAIDOC TD1261' or d.alias=='TAIDOC TD1107' ) and @devices[d.alias]==nil
+
+              puts "Found #{d.alias} #{i}"
+
+
+              d.on_signal do |intf,props|
+
+              puts "#{intf} #{props.inspect}"
+
+              case intf
+              when BLE::I_DEVICE
+
+
+                      if  props['ServicesResolved']
+                              devices.delete d.address
+                      end
+
+
+              end 
+              
+            end
+            
+            
+            
+            #puts 'connect '+devices.inspect
+            d.connect
+
+
+
+            if devices[i] == nil
+
+                    service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
+                           char_uuid = '00002a1c-0000-1000-8000-00805f9b34fb'
+
+                             d.services.each do |s|
+                            if s==service_uuid
+                                    d.subscribe_indicate(service_uuid,char_uuid) do |raw|
+                                    puts '***********indicate'
+                                    puts raw.unpack("H*")
+                         #  d.disconnect    
+                                    end
+                                    devices[i] = true
+                            end
+                            #devices[i]
+                            end
+
+
+            end         
+                
+    
+    
+  end
+  
+  if false
+  
 	d = $a[i]
 	#puts "#{i} #{d.alias}"
 	if d.alias=='AOJ-20A'
@@ -55,7 +118,7 @@ for i in $a.devices
 
 	  puts 'found service'
 
-	  d.characteristics(s).each {|uuid|
+	  d.characteristics(s).each do |uuid|
 
 	   info  = BLE::Characteristic[uuid]
            name  = info.nil? ? uuid : info[:name]
@@ -94,13 +157,13 @@ EOM
 
           end
 
-          }
+        end
 
 	  end
 
 	  end
 
-
+ end
 
 	end
 
