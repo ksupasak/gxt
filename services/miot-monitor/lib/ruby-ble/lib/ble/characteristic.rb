@@ -69,14 +69,14 @@ module BLE
     # Register to this characteristic for notifications when
     # its value changes.
     def notify!
-      puts 'call notify in char'
+      #puts 'call notify in char'
       @dbus_obj[I_GATT_CHARACTERISTIC].StartNotify
     end
 
     def on_change(raw: false, &callback)
       @dbus_obj[I_PROPERTIES].on_signal('PropertiesChanged') do |intf, props|
 
-	puts "#{intf} #{props.inspect}"
+	#puts "#{intf} #{props.inspect}"
         case intf
         when I_GATT_CHARACTERISTIC
 	  if props['Value']
