@@ -2,22 +2,27 @@
 
     cid = params[:cid]
     hn = params[:hn]
-    # s = nil
-#     admit = nil
-#     if hn
-#         s={:hn=>hn}
-#     elsif cid
-#         s={:cid=>cid}
-#     end
-#
+
+		
+
 	cond = []
 	cond << {:public_id=>cid} if cid!="" and cid.size>0
 	cond << {:hn=>hn} if hn!="" and hn.size>0
 	
+	
+	if @current_hospital 
 		
 	puts @current_hospital
 	
 	relations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	
+elsif @current_network
+	
+	relations = SHRelation.where(:network_id=>@current_network.id).all
+	
+	
+	end
 	
 	puts relations.collect{|i| i.patient_id }.inspect 
 	

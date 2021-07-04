@@ -1,22 +1,6 @@
 <%=inline(this,:'_init')%>
 
-<div class="row banner-header" style="">
-
-<div class="col">
-	<div>
-		<span class="banner-title"><%=link_to @access_title, "index" %></span>
-		<br/>
-		<span style="font-size:0.8em">ระบบตรวจ SmartHealth</span>
-    </div>
-</div>
-
-<div class="col  d-flex justify-content-end">
-
-</div>
-
-
-</div>
-
+<%=inline(this,:'_header')%>
 
 
 <div class="containerx" style="background:none">
@@ -32,10 +16,20 @@
         <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
       </li>	 -->
 	  <li class="nav-item">
-	    <a class="nav-link  <%='active' unless params[:tab]%>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">แพทย์ / พยาบาล</a>
+	    <a class="nav-link  <%='active' unless params[:tab]%>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
 	  </li>
+	  
+
+	  
+	  
 	  <li class="nav-item">
-	    <a class="nav-link <%='active' if params[:tab]%>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+	    <a class="nav-link <%='active' if params[:tab]=='patient'%>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+	  </li>
+	  
+	  
+	  
+	  <li class="nav-item">
+	    <a class="nav-link  <%='active' if params[:tab]=='network'%>" id="pills-network-tab" data-toggle="pill" href="#pills-network" role="tab" aria-controls="pills-network" aria-selected="true">เครือข่าย</a>
 	  </li>
 	</ul>
 </div>
@@ -88,6 +82,146 @@
 		
 		
 	  </div>  <!-- End Doctor Section-->
+	  
+	  
+	  
+		
+	  <div class="tab-pane fade show container  <%='active' if params[:tab]=='network' %>" id="pills-network" role="tabpanel" aria-labelledby="pills-network-tab">
+	  
+  	<%
+  		
+	if @current_hospital 
+		
+	 list = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+		
+  	%>
+	
+	<div class="network-list">	
+	<%= tabular :data=>list, :model=>%w{network code user }, :label=>{'user'=>'ผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+	
+	out[0] = row.name
+	
+	out[1] = row.code
+	
+	un = SHUserNetwork.where(:network_id=>row.id).first
+	un_id = un.id if un
+	out[-1] = SHUserNetwork.where(:network_id=>row.id).count
+	
+	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un_id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger')
+	
+	out
+	end
+	 %>
+	  
+	
+	
+	<%=link_to("เพิ่ม", "../SHNetwork/create?hospital_id=#{@current_hospital.id.to_s}", :hospital_id=>@current_hospital.id,:class=>'network-create btn btn-success')%>
+	
+</div>
+
+
+
+   <div class="network-panel">
+	   
+   </div>
+
+    <div class="network-ctrl" style="display:none">
+		<center>
+			<br/>
+ 	   <a href="#" class="network-list-show" >Show All Networks</a>
+   </center>
+    </div>
+	<% end %> 
+	<script>
+		
+		$('.network-list-show').click(function(e){
+			
+			$('.network-panel').hide();
+			$('.network-ctrl').hide();
+			$('.network-list').slideDown();
+		
+			e.preventDefault();
+			
+		}) 
+		$('.network-create').click(function(e){
+			let id = $(this).attr('hospital_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_create?hospital_id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		$('.network-show').click(function(e){
+			let id = $(this).attr('network_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_show?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		$('.network-edit').click(function(e){
+			// id = $(this).attr('network_id')
+			let id = $(this).attr('un_id');
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_edit?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		
+		
+		$('.network-destroy').click(function(e){
+			id = $(this).attr('network_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_destroy?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+	</script>
+	
+	
+	
+  </div>
 	  
 	  
 	  <div class="tab-pane fade  <%='show active' if params[:tab]=='patient'%>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">

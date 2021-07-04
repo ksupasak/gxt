@@ -4,9 +4,9 @@
 @record = nil
 
 if params[:id]
-	@record = SHUserHospital.find params[:id]
+	@record = SHUserCluster.find params[:id]
 else
-	@record = SHUserHospital.new :hospital_id=>params[:hospital_id]
+	@record = SHUserCluster.new :cluster_id=>params[:cluster_id]
 end	
 
 
@@ -24,28 +24,8 @@ if request.post?
  
  	provider = nil
 	user = nil
-	
-	
-	
-	
  
- 	if params[:provider]
-		
-		provider = Provider.find params[:provider_id]
-		
-		if provider 
-			
-			provider.update_attributes params[:provider]
-		
-		else
-		
-			provider = Provider.create params[:provider]
-		
-		end 
-		
-		
-	end
-	
+ 	
 	
 	
  	if params[:user]
@@ -65,11 +45,11 @@ if request.post?
 		
 		else
 			
-			role = 'hospital'
-			role = 'hospital_admin' if params[:record][:provider_type] == 'admin'
-			role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
-			role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
-			
+			# role = 'cluster'
+			role = 'cluster_admin' if params[:record][:provider_type] == 'admin'
+		# 	role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
+		# 	role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
+		#
 			
 			
 			
@@ -95,10 +75,9 @@ if request.post?
 	end
 	
 	
-	params[:record][:provider_id] = provider.id if provider
+	# params[:record][:provider_id] = provider.id if provider
 	params[:record][:user_id] = user.id if user
 	
-
 	@record.update_attributes params[:record]
 		
  
@@ -113,11 +92,11 @@ Updating..
 <% else %>
 
 
-<h1> Hospital User : <%=(params[:id])? "Edit" : "Create" %> </h1>
+<h1> User <%=(params[:id])? "Edit" : "Create" %> </h1>
 
 <form action="" method="post">
 
-<%=inline(this,:'_ha_provider_form')%>
+<%=inline(this,:'_hc_provider_form')%>
 
 
 <input type="submit" value="Submit" class="btn btn-primary"/>

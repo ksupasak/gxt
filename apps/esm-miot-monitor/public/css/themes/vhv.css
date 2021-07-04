@@ -2,7 +2,8 @@
 
 .login-logo{
 
-	background-image: url('../../img/sammho-login.png');
+	/* background-image: url('../../img/sammho-login.png'); */
+	background-image: url('../../img/health/logo_telehealth.png');
 	width:200px;
     background-repeat: repeat;
     background-size: cover;

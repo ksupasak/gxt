@@ -134,6 +134,7 @@ border-bottom: 2px solid #3147FF;
           <!-- <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/cms" >CMS </a>
 		  </li> -->
+		  <% if @current_zone and  @current_zone.mode=='smart_or' and  @current_role=='admin'%>
 		  
           <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/patient" >Patients</a>
@@ -142,10 +143,10 @@ border-bottom: 2px solid #3147FF;
             <a class="nav-link" href="../Admit/index" >Admission</a>
 		  </li>
 		  
-		   
+		   <% end %>
 	
 		  <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../Zone/index">Zone</a>
   		      <a class="dropdown-item" href="../Room/index">Room</a>
@@ -170,8 +171,8 @@ border-bottom: 2px solid #3147FF;
 			  <a class="dropdown-item" href="../Sense/index">Data</a>
 	 		 </div>
           </li>
-
-		  <% if @current_zone and  @current_zone.mode!='smart_aoc' or @current_role=='admin'%>
+		  
+		  <% if @current_zone and  @current_zone.mode=='smart_aoc' and @current_role=='admin'%>
          
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AOC</a>
@@ -196,8 +197,8 @@ border-bottom: 2px solid #3147FF;
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
-					
-		 		<a class="dropdown-item" href="../SHHospital/index">Hospital(โรงพยาบาล)</a>
+			 	<a class="dropdown-item" href="../SHCluster/index">Cluster(สสจ)</a>
+				<a class="dropdown-item" href="../SHHospital/index">Hospital(รพช)</a>
 		  		<a class="dropdown-item" href="../SHNetwork/index">Network(รพสต)</a>
 		 		<a class="dropdown-item" href="../SHOfficer/index">Officer(อสม)</a>
 	 			<a class="dropdown-item" href="../SHVisit/index">Visit</a>
@@ -216,8 +217,8 @@ border-bottom: 2px solid #3147FF;
 	 		  <a class="dropdown-item" href="../Opd/index">Station</a>
 		  </div>
 			  </li> -->
-  		    <li class="nav-item dropdown control-area">
-                 <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Care Unit</a>
+  		    <li class="nav-item dropdown <%='control-area' if @current_role != 'admin' %> ">
+                 <a class="nav-link dropdown-toggle"  id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Care Unit</a>
                  <div class="dropdown-menu" aria-labelledby="dropdown01">
   				 <% for i in Zone.all.collect{|i| i if i.name!='default'}.compact %>
                    <a class="dropdown-item" href="../Home/switch_zone?id=<%=i.id%>"><%=i.name%></a>
@@ -225,10 +226,10 @@ border-bottom: 2px solid #3147FF;
                </li>
 			   
 			   
-			   	  <% if  @current_role == 'admin' %>
+		  <% if  @current_role == 'admin' %>
 			   
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">System</a>
+            <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">System</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../User/index">User</a>
               <a class="dropdown-item" href="../Role/index">Role</a>
@@ -240,7 +241,7 @@ border-bottom: 2px solid #3147FF;
 			   	  <% if  @current_role == 'smarthealth_admin' %>
 			   
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
+            <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../SmartHealth/index">ลงทะเบียนผู้ป่วย</a>
               <a class="dropdown-item" href="../Provider/index">รายชื่อแพทย์</a>

@@ -13,20 +13,38 @@
 </thead>
 <tbody>
 <%	
-	for i in this.model.limit(99999).sort('start_time desc').all
+	for i in this.model.order(:hospital_id=>1).all
 %>
 <tr>
 	<% for j in keys %>
-	<% if j[0]=='role_id'%>
-		<td><%= i.role.name.humanize if i.role%></td>
-	
-	<% else%>
-		<td><%=i[j[0]] %></td>
-	<% end %>	<% end %>
-	<td>
+	<% if j[0]=='vs'%>
+	<td><%=i[j[0]] %></td>
+	<% else %>
+	<%
+	text = ""
+	case j[0]
 		
+	when 'hospital_id'
+		hospital = SHHospital.find(i.hospital_id)
+		text = hospital.name if hospital
+	when 'user_id'
+		user = User.find(i.user_id)
+		text = user.login if user
+	when 'provider_id'
+		provider = Provider.find(i.provider_id)
+		text = provider.name if provider
+		text = "-NA-" if text.size==0
+	else
+		text=i[j[0]]
+	end
+		
+		
+	%>
+		<td><%=text %></td>
+	<% end %>
+		<% end %>
+	<td>
 	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default btn-small' %>
-	<%=link_to 'Password',"password?id=#{i.id}",:class=>'btn btn-warning btn-small' %>
 	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info  btn-small' %>
 	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger  btn-small' %>
 	</td>

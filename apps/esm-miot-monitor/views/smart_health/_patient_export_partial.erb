@@ -1,4 +1,3 @@
-<%#params.inspect %>
 <style>
 .div-patient{
 	max-width:100%;
@@ -24,7 +23,9 @@
 	provider_id = params[:provider_id] if params[:provider_id] and params[:provider_id]!=''
 	provider_type = params[:provider_type] if params[:provider_type] and  params[:provider_type]
 	
-	
+	from = params[:from]
+	to = params[:to]
+	offname = params[:offname]
 	
 	
 	query = {}
@@ -117,14 +118,10 @@
 			
 		end
 		
-		p = 0 
-		p = params[:page].to_i if params[:page]
-		page = p
-		all_patients = patients 
 		
 		if params[:row] and row = params[:row].to_i and row!=0
 			
-			patients = all_patients[p*row..(p+1)*row-1].compact
+			patients = patients[0..row-1].compact
 			
 		end
 	
@@ -141,12 +138,23 @@
 	    m_pd = Hash[relations.collect{|i| [i.patient_id,i.hospital_doctor_id]}.compact]
 	    m_pn = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 	    m_po = Hash[relations.collect{|i| [i.patient_id,i.network_officer_id]}.compact]
+	    m_p_hos = Hash[relations.collect{|i| [i.patient_id,i.hospital_id]}.compact]
+	    m_p_net = Hash[relations.collect{|i| [i.patient_id,i.network_id]}.compact]
 	    offs = Provider.where(:id=>relations.collect{|i| i.network_officer_id}.compact).all
+
+		m_net_name = Hash[SHNetwork.all.collect{|k| [k.id,"#{k.name}"]}.compact]
+		m_hos_name = Hash[SHHospital.all.collect{|k| [k.id,"#{k.name}"]}.compact]
+		m_net_code = Hash[SHNetwork.all.collect{|k| [k.id,"#{k.code}"]}.compact]
+		m_hos_code = Hash[SHHospital.all.collect{|k| [k.id,"#{k.code}"]}.compact]
+		m_prov_name = Hash[SHUserHospital.all.collect{|i| i.provider}.compact.collect{|k| [k.id,"#{k.name}"]}.compact]
+		m_off_name = Hash[SHUserNetwork.all.collect{|i| i.provider}.compact.collect{|k| [k.id,"#{k.name}"]}.compact]
 
 	    m_p_r = {}
 		m_p_f = {}
 		m_p_t = {}
 		m_p_s = {}
+		m_p_v = {}
+		m_p_nr = {}
 	
 		
 	    for p in patients
@@ -161,7 +169,12 @@
 				
 	        r = DataRecord.where(:admit_id=>a.id).last 
 	        m_p_r[p.id] = r if r
-		
+
+			visit = SHVisit.where(:patient_id=>p.id).last
+			m_p_v[p.id] = visit if visit
+
+			nr = NurseRecord.where(:admit_id=>a.id).last 
+			m_p_nr[p.id] = nr if nr
 		
 			is_normal = true
 			
@@ -216,13 +229,38 @@
 	
 %>
 <div  id="data">
+<%#=m_off_name.inspect%>
 <table class="table table-striped table-bordered table-condensed" style="background:#FFF;font-size:0.8em">
 <thead>
 <tr style="text-align:center">
+
 <th>No.</th>
-<th>CID</th>
-<th>HN</th>
-<th>ชื่อ-สกุล</th>
+
+<th>รหัสโรงพยาบาล</th>
+<th>รหัส รพ.สต.</th>
+<th>รหัสนัด</th>
+
+<th>เลขประจำตัวประชาชน</th>
+<th>รหัสผู้ป่วย</th>
+<!--<th>ชื่อ-สกุล</th>-->
+
+<th>คำนำหน้า</th>
+<th>ชื่อ</th>
+<th>ชื่อกลาง</th>
+<th>นามสกุล</th>
+
+
+<th>อายุ</th>
+<th>แพทย์ประจำ</th>
+<th>พยาบาล</th>
+<th>ผู้ตรวจ(อสม)</th>
+<th>ชื่อโรงพยาบาล</th>
+<th>ชื่อ รพ.สต.</th>
+<th>คลินิกตรวจโรค</th>
+<th>วันที่นัด</th>
+
+<th>สถานะ</th>
+<th>สถานะคนไข้</th>
 <th>วัดครั้งแรก</th>
 <% sense_list[0..2].each_with_index do |i,ix| %>
 <th><%=i%><br/>(<%=sense_unit[ix]%>)</th>
@@ -231,6 +269,14 @@
 <% sense_list.each_with_index do |i,ix| %>
 <th><%=i%><br/>(<%=sense_unit[ix]%>)</th>
 <% end %>
+
+					
+<th>ดัชนีมวลกาย</th>
+<th>โน๊ตตอนตรวจ</th>
+<th>สถานภาพผู้ป่วย / อาการ</th>
+<th>วินิจฉัย / กลุ่มอาการ / รักษา</th>
+<th>คำแนะนำ / วิธีปฏิบัติ</th>
+
 <th></th>
 </tr>
 </thead>
@@ -248,9 +294,17 @@
     r = nil
     r = m_p_r[p.id] if m_p_r[p.id]
     status_sign = ''
+    status_check = 'รอตรวจ'
+    status_text = ''
     highlight = {}
+    sfilter = true
+	bmi = ''
+
+
     if r 
         status_sign = '<span style="color:green"><i class="fas fa-smile"></i></span>'
+        status_check = 'ตรวจแล้ว'
+        status_text = 'ปกติ'
         is_normal = true
         for s in sense_list
             highlight[s.to_sym]=''
@@ -264,6 +318,18 @@
             is_normal = (highlight[s.to_sym]=='') if is_normal
         end
         status_sign = '<span style="color:red"><i class="fas fa-frown"></i></span>' if !is_normal
+        status_text = 'ผิดปกติ' if !is_normal
+        if to and to!=''
+            begin
+                dt = Time.strptime(to,'%d/%m/%Y')
+                sfilter = false if dt<r.stamp
+            rescue => exception
+             
+            end
+        end
+		bmi=r.bmi.to_s if r.bmi
+
+
     end
 	
     f = nil
@@ -285,19 +351,78 @@
             is_normal = (highlight_2[s.to_sym]=='') if is_normal
         end
         status_sign_2 = '<span style="color:red"><i class="fas fa-frown"></i></span>' if !is_normal
+
+        if from and from!=''
+            begin
+                df = Time.strptime(from,'%d/%m/%Y')
+                sfilter = false if df>f.stamp
+            rescue => exception
+             
+            end
+        end
+
     end
 	
 	t = 0 
 	t = m_p_t[p.id] if m_p_t[p.id]
-    
+    sfilter = false if params[:status]=='finished' and status_check!='ตรวจแล้ว'
+    sfilter = false if params[:status]=='wait' and status_check!='รอตรวจ'
+    sfilter = false if params[:pstatus]=='normal' and status_text!='ปกติ'
+    sfilter = false if params[:pstatus]=='abnormal' and status_text!='ผิดปกติ'
+	if offname and offname!=''
+		sfilter = false if !m_off_name[m_po[p.id]] or (m_off_name[m_po[p.id]] and !m_off_name[m_po[p.id]].index(offname))
+	end
+
+	visit = m_p_v[p.id]
+	nr = m_p_nr[p.id]
+
+	app_no = ''
+	app_date = ''
+	if visit
+		app_no = visit.app_no if visit.app_no
+		app_date = 	visit.appointed_date.strftime("%d/%m/%Y") if visit.appointed_date
+	end
+	n_note = ''
+	n_note2 = ''
+	n_note3 = ''
+	n_note4 = ''
+	if nr
+		n_note = nr.note if nr.note
+		n_note2 = nr.note_2 if nr.note_2
+		n_note3 = nr.note_3 if nr.note_3
+		n_note4 = nr.note_4 if nr.note_4
+	end
+
+
+    if sfilter
 %>
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" style="text-align:center" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
-<td style="text-align:left"><%=ix+1+row*page%>. <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success btn-sm' %>  </td>
+<td style="text-align:left"><%=ix+1%>.   </td>
+
+<td><%=m_hos_code[m_p_hos[p.id]]%><!--รหัสโรงพยาบาล--></td>
+<td><%=m_net_code[m_p_net[p.id]]%><!--รหัส รพ.สต.--></td>
+<td><%=app_no%><!--รหัสนัด--></td>
 
 <td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%></td>
 <td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
-<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
+<!--<td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>-->
+<td><%=p.prefix_name%></td>
+<td><%=p.first_name%></td>
+<td>&nbsp;</td>
+<td><%=p.last_name%></td>
 
+<td><%=p.age%> </td>
+
+<td><%=m_prov_name[m_pd[p.id]]%></td>
+<td><%=m_prov_name[m_pn[p.id]]%></td>
+<td><%=m_off_name[m_po[p.id]]%></td>
+<td><%=m_hos_name[m_p_hos[p.id]]%></td>
+<td><%=m_net_name[m_p_net[p.id]]%></td>
+<td><!--คลินิกตรวจโรค--></td>
+<td><%=app_date%><!--วันที่นัด--></td>
+
+<td><%=status_check%></td>
+<td><%=status_text%></td>
 <td><%=f.stamp.strftime("%d/%m/%y %H:%M") if f%><br/>
 	<%=((Time.now - f.stamp.to_datetime)/86400).to_i.to_s+" วัน" if f%>
 </td>
@@ -317,62 +442,23 @@
 <td><span style="<%=highlight[s.to_sym]%>"><%=r[s.to_sym] if r and r[s.to_sym]%></span> &nbsp; </td>
 <% end %>
 
-
+<td><%=bmi%><!--ดัชนีมวลกาย--></td>
+<td><%=n_note%><!--โน๊ตตอนตรวจ--></td>
+<td><%=n_note2%><!--สถานภาพผู้ป่วย / อาการ--></td>
+<td><%=n_note3%><!--วินิจฉัย / กลุ่มอาการ / รักษา--></td>
+<td><%=n_note4%><!--คำแนะนำ / วิธีปฏิบัติ--></td>
 
 <td>
-<% if params[:manage] =='true' %>
-<%=link_to "แก้ไข", "admit?id=#{a.id}", :class=>'btn btn-warning  btn-sm' %>&nbsp;
-<%=link_to "ลบ", "destroy?id=#{p.id}", :class=>'btn btn-danger  btn-sm' unless @current_network %>
-<% end %>
+
 </td>
 </tr>
+<% end # if sfilter%>
 <% end %>
 </tbody>
 </table>
-
-
-<% if row > 0 %>
-Pages : 
-<% if page !=0 %>
-<a href="#" class="page" p="0">&lt;&lt;</a> 
-<% end %>
-<%
-	
-n = (all_patients.size.to_f/row).ceil
-	
-n.times do |ni|
-%>
-
-<a href="#" class="page btn <%='btn-info' if ni==page %>" p="<%=ni%>"><%=ni+1%></a> 
-
-<% end %>
-<% if page!=n-1%>
-<a href="#" class="page" p="<%=n-1%>">>></a> 
-<% end %>
-
-<% end %>
-<div class="" style="float:right">
-	
-	<% if row > 0 %>
-	<%= row %> / <%= all_patients.size %> Patients
-	<% else %>
-	<%= all_patients.size %> Patients
-
-	<% end %>
-<a href="#" class="btn btn-warning" id="btnExport">Export excel</a>
 </div>
-</div>
-
-
+<!--<a href="#" class="btn" id="btnExport">Export excel</a>-->
 <script>
-	
-	$('.page').click(function(e){
-		p = $(this).attr('p')
-		// alert(p)
-		selectPage(p)
-		e.preventDefault();
-	})
-	
 	$("#btnExport").click(function(e) {
 	    tableToExcel('data', 'patient')
 	    e.preventDefault();

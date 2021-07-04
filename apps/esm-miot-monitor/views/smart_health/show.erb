@@ -6,6 +6,16 @@
 admit = Admit.find params[:id]
 patient = admit.patient
 
+#fix duplicate patient
+allpatients = Patient.where(:hn=>patient.hn).all #.collect{|i| i.id}
+allpatients_id = allpatients.collect{|i| i.id}
+allrelations = SHRelation.where(:patient_id=>allpatients_id).all.collect{|i| i.patient_id if i.hospital_id}.compact
+allpatients2 = allpatients.collect{|i| i.id if !allrelations.index(i.id)}.compact
+for ap in allpatients
+	 ap.destroy if !allrelations.index(ap.id)
+end
+allpatients = Patient.where(:hn=>patient.hn).all.collect{|i| i.id}
+
 data_records = admit.records
 
 
@@ -750,6 +760,18 @@ reportid = "&record_id=#{report.id}" if report
 	            </a>
 				</div>
 				<% end %>
+				
+				&nbsp;
+				<% if @current_hospital %>
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="manage_patient_user?id=<%=relation.id%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                Login ผู้ป่วย
+	            </a>
+				</div>
+				<% end %>
+				
+				
 		
 			&nbsp;
 
@@ -1025,11 +1047,13 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<% 
 				
 				@current_network = SHNetwork.find relation.network_id
+				if @current_network
 					
 				for i in SHNetwork.where(:hospital_id=>@current_network.hospital_id).all
 			
 				%>
 				<option value="<%=i.id%>" <%="selected" if i.id==relation.network_id %>><%=i.name%></option>
+				<% end %>
 				<% end %>
 				</select>
 			
@@ -1041,7 +1065,8 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 		 
 		  <div class="row">
 
-		 		<div class="col">
+		 		<!--
+				 <div class="col">
 		 		<label for="relation-network_doctor_id">แพทย์</label>
 				<br/>
 				<select name="relation[network_doctor_id]" class="form-control">
@@ -1066,6 +1091,7 @@ path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
 				<% end %>
 				</select>
 				</div>
+				-->
 			 
 		 		<div class="col">
 		 		<label for="relation-network_officer_id">อสม</label><br/>

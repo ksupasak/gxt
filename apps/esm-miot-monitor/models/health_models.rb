@@ -68,10 +68,14 @@ class SHAddressBook < GXTModel
             
             if u.provider_type == 'operator' || u.provider_type == 'officer'  
               us = User.find(u.user_id)  
+              if us 
               role = Role.find us.role_id
               udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name, :provider=>pmap[u.provider_id]}
             
               nlist << udata  
+              else
+                u.destroy
+              end
             
             end
             
@@ -127,10 +131,14 @@ class SHAddressBook < GXTModel
           if u.id != user_network.id 
               
             us = User.find(u.user_id)  
+            if us
             role = Role.find us.role_id
             udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name,:provider=>pmap[u.provider_id]}
             
             nlist << udata  
+            else
+              u.destroy
+            end 
           end
             
           end
@@ -158,6 +166,37 @@ class SHAddressBook < GXTModel
   end
   
 end  
+
+class SHCluster < GXTModel
+    
+    include Mongoid::Document
+  
+    key :name, String  
+    key :title, String
+    key :address, String  
+    key :phone, String  
+    key :code, String
+    key :latlng, String
+      
+    include Mongoid::Timestamps
+end
+
+
+
+class SHUserCluster < GXTModel
+  
+  include Mongoid::Document
+  
+  belongs_to :cluster, :class_name=>'EsmMiotMonitor::SHCluster', :foreign_key=>:cluster_id
+  belongs_to :user, :class_name=>'EsmMiotMonitor::User'
+  
+  key :user_id, ObjectId
+  key :cluster_id, ObjectId
+  key :provider_type, String
+  
+end
+
+
 
 class SHConference < GXTModel
   
@@ -264,6 +303,8 @@ class SHNetwork < GXTModel
   key :district, String
   key :code, String
   
+
+  
   key :hospital_id, ObjectId
   
 end
@@ -280,6 +321,8 @@ class SHHospital < GXTModel
   key :phone, String
   key :district, String
   key :code, String
+  
+  key :cluster_id, ObjectId
   
   
 end
@@ -394,6 +437,8 @@ class SHVisit < GXTModel
   key :completed_user, ObjectId # user
   key :complated_by, String # 1 : hospital , 2 : network , 3 : officer
 
+
+  key :data_record_id, ObjectId # user
   #
   # def self.start
   #   return self.date
@@ -489,7 +534,9 @@ class SHUserHospitalController < GXTDocument
   
 end
 
-
+class SHClusterController < GXTDocument
+  
+end
 
 class SHNetworkController < GXTDocument
   

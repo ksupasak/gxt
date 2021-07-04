@@ -1,3 +1,8 @@
+<%=inline(this,:'_init')%>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
 <br/>
 <style>
 .div-patient{
@@ -14,12 +19,9 @@
 	hospital_id = nil
 	hospital_id = @current_hospital.id if @current_hospital
 	
+	
 	network_id = nil
 	network_id = @current_network.id if @current_network
-	
-	cluster_id = nil
-	cluster_id = @current_cluster.id if @current_cluster
-	
 	
 	
 	provider_id = nil
@@ -65,27 +67,6 @@
 	
 	
 	
-	if @current_cluster
-	
-		sh_user_cluster = SHUserCluster.where(:cluster_id=>@current_cluster.id, :user_id=>@current_user.id).first
-		
-		hospitals = SHHospital.where(:cluster_id=>@current_cluster.id).all
-		networks = SHNetwork.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id}}).all
-		
-		# if sh_user_network and sh_user_network.provider_id and sh_user_network.provider_type and  %w{doctor officer}.index(sh_user_network.provider_type )
-		#
-		# 	provider = Provider.find(sh_user_network.provider_id)
-		# 	if provider and provider.name.size>0
-		# 		provider_id = sh_user_network.provider_id if
-		# 		provider_type = 'network'
-		# 	end
-		#
-		# end
-		
-	
-	end
-	
-	
 	query = {}
 	
 	if provider_id
@@ -101,11 +82,7 @@
 	elsif network_id
 	
 		query[:network_id] = network_id
-	
-	elsif cluster_id
-	
-		query[:cluster_id] = cluster_id
-			
+		
 	end
 	
 	
@@ -117,40 +94,20 @@
 <form class="query" >	
 	
 	<div class="row" style="border:0px solid">
-
+	<div class="col"><h3>Export Data</h3></div>
 	<div class="col">
-		
-	<% if @current_cluster %>
-	<input type="hidden" name="query[cluster_id]" id="query_cluster_id" value="<%=query[:cluster_id]%>"/>
-	<% end %>
-	<% if @current_hospital %>
+	
 	<input type="hidden" name="query[hospital_id]" id="query_hospital_id" value="<%=query[:hospital_id]%>"/>
-	<% end %>
+	
 	<input type="hidden" name="query[provider_id]" id="query_provider_id" value="<%=query[:provider_id]%>"/>
 	
 	<input type="hidden" name="query[provider_type]" id="query_provider_type" value="<%=query[:provider_type]%>"/>
 	
 	
 	
-	<%if @current_cluster %>
-	เครือข่าย รพ :  
-	<input type="hidden" name="query[cluster_id]" id="query_cluster_id" value="<%=query[:cluster_id]%>"/>
-	<select id="query_hospital_id" name="query[hospital_id]"  value="" style="width:200px">
-	<option value="" %>ทั้งหมด</option>
-	<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
-		<option value="<%=j[0]%>" <%=(pnet==j[0].to_s)? "selected" : "" %> ><%=j[1]%></option>
-	<% end %>
-	</select>
-	<% elsif @current_hospital %>
+	<%if @current_hospital %>
+	เครือข่าย :  
 	<input type="hidden" name="query[hospital_id]" id="query_hospital_id" value="<%=query[:hospital_id]%>"/>
-	<% end %>
-
-	
-	<%if @current_hospital or @current_cluster %>
-	เครือข่าย รพสต :  
-	
-	<% if @current_hospital %><input type="hidden" name="query[hospital_id]" id="query_hospital_id" value="<%=query[:hospital_id]%>"/> <% end %>
-	
 	<select id="query_network_id" name="query[network_id]"  value="" style="width:200px">
 	<option value="" %>ทั้งหมด</option>
 	<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
@@ -160,14 +117,14 @@
 	<% else %>
 	<input type="hidden" name="query[network_id]" id="query_network_id" value="<%=query[:network_id]%>"/>
 	<% end %>
-	
-	
+
+	<br> ผู้ตรวจ : 
+	<input type='text' name="query[offname]" id="query_offname"  placeholder="ชื่อ อสม.">
 		
 	</div>
 
 	<div class="col">
 	แสดง <select type='select' name="query[row]" id="query_row">
-		<!-- <option vlaue="5">5</option> -->
 		<option vlaue="20">20</option>
 		<option vlaue="50">50</option>
 		<option vlaue="100">100</option>
@@ -184,31 +141,31 @@
 	</div>
 
 	
-	
 	<div class="col">
-	ค้นหา <input type='text' name="query[search]" id="query_search"  placeholder="ชื่อ, HN, บัตรประชาชน">
+	วันที่ <input type='text' name="query[from]" id="query_from"  placeholder="วันที่เริ่ม">
+	ถึง <input type='text' name="query[to]" id="query_to"  placeholder="วันที่สิ้นสุด">
 	</div>
+	<div class="col">
+	สถานะ <select type='select' name="query[status]" id="query_status">
+		<option value="all">ทั้งหมด</option>
+		<option value="finished">ตรวจแล้ว</option>
+		<option value="wait">รอตรวจ</option>
+		</select>
+	</div>
+	<div class="col">
+	สถานะคนไข้ <select type='select' name="query[pstatus]" id="query_pstatus">
+		<option value="all">ทั้งหมด</option>
+		<option value="normal">ปกติ</option>
+		<option value="abnormal">ผิดปกติ</option>
+		</select>
+	</div>
+	
 	
 	<div class="col">
 	<input type="submit" value='ค้นหา' class="btn btn-success"/>
-	<a href="patient_export" class="btn btn-info">Export</a>
+	<a href="patient_export" class="btn btn-info" id="btnExport">Download</a>
 	</div>
-	<div class="col d-flex justify-content-end " >
-	    <% if true # unless @current_network%>	
-            <div class=" d-flex justify-content-center btn-submit" >
-                <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
-                <!--<a href="visit" class="btn  d-flex align-items-center justify-content-center">-->
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
-                        </svg>
-                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
-                </a>
-            </div>
-        <% else %>
-    
-        <% end %>
-	</div>
+
 	</div>	
 	
 	
@@ -222,17 +179,7 @@
 	
 	<script>
 		
-		// $(document).ready(function(){
-			
-		
-			var page = 0;	
-			
-		function selectPage(i){
-		
-				page = i
-	
-			queryPatient();
-		}	
+		$(document).ready(function(){
 			
 		
 		function queryPatient(event){
@@ -241,12 +188,13 @@
 			row = $('#query_row').val()
 			network_id=$('#query_network_id').val()
 			hospital_id=$('#query_hospital_id').val()
-			cluster_id=$('#query_cluster_id').val()
-			
 			provider_id=$('#query_provider_id').val()
 			provider_type=$('#query_provider_type').val()
-			
-			
+			from=$('#query_from').val()
+			to=$('#query_to').val()
+			status=$('#query_status').val()
+			pstatus=$('#query_pstatus').val()
+			offname=$('#query_offname').val()
 			
 			sort=$('#query_sort').val()
 			manage = false;
@@ -254,7 +202,7 @@
 			manage = true;
 			<% end %>
 			
-		    $.get( "patient_record_partial", {page: page, manage: manage, query: query, sort: sort,  provider_id: provider_id, provider_type:provider_type, hospital_id:hospital_id, network_id: network_id,cluster_id:cluster_id, row:row} )
+		    $.get( "patient_export_partial", {manage: manage, query: query, sort: sort,  provider_id: provider_id, provider_type:provider_type, hospital_id:hospital_id, network_id: network_id, row:row, from:from, to:to, status:status, pstatus:pstatus, offname:offname} )
 		    .done(function( data ) {
 				$('#patient-query').html(data);
 			
@@ -274,7 +222,7 @@
 		
 		queryPatient();
 		
-	// })
+	})
 		
 	</script>
 	
@@ -307,6 +255,7 @@ function filter_p(s){
 	}
 }
 $(document).ready(function(){
+
 	$("#search-p2").keyup(function(){
 		filter_p($(this).val())
 	})
@@ -315,6 +264,15 @@ $(document).ready(function(){
 		networkshow($(this).val())
 		//document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
 	})
+	try{
+		$('#query_from').datepicker({
+			format: "dd/mm/yyyy"
+		});
+		$('#query_to').datepicker({
+			format: "dd/mm/yyyy"
+		});
+	}catch(e){alert(e)}
 })
 
 </script> 
+

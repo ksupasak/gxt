@@ -520,6 +520,7 @@ class Patient  < GXTModel
   key :public_id, String
   key :prefix_name, String 
   key :first_name, String 
+  key :middle_name, String 
   key :last_name, String 
   key :dob, Time 
   key :age, String

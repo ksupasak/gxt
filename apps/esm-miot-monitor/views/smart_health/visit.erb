@@ -25,7 +25,7 @@
  
  <% 
  	
- puts "xxxxxx"
+
  puts params.inspect 
  puts Patient.count
  
@@ -47,9 +47,26 @@
 	 #  	 patient = Patient.create params[:patient]
 
  end
- #
-	 
-	 	patient_ids = SHRelation.where(:hospital_id=>@current_hospital.id).all.collect{|i| i.patient_id}
+ # => 	
+        hos_id = nil
+ 
+ 	    hos_id = @current_hospital.id if @current_hospital
+		
+		hos_id = @current_network.hospital_id if @current_network
+ 
+ 
+ 
+	 	patient_hos = SHRelation.where(:hospital_id=>hos_id).all
+	 	patient_ids = patient_hos.collect{|i| i.patient_id}
+		#clear patient not exist
+		temp_ps=Patient.where(:id=>patient_ids).all.collect{|i| i.id}
+		if temp_ps.size!=patient_hos.size
+			for ph in patient_hos
+				ph.destroy if !temp_ps.index(ph.patient_id)
+			end
+			patient_hos = SHRelation.where(:hospital_id=>hos_id).all
+			patient_ids = patient_hos.collect{|i| i.patient_id}
+		end
 	    
 		cond = []
 		
@@ -70,18 +87,18 @@
 		
 		
 			params[:relation][:patient_id] = patient.id
-			params[:relation][:hospital_id] = @current_hospital.id 
+			params[:relation][:hospital_id] = hos_id
 			
 			relation = SHRelation.create params[:relation]
 			
 		
 		
-		if params[:admit]
-		
-				admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now, :note=> params[:admit][:note]
+			if params[:admit]
 			
-		
-		end
+					admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now, :note=> params[:admit][:note]
+				
+			
+			end
 		
 		end	
 		
@@ -90,8 +107,27 @@
 			if params[:vid]
 				visit = SHVisit.find params[:vid]
 				visit.update_attributes :appoint_type=>params[:visit][:appoint_type],:appointed_user=> @current_user.id, :date=> params[:visit][:date],:note=> params[:visit][:note], :provider_id=>params[:provider_id]
-			else		
-				visit = SHVisit.create :appoint_type=>params[:visit][:appoint_type],:status=> "Pending",:appointed_user=> @current_user.id, :appointed_at=> Time.now, :patient_id=>patient.id, :date=> params[:visit][:date], :provider_id=>params[:provider_id], :hospital_id=>params[:relation][:hospital_id], :network_id=>params[:relation][:network_id],:note=> params[:visit][:note]
+			else
+				
+				
+				
+						
+				visit = SHVisit.create :appoint_type=>params[:visit][:appoint_type],:status=> "Pending",:appointed_user=> @current_user.id, :appointed_at=> Time.now, :patient_id=>patient.id, :date=> params[:visit][:date], :provider_id=>params[:provider_id],:note=> params[:visit][:note]
+				
+				if params[:relation]
+					
+				visit.update_attributes  :hospital_id=>params[:relation][:hospital_id], :network_id=>params[:relation][:network_id]
+					
+				end
+				
+				
+				if @current_network
+						
+					visit.update_attributes :status=>'Accepted', :officer_id=>params[:officer_id], :dispatched_at=>Time.now, :dispatched_user=> @current_user.id, :appoint_type=>'3', :network_id=>@current_network.id, :hospital_id=>hos_id	
+					
+				end
+				
+				
 			end
 		end
 	
@@ -433,6 +469,8 @@
 		</div>			
 		</div><!--row-->
 		
+		
+		<% if @current_hospital %>
 		<div class="row  mt-1"  style="padding-bottom:20px">
 
 			<div class="col col-md-4">
@@ -498,7 +536,7 @@
 		
 		</div>
 		
-		
+		<% end %>
 
 	<div class="row mt-1">
 	
@@ -538,6 +576,8 @@
 		
 		<div class="row " style="background-color:#ffc;padding-bottom:20px">
 		
+		<% if @current_hospital %>
+		
 		<div class=" col-md-4">
 	  		<label for="product-name">นัดพบแพทย์ </label>
 			<%
@@ -551,7 +591,31 @@
 			<% end %>
 			</select>
 		</div>
-	</div>
+		
+		<% else %>
+		
+		<div class=" col-md-4">
+	  		<label for="product-name">นัดอสม</label>
+			<%
+				
+				providers = SHUserNetwork.where(:network_id=>@current_network.id, :provider_type=>'officer').all.collect{|i| i.provider}
+			%>
+			<select id="record-hospital_doctor_id" name="officer_id" class="form-control" value="">
+			<option value=""></option>
+			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected".html_safe if visit.provider_id==j[0]%>><%=j[1]%></option>
+			<% end %>
+			</select>
+		</div>
+		
+		<% end %>
+	   </div>
+	
+	   
+	   
+	   
+	
+	
 		
 		<div class="row " style="background-color:#ffc;padding-bottom:20px">
 		<div class="col-12 col-md-12">

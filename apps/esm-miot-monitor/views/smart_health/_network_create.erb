@@ -1,0 +1,179 @@
+<%=inline(this,:'_init')%>
+<%
+	
+@record = nil
+
+if params[:id]
+	@record = SHUserNetwork.find params[:id]
+    @record = SHUserNetwork.new if !@record
+else
+	@record = SHUserNetwork.new 
+end	
+hospital =  @current_hospital
+	
+%>
+<%
+	
+if request.post?
+
+	
+    if !@record.network_id
+        network = SHNetwork.create :name=>params[:provider][:name],:code=>params[:provider][:license],:hospital_id=>hospital.id
+    else
+        network = SHNetwork.find @record.network_id
+        network.update_attributes :name=>params[:provider][:name],:code=>params[:provider][:license]
+    end
+ 
+ 	provider = nil
+	user = nil
+ 
+ 	if params[:provider]
+		
+		provider = Provider.find params[:provider_id]
+		
+		if provider 
+			
+			provider.update_attributes params[:provider]
+		
+		else
+		
+			provider = Provider.create params[:provider]
+		
+		end 
+		
+		
+	end
+	
+	
+	
+ 	if params[:user]
+		
+		user = User.find params[:user_id]
+		
+		if user 
+			
+			user.update_attributes params[:user]
+			
+			
+			if  params[:password].size > 0 and params[:password] == params[:password_confirmation]
+				user.password = params[:password]
+				user.save
+			end
+			
+		
+		else
+			
+			
+			
+			
+			
+			role = 'network_admin'
+			
+			
+			
+			hospital_role = Role.where(:name=>role).first
+			
+			unless hospital_role
+				
+				hospital_role = Role.create :name=>role
+				
+			end
+			params[:user][:role_id] = hospital_role.id
+			user = User.create params[:user]
+			
+			
+			if  params[:password].size > 0 and params[:password] == params[:password_confirmation]
+				user.password = params[:password]
+				user.save
+			end
+			
+			
+			
+		end 
+		
+		
+	end
+	
+	temprec = {}
+	temprec[:provider_id] = provider.id if provider
+	temprec[:user_id] = user.id if user
+	temprec[:network_id] = network.id if network
+	# params[:record][:provider_type] = 'network_admin'
+	
+	@record.update_attributes :provider_id=>temprec[:provider_id],:network_id=>temprec[:network_id],:user_id=>temprec[:user_id]
+ 
+ 
+	
+	
+	
+%>
+Updating..
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=index?tab=network">
+<% else %>
+
+
+รพ.เครือข่ายของ <%=hospital.name if hospital%>
+<form action="network_create" method="post">
+<%=inline(this,:'_network_create_form')%>
+<input id="btn-submit" type="submit" value="Submit" class="btn btn-primary"/>
+<a id="btn-dis" class="btn btn-primary disabled" href="#">Submit</a>
+<a class="btn btn-secondary" href="#">ย้อนกลับ</a>
+</form>
+<script>
+$('.btn-secondary').click(function(){
+    $('.network-list-show').click()
+})
+
+function check_input(){
+	//alert('check')
+	n = $("#provider_name").val()
+	u = $("#user_login").val()
+	t = $("#record-user").val()
+	if(n!==''&&u!==''&&t!==''){
+		$("#btn-submit").show()
+		$("#btn-dis").hide()
+	}else{
+		$("#btn-submit").hide()
+		$("#btn-dis").show()
+	}
+}
+function check_user(){
+	u = $("#user_login").val()
+	if(u!==''){
+		$.ajax({
+			url:'hn_check_user',
+			data:{u:u},
+		}).done(function(data){
+			isValid = data.trim()
+			//alert(isValid)
+			if(isValid!=='true'){
+				alert('User Login "'+u+'" is already exist!')
+				$("#user_login").val('')
+				$("#btn-submit").hide()
+				$("#btn-dis").show()
+			}
+		})
+	}else{
+		alert('User Login must not empty! ')
+	}
+}
+function check_pass(){
+	p1 = $("#password").val()
+	p2 = $("#password_confirmation").val()
+	if(p2!==''&&p1!==p2){
+		alert('Password Confirm not correct!')
+		$("#btn-submit").hide()
+		$("#btn-dis").show()
+	}else{
+		$("#btn-submit").show()
+		$("#btn-dis").hide()
+	}
+}
+$(document).ready(function(){
+	$("#btn-submit").hide()
+	$("input,select").change(check_input)
+	$("#user_login").change(check_user)
+	$("#password_confirmation").change(check_pass)
+})
+</script>
+<% end %>
