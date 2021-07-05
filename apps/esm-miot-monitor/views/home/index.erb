@@ -158,8 +158,8 @@ body{
 		<div class="col-8 text-center">
 			<%
 			
-			if admit
-				patient = admit.patient
+			if admit and patient = admit.patient
+				
 			
 			%>
 			<%= link_to "#{patient} #{"("+patient.hn+")" if patient.hn.size>0}","../Admit/show?id=#{admit.id}", :class=>'btn'%>

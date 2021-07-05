@@ -1641,6 +1641,7 @@
 				var bp_dia=''
 				var bp_mean=''
 				var pr=''
+				var rr=''
 				var spo2=''
 				var temp=''
 				var weight=''
@@ -1674,11 +1675,16 @@
 					bmi = $(this).html().trim();
 				})
 		
+				$('.rr .v-entry').each(function(){
+					rr = $(this).html().trim();
+				
+				})
 		
 		
 				$('.pr .v-entry').each(function(){
 					pr = $(this).html().trim();
 				})
+		
 				$('.spo2 .v-entry').each(function(){
 					spo2 = $(this).html().trim();
 				})
@@ -1700,7 +1706,10 @@
 		
 		
 		
-			 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+			 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr,rr:rr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+				
+				console.log(data)
+
 				return data
 		    }
 

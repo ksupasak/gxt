@@ -1,9 +1,13 @@
+
 require 'sinatra'
 require 'socket'
 require 'sinatra/base'
 require 'net/http'
 require 'nokogiri'
 
+require 'websocket-client-simple'
+
+require_relative '../lib/miot'
 
   set :bind, '0.0.0.0'
   set :port, 9292
@@ -13,6 +17,38 @@ require 'nokogiri'
   set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th:9293'
 
   puts settings.endpoint
+
+  
+  
+  
+  
+  #
+  unless HOST_IP
+  HOST_IP = IPSocket.getaddress(Socket.gethostname)
+  end
+
+  t = HOST_IP.split('.')
+  HOST_NETWORK = t[0..2].join(".")+".1"
+
+  unless ARGV[3]
+  HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
+  else
+  HOST_NETWORK_BOARDCAST = ARGV[3]
+  end
+
+  select_monitor = ARGV[2]
+
+
+  CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+  MIOT::post_config
+
+  $global_position = ""
+
+  threads = []
+  puts ARGV.inspect
+
+  ws = MIOT::connect
+
 
 
   def login 
@@ -222,7 +258,6 @@ CNX
    
    
    
-   
 # [{
 # "mrn": "0000001",
 # "locationId": "",
@@ -235,7 +270,7 @@ CNX
 # },{...},{...}]
    
    
-      senses = {'pr'=>['PR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
+      senses = {'pr'=>['PR','bpm'],'rr'=>['RR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
       
       senses['pr']=['PR','bpm']
       senses['rr']=['RR','bpm']
@@ -247,6 +282,9 @@ CNX
       senses['score']=['SCORE','']
       senses['weight']=['W','kg']
       senses['height']=['H','cm']
+      puts
+      puts params.inspect 
+      puts
       
       list = []
       
@@ -323,6 +361,55 @@ CNX
       end
       
   
+
+
+      begin
+        
+          name = 'TEST'
+          
+          stamp = record_at
+          data = {}
+          ref = mrn
+          # data[:bp] = '120/90'
+     #      data[:pr] = 60 + rand(60)
+     #      data[:hr] = data[:pr]
+     #      data[:rr] = 18 + rand(4)
+     #      data[:temp] = 36 + rand(4)
+     #      data[:spo2] = 90+rand(10)
+     #
+          
+      
+          for s in senses.keys
+            v = senses[s]
+            
+            if params[s] and params[s].size>0 
+              
+              data[s.to_sym] = params[s]
+          
+            end
+            
+          end
+          
+          
+          
+          data[:bp_stamp] = record_at.strftime("%H%M%S")
+          msg = <<MSG
+Data.Spot device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+          # puts msg
+
+          puts 'Start Sent Data '+msg
+
+          ws.send(msg)
+
+        rescue Exception=>e
+          puts e.inspect
+          puts e.backtrace
+        end
+
+
+
 
       return result.to_json
 	
