@@ -14,7 +14,7 @@ require_relative '../lib/miot'
 
  
  
-  set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th:9293'
+  set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
 
   puts settings.endpoint
 
@@ -61,16 +61,27 @@ require_relative '../lib/miot'
       data = {}
       
       content = <<CNX
+      { "data":
       {
       "username": "test01",
       "password": "test01",
       "appCode": "smartopd"
       }
+    }
+  
+
 CNX
       data = JSON.parse(content)
       
-
+      puts data.to_json
     
+
+  #    res = Net::HTTP.post_form  uri, data
+      
+   #   puts res.body
+      
+
+      
 
       # Full control
       http = Net::HTTP.new(uri.host, uri.port)
@@ -80,6 +91,9 @@ CNX
 
       request = Net::HTTP::Post.new(uri.request_uri)
       request.set_form_data(data)
+      
+      request.body = data.to_json
+      puts "ss #{request.body}"
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -87,10 +101,12 @@ CNX
       puts '============= DEBUG ==================='
     
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      puts request.inspect 
+      
 
       response = http.request(request)
     
-      puts '============= FINISH ==================='
+      puts '============= FINISH 2 ==================='
     
     
       
@@ -101,7 +117,7 @@ CNX
       
       settings.set :token, obj['data']['accessToken']
       
-      return obj['success']
+      return {:r=>obj['success'],:http=>http}
       
       
   end
@@ -121,7 +137,7 @@ CNX
 
   begin    
 
-  if login
+  if ht = login
   
       
       uri = URI("#{settings.endpoint}/api/MR/Patients/GetPatientProfileByMrn")
@@ -135,21 +151,29 @@ CNX
 CNX
       data = JSON.parse(content)
       
-
+      
     
 
       # Full control
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.instance_of? URI::HTTPS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.read_timeout = 10 # seconds
-
+      # http = Net::HTTP.new(uri.host, uri.port)
+ #      http.use_ssl = true if uri.instance_of? URI::HTTPS
+ #      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+ #      http.read_timeout = 10 # seconds
+ 
+       http = ht[:http]
+       
+       data['accessToken'] = settings.token
+      
       request = Net::HTTP::Post.new(uri.request_uri)
       request.set_form_data(data)
+      request.body = data.to_json
+      
+      puts request.body.inspect
 
+      puts 'tok '+ht.inspect 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = settings.token
+      request["Authorization"] = 'Bearer '+settings.token
       
 
       puts '============= DEBUG ==================='
@@ -330,11 +354,11 @@ CNX
       http.read_timeout = 10 # seconds
 
       request = Net::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(data)
+      request.body = data.to_json
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = settings.token
+      request["Authorization"] = 'Bearer '+settings.token
 
       puts '============= DEBUG ==================='
     
@@ -572,7 +596,8 @@ end
       
       
  
-      request.set_form_data(pd)
+      # request.set_form_data(pd)
+      request.body = pd
       # puts px.to_json
    #    request.body = px.to_json
     
