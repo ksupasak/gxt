@@ -1,4 +1,16 @@
 <%=inline(this,:'_init')%>
+<style>
+	v{
+		color:red;
+	}
+	
+	.validate_error{
+		color:red;
+		border:1px solid red ;
+		
+	}
+	
+	</style>
 <link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
 <link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
@@ -26,33 +38,61 @@
 	hos_id = @current_hospital.id if @current_hospital
 	hos_id = @current_network.hospital_id if @current_network
  		
+		
 	
 %>	    
 
  <% if request.post? %>	
- 
+
  <% if params[:patient] 
  		
 		params[:patient][:zone_id] = session[:current_zone]
+		
+		msg = ""
 		
 		
  if params[:id] and params[:id]!=''
 	
      admit = Admit.find(params[:id])
 	 patient = admit.patient
+	 
+	 
+	 new_patient = Patient.where(:public_id=>params[:patient][:public_id])
+	 
+	 if new_patient
+			 
+		 params[:patient][:public_id] = patient.public_id
+		 
+	 end
+	 
 	 patient.update_attributes params[:patient]	
 	
  else
+	
 	 
+	
+	 
+	 ids = SHRelation.where(:hospital_id=>@current_hospital_id).all.collect{|i| i.patient_id}
+
+	 new_patient = Patient.where(:_id=>{'$in'=>ids},:public_id=>params[:patient][:public_id]).first
+
+	 unless new_patient 
+		 
 	 patient = Patient.create params[:patient]
+	 
+ 	else
+	 msg = "หมายเลขบัตรประชาชน ซ้ำ"
+	 patient = nil
+ 	end
+	 
 	 
  end
 	 
 
 		
+		if patient
 		
-		
-		if params[:relation]
+		 if  params[:relation]
 			
 			params[:relation][:patient_id] = patient.id
 			params[:admit][:provider_id]  = params[:relation][:hospital_doctor_id]
@@ -77,6 +117,7 @@
 		end
 		
 		
+		
 		if params[:admit]
 		
 		
@@ -93,7 +134,10 @@
 		end
 		
 			
-			
+		
+		
+		
+		
  %>
  	<% if params[:return] and params[:return]!="" %>
 		<%= redirect_to params[:return]%>
@@ -101,10 +145,14 @@
  		<%= redirect_to "show?id=#{admit.id}" %>	
 	<% end %>
 		
+		<% end %>
+		
 	<% end %>		
  	
- <% else %>	
+ <% end %>	
 
+
+<% if true %>
     <div class="container">
         <div class="row">
             <div class="col title-fill ">
@@ -118,9 +166,19 @@
 			
 		else
 			
-			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' 
+			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' unless params[:patient]
+			patient = Patient.new params[:patient]
+				
 			admit = Admit.new :patient_id=>patient.id 
 			relation = SHRelation.new :patient_id=>patient.id 
+			relation.hospital_id = @current_hospital.id if @current_hospital
+			if @current_network
+			relation.network_id = @current_network.id 
+			relation.hospital_id = @current_network.hospital.id 
+			
+			end
+			
+			
 		end	
 			
 		
@@ -129,7 +187,7 @@
 		%>
 		<div class="card admit-form">
             <div class="card-body d-flex">
-				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+				<form action="" id="patient" class="patient" method="post"   method="post"  style="width:100%;font-size:16px">
 					<input type="hidden" name="return" value="<%=params[:return]%>">
 					
 					
@@ -188,18 +246,69 @@
 			<div class="row" style="background-color:#ffc;padding-bottom:20px">
 				
 				<div class=" col-md-4">
-		  			<label for="product-name">HN</label>
+				<label for="patient-public_id">เลขประจำตัวประชาชน <v>*</v></label>
+				<input type="text" class="form-control validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="CID" >
+				</div>
+	
+				<% if msg!=""and msg!=nil %>
+				<script>
+					alert("<%=msg%>")
+					$('#patient-public_id').css("border","1px solid red")
+				</script>
+					<% end %>
+					
+				<div class=" col-md-4">
+		  			<label for="product-name">HN  <v>*</v></label>
 		  			<input type="text" class="form-control validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
 					<input type="hidden" name="id" value="<%=params[:id]%>">
 					<input type="hidden" name="relation_id" value="<%=params[:relation_id]%>">
 				</div>
 				
 				
+			
+			</div>
+
+			<div class="row" style="background-color:#ffc;padding-bottom:20px">
+				<div class="col col-md-4">
+		  			<label for="product-name">โรงพยาบาลต้นสังกัด <v>*</v></label>
+					<%
+					if @current_hospital
+						
+						hospitals = [@current_hospital]
+						
+					elsif @current_network 
+						
+						hospitals = [@current_network.hospital]
+						
+					elsif @current_cluster
+						
+						hospitals = SHHospital.where(:cluster_id=>@current_cluster.id).all
+							
+					else
+							
+						hopsitals = SHHospital.all	
+						
+					end
+						
+						h_sel = hos_id
+						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id)
+
+					%><%#="(#{hos_id}) #{relation.id} #{h_sel} #{hospitals.inspect}"%>
+					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control validate" value=""  >
+					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
+					  <option value="<%=j[0]%>"  <%="selected" if j[0]==h_sel %> <%="disabled" if hos_id!=nil and j[0]!=h_sel%> ><%=j[1]%></option>
+					<% end %>
+					</select>
+					
+				</div>
+				
 				<div class=" col-md-4">
 			  		<label for="product-name">แพทย์ประจำผู้ป่วย</label>
+					<%#relation.to_json%>
+					<%#providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'doctor').all.to_json%>
 					<%
 						
-						providers = SHUserHospital.where(:hospital_id=>relation.id, :provider_type=>'doctor').all.collect{|i| i.provider}
+						providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'doctor').all.collect{|i| i.provider}
 					%>
 					<select id="record-hospital_doctor_id" name="relation[hospital_doctor_id]" class="form-control" value="">
 					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
@@ -210,7 +319,7 @@
 				<div class=" col-md-4">
 			  		<label for="product-name">พยาบาลประจำผู้ป่วย</label>
 					<%
-						providers = SHUserHospital.where(:hospital_id=>relation.id, :provider_type=>'nurse').all.collect{|i| i.provider}
+						providers = SHUserHospital.where(:hospital_id=>relation.hospital_id, :provider_type=>'nurse').all.collect{|i| i.provider}
 					%>
 					<select id="record-provider_id" name="relation[hospital_nurse_id]" class="form-control" value="">
 					<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
@@ -219,31 +328,30 @@
 					</select>
 				</div>
 			</div>
-
-			<div class="row" style="background-color:#ffc;padding-bottom:20px">
+				<div class="row" style="background-color:#ffc;padding-bottom:20px">
 				<div class="col col-md-6">
-		  			<label for="product-name">โรงพยาบาลต้นสังกัด (Hospital)</label>
-					<%
-						hospitals = SHHospital.all
-						h_sel = hos_id
-						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id)
-
-					%><%#="(#{hos_id}) #{relation.id} #{h_sel} #{hospitals.inspect}"%>
-					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value=""  >
-					<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
-					  <option value="<%=j[0]%>"  <%="selected" if j[0]==h_sel %> <%="disabled" if hos_id!=nil and j[0]!=h_sel%> ><%=j[1]%></option>
-					<% end %>
-					</select>
 					
-				</div>
-				<div class="col col-md-6">
-		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต (Network Hospital)</label>
+		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต <v>*</v></label>
 				<%
+				
+				if @current_hospital
+						
+					networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+				
+				elsif @current_network
+				
+					networks = [@current_network]
+				
+				elsif @current_cluster
 					
-				networks = SHNetwork.all
+					networks = SHNetwork.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id}}).all	
+					
+				end
+				
+				
 					
 				%>
-				<select id="record-network_id" name="relation[network_id]" class="form-control" value="">
+				<select id="record-network_id" name="relation[network_id]" class="form-control validate" value="">
 					<option value="" ></option>
 				<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
 				  <option value="<%=j[0]%>" <%="selected=true" if j[0]==relation.network_id %> ><%=j[1]%></option>
@@ -262,31 +370,37 @@
 			
 		<div class="row mt-1">
 			
-		<div class="col-4 col-md-4">
+		<div class="col-4 col-md-3">
 		<label for="patient-prefix_name">คำนำหน้า</label>
 		<input type="text" class="form-control" id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
 		</div>
 	
 
-		<div class="col-4 col-md-4">
-		<label for="patient-first_name">ชื่อ</label>
+		<div class="col-4 col-md-3">
+		<label for="patient-first_name">ชื่อ <v>*</v></label>
 		<input type="text" class="form-control validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
 		</div>
+		
 
-		<div class="col-4 col-md-4">
-			<label for="patient-last_name">นามสกุล</label>
-			
+
+		<div class="col-4 col-md-3">
+			<label for="patient-last_name">นามสกุล <v>*</v></label>
 		<input type="text" class="form-control validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
 		</div>
 		
+		
+		<div class="col-4 col-md-3">
+		<label for="patient-middle_name">ชื่อ กลาง </label>
+		<input type="text" class="form-control" id="patient-middle_name" name="patient[middle_name]" value="<%=patient.middle_name%>" placeholder="ชื่อ" style="">
+		</div>
 		</div><!--row-->
 		
 		
 		<div class="row mt-1">
 			
 		<div class="col-4 col-md-4">
-		<label for="patient-gener">เพศ</label>
-		<select name="patient[gender]" class="form-control" >
+		<label for="patient-gener">เพศ <v>*</v></label>
+		<select name="patient[gender]" class="form-control validate" id="patient-gender">
 		<option value="">ไม่ระบุ</option>
 		<option value="M">ชาย</option>
 		<option value="F">หญิง</option>
@@ -296,8 +410,8 @@
 		</div>
 	
 		<div class="col-8 col-md-4">
-		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
-		<input type="text" class="form-control" id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
+		<label for="patient-dob">วัน/เดือน/ปี เกิด <v>*</v></label>
+		<input type="text" class="form-control validate" id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
 		</div>
 		
 		<div class="col-8 col-md-4">
@@ -312,6 +426,8 @@
 		<div class="col-4 col-md-4">
 		<label for="patient-blood">หมู่เลือด</label>
 	    <input type="text" class="form-control" id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
+		
+		
 	    </div>
 	
 		<div class="col-4 col-md-4">
@@ -339,10 +455,7 @@
 		<input type="text" class="form-control" id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
 		</div>
 
-		<div class="col-8 col-md-6">
-		<label for="patient-public_id">เลขประจำตัวประชาชน</label>
-		<input type="text" class="form-control validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="ID" >
-		</div>
+
 
 		<div class="col-8 col-md-6">
 		<label for="patient-passport">เลขที่หนังสือเดินทาง</label>
@@ -363,8 +476,8 @@
 		</script>
 
 		<div class="col-8 col-md-4">
-		<label for="patient-contact_phone">โทร</label>
-		<input type="text" class="form-control" id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
+		<label for="patient-contact_phone">โทร <v>*</v></label>
+		<input type="text" class="form-control validate " id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
 		</div>
 
 		<div class="col-8 col-md-4">
@@ -708,8 +821,79 @@
 					 } 
 		
 				})
-		
-	     
+			
+
 
 			</script>
-<% end %>				
+<% end %>		
+	
+<script>
+
+
+$('.patient').submit(function(e){
+	
+	ready = true
+	noti = false
+	$('.validate').each(function(){
+		id = $(this).attr('id')
+		v = $(this).val();
+		
+		
+		if(v==""){
+			
+			if(id=='patient-public_id'){
+				text = 'บัตรประชาชน'
+			}
+			if(id=='patient-first_name'){
+				text = 'ชื่อผู้ป่วย'
+			}
+			if(id=='patient-last_name'){
+				text = 'นามสกุล'
+			}
+			if(id=='patient-dob'){
+				text = 'วันเกิด'
+			}
+			if(id=='patient-contact_phone'){
+				text = 'เบอร์ติดต่อ'
+			}
+			if(id=='patient-hn'){
+				text = 'หมายเลขโรงพยาบาล'
+			}
+
+			if(id=='patient-gender'){
+				text = 'เพศ'
+			}
+			if(noti==false)
+			alert(text+' ห้ามเว้นว่าง')
+			noti=true;
+			
+			$(this).addClass("validate_error")
+			$(this).css("border","1px solid red")
+			ready &= false
+		}else{
+			$(this).removeClass("validate_error")
+			$(this).css("border","0px solid red")
+		}
+		
+		if(ready&&id=='patient-public_id'){
+	
+			if(v.length!=13){
+				alert('เลขประจำตัวประชาชนต้องมี 13 หลัก')
+				$(this).css("border","1px solid red")
+				ready &= false
+			}
+		
+		}
+		
+		
+	})
+	
+	if(ready){
+		
+	}else{
+		e.preventDefault();
+	}
+	
+
+})
+</script>

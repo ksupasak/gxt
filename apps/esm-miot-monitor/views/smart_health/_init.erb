@@ -16,6 +16,7 @@ if user_hospital = SHUserHospital.where(:user_id=>session[:identity]).first
 	@access_title = @current_hospital.name
 	@current_provider = user_hospital.provider
 	@current_user_hospital = user_hospital	
+	@current_hospital_id = @current_hospital.id
 
 elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@access_type = 'network'
@@ -23,6 +24,7 @@ elsif user_network = SHUserNetwork.where(:user_id=>session[:identity]).first
 	@access_title = "#{@current_network.name}(#{@current_network.code})"
 	@current_provider = user_network.provider		
 	@current_user_network = user_network
+	@current_hospital_id = 	@current_network.hospital_id
 	
 elsif user_cluster = SHUserCluster.where(:user_id=>session[:identity]).first
 	@access_type = 'cluster'

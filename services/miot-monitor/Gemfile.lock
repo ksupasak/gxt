@@ -1,3 +1,10 @@
+PATH
+  remote: lib/ruby-ble
+  specs:
+    ble (1.0.0)
+      concurrent-ruby
+      ruby-dbus
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -13,9 +20,6 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     backports (3.17.2)
     barby (0.6.8)
-    ble (1.0.0)
-      concurrent-ruby
-      ruby-dbus
     bson (4.9.2)
     chunky_png (1.3.11)
     concurrent-ruby (1.1.8)
@@ -48,6 +52,7 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.0512)
+    mini_portile2 (2.5.3)
     minitest (5.14.3)
     mongo (2.12.1)
       bson (>= 4.8.2, < 5.0.0)
@@ -64,6 +69,11 @@ GEM
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
     nio4r (2.5.4)
+    nokogiri (1.11.7)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    nokogiri (1.11.7-x86_64-darwin)
+      racc (~> 1.4)
     parallel (1.19.1)
     pdf-core (0.7.0)
     pdfkit (0.8.4.2)
@@ -78,6 +88,7 @@ GEM
       multi_json (~> 1.0)
       pusher-signature (~> 0.1.8)
     pusher-signature (0.1.8)
+    racc (1.5.2)
     rack (2.2.3)
     rack-gridfs (0.3.0)
       mongo (>= 0.20.1)
@@ -158,12 +169,13 @@ GEM
     zeitwerk (2.4.2)
 
 PLATFORMS
+  aarch64-linux
   x86_64-darwin-19
 
 DEPENDENCIES
   activesupport
   barby
-  ble
+  ble!
   chunky_png
   crc
   em-hiredis
@@ -174,6 +186,7 @@ DEPENDENCIES
   mongoid
   mongoid-grid_fs
   mqtt
+  nokogiri
   parallel
   pdfkit
   prawn
@@ -198,4 +211,4 @@ DEPENDENCIES
   xmpp4r
 
 BUNDLED WITH
-   2.2.8
+   2.2.17
