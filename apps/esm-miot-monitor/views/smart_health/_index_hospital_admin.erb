@@ -52,9 +52,11 @@
 			
 			list = SHUserHospital.where(:hospital_id=>@current_hospital.id).all
 			
-	  	%>
-			
-		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+	  	%><br/>
+			<h3>เจ้าหน้าที่ / ผู้ใช้ 
+			<%=link_to("เพิ่มเจ้าหน้าที่", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success', :style=>'float:right')%>
+			</h3>
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','provider_type'=>'สิทธิ์ใช้งาน','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล','phone'=>'โทร'}, :ext_model=>%w{action} do |row,out|
 		
 		out[0] = row.hospital.name if row.hospital
 		
@@ -66,7 +68,7 @@
 	
 		out[-1] = row.user.login if row.user
 		
-		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
 		
 		out
 		end
@@ -76,7 +78,7 @@
 		<% end %>
 		
 		
-		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
+		<%#link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
 		
 		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
 		
@@ -95,8 +97,14 @@
 	 list = SHNetwork.where(:hospital_id=>@current_hospital.id).all
 		
   	%>
-	
-	<div class="network-list">	
+
+	<div class="network-list" style="">	
+		<br/>
+		<h3>
+			รพเครือข่าย / รพสต
+			<%=link_to("เพิ่มรพเครือข่าย", "../SHNetwork/create?hospital_id=#{@current_hospital.id.to_s}", :hospital_id=>@current_hospital.id,:class=>'network-create btn btn-success', :style=>'float:right')%>
+		
+		</h3>
 	<%= tabular :data=>list, :model=>%w{network code user }, :label=>{'user'=>'ผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
 	
 	out[0] = row.name
@@ -107,7 +115,7 @@
 	un_id = un.id if un
 	out[-1] = SHUserNetwork.where(:network_id=>row.id).count
 	
-	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un_id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger')
+	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un_id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger destroy')
 	
 	out
 	end
@@ -115,7 +123,6 @@
 	  
 	
 	
-	<%=link_to("เพิ่ม", "../SHNetwork/create?hospital_id=#{@current_hospital.id.to_s}", :hospital_id=>@current_hospital.id,:class=>'network-create btn btn-success')%>
 	
 </div>
 
@@ -280,4 +287,21 @@
 </div>
 
 
+<script>
 
+	
+	$(".destroy").unbind( "click" );
+	$('.destroy').click(function(e){
+		
+		if(confirm("ยืนยัน?")){
+			
+			
+		}else{
+			
+			e.preventDefault()
+			
+		}
+			
+	});
+	
+</script>

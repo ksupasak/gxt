@@ -1,0 +1,18 @@
+<%
+	
+	record = this.model.find(params[:id])
+	
+	
+	record.provider.destroy
+	record.user.destroy
+	
+	
+	record.destroy
+	
+	
+	
+	return_url = '../Home/index'
+	return_url = params[:return] if params[:return] 
+
+%>
+<%=redirect_to return_url%>

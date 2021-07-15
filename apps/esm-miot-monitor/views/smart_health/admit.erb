@@ -285,13 +285,16 @@
 						hospitals = SHHospital.where(:cluster_id=>@current_cluster.id).all
 							
 					else
-							
-						hopsitals = SHHospital.all	
-						
+					
 					end
+					
+					unless	
+						hospitals = SHHospital.all	
+					end
+					if hospitals
 						
 						h_sel = hos_id
-						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id)
+						h_sel = relation.id if hospitals.collect{|i| i.id}.index(relation.id) if hospitals
 
 					%><%#="(#{hos_id}) #{relation.id} #{h_sel} #{hospitals.inspect}"%>
 					<select id="record-hospital_id" name="relation[hospital_id]" class="form-control validate" value=""  >
@@ -299,7 +302,7 @@
 					  <option value="<%=j[0]%>"  <%="selected" if j[0]==h_sel %> <%="disabled" if hos_id!=nil and j[0]!=h_sel%> ><%=j[1]%></option>
 					<% end %>
 					</select>
-					
+					<% end %>
 				</div>
 				
 				<div class=" col-md-4">
@@ -329,7 +332,7 @@
 				</div>
 			</div>
 				<div class="row" style="background-color:#ffc;padding-bottom:20px">
-				<div class="col col-md-6">
+				<div class="col col-md-4">
 					
 		  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต <v>*</v></label>
 				<%
@@ -346,8 +349,11 @@
 					
 					networks = SHNetwork.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id}}).all	
 					
+				else
+					networks = SHNetwork.all
 				end
 				
+				if networks
 				
 					
 				%>
@@ -358,7 +364,7 @@
 				<% end %>
 				</select>
 		  		
-				
+				<% end %>
 				</div>
 				
 				
