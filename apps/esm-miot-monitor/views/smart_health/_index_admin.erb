@@ -93,7 +93,7 @@
 		  
 
 <h3>Cluster User
-		<%=link_to("เพิ่ม", "hc_provider_manage?cluster_id=#{@current_cluster.id.to_s if @current_cluster}", :class=>'btn btn-success',:style=>"")%>
+		<%=link_to("เพิ่มเจ้าหน้าที่", "hc_provider_manage?cluster_id=#{@current_cluster.id.to_s if @current_cluster}", :class=>'btn btn-success',:style=>'float:right')%>
 
 </h3>
 
@@ -132,7 +132,7 @@
 		<br/>
 		<br/>
 
-<h3>Hospital User 		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
+<h3>Hospital User 		<%=link_to("เพิ่มเจ้าหน้าที่", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success', :style=>'float:right')%>
 </h3>
 		  
 	  	<%
@@ -169,7 +169,7 @@
 		<br/>
 		<br/>
 		
-		<h3>Network User 		<%=link_to("เพิ่ม", "hn_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
+		<h3>Network User 		<%=link_to("เพิ่มเจ้าหน้าที่", "hn_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success', :style=>'float:right')%>
 </h3>
 		
 	  	<%
