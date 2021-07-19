@@ -9,15 +9,15 @@ gem 'sinatra-partial'
 
 gem 'sinatra-formhelpers-ng'
 
-gem 'puma'
+#gem 'puma'
 gem 'mqtt'
 gem 'thin'
-
-gem 'ble'
 
 gem 'pusher'
 
 gem 'parallel'
+
+gem 'nokogiri'
 
 gem 'activesupport', require: 'active_support/all'
 #gem 'mysql2' , '0.3.17'
