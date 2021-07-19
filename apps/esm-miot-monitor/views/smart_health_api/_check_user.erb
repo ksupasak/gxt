@@ -43,10 +43,16 @@ end
 					
 					if user_hospital = SHUserHospital.where(:user_id=>user_login.id).first
 						hos = SHHospital.find(user_hospital.hospital_id)
+						
 						if hos
 							i['login_hospid'] = hos.code
 							i['login_hospname'] = hos.name
-							i['login_rule'] = user_hospital.provider_type
+							i['login_rule'] = "NA"
+							i['login_rule'] = user_hospital.provider_type if user_hospital.provider_type and user_hospital.provider_type!=""
+							provider = user_hospital.provider
+							provider_name = 'ไม่ระบุ'
+							provider_name = provider.name if provider
+							i['login_username'] = provider_name
 						else
 							i['login_hospid'] = 'REMOVED'
 							i['login_hospname'] = 'REMOVED'
@@ -59,10 +65,16 @@ end
 					
 					if user_network = SHUserNetwork.where(:user_id=>user_login.id).first
 						hos = SHNetwork.find(user_network.network_id)
+						
 						if hos
 							i['login_hospid'] = hos.code
 							i['login_hospname'] = hos.name
-							i['login_rule'] = user_network.provider_type
+							i['login_rule'] = "NA"
+							i['login_rule'] = user_network.provider_type if user_network.provider_type and user_network.provider_type!=""
+							provider = user_network.provider
+							provider_name = 'ไม่ระบุ'
+							provider_name = provider.name if provider
+							i['login_username'] = provider_name
 						else
 							i['login_hospid'] = 'REMOVED'
 							i['login_hospname'] = 'REMOVED'
