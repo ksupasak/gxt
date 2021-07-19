@@ -5,7 +5,7 @@
         u = User.find record.user_id
         pv = Provider.find record.provider_id   
         u.destroy if u
-        #pv.destroy if pv        
+        pv.destroy if pv
         record.destroy
 	end
 	return_url = '../Home/index'

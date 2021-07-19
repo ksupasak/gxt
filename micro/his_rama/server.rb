@@ -1,18 +1,54 @@
+
 require 'sinatra'
 require 'socket'
 require 'sinatra/base'
 require 'net/http'
 require 'nokogiri'
 
+require 'websocket-client-simple'
+
+require_relative '../lib/miot'
 
   set :bind, '0.0.0.0'
   set :port, 9292
 
  
  
-  set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th:9293'
+  set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
 
   puts settings.endpoint
+
+  
+  
+  
+  
+  #
+  unless HOST_IP
+  HOST_IP = IPSocket.getaddress(Socket.gethostname)
+  end
+
+  t = HOST_IP.split('.')
+  HOST_NETWORK = t[0..2].join(".")+".1"
+
+  unless ARGV[3]
+  HOST_NETWORK_BOARDCAST = t[0..2].join(".")+".255"
+  else
+  HOST_NETWORK_BOARDCAST = ARGV[3]
+  end
+
+  select_monitor = ARGV[2]
+
+
+  CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+  MIOT::post_config
+
+  $global_position = ""
+
+  threads = []
+  puts ARGV.inspect
+
+  ws = MIOT::connect
+
 
 
   def login 
@@ -25,16 +61,27 @@ require 'nokogiri'
       data = {}
       
       content = <<CNX
+      { "data":
       {
       "username": "test01",
       "password": "test01",
       "appCode": "smartopd"
       }
+    }
+  
+
 CNX
       data = JSON.parse(content)
       
-
+      puts data.to_json
     
+
+  #    res = Net::HTTP.post_form  uri, data
+      
+   #   puts res.body
+      
+
+      
 
       # Full control
       http = Net::HTTP.new(uri.host, uri.port)
@@ -44,6 +91,9 @@ CNX
 
       request = Net::HTTP::Post.new(uri.request_uri)
       request.set_form_data(data)
+      
+      request.body = data.to_json
+      puts "ss #{request.body}"
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -51,10 +101,12 @@ CNX
       puts '============= DEBUG ==================='
     
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      puts request.inspect 
+      
 
       response = http.request(request)
     
-      puts '============= FINISH ==================='
+      puts '============= FINISH 2 ==================='
     
     
       
@@ -65,7 +117,7 @@ CNX
       
       settings.set :token, obj['data']['accessToken']
       
-      return obj['success']
+      return {:r=>obj['success'],:http=>http}
       
       
   end
@@ -85,7 +137,7 @@ CNX
 
   begin    
 
-  if login
+  if ht = login
   
       
       uri = URI("#{settings.endpoint}/api/MR/Patients/GetPatientProfileByMrn")
@@ -99,21 +151,29 @@ CNX
 CNX
       data = JSON.parse(content)
       
-
+      
     
 
       # Full control
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.instance_of? URI::HTTPS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.read_timeout = 10 # seconds
-
+      # http = Net::HTTP.new(uri.host, uri.port)
+ #      http.use_ssl = true if uri.instance_of? URI::HTTPS
+ #      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+ #      http.read_timeout = 10 # seconds
+ 
+       http = ht[:http]
+       
+       data['accessToken'] = settings.token
+      
       request = Net::HTTP::Post.new(uri.request_uri)
       request.set_form_data(data)
+      request.body = data.to_json
+      
+      puts request.body.inspect
 
+      puts 'tok '+ht.inspect 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = settings.token
+      request["Authorization"] = 'Bearer '+settings.token
       
 
       puts '============= DEBUG ==================='
@@ -222,7 +282,6 @@ CNX
    
    
    
-   
 # [{
 # "mrn": "0000001",
 # "locationId": "",
@@ -235,7 +294,7 @@ CNX
 # },{...},{...}]
    
    
-      senses = {'pr'=>['PR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
+      senses = {'pr'=>['PR','bpm'],'rr'=>['RR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
       
       senses['pr']=['PR','bpm']
       senses['rr']=['RR','bpm']
@@ -247,6 +306,9 @@ CNX
       senses['score']=['SCORE','']
       senses['weight']=['W','kg']
       senses['height']=['H','cm']
+      puts
+      puts params.inspect 
+      puts
       
       list = []
       
@@ -292,11 +354,11 @@ CNX
       http.read_timeout = 10 # seconds
 
       request = Net::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(data)
+      request.body = data.to_json
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = settings.token
+      request["Authorization"] = 'Bearer '+settings.token
 
       puts '============= DEBUG ==================='
     
@@ -323,6 +385,55 @@ CNX
       end
       
   
+
+
+      begin
+        
+          name = 'TEST'
+          
+          stamp = record_at
+          data = {}
+          ref = mrn
+          # data[:bp] = '120/90'
+     #      data[:pr] = 60 + rand(60)
+     #      data[:hr] = data[:pr]
+     #      data[:rr] = 18 + rand(4)
+     #      data[:temp] = 36 + rand(4)
+     #      data[:spo2] = 90+rand(10)
+     #
+          
+      
+          for s in senses.keys
+            v = senses[s]
+            
+            if params[s] and params[s].size>0 
+              
+              data[s.to_sym] = params[s]
+          
+            end
+            
+          end
+          
+          
+          
+          data[:bp_stamp] = record_at.strftime("%H%M%S")
+          msg = <<MSG
+Data.Spot device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+          # puts msg
+
+          puts 'Start Sent Data '+msg
+
+          ws.send(msg)
+
+        rescue Exception=>e
+          puts e.inspect
+          puts e.backtrace
+        end
+
+
+
 
       return result.to_json
 	
@@ -485,7 +596,8 @@ end
       
       
  
-      request.set_form_data(pd)
+      # request.set_form_data(pd)
+      request.body = pd
       # puts px.to_json
    #    request.body = px.to_json
     

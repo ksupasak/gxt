@@ -747,7 +747,114 @@ MSG
        when 'Zone.Data'
          
 # store local sensing     
-      
+       when 'Data.Spot'
+  
+         pdata =  ActiveSupport::JSON.decode(body)
+     
+         station_name = "Untitled"
+         station_name = pdata['station'] if pdata['station'] 
+         station_idx = "#{name}|#{station_name}"
+         
+         # fw : data sensing for direct receiver
+         # EsmMiotMonitor::dispatch cmd, path, pdata.to_json
+     
+        
+         ref = "-"
+         ref = pdata['ref'] if pdata['ref']
+
+         data = "{}"
+         data = pdata['data'] if pdata['data']
+
+         
+
+         station_id = nil
+         station = nil
+         
+        
+         settings.stations[name] = {} unless settings.stations[name]
+
+         
+         # register or retrieve station 
+         
+         station = Station.where(:name=>station_name).first
+         
+         unless station
+                zone = Zone.first 
+                zone_id = nil
+                zone_id = zone.id if zone
+                station = Station.create(:name=>station_name, :title=>station_name,:zone_id=>zone_id)
+         end
+         
+         
+         settings.stations[name][station.name] = station
+         
+         
+         data['station_id'] = station.id
+          
+         # insert title data  
+         
+         if station
+             station_id = station['_id']
+             data['title'] = station.title if station.title and station.title.size>0 
+         end  
+
+         # if data['pr'] 
+          data['ref'] = ref
+         # end
+         
+         data['score'] = 0
+         
+         admit = nil
+         
+         # inject last score
+         
+         if ref and ref!="" and ref !="-"
+           
+           patient = Patient.where(:hn=>ref).first
+           
+           unless patient 
+             
+             # previous_admit = Admit.where(:station_id=>station.id,:status=>'Admitted').first
+          
+             
+             patient = Patient.create :hn=>ref
+             admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now)
+             
+          else
+            
+             admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
+            
+             unless admit
+               admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+             else
+               if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+                 admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+                 admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+               end
+             end
+            
+          end
+           
+           
+         end
+         
+         
+         if admit 
+           
+           v = data
+           puts 'insert'
+           DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data
+           
+           
+           
+           
+         end
+         
+  
+  
+         
+  
+  
        when 'Data.Sensing'
          
              pdata =  ActiveSupport::JSON.decode(body)

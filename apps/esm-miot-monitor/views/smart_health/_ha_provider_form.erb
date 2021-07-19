@@ -43,20 +43,25 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 	<%
 
 	list = %w{admin doctor nurse operator officer terminal}
+	llist = %w{ผู้ดูแลระบบ แพทย์ พยาบาล เจ้าหน้าที่ เจ้าหน้าที่ออกตรวจ terminal}
+	
+	lists = []
+	
+	list.each_with_index do |i,j|
+		lists << [i,llist[j]]
+	end
 		
 	%>
 	
 <div class="col-sm-4">
 	
   <div class="form-group">
-    <label for=""> <span class="mand">*</span>Provider Type</label>
+    <label for="" style="width:160px"> <span class="mand">*</span> สิทธิ์ใช้งาน</label>
 	
 	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
 	  <option value="" %></option>
 
-	<% for j in list.collect{|k| 
-		[k,k]
-	}
+	<% for j in lists
 		%>
 	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
 	<% end %>
@@ -81,7 +86,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 	%>
 <div class="col-sm-4">
   <div class="form-group">
-    <label for="">Hospital by <%=@current_role%></label>
+    <label for="">โรงพยาบาล</label>
 	
 	<select id="record-user" name="record[hospital_id]" class="form-control" value="<%=@record['hospital_id']%>">
 	  <% if list.size > 1 %>
@@ -99,7 +104,39 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
  </div> 
  </div><!--row-->
 </div><!--u-section-->
+<div class="u-section rounded p-3 mb-3">
+<div class="row">
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for="user-login"> <span class="mand">*</span>User Login ชื่อเข้าสู่ระบบ</label>
+	
+  <input name="user[login]" class="form-control" value="<%=user.login%>">
 
+  </div>
+</div>
+
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for=""> <span class="mand">*</span>Password รหัสผ่าน</label>
+	
+  <input name="password" type="password" class="form-control" value="">
+
+  </div>
+</div>
+
+<div class="col-sm-4">
+  <div class="form-group">
+	  
+  <label for=""> <span class="mand">*</span>Password Confirm ยืนยันรหัสผ่าน</label>
+	
+  <input name="password_confirmation" type="password" class="form-control" value="">
+
+  </div>
+</div>
+</div><!--row-->
+</div><!--u-section-->
 
 <div class="u-section rounded p-3 mb-3">
 <div class="row">
@@ -107,7 +144,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-name"> <span class="mand">*</span>Provider Name</label>
+<label for="provider-name"> <span class="mand">*</span>ชื่อ เจ้าหน้าที่</label>
 	
 <input name="provider[name]" class="form-control" value="<%=provider.name%>">
 
@@ -116,7 +153,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-department">Provider Department</label>
+<label for="provider-department">แผนก</label>
 	
 <input name="provider[department]" class="form-control" value="<%=provider.department%>">
 
@@ -125,7 +162,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-license">Provider License</label>
+<label for="provider-license" style="width:160px">เลขที่ใบอนุญาต</label>
 	
 <input name="provider[license]" class="form-control" value="<%=provider.license%>">
 
@@ -134,7 +171,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-phone">Provider Phone</label>
+<label for="provider-phone">หมายเลขโทรศัพท์</label>
 	
 <input name="provider[phone]" class="form-control" value="<%=provider.phone%>">
 
@@ -143,7 +180,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-email">Provider Email</label>
+<label for="provider-email">อีเมล</label>
 	
 <input name="provider[email]" class="form-control" value="<%=provider.email%>">
 
@@ -154,36 +191,3 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 </div> <!--u-section-->
 
 
-<div class="u-section rounded p-3 mb-3">
-<div class="row">
-<div class="col-sm-4">
-  <div class="form-group">
-	  
-  <label for="user-login"> <span class="mand">*</span>User Login</label>
-	
-  <input name="user[login]" class="form-control" value="<%=user.login%>">
-
-  </div>
-</div>
-
-<div class="col-sm-4">
-  <div class="form-group">
-	  
-  <label for=""> <span class="mand">*</span>Password</label>
-	
-  <input name="password" type="password" class="form-control" value="">
-
-  </div>
-</div>
-
-<div class="col-sm-4">
-  <div class="form-group">
-	  
-  <label for=""> <span class="mand">*</span>Password Confirm</label>
-	
-  <input name="password_confirmation" type="password" class="form-control" value="">
-
-  </div>
-</div>
-</div><!--row-->
-</div><!--u-section-->

@@ -7,6 +7,7 @@ unless params[:query]
 	# admits = Admit.limit(20).sort(:created_at=>-1).all
 	
 	admits = Admit.where(:zone_id=>session[:current_zone]).sort(:created_at=>-1).all
+	
 	# admits = Admit.all
 	
 else
@@ -54,7 +55,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 
 %w{Admitted Discharged}.each do |type|
 	
-	admits = Admit.where(:status=>type,:zone_id=>session[:current_zone]).sort('updated_at'=>-1).limit(20).all
+	admits = Admit.where(:status=>type).sort('updated_at'=>-1).limit(20).all
 	# admits = Admit.all
 	if mpatients
 	admits = admits.collect{|i| i if mpatients[i.patient_id]}.compact	

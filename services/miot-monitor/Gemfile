@@ -13,6 +13,13 @@ gem 'sinatra-formhelpers-ng'
 gem 'mqtt'
 gem 'thin'
 
+<<<<<<< HEAD
+=======
+
+#gem 'ble'
+gem 'ble', :path => 'lib/ruby-ble'
+
+>>>>>>> ce1b64fddb80a3183149c354a7a22031d809035a
 gem 'pusher'
 
 gem 'parallel'
@@ -58,3 +65,6 @@ gem 'rest-graph'
 gem 'eventmachine'
 
 gem 'rack-ssl-enforcer'
+
+
+gem 'nokogiri'
