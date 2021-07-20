@@ -56,7 +56,7 @@
 			<h3>เจ้าหน้าที่ / ผู้ใช้ 
 			<%=link_to("เพิ่มเจ้าหน้าที่", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success', :style=>'float:right')%>
 			</h3>
-		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','provider_type'=>'สิทธิ์ใช้งาน','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล','phone'=>'โทร'}, :ext_model=>%w{action} do |row,out|
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','provider_type'=>'สิทธิ์ใช้งาน','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล','phone'=>'โทร','action'=>''}, :ext_model=>%w{action} do |row,out|
 		
 		out[0] = row.hospital.name if row.hospital
 		
@@ -68,7 +68,8 @@
 	
 		out[-1] = row.user.login if row.user
 		
-		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
+		# out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
+		out<<link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
 		
 		out
 		end

@@ -218,21 +218,25 @@ function check_user(){
 			isValid = data.trim()
 			//alert(isValid)
 			if(isValid!=='true'){
-				alert('User Login "'+u+'" is already exist!')
+				//alert('User Login "'+u+'" is already exist!')
+				alert('มีชื่อเข้าสู่ระบบ "'+u+'" นี้แล้วในระบบ กรุณาเลือกชื่ออื่น')
 				$("#user_login").val('')
 				$("#btn-submit").hide()
 				$("#btn-dis").show()
 			}
 		})
 	}else{
-		alert('User Login must not empty! ')
+		//alert('User Login must not empty! ')
+		alert('ชื่อเข้าสู่ระบบต้องไม่เป็นค่าว่าง')
 	}
 }
 function check_pass(){
 	p1 = $("#password").val()
 	p2 = $("#password_confirmation").val()
 	if(p2!==''&&p1!==p2){
-		alert('Password Confirm not correct!')
+		//alert('Password Confirm not correct!')
+		alert('ยืนยันรหัสผ่านไม่ถูกต้อง!')
+		$("#password_confirmation").val('')
 		$("#btn-submit").hide()
 		$("#btn-dis").show()
 	}else{
