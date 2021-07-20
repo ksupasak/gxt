@@ -9,7 +9,7 @@ services:
   #     MYSQL_ROOT_PASSWORD: minadadmin
   redis:
     image: redis
-    command: redis-server --requirepass minadadmin
+    # command: redis-server --requirepass minadadmin
     restart: always
     ports:
       - "6379:6379"
