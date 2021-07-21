@@ -6,7 +6,7 @@ list = SHUserNetwork.where(:network_id=>params[:id]).all
 %>
 <div class="user-network-list">	
 รายชื่อผู้ใช้งาน
-	<%= tabular :data=>list, :model=>%w{network_id user_id provider_id }, :label=>{'network_id'=>'โรงพยาบาล','user_id'=>'ผู้ใช้','provider_id'=>'ชื่อ-สกุล'}, :ext_model=>%w{role action} do |row,out|
+	<%= tabular :data=>list, :model=>%w{network_id user_id provider_id }, :label=>{'network_id'=>'โรงพยาบาล','user_id'=>'ผู้ใช้','provider_id'=>'ชื่อ-สกุล','role'=>'สิทธิผู้ใช้'}, :ext_model=>%w{role action} do |row,out|
 	u = User.find(row.user_id)
     n = SHNetwork.find(row.network_id)
     p = Provider.find(row.provider_id)

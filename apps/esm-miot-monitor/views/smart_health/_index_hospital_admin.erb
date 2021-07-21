@@ -102,11 +102,11 @@
 	<div class="network-list" style="">	
 		<br/>
 		<h3>
-			รพเครือข่าย / รพสต
+			รพเครือข่าย / รพสต 
 			<%=link_to("เพิ่มรพเครือข่าย", "../SHNetwork/create?hospital_id=#{@current_hospital.id.to_s}", :hospital_id=>@current_hospital.id,:class=>'network-create btn btn-success', :style=>'float:right')%>
 		
 		</h3>
-	<%= tabular :data=>list, :model=>%w{network code user }, :label=>{'user'=>'ผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+	<%= tabular :data=>list, :model=>%w{network code user }, :label=>{'user'=>'ผู้ใช้','network'=>'เครือข่าย','code'=>'รหัสเครือข่าย','action'=>''}, :ext_model=>%w{action} do |row,out|
 	
 	out[0] = row.name
 	

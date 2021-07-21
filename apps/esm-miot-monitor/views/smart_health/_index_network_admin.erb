@@ -308,7 +308,7 @@ t_data = completed_visits
 	<div class="col">
 	ค้นหา <input type='text' id="search-off">
 	</div>
-	<div class="col"></div>
+	<div class="col"><%=link_to("เพิ่มเจ้าหน้าที่", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%></div>
 </div>	  
 	  	<%
 	  		
@@ -319,13 +319,19 @@ t_data = completed_visits
 	  	%>
 <%
 v_cols = %w{  provider provider_type phone user action}
+m_v_cols = {}
+m_v_cols['provider']='ชื่อ-สกุล'
+m_v_cols['provider_type']='สิทธิ์ใช้งาน'
+m_v_cols['phone']='โทร'
+m_v_cols['user']='รหัสผู้ใช้'
+m_v_cols['action']=''
 t_data = list
 %>
 <table class="table" >
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%#=c.humanize%><%=m_v_cols[c]%></th>
 <% end %>
 </tr>
 </thead>
@@ -362,7 +368,7 @@ t_data = list
 		<% end %>
 		
 		
-		<%=link_to("เพิ่ม", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%>
+		
 		
 		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_network.id.to_s}", :class=>'btn')%>
 		
