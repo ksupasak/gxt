@@ -73,10 +73,21 @@
 	overflow:auto;
 }
 </style>
-<h4>รอจ่ายงาน - (Pending)</h4>		
-	<form action="assign" method="post">
+<form action="assign" method="post">
+<div class="row">
+<div class="col"><h4>รอจ่ายงาน - (Pending)</h4>		</div>
+<div class="col"><div class="float-right"><input type="submit" value="จ่ายงาน" class="btn btn-success" ></div></div>
+</div>
 <%
 v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+m_v_cols = {}
+m_v_cols['status'] = 'สถานะงาน'
+m_v_cols['hn'] = 'รหัสผู้ป่วย'
+m_v_cols['patient'] = 'ผู้ป่วย'
+m_v_cols['appointed_at'] = 'วันที่จ่ายงาน'
+m_v_cols['date'] = 'วันที่นัด'
+m_v_cols['hospital_id'] = 'โรงพยาบาล'
+m_v_cols['officer_id'] = 'เจ้าหน้าที่ออกตรวจ'
 t_data = pending_visits
 %>
 <div class="div-datatable">
@@ -84,7 +95,7 @@ t_data = pending_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -149,7 +160,7 @@ t_data = pending_visits
 </tbody>
 </table>
 </div>	
-	<input type="submit" value="จ่ายงาน" class="btn btn-success" >
+	
 		
 </form>
 <br/>
@@ -164,7 +175,7 @@ t_data = accepted_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -237,7 +248,7 @@ t_data = completed_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -353,7 +364,7 @@ t_data = list
 	
 		out = row.user.login if c=='user' and row.user
 		
-		out = link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
+		out = link_to("แก้ไข", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
 		
 %>
 <td><%=out%></td>
