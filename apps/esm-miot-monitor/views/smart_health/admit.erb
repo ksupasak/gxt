@@ -61,7 +61,7 @@
 	 
 	 if new_patient
 			 
-		 params[:patient][:public_id] = patient.public_id
+		#  params[:patient][:public_id] = patient.public_id
 		 
 	 end
 	 
@@ -407,9 +407,9 @@
 		<div class="col-4 col-md-4">
 		<label for="patient-gener">เพศ <v>*</v></label>
 		<select name="patient[gender]" class="form-control validate" id="patient-gender">
-		<option value="">ไม่ระบุ</option>
-		<option value="M">ชาย</option>
-		<option value="F">หญิง</option>
+		<option value="" <%="selected" if patient.gender==''%>>ไม่ระบุ</option>
+		<option value="M" <%="selected" if patient.gender=='M'%>>ชาย</option>
+		<option value="F" <%="selected" if patient.gender=='F'%>>หญิง</option>
 		</select>	
 	    <!-- <input type="text" class="form-control" id="patient-gender" name="patient[gender]" value="<%=patient.gender%>" placeholder="M or FM" style=""> -->
 	    
