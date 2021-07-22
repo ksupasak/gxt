@@ -50,7 +50,21 @@ if request.post?
  	if params[:user]
 		
 		user = User.find params[:user_id]
+		role = 'network'
+		role = 'network_admin' if params[:record][:provider_type] == 'admin'
+		role = 'network_operator' if params[:record][:provider_type] == 'operator'
 		
+		
+		
+		hospital_role = Role.where(:name=>role).first
+		
+		unless hospital_role
+			
+			hospital_role = Role.create :name=>role
+			
+		end
+		params[:user][:role_id] = hospital_role.id
+
 		if user 
 			
 			user.update_attributes params[:user]
@@ -64,24 +78,6 @@ if request.post?
 		
 		else
 			
-			
-			
-			
-			
-			role = 'network'
-			role = 'network_admin' if params[:record][:provider_type] == 'admin'
-			role = 'network_operator' if params[:record][:provider_type] == 'operator'
-			
-			
-			
-			hospital_role = Role.where(:name=>role).first
-			
-			unless hospital_role
-				
-				hospital_role = Role.create :name=>role
-				
-			end
-			params[:user][:role_id] = hospital_role.id
 			user = User.create params[:user]
 			
 			

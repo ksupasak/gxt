@@ -115,6 +115,7 @@ begin
 	
 	if row.status=='Completed'
 		bname = "ตรวจแล้ว"
+		bclass = "b-hos"
 		case row.complated_by
 		when '1'	
 			bclass = "b-hos"
@@ -138,6 +139,7 @@ begin
 	status = ""
 	status = "แสดง" # if row.status==nil
 	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	out[-1] += link_to("ลบ","../SHVisit/destroy?id=#{row.id}&return=../Home/index", :class=>'btn btn-danger') if bname!='ตรวจแล้ว'
 	end
 
 	out
@@ -166,6 +168,7 @@ end
 	
 	if row.status=='Completed'
 		bname = "ตรวจแล้ว"
+		bclass = "b-hos"
 		case row.complated_by
 		when '1'	
 			bclass = "b-hos"
@@ -194,6 +197,7 @@ end
 	status = ""
 	status = "แสดง" #if row.status==nil
 	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	out[-1] += link_to("ลบ","../SHVisit/destroy?id=#{row.id}&return=../Home/index", :class=>'btn btn-danger') if bname!='ตรวจแล้ว'
 	
 	out
 

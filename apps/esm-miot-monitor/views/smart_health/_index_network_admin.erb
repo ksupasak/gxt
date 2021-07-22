@@ -88,6 +88,10 @@ m_v_cols['appointed_at'] = 'วันที่จ่ายงาน'
 m_v_cols['date'] = 'วันที่นัด'
 m_v_cols['hospital_id'] = 'โรงพยาบาล'
 m_v_cols['officer_id'] = 'เจ้าหน้าที่ออกตรวจ'
+m_status = {}
+m_status['Pending']='รอจ่ายงาน'
+m_status['Accepted']='จ่ายงานแล้ว'
+m_status['Completed']='เสร็จสิ้น'
 t_data = pending_visits
 %>
 <div class="div-datatable">
@@ -103,12 +107,14 @@ t_data = pending_visits
 <%	
 	for row in t_data 
 		patient = Patient.find(row.patient_id)
+		phn = ''
+		pname = ''
 		if patient
-			phn = ''
-			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if patient and patient.hn
 				pname = patient.to_s if patient
+				
 			end		
 %>
 <tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
@@ -133,10 +139,12 @@ t_data = pending_visits
 				bclass = "b-officer"
 			end
 			
-
-		out = "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
-
+		if c=='status'
+		out = "<a href='../SHVisit/destroy?id=#{row.id}&return=../Home/index' class='btn btn-danger btn-sm'>ลบ</a> " 
+		out += "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" 
+		end
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
@@ -186,6 +194,7 @@ t_data = accepted_visits
 		if patient
 			phn = ''
 			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if patient and patient.hn
 				pname = patient.to_s if patient
@@ -214,9 +223,10 @@ t_data = accepted_visits
 			end
 			
 		
-		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
 
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
@@ -259,6 +269,7 @@ t_data = completed_visits
 		if patient
 			phn = ''
 			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if  patient.hn
 				pname = patient.to_s 
@@ -287,9 +298,10 @@ t_data = completed_visits
 			end
 			
 			
-		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
 
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at

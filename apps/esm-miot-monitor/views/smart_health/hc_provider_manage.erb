@@ -31,6 +31,22 @@ if request.post?
  	if params[:user]
 		
 		user = User.find params[:user_id]
+		# role = 'cluster'
+		role = 'cluster_admin' if params[:record][:provider_type] == 'admin'
+	# 	role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
+	# 	role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
+	#
+		
+		
+		
+		hospital_role = Role.where(:name=>role).first
+		
+		unless hospital_role
+			
+			hospital_role = Role.create :name=>role
+			
+		end
+		params[:user][:role_id] = hospital_role.id		
 		
 		if user 
 			
@@ -45,22 +61,7 @@ if request.post?
 		
 		else
 			
-			# role = 'cluster'
-			role = 'cluster_admin' if params[:record][:provider_type] == 'admin'
-		# 	role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
-		# 	role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
-		#
-			
-			
-			
-			hospital_role = Role.where(:name=>role).first
-			
-			unless hospital_role
-				
-				hospital_role = Role.create :name=>role
-				
-			end
-			params[:user][:role_id] = hospital_role.id
+
 			user = User.create params[:user]
 			
 			
