@@ -28,6 +28,7 @@ o_bluez.introspect
 
 
 address = ['C0:26:DA:01:DA:F0']
+address = ['C0:26:DA:10:C1:92']
 address = [ENV['TEMP_ADDRESS']] if ENV['TEMP_ADDRESS']
 puts "TEMP #{address}"
 
@@ -50,7 +51,9 @@ devices = {}
 begin
 
 for i in $a.devices
-  
+#    d = $a[i]
+
+ #    puts "#{i} #{d.alias}" if d.alias.index "TAIDOC"  
   if address.index(i)
     
     d = $a[i]
