@@ -119,8 +119,11 @@
 		color:#999;
 	}
 	
-	.score-warning-2{
+	.score-warning-1{
 		color:yellow;
+	}
+	.score-warning-2{
+		color:orange;
 	}
 	.score-warning-3{
 		color:red;
@@ -1028,6 +1031,9 @@
 			   
 			   $('.act-score').removeClass("act-score")
 			   $(".noti").html("")
+			   
+			   $(".noti").removeClass("score-warning-1")
+			   
 			   $(".noti").removeClass("score-warning-2")
 
 			   $(".noti").removeClass("score-warning-3")
@@ -1773,17 +1779,31 @@
 
 								 
 								 
+			 					$('.'+s['name']+" .noti").removeClass("score-warning-1")
 			 					$('.'+s['name']+" .noti").removeClass("score-warning-2")
 			 					$('.'+s['name']+" .noti").removeClass("score-warning-3")
+								 
+			 					$('.'+s['name']).removeClass("score-warning-1")
+			 					$('.'+s['name']).removeClass("score-warning-2")
+			 					$('.'+s['name']).removeClass("score-warning-3")
+								 
 					
 					
+ 			 					if(i_score==1){
+ 			 							$('.'+s['name']+" .noti").addClass("score-warning-1")
+ 										$('.'+s['name']+" ").addClass("score-warning-1")
+ 			 					}
+								
 			 					if(i_score==2){
 			 							$('.'+s['name']+" .noti").addClass("score-warning-2")
+										$('.'+s['name']+" ").addClass("score-warning-2")
 			 					}
 					
 					
 			 					if(i_score==3){
 			 							$('.'+s['name']+" .noti").addClass("score-warning-3")
+										$('.'+s['name']+" ").addClass("score-warning-3")
+									
 			 					}
 					
 								 
