@@ -174,6 +174,26 @@
 	width:100px;
 }
 
+.noti {
+	float:right;
+	font-size:0.9em;
+}
+
+.bmi-noti{
+	
+}
+.noti-green{
+	color:#46d884;
+}
+.noti-yellow{
+	color:#fdd24a;
+}
+.noti-orange{
+	color:#e17226;
+}
+.noti-red{
+	color:#e14d4a;
+}
 </style>
 
 	<div class="containerx">
@@ -288,7 +308,7 @@
 						
                         <div class="col mb-2 ">
 							<div class="vital-card">
-	                            <p>BMI</p>
+	                            <p>BMI <span class="noti bmi-noti" ></span></p> 
 				                <div class="row">
 				                    <div class="col-3" style="text-align:center">
 				                        <center><img src="<%=url_for 'img/svg/bmi.svg'%>" width="40" ></center>
@@ -334,7 +354,7 @@
 						
                     <div class="col mb-2 ">
 						<div class="vital-card">
-                            <p>Glucose</p>
+                            <p>Glucose <span class="noti glucose-noti" ></span></p>
 			                <div class="row">
 			                    <div class="col-3" style="text-align:center">
 			                        <center><img src="<%=url_for 'img/svg/glucose.svg'%>" width="40" ></center>
@@ -406,7 +426,7 @@
                     <div class="col p-0 d-flex flex-column" id="patient-vital-sign">
                         <div class="col mb-2 ">
                            	<div class="vital-card" style="border:0px solid red;padding:5px">
-                                <p>Blood Pressure</p>
+                                <p>Blood Pressure  <span class="noti bp-noti" ></span></p>
 								<div class="row"  style="border:0px solid red;padding:0px">
 								<div class="col-3" style="border:0px solid">
                                 <center><img src="<%=url_for('img/svg/bp.svg')%>" alt="blood-pressure"  width="40" /></center>
@@ -431,7 +451,7 @@
                         </div>
                         <div class="col mb-2 ">
                    		 	<div class="vital-card">
-                                <p>Pulse / SpO<sub>2</sub></p>
+                                <p>Pulse / SpO<sub>2</sub> <span class="noti pr-noti" ></span>&nbsp;<span class="noti spo2-noti" ></span></p>
                           
 				                <div class="row">
 				                    <div class="col-3">
@@ -455,7 +475,7 @@
                         </div>
                         <div class="col mb-2">
                             	<div class="vital-card">
-                                <p>Body Temperature</p>
+                                <p>Body Temp  <span class="noti temp-noti" ></span></p>
 				                <div class="row">
 				                    <div class="col-3" >
 										<center>
@@ -471,7 +491,7 @@
 						
                         <div class="col mb-2 ">
 							<div class="vital-card">
-	                            <p>อัตราการหายใจ RR</p>
+	                            <p>อัตราการหายใจ RR <span class="noti rr-noti" ></span></p>
 				                <div class="row">
 				                    <div class="col-3" style="text-align:center">
 				                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
@@ -1128,14 +1148,35 @@
 		
 		score = 0
 		count = 0 
-		list = ['spo2', 'bp_sys', 'temp', 'pr']
+		list = ['spo2', 'bp_sys', 'temp', 'pr','bmi','rr','glucose']
 		err = [];
+		
+		$(".noti").each(function(){
+			
+			$(this).removeClass("noti-yellow")
+			$(this).removeClass("noti-orange")
+			$(this).removeClass("noti-red")
+			$(this).html("")
+			
+		})
+		$('.v-entry').each(function(){
+			$(this).removeClass("noti-orange")
+			
+			$(this).removeClass("noti-yellow")
+			$(this).removeClass("noti-red")
+			
+		})
+		
+		
 		for(var i=0;i<list.length;i++){
 			
 			v = list[i]
 			s = 0 
 			title = ""
 			t = $('.'+v).html().trim()
+			
+			console.log(""+list[i]+" "+t)
+			
 			if(t!=''&&t!='-'&&t!='0'){
 				x = parseFloat(t)
 				count++;
@@ -1147,6 +1188,71 @@
 					if(x>=38.1&&x<=38.4)s=1;
 					if(x>=38.5)s=2;
 					
+					if(x<35){
+						$('.temp-noti').html('ค่าวัดไม่ถูกต้อง')
+						$('.temp-noti').addClass('noti-yellow')
+					}
+					if(x>37.5){
+						$('.temp-noti').html('อุณหภูมิสูง BT>37.5')
+						$('.temp-noti').addClass('noti-red')
+						$('.temp').addClass('noti-red')
+					}
+					if(x>=36.5&&x<=37.5){
+						$('.temp-noti').html('ปกติ')
+						$('.temp-noti').addClass('noti-green')
+					}
+					
+				}else
+				if(v=='bmi'){
+					
+					// if(x<35){
+	// 					$('.temp-noti').html('ค่าวัดไม่ถูกต้อง')
+	// 					$('.temp-noti').addClass('noti-yellow')
+	// 				}
+					if(x<18.5){
+						$('.bmi-noti').html('ผอม BMI < 18.5')
+						$('.bmi-noti').addClass('noti-yellow')
+						$('.bmi').addClass('noti-yellow')
+					}
+					if(x>=18.5&&x<=22.9){
+						$('.bmi-noti').html('ปกติ')
+	// 					$('.bmi-noti').addClass('noti-yellow')
+	// 					$('.bmi').addClass('noti-yellow')
+					}
+					if(x>=23&&x<=24.9){
+						$('.bmi-noti').html('นน.เกิน')
+						$('.bmi-noti').addClass('noti-yellow')
+						$('.bmi').addClass('noti-yellow')
+					}
+					if(x>=25&&x<=29.9){
+						$('.bmi-noti').html('โรคอ้วนระดับ 1 ')
+						$('.bmi-noti').addClass('noti-orange')
+						$('.bmi').addClass('noti-orange')
+					}
+					if(x>=30){
+						$('.bmi-noti').html('โรคอ้วนระดับ 2 ')
+						$('.bmi-noti').addClass('noti-red')
+						$('.bmi').addClass('noti-red')
+					}
+					
+				}else
+				
+				if(v=='rr'){
+					
+					// if(x<35){
+	// 					$('.temp-noti').html('ค่าวัดไม่ถูกต้อง')
+	// 					$('.temp-noti').addClass('noti-yellow')
+	// 				}
+					if(x>18){
+						$('.rr-noti').html('ผิดปกติ RR > 18')
+						$('.rr-noti').addClass('noti-red')
+						$('.rr').addClass('noti-red')
+					}
+					if(x>=12&&x<=18){
+						$('.rr-noti').html('ปกติ')
+						$('.rr-noti').addClass('noti-green')
+					}
+					
 				}else
 				if(v=='bp_sys'){
 					title = "BP systolic"
@@ -1157,7 +1263,38 @@
 					if(x>=181&&x<=199)s=1;
 					if(x>=200)s=2;
 					
+					
+					if(x<130){
+						$('.bp-noti').html('ปกติ')
+					}
+					if(x>=130&&x<=139){
+						$('.bp-noti').html('เสี่ยง')
+						$('.bp-noti').addClass('noti-orange')
+						$('.bp').addClass('noti-orange')
+					}
+					if(x>=140){
+						$('.bp-noti').html('ผิดปกติ')
+						$('.bp-noti').addClass('noti-red')
+						$('.bp_sys').addClass('noti-red')
+					}
+					
 				}else
+				if(v=='spo2'){
+					if(x<90){
+						$('.spo2-noti').html('พร่องออกซิเจน')
+						$('.spo2-noti').addClass('noti-red')
+						$('.spo2').addClass('noti-red')
+			
+					}
+					if(x>=90&&x<=94){
+						$('.spo2-noti').html('เริ่มเกิดภาวะพร่องออกซิเจน')
+						$('.spo2-noti').addClass('noti-yellow')
+						$('.spo2').addClass('noti-yellow')
+					}
+					if(x>=95){
+						$('.spo2-noti').html('SpO2 ปกติ&nbsp;')
+					}
+				}
 				if(v=='pr'){
 					title = "Pulse rate"
 					if(x<=40)s=-3;
@@ -1166,6 +1303,38 @@
 					if(x>=100&&x<=120)s=1;
 					if(x>=121&&x<=139)s=2;
 					if(x>=140)s=3;
+					
+					if(x<84){
+						$('.pr-noti').html('PR ปกติ')
+			
+					}
+					if(x>=85&&x<=89){
+						$('.pr-noti').html('เสี่ยง PR 85-89')
+						$('.pr-noti').addClass('noti-yellow')
+						$('.pr').addClass('noti-yellow')
+					}
+					if(x>=90){
+						$('.pr-noti').html('ผิดปกติ PR > 90')
+						$('.pr-noti').addClass('noti-red')
+						$('.pr').addClass('noti-red')
+					}
+					
+				}else
+				if(v=='glucose'){
+					
+					if(x<100){
+						$('.glucose-noti').html('ปกติ')
+					}
+					if(x>=100&&x<=125){
+						$('.glucose-noti').html('เสี่ยงต่อเบาหวาน')
+						$('.glucose-noti').addClass('noti-yellow')
+						$('.glucose').addClass('noti-yellow')
+					}
+					if(x>=126){
+						$('.glucose-noti').html('เป็นเบาหวาน')
+						$('.glucose-noti').addClass('noti-red')
+						$('.glucose').addClass('noti-red')
+					}
 					
 				}
 				

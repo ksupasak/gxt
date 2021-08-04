@@ -172,10 +172,22 @@
 	            highlight[s.to_sym]=''
 	            v = r[s.to_sym]
 	            if v
-	                highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
-	                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
-	                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
-	                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+					highlight[s.to_sym]='color:orange' if s.to_sym==:bp and (v.split('/')[0].to_i>=130 and v.split('/')[0].to_i<=139)
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v>90)
+					highlight[s.to_sym]='color:orange' if s.to_sym==:pr and (v<90 and v>=85)
+					
+					highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<90
+					highlight[s.to_sym]='color:orange' if s.to_sym==:spo2 and (v<=94 and v>89)
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>37.5
+
 	            end
 	            is_normal = (highlight[s.to_sym]=='') if is_normal
 	        end
@@ -219,7 +231,8 @@
 <table class="table table-striped table-bordered table-condensed" style="background:#FFF;font-size:0.8em">
 <thead>
 <tr style="text-align:center">
-<th>No.</th>
+
+<th style="width:120px">No.</th>
 <th>CID</th>
 <th>HN</th>
 <th>ชื่อ-สกุล</th>
@@ -257,9 +270,15 @@
             v = r[s.to_sym]
             if v
                 highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
-                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
-                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
-                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+                highlight[s.to_sym]='color:orange' if s.to_sym==:bp and (v.split('/')[0].to_i>=130 and v.split('/')[0].to_i<=139)
+
+                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v>90)
+                highlight[s.to_sym]='color:orange' if s.to_sym==:pr and (v<90 and v>=85)
+				
+                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<90
+                highlight[s.to_sym]='color:orange' if s.to_sym==:spo2 and (v<=94 and v>89)
+
+                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>37.5
             end
             is_normal = (highlight[s.to_sym]=='') if is_normal
         end
@@ -277,10 +296,22 @@
             highlight_2[s.to_sym]=''
             v = f[s.to_sym]
             if v
+                # highlight_2[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+                # highlight_2[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+                # highlight_2[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+                # highlight_2[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+
                 highlight_2[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
-                highlight_2[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
-                highlight_2[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
-                highlight_2[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+                highlight_2[s.to_sym]='color:orange' if s.to_sym==:bp and (v.split('/')[0].to_i>=130 and v.split('/')[0].to_i<=139)
+
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:pr and (v>90)
+                highlight_2[s.to_sym]='color:orange' if s.to_sym==:pr and (v<90 and v>=85)
+				
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:spo2 and v<90
+                highlight_2[s.to_sym]='color:orange' if s.to_sym==:spo2 and (v<=94 and v>89)
+
+                highlight_2[s.to_sym]='color:red' if s.to_sym==:temp and v>37.5
+
             end
             is_normal = (highlight_2[s.to_sym]=='') if is_normal
         end
@@ -292,9 +323,16 @@
     
 %>
 <tr class="tr-p tr-network <%=m_pn[p.id]%>" style="text-align:center" text='<%="#{p.hn} #{p.public_id} #{p.prefix_name} #{p.first_name} #{p.last_name} "%> '>
-<td style="text-align:left"><%=ix+1+row*page%>. <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success btn-sm' %>  </td>
 
-<td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%></td>
+<td style="text-align:left"><%=ix+1+row*page%>. <%=link_to "ตรวจ", "show?id=#{a.id}", :class=>'btn btn-success btn-sm' %>
+<% if params[:manage] =='true' %>
+<%=link_to "แก้ไข", "admit?id=#{a.id}", :class=>'btn btn-warning  btn-sm' %>&nbsp;
+<% end %>
+</td>
+<td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%>
+
+
+</td>
 <td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
 <td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
 
@@ -317,14 +355,11 @@
 <td><span style="<%=highlight[s.to_sym]%>"><%=r[s.to_sym] if r and r[s.to_sym]%></span> &nbsp; </td>
 <% end %>
 
-
-
 <td>
-<% if params[:manage] =='true' %>
-<%=link_to "แก้ไข", "admit?id=#{a.id}", :class=>'btn btn-warning  btn-sm' %>&nbsp;
-<%=link_to "ลบ", "destroy?id=#{p.id}", :class=>'btn btn-danger  btn-sm' unless @current_network %>
-<% end %>
+	<%=link_to "ลบ", "destroy?id=#{p.id}", :class=>'btn btn-danger  btn-sm destroy' unless @current_network %>
 </td>
+
+
 </tr>
 <% end %>
 </tbody>
@@ -396,5 +431,21 @@ n.times do |ni|
 	        window.open( uri + base64(format(template, ctx)) )
 	    }
 	})()
+	
+	$( ".destroy").unbind( "click" );
+	$('.destroy').click(function(e){
+		
+		if(confirm("ยืนยัน?")){
+			
+			
+		}else{
+			
+			e.preventDefault()
+			
+		}
+			
+	});
+	
+	
 	</script>   
 

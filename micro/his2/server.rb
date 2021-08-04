@@ -112,10 +112,13 @@ return content
     
   his_get_patient_uri = URI("http://xxxx/patient/#{hn}")
     
-  his_get_patient_uri = URI("http://172.20.10.5:9292/test_get_patient?hn=#{hn}")
+  # his_get_patient_uri = URI("http://172.20.10.5:9292/test_get_patient?hn=#{hn}")
   
-  # his_get_patient_uri = URI("http://10.99.0.109/systemx-poc/api/patient/#{hn}")
+  his_get_patient_uri = URI("http://10.99.0.109/systemx-poc/api/patient/#{hn}")
+  
  
+
+  his_get_patient_uri = URI("https://cnmi-his.rama.mahidol.ac.th/apis/IME/get_demographic/hn/#{hn}/")
   
   
     
@@ -136,13 +139,23 @@ return content
   
     puts 'xxxxx'
   req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
+  #
+  # # setting both OpenTimeout and ReadTimeout
+  # res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+  #
+  #      http.request(req)
+  #
+  # }
 
-  # setting both OpenTimeout and ReadTimeout
-  res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
 
-       http.request(req)
+  http = Net::HTTP.new(his_get_patient_uri.host, his_get_patient_uri.port)
+  http.use_ssl = true #if uri.instance_of? URI::HTTPS
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  http.read_timeout = 10 # secon
+  
+  res =  http.request(req)
 
-  }
+
 
   content = res.body  
   
@@ -169,15 +182,23 @@ CNX
   # birth_date = Date.new obj['birth'][0..3].to_i, obj['birth'][4..5].to_i, obj['birth'][6..7].to_i
   
   
+  # {"hn":"C3344","initial_name":"นาง","first_name":"ทัศนีย์","last_name":"ปิ่นปั่น","middle_name":"","initial_name_eng":"Mrs.","first_name_eng":"Tasanee","last_name_eng":"Pinpan","middle_name_eng":"","id_card_no":"3670300238028","nation_code":1,"nationality":"ไทย","dob":"1981-01-07","gender":"F","address":"270 โรงพยาบาลรามาธิบดี พระราม 6 ทุ่งพญาไท","amphur":"เขตราชเทวี","province":"กรุงเทพมหานคร","zipcode":"10400","tel_no":"","mobile_no":"089-1139055","email":"tpinpan@gmail.com","emergency_contact":"270 โรงพยาบาลรามาธิบดี พระราม 6 แขวง ทุ่งพญาไท เขต เขตราชเทวี จังหวัด กรุงเทพมหานคร ประเทศไทย","photo":"","encounters":[]}%
+  
+  
+  
+
+  
+  
   robj[:hn] = obj['hn']
   # robj[:pid] = obj['pid']
-  robj[:first_name] = obj['name']
-  robj[:last_name] = obj['lastname']
-  robj[:prefix_name] = obj['title']
-  robj[:gender] = obj['sex']
+  robj[:first_name] = obj['first_name']
+  robj[:last_name] = obj['last_name']
+  robj[:prefix_name] = obj['initial_name']
+  robj[:gender] = obj['gender']
   # robj[:birth_date] = birth_date
+  robj[:birth_date] = obj['dob']
   # robj[:age] = 
-  robj[:full_name] = "#{obj['name']} #{obj['lastname']}"
+  robj[:full_name] = "#{obj['initial_name']}#{obj['first_name']} #{obj['last_name']}"
   
   
   result = {:status=>'200 OK', :record=>robj}

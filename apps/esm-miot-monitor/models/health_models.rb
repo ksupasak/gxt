@@ -534,6 +534,10 @@ class SHUserHospitalController < GXTDocument
   
 end
 
+class SHUserClusterController < GXTDocument
+  
+end
+
 class SHClusterController < GXTDocument
   
 end

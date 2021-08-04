@@ -185,10 +185,22 @@
 	            highlight[s.to_sym]=''
 	            v = r[s.to_sym]
 	            if v
-	                highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
-	                highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
-	                highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
-	                highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v<61 or v>99)
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<95
+	                # highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>38
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:bp and (v.split('/')[0].to_i>=140)
+					highlight[s.to_sym]='color:orange' if s.to_sym==:bp and (v.split('/')[0].to_i>=130 and v.split('/')[0].to_i<=139)
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:pr and (v>90)
+					highlight[s.to_sym]='color:orange' if s.to_sym==:pr and (v<90 and v>=85)
+					
+					highlight[s.to_sym]='color:red' if s.to_sym==:spo2 and v<90
+					highlight[s.to_sym]='color:orange' if s.to_sym==:spo2 and (v<=94 and v>89)
+
+					highlight[s.to_sym]='color:red' if s.to_sym==:temp and v>37.5
+			
 	            end
 	            is_normal = (highlight[s.to_sym]=='') if is_normal
 	        end

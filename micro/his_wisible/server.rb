@@ -340,6 +340,7 @@ CNX
       
  
       request.set_form_data(pd)
+      request.body = pd.to_json
       # puts px.to_json
    #    request.body = px.to_json
     

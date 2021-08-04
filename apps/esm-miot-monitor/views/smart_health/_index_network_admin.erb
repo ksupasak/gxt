@@ -73,10 +73,25 @@
 	overflow:auto;
 }
 </style>
-<h4>รอจ่ายงาน - (Pending)</h4>		
-	<form action="assign" method="post">
+<form action="assign" method="post">
+<div class="row">
+<div class="col"><h4>รอจ่ายงาน - (Pending)</h4>		</div>
+<div class="col"><div class="float-right"><input type="submit" value="จ่ายงาน" class="btn btn-success" ></div></div>
+</div>
 <%
 v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+m_v_cols = {}
+m_v_cols['status'] = 'สถานะงาน'
+m_v_cols['hn'] = 'รหัสผู้ป่วย'
+m_v_cols['patient'] = 'ผู้ป่วย'
+m_v_cols['appointed_at'] = 'วันที่จ่ายงาน'
+m_v_cols['date'] = 'วันที่นัด'
+m_v_cols['hospital_id'] = 'โรงพยาบาล'
+m_v_cols['officer_id'] = 'เจ้าหน้าที่ออกตรวจ'
+m_status = {}
+m_status['Pending']='รอจ่ายงาน'
+m_status['Accepted']='จ่ายงานแล้ว'
+m_status['Completed']='เสร็จสิ้น'
 t_data = pending_visits
 %>
 <div class="div-datatable">
@@ -84,7 +99,7 @@ t_data = pending_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -92,12 +107,14 @@ t_data = pending_visits
 <%	
 	for row in t_data 
 		patient = Patient.find(row.patient_id)
+		phn = ''
+		pname = ''
 		if patient
-			phn = ''
-			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if patient and patient.hn
 				pname = patient.to_s if patient
+				
 			end		
 %>
 <tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
@@ -122,10 +139,12 @@ t_data = pending_visits
 				bclass = "b-officer"
 			end
 			
-
-		out = "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
-
+		if c=='status'
+		out = "<a href='../SHVisit/destroy?id=#{row.id}&return=../Home/index' class='btn btn-danger btn-sm'>ลบ</a> " 
+		out += "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" 
+		end
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
@@ -149,7 +168,7 @@ t_data = pending_visits
 </tbody>
 </table>
 </div>	
-	<input type="submit" value="จ่ายงาน" class="btn btn-success" >
+	
 		
 </form>
 <br/>
@@ -164,7 +183,7 @@ t_data = accepted_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -175,6 +194,7 @@ t_data = accepted_visits
 		if patient
 			phn = ''
 			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if patient and patient.hn
 				pname = patient.to_s if patient
@@ -203,9 +223,10 @@ t_data = accepted_visits
 			end
 			
 		
-		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
 
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
@@ -237,7 +258,7 @@ t_data = completed_visits
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
 <% end %>
 </tr>
 </thead>
@@ -248,6 +269,7 @@ t_data = completed_visits
 		if patient
 			phn = ''
 			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
 			if patient
 				phn = patient.hn if  patient.hn
 				pname = patient.to_s 
@@ -276,9 +298,10 @@ t_data = completed_visits
 			end
 			
 			
-		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{row.status}</span>" if c=='status'
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
 
 		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
 		out = pname if c=='patient'
 
 		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
@@ -308,7 +331,7 @@ t_data = completed_visits
 	<div class="col">
 	ค้นหา <input type='text' id="search-off">
 	</div>
-	<div class="col"></div>
+	<div class="col"><%=link_to("เพิ่มเจ้าหน้าที่", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%></div>
 </div>	  
 	  	<%
 	  		
@@ -319,13 +342,19 @@ t_data = completed_visits
 	  	%>
 <%
 v_cols = %w{  provider provider_type phone user action}
+m_v_cols = {}
+m_v_cols['provider']='ชื่อ-สกุล'
+m_v_cols['provider_type']='สิทธิ์ใช้งาน'
+m_v_cols['phone']='โทร'
+m_v_cols['user']='รหัสผู้ใช้'
+m_v_cols['action']=''
 t_data = list
 %>
 <table class="table" >
 <thead>
 <tr>
 <% for c in v_cols %>
-<th><%=c.humanize%></th>
+<th><%#=c.humanize%><%=m_v_cols[c]%></th>
 <% end %>
 </tr>
 </thead>
@@ -347,7 +376,7 @@ t_data = list
 	
 		out = row.user.login if c=='user' and row.user
 		
-		out = link_to("Edit", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("Del", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
+		out = link_to("แก้ไข", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
 		
 %>
 <td><%=out%></td>
@@ -362,7 +391,7 @@ t_data = list
 		<% end %>
 		
 		
-		<%=link_to("เพิ่ม", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%>
+		
 		
 		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_network.id.to_s}", :class=>'btn')%>
 		

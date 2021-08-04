@@ -1,4 +1,4 @@
-<%=inline(this,:'_init')%>
+<%=inline(this,:'_init')%><br/>
 <%
 	
 @record = nil
@@ -108,14 +108,14 @@ if request.post?
 	
 %>
 Updating..
-<%# <META HTTP-EQUIV="Refresh" CONTENT="0;URL=index?tab=network"> %>
+ <META HTTP-EQUIV="Refresh" CONTENT="0;URL=index?tab=network"> 
 <% else %>
 
 
 รพ.เครือข่ายของ <%=hospital.name if hospital%>
 <form action="network_edit" method="post">
 <%=inline(this,:'_network_create_form')%>
-<input id="btn-submit" type="submit" value="Submit" class="btn btn-primary"/>
+<input id="btn-submit" type="submit" value="แก้ไข" class="btn btn-primary"/>
 <a id="btn-dis" class="btn btn-primary disabled" href="#">Submit</a>
 <a class="btn btn-secondary" href="#">ย้อนกลับ</a>
 </form>

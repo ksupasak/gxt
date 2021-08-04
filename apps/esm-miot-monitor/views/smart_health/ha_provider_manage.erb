@@ -51,6 +51,19 @@ if request.post?
  	if params[:user]
 		
 		user = User.find params[:user_id]
+
+		role = 'hospital'
+		role = 'hospital_admin' if params[:record][:provider_type] == 'admin'
+		role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
+		role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
+		hospital_role = Role.where(:name=>role).first
+
+		unless hospital_role
+			
+			hospital_role = Role.create :name=>role
+			
+		end
+		params[:user][:role_id] = hospital_role.id
 		
 		if user 
 			
@@ -62,25 +75,8 @@ if request.post?
 			end
 			
 		
-		
 		else
-			
-			role = 'hospital'
-			role = 'hospital_admin' if params[:record][:provider_type] == 'admin'
-			role = 'hospital_operator' if params[:record][:provider_type] == 'operator'
-			role = 'hospital_terminal' if params[:record][:provider_type] == 'terminal'
-			
-			
-			
-			
-			hospital_role = Role.where(:name=>role).first
-			
-			unless hospital_role
 				
-				hospital_role = Role.create :name=>role
-				
-			end
-			params[:user][:role_id] = hospital_role.id
 			user = User.create params[:user]
 			
 			
@@ -120,7 +116,9 @@ Updating..
 <%=inline(this,:'_ha_provider_form')%>
 
 
-<input type="submit" value="Submit" class="btn btn-primary"/>
+
+<input id="btn-submit" type="submit" value="ดำเนินการ" class="btn btn-primary"/>
+<a id="btn-dis" class="btn btn-primary disabled" href="#">ดำเนินการ</a>
 <a class="btn btn-secondary" href="index">ย้อนกลับ</a>
 </form>
 <% end %>

@@ -1,0 +1,154 @@
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<style>
+.data-panel{
+    background:white;
+    min-height:70vh;
+    margin-left:5vw;
+    margin-right:5vw;
+    box-shadow: 0px 3px 6px #00002950;
+
+}
+.step{
+    font-size:3vh;
+}
+#div-patient{
+    height:80vh;
+    max-height:80vh;
+    overflow:auto;
+}
+
+.citem{
+    border-radius:5px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow: 0px 3px 6px #588fd829 ;
+    min-height:30vh;
+    
+}    
+.vitem{
+    font-size:0.8em;
+}
+.p-pic{
+    font-size:10vh;
+    color:grey;
+}
+.p-name{
+    font-size:5vh;
+    vertical-align:center;
+}
+.bg-panel{
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.5" x="0" y="0" width="1000" height="1000"/></svg>');
+}
+.bg-panel:hover{
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.8" x="0" y="0" width="1000" height="1000"/></svg>');
+}
+
+.bg-gd1{
+    background: #ffe7ea;  ล
+    background: -webkit-linear-gradient(to bottom, #ffe7ea, #ffb6d4);  
+    background: linear-gradient(to bottom, #ffe7ea, #ffb6d4); 
+     min-height:30vh;
+}
+.bg-gd2{
+    background: #FBD6E3;  
+    background: -webkit-linear-gradient(to bottom, #FBD6E3, #A9EDE9);  
+    background: linear-gradient(to bottom, #FBD6E3, #A9EDE9); 
+    min-height:30vh;
+    
+}
+.covid-header{
+    text-align:center;
+    
+}
+</style>
+<div class="containerx" style="background:none">
+<div class="row">
+<div class="col-12 d-flex ">
+<center>
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"  >
+      <!-- <li class="nav-item">
+        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
+      </li>	 -->
+      <li class="nav-item">
+	    <a class="nav-link  active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">ข้อมูลการตรวจ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a href="./field_hospital" class="nav-link " id="pills-profile-tab"  aria-controls="pills-profile" aria-selected="false">คำแนะนำการรักษา</a>
+	  </li>
+
+	</ul>
+</center> 
+</div>
+</div>
+
+<div id="div-patient" class="row regis  bg-gd1  justify-content-md-center">
+
+    <div class="col-12 covid-header pt-3"><h3><i class="fas fa-home"></i> COVID-19 Home Care</h3></div>
+    <div class="col-md">
+        <div class="citem bg-panel">
+            <span class="p-pic"><i class="fas fa-user-circle"></i></span>
+            <span class="p-name">อาโก </span>
+            <div class="vitem">
+                <div class="row">
+                <div class="col-7">สถานะ :</div><div class="col-5"> COVID-19<span style="color:red"><i class="fas fa-frown"></i></span></div>
+                <div class="col-7">ออกซิเจนในเลือด :</div><div class="col-5"> 90</div>
+                <div class="col-7">อัตราการเต้นของหัวใจ :</div><div class="col-5"> 88</div>
+                <div class="col-7">ค่าความดัน :</div><div class="col-5"> 120/80</div>
+                <div class="col-7">วัดอุณหภูมิ :</div><div class="col-5"> 38</div>
+                </div>
+            </div>
+            <a href="#" class="btn btn-pcm">ตรวจ</a>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="citem bg-panel">
+            <span class="p-pic"><i class="fas fa-user-circle"></i></span>
+            <span class="p-name">คุณพ่อ </span>
+            
+            <div class="vitem">
+                <div class="row">
+                <div class="col-7">สถานะ :</div><div class="col-5"> ปกติ<span style="color:green"><i class="fas fa-smile"></i></span></div>
+                <div class="col-7">ออกซิเจนในเลือด :</div><div class="col-5"> 99</div>
+                <div class="col-7">อัตราการเต้นของหัวใจ :</div><div class="col-5"> 80</div>
+                <div class="col-7">ค่าความดัน :</div><div class="col-5"> 110/70</div>
+                <div class="col-7">วัดอุณหภูมิ :</div><div class="col-5"> 36.5</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="citem bg-panel">
+            <span class="p-pic"><i class="fas fa-user-circle"></i></span>
+            <span class="p-name">คุณแม่ </span>
+        
+            <div class="vitem">
+                <div class="row">
+                <div class="col-7">สถานะ :</div><div class="col-5"> ปกติ<span style="color:orange"><i class="fas fa-question-circle"></i></div>
+                <div class="col-7">ออกซิเจนในเลือด :</div><div class="col-5"> -</div>
+                <div class="col-7">อัตราการเต้นของหัวใจ :</div><div class="col-5"> -</div>
+                <div class="col-7">ค่าความดัน :</div><div class="col-5"> -</div>
+                <div class="col-7">วัดอุณหภูมิ :</div><div class="col-5"> -</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="citem bg-panel" style="text-align:center">
+        เพิ่มสมาชิกครอบครัว
+        <br><div style="color:grey;font-size:10vh" class="pt-3"><i class="fas fa-plus-circle"></i></div>
+        </div>
+    </div>
+  
+</div><!--regis-->
+
+
+
+
+
+
+</div><!--container-->

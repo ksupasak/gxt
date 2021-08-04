@@ -45,20 +45,24 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
   
 	<%
 
-	list = %w{admin doctor nurse officer operator}
-		
+	list = %w{admin doctor nurse  operator officer}
+	llist = %w{ผู้ดูแลระบบ แพทย์ พยาบาล เจ้าหน้าที่ เจ้าหน้าที่ออกตรวจ }
+	
+	lists = []
+	
+	list.each_with_index do |i,j|
+		lists << [i,llist[j]]
+	end
 	%>
 	
 <div class="col-sm-4">	
   <div class="form-group">
-    <label for=""><span class="mand">*</span> Provider Type</label>
+    <label for="" style="width:150px"><span class="mand">*</span> สิทธิ์ใช้งาน</label>
 	
 	<select id="record-user" name="record[provider_type]" class="form-control" value="<%=@record['provider_type']%>">
 	  <option value="" %></option>
 
-	<% for j in list.collect{|k| 
-		[k,k]
-	}
+	<% for j in lists
 		%>
 	  <option value="<%=j[0]%>" <%="selected" if @record['provider_type']==j[0] %>><%=j[1]%></option>
 	<% end %>
@@ -86,7 +90,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 	%>
 <div class="col-sm-4">
   <div class="form-group">
-    <label for="">Hospital by <%=@current_role.humanize%></label>
+    <label for="">โรงพยาบาลเครือข่าย</label>
 	
 	<select id="record-user" name="record[network_id]" class="form-control" value="<%=@record['network_id']%>">
 	 <% if list.size > 1%>
@@ -109,7 +113,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
   <div class="form-group">
 	  
-  <label for="user-login"><span class="mand">*</span> User Login</label>
+  <label for="user-login" style="width:230px"><span class="mand">*</span> User Login รหัสผู้ใช้งาน</label>
 	
   <input id="user_login" name="user[login]" class="form-control" value="<%=user.login%>">
 
@@ -119,7 +123,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
   <div class="form-group">
 	  
-  <label for="">Password</label>
+  <label for="">Password รหัสผ่าน</label>
 	
   <input id="password" name="password" type="password" class="form-control" value="">
 
@@ -129,7 +133,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
   <div class="form-group">
 	  
-  <label for="">Password Confirm</label>
+  <label for="">Password Confirm ยืนยันรหัสผ่าน</label>
 	
   <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" value="">
 
@@ -144,7 +148,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-name"><span class="mand">*</span> Provider Name</label>
+<label for="provider-name"><span class="mand">*</span> ชื่อ เจ้าหน้าที่</label>
 	
 <input id="provider_name" name="provider[name]" class="form-control" value="<%=provider.name%>">
 
@@ -153,7 +157,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-department">Provider Department</label>
+<label for="provider-department">แผนก</label>
 	
 <input name="provider[department]" class="form-control" value="<%=provider.department%>">
 
@@ -162,7 +166,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-license">Provider License</label>
+<label for="provider-license">เลขที่ใบอนุญาต</label>
 	
 <input name="provider[license]" class="form-control" value="<%=provider.license%>">
 
@@ -171,7 +175,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-phone">Provider Phone</label>
+<label for="provider-phone">หมายเลขโทรศัพท์</label>
 	
 <input name="provider[phone]" class="form-control" value="<%=provider.phone%>">
 
@@ -180,7 +184,7 @@ background: linear-gradient(to right, #CFDEF3, #E0EAFC); /* W3C, IE 10+/ Edge, F
 <div class="col-sm-4">
 <div class="form-group">
 	  
-<label for="provider-email">Provider Email</label>
+<label for="provider-email">อีเมล</label>
 	
 <input name="provider[email]" class="form-control" value="<%=provider.email%>">
 
@@ -214,21 +218,25 @@ function check_user(){
 			isValid = data.trim()
 			//alert(isValid)
 			if(isValid!=='true'){
-				alert('User Login "'+u+'" is already exist!')
+				//alert('User Login "'+u+'" is already exist!')
+				alert('มีชื่อเข้าสู่ระบบ "'+u+'" นี้แล้วในระบบ กรุณาเลือกชื่ออื่น')
 				$("#user_login").val('')
 				$("#btn-submit").hide()
 				$("#btn-dis").show()
 			}
 		})
 	}else{
-		alert('User Login must not empty! ')
+		//alert('User Login must not empty! ')
+		alert('ชื่อเข้าสู่ระบบต้องไม่เป็นค่าว่าง')
 	}
 }
 function check_pass(){
 	p1 = $("#password").val()
 	p2 = $("#password_confirmation").val()
 	if(p2!==''&&p1!==p2){
-		alert('Password Confirm not correct!')
+		//alert('Password Confirm not correct!')
+		alert('ยืนยันรหัสผ่านไม่ถูกต้อง!')
+		$("#password_confirmation").val('')
 		$("#btn-submit").hide()
 		$("#btn-dis").show()
 	}else{
