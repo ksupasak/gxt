@@ -147,7 +147,8 @@
 		m_p_f = {}
 		m_p_t = {}
 		m_p_s = {}
-	
+		m_p_v = {}
+		m_p_r4 = {}
 		
 	    for p in patients
 	        a = Admit.where(:patient_id=>p.id).first
@@ -161,8 +162,16 @@
 				
 	        r = DataRecord.where(:admit_id=>a.id).last 
 	        m_p_r[p.id] = r if r
+
+			r_all = DataRecord.where(:admit_id=>a.id).all 
+			if r_all.size>0
+				m_p_r4[p.id] = r_all
+				m_p_r4[p.id] = r_all[r_all.size-5..r_all.size-1] if r_all.size>4
+			end
 		
-		
+			visit = SHVisit.where(:patient_id=>p.id).last
+			m_p_v[p.id] = visit.date if visit and visit.date
+
 			is_normal = true
 			
 			if r
@@ -218,6 +227,7 @@
 			end
 			
 		end	
+		patients = patients.sort{|a,b| t = 0 ; t = m_p_v[b.id]<=>m_p_v[a.id] if m_p_v[a.id] and m_p_v[b.id] ; t }
 				
 			
 		
@@ -237,6 +247,14 @@
 <th>HN</th>
 <th>ชื่อ-สกุล</th>
 <th>วัดครั้งแรก</th>
+<th>bp-1 วันเวลา</th>
+<th>bp-1 (mmHg)</th>
+<th>bp-2 วันเวลา</th>
+<th>bp-2 (mmHg)</th>
+<th>bp-3 วันเวลา</th>
+<th>bp-3 (mmHg)</th>
+<th>bp-4 วันเวลา</th>
+<th>bp-4 (mmHg)</th>
 <% sense_list[0..2].each_with_index do |i,ix| %>
 <th><%=i%><br/>(<%=sense_unit[ix]%>)</th>
 <% end %>
@@ -331,7 +349,6 @@
 </td>
 <td><%=link_to p.public_id, "show?id=#{a.id}" if p.public_id%>
 
-
 </td>
 <td><%=link_to p.hn , "show?id=#{a.id}"  if p.hn%></td>
 <td><%=p.prefix_name%><%=p.first_name%> <%=p.last_name%></td>
@@ -339,6 +356,35 @@
 <td><%=f.stamp.strftime("%d/%m/%y %H:%M") if f%><br/>
 	<%=((Time.now - f.stamp.to_datetime)/86400).to_i.to_s+" วัน" if f%>
 </td>
+<%
+bpd4 = []
+bpt4 = []
+bp4 = []
+for i in 0..3
+	bpd4 << ''
+	bpt4 << ''
+	bp4 << ''
+end
+bp4_all = m_p_r4[p.id]
+if bp4_all
+	bp4_all.each_with_index{|v,i|
+		if v.stamp
+			bpd4[i] = v.stamp.strftime("%d/%m/%y %H:%M") 
+			bpt4[i] = ((Time.now - v.stamp.to_datetime)/86400).to_i.to_s+" วัน" 
+		end
+		bp4[i] = v.bp if v.bp
+	}
+end
+%>
+<td><%=bpd4[0]%><br><%=bpt4[0]%></td>
+<td><%=bp4[0]%></td>
+<td><%=bpd4[1]%><br><%=bpt4[1]%></td>
+<td><%=bp4[1]%></td>
+<td><%=bpd4[2]%><br><%=bpt4[2]%></td>
+<td><%=bp4[2]%></td>
+<td><%=bpd4[3]%><br><%=bpt4[3]%></td>
+<td><%=bp4[3]%></td>
+
 <% for s in sense_list[0..2] %>
 <td><span style="<%=highlight_2[s.to_sym]%>"><%=f[s.to_sym] if f and f[s.to_sym]%></span> &nbsp; </td>
 <% end %>
