@@ -14,7 +14,7 @@
 </thead>
 <tbody>
 <%	
-	for i in this.model.all
+	for i in this.model.where({}).sort(:created_at=>-1).limit(30).all 
 %>
 <tr>
 	<% for j in keys %>

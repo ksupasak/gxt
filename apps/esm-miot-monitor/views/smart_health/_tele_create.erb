@@ -18,11 +18,26 @@ if params[:admit_id]
     # key :status, String  # New (Waiting), Accepted, Finished, Cancelled
 elsif params[:sender] and params[:receiver]
 
-	resource_id = "#{}#{rand(999999)}"
+	resource_id = "#{Time.now.strftime('%y%m%d')}#{rand(999999)}"
 	title = "#{User.find(params[:sender]).login} > #{User.find(params[:receiver]).login}"
+	
+	if conference = SHConference.where(:status=>{'$in'=>['New','Accepted']},:sender_user_id=> params[:sender], :sender_role=>@current_role, :receiver_user_id=>params[:receiver]).first
+	
+	else	
+	
 	conference = SHConference.create :status=>'New',:admit_id=>nil, :group_id=>nil , :sender_user_id=> params[:sender], :sender_role=>@current_role, :resource_id=>resource_id, :receiver_user_id=>params[:receiver], :title=>title, :schedule=>Time.now	
 	
-end
+	end
+	
+elsif params[:sender] and params[:receiver_role]
 
-%>
+	resource_id = "#{Time.now.strftime('%y%m%d')}#{rand(999999)}"
+	title = "#{User.find(params[:sender]).login} > #{params[:receiver_role]}"
+	conference = SHConference.create :status=>'New',:admit_id=>nil, :group_id=>nil , :sender_user_id=> params[:sender], :sender_role=>@current_role, :resource_id=>resource_id, :receiver_role=>params[:receiver_role], :title=>title, :schedule=>Time.now	
+		
+end
+if params[:format]=='json'
+	out = {:resourceId=>conference.resource_id,:cid=>conference.id}
+%><%=out.to_json%><%else%>
 <META HTTP-EQUIV="Refresh" CONTENT="0;URL=tele?resourceId=<%=conference.resource_id%>&cid=<%=conference.id%>">
+<% end %>

@@ -8,7 +8,13 @@
 		
 		patient = Patient.create :hn=>params[:hn] unless patient 
 		
-		admit = Admit.create :patient_id=>patient.id, :status=>'Discharged', :admit_stamp=>params[:datetime], :discharge_stamp=>params[:datetime]
+		admit = Admit.where(:patient_id=>patient.id, :status=>'Admitted').first
+		
+		unless admit 
+		
+			admit = Admit.create :patient_id=>patient.id, :status=>'Admitted', :admit_stamp=>params[:datetime]
+		
+		end
 		
 		bmi = 0 
 	
@@ -67,17 +73,49 @@
 		
 		px[:serial_number] = params[:device_id] if params[:device_id]
 		
+		a = <<LIST
+		emPatientSymptomsCL1 = หายใจไม่สะดวก, 
+		emPatientSymptomsCL2 = มีไข้ , 
+		emPatientSymptomsCL3 = ไอมาก , 
+		emPatientSymptomsCL4 = น้ำมูกไหล , 
+		emPatientSymptomsCL5 = เจ็บคอ , 
+		emPatientSymptomsCL6 = เมื่อยเนื้อเมื่อยตัว , 
+		emPatientSymptomsCL7 = ปวดศรีษะ , 
+		emPatientSymptomsCL8 = ท้องเสีย , 
+		emPatientSymptomsCL9 = ไม่ได้กลิ่น , 
+		emPatientSymptomsCL10 = ตาแดง , 
+		emPatientSymptomsCL11 = มีผื่น , 
+		emPatientSymptomsCL12 = ลิ้นไม่รับรส , 
+		emPatientSymptomsCL13 = หอบเหนื่อย , 
+		emPatientSymptomsCL14 = เจ็บหน้าอก
+LIST
+
+
+		a = a.split(",").collect{|i| i.strip.split("=").collect{|j| j.strip}}
+			
+		
+		for item in a
+			
+			px[item[0].to_sym] = params[item[0].to_sym] == 'true' 
+			
+		end
+		
+		px[:emPatientSymptomsOther] = params[:emPatientSymptomsOther]
+		
+		
 	
 	    ##############################################################
     
     
-	    his_post_opd_url = URI("http://#{Setting.get(:gateway,'localhost')}:9292/send")
+	    his_post_opd_url = URI("#{Setting.get(:gateway,'localhost')}/send")
 		
     
 	    ##############################################################
 
 	    url = his_post_opd_url
-    
+    	
+		puts px.inspect
+		
    
 	    error = false
 	    err_msg = "NA"
@@ -86,11 +124,14 @@
       
 
 	      http = Net::HTTP.new(url.host, url.port)
-	      http.read_timeout = 2 # seconds
+	      http.read_timeout = 5 # seconds
       
       
 	      request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json'})
-	      request.set_form_data(px)
+	      
+		  request.set_form_data(px)
+		  
+		  # request.body = px
         
       
 	      response = Net::HTTP.start(url.host, url.port,:open_timeout => 1, :read_timeout => 3) {|http| http.request(request)}

@@ -168,16 +168,17 @@
 		
 		
 		
-		$('.btn-primary').html('Loading')
-        $.post( "post", prepare() , function( data ) {         
-            data.inspect 
+		$('.btn-primary-x').html('Loading')
+        $.post( "fh_post", prepare() , function( data ) {   
+			      
+          	
 			
 			hn = $('.hn .v-entry').html().trim()
 			
             $("#beep").click()
             // 
-        $(".step").hide()
-        $(".step6").show()
+        	$(".step").hide()
+        	$(".step7").show()
 			setTimeout(function(){ window.location.replace("index");  }, 1000);
 			       
         });
@@ -210,6 +211,8 @@
 				$(".btn-entry").addClass("btn-opd").removeClass("btn-entry")
 				$('.btn-opd').unbind()
                 $('.btn-opd').click(submitEntry)
+                // $('.btn-opd').click(prepare)
+			
              
             // }
         }else{
@@ -274,7 +277,7 @@
 	}
 	var will_reset_hn = true;
 	$(document).keypress(function(e){
-		
+	
 	    if( event.which == 13 ) {
 	     getPatient();   
 		 will_reset_hn = true;
@@ -294,7 +297,7 @@
 				
 			}
 		
-			$('.patient_name').html('...')			 
+			// $('.patient_name').html('...')		
 	        v = $(".hn  .v-entry").html().trim()
     		 
 			v+=String.fromCharCode(e.keyCode)
@@ -389,10 +392,12 @@
 	    $(document).ready(function(){
 		
 			var current_modal ;
-
+				
 	        $(".v-entry-hn").click(function(){
+			
 	            v = $(".hn .v-entry").html().trim()
-	            if(v=='-')v = '' 
+			
+	            if(v=='....')v = '' 
 				$(".display-hn").html(v)
 			
 				current_modal = $(this).attr('name')
@@ -401,15 +406,14 @@
 	            $("#opdModal").modal('toggle')
 	        })
 	        $(".v-entry").click(function(){
-				
-				
+			
 				if($(this).hasClass('v-null')) return;
 					
 				
 					
 	            v = $(this).html().trim()
 				console.log(v)
-	            if(v=='-')v = '' 
+	            if(v=='-'||v=='....')v = '' 
 				$(".display-hn").html(v)
 			
 				current_modal = $(this).attr('name')
@@ -534,13 +538,37 @@
 				score = $(this).html().trim();
 			})
 		
-		
+			
 			bp = ""+bp_sys+"/"+bp_dia
 		
 		
 		
 		
 		 	data = { hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+			
+			
+			
+			$('#emPatientSymptomsOther').each(function(){
+				data['emPatientSymptomsOther'] = $(this).val()
+				
+			})
+			
+	
+	     $('.cos').each(function(){
+	     	
+			id = $(this).attr("id")
+			select = $(this).attr('select')
+			
+			console.log(id+" "+select)
+			 
+			 data[id] = select
+			
+			
+	     })
+	
+	
+			
+			
 			return data
 	    }
 
@@ -629,33 +657,33 @@
 			
 		
 			
-		
+			// fix auto jump
 			
-			if(values['temp']==null){
-				state = 4;
-			}
-			
-			if(values['spo2']==null||values['pr']==null){
-				state = 3;
-			}
-			
-			if(values['bp_sys']==null||values['bp_dia']==null){
-				state = 2;
-			}
-			
-			if(values['temp']!=null&&values['bp_sys']!=null&&values['bp_dia']!=null&&values['spo2']!=null&&values['pr']!=null){
-				state = 5;
-			}
-			
-			var current_state = parseInt($("#hidstep").val());
-			
-			console.log(state)
-			if(state!=null&&current_state!=state){
-				jumpVarx = state
-				jumpVar = setTimeout(jumpVarfunc, 800);
-				
-
-			}
+			// if(values['temp']==null){
+// 				state = 4;
+// 			}
+//
+// 			if(values['spo2']==null||values['pr']==null){
+// 				state = 3;
+// 			}
+//
+// 			if(values['bp_sys']==null||values['bp_dia']==null){
+// 				state = 2;
+// 			}
+//
+// 			if(values['temp']!=null&&values['bp_sys']!=null&&values['bp_dia']!=null&&values['spo2']!=null&&values['pr']!=null){
+// 				state = 5;
+// 			}
+//
+// 			var current_state = parseInt($("#hidstep").val());
+//
+// 			console.log(state)
+// 			if(state!=null&&current_state!=state){
+// 				jumpVarx = state
+// 				jumpVar = setTimeout(jumpVarfunc, 800);
+//
+//
+// 			}
 			
 			
 		}

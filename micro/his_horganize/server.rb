@@ -3,6 +3,8 @@ require 'socket'
 require 'sinatra/base'
 require 'net/http'
 require 'nokogiri'
+require_relative 'config'
+
 set :bind, '0.0.0.0'
 set :port, 9292
 
@@ -230,13 +232,13 @@ CNX
     
     # his_post_opd_url = URI("http://xxxx/bloodpressure/obd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
     
-    his_post_opd_url = URI("http://localhost:9292/test_send?hn=#{hn}")
+    # his_post_opd_url = URI("http://localhost:9292/test_send?hn=#{hn}")
+    #
+    # his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
+    #
+    # his_post_opd_url = URI("https://api-covid.wisible.com/v2/addVitalSigns")
     
-    his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
-    
-    his_post_opd_url = URI("https://api-covid.wisible.com/v2/addVitalSigns")
-    
-    his_post_opd_url = URI("https://ped-shelter-parse-eir4oz44ca-uk.a.run.app/pedthai/vitalsign")
+    his_post_opd_url = URI(HIS_URI)
     
     
     # his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
@@ -248,7 +250,7 @@ CNX
     # else
     # his_post_opd_url = URI("http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}")
     # end
-    puts 'yyyy'
+
     puts his_post_opd_url
    # http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=111&systolic=222&diastolic=333&pulse=444&weight=555&height=666&waist=777
     
@@ -263,12 +265,6 @@ CNX
     begin
    
       
-      # uri = URI.parse(encoded_url)
-   #      http = Net::HTTP.new(uri.host, uri.port)
-   #      http.use_ssl = true if uri.instance_of? URI::HTTPS
-   #      request = Net::HTTP::Post.new(uri.request_uri)
-      
-   
    
    
    
@@ -277,25 +273,14 @@ CNX
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
       
-      # --header 'Content-Type:application/json' --header 'Accept:application/json'
-      # puts url.path
-      # puts url.full_path
-      # puts "#{url.path}?#{url.query}"
-      
-  
-     
 
-      # request = Net::HTTP::Post.new(uri.path, request_header)
+      
+      # {"hospitalId"=>"pRFrbayEb9", "hospitalNumber"=>"88888888", "datetime"=>"05/08/2021 08:37:42 (DD/MM/YYYY HH:mm:ss)", "round"=>"0", "temperature"=>35.4, "respirationPulse"=>0, "pulse"=>80, "systolicBloodPressure"=>120, "diastolicBloodPressure"=>80, "oxygenSaturation"=>99, "oxygenSaturationAfterTest"=>99}
+  #     RESPONSE {"success":true,"message":"success"}
       
       
-      # request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'Content-Type' =>'application/json', 'Accept'=>'application/json'})
- 
- 
-      # request = Net::HTTP::Post.new("#{url.path}?#{url.query}", initheader = {'x-api-key'=>'DCTIoTCovid19','Content-Type' =>'application/json'})
-    
-      
-      api_key = 'd74881c2-20cb-49ae-872b-afa6bce2f139'
-      hospital_id = 'pRFrbayEb9'
+      api_key = API_KEY
+      hospital_id = HOSPITAL_ID
       
       
       request = Net::HTTP::Post.new(url, {'x-api-key'=>api_key,'Content-Type' =>'application/json'})
@@ -320,11 +305,11 @@ CNX
       pd['hospitalNumber'] = px['hn']
       pd['datetime'] = "#{px['date'].split("-").reverse.join("/")} #{px['time']} (DD/MM/YYYY HH:mm:ss)"
     
-      pd['round'] = "0"
+      # pd['round'] = "0"
       # pd['doci'] = "0"
       pd['temperature'] = px['temp'].to_f
-      pd['respirationPulse'] = px['rr'].to_i
       pd['pulse'] = px['pr'].to_i
+      pd['respirationPulse'] = px['rr'].to_i
       
       pd['systolicBloodPressure'] = px['bp_sys'].to_i
       pd['diastolicBloodPressure'] = px['bp_dia'].to_i
@@ -332,6 +317,31 @@ CNX
       pd['oxygenSaturation'] = px['spo2'].to_i
       pd['oxygenSaturationAfterTest'] = px['spo2'].to_i
       
+  		a = <<LIST
+  		emPatientSymptomsCL1 = หายใจไม่สะดวก, 
+  		emPatientSymptomsCL2 = มีไข้ , 
+  		emPatientSymptomsCL3 = ไอมาก , 
+  		emPatientSymptomsCL4 = น้ำมูกไหล , 
+  		emPatientSymptomsCL5 = เจ็บคอ , 
+  		emPatientSymptomsCL6 = เมื่อยเนื้อเมื่อยตัว , 
+  		emPatientSymptomsCL7 = ปวดศรีษะ , 
+  		emPatientSymptomsCL8 = ท้องเสีย , 
+  		emPatientSymptomsCL9 = ไม่ได้กลิ่น , 
+  		emPatientSymptomsCL10 = ตาแดง , 
+  		emPatientSymptomsCL11 = มีผื่น , 
+  		emPatientSymptomsCL12 = ลิ้นไม่รับรส , 
+  		emPatientSymptomsCL13 = หอบเหนื่อย , 
+  		emPatientSymptomsCL14 = เจ็บหน้าอก
+LIST
+
+
+  		a = a.split(",").collect{|i| i.strip.split("=").collect{|j| j.strip}}
+      
+  		for item in a
+			
+  			pd[item[0]] = px[item[0]] 
+			
+  		end
       
       
       # {

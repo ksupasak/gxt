@@ -1,6 +1,11 @@
 <%
-	
-conference = SHConference.find params[:cid]
+puts params.inspect 
+
+conference = SHConference.find params[:cid] if params[:cid]
+
+conference = SHConference.where(:resource_id=> params[:resourceId]).first if params[:resourceId]
+
+puts conference.inspect
 
 if params[:cmd] == 'finish'
 	

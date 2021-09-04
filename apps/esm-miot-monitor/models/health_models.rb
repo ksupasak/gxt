@@ -43,15 +43,21 @@ class SHAddressBook < GXTModel
         # find all network operator of sub network
         hlist = []
         
+        
+        
+        
+        
         for u in SHUserHospital.where(:hospital_id=>hospital.id).all
           
-          if u.id != user_hospital.id and ( u.provider_type=='operator' || u.provider_type == 'doctor' )
+          if u.id != user_hospital.id and ( u.provider_type=='operator' || u.provider_type == 'doctor' || u.provider_type == 'terminal' )
             
             us = User.find(u.user_id)  
             role = Role.find us.role_id
             udata = {:id=>u.user_id, :user=>us, :provider_type=>u.provider_type,:role=>role.name, :provider=>pmap[u.provider_id]}
             
              hlist << udata  
+             
+             
             
           end
           

@@ -60,9 +60,6 @@ if @current_user
 }
 
 </style>
-
-
-
 <div class="containerx" style="background:none">
 
 <div class="row banner-header justify-content-md-center" style="padding-bottom:20vh">
@@ -77,16 +74,16 @@ if @current_user
 
 <div class="row justify-content-md-center" style="margin-top:-20vh">
     <div class="data-panel col-md-10 col-11 rounded">
-        <input type="hidden" id="hidstep" value="5">
+        <input type="hidden" id="hidstep" value="1">
 		
-		<center class="entry hn  ">
-	   <div class="col-12  x-0 v-entry patient_name " label="HN" name="hn"  style="border:0px solid;font-size:1.5em;margin-top:10px" label="HN" name="patient">....</div>
+		<center class="entry">
+	   <div class="col-12  v-entry px-0 patient_name"  style="border:0px solid;font-size:1.5em;margin-top:10px" label="HN" name="patient"></div>
 	   	</center>
 	
         <div class="step step1 p-3">
         <center>
             1.กรุณาสแกนบาร์โค้ด
-          <div class="entry  hn-tmp" style="">
+          <div class="entry  hn" style="">
 			<div class="col-12  v-entry px-0 hn-value"  style="border:0px solid;" label="HN" name="hn">-</div>
 		</div>
           <!-- <div class="entry  hn" style="height:100px;font-size:0.5em">
@@ -141,7 +138,7 @@ if @current_user
 		
         <div class="step step5 p-3">
         <center>
-            ค่าสัญญาณชีพ
+            5.สรุปผลการวัดค่า
            <br/>    <br/>
 		   <div class="row " style="margin-bottom:10px">
 			   <div class="col-6">
@@ -199,8 +196,8 @@ if @current_user
 	<div class="row">
 		<div class="col-12">
         <div class="d-flex justify-content-center mt-5">
-            <a href="#" class="btn btn-lg btn-next btn-submit d-flex align-items-center justify-content-center ">
-                บันทึกอาการ
+            <a href="#" class="btn btn-lg btn-primary btn-submit d-flex align-items-center justify-content-center btn-opd">
+                บันทึก
             </a>
 
         </div>
@@ -232,157 +229,8 @@ if @current_user
         
 		
 		</center>
-        </div><!--step5.2-->
-		
-		
-	        <div class="step step6 p-3">
-	        <center>
-	            บันทึกอาการ
-	           <br/>    <br/>
-			  <style>
-				  .cos{
-					  font-size:1.2rem;
-					  margin-bottom:1rem;
-				  }
-				  .select{
-					  color:white;
-					  background:#37a69a;
-					  border:1px solid black;
-				  }
-				  </style>
-			   
-			​<div class="" style="font-size:1.5em">   
-				
-<%
-		
-a = <<LIST
-emPatientSymptomsCL1 = หายใจไม่สะดวก, 
-emPatientSymptomsCL2 = มีไข้ , 
-emPatientSymptomsCL3 = ไอมาก , 
-emPatientSymptomsCL4 = น้ำมูกไหล , 
-emPatientSymptomsCL5 = เจ็บคอ , 
-emPatientSymptomsCL6 = เมื่อยเนื้อเมื่อยตัว , 
-emPatientSymptomsCL7 = ปวดศรีษะ , 
-emPatientSymptomsCL8 = ท้องเสีย , 
-emPatientSymptomsCL9 = ไม่ได้กลิ่น , 
-emPatientSymptomsCL10 = ตาแดง , 
-emPatientSymptomsCL11 = มีผื่น , 
-emPatientSymptomsCL12 = ลิ้นไม่รับรส , 
-emPatientSymptomsCL13 = หอบเหนื่อย , 
-emPatientSymptomsCL14 = เจ็บหน้าอก
-LIST
-
-
-a = a.split(",").collect{|i| i.strip.split("=").collect{|j| j.strip}}
-	
-	
-%>				
-				
-			   
-			   
-			<div class="row " style="margin-bottom:10px">
-			   
-			<% for i in a %>
-			
-				<div class="col-4 x">
-					<a href="" class="btn cos" style="border:1px solid;" id="<%=i[0]%>" select="false"><%=i[1]%></a>
-				</div>
-				
-			<% end %>
-				
-				
-				
-			   
-			</div>
-			
-			<div class="row">
-			 
-			<div class="col-12">
-			<span style="font-size:2vh;text-align:left">อาการอื่น ๆ </span>
-		   	 <input type="text" name="otemPatientSymptomsOtherher" id="emPatientSymptomsOther" style="font-size:3vh;color:#666">
-		   	</div>
-		   
-			</div>
-			
-			
-			   
-			</div>
-			   
-			   
-		<script>
-			
-			$('.cos').click(function(e){
-				
-				checked = $(this).attr("select")
-				// alert(checked)
-				
-				if(checked=='true'){
-					
-					$(this).removeClass('select')
-					$(this).attr("select",'false')
-					
-					
-				}else{
-					
-					$(this).addClass('select')
-					$(this).attr("select",'true')
-					
-				}
-				
-				e.preventDefault();
-				
-				
-			})
-			
-			
-		</script>	
-			   
-			   
-			   
-			   
-			   
-		<% unless record %>
-		<div class="row">
-			<div class="col-12">
-	        <div class="d-flex justify-content-center mt-5">
-		
-	            <a href="#" class="btn btn-lg btn-primary-x btn-submit d-flex align-items-center justify-content-center btn-opd">
-	                บันทึก
-	            </a>
-
-	        </div>
-      
-			<%
-		
-			return_to = "show?id=#{admit.id if admit}"
-			return_to = params[:return] if params[:return]
-		
-			%>
-	        <a href="<%=return_to%>" class="d-flex justify-content-center">
-        
-	        </a>
-	        <a href="#" id="beep" style="display:none">beep</a>
-	        <a href="#" id="ready" style="display:none">ready</a>
-	        </div>
-		</div>
-
-		<% else %>
-		<div class="row">
-			<div class="col-12">
-	        <div class="d-flex justify-content-center mt-5">
-			<%= link_to 'ลบข้อมูล', "show_delete_record?id=#{params[:id]}&admit_id=#{params[:admit_id]}", :class=>'btn btn-danger' %>
-			</div>
-			</div>
-		</div>
-		<% end %>
-             
-        
-		
-			</center>
-	        </div><!--step5.2-->
-		
-		     
-        <div class="step step7 p-3">
+        </div><!--step5-->     
+        <div class="step step6 p-3">
         <center>
             ส่งผลตรวจร่างกายสำเร็จ
 			<br><!--<span style="color:green;font-size:30vh;"><i class="fas fa-check-circle"></i></span>-->
@@ -393,16 +241,7 @@ a = a.split(",").collect{|i| i.strip.split("=").collect{|j| j.strip}}
 </div>   
 
 <div class="row justify-content-center" style="padding-top:5vh;">
-	
- 	<div id="video-call-start" class="col-sm-4 col-6 ">
-	<a href="" class="make_call btn btn-warning">ติดต่อ</a>
-	</div>
-	
- 	<div id="video-call-end" class="col-sm-4 col-6" style="display:none">
-	<a href="" class="end_call btn btn-danger">วางสาย</a>
-	</div>
-    
-	<div id="div-back" class="col-sm-4 col-6 ">
+    <div id="div-back" class="col-sm-4 col-6 ">
 		<a href="#" class="btn btn-lg " id="btn-back">ย้อนกลับ</a>
 
    </div>
@@ -427,7 +266,7 @@ function backstep(){
 			$(".step"+i).slideDown()
 		}
 		$("#hidstep").val(i)
-		if(i==1||i==5){
+		if(i==1||i==6){
 			$("#div-back").hide()
 			$("#div-next").show()
 		}else if(i==5){
@@ -449,10 +288,10 @@ function gostep(step){
         $(".step").slideUp()
         $(".step"+i).slideDown()
         $("#hidstep").val(i)
-		if(i==1||i==7){
+		if(i==1||i==6){
 			$("#div-back").hide()
 			$("#div-next").show()
-		}else if(i==6){
+		}else if(i==5){
 			$("#div-next").hide()
 			$("#div-back").show()
 		}else{
@@ -472,10 +311,10 @@ function nextstep(){
         $(".step").slideUp()
         $(".step"+i).slideDown()
         $("#hidstep").val(i)
-		if(i==1||i==7){
+		if(i==1||i==6){
 			$("#div-back").hide()
 			$("#div-next").show()
-		}else if(i==6){
+		}else if(i==5){
 			$("#div-next").hide()
 			$("#div-back").show()
 		}else{
@@ -485,11 +324,6 @@ function nextstep(){
     }catch(e){}
 
 }
-
-$('.btn-next').click(function(){
-	gostep(6)
-})
-
 $(document).ready(function(){
     $("#btn-next").click(function(){
         nextstep()
@@ -498,90 +332,9 @@ $(document).ready(function(){
         backstep()
     })
     $(".step").hide()
-    $(".step5").show()
+    $(".step1").show()
 	$("#div-back").hide()
 })
 </script>
-
-
-<div class="video" style="display:none;position:absolute;top:0px;right:0px;width:30%;height:30%;border:1px solid ;z-index:100;background:black;color:gray">
-<iframe src="" class="video-panel" style="width:100%;height:100%" ></iframe>
-</div>
-
-
-<script>
-	
-	var called=false;
-	var cid="";
-	
-	
-	function make_call_create(){
-		$.ajax({
-		  url: "tele_create?sender=<%=@current_user.id%>&receiver_role=hospital_operator&format=json",
-		  context: document.body
-		}).done(function(data) {
-			
-			data =  JSON.parse(data)
-			cid = data['resourceId']
-			make_call(data['resourceId'])
-			
-			
-		});
-		
-		
-	}
-	
-	function make_call_end(){
-		$.ajax({
-		  url: "tele_update?resourceId="+cid+"&cmd=finish&format=json",
-		  context: document.body
-		}).done(function(data) {
-			
-			end_call(cid)
-			
-		});
-		
-		
-	}
-	
-	
-	
-	function make_call(resourceId){
-		cid = resourceId;
-	
-		$('.video').show();
-		$('.video-panel').attr("src","tele?resourceId="+resourceId)
-
-	    
-		$('#video-call-end').show();
-		$('#video-call-start').hide();
-	   
-		
-	}
-	
-	function end_call(resourceId){
-		if(called){
-		$('.video').hide();
-		$('.video-panel').attr("src","");
-		
-		
-		$('#video-call-start').show();
-		$('#video-call-end').hide();
-		}
-		
-	}
-	
-	$('.make_call').click(function(e){
-		make_call_create();
-		e.preventDefault();
-	})
-	
-	$('.end_call').click(function(e){
-		make_call_end();
-		e.preventDefault();
-	})
-	
-</script>
-
 
 <%=inline(this,:'_entry_partial')%>
