@@ -339,7 +339,7 @@ LIST
       
   		for item in a
 			
-  			pd[item[0]] = px[item[0]] 
+  			pd[item[0]] = px[item[0]]=='true' 
 			
   		end
       
