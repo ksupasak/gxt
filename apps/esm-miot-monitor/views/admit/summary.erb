@@ -87,6 +87,10 @@ print_area.close();
 <div id="printout">
 <h2>Patient Summary : <%=patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
 <hr/>
+
+<div class="row">
+
+<div class="col-4">
 <strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
 <strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
 <%
@@ -108,6 +112,21 @@ u = 'mins'
 	end
 %>
 <strong>Total time</strong> : <%=format("%0.2f",total) %> <%=u %> <br/>
+</div >
+
+<div class="col-4">
+<strong>BMI</strong> : <%=admit.bmi%><br/>
+<strong>Weight</strong> : <%=admit.weight%> kg<br/>
+<strong>Height</strong> : <%=admit.height%> cm<br/>
+<strong>Glucose</strong> : <%=admit.glucose%> mmol/L<br/>
+
+
+</div>
+
+</div >
+
+
+
 
 
 <%
