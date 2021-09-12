@@ -372,8 +372,91 @@ name = 'admit_stamp'
 </div>	
 </div>
 
+
+
+
+<%
+	
+name = 'weight'
+	
+%>
+<div class="col-3">
+<label for="product-name">Weight (kg)</label>
+<div>
+
+    <input type="text" class="form-control" id="record-weight" name="record[weight]" value="<%=@record.weight%>" placeholder="KG" style="">
+	
+</div>	
+</div>
+
+
+<%
+	
+name = 'height'
+	
+%>
+<div class="col-3">
+<label for="product-name">Height (cm)</label>
+<div>
+
+    <input type="text" class="form-control" id="record-height" name="record[height]" value="<%=@record.height%>" placeholder="CM" style="">
+	
+</div>	
+</div>
+
+<%
+	
+name = 'bmi'
+	
+%>
+<div class="col-3">
+<label for="product-name">BMI</label>
+<div>
+
+    <input type="text" class="form-control" id="record-bmi" name="record[bmi]" value="<%=@record.bmi%>" placeholder="" style="">
+	
+</div>	
+</div>
+<script>
+	function update_bmi(){
+		
+		weight = $('#record-weight').val()
+		height = $('#record-height').val()
+		if(parseFloat(weight)>0&&parseFloat(height)){
+			h = parseFloat(height)/100
+			bmi = parseFloat(weight)/h/h
+		 	$('#record-bmi').val(bmi.toFixed(2))
+		}
+	
+		
+		
+		
+	}
+	$('#record-height').change(function(){
+		update_bmi()
+	})
+	$('#record-weight').change(function(){
+		update_bmi()
+	})
+</script>
+
+<%
+	
+name = 'glucose'
+	
+%>
+<div class="col-3">
+<label for="product-name">Glucose mmol/L</label>
+<div>
+
+    <input type="text" class="form-control" id="record-glucose" name="record[glucose]" value="<%=@record.glucose%>" placeholder="mmol/L" style="">
+	
+</div>	
+</div>
+
 </div>
 </div>
+
 
 <%
 	

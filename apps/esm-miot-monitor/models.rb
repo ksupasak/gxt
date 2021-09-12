@@ -313,6 +313,9 @@ class Admit < GXTModel
   
   key :weight, Float
   key :height, Float
+  key :bmi, Float
+  
+  key :glucose, Integer
   
   key :status, String
   
@@ -545,6 +548,8 @@ class Patient  < GXTModel
   key :addr_present, String 
   key :parent, String 
   key :note, String 
+  
+  
   
   key :image_id, ObjectId
   

@@ -139,7 +139,17 @@
 	  		
 		if true #@current_hospital 
 			
-			list = SHUserHospital.order(:hospital_id=>1).all
+			
+			unless params[:unlimit]
+			
+			list = SHUserHospital.order(:hospital_id=>1, :created_at=>1).limit(50).all
+			
+			else
+			
+			list = SHUserHospital.order(:hospital_id=>1, :created_at=>1).all
+			
+			
+			end
 			
 	  	%>
 			
@@ -176,7 +186,16 @@
 	  		
 		if true #@current_hospital 
 			
-			list = SHUserNetwork.order(:network_id=>1).all
+			unless params[:unlimit]
+			
+			list = SHUserNetwork.order(:network_id=>1, :created_at=>1).limit(50).all
+			
+			else
+			
+			list = SHUserNetwork.order(:network_id=>1, :created_at=>1).all
+			
+			
+			end
 			
 	  	%>
 			
