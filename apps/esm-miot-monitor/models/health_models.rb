@@ -258,7 +258,7 @@ class SHAlert < GXTModel
       
 			if sense==:temp and temp = val.to_f and temp != 0 
 				
-				if temp <= 36.5
+				if temp < 35
 					 return [:temp, :low, temp]
 				elsif temp >=38
 					 return [:temp, :high, temp]
@@ -291,6 +291,96 @@ class SHAlert < GXTModel
       return nil
       
     end
+    
+    
+    
+    def self.vs_condition_sh sense, val
+      
+      
+			if sense==:temp and temp = val.to_f and temp != 0 
+				
+				if temp < 35
+					 return [:temp, :yellow, temp, "ค่าวัดไม่ถูกต้อง"]
+				elsif temp >37.5
+					 return [:temp, :red, temp, "อุภหภูมิสูง BT>37.5"]
+        elsif temp >=36.5 and temp <37.5
+				   return [:temp, :green, temp, "ปกติ"] 
+        end
+				
+      elsif sense==:pr and pr = val.to_i and pr != 0 
+				
+				if val < 85
+					return [:spo2, :green, val, "ปกติ"]
+        elsif val>=85 and val <=89
+					return [:spo2, :yellow, val, "เสี่ยง PR 85-89"]
+        elsif val >90 
+					return [:spo2, :red, val, "ผิดปกติ PR > 90"]  
+        end  
+        
+        
+      elsif sense == :rr and val = val.to_i and val != 0 
+				
+				if val >=12 and val <=18
+					return [:rr, :green, val, "ปกติ"]
+				elsif val >= 18
+					return [:rr, :red, val, "ผิดปกติ RR > 18"]
+				end
+				
+      elsif sense == :spo2 and val = val.to_i  and val != 0 
+				
+				if val < 90
+					return [:spo2, :red, val, "พร่องออกซิเจน"]
+        elsif val>=90 and val <=94
+					return [:spo2, :yellow, val, "เริ่มเกิดภาวะพร่องออกซิเจน"]
+        elsif val >94 
+					return [:spo2, :green, val, "ปกติ"]
+          
+        end  
+				
+      elsif sense == :glucose and val = val.to_i  and val != 0 
+				
+				if val < 100
+					return [:glucose, :green, val, "ปกติ"]
+        elsif val>=100 and val <=125
+					return [:glucose, :yellow, val, "เสี่ยงต่อเบาหวาน"]
+        elsif val >=126
+					return [:glucose, :red, val, "เป็นเบาหวาน"]
+          
+        end  
+				
+      elsif sense == :bmi and val = val.to_f and val != 0 
+				
+				if val < 18.5
+					return [:bmi, :yellow, val, "ผอม BMI < 18.5"]
+        elsif val>=18.5 and val <=22.9
+					return [:bmi, :green, val, "ปกติ"]
+        elsif val >22.9 and val <=24.9
+					return [:bmi, :yellow, val, "นน.เกิน"]
+        elsif val >24.9 and val <=29.9
+					return [:bmi, :orange, val, "โรคอ้วนระดับ 1"]
+        elsif val >30
+					return [:bmi, :red, val, "โรคอ้วนระดับ 2 "]
+         
+        end  
+				
+      elsif sense == :bp_sys and val = val.to_i  and val != 0 
+				
+				if val < 130
+					return [:bp_sys, :green, val, "ปกติ"]
+        elsif val>=130 and val <=139
+					return [:bp_sys, :yellow, val, "เสี่ยง"]
+        elsif val >=140
+					return [:bp_sys, :red, val, "ผิดปกติ"]
+          
+        end  
+				
+      end
+      
+      return nil
+      
+    end
+    
+    
     
     
 end
@@ -410,6 +500,7 @@ class SHVisit < GXTModel
   
   include Mongoid::Document
   
+  # visit_clinicname
   
   key :appoint_type, String # at hospital , at network order
   key :date, Time
@@ -443,6 +534,7 @@ class SHVisit < GXTModel
   key :completed_user, ObjectId # user
   key :complated_by, String # 1 : hospital , 2 : network , 3 : officer
 
+  key :clinic_name, String
 
   key :data_record_id, ObjectId # user
   #

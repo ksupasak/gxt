@@ -1,0 +1,355 @@
+<%
+	
+#
+# "dt0_token0==TOKEN
+# visit_id==VISIT ID(PK)
+# --
+# pat_hn==hn Ex:00001
+# pat_cid==เลข ปชช Ex:00001
+# pat_hos0mainid==รพ.หลัก Ex:10912
+# pat_hos0subid==รพ.รอง Ex:03064
+# ---
+# app_id==เลขที่นัด(จากที Import) ไม่ได้เก็บ
+# app_no==เลขที่นัดอ้างอิง Ex:03060
+# app_date==วันที่ทำนัด Ex:2021-05-31
+# ---
+# visit_date==วันที่นัด Ex:2021-06-11
+# visit_type==ประเภทนัด (1.รพช, 2:รพสต, 3:อสม) Def:3
+# visit_clinicname==clinic Ex:ความดัน
+# visit_note==หมายเหตุ Ex:ความดัน
+# --- ผลการตรวจ
+# res_bp0vdate==วันบันทึก
+# res_bp0vtime==เวลาบันทึก
+# res_bp0vvalue==ผลตรวจ
+# res_bp0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_bp1vdate==วันบันทึก
+# res_bp1vtime==เวลาบันทึก
+# res_bp1vvalue==ผลตรวจ
+# res_bp1vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_bp2vdate==วันบันทึก
+# res_bp2vtime==เวลาบันทึก
+# res_bp2vvalue==ผลตรวจ
+# res_bp2vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_bp3vdate==วันบันทึก
+# res_bp3vtime==เวลาบันทึก
+# res_bp3vvalue==ผลตรวจ
+# res_bp3vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_pr0vdate==วันบันทึก
+# res_pr0vtime==เวลาบันทึก
+# res_pr0vvalue==ผลตรวจ
+# res_pr0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_spo0vdate==วันบันทึก
+# res_spo0vtime==เวลาบันทึก
+# res_spo0vvalue==ผลตรวจ
+# res_spo0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_wet0vdate==วันบันทึก
+# res_wet0vtime==เวลาบันทึก
+# res_wet0vvalue==ผลตรวจ
+# res_wet0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_height0vdate==วันบันทึก
+# res_height0vtime==เวลาบันทึก
+# res_height0vvalue==ผลตรวจ
+# res_height0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_rr0vdate==วันบันทึก
+# res_rr0vtime==เวลาบันทึก
+# res_rr0vvalue==ผลตรวจ
+# res_rr0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+# res_glucose0vdate==วันบันทึก
+# res_glucose0vtime==เวลาบันทึก
+# res_glucose0vvalue==ผลตรวจ
+# res_glucose0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+#
+# "
+
+
+template = {  'pat_hn'=>:hn,
+        'pat_cid'=>:public_id,
+        'pat_nameatc'=>:prefix_name,
+        'pat_namefirst'=>:first_name,
+        'pat_namelast'=>:last_name,
+        'pat_bdate'=>:dob, 
+        'pat_gender'=>:gender,
+        'pat_pname'=>:contact_name,
+        'pat_ptel0'=>:contact_phone,
+        'pat_blood'=>:blood,
+        'pat_marr'=>:status,
+        'pat_occupat'=>:job,
+        'pat_race'=>:race,
+        'pat_nation'=>:nation,
+        'pat_religion'=>:religion,
+        'pat_pid'=>:passport,
+        'pat_add0'=>:addr,
+        'pat_add1'=>:addr_present,
+        'pat_note'=>:note	        }
+		
+		
+		
+	    # key :hospital_id, ObjectId
+ # 	    key :hospital_doctor_id, ObjectId
+ # 	    key :hospital_doctor_2_id, ObjectId
+ # 	    key :hospital_nurse_id, ObjectId
+ # 	    key :network_id, ObjectId
+ # 	    key :network_doctor_id, ObjectId
+ # 	    key :network_nurse_id, ObjectId
+ # 	    key :network_officer_id, ObjectId
+		
+		# {"pat_hn":"4567/45","pat_cid":"3840100269238","pat_nameatc":"นาย","pat_namefirst":"ศุภศักดิ์","pat_namelast":"กุลวงศือนันชัย","pat_bdate":"2021-09-28T00:00:00.000+07:00","pat_gender":"M","pat_pname":"ะำหะ","pat_ptel0":"0865443352","pat_blood":"O","pat_marr":"","pat_occupat":"","pat_race":"","pat_nation":"","pat_religion":"","pat_pid":"","pat_add0":"","pat_add1":"กดกดฟหกด","pat_note":null
+	
+	api_token = Setting.get :api_token
+	
+	
+    result = {:result=>"406 Error",:code=>406,:message=>"Not found parameter records"}
+
+if api_token == params[:token]
+	
+		records  = []
+	
+		
+		
+		patients = Patient.all
+		
+		
+		#
+		# "dt0_token0==TOKEN
+		# visit_id==VISIT ID(PK)
+
+		
+		admits = Admit.where(:patient_id=>{'$in'=>patients.collect{|i| i.id}}).all
+		
+		records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).all
+		
+		amap = {}
+		rmap = {}
+		map = {}
+		
+		for i in admits 
+		
+			amap[i.id] = i.patient_id		
+				
+		end
+		
+		for i in admits 
+			map[i.id] = i
+		end
+		
+		for i in records 
+			patient_id = amap[i.admit_id]
+			rmap[patient_id] = [] unless rmap[patient_id]
+			rmap[patient_id] <<	i
+				
+		end
+
+	
+
+		records = []
+
+
+		for p in patients 
+			
+			
+			rs = rmap[p.id]
+			
+			if rs
+			
+			relation = SHRelation.where(:patient_id=>p.id).first
+
+			if relation
+
+				# pat_hos0mainid==รพ.หลัก รหัส Ex:10912
+				# pat_hos0mainn==รพ.หลัก ชื่อ Ex:ชำนิ
+				# pat_hos0subid==รพ.รอง รหัส Ex:03064
+				# pat_hos0subn==รพ.รอง ชื่อ Ex:รพสต
+
+				hos = SHHospital.find relation.hospital_id
+
+			
+			
+			
+			for i in rs
+			
+				r = {}
+				
+				r['pat_hn'] = p.hn
+				r['pat_cid'] = p.public_id
+				r['pat_hos0mainid'] = p.hn
+				r['pat_hos0subid'] = p.hn
+				if hos
+					r['pat_hos0mainid'] = hos.code
+					r['pat_hos0mainn'] = hos.name
+				end
+				
+				admit = map[i.admit_id]
+				
+				visit = SHVisit.find(i.sh_visit_id)
+				
+				if visit 
+				
+					r['app_no'] = visit.app_no
+					r['app_date'] = visit.appointed_date.strftime("%Y-%m-%d")
+					
+					r['visit_type'] = visit.appoint_type
+					r['visit_clinicname'] = visit.clinic_name
+					
+				end
+				
+				r['visit_date'] = i.stamp.strftime("%Y-%m-%d")
+				r['visit_note'] = i.note
+				
+				list = %w{
+				res_bp_sys
+				res_bp_dia
+				res_bp_mean
+				res_pr
+				res_spo2
+				res_rr
+				res_temp
+				res_glucose
+				res_weight
+				res_height
+				res_bmi
+				
+				}
+				
+				for j in list
+					field = j.split("_")[1..-1].join("_")
+					
+					
+					res = SHAlert::vs_condition_sh field.to_sym, i[field]
+					
+				
+					r[j+"0value"] = i[field]
+					if res
+						r[j+"0status"] = res[1]
+						r[j+"0remark"] = res[-1]
+					end
+					r[j+"0date"] = i.stamp.strftime("%Y-%m-%d")
+					r[j+"0time"] = i.stamp.strftime("%H:%M")
+					
+				end
+					
+				# --
+				# pat_hn==hn Ex:00001
+				# pat_cid==เลข ปชช Ex:00001
+				# pat_hos0mainid==รพ.หลัก Ex:10912
+				# pat_hos0subid==รพ.รอง Ex:03064
+				# ---
+				# app_id==เลขที่นัด(จากที Import) ไม่ได้เก็บ
+				# app_no==เลขที่นัดอ้างอิง Ex:03060
+				# app_date==วันที่ทำนัด Ex:2021-05-31
+				# ---
+				# visit_date==วันที่นัด Ex:2021-06-11
+				# visit_type==ประเภทนัด (1.รพช, 2:รพสต, 3:อสม) Def:3
+				# visit_clinicname==clinic Ex:ความดัน
+				# visit_note==หมายเหตุ Ex:ความดัน
+				# --- ผลการตรวจ
+				# res_bp0vdate==วันบันทึก
+				# res_bp0vtime==เวลาบันทึก
+				# res_bp0vvalue==ผลตรวจ
+				# res_bp0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+				# res_bp1vdate==วันบันทึก
+				# res_bp1vtime==เวลาบันทึก
+				# res_bp1vvalue==ผลตรวจ
+				# res_bp1vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
+				# res_bp2vdate==วันบันทึก
+				# res_bp2vtime==เวลาบันทึก
+				# res_bp2vvalue==ผลตรวจ
+			
+				records <<  r
+			
+			
+			end
+			
+			end
+			
+			end
+		end
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		# for i in patients
+	#
+	# 		r = {}
+	#
+	# 		relation = SHRelation.where(:patient_id=>i.id).first
+	#
+	# 		if relation
+	#
+	# 			# pat_hos0mainid==รพ.หลัก รหัส Ex:10912
+	# 			# pat_hos0mainn==รพ.หลัก ชื่อ Ex:ชำนิ
+	# 			# pat_hos0subid==รพ.รอง รหัส Ex:03064
+	# 			# pat_hos0subn==รพ.รอง ชื่อ Ex:รพสต
+	#
+	# 			hos = SHHospital.find relation.hospital_id
+	#
+	# 			if hos
+	# 				r['pat_hos0mainid'] = hos.code
+	# 				r['pat_hos0mainn'] = hos.name
+	# 			end
+	#
+	# 			net = SHNetwork.find relation.network_id
+	#
+	# 			if net
+	# 				r['pat_hos0subid'] = net.code
+	# 				r['pat_hos0subn'] = net.name
+	# 			end
+	#
+	# 		end
+	#
+	# 		template.each_pair do |k,v|
+	#
+	# 			va = i[v]
+	#
+	# 			if v==:gender
+	#
+	# 				if va == 'M'
+	# 					va = 'ชาย'
+	# 				elsif va == 'F'
+	# 					va = 'หญิง'
+	# 				elsif va == nil
+	# 					va = ''
+	# 				end
+	#
+	# 			elsif v==:dob
+	#
+	# 				va = va.strftime("%Y-%m-%d") if va
+	#
+	# 			end
+	#
+	# 			r[k] = va
+	#
+	# 		end
+	#
+	#
+	#
+	# 		records << r
+	#
+	# 	end
+	
+
+		begin
+	        result = {:result=>"200 OK",:code=>200,:data=>records}
+        rescue Exception=>e
+            result = {:result=>"401 Error",:code=>401,:message=>e.to_s}
+        end
+    
+	
+else
+	result = {:result=>'403 Forbidden', :code=>403}
+end
+%>
+<%=result.to_json%>
+

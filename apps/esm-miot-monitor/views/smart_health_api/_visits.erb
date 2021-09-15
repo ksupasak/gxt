@@ -198,7 +198,7 @@
 					 visit_type = '3'
 					 visit_type = i['visit_type'] if i['visit_type']
 					 
-				     visit = SHVisit.create :status=>'Pending', :appoint_type=>visit_type, :date=>date, :appointed_date=>appointed_date , :patient_id=>patient.id, :hospital_id=>hospital_id, :network_id=>network_id, :app_no=>i['app_no'], :note=>i['visit_note']
+				     visit = SHVisit.create :status=>'Pending', :clinic_name=>i['visit_clinicname'], :appoint_type=>visit_type, :date=>date, :appointed_date=>appointed_date , :patient_id=>patient.id, :hospital_id=>hospital_id, :network_id=>network_id, :app_no=>i['app_no'], :note=>i['visit_note']
 					 
 				  	 datareturn << {:hn=>patient.hn,:cid=>patient.public_id, :app_no=>i['app_no'], :action=>'insert'}	
 					 
