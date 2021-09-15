@@ -1,65 +1,6 @@
 <%
 	
-#
-# "dt0_token0==TOKEN
-# visit_id==VISIT ID(PK)
-# --
-# pat_hn==hn Ex:00001
-# pat_cid==เลข ปชช Ex:00001
-# pat_hos0mainid==รพ.หลัก Ex:10912
-# pat_hos0subid==รพ.รอง Ex:03064
-# ---
-# app_id==เลขที่นัด(จากที Import) ไม่ได้เก็บ
-# app_no==เลขที่นัดอ้างอิง Ex:03060
-# app_date==วันที่ทำนัด Ex:2021-05-31
-# ---
-# visit_date==วันที่นัด Ex:2021-06-11
-# visit_type==ประเภทนัด (1.รพช, 2:รพสต, 3:อสม) Def:3
-# visit_clinicname==clinic Ex:ความดัน
-# visit_note==หมายเหตุ Ex:ความดัน
-# --- ผลการตรวจ
-# res_bp0vdate==วันบันทึก
-# res_bp0vtime==เวลาบันทึก
-# res_bp0vvalue==ผลตรวจ
-# res_bp0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_bp1vdate==วันบันทึก
-# res_bp1vtime==เวลาบันทึก
-# res_bp1vvalue==ผลตรวจ
-# res_bp1vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_bp2vdate==วันบันทึก
-# res_bp2vtime==เวลาบันทึก
-# res_bp2vvalue==ผลตรวจ
-# res_bp2vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_bp3vdate==วันบันทึก
-# res_bp3vtime==เวลาบันทึก
-# res_bp3vvalue==ผลตรวจ
-# res_bp3vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_pr0vdate==วันบันทึก
-# res_pr0vtime==เวลาบันทึก
-# res_pr0vvalue==ผลตรวจ
-# res_pr0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_spo0vdate==วันบันทึก
-# res_spo0vtime==เวลาบันทึก
-# res_spo0vvalue==ผลตรวจ
-# res_spo0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_wet0vdate==วันบันทึก
-# res_wet0vtime==เวลาบันทึก
-# res_wet0vvalue==ผลตรวจ
-# res_wet0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_height0vdate==วันบันทึก
-# res_height0vtime==เวลาบันทึก
-# res_height0vvalue==ผลตรวจ
-# res_height0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_rr0vdate==วันบันทึก
-# res_rr0vtime==เวลาบันทึก
-# res_rr0vvalue==ผลตรวจ
-# res_rr0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-# res_glucose0vdate==วันบันทึก
-# res_glucose0vtime==เวลาบันทึก
-# res_glucose0vvalue==ผลตรวจ
-# res_glucose0vsts0==สถานะ (1:ปกติ, 2:ผิดปกติ)
-#
-# "
+
 
 
 template = {  'pat_hn'=>:hn,
@@ -104,11 +45,18 @@ if api_token == params[:token]
 	
 		records  = []
 	
+		patients = []
 		
-		
+		unless params[:cid]
+			
+			
 		patients = Patient.all
 		
+		else
 		
+		patients = Patient.where(:public_id=>params[:cid]).all	
+			
+		end
 		#
 		# "dt0_token0==TOKEN
 		# visit_id==VISIT ID(PK)

@@ -67,8 +67,19 @@ template = {  'pat_hn'=>:hn,
 if api_token == params[:token]
 	
 		records  = []
+		
+		patients = []
 	
+		unless params[:cid]
+			
+			
 		patients = Patient.all
+		
+		else
+		
+		patients = Patient.where(:public_id=>params[:cid]).all	
+			
+		end
 		
 		for i in patients
 			
