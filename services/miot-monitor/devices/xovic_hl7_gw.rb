@@ -185,13 +185,15 @@ module Device
             name = last['name']#current_station.split.join("_")
             ref = last['hn']#current_hn
             
+            if data[:spo2] or data[:bp]
+            
             msg = <<MSG
 Data.Sensing device_id=#{name}
 #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
 MSG
             # puts msg
 
-            puts 'Start Sent Dataf '+msg
+            puts 'Start Sent Data '+msg
 
            
   
@@ -206,7 +208,7 @@ MSG
              
            end
            
-
+         end
         
          
           

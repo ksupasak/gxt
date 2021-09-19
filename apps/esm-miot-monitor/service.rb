@@ -959,15 +959,24 @@ MSG
               old = old.clone if old
               odata = settings.senses[name][station_name]
               odata = {} unless odata
-              
-              
+         
+           
               # mark history
               
-              if admit!=nil and (data['bp'] or data['pr'] or data['spo2'] or data['hr'])
+              if admit!=nil and (data['pr'] or data['spo2'] or data['hr'])
                 
                 odata['admit_id'] = admit.id
                 
                 now = Time.now
+                
+                unless data['bp']
+                  puts data.inspect 
+                  data['bp'] = odata['bp']
+                  data['bp_stamp'] = odata['bp_stamp']
+                end              
+                
+                data['bp_sys'], data['bp_dia'] = data['bp'].split("/") if data['bp'] and data['bp_sys'] == nil
+                
                 # core":0,"bp":"113/87","pr":114,"hr":114,"rr":18,"temp":37,"spo2":90,"bp_stamp":"133737","ref":"1234"}}}
                 record = {:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:hr=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
                 
@@ -976,6 +985,9 @@ MSG
                 odata['vs'] << record 
                 
                 if data['spot']
+                
+                  puts data
+                  
                   v = data
                   DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
               

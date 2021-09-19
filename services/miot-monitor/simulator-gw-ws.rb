@@ -209,7 +209,7 @@ MSG
      data = {}
 
 
-     data[:bp] = bp
+     data[:bp] = bp if bp
      data[:pr] = 60 + rand(60)
      data[:hr] = data[:pr]
      data[:rr] = 18 + rand(4)
@@ -234,13 +234,6 @@ MSG
      
      # puts data.inspect 
      
-     data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
-msg = <<MSG
-Data.Sensing device_id=#{name}
-#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
-MSG
-    # puts msg
-     ws.send(msg)
      
      
     
@@ -249,14 +242,33 @@ MSG
    
 
      if count%ls==0
-       bp_stamp = Time.now
+ 
 
-       bp = "#{100+rand(22)}/#{70+rand(20)}"
+       if count%2==0
+         bp = "#{100+rand(22)}/#{70+rand(20)}"
+         bp_stamp = Time.now
+       else
+         puts 'spot without bp'
+         bp = nil
+       end
        ls = 20+rand(10)
+       
+       data[:spot] = true
        puts "Data sent #{count} times + BP : #{bp}"
        
      end
     
+  
+  
+     data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+    # puts msg
+     ws.send(msg)
+  
+  
     
   end
   
