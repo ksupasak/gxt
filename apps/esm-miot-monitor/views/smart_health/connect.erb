@@ -163,7 +163,7 @@
 /*  height:60vh;*/
 }
 .human .col{
-    min-height:125px;
+    min-height:145px;
     /* padding-bottom:1vh; */
 }
 .v-entry,.n-entry{
@@ -176,7 +176,8 @@
 
 .noti {
 	float:right;
-	font-size:0.9em;
+	text-align:right;
+	font-size:0.7em;
 }
 
 .bmi-noti{
@@ -451,8 +452,16 @@
                         </div>
                         <div class="col mb-2 ">
                    		 	<div class="vital-card">
-                                <p>Pulse / SpO<sub>2</sub> <span class="noti pr-noti" ></span>&nbsp;<span class="noti spo2-noti" ></span></p>
-                          
+                                <p>Pulse / SpO<sub>2</sub> </p>
+		                <div class="row">
+		                    <div class="col-6">
+								 <span class="noti pr-noti" ></span>
+							</div>
+		                    <div class="col-6">
+								 <span class="noti spo2-noti" ></span>
+							</div>
+							
+						</div>
 				                <div class="row">
 				                    <div class="col-3">
 										<center>
@@ -491,7 +500,8 @@
 						
                         <div class="col mb-2 ">
 							<div class="vital-card">
-	                            <p>อัตราการหายใจ RR <span class="noti rr-noti" ></span></p>
+	                            <p>อัตราการหายใจ RR</p>
+								<div class="row"><div class="col-12"> <span class="noti rr-noti" style="" ></span></div></div>
 				                <div class="row">
 				                    <div class="col-3" style="text-align:center">
 				                        <center><img src="<%=url_for 'img/svg/respirate.svg'%>" width="40" ></center>
@@ -1292,7 +1302,7 @@
 						$('.spo2').addClass('noti-yellow')
 					}
 					if(x>=95){
-						$('.spo2-noti').html('SpO2 ปกติ&nbsp;')
+						$('.spo2-noti').html('SpO2 ปกติ')
 					}
 				}
 				if(v=='pr'){
@@ -1314,6 +1324,22 @@
 						$('.pr').addClass('noti-yellow')
 					}
 					if(x>=90){
+						$('.pr-noti').html('ผิดปกติ PR > 90')
+						$('.pr-noti').addClass('noti-red')
+						$('.pr').addClass('noti-red')
+					}
+					
+					
+					if(x<60){
+						$('.pr-noti').html('ผิดปกติ PR < 60')
+						$('.pr-noti').addClass('noti-yellow')
+						$('.pr').addClass('noti-yellow')
+						
+					}
+					if(x>=60&&x<=100){
+						$('.pr-noti').html('ปกติ')
+					}
+					if(x>100){
 						$('.pr-noti').html('ผิดปกติ PR > 90')
 						$('.pr-noti').addClass('noti-red')
 						$('.pr').addClass('noti-red')

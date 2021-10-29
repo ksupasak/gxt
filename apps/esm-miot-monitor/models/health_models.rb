@@ -308,8 +308,9 @@ class SHAlert < GXTModel
         end
 				
       elsif sense==:pr and pr = val.to_i and pr != 0 
-				
-				if val < 85
+				if val < 60 
+					return [:spo2, :yellow, val, "เสี่ยง PR < 60"]
+        elsif val >= 60 and val < 85
 					return [:spo2, :green, val, "ปกติ"]
         elsif val>=85 and val <=89
 					return [:spo2, :yellow, val, "เสี่ยง PR 85-89"]
@@ -365,14 +366,42 @@ class SHAlert < GXTModel
 				
       elsif sense == :bp_sys and val = val.to_i  and val != 0 
 				
-				if val < 130
+				if val < 120
 					return [:bp_sys, :green, val, "ปกติ"]
-        elsif val>=130 and val <=139
-					return [:bp_sys, :yellow, val, "เสี่ยง"]
-        elsif val >=140
-					return [:bp_sys, :red, val, "ผิดปกติ"]
+        elsif val>=120 and val <=139
+					return [:bp_sys, :yellow, val, "เสี่ยงความดันโลหิตสูง"]
+        elsif val >=140 and val <= 159
+					return [:bp_sys, :red, val, "ความดันสูงระดับที่ 1"]
+        elsif val >=160 and val <= 179
+					return [:bp_sys, :red, val, "ความดันสูงระดับที่ 2"]
+        elsif val >=180
+					return [:bp_sys, :red, val, "ความดันสูงระดับที่ 3"]
           
-        end  
+          
+        elsif sense == :bp_dia and val = val.to_i  and val != 0 
+				
+  				if val < 80
+  					return [:bp_dia, :green, val, "ปกติ"]
+          elsif val>=80 and val <=89
+  					return [:bp_dia, :yellow, val, "เสี่ยงความดันโลหิตสูง"]
+          elsif val >=90 and val <= 99
+  					return [:bp_dia, :red, val, "ความดันสูงระดับที่ 1"]
+          elsif val >=100 and val <= 109
+  					return [:bp_dia, :red, val, "ความดันสูงระดับที่ 2"]
+          elsif val >=110
+  					return [:bp_dia, :red, val, "ความดันสูงระดับที่ 3"]
+          
+          
+          end  
+           end  
+        # if val < 130
+        #   return [:bp_sys, :green, val, "ปกติ"]
+        #         elsif val>=130 and val <=139
+        #   return [:bp_sys, :yellow, val, "เสี่ยง"]
+        #         elsif val >=140
+        #   return [:bp_sys, :red, val, "ผิดปกติ"]
+        #
+        #         end
 				
       end
       
