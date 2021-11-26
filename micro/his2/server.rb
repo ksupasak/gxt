@@ -185,7 +185,7 @@ CNX
   # {"hn":"C3344","initial_name":"นาง","first_name":"ทัศนีย์","last_name":"ปิ่นปั่น","middle_name":"","initial_name_eng":"Mrs.","first_name_eng":"Tasanee","last_name_eng":"Pinpan","middle_name_eng":"","id_card_no":"3670300238028","nation_code":1,"nationality":"ไทย","dob":"1981-01-07","gender":"F","address":"270 โรงพยาบาลรามาธิบดี พระราม 6 ทุ่งพญาไท","amphur":"เขตราชเทวี","province":"กรุงเทพมหานคร","zipcode":"10400","tel_no":"","mobile_no":"089-1139055","email":"tpinpan@gmail.com","emergency_contact":"270 โรงพยาบาลรามาธิบดี พระราม 6 แขวง ทุ่งพญาไท เขต เขตราชเทวี จังหวัด กรุงเทพมหานคร ประเทศไทย","photo":"","encounters":[]}%
   
   
-  
+  puts obj.inspect 
 
   
   
@@ -255,9 +255,10 @@ CNX
     
     his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
     
-    # his_post_opd_url = URI("http://172.20.10.5:9292/test_send?hn=#{hn}")
+    his_post_opd_url = URI("https://cnmi-his.rama.mahidol.ac.th/apis/PTM/set_smart_vital_sign/")
     
-    
+    his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
+
     
     # if weight !="-" and height !="-" and weight != '0.0' and height != '0.0'
     # his_post_opd_url = URI("http://10.99.0.109/systemx-poc/medicaldevice/bloodpressure/opd2?hn=#{hn}&systolic=#{bp_sys}&diastolic=#{bp_dia}&pulse=#{pr}&height=#{height}&weight=#{weight}")
@@ -340,8 +341,8 @@ CNX
       
  
       request.set_form_data(px)
-      # puts px.to_json
-   #    request.body = px.to_json
+ #      puts px.to_json
+ #      request.body = px.to_json
     
       
       # response = Net::HTTP.start(url.host, url.port, :open_timeout => 5, :read_timeout => 10) {|http|
@@ -366,7 +367,9 @@ CNX
       err_msg = "Server Timeout!"
     end
     
+    return {:status=>"200 OK", :msg=>'SUCCESS'}.to_json
    
+
     if result['status'] == "200 OK"
       
       return {:status=>"200 OK", :msg=>'SUCCESS'}.to_json

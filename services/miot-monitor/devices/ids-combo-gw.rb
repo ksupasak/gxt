@@ -132,7 +132,7 @@ require 'nokogiri'
        
    device_id = get_device "10c4:ea60"
 
-   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
+   serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
     
     while true
     
