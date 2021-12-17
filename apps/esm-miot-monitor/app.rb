@@ -53,7 +53,21 @@ MSG
     
 end
 
+class EMSController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
 
+class UITemplateController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
   
 class TestController < GXT
 
