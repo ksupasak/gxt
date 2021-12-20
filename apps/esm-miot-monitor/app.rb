@@ -61,6 +61,17 @@ class EMSController < GXT
  
 end
 
+
+class EmsKMController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
 class UITemplateController < GXT
   
   def default_layout

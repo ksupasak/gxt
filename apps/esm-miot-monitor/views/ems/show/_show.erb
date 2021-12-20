@@ -91,7 +91,12 @@
 		<div class="tab-pane fade active show" id="requestcontent" role="tabpanel">
 			<p>
 				
-				<%= inline(this,:'_show_request')  %>
+				<%= inline(this,:'show/_request')  %><br/>
+
+				<%= inline(this,:'../lib/_ems')  %><br/>
+
+				<%= get_time %>
+
 				
 			</p>
 		</div>
@@ -101,7 +106,7 @@
 		
 		<p>
 			
-			<%= inline(this,:'_show_prearrival')  %>
+			<%= inline(this,:'show/_prearrival')  %>
 			
 		</p>
 		
@@ -114,7 +119,6 @@
 		
 		<p>
 			
-			<%= inline(this,:'_show_prearrival')  %> 1
 			
 		</p>
 		
@@ -126,7 +130,6 @@
 		
 		<p>
 			
-			<%= inline(this,:'_show_prearrival')  %> 2
 			
 		</p>
 		
@@ -138,7 +141,6 @@
 		
 		<p>
 			
-			<%= inline(this,:'_show_prearrival')  %> 3
 			
 		</p>
 		
@@ -150,7 +152,6 @@
 		
 		<p>
 			
-			<%= inline(this,:'_show_prearrival')  %> 4
 			
 		</p>
 		
