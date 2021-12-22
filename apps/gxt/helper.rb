@@ -513,3 +513,8 @@ end
 
 
 
+def get_path path
+
+	return "../#{params[:service].split("::")[-1].classify}/#{path}"
+
+end
