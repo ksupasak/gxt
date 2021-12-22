@@ -190,29 +190,3 @@
 </div>
 </div>
 
-
-<script>
-	
-	$(document).ready(function(){
-
-	$('*[data-remote="true"]').submit(function(e){
-		
-	    var form = $(this);
-	    var url = form.attr('action');
-		var id = form.attr('data-remote-update')
-    
-	       $.ajax({
-	              type: "POST",
-	              url: url,
-	              data: form.serialize(),
-	              success: function(data)
-	              {
-	                  $('#'+id).html(data)
-			      }
-	            });
-
-		e.preventDefault();
-		
-	})
-	})
-</script>	
