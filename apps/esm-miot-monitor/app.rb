@@ -61,6 +61,22 @@ class EMSController < GXT
  
 end
 
+class EmsRequestController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+class EmsPrearrivalController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
 
 class EmsKMController < GXT
   
