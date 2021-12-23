@@ -1,17 +1,75 @@
-<h1>Prearrival</h1>
+<h5><strong>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</strong></h5>
 
+<div class="col-12 col-lg-8 col-xl-8">
+  <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="prearrival_panel">
+    <div class="card-body p-0">
+      <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
+      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+      <datalist id="datalistOptions">
+        <option value="San Francisco">
+        </option><option value="New York">
+        </option><option value="Seattle">
+        </option><option value="Los Angeles">
+        </option><option value="Chicago">
+        </option></datalist>
+    </div>
 
-<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="prearrival_panel">
+    <br>
+    <div class="card radius-10 border shadow-none">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 ">1. สวัสดีค่ะ/ครับ โทรจากศูนย์กู้ชีพโรงพยาบาลจุฬาฯ 
+            ไม่ทราบว่าใช่เบอร์ที่โทรขอรถ 1669 หรือเปล่าคะ/ครับ</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card radius-10 border shadow-none">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 ">2. ขณะนี้ทีมแพทย์จุฬาฯ ได้รับแจ้งให้ออกรับผู้บาดเจ็บ/เจ็บป่วย ขณะนี้รถกำลังออกจาก รพ.นะคะ
+            ระหว่างนี้เจ้าหน้าที่จะขอซักประวัติเพิ่มเติม เพื่อจะได้เตรียมพร้อมในการรักษาผู้ป่วยนะคะ ซักประวัติเพิ่มเติม</p>
 
-<div class="input-group mb-3">
-<input type="text" class="form-control" name="username" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"> <span class="input-group-text" id="basic-addon2">@example.com</span>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="card radius-10  border shadow-none">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 ">2.1 เกิดเหตุอะไรขึ้น/ ผู้ป่วยมีอาการยังไงบ้าง/ ผู้ป่วยรู้สึกตัวหรือไม่</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="card radius-10 border shadow-none">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <p class="mb-0 ">2.2 หากญาติแจ้งว่าหมดสติ สอบถามเพิ่มเติมดังนี้</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <div class="input-group"> 
+		<textarea class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">บันทึก</button>
+    </div>
+
+  </form>
 </div>
 
-<input type="submit" name="create" value="create">
 
-</form>
-
+<div class="col-12 col-lg-4 col-xl-4">
+</div>
 <div id="prearrival_panel">
-result
+  result
 </div>
-
