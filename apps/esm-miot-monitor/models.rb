@@ -13,11 +13,13 @@ class User < GXTModel
  
   belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
   key :login, String
+  key :name, String
   key :salt,  String
   key :passcode, String
   key :pattern, String
   key :hashed_password,  String
   key :last_accessed, DateTime
+  key :picture_id, ObjectId
   key :role_id, ObjectId
   key :email, String
    include Mongoid::Timestamps
@@ -57,6 +59,15 @@ class User < GXTModel
   def self.encrypt(pass, salt)
     Digest::SHA1.hexdigest(pass+salt)
   end
+  
+  def get_name
+    
+    name = self.login
+    name = self.name if self.name and self.name.size>0 
+    
+    return name
+  end
+  
   
 end
 
