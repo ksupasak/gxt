@@ -78,6 +78,45 @@ class EmsPrearrivalController < GXT
  
 end
 
+
+
+class EmsCommandController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+class EmsOperationController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class EmsParamedicController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class EmsDischargeController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
 class EmsKMController < GXT
   
   def default_layout
