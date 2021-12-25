@@ -27,6 +27,13 @@ class EMSCase < GXTModel
   key :patient_hn, String
   key :patient_phone, String
   
+  
+  key :address, String
+  key :latlng, String
+  
+  key :note, String
+  
+  
       
   key :admit_id, ObjectId
   
