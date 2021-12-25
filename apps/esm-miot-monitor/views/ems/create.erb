@@ -1,4 +1,6 @@
 
+	
+	
 <script src="/rocker/assets/js/jquery.min.js"></script>
 <!--<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Components</div>
@@ -25,7 +27,7 @@
 					</div>
 				</div>-->
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-xl-2">
+<!-- <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2">
 	<div class="col">
 		<div class="card radius-10 border-start border-0 border-3 border-danger">
 		<div class="card-body">
@@ -55,9 +57,27 @@
 			</div>
 		</div>
 		</div>
-	</div>	
-</div>				
+	</div>
+</div>				 -->
 
+<!-- <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2">
+	<div class="col">
+		<div class="card radius-10 border-start border-0 border-3 border-danger">
+		<div class="card-body">
+			<div class="d-flex align-items-center">
+				<div>
+					<h4 class="my-1 ">EMS-64_____</h4>
+					<p class="mb-0 text-secondary">Patient info : </p>
+					<p class="mb-0 font-13">New Request</p>
+				</div>
+				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+
+</div>	 -->
 <div class="card">
 <div class="card-body">
 	<ul class="nav nav-tabs nav-primary" role="tablist">
@@ -66,11 +86,11 @@
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
 					</div>
-					<div class="tab-title">Request</div>
+					<div class="tab-title">New Request</div>
 				</div>
 			</a>
 		</li>
-		<li class="nav-item" role="presentation">
+		<!-- <li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#prearrivalcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
@@ -88,7 +108,7 @@
 				</div>
 			</a>
 		</li>
-		
+
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
@@ -98,7 +118,7 @@
 				</div>
 			</a>
 		</li>
-		
+
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
@@ -108,7 +128,7 @@
 				</div>
 			</a>
 		</li>
-		
+
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#dischargecontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
@@ -117,7 +137,7 @@
 					<div class="tab-title">Discharge</div>
 				</div>
 			</a>
-		</li>
+		</li> -->
 		
 		
 	</ul>
@@ -132,7 +152,7 @@
 				<script>
 					
 					$.ajax({
-					  url: "../EmsRequest/show",
+					  url: "../EmsRequest/create",
 					  context: document.body
 					}).done(function(html) {
 					
@@ -150,20 +170,7 @@
 		
 		<p>
 			
-		<div class="prearrival"></div>
-		<script>
-			
-			$.ajax({
-		    url: "../EmsPrearrival/show",
-			  context: document.body
-			}).done(function(html) {
-			
-			  $( '.prearrival' ).html(html);
-			});
-			
-			
-		</script>
-			
+		
 		</p>
 		
 		

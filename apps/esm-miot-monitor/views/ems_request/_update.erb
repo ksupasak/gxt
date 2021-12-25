@@ -1,0 +1,31 @@
+<% 
+
+	record = EMSCase.find params[:id]
+	
+	
+
+if request.post? 
+
+
+	
+if params[:record]
+
+	p = params[:record]
+	
+	patient_id = nil
+	patient = Patient.find p[:patient_id] if p[:patient_id]
+	
+	
+	patient_id = patient.id if patient 
+		
+	
+	record.update_attributes p
+	
+	
+end
+	
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=show?id=<%=record.id%>">Updated <%=Time.now%>
+<% end %>

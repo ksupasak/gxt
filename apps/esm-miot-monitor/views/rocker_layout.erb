@@ -3,6 +3,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--favicon-->
+	<script src="/rocker/assets/js/jquery.min.js"></script>
 	<link rel="icon" href="/rocker/assets/images/favicon-32x32.png" type="image/png">
 	<!--plugins-->
 	<link href="/rocker/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet">
@@ -22,6 +23,11 @@
 	<link rel="stylesheet" href="/rocker/assets/css/dark-theme.css">
 	<link rel="stylesheet" href="/rocker/assets/css/semi-dark.css">
 	<link rel="stylesheet" href="/rocker/assets/css/header-colors.css">
+	
+	
+		<%= inline(this,:'../lib/_ems')  %>
+	
+	
 	<title>EMS - Emergency medical services</title>
 <style type="text/css">/* Chart.js */
 @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
@@ -33,7 +39,7 @@
 	<!--wrapper-->
 	<div class="wrapper">
 		<!--sidebar wrapper -->
-		<div class="sidebar-wrapper" data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content mm-active" style="padding: 0px;">
+		<div class="sidebar-wrapper "   data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content mm-active" style="padding: 0px;">
 			<div class="sidebar-header">
 				<div>
 					<img src="/miot/img/svg/aoc-icon.svg" class="logo-icon" alt="logo icon" style="border-radius:5px">
@@ -45,59 +51,20 @@
 				</div>
 			</div>
 			<!--navigation-->
-			<ul class="metismenu mm-show" id="menu">
-				<li>
-					<a href="./index">
-						<div class="parent-icon"><i class="bx bx-home-circle"></i>
-						</div>
-						<div class="menu-title">Dashboard</div>
-					</a>
-				</li>
-				<li  class="btn">
-					<a href="./show">
-						<div class="menu-title"><i class="bx bx-plus"></i> New Request</div>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-support"></i>
-						</div>
-						<div class="menu-title">Operation</div>
-					</a>
-					<ul class="mm-show mm-collapse">
-						<li ><!--class="mm-active"--> <a href="./show?id=2"><i class="bx bx-right-arrow-alt"></i>EMS-64122202</a>
-						</li>
-						<li> <a href="./show?id=3"><i class="bx bx-right-arrow-alt"></i>EMS-64122203</a>
-						</li>
-						<li> <a href="./show?id=4"><i class="bx bx-right-arrow-alt"></i>EMS-64122204</a>
-						</li>
-						<li> <a href="./show?id=5"><i class="bx bx-right-arrow-alt"></i>EMS-64122205</a>
-						</li>
-					</ul>
-				</li>
-				<li class="menu-label">History</li>
-				<li>
-					<a href="widgets.html">
-						<div class="parent-icon"><i class="bx bx-calendar"></i>
-						</div>
-						<div class="menu-title">Today Operation</div>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-check-circle"></i>
-						</div>
-						<div class="menu-title">Today Completed</div>
-					</a>
-					<ul class="mm-collapse">
-						<li> <a href="./show?id=0"><i class="bx bx-right-arrow-alt"></i>EMS-64122200</a>
-						</li>
-						<li> <a href="./show?id=1"><i class="bx bx-right-arrow-alt"></i>EMS-64122201</a>
-						</li>
-					</ul>
-				</li>
-				
-			</ul>
+			<div class="nav-menu" >
+			</div>
+			<script>
+			$.ajax({
+		      url: "nav",
+			  context: document.body
+			}).done(function(html) {
+		
+			  $( '.nav-menu' ).html(html);
+			});
+			</script>
+			
+			
+			
 			<!--end navigation-->
 		</div></div></div></div><div class="simplebar-placeholder" style="width: auto; height: 1390px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 118px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div></div>
 		<!--end sidebar wrapper -->
@@ -589,7 +556,7 @@
 	<!-- Bootstrap JS -->
 	<script src="/rocker/assets/js/bootstrap.bundle.min.js"></script>
 	<!--plugins-->
-	<script src="/rocker/assets/js/jquery.min.js"></script>
+
 	<script src="/rocker/assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="/rocker/assets/plugins/metismenu/js/metisMenu.min.js"></script>
 	<script src="/rocker/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
