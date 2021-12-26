@@ -61,7 +61,7 @@ end
 <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
 <% fieldset(:record) do |f| %>	
 
-<%= inline(this,:'_form', :f=>f, :record=>@ems_case)  %>
+<%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case)  %>
 
 <% end %>
 <input type="submit" name="create" value="Create" class="btn btn-success">
