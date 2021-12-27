@@ -77,6 +77,70 @@ class EMSCaseCounter < GXTModel
       
 end
 
+class EMSKWorkflow < GXTModel
+  
+  include Mongoid::Document
+  
+  key :name, String
+  
+  key :code, String
+      
+end
+
+class EMSKProcess < GXTModel
+  
+  include Mongoid::Document
+  
+  key :name, String
+  
+  key :order, Float
+
+  key :kworkflow_id, ObjectId
+      
+end
+
+class EMSKAction < GXTModel
+  
+  include Mongoid::Document
+  
+  key :name, String
+
+  key :linkto, Float
+
+  key :kprocess_id, ObjectId
+        
+end
+
+class EMSCaseWorkflow < GXTModel
+  
+  include Mongoid::Document
+  
+  key :case_id, ObjectId
+  key :kworkflow_id, ObjectId
+      
+end
+
+class EMSCaseProcess < GXTModel
+  
+  include Mongoid::Document
+  
+  key :case_id, ObjectId
+  key :case_workflow_id, ObjectId
+  key :kprocess_id, ObjectId
+      
+end
+
+class EMSCaseAction < GXTModel
+  
+  include Mongoid::Document
+  
+  key :case_id, ObjectId
+  key :case_process_id, ObjectId
+  key :kaction_id, ObjectId
+  key :name, String
+
+        
+end
 
 class EMSCaseController < GXTDocument
   
@@ -86,6 +150,29 @@ class EMSCodeController < GXTDocument
   
 end
 
+
+class EMSCaseWorkflowController < GXTDocument
+  
 end
 
+class EMSCaseProcessController < GXTDocument
+  
+end
 
+class EMSCaseActionController < GXTDocument
+  
+end
+
+class EMSKWorkflowController < GXTDocument
+  
+end
+
+class EMSKProcessController < GXTDocument
+  
+end
+
+class EMSKActionController < GXTDocument
+  
+end
+
+end
