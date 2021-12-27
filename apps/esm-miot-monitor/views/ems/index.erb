@@ -1,67 +1,43 @@
+
 <div class="row row-cols-1 row-cols-md-4 row-cols-xl-4">
-	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-danger">
-		<div class="card-body">
-			<div class="d-flex align-items-center">
-				<div>
-					<h4 class="my-1 ">EMS-64122202</h4>
-					<p class="mb-0 text-secondary">ผู้ป่วย : นายทดสอบ หวงท่าไม้</p>
-					<p class="mb-0 font-13">Code : Red</p>
-				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
-				</div>
-			</div>
-		</div>
-		</div>
+	
+	
+	<% 
 		
+	cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).limit(4).all()
+	
+	
+	%>
+	<% for i in cases 
+	
+		code = EMSCode.find i.init_cbd_code 
 		
-	</div>
-	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-danger">
-		<div class="card-body">
-			<div class="d-flex align-items-center">
-				<div>
-					<h4 class="my-1 ">EMS-64122202</h4>
-					<p class="mb-0 text-secondary">Patient info</p>
-					<p class="mb-0 font-13">+2.5% from last week</p>
-				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
-				</div>
-			</div>
-		</div>
-		</div>
-	</div>
-	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-danger">
-		<div class="card-body">
-			<div class="d-flex align-items-center">
-				<div>
-					<h4 class="my-1 ">EMS-64122202</h4>
-					<p class="mb-0 text-secondary">Patient info</p>
-					<p class="mb-0 font-13">+2.5% from last week</p>
-				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
-				</div>
-			</div>
-		</div>
-		</div>
-	</div>
+	%>
+
+
 	
 	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-danger">
+		<a href="show?id=<%=i.id%>">
+		<div class="card radius-10 border-start border-0 border-3 border-<%= code.get_class %>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
-					<h4 class="my-1 ">EMS-64122202</h4>
-					<p class="mb-0 text-secondary">Patient info</p>
-					<p class="mb-0 font-13">+2.5% from last week</p>
+					<h4 class="my-1 ">EMS-<%=i.case_no%></h4>
+					<p class="mb-0 text-secondary">ผู้ป่วย : <%=i.patient_name%></p>
+					<p class="mb-0 font-13">Code : <%= code.name  if code%> </p> 	
+					<p class="mb-0 text-secondary">อาการ : <%=i.chief_complain[0..30]%></p>
+					
+				
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
 				</div>
 			</div>
 		</div>
 		</div>
+	</a>
 	</div>
+	<% end %>	
+	
 </div>
 
 <div class="row">
