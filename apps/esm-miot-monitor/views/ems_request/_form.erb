@@ -1,4 +1,4 @@
-<%= inline(this,:'../lib/_map')  %>
+
 
 
 		<h5>
@@ -136,14 +136,14 @@
 							
 							
 							
-							map1 = new EMSMap('dashboard-map');
+							map1 = new EMSMap('dashboard-map',{movable:true});
 							map1.setPosition(latlng[0], latlng[1])
 							map1.setMarkerPosition(latlng[0], latlng[1])
 							
-							map2 = new EMSMap('dashboard-map-2', {type:'hybrid'} );
+							map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 							map2.setPosition(latlng[0], latlng[1])
 							map2.setMarkerPosition(latlng[0], latlng[1])
-							
+						
 							
 							map1.changeMarkerPosition(function(marker){
 								
@@ -178,12 +178,10 @@
 								map1.setPosition(pos.lat(), pos.lng())
 								map1.setMarkerPosition(pos.lat(), pos.lng(), false)
 							})
-							
-							
+				
 						</script>
 						
 						
-						<%=init_map%>
 					
 						
 						<script>

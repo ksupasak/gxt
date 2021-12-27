@@ -1,0 +1,133 @@
+
+
+		<h5>
+			<strong>รายการสั่งการ</strong>
+		</h5>
+		<div class="row">
+			
+			
+			<div class="col-12 col-lg-4 col-xl-4">
+				<div class="card">
+					<p class="p-3 mb-0">
+						คำสั่งการ
+					</p>
+					<div class="input-group px-3 pb-3">
+						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
+						<textarea name="record[chief_complain]" class="form-control"><%=record.chief_complain%></textarea>
+					</div>
+					<p class="px-3">
+						
+						รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
+						
+					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select mb-3 mx-3 w-auto') %>
+					
+				</div>
+			</div>
+			
+			
+
+				<div class="col-12 col-lg-8 col-xl-8">
+					<div class="card radius-10">
+						<div class="card-header bg-transparent">
+							<div class="d-flex align-items-center">
+								<div>
+									<h6 class="mb-0">
+										สถานที่เกิดเหตุ
+									</h6>
+								</div>
+								<div class="dropdown ms-auto">
+									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+									<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+										<li>
+											<a class="dropdown-item" href="javascript:;">Action</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Another action</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Something else here</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<style>
+							       /* Set the size of the div element that contains the map */
+							      #dashboard-map {
+							        height: 380px;  /* The height is 400 pixels */
+							        width: 100%;  /* The width is the width of the web page */
+							       }
+							      #dashboard-map-2 {
+							        height: 380px;  /* The height is 400 pixels */
+							        width: 100%;  /* The width is the width of the web page */
+							       }
+							    </style>
+							<div class="row">
+							<div class="col-md-6">
+								<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
+								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+								<input name='record[address]' id="record_address" value="<%=record.address%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								</div>
+							</div>
+							<div class="col-md-6">
+								<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
+								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								</div>
+							</div>					
+							</div>
+							<br/>
+							<div id="dashboard-map-c" style="height: 400px">
+								map
+							</div>
+							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
+					
+				
+							<script>
+								latlng = [13.69313508354787, 100.69198345629769]
+						
+						
+								<% if record.latlng and record.latlng.index(',') %>
+								latlng = [<%=record.latlng%>]
+								<% end %>
+						
+						
+						
+								mapc = new EMSMap('dashboard-map-c', {change_marker:false});
+								mapc.setPosition(latlng[0], latlng[1])
+								mapc.setMarkerPosition(latlng[0], latlng[1])
+						
+								mapc.changeMarkerPosition(function(marker){
+							
+									// var pos = marker.position
+			// 						$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+			//
+			//
+			//
+			// 						map1.geocode({'location':pos},function(result){
+			//
+			// 							$('#record_address').val(result.formatted_address)
+			//
+			// 						})
+			//
+			// 						map2.setPosition(pos.lat(), pos.lng())
+			// 						map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+								
+								}.bind(this))
+								
+						
+									
+							</script>
+			
+					
+						</div>
+					</div>
+	
+			</div>
+			
+			
+		</div>

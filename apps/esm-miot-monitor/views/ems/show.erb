@@ -1,10 +1,12 @@
+<%= inline(this,:'../lib/_map')  %>
 <%
 	
 record = EMSCase.find params[:id]
 code = EMSCode.find record.init_cbd_code
 	
 %>
-<script src="/rocker/assets/js/jquery.min.js"></script>
+
+
 <!--<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Components</div>
 					<div class="ps-3">
@@ -38,7 +40,7 @@ code = EMSCode.find record.init_cbd_code
 				<div>
 					<h4 class="my-1 ">EMS-<%=record.case_no%></h4>
 					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
-					<p class="mb-0 font-13">Location : <%=record.address.split(",")[-3..-2].join(",") %> </p>
+					<p class="mb-0 font-13">Location : <%=record.address.split(",")[-3..-2].join(",") if record.address %> </p>
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
 				</div>
@@ -65,9 +67,9 @@ code = EMSCode.find record.init_cbd_code
 
 <div class="card">
 <div class="card-body">
-	<ul class="nav nav-tabs nav-primary" role="tablist">
+	<ul id="nav-tab-main" class="nav nav-tabs nav-primary" role="tablist">
 		<li class="nav-item" role="presentation">
-			<a class="nav-link active" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
+			<a class="nav-link  requestcontent" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
 					</div>
@@ -76,7 +78,7 @@ code = EMSCode.find record.init_cbd_code
 			</a>
 		</li>
 		<li class="nav-item" role="presentation">
-			<a class="nav-link" data-bs-toggle="tab" href="#prearrivalcontent" role="tab" aria-selected="false">
+			<a class="nav-link prearrivalcontent" data-bs-toggle="tab"   href="#prearrivalcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
 					</div>
@@ -85,7 +87,7 @@ code = EMSCode.find record.init_cbd_code
 			</a>
 		</li>
 		<li class="nav-item" role="presentation">
-			<a class="nav-link" data-bs-toggle="tab" href="#commandcontent" role="tab" aria-selected="false">
+			<a class="nav-link commandcontent" data-bs-toggle="tab"     href="#commandcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
 					</div>
@@ -95,7 +97,7 @@ code = EMSCode.find record.init_cbd_code
 		</li>
 		
 		<li class="nav-item" role="presentation">
-			<a class="nav-link" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
+			<a class="nav-link operationcontent" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
 					</div>
@@ -105,7 +107,7 @@ code = EMSCode.find record.init_cbd_code
 		</li>
 		
 		<li class="nav-item" role="presentation">
-			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
+			<a class="nav-link" data-bs-toggle="tab" id="paramediccontent" href="#paramediccontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
 					</div>
@@ -128,7 +130,7 @@ code = EMSCode.find record.init_cbd_code
 	</ul>
 	<div class="tab-content py-3">
 		
-		<div class="tab-pane fade active show" id="requestcontent" role="tabpanel">
+		<div class="tab-pane fade " id="requestcontent" role="tabpanel">
 			<p>
 				
 				<%# inline(this,:'../ems_request/_show')  %><br/>
@@ -183,15 +185,33 @@ code = EMSCode.find record.init_cbd_code
 			
 			<div class="command"></div>
 			<script>
-			
+				
+				<% 
+					commands = EMSCommand.where(:case_id=>record.id).all
+					if commands.size == 0 
+				%>
+				
 				$.ajax({
-			    url: "../EmsCommand/show",
+			    url: "../EmsCommand/create?id=<%=params[:id]%>",
 				  context: document.body
 				}).done(function(html) {
 			
 				  $( '.command' ).html(html);
 				});
+			  
+			  
+			    <% else %>
 			
+				$.ajax({
+			    url: "../EmsCommand/show?id=<%=params[:id]%>",
+				  context: document.body
+				}).done(function(html) {
+			
+				  $( '.command' ).html(html);
+				});
+				
+				
+				<% end %>
 			
 			</script>
 			
@@ -279,4 +299,35 @@ code = EMSCode.find record.init_cbd_code
 	</div>
 </div>
 </div>
+<script>
+		
+		$('.nav-link').each(function(){
+
+			obj = $(this)
+			if(obj.attr('data-bs-toggle')=='tab'){
+				$(this).click(function(e){
+
+					obj = $(this)
+					sessionStorage.setItem("last_tab", obj.attr('href'));
+				})
+			}
+
+		})
+
+		$(document).ready(function(){
+
+			if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
+				 $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+				
+			}else{
+				 $('.nav-tabs a[href="#requestcontent"]').tab('show');
+			}
+
+		})
+
+		
+		
+</script>
+
+<%=init_map%>
 

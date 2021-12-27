@@ -142,6 +142,33 @@ class EMSCaseAction < GXTModel
         
 end
 
+
+class EMSCommand < GXTModel
+  
+  include Mongoid::Document
+  
+  key :case_id, ObjectId
+  key :init_command, String
+  key :ambulance_id, ObjectId
+  key :note, String
+
+        
+end
+
+class EMSCommandProvider < GXTModel
+  
+  include Mongoid::Document
+  
+  key :command_id, ObjectId
+  key :provider_id, ObjectId
+  key :position, String
+  key :name, String
+  key :note, String
+  key :sort_order, Integer
+        
+end
+
+
 class EMSCaseController < GXTDocument
   
 end
@@ -174,5 +201,12 @@ end
 class EMSKActionController < GXTDocument
   
 end
+
+class EMSCommandController < GXTDocument
+end
+
+class EMSCommandProviderController < GXTDocument
+end
+
 
 end

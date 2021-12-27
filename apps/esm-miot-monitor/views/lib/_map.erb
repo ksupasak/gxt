@@ -24,7 +24,7 @@ end
 <script>
 	
 	var maps = [];
-	
+	// alert(typeof EMSMap)
 	
 	class EMSMap{
 		
@@ -42,11 +42,14 @@ end
 			
 			this.options = options
 			
+		
+			
 		}
 		
 		init(){
 			
-			
+
+		
 		  // The location of Uluru
 		  var uluru = {lat: 15.8700, lng: 100.9925};
 		  // The map, centered at Uluru
@@ -86,9 +89,13 @@ end
 				
 				var pos = new google.maps.LatLng(this.marker_latlng[0], this.marker_latlng[1] )
 				
-  				this.marker = new google.maps.Marker({position: pos, map: this.map, draggable:true});
+				var cmarker = false
+				if(this.options['movable']==true)
+					cmarker = true 
+					
+  				this.marker = new google.maps.Marker({position: pos, map: this.map, draggable:cmarker});
 			
-				
+				if(this.options['movable']==true){
   	  		  	google.maps.event.addListener(this.marker, 'dragend', function() { 
 	  			  		console.log(this)
   			  		  	var position = this.marker.position
@@ -96,6 +103,7 @@ end
 						this.map.setCenter(position)
 		 
   	  		   }.bind(this) );
+			   }
   		   }  
 			  
 			  
@@ -109,15 +117,15 @@ end
 		   
 		   this.map.addListener('rightclick', function(e){
 			   var position = e.latLng;
-			
-			   this.setMarkerPosition(position.lat(),position.lng())
-			   this.map.setCenter(position)
-			   
+			   if(this.options['movable']==true){
+			   		this.setMarkerPosition(position.lat(),position.lng())
+			   		this.map.setCenter(position)
+			   }
 			  
 		   }.bind(this))
 		   
 	   
-		  
+
 		  
 		}
 		
@@ -189,16 +197,21 @@ end
    	}
 		
 	}
+
 	
 	
 	function initMapMain(){
-		
-		for(var id in maps){
-			mx = maps[id]
+		setTimeout(function (){
+  
+			for(var id in maps){
+				mx = maps[id]
+				// alert(id)
+				mx.init();
 			
-			mx.init();
-			
-		}
+			}
+            
+		}, 300); // How long you want the delay to be, measured in milliseconds.
+
 	}
 	
 	
