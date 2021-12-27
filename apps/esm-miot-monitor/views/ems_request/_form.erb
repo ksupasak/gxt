@@ -1,0 +1,258 @@
+<%= inline(this,:'../lib/_map')  %>
+
+
+		<h5>
+			<strong>รายละเอียดของผู้ป่วย</strong>
+		</h5>
+		<div class="row">
+			<div class="col-12 col-lg-4 col-xl-4">
+				<div class="card">
+					<p class="p-3 mb-0">
+						Chief Complain
+					</p>
+					<div class="input-group px-3 pb-3">
+						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
+						<textarea name="record[chief_complain]" class="form-control"><%=record.chief_complain%></textarea>
+					</div>
+					<p class="px-3">
+						CBD code
+					</p><%= f.select(:init_cbd_code, EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select mb-3 mx-3 w-auto') %><!-- <select class="form-select mb-3 mx-3 w-auto" aria-label="Default select example">
+		<option selected>กรุณาเลือก CBD Code</option>
+		<option value="1">One</option>
+		<option value="2">Two</option>
+		<option value="3">Three</option>
+	</select> -->
+					<p class="px-3">
+						ผู้แจ้ง
+					</p><%
+
+					def record.input name
+					"name='record[#{name}]' id='record_#{name}' value='#{self[name]}' "
+					end
+
+					%><input name='record[contact_name]' value="<%=record.contact_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุล" aria-label="default input example">
+					<p class="px-3">
+						เบอร์ติดต่อ
+					</p><%# f.input(:contact_phone,:value=>record.contact_phone,:placeholder=>"xxx-xxx-xxxxx", :class=>'form-control mb-3 mx-3 w-auto') %><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+					<p class="px-3">
+						ชื่อ-นามสกุลผู้ป่วย
+					</p><%# f.input(:patient_name,:value=>record.patient_name,:placeholder=>"xxx-xxx-xxxxx", :class=>'form-control mb-3 mx-3 w-auto') %><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุลผู้ป่วย" aria-label="default input example">
+					<p class="px-3">
+						Patient Identification <span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="ค้นหา"></span>
+					</p><input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden"> <input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example"> <input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example"> <input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
+					<hr>
+					<p class="px-3">
+						ผู้ป่วยมีสติหรือไม่
+					</p>
+					<div class="form-check mx-3">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"> <label class="form-check-label" for="flexRadioDefault1">ใช่</label>
+					</div>
+					<div class="form-check mx-3">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"> <label class="form-check-label" for="flexRadioDefault1">ไม่</label>
+					</div>
+					<p class="px-3">
+						ผู้ป่วยหายใจปกติหรือไม่
+					</p>
+					<div class="form-check mx-3">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"> <label class="form-check-label" for="flexRadioDefault1">ใช่</label>
+					</div>
+					<div class="form-check mx-3 mb-3">
+						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"> <label class="form-check-label" for="flexRadioDefault1">ไม่</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-lg-8 col-xl-8">
+				<div class="card radius-10">
+					<div class="card-header bg-transparent">
+						<div class="d-flex align-items-center">
+							<div>
+								<h6 class="mb-0">
+									ค้นหาสถานที่
+								</h6>
+							</div>
+							<div class="dropdown ms-auto">
+								<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+								<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+									<li>
+										<a class="dropdown-item" href="javascript:;">Action</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="javascript:;">Another action</a>
+									</li>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="javascript:;">Something else here</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<style>
+						       /* Set the size of the div element that contains the map */
+						      #dashboard-map {
+						        height: 380px;  /* The height is 400 pixels */
+						        width: 100%;  /* The width is the width of the web page */
+						       }
+ 						      #dashboard-map-2 {
+ 						        height: 380px;  /* The height is 400 pixels */
+ 						        width: 100%;  /* The width is the width of the web page */
+ 						       }
+						    </style>
+						<div class="row">
+						<div class="col-md-6">
+							<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
+							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+							<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
+							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+							<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+							</div>
+						</div>					
+						</div>
+						<br/>
+						<div id="dashboard-map" style="height: 400px">
+							map
+						</div>
+						<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
+						
+						<div id="dashboard-map-2" style="height: 400px">
+							map
+						</div>
+						
+						
+						<script>
+							
+							latlng = [13.69313508354787, 100.69198345629769]
+							
+							<% if record.latlng and record.latlng.index(',') %>
+							latlng = [<%=record.latlng%>]
+							<% end %>
+							
+							
+							
+							map1 = new EMSMap('dashboard-map');
+							map1.setPosition(latlng[0], latlng[1])
+							map1.setMarkerPosition(latlng[0], latlng[1])
+							
+							map2 = new EMSMap('dashboard-map-2', {type:'hybrid'} );
+							map2.setPosition(latlng[0], latlng[1])
+							map2.setMarkerPosition(latlng[0], latlng[1])
+							
+							
+							map1.changeMarkerPosition(function(marker){
+								
+								var pos = marker.position
+								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+								
+							
+								
+								map1.geocode({'location':pos},function(result){
+
+									$('#record_address').val(result.formatted_address)
+
+								})
+								
+								map2.setPosition(pos.lat(), pos.lng())
+								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+									
+							}.bind(this))
+							
+							map2.changeMarkerPosition(function(marker){
+								
+								var pos = marker.position
+								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+						
+								
+								map2.geocode({'location':pos},function(result){
+
+									$('#record_address').val(result.formatted_address)
+
+								})
+								
+								map1.setPosition(pos.lat(), pos.lng())
+								map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+							})
+							
+							
+						</script>
+						
+						
+						<%=init_map%>
+					
+						
+						<script>
+							
+							function address_search(e){
+								
+								
+									var address = $('#record_address').val()
+								
+									map1.geocode({'address':address},function(result){
+
+										// $('#record_address').val(result.formatted_address)
+									
+										var pos = result.geometry.location;
+									
+										map1.setPosition(pos.lat(), pos.lng())
+										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map2.setPosition(pos.lat(), pos.lng())
+										map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+								
+									})
+									
+									e.preventDefault();
+									return false;
+								
+							}
+							
+							
+							$('#record_address').keydown(function(e){
+								if(e.keyCode == 13) {
+									address_search(e)
+	   								e.preventDefault()
+	   								return false;
+	   							}
+							});
+							
+							$('#record_address').change(address_search);
+							
+							
+							$('#record_latlng').keydown(function(e){
+   
+   							
+							if(event.keyCode == 13) {
+								var address = $(this).val()
+								latlng = address.split(",")
+								var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
+								
+								map1.geocode({'location':latlng},function(result){
+
+									// $('#record_address').val(result.formatted_address)
+									
+									var pos = result.geometry.location;
+									
+									map1.setPosition(pos.lat(), pos.lng())
+									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+									map2.setPosition(pos.lat(), pos.lng())
+									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+								
+								})
+								
+								e.preventDefault()
+								 return false;
+							  }
+									
+							})
+						
+						</script>
+						
+					</div>
+				</div>
+			</div>
+		</div>

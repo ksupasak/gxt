@@ -338,7 +338,7 @@ helpers do
     EM.next_tick {  settings.apps_ws[settings.app].each{|s| s.send(msg) } }
   end
   
-  def inline this, p
+  def inline this, p, locals={}
     
     
     path = :"#{params[:service].split(':')[-1].underscore}/#{p}"
@@ -348,7 +348,7 @@ helpers do
     end
     path
     
-    partial path, :locals=>{:this=>this}
+    partial path, :locals=>{:this=>this}.merge(locals)
     
   end
   

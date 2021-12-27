@@ -1,1 +1,78 @@
-<%=params.inspect%>
+
+	
+<% if request.post? 
+
+
+	
+if params[:record]
+
+	p = params[:record]
+	
+	patient_id = nil
+	patient = Patient.find p[:patient_id] if p[:patient_id]
+	
+	unless patient
+		
+		patient = Patient.create :name=>p[:patient_name], :hn=>p[:patient_hn], :public_id=>p[:patient_cid], :contact_name=>p[:contact_name], :contact_phone=>p[:patient_phone],:zone_id=>session[:current_zone]
+	
+	end		
+	
+	patient_id = patient.id if patient 
+	
+		
+	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id
+	
+	p[:admit_id] = admit.id
+	p[:zone_id] = session[:current_zone]
+	p[:patient_id] = patient_id
+	p[:status] = "New"
+	
+	counter_key = Time.now.strftime("%y%m")
+	
+	counter = EMSCaseCounter.where(:key=>counter_key).first
+	counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
+		
+	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
+	
+	p[:case_no] = case_no
+	
+	record = EMSCase.create p
+		
+	counter.update(:count=>counter.count+1)
+	
+	
+end
+	
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>">
+
+
+<% else %>
+
+<%
+	
+	@ems_case = EMSCase.new  :chief_complain=>'data',:contact_name=>'Soup',:contact_phone=>'0865443352',:patient_name=>'ทดสอบ'
+	
+	
+%>
+
+<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
+<% fieldset(:record) do |f| %>	
+
+<%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case)  %>
+
+<% end %>
+<input type="submit" name="create" value="Create" class="btn btn-success">
+
+</form>
+
+<div id="reqeust-panel">
+
+</div>
+<% end %>
+
+<script>
+	refresh_remote()
+</script>
