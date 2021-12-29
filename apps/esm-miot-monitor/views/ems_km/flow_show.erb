@@ -1,10 +1,14 @@
+<%
+    if params[:id]
+    flow = EMSKWorkflow.find params[:id]
+%>
 
 <div class="card">
 <div class="card-body">
-<h1>Kownledge Management</h1>
+<h1><%=flow.name%></h1>
 
 <div class="col-12 col-lg-8 col-xl-8">
-  <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="prearrival_panel">
+  <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
     <div class="card-body p-0">
       <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
       <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
@@ -18,53 +22,29 @@
     </div>
 
     <br>
+    <div id="kworkflow_list">
+    <%
+        processs = EMSKProcess.where(:kworkflow_id=>flow.id).all()
+        for p in processs
+    %>
     <div class="card radius-10 border shadow-none">
       <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">1. สวัสดีค่ะ/ครับ โทรจากศูนย์กู้ชีพโรงพยาบาลจุฬาฯ 
-            ไม่ทราบว่าใช่เบอร์ที่โทรขอรถ 1669 หรือเปล่าคะ/ครับ</p>
+        <div class="row d-flex align-items-center">
+          <div class="col-10">
+            <p class="mb-0 "><%=p.name%></p>
+          </div>
+          <div class="col align-self-end">
+            <a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2. ขณะนี้ทีมแพทย์จุฬาฯ ได้รับแจ้งให้ออกรับผู้บาดเจ็บ/เจ็บป่วย ขณะนี้รถกำลังออกจาก รพ.นะคะ
-            ระหว่างนี้เจ้าหน้าที่จะขอซักประวัติเพิ่มเติม เพื่อจะได้เตรียมพร้อมในการรักษาผู้ป่วยนะคะ ซักประวัติเพิ่มเติม</p>
+    <%  end%>
+    </div><!--kworkflow_list-->
 
-          </div>
-          
-        </div>
-      </div>
-    </div>
-    <div class="card radius-10  border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2.1 เกิดเหตุอะไรขึ้น/ ผู้ป่วยมีอาการยังไงบ้าง/ ผู้ป่วยรู้สึกตัวหรือไม่</p>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2.2 หากญาติแจ้งว่าหมดสติ สอบถามเพิ่มเติมดังนี้</p>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-    
     <div class="input-group"> 
-		<textarea class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2">บันทึก</button>
+		<textarea id="record_name" name="record[name]" class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">บันทึก</button>
     </div>
 
   </form>
@@ -73,9 +53,11 @@
 
 <div class="col-12 col-lg-4 col-xl-4">
 </div>
-<div id="prearrival_panel">
+<div id="kworkflow_panel">
   result
 </div>
 
 </div>
 </div>
+
+<% end #if params%>
