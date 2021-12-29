@@ -1,0 +1,17 @@
+<%
+	
+	
+	
+	providers = Provider.find params[:providers].split(",")	
+		
+	for i in providers
+%>
+													
+	<div class="chip chip-md">
+		<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=i.name%>
+	</div>
+<%
+	
+end
+%>
+
