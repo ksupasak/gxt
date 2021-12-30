@@ -40,7 +40,7 @@ code = EMSCode.find record.init_cbd_code
 				<div>
 					<h4 class="my-1 ">EMS-<%=record.case_no%></h4>
 					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
-					<p class="mb-0 font-13">Location : <%=record.address.split(",")[-3..-2].join(",") if record.address %> </p>
+					<p class="mb-0 font-13">Location : <%=record.address  %> </p>
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
 				</div>
@@ -183,7 +183,7 @@ code = EMSCode.find record.init_cbd_code
 		<p>
 			
 			
-			<div class="command"></div>
+			<div id="command"></div>
 			<script>
 				
 				<% 
@@ -192,22 +192,22 @@ code = EMSCode.find record.init_cbd_code
 				%>
 				
 				$.ajax({
-			    url: "../EmsCommand/create?id=<%=params[:id]%>",
+			    url: "../EmsCommand/create?case_id=<%=params[:id]%>",
 				  context: document.body
 				}).done(function(html) {
 			
-				  $( '.command' ).html(html);
+				  $( '#command' ).html(html);
 				});
 			  
 			  
 			    <% else %>
 			
 				$.ajax({
-			    url: "../EmsCommand/show?id=<%=params[:id]%>",
+			    url: "../EmsCommand/show?case_id=<%=params[:id]%>",
 				  context: document.body
 				}).done(function(html) {
 			
-				  $( '.command' ).html(html);
+				  $( '#command' ).html(html);
 				});
 				
 				

@@ -6,6 +6,8 @@ class EMSCase < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
+  has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at ASC", foreign_key: 'case_id'
+  
   key :case_no, String
   
   key :chief_complain, String
@@ -147,6 +149,10 @@ class EMSCommand < GXTModel
   
   include Mongoid::Document
   
+  belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance',  foreign_key: 'ambulance_id'
+  has_many :providers, :class_name=>'EsmMiotMonitor::EMSCommandProvider', foreign_key: 'command_id'
+  
+  
   key :case_id, ObjectId
   key :init_command, String
   key :ambulance_id, ObjectId
@@ -158,7 +164,7 @@ end
 class EMSCommandProvider < GXTModel
   
   include Mongoid::Document
-  
+  belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
   key :command_id, ObjectId
   key :provider_id, ObjectId
   key :position, String

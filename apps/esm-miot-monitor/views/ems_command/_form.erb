@@ -1,7 +1,12 @@
-
+<%
+	
+# record => ems_command
+	
+	
+%>
 
 		<h5>
-			<strong>รายการสั่งการ</strong>
+			<strong>สั่งการรถพยาบาล</strong>
 		</h5>
 		<div class="row">
 			
@@ -13,13 +18,157 @@
 					</p>
 					<div class="input-group px-3 pb-3">
 						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
-						<textarea name="record[chief_complain]" class="form-control"><%=record.chief_complain%></textarea>
+						<textarea name="record[init_command]" class="form-control"><%=record.init_command%></textarea>
 					</div>
 					<p class="px-3">
 						
-						รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
+					รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
 						
-					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select mb-3 mx-3 w-auto') %>
+					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					
+					
+				
+					
+					<p class="px-3">
+						
+					เจ้าหน้าที่<span style="float:right">
+					<input class="btn btn-info btn-sm" id="select-officer" data-bs-toggle="modal" data-bs-target="#selectProviderModal" type="submit" value="เลือก"></span>
+						
+					</p>
+					
+					<%
+						
+						ems_providers = EMSCommandProvider.where(:command_id=>record.id).all()
+						
+					%>
+				
+						<div class="" style="padding:0 20px 20px 20px;border:0px solid">
+					
+						
+						<div class="command-provider-<%=record.id%>">
+						
+						<% for i in ems_providers
+							
+							provider = i.provider 
+						
+						%>
+						
+													
+						<div class="chip chip-md">
+							<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=provider.name%>
+						</div>
+						
+						<% end %>
+						
+						</div>
+											
+						</div>
+					
+						<input type="hidden" name="providers" id="selected-providers" value="<%=ems_providers.collect{|i| i.provider_id}.join(",")%>" class="form-control mb-3 mx-3 w-auto">
+					
+					
+			
+															<!-- Modal -->
+															<div class="modal fade" id="selectProviderModal" tabindex="-1" aria-hidden="true" style="display: none;">
+																<div class="modal-dialog modal-dialog-centered">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h5 class="modal-title">เจ้าหน้าที่</h5>
+																			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																		</div>
+																		<div class="modal-body">
+																		<%
+																				
+																			providers = Provider.all()
+																			
+																		%>	
+																		<% for i in providers %>
+																		
+																		<div class="chip chip-md chip-select " provider_id="<%=i.id%>" >
+																			<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=i.name%>
+																		</div>
+																		
+																		<% end %>
+																		</div>
+																
+																		<div class="modal-footer">
+																			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																			<button type="button" class="btn btn-primary officer-select">Select</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															
+															<script>
+																
+																$('.chip-select').click(function(){
+																	
+																	selected = $(this).attr("selected")
+																	
+																	console.log(selected)
+																	if(selected!='selected'){
+																	
+																		$(this).addClass("bg-info")
+																		$(this).attr('selected','selected')
+																		
+																	}else{
+																		$(this).removeClass("bg-info")
+																		$(this).removeAttr('selected')
+																	}
+																	
+																	
+																})
+																
+																$('.officer-select').click(function(e){
+																	
+																	var providers = []
+																	
+																	$('.chip-select[selected*="selected"]' ).each(function(){
+																		
+																		pid = $(this).attr('provider_id')
+																		providers.push(pid)
+																		
+																	})
+																	
+			
+																	$.ajax({
+																    url: "<%=get_path 'show_providers'%>?providers="+providers.join(","),
+																	  context: document.body
+																	}).done(function(html) {
+			
+																	  $( '.command-provider-<%=record.id%>' ).html(html);
+																	});
+			
+																	$('#selectProviderModal').modal('hide');
+																	
+			
+																	$('#selected-providers').val(providers.join(","))
+																	
+																	
+																	e.preventDefault()
+																	return false;
+																})
+																
+																$('#select-officer').click(function(e){
+																	
+																	providers = $('#selected-providers').val().split(",")
+																	if(providers.length>0){
+																	$('.chip').removeAttr('selected')
+																
+																	for(var ip in providers){
+																			p = providers[ip]
+																			$('.chip-select[provider_id="'+p+'"]').each(function(){
+																				$(this).attr('selected','selected')
+																				$(this).addClass("bg-info")
+																			})
+																	}
+																	}
+																	e.preventDefault();
+																	return false;
+																})
+																
+															</script>
+														
 					
 				</div>
 			</div>
@@ -70,13 +219,13 @@
 							<div class="col-md-6">
 								<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
 								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-								<input name='record[address]' id="record_address" value="<%=record.address%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								<input name='case[address]' id="record_address" value="<%=ems_case.address%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
 								</div>
 							</div>
 							<div class="col-md-6">
 								<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
 								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								<input name='case[latlng]' id="record_latlng" value="<%=ems_case.latlng%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
 								</div>
 							</div>					
 							</div>
@@ -91,8 +240,8 @@
 								latlng = [13.69313508354787, 100.69198345629769]
 						
 						
-								<% if record.latlng and record.latlng.index(',') %>
-								latlng = [<%=record.latlng%>]
+								<% if ems_case.latlng and ems_case.latlng.index(',') %>
+								latlng = [<%=ems_case.latlng%>]
 								<% end %>
 						
 						
@@ -117,9 +266,11 @@
 			// 						map2.setPosition(pos.lat(), pos.lng())
 			// 						map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 								
+								
+								
 								}.bind(this))
 								
-						
+						mapc.init()
 									
 							</script>
 			

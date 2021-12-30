@@ -1,13 +1,59 @@
 <% 
 
-	record = EMSCase.find params[:id]
+	ems_case = EMSCase.find params[:case_id]
 	
 %>
 	
-	<h2>Show</h2>
+	<h2>ข้อมูลสั่งการ</h2>
 	
+	<hr/>
+
+	<div class="row">
 	
-	
+	<div class="col-12 col-lg-4 col-xl-4">
+		
+		<% 
+		
+		commands = ems_case.commands
+			
+		for i in commands
+		%>
+		
+		<div class="card">
+			<p class="p-3 mb-0">
+				คำสั่งการ : <%=i.init_command%>  รถพยาบาล : <%=i.ambulance.name%>
+				
+				
+				<a href="<%=get_path "update?id=#{i.id}" %>" class="btn btn-info btn-sm" data-remote="true"  style="float:right" data-remote-update="command">แก้ไข</a>
+				
+			</p>
+			<p class="p-3 mb-0">
+				ออกปฏิบัติการ : 
+				<div class="p-3">
+				<% for j in i.providers 
+					
+					name = j.name
+					provider = nil
+					provider = j.provider
+					name = provider.name if provider
+				%>
+				
+					<div class="chip chip-md">
+						<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=name%>
+					</div>
+				
+				<% end %>
+				</div>
+			</p>
+			
+		</div>
+		
+		<% end %>
+		
+		
+		<a href="<%=get_path "create?case_id=#{ems_case.id}" %>" class="btn btn-info" data-remote="true" data-remote-update="command">เพิ่มทีม</a>
+		
+	</div>
 	
 		<div class="col-12 col-lg-8 col-xl-8">
 			<div class="card radius-10">
@@ -53,13 +99,13 @@
 					<div class="col-md-6">
 						<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
 						<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-						<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+						<input name='record[address]' id="record_address" value="<%=ems_case.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
 						</div>
 					</div>
 					<div class="col-md-6">
 						<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
 						<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-						<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+						<input name='record[latlng]' id="record_latlng" value="<%=ems_case.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
 						</div>
 					</div>					
 					</div>
@@ -72,10 +118,11 @@
 				
 					<script>
 						latlng = [13.69313508354787, 100.69198345629769]
-						
-						
-						<% if record.latlng and record.latlng.index(',') %>
-						latlng = [<%=record.latlng%>]
+						<% if Setting.get('aoc_center') %>
+						latlng = [<%=Setting.get('aoc_center') %>]
+						<% end %>
+						<% if ems_case.latlng and ems_case.latlng.index(',') %>
+						latlng = [<%=ems_case.latlng%>]
 						<% end %>
 						
 						
@@ -101,6 +148,8 @@
 	// 						map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 								
 						}.bind(this))
+						
+						mapc.init()
 					</script>
 			
 					
@@ -111,8 +160,12 @@
 	
 	
 	
+	</div>
 	
 	
 	
+
+	<script>
 	
-	
+		refresh_remote()
+	</script>
