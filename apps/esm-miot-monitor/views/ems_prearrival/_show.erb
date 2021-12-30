@@ -15,6 +15,15 @@
     </div>
 
     <br>
+    <%
+        flows = EMSKWorkflow.all()
+        for f in flows
+    %>
+    <div class="chip chip-md"><i class="bx bx-plus"></i> <%=f.name%></div>
+    
+    <%  end %>
+    <div class="card p-2 radius-10 border shadow-none">
+    <h5>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</h5>
     <div class="card radius-10 border shadow-none">
       <div class="card-body">
         <div class="d-flex align-items-center">
@@ -37,26 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="card radius-10  border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2.1 เกิดเหตุอะไรขึ้น/ ผู้ป่วยมีอาการยังไงบ้าง/ ผู้ป่วยรู้สึกตัวหรือไม่</p>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2.2 หากญาติแจ้งว่าหมดสติ สอบถามเพิ่มเติมดังนี้</p>
-          </div>
-          
-        </div>
-      </div>
+    
     </div>
     
     <div class="input-group"> 

@@ -8,7 +8,8 @@
 <h1><%=flow.name%></h1>
 
 <div class="col-12 col-lg-8 col-xl-8">
-  <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
+  <form action="<%= get_path 'process_create'%>" method="post" data-remote='true' data-remote-update="kprocess_panel">
+    <input type="hidden" name="record[kworkflow_id]" value="<%=flow.id%>">
     <div class="card-body p-0">
       <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
       <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
@@ -22,7 +23,7 @@
     </div>
 
     <br>
-    <div id="kworkflow_list">
+    <div id="kprocess_list">
     <%
         processs = EMSKProcess.where(:kworkflow_id=>flow.id).all()
         for p in processs
@@ -40,7 +41,7 @@
       </div>
     </div>
     <%  end%>
-    </div><!--kworkflow_list-->
+    </div><!--kprocess_list-->
 
     <div class="input-group"> 
 		<textarea id="record_name" name="record[name]" class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
@@ -53,7 +54,7 @@
 
 <div class="col-12 col-lg-4 col-xl-4">
 </div>
-<div id="kworkflow_panel">
+<div id="kprocess_panel">
   result
 </div>
 
