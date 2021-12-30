@@ -1,3 +1,5 @@
+<input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
+
 <h5><strong>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</strong></h5>
 
 <div class="col-12 col-lg-8 col-xl-8">
@@ -16,38 +18,39 @@
 
     <br>
     <%
+        record = EMSCase.find params[:case_id]
         flows = EMSKWorkflow.all()
-        for f in flows
+        m_f_name = Hash[flows.collect{|i| [i.id,i.name]}.compact]
+        case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
+        case_flows_ids = case_flows.collect{|i| i.kworkflow_id}
+        select_flows = flows.collect{|i| i if !case_flows_ids.index(i.id)}.compact
+        for f in select_flows
     %>
-    <div class="chip chip-md"><i class="bx bx-plus"></i> <%=f.name%></div>
+    <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
     
     <%  end %>
-    <div class="card p-2 radius-10 border shadow-none">
-    <h5>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</h5>
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">1. สวัสดีค่ะ/ครับ โทรจากศูนย์กู้ชีพโรงพยาบาลจุฬาฯ 
-            ไม่ทราบว่าใช่เบอร์ที่โทรขอรถ 1669 หรือเปล่าคะ/ครับ</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div>
-            <p class="mb-0 ">2. ขณะนี้ทีมแพทย์จุฬาฯ ได้รับแจ้งให้ออกรับผู้บาดเจ็บ/เจ็บป่วย ขณะนี้รถกำลังออกจาก รพ.นะคะ
-            ระหว่างนี้เจ้าหน้าที่จะขอซักประวัติเพิ่มเติม เพื่อจะได้เตรียมพร้อมในการรักษาผู้ป่วยนะคะ ซักประวัติเพิ่มเติม</p>
 
-          </div>
-          
-        </div>
+    <%
+        for cf in case_flows
+    %>
+    <div class="card p-2 radius-10 border shadow-none">
+      <div class="row">
+      <div class="col-10"><h5><%=m_f_name[cf.kworkflow_id]%></h5></div>
+      <div class="col-1"><a href="javascript:delFlow('<%=cf.kworkflow_id%>');" class="btn btn-sm btn-light" >Remove</a></div>
       </div>
+      <div class="card radius-10 border shadow-none">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div>
+              <p class="mb-0 ">1. สวัสดีค่ะ/ครับ โทรจากศูนย์กู้ชีพโรงพยาบาลจุฬาฯ 
+              ไม่ทราบว่าใช่เบอร์ที่โทรขอรถ 1669 หรือเปล่าคะ/ครับ</p>
+            </div>
+          </div>
+        </div>
+      </div>    
     </div>
     
-    </div>
+    <%  end %>
     
     <div class="input-group"> 
 		<textarea class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
@@ -63,3 +66,44 @@
 <div id="prearrival_panel">
   result
 </div>
+
+<script>
+function reloadPrearrival(){
+  case_id = $("#pre_case_id").val()
+  $.ajax({
+    url: "../EmsPrearrival/show?case_id="+case_id,
+    context: document.body
+  }).done(function(html) {
+  
+    $( '.prearrival' ).html(html);
+  });
+}
+
+function addFlow(fid){
+  case_id = $("#pre_case_id").val()
+  // alert(fid)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_workflow_create",
+    data:{record:{case_id:case_id,kworkflow_id:fid}}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+function delFlow(fid){
+  case_id = $("#pre_case_id").val()
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_workflow_del",
+    data:{record:{case_id:case_id,kworkflow_id:fid}}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+
+$(document).ready(function(){
+  $(".add-flow").click(function(){
+    addFlow($(this).attr("fid"))
+  })
+})
+</script>
