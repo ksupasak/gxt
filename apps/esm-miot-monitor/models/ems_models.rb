@@ -129,6 +129,9 @@ class EMSCaseProcess < GXTModel
   key :case_id, ObjectId
   key :case_workflow_id, ObjectId
   key :kprocess_id, ObjectId
+  key :action, String
+  key :note, String
+
       
 end
 

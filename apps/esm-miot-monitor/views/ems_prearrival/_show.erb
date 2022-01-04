@@ -32,22 +32,37 @@
 
     <%
         for cf in case_flows
+          processes = EMSKProcess.where(:kworkflow_id=>cf.kworkflow_id).all()
     %>
     <div class="card p-2 radius-10 border shadow-none">
       <div class="row">
-      <div class="col-10"><h5><%=m_f_name[cf.kworkflow_id]%></h5></div>
+      <div class="col-9"><h5><%=m_f_name[cf.kworkflow_id]%></h5></div>
       <div class="col-1"><a href="javascript:delFlow('<%=cf.kworkflow_id%>');" class="btn btn-sm btn-light" >Remove</a></div>
       </div>
+      <%  for pc in processes %>
+      <%
+            yclass="btn-outline-primary"
+            nclass="btn-outline-danger"
+            newclass="btn-light"
+      %>
       <div class="card radius-10 border shadow-none">
         <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div>
-              <p class="mb-0 ">1. สวัสดีค่ะ/ครับ โทรจากศูนย์กู้ชีพโรงพยาบาลจุฬาฯ 
-              ไม่ทราบว่าใช่เบอร์ที่โทรขอรถ 1669 หรือเปล่าคะ/ครับ</p>
+          <!--<div class="d-flex align-items-center">-->
+            <div class="row">
+              <div class="col-8 col-md">
+                <p class="mb-0 "><%=pc.name%></p>
+              </div>
+              <div class="col-2 col-md-1">
+                <a href="javascript:;" class="btn btn-light">&nbsp;<i class="bx bx-check"></i>&nbsp;</a>
+              </div>
+              <div class="col-2  col-md-1">
+                <a href="javascript:;" class="btn btn-light">&nbsp;<i class="bx bx-x"></i>&nbsp;</a>
+              </div>
             </div>
-          </div>
+          <!--</div>-->
         </div>
-      </div>    
+      </div>   
+      <%  end #for pc %>
     </div>
     
     <%  end %>
