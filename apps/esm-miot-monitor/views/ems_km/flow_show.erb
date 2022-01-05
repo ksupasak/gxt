@@ -6,7 +6,7 @@
 <div class="card">
 <div class="card-body">
 <h1><%=flow.name%></h1>
-
+<input type="hidden" id="wid" value="<%=params[:id]%>">
 <div class="col-12 col-lg-8 col-xl-8">
   <form action="<%= get_path 'process_create'%>" method="post" data-remote='true' data-remote-update="kprocess_panel">
     <input type="hidden" name="record[kworkflow_id]" value="<%=flow.id%>">
@@ -28,14 +28,18 @@
         processs = EMSKProcess.where(:kworkflow_id=>flow.id).all()
         for p in processs
     %>
-    <div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="row d-flex align-items-center">
-          <div class="col-10">
-            <p class="mb-0 "><%=p.name%></p>
-          </div>
-          <div class="col align-self-end">
-            <a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>
+    <div id="<%=p.id%>">
+      <div class="card radius-10 border shadow-none">
+        <div class="card-body">
+          <div class="row d-flex align-items-center">
+            <div class="col-10">
+              <%=p.order%><p class="mb-0 "><%=p.name%></p>
+              <p class="mb-0 "><%=p.name_en%></p>
+            </div>
+            <div class="col align-self-end">
+              <!--<a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>-->
+              <a href="javascript:editProcess('<%=p.id%>');" class="btn btn-light">edit</a>
+            </div>
           </div>
         </div>
       </div>
@@ -43,10 +47,39 @@
     <%  end%>
     </div><!--kprocess_list-->
 
-    <div class="input-group"> 
-		<textarea id="record_name" name="record[name]" class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">บันทึก</button>
-    </div>
+
+            <div class="card border-start border-0 border-4 border-primary">
+							<div class="card-body p-3">
+								<div class="card-title d-flex align-items-center">
+									<div><i class="bx bxs-plus-square me-1 font-22 text-primary"></i>
+									</div>
+									<h5 class="mb-0 text-primary">Add Process</h5>
+								</div>
+								<hr>
+								<div class="row g-3">
+                  <div class="col-2">
+                    <label for="record_order" class="form-label">No.</label>
+                    <input type="text" name="record[order]" class="form-control" id="record_order">
+                  </div>
+									<div class="col-10">
+										<label for="record_name" class="form-label">TH</label>
+										<textarea class="form-control" name="record[name]" id="record_name" placeholder="คำถาม หรือ คำแนะนำ..." rows="3"></textarea>
+									</div>
+                  <div class="col-2">
+                  </div>
+									<div class="col-10">
+										<label for="record_name_en" class="form-label">EN</label>
+										<textarea class="form-control" name="record[name_en]" id="record_name_en" placeholder="Question or instruction..." rows="3"></textarea>
+									</div>
+									
+									<div class="col-8 mx-auto pt-3">
+										<button type="submit" class="btn btn-primary px-5"><i class="bx bx-plus"></i> Add</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+  
 
   </form>
 </div>
@@ -61,4 +94,22 @@
 </div>
 </div>
 
+<script>
+function editProcess(pid){
+  $.ajax({
+    url: "../EmsKM/process_edit?pid="+pid,
+  }).done(function(html) {
+    $( '#'+pid ).html(html);
+  });
+}
+
+function reloadProcess(){
+  wid = $("#wid").val()
+  $.ajax({
+    url: "../EmsKM/process_list?wid="+wid,
+  }).done(function(html) {
+    $( '#kprocess_list' ).html(html);
+  });
+}
+</script>
 <% end #if params%>

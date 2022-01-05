@@ -1,0 +1,37 @@
+<%
+    pid = params[:pid]
+    p = EMSKProcess.find pid
+    if p
+%>
+<div class="card border-start border-0 border-4 border-primary">
+    <div class="card-body p-2">
+        
+        <div class="row g-3">
+            <div class="col-2">
+            <label for="record_order" class="form-label">No.</label>
+            <input type="text" name="record[order]" class="form-control" id="record_order" value="<%=p.order%>">
+            </div>
+            <div class="col-10">
+                <label for="record_name" class="form-label">TH</label>
+                <textarea class="form-control" name="record[name]" id="record_name" placeholder="คำถาม หรือ คำแนะนำ..." rows="3"><%=p.name%></textarea>
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-10">
+                <label for="record_name_en" class="form-label">EN</label>
+                <textarea class="form-control" name="record[name_en]" id="record_name_en" placeholder="Question or instruction..." rows="3"><%=p.name_en%></textarea>
+            </div>
+            
+            <div class="col-6 mx-auto pt-3">
+                <button type="submit" class="btn btn-primary px-3"><i class="bx bx-save"></i> Save</button>
+                <a href="javascript:reloadProcess()" class="btn btn-light px-3"><i class="bx bx-x"></i> Cancel</a>
+            </div>
+            <div class="col-2 pt-3">
+                <a href="javascript:delProcess()" class="btn btn-light px-3">&nbsp;<i class="bx bx-trash"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<%
+    end #if p
+%>
