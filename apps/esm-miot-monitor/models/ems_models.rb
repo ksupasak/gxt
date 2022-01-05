@@ -94,6 +94,8 @@ class EMSKProcess < GXTModel
   include Mongoid::Document
   
   key :name, String
+
+  key :name_en, String
   
   key :order, Float
 
