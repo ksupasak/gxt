@@ -96,7 +96,7 @@ function updateProcess(pid,cpid,action){
   case_id = $("#pre_case_id").val()
   note = $("#"+pid).find("#note-"+pid).val()
   cwid = $("#"+pid).attr("cwid")
-  alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)
+  // alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)
   $.ajax({
     type:"POST",
     url:"../EmsPrearrival/case_process_create",
