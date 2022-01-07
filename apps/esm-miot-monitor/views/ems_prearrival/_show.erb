@@ -1,7 +1,15 @@
 <input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
-
+<div class="row">
+<div class="col">
 <h5><strong>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</strong></h5>
-
+</div>
+<div class="col">
+<div class="btn-group" role="group" aria-label="First group">
+  <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
+  <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
+</div>
+</div>
+</div>
 <div class="col-12 col-lg-8 col-xl-8">
   <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="prearrival_panel">
     <div class="card-body p-0">
@@ -62,7 +70,7 @@
           <!--<div class="d-flex align-items-center">-->
             <div class="row" id="<%=pc.id%>" cwid="<%=cf.id%>">
               <div class="col-8 col-md">
-                <p class="mb-0 "><%=pc.name%> </p>
+                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> </p>
                 <input type="text" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-<%=pc.id%>" value="<%=cpnote%>">
               </div>
               <div class="col-2 col-md-1">
@@ -143,5 +151,33 @@ $(document).ready(function(){
   $(".add-flow").click(function(){
     addFlow($(this).attr("fid"))
   })
+
+  $('.t').each(function(){
+      obj = $(this)
+    
+      en = obj.attr('en')
+      th = obj.html()
+      obj.attr('th', th)
+      //obj.html(th)    
+
+  })
+
+
+  $('.btn_lang').click(function(e){
+      
+      btn_obj = $(this)
+      lang = btn_obj.attr('lang')
+      $('.btn_lang').removeClass('btn-secondary').addClass('btn-outline-secondary')
+      $(this).removeClass('btn-outline-secondary').addClass('btn-secondary')
+      
+      $('.t').each(function(){
+        obj = $(this)
+        text = obj.attr(lang)
+        obj.html(text)    
+        e.preventDefault()
+      })
+  })
+
+
 })
 </script>

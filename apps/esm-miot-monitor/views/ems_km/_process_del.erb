@@ -1,0 +1,9 @@
+<% 
+
+if params[:pid]
+	record = EMSKProcess.find params[:pid]
+	record.destroy	if record
+end
+%>
+ลบสำเร็จ
+

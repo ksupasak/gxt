@@ -95,13 +95,8 @@
 </div>
 
 <script>
-function editProcess(pid){
-  $.ajax({
-    url: "../EmsKM/process_edit?pid="+pid,
-  }).done(function(html) {
-    $( '#'+pid ).html(html);
-  });
-}
+
+
 
 function reloadProcess(){
   wid = $("#wid").val()
@@ -109,6 +104,33 @@ function reloadProcess(){
     url: "../EmsKM/process_list?wid="+wid,
   }).done(function(html) {
     $( '#kprocess_list' ).html(html);
+  });
+}
+function editProcess(pid){
+  $.ajax({
+    url: "../EmsKM/process_edit?pid="+pid,
+  }).done(function(html) {
+    $( '#'+pid ).html(html);
+  });
+}
+function updateProcess(pid){
+  name = $("#record_name-"+pid).val()
+  name_en = $("#record_name_en-"+pid).val()
+  order = $("#record_order-"+pid).val()
+  // alert('pid='+pid+' \nname='+name+' \nname_en='+name_en+' \norder='+order)
+  $.ajax({
+    type:"POST",
+    url:"../EmsKM/process_edit",
+    data:{record:{name:name,name_en:name_en,order:order},pid:pid}
+  }).done(function(data){
+    reloadProcess()
+  })
+}
+function delProcess(pid){
+  $.ajax({
+    url: "../EmsKM/process_del?pid="+pid,
+  }).done(function(html) {
+    reloadProcess()
   });
 }
 </script>
