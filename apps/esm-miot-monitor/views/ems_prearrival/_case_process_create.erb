@@ -1,0 +1,31 @@
+<% if request.post? 
+
+
+	
+if params[:record] and params[:cpid]
+# if params[:case_id] and params[:kworkflow_id]
+    record = EMSCaseProcess.find params[:cpid]
+	p = params[:record]
+    if record
+        record.update_attributes p
+    else
+	    record = EMSCaseProcess.create p
+	end
+	# record = EMSCaseWorkflow.create :case_id=>params[:case_id],:kworkflow_id=>params[:kworkflow_id]
+			
+end
+	
+
+
+%>
+<!--<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>">-->
+<% if record%>
+บันทึกสำเร็จ
+
+<% end #if record%>
+
+<% end #if request%>
+
+<script>
+	//refresh_remote()
+</script>

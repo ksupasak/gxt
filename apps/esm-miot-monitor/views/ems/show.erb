@@ -165,7 +165,7 @@ code = EMSCode.find record.init_cbd_code
 		<script>
 			
 			$.ajax({
-		    url: "../EmsPrearrival/show",
+		    url: "../EmsPrearrival/show?case_id=<%=params[:id]%>",
 			  context: document.body
 			}).done(function(html) {
 			

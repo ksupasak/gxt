@@ -1,0 +1,17 @@
+<% if request.post? 
+
+if params[:record]
+
+	p = params[:record]
+	record = EMSCaseWorkflow.where(:case_id=>p[:case_id],:kworkflow_id=>p[:kworkflow_id]).first
+	if record
+		cps = EMSCaseProcess.where(:case_workflow_id=>record.id).all()
+		for cp in cps
+			cp.destroy
+		end
+	end
+	record.destroy		
+end
+%>
+ลบสำเร็จ
+<% end #if request%>
