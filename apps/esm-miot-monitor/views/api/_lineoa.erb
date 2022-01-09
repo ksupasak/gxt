@@ -8,7 +8,8 @@ data = request.body.read
 #{"type"=>"message", "message"=>{"type"=>"text", "id"=>"15229438606003", "text"=>"f"}, "timestamp"=>1639211885245, "source"=>{"type"=>"user", "userId"=>"U7921527448ec9cbf2021991d997ab1de"}, "replyToken"=>"6108188eb56143ac95f22e2e57c9ab9a", "mode"=>"active"}
 #<Line::Bot::Event::Follow:0x00007feaf0093868 @src={"type"=>"follow",                                                                       "timestamp"=>1639148427757, "source"=>{"type"=>"user", "userId"=>"Ubb2e149a6e2374f10c673d4bd106b18d"}, "replyToken"=>"57e77408eae24ac6a7b55243110ad5fd", "mode"=>"active"}>
 
-obj = params
+obj = JSON.parse data
+
 
 puts data.inspect 
 puts obj.inspect 
