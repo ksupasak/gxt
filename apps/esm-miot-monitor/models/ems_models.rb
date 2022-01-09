@@ -161,6 +161,8 @@ class EMSCommand < GXTModel
         
 end
 
+
+
 class EMSCommandProvider < GXTModel
   
   include Mongoid::Document
@@ -174,6 +176,52 @@ class EMSCommandProvider < GXTModel
         
 end
 
+
+class LineAccount < GXTModel
+  
+  include Mongoid::Document
+  
+  has_many :messages, :class_name=>'EsmMiotMonitor::LineMessage', foreign_key: 'account_id'
+  
+  key :name, String
+  
+  key :user_id, String
+  
+  key :type, String
+
+        
+end
+
+class LineMessage < GXTModel
+  
+  include Mongoid::Document
+  
+  belongs_to :account, :class_name=>'EsmMiotMonitor::LineAccount',  foreign_key: 'account_id'
+  
+  key :account_id, ObjectId
+  
+  key :message_id, String
+  key :user_id, String
+  
+  key :type, String
+  key :message_type, String
+  key :text, String
+  key :source_type, String
+  
+  key :content, String
+  
+    include Mongoid::Timestamps
+
+        
+end
+
+class LineAccountController < GXTDocument
+  
+end
+
+class LineMessageController < GXTDocument
+  
+end
 
 class EMSCaseController < GXTDocument
   

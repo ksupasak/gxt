@@ -1,0 +1,428 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/rocker/assets/js/jquery.min.js"></script>
+<link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+
+	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
+</head>	
+<body style="padding:10px">
+	
+<div class="wrapper">
+<%
+ems_case = EMSCase.new 	
+ems_case = EMSCase.find params[:id] if params[:id]
+	
+%>	
+	<!-- <input type="file" accept="image/*;capture=camera"> -->
+	
+<%= inline(this,:'../lib/_map')  %>
+
+
+		<div class="page-wrapper">
+			<div class="page-content">
+				<div class="row">
+					<div class="col align-center alert alert-warning">
+						<h4><center>ศูนย์ปฏิบัติการ</center></h4>
+					</div>
+				</div>
+				
+				
+    <div class='row'>
+		<div class="col">
+			<div class="card radius-10 border-start border-0 border-3 border-info">
+			<div class="card-body">
+				<div class="d-flex align-items-center">
+					<div>
+						<p class="mb-0 text-secondary">Contact info</p>
+						<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
+						<p class="mb-0 font-13"></p>
+				
+					</div>
+					<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>			
+				
+				
+				
+	<div class="row">
+
+
+		<div class="card-body p-5">
+				<div class="card-title d-flex align-items-center">
+					<div><i class="bx bxs-user me-1 font-22 text-primary"></i>
+					</div>
+					<h5 class="mb-0 text-primary">ข้อมูลเหตุฉุกเฉิน</h5>
+				</div>
+				<hr>
+				<form class="row g-3">
+					<div class="col-md-6">
+						<label for="inputFirstName" class="form-label">First Name</label>
+						<input type="email" class="form-control" id="inputFirstName">
+					</div>
+					<div class="col-md-6">
+						<label for="inputLastName" class="form-label">Last Name</label>
+						<input type="password" class="form-control" id="inputLastName">
+					</div>
+					<div class="col-md-6">
+						<label for="inputEmail" class="form-label">Phone</label>
+						<input type="email" class="form-control" id="inputEmail">
+					</div>
+				<div class="col-md-6">
+					<label for="inputEmail" class="form-label">อาการผู้ป่วย</label>
+					<input type="email" class="form-control" id="inputEmail">
+				</div>
+				</form>
+		</div>
+
+</div>
+
+<div class="row g-3">
+	<div class="col text-center ">			
+		
+		<button class="btn btn-primary capture-spinner " style="display:none" type="button" disabled=""> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+											Loading...</button>
+		<video playsinline autoplay ></video>
+		<br/>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-12 col-sm-4 text-center">
+	</div>
+	<div class="col-12 col-sm-4 ">
+		<div class="row">
+			<button  type="button" class="take-picture-x  col btn btn-lg btn-warning px-5" style="display:none;margin-bottom:10px"><i class="bx bx-bookmark mr-1"></i>Take Picture</button>
+			
+		</div>
+	</div>				
+</div>
+<div class="row">
+<div class="col">
+	    <div class="canvas"></div>
+		
+		<div class="col-12 col-sm-4 ">
+			<div class="row">
+				
+				<button  type="button" class="capture-close col btn btn-lg  px-5"  style="display:none" ><i class="bx bx-bookmark mr-1"></i>ปิด</button>
+			</div>
+		</div>
+		<br/>
+</div>
+</div>
+
+				
+	<!-- <div class="row">
+
+			<div class="col">
+				<div class="card radius-10 border-start border-0 border-3 border-info">
+				<div class="card-body">
+					<div class="d-flex align-items-center">
+						<div>
+							<p class="mb-0 text-secondary">Contact info</p>
+							<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
+							<p class="mb-0 font-13"></p>
+
+						</div>
+						<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+
+	</div> -->
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<div class="row">	
+					
+				<div class="col">
+						<div class="" style="">
+						พิกัดตำแหน่ง
+						<div id="dashboard-map" style="height: 300px">
+							map
+						</div>
+								<p id = "status"></p>
+								<a id = "map-link" target="_blank"></a>
+						</div>
+						
+				
+					
+				</div>
+				</div>
+				
+				<div class="row">
+				<div class="col-12 col-sm-4 text-center">
+					<div class="row">
+					<button id = "find-me"  type="button" class="col btn btn-lg btn-danger px-5"><i class="bx bx-bookmark mr-1"></i>Share Location</button>
+					</div>
+				</div>
+				<div class="col-12 col-sm-4 text-center">
+					<div class="row">
+					<button  type="button" class=" take-picture col btn btn-lg btn-warning px-5"><i class="bx bx-bookmark mr-1"></i>Take Picture</button>
+					</div>
+				</div>
+				<div class="col-12 col-sm-4  text-center">
+					<div class="row">
+					<button id = "video-conf"  type="button" class="col btn btn-lg btn-success px-5"><i class="bx bx-bookmark mr-1"></i>Video Conf</button>
+					</div>
+				</div>
+				
+				
+				
+				</div>
+			</div>
+		</div>	
+
+
+<script>
+	latlng = [14.69313508354787, 101.69198345629769]
+	
+	
+	
+	
+	
+	map1 = new EMSMap('dashboard-map',{movable:true});
+	map1.setPosition(latlng[0], latlng[1])
+	map1.setMarkerPosition(latlng[0], latlng[1])
+	
+	
+	
+	map1.changeMarkerPosition(function(marker){
+		
+		var pos = marker.position
+		$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+		
+	
+		
+		map1.geocode({'location':pos},function(result){
+
+			$('#record_address').val(result.formatted_address)
+			$('#status').html(result.formatted_address)
+		})
+		
+		
+			
+	}.bind(this))
+	
+	
+	function geoFindMe() {
+
+	  const status = document.querySelector('#status');
+	  const mapLink = document.querySelector('#map-link');
+
+	  mapLink.href = '';
+	  mapLink.textContent = '';
+
+	  function success(position) {
+	    const latitude  = position.coords.latitude;
+	    const longitude = position.coords.longitude;
+
+	    status.textContent = '';
+	    // mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+   // 	    mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+		
+		map1.setPosition(latitude,longitude)
+		map1.setMarkerPosition(latitude,longitude)
+		
+	  }
+
+	  function error() {
+	    status.textContent = 'Unable to retrieve your location';
+	  }
+
+	  if(!navigator.geolocation) {
+	    status.textContent = 'Geolocation is not supported by your browser';
+	  } else {
+	    status.textContent = 'Locating…';
+	    navigator.geolocation.getCurrentPosition(success, error);
+	  }
+
+	}
+
+	document.querySelector('#find-me').addEventListener('click', geoFindMe);
+	var imageCapture;
+
+
+
+
+// document.querySelector('#take-picture').addEventListener('click', takePicture);
+geoFindMe()
+
+</script>
+
+
+
+
+
+
+</div>
+
+	
+	
+	<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+	
+<script>
+
+	var picture_status = false;
+
+	// Put variables in global scope to make them available to the browser console.
+	const video = document.querySelector('video');
+	const capture_spinner =  document.querySelector('.capture-spinner');
+	const capture_close =  document.querySelector('.capture-close');
+	const capture_btn =  document.querySelector('.take-picture-x');
+	
+	const canvas = window.canvas = document.querySelector('.canvas');
+	canvas.width = 240;
+	canvas.height = 0;
+	video.style.display  = 'none';
+	canvas.style.display = 'none';
+
+	const button = document.querySelector('.take-picture');
+	
+	function snap(){
+ 		// then capture
+	  var canvasx = document.createElement('canvas');
+    	  var r = 0.4;
+	  canvasx.width = video.videoWidth*r;
+      canvasx.height = video.videoHeight*r;
+	  var ctx = canvasx.getContext('2d')
+	  ctx.scale(r,r)
+    	  ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+	  
+	  canvas.prepend(canvasx)
+		  
+		  
+  		canvasx.toBlob(function (blob) {
+			
+  			console.log(blob)
+		
+  		}, 'image/jpeg', 0.95)
+		  
+	}
+	
+	document.querySelector('.take-picture-x ').onclick = function(){
+		
+	
+		snap()
+		
+	}
+	
+	
+	button.onclick = function() {
+		
+	 if(picture_status==false){
+			// init camera
+		capture_spinner.style.display='inline'
+	 	navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+   	 	
+	  
+	 }else{
+	 	snap()
+	 }
+		
+	  
+	};
+
+
+	capture_close.onclick = function() {
+	   picture_status = false;
+		
+ 	   video.style.display = 'none';
+	   capture_close.style.display = 'none';
+	    capture_btn.style.display='none'
+	};
+
+	const constraints = {
+	  audio: false,
+	  video: true
+	};
+
+	function handleSuccess(stream) {
+	  window.stream = stream; // make stream available to browser console
+	  video.srcObject = stream;
+	  picture_status = true;
+	  canvas.style.display = 'inline';
+  	  capture_spinner.style.display='none'
+	  capture_close.style.display='inline'
+	  capture_btn.style.display='inline'
+	  video.style.display = 'inline';
+	  video.width = 320;
+
+  		// canvas.width = 240;
+	//  	  	canvas.height = 160;
+	}
+
+	function handleError(error) {
+	  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+	}
+
+	
+// var formData = new FormData(),
+//     uploadedImageName = 'selfie.png';
+//
+// canvas.toBlob(function (blob) {
+//     formData.append('user_picture', blob, uploadedImageName);
+//     $.ajax({
+//         data: formData,
+//         type: "POST",
+//         dataType: "JSON",
+//         url: '',
+//         processData: false,
+//         contentType: false,
+//     });
+// });
+
+</script>
+
+
+
+<% if false %>
+<video id="player" controls autoplay></video>
+<button id="capture">Capture</button>
+<canvas id="canvas" width=320 height=240></canvas>
+<script>
+  const player = document.getElementById('player');
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+  const captureButton = document.getElementById('capture');
+
+  const constraints = {
+    video: true,
+  };
+
+  captureButton.addEventListener('click', () => {
+    // Draw the video frame to the canvas.
+    context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  });
+
+  // Attach the video stream to the video element and autoplay.
+  navigator.mediaDevices.getUserMedia(constraints)
+    .then((stream) => {
+      player.srcObject = stream;
+    });
+</script>
+	
+<% end %>
+
+<%=init_map%>
+</body>
+</html>

@@ -105,7 +105,8 @@ class Provider < GXTModel
    key :phone, String
    key :email, String
    key :license, String
-   
+   key :user_id, ObjectId
+   key :line_account_id, ObjectId
    
   
 end

@@ -1,0 +1,74 @@
+<%
+	
+
+data = request.body.read
+
+
+#<Line::Bot::Event::Message:0x00007f9de0091700 @src={"type"=>"message", "message"=>{"type"=>"text", "id"=>"15225896375603", "text"=>"ok"}, "timestamp"=>1639148166272, "source"=>{"type"=>"user", "userId"=>"U7921527448ec9cbf2021991d997ab1de"}, "replyToken"=>"c78d966e81e349d1b20b77241e0f0dcd", "mode"=>"active"}>
+#{"type"=>"message", "message"=>{"type"=>"text", "id"=>"15229438606003", "text"=>"f"}, "timestamp"=>1639211885245, "source"=>{"type"=>"user", "userId"=>"U7921527448ec9cbf2021991d997ab1de"}, "replyToken"=>"6108188eb56143ac95f22e2e57c9ab9a", "mode"=>"active"}
+#<Line::Bot::Event::Follow:0x00007feaf0093868 @src={"type"=>"follow",                                                                       "timestamp"=>1639148427757, "source"=>{"type"=>"user", "userId"=>"Ubb2e149a6e2374f10c673d4bd106b18d"}, "replyToken"=>"57e77408eae24ac6a7b55243110ad5fd", "mode"=>"active"}>
+
+obj = params
+
+if obj['type']
+
+type = obj['type']
+timestamp = obj['timestamp']
+source = obj['source']
+user_id = source['userId']
+
+line_account = nil
+
+if user_id
+  
+  line_account = LineAccount.where(:user_id=>user_id).first
+  line_account = LineAccount.create(:user_id=>user_id) unless line_account
+
+end
+
+case type 
+
+when 'message'
+    
+    message = obj['message']
+    
+    if message['type'] == 'text'
+    
+        line_message = LineMessage.create :type=>type, :account_id=>line_account.id, :text=>message['text'], :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
+        
+        if message['text'].index('#reg:')
+            
+            phone = message['text'].split(":")[-1].strip
+			# require zone
+            provider = Provider.where(:phone=>phone).first
+            if provider 
+                
+                provider.update_attributes :line_account_id=>line_account.id
+                line_account.update_attributes :name=>provider.name, :type=>'provider'
+                line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
+                
+            end
+            
+          
+            
+            
+        else
+        
+            
+            
+        end
+        
+        
+    end
+
+when 'follow'
+
+        line_message = LineMessage.create :type=>type, :line_account_id=>line_account.id, :source_type=>source['type'], :user_id=>user_id, :timestamp=>timestamp, :content=>data
+
+else
+end
+	
+end
+	
+%>
+<%=params.inspect%>

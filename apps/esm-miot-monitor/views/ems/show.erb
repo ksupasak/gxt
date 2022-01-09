@@ -1,3 +1,4 @@
+<%= inline(this,:'_init')  %>
 <%= inline(this,:'../lib/_map')  %>
 <%
 	
@@ -48,6 +49,7 @@ code = EMSCode.find record.init_cbd_code
 		</div>
 		</div>
 	</div>
+	
 	<div class="col">
 		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
@@ -55,7 +57,9 @@ code = EMSCode.find record.init_cbd_code
 				<div>
 					<p class="mb-0 text-secondary">Contact info</p>
 					<h4 class="my-1 text-info"><%= record.contact_phone%></h4>
-					<p class="mb-0 font-13"><%= record.contact_name%></p>
+					<p class="mb-0 font-13"><%= record.contact_name%> Requst Submit : <%=link_to "[Click]", "request_ems?id=#{record.id}", :target=>"_blank"%></p>
+					<p class="mb-0 font-13"></p>
+					
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
 				</div>
@@ -330,4 +334,45 @@ code = EMSCode.find record.init_cbd_code
 </script>
 
 <%=init_map%>
+
+
+	<% if true %><div class="msg" style="font-size:0.8em;height:200px">ffff</div><% end %>
+<script>
+	
+	
+  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+  
+  
+  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+
+  ws.onopen    = function()  { show('websocket opened'); 
+	
+  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+
+
+  };
+
+
+  ws.onclose   = function()  { show('websocket closed'); 
+
+ 	setTimeout(function () {
+       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    }, 2000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) { 
+	  
+	  
+	  console.log("package="+m.data.length)
+	  
+	  show(m.data)
+	
+  }
+  
+  
+	
+</script>
 
