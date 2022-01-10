@@ -312,7 +312,6 @@ class EMSController < GXT
     msg = Message.create :admit_id=> ems_case.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>i['type'], :file_id=>fid, :station_id=>station_id
 
 
-    puts 'oij'
 
 
 
@@ -351,7 +350,8 @@ class EMSController < GXT
     request.body = body.to_json
     puts  body.to_json
     response = http.request(request)
-    return  response.read_body
+    url = "show?id=#{ems_case.id}"
+    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="1;URL='+url+'">'
     
   end
  
