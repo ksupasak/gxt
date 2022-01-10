@@ -1,9 +1,9 @@
 
 
 
-		<h5>
-			<strong>รายละเอียดของผู้ป่วย</strong>
-		</h5>
+		<!-- <h5>
+			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
+		</h5> -->
 		<div class="row">
 			<div class="col-12 col-lg-4 col-xl-4">
 				<div class="card">
@@ -12,7 +12,7 @@
 					</p>
 					<div class="input-group px-3 pb-3">
 						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
-						<textarea name="record[chief_complain]" class="form-control"><%=record.chief_complain%></textarea>
+						<textarea name="record[chief_complain]" id="record_chief_complain" class="form-control"><%=record.chief_complain%></textarea>
 					</div>
 					<p class="px-3">
 						CBD code
@@ -61,7 +61,59 @@
 					</div>
 				</div>
 			</div>
+			
+			
+			
+			
+			
 			<div class="col-12 col-lg-8 col-xl-8">
+				
+				
+				
+				
+				<div class="card radius-10">
+					<div class="card-header bg-transparent">
+						<div class="d-flex align-items-center">
+							<div>
+								<h6 class="mb-0">
+									ภาพเหตุ
+								</h6>
+							</div>
+						</div>	
+					</div>			
+				  <div class="card-body">
+						
+			
+			<div class="row">
+			<div>
+				<%
+				
+				imgs = Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
+				
+			
+					
+				%>
+				
+				<% for img in imgs %>
+				
+				<%
+				if img
+					url = "../Message/content?id=#{img.id}" 
+				
+				%>	
+				<img src="<%=url%>" width="140">
+				<%
+				end
+				%>
+				
+				
+				<% end %>
+			</div>
+			</div>
+			
+			</div>
+			</div>
+		
 				<div class="card radius-10">
 					<div class="card-header bg-transparent">
 						<div class="d-flex align-items-center">
@@ -101,6 +153,9 @@
  						        width: 100%;  /* The width is the width of the web page */
  						       }
 						    </style>
+							
+						
+							
 						<div class="row">
 						<div class="col-md-6">
 							<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>

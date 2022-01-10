@@ -53,8 +53,7 @@ end
 
 <%
 	
-	@ems_case = EMSCase.new  :chief_complain=>'data',:contact_name=>'Soup',:contact_phone=>'0865443352',:patient_name=>'ทดสอบ'
-	
+	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'',:contact_phone=>'',:patient_name=>''
 	
 %>
 
@@ -72,7 +71,7 @@ end
 
 </div>
 <% end %>
-
 <script>
+	$('#record_chief_complain').focus()
 	refresh_remote()
 </script>

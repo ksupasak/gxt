@@ -1,0 +1,28 @@
+<%
+
+body = {"message"=>params[:message], "sender"=>params[:sender], "phone" => params[:phone] }
+
+require 'uri'
+require 'net/http'
+require 'openssl'
+
+url = URI("https://portal-otp.smsmkt.com/api/send-message")
+
+http = Net::HTTP.new(url.host, url.port)
+http.use_ssl = true
+http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+request = Net::HTTP::Post.new(url)
+request["Accept"] = 'application/json'
+request["Content-Type"] = 'application/json'
+request["api_key"] = Setting.get("sms_api_key")
+request["secret_key"] = Setting.get("sms_secret_key")
+
+request.body = body.to_json
+puts  request.body 
+puts Setting.get("sms_secret_key")
+response = http.request(request)
+puts response.read_body
+
+
+%><%=response.read_body%>
