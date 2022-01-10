@@ -1,0 +1,35 @@
+<%
+
+
+
+	
+	account = LineAccount.find params[:id]
+
+	
+	if request.post?
+		
+		
+
+	account.send_message params[:text]
+	
+	%>
+	
+	<META HTTP-EQUIV="Refresh" CONTENT="0;URL=send_message?id=<%=account.id%>">
+	
+	<%
+	end
+	
+	
+%>
+<h3>Send message to LineOA</h3>
+<hr/>
+User : <%=account.name%>
+<hr/>
+<form action="send_message?id=<%=account.id%>" method="POST">
+	
+	Text : <input name="text" id="text" value="" type="text">
+	
+	<input type='submit' name="Send" value="Send">
+</form>
+<br/>
+<%=link_to 'Back', "show?id=#{account.id}"%>

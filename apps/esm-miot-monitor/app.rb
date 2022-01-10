@@ -53,7 +53,30 @@ MSG
     
 end
 
+class APIController < GXT
+  
+  def acl
+    
+    return '*'
+
+    
+  end
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
 class EMSController < GXT
+  
+  def acl
+    
+    return {:request_ems=>'*'}
+
+    
+  end
   
   def default_layout
     return :rocker_layout
