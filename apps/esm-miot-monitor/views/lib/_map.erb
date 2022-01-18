@@ -42,8 +42,12 @@ end
 			
 			this.options = options
 			
-		
+			this.ready_func = [];
 			
+		}
+		
+		ready(func){
+			this.ready_func.push(func);
 		}
 		
 		init(){
@@ -124,7 +128,17 @@ end
 			  
 		   }.bind(this))
 		   
-	   
+	   			
+		 console.log(this.ready_func.length)
+		   
+		   for(var ifunc in this.ready_func){
+
+			  var f = this.ready_func[ifunc];
+			  f.call();
+		
+			 
+
+		   }
 
 		  
 		}
@@ -151,7 +165,29 @@ end
 			
 		}
 		
+		drawPath(directionsService,directionsDisplay, start, end, waypoints=[], callbackx ) {
+			
+			
+		        directionsService.route({
+		          origin: start,
+		          destination: end,
+		          waypoints: waypoints,
+		          optimizeWaypoints: true,
 		
+		          travelMode: 'DRIVING'
+		        }, function(response, status) {
+		            if (status === 'OK') {
+						console.log(response)
+						console.log(response['routes'][0]['legs'][0])
+						directionsDisplay.setDirections(response);
+						callbackx(response['routes'][0]['legs'][0])
+						
+		            } else {
+		            window.alert('Problem in showing direction due to ' + status);
+		            }
+		        }.bind(this));
+
+			}
 		
 		setMarkerPosition(lat, lng, cb=true){
 		

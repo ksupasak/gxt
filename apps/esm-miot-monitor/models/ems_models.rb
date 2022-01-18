@@ -6,6 +6,7 @@ class EMSCase < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
+  belongs_to :init_code, :class_name=>'EsmMiotMonitor::EMSCode', foreign_key: 'init_cbd_code'
   has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at ASC", foreign_key: 'case_id'
   
   key :case_no, String
@@ -24,10 +25,14 @@ class EMSCase < GXTModel
   
   key :patient_id, ObjectId
   key :patient_name, String
+  key :patient_info, String
+  key :pateint_gender, String
+  key :patient_age, String
   
   key :patient_cid, String
   key :patient_hn, String
   key :patient_phone, String
+  
   
   
   key :address, String
@@ -47,7 +52,7 @@ class EMSCase < GXTModel
   
   key :status, String
   
-  
+  include Mongoid::Timestamps
 
     
 end
@@ -216,12 +221,12 @@ class LineAccount < GXTModel
           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'text' => text)
       
       elsif option[:type] == 'raw'
-          
+        puts 'type=raw'+text+' user_id:'+self.user_id
           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'msg' => text)    
       
       end
-     
-     
+      puts res.body
+      return res.body
   #   puts res.body
      
     end

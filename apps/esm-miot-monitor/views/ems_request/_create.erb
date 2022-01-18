@@ -32,7 +32,7 @@ if params[:record]
 	counter = EMSCaseCounter.where(:key=>counter_key).first
 	counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
 		
-	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
+	case_no = "EMS-#{counter_key}-#{format('%04d',counter.count+1)}"
 	
 	p[:case_no] = case_no
 	
