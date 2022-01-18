@@ -3,7 +3,7 @@
 	ems_case = EMSCase.find params[:case_id]
 	
 %>
-	
+
 	<h2>ข้อมูลสั่งการ</h2>
 	
 	<hr/>
@@ -81,8 +81,8 @@
 				</div>
 				
 				<p class="p-3 mb-0">
-				<a href="<%=get_path "send_message?id=#{i.id}" %>" class="btn btn-success btn-sm" data-remote="true"  style="" data-remote-update="command">ส่งคำสั่ง Line</a>
-				
+				<a href="<%=get_path "send_message?id=#{i.id}" %>" id="send-msg-<%=i.id%>" class="btn btn-success btn-sm" data-remote="true"  style="" data-remote-update="c<%=i.id%>">ส่งคำสั่ง Line</a>
+				<span id="c<%=i.id%>"></span>
 				<a href="<%=get_path "update?id=#{i.id}" %>" class="btn btn-warning btn-sm" data-remote="true"  style="float:right" data-remote-update="command">แยก Case </a>
 				<a href="<%=get_path "update?id=#{i.id}" %>" class="btn btn-info btn-sm" data-remote="true"  style="float:right" data-remote-update="command">แก้ไข</a>
 			
@@ -209,7 +209,16 @@
 				  		    directionsDisplay.setMap(mapc.map);
 							mapc.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
 								
+								
+								a = $('#send-msg-<%=i.id%>')
+								
+								if(a.attr("href").indexOf("distance")==-1){
+									a.attr("href", a.attr('href')+"&distance="+rs['distance']['text']+"&duration="+rs['duration']['text'])
+								}
+								
 								$('#ambu-status-<%=cm.id%>').html(" Distance : "+rs['distance']['text'] + " Time : "+rs['duration']['text'])
+								
+								
 								
 							}.bind(this));
 							<% end %>

@@ -43,8 +43,12 @@ patient_info = "ไม่ระบุ"
 patient_info = ems_case.patient_info if ems_case.patient_info and ems_case.patient_info.size>0
 
 
-duration = "3 mins"
-distance = "3 km"
+duration = "-"
+distance = "-"
+
+duration = params[:duration] if params[:duration] and  params[:duration].size>0
+distance = params[:distance] if params[:distance] and  params[:distance].size>0
+
 
 phone = "-"
 phone = ems_case.contact_phone if ems_case.contact_phone and ems_case.contact_phone.size>0
@@ -56,7 +60,10 @@ time_text = "-"
 time_text = ems_case.created_at.strftime('%H:%M') if ems_case.created_at 
 
 
-link = "http://emr-life.com"
+link = "#{Setting.get("host_url")}/#{@context.settings.name}/EMS/show?id=#{ems_case.id}"
+
+map_link = "https://www.google.com/maps/dir//#{ems_case.latlng}"
+
 msg =<<MSG
 {
       "type": "flex",
@@ -185,28 +192,6 @@ msg =<<MSG
               "contents": [
                 {
                   "type": "text",
-                  "text": "duration",
-                  "color": "#aaaaaa",
-                  "size": "sm",
-                  "flex": 2
-                },
-                {
-                  "type": "text",
-                  "text": "#{duration}",
-                  "wrap": true,
-                  "color": "#666666",
-                  "size": "sm",
-                  "flex": 5
-                }
-              ]
-            }	  ,
-       	 {
-              "type": "box",
-              "layout": "baseline",
-              "spacing": "sm",
-              "contents": [
-                {
-                  "type": "text",
                   "text": "distance",
                   "color": "#aaaaaa",
                   "size": "sm",
@@ -221,7 +206,29 @@ msg =<<MSG
                   "flex": 5
                 }
               ]
-            },
+            }	,
+       	 {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "duration",
+                  "color": "#aaaaaa",
+                  "size": "sm",
+                  "flex": 2
+                },
+                {
+                  "type": "text",
+                  "text": "#{duration}",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "sm",
+                  "flex": 5
+                }
+              ]
+            }	 ,
     
             {
               "type": "box",
@@ -282,8 +289,18 @@ msg =<<MSG
           "height": "sm",
           "action": {
             "type": "uri",
-            "label": "PATIENT RECORD",
+            "label": "CASE RECORD",
             "uri": "#{link}"
+          }
+        },
+        {
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "GOOGLE MAP",
+            "uri": "#{map_link}"
           }
         },
     
@@ -305,11 +322,7 @@ obj = JSON::parse(msg)
 for i in lines
 		
 	out = i.send_message obj.to_json, :type=>'raw'
-	%>
-	<%=out.inspect %>
-	<%
+
 end
 
-%><%=msg%>
-
-<%=lines.inspect%>
+%>Sent
