@@ -1,3 +1,27 @@
+<%
+
+ems_case = EMSCase.new 	
+
+
+ems_case = EMSCase.find params[:id] if params[:id]
+	
+if request.post?
+	
+	ems_case = ESMCase.create unless ems_case
+	
+	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location]
+
+
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=request_ems?id=<%=ems_case.id%>">
+<%		
+	
+else
+	
+%>
+
 <html>
 <head>
 	<meta charset="utf-8">
@@ -13,11 +37,19 @@
 	
 <div class="wrapper">
 <%
-ems_case = EMSCase.new 	
-ems_case = EMSCase.find params[:id] if params[:id]
+
+
+location = "#{Setting.get(:aoc_center)}"
+
+locaiton = "#{ems_case.patient_location}" if ems_case.patient_location 
+
+	
+
+	
 	
 %>	
 	<!-- <input type="file" accept="image/*;capture=camera"> -->
+
 	
 <%= inline(this,:'../lib/_map')  %>
 
@@ -29,8 +61,9 @@ ems_case = EMSCase.find params[:id] if params[:id]
 						<h4><center>ศูนย์ปฏิบัติการ</center></h4>
 					</div>
 				</div>
-				
-				
+
+<form action="request_ems?id=<%=ems_case.id%>" method="POST">				
+
     <div class='row'>
 		<div class="col">
 			<div class="card radius-10 border-start border-0 border-3 border-info">
@@ -52,7 +85,7 @@ ems_case = EMSCase.find params[:id] if params[:id]
 				
 				
 				
-	<div class="row">
+	<!-- <div class="row">
 
 
 		<div class="card-body p-5">
@@ -82,41 +115,9 @@ ems_case = EMSCase.find params[:id] if params[:id]
 				</form>
 		</div>
 
-</div>
+</div> -->
 
-<div class="row g-3">
-	<div class="col text-center ">			
-		
-		<button class="btn btn-primary capture-spinner " style="display:none" type="button" disabled=""> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-											Loading...</button>
-		<video playsinline autoplay ></video>
-		<br/>
-	</div>
-</div>
 
-<div class="row">
-	<div class="col-12 col-sm-4 text-center">
-	</div>
-	<div class="col-12 col-sm-4 ">
-		<div class="row">
-			<button  type="button" class="take-picture-x  col btn btn-lg btn-warning px-5" style="display:none;margin-bottom:10px"><i class="bx bx-bookmark mr-1"></i>Take Picture</button>
-			
-		</div>
-	</div>				
-</div>
-<div class="row">
-<div class="col">
-	    <div class="canvas"></div>
-		
-		<div class="col-12 col-sm-4 ">
-			<div class="row">
-				
-				<button  type="button" class="capture-close col btn btn-lg  px-5"  style="display:none" ><i class="bx bx-bookmark mr-1"></i>ปิด</button>
-			</div>
-		</div>
-		<br/>
-</div>
-</div>
 
 				
 	<!-- <div class="row">
@@ -141,36 +142,128 @@ ems_case = EMSCase.find params[:id] if params[:id]
 	</div> -->
 				
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				<div class="row">	
 					
-				<div class="col">
-						<div class="" style="">
-						พิกัดตำแหน่ง
-						<div id="dashboard-map" style="height: 300px">
-							map
-						</div>
-								<p id = "status"></p>
-								<a id = "map-link" target="_blank"></a>
-						</div>
+					<div class="col">
 						
-				
+						<div class="card radius-10 border-start border-0 border-3 border-info">
 					
-				</div>
+						
+							<div class="card-body" style="">
+								<p>
+								พิกัดตำแหน่ง 
+								
+								<span style="float:right"><a  id = "find-me" class="">อ่านตำแหน่ง</a></span>
+							</p>
+								<div id="dashboard-map" style="height: 300px">
+									map
+								</div>
+							 
+							 <br/>
+								
+							
+							<center>
+							<% if ems_case.patient_location and ems_case.patient_location.index(",") %>
+							<input type="submit" name="Submit" value="ส่งตำแหน่งแล้ว" class="btn btn-info">
+							<% else %>
+							<input type="submit" name="Submit" value="ส่งตำแหน่ง" class="btn btn-success">
+							<% end %>
+									 <p id = "status" style="font-size:0.8em;padding:20px"></p>
+							</center>
+				
+						  <input type="hidden" name="location" id="location" value="<%=location%>">
+							
+							
+							</div>
+							
+						</div>
+					</div>
+					
 				</div>
 				
 				<div class="row">
-				<div class="col-12 col-sm-4 text-center">
+				<div class="col">
+				<div class="card radius-10 border-start border-0 border-3 border-info">
+				<div class="card-body">
+				<div class="row">
+					<div class="col">
+					<p>
+					รูปถ่าย
+					<span style="float:right"><a   class="take-picture ">ถ่ายภาพ</a></span>
+					</p>
+					</div>
+				</div>
+				<div class="row g-3">
+					
+				
+					
+					
+					<div class="col text-center ">			
+		
+						<button class="btn btn-primary capture-spinner " style="display:none" type="button" disabled=""> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+															Loading...</button>
+						<video playsinline autoplay ></video>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-12 col-sm-4 text-center">
+					</div>
+					<div class="col-12 col-sm-4 ">
+						<div class="row">
+							<button  type="button" class="take-picture-x  col btn btn-lg btn-warning px-5" style="display:none;margin-bottom:10px">
+								<i class="bx bx-bookmark mr-1"></i>ถ่ายภาพ</button>
+			
+						</div>
+					</div>				
+				</div>
+				<div class="row">
+				<div class="col">
+					
+					<%
+				
+					imgs = Message.where(:admit_id=>ems_case.id).sort(:created_at=>-1).all
+					
+					%>
+				
+						
+					    <div class="canvas" >
+					    	
+						
+							
+					    </div>
+						<hr/>
+						<div class="sent-img">
+						<% for img in imgs %>
+			
+						<%
+						if img
+							url = "../Message/content?id=#{img.id}" 
+			
+						%>	
+						<img src="<%=url%>" width="140">
+						<%
+						end
+						%>
+			
+			
+						<% end %>
+						</div>
+						<div class="col-12 ">
+							<div class="row">
+								<button  type="button" class="capture-close col btn btn-lg  px-5"  style="display:none" ><i class=""></i>ปิด</button>
+							</div>
+						</div>
+	
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				<div class="row">
+				<!-- <div class="col-12 col-sm-4 text-center">
 					<div class="row">
 					<button id = "find-me"  type="button" class="col btn btn-lg btn-danger px-5"><i class="bx bx-bookmark mr-1"></i>Share Location</button>
 					</div>
@@ -179,22 +272,26 @@ ems_case = EMSCase.find params[:id] if params[:id]
 					<div class="row">
 					<button  type="button" class=" take-picture col btn btn-lg btn-warning px-5"><i class="bx bx-bookmark mr-1"></i>Take Picture</button>
 					</div>
-				</div>
-				<div class="col-12 col-sm-4  text-center">
+				</div> -->
+				<!-- <div class="col-12 col-sm-4  text-center">
 					<div class="row">
 					<button id = "video-conf"  type="button" class="col btn btn-lg btn-success px-5"><i class="bx bx-bookmark mr-1"></i>Video Conf</button>
 					</div>
-				</div>
-				
-				
+				</div> -->
 				
 				</div>
+				<br/>
+				
+			</form>
+				
+				
+				
 			</div>
 		</div>	
 
 
 <script>
-	latlng = [14.69313508354787, 101.69198345629769]
+	latlng = [<%=location%>]
 	
 	
 	
@@ -209,14 +306,13 @@ ems_case = EMSCase.find params[:id] if params[:id]
 	map1.changeMarkerPosition(function(marker){
 		
 		var pos = marker.position
-		$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-		
-	
+		$('#location').val(""+pos.lat()+","+pos.lng())
 		
 		map1.geocode({'location':pos},function(result){
 
 			$('#record_address').val(result.formatted_address)
 			$('#status').html(result.formatted_address)
+		
 		})
 		
 		
@@ -227,10 +323,10 @@ ems_case = EMSCase.find params[:id] if params[:id]
 	function geoFindMe() {
 
 	  const status = document.querySelector('#status');
-	  const mapLink = document.querySelector('#map-link');
+	  // const mapLink = document.querySelector('#map-link');
 
-	  mapLink.href = '';
-	  mapLink.textContent = '';
+	  // mapLink.href = '';
+	  // mapLink.textContent = '';
 
 	  function success(position) {
 	    const latitude  = position.coords.latitude;
@@ -242,6 +338,10 @@ ems_case = EMSCase.find params[:id] if params[:id]
 		
 		map1.setPosition(latitude,longitude)
 		map1.setMarkerPosition(latitude,longitude)
+   	    
+		
+		$('#location').val(""+latitude+","+longitude)
+   		
 		
 	  }
 
@@ -301,21 +401,52 @@ geoFindMe()
 	function snap(){
  		// then capture
 	  var canvasx = document.createElement('canvas');
-    	  var r = 0.4;
+      var r = 0.23;
 	  canvasx.width = video.videoWidth*r;
       canvasx.height = video.videoHeight*r;
 	  var ctx = canvasx.getContext('2d')
 	  ctx.scale(r,r)
-    	  ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-	  
+      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 	  canvas.prepend(canvasx)
 		  
+	  var canvas_img = document.createElement('canvas');
+	  canvas_img.width = video.videoWidth;
+      canvas_img.height = video.videoHeight;
+	  var ctx = canvas_img.getContext('2d')
+      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+	  
 		  
-  		canvasx.toBlob(function (blob) {
-			
-  			console.log(blob)
+  		// canvasx.toBlob(function (blob) {
+	//
+	//   			console.log(blob)
+	//
+	//   		}, 'image/jpeg', 0.95)
 		
-  		}, 'image/jpeg', 0.95)
+		
+		
+	       var img = canvas_img.toDataURL("image/jpeg");
+	       var filename = 'EMS.jpeg';
+	       var formdata = new FormData();
+	       formdata.append("capture", img);
+
+	       $.ajax({
+	           url: 'image_upload?id=<%=params[:id]%>',
+	           type: "POST",
+	           data: formdata,
+	           processData: false,
+	           contentType: false,
+	           success: function (result) {
+	               console.log("Upload complete!");
+	           },
+	           error: function (error) {
+	               console.log("Something went wrong!");
+	           }            
+	       });
+		
+		
+		
+		
+		
 		  
 	}
 	
@@ -426,3 +557,4 @@ geoFindMe()
 <%=init_map%>
 </body>
 </html>
+<% end %>

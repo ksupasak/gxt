@@ -45,7 +45,7 @@ when 'message'
         
         if message['text'].index('#reg:')
             
-            phone = message['text'].split(":")[-1].strip
+            phone = message['text'].split(":")[-1].split("|")[0].strip
 			# require zone
             provider = Provider.where(:phone=>phone).first
             if provider 
@@ -54,7 +54,18 @@ when 'message'
                 line_account.update_attributes :name=>provider.name, :type=>'provider'
                 line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
                 
-            end
+			else
+				
+				p = message['text'].split(":")[-1].split("|")
+				
+				provider = Provider.create :name=>p[1], :phone=>p[0], :line_account_id=>line_account.id
+				line_account.update_attributes :name=>provider.name, :type=>'provider'
+				line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
+				
+				
+				
+				
+			end
             
           
             

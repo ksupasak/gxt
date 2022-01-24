@@ -58,7 +58,6 @@ class APIController < GXT
   def acl
     
     return '*'
-
     
   end
   
@@ -69,20 +68,6 @@ class APIController < GXT
 end
 
 
-class EMSController < GXT
-  
-  def acl
-    
-    return {:request_ems=>'*'}
-
-    
-  end
-  
-  def default_layout
-    return :rocker_layout
-  end
- 
-end
 
 class EmsRequestController < GXT
   

@@ -1,4 +1,4 @@
-
+require "base64"
 module EsmMiotMonitor
 
 class EMSCase < GXTModel
@@ -6,6 +6,7 @@ class EMSCase < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
   
+  belongs_to :init_code, :class_name=>'EsmMiotMonitor::EMSCode', foreign_key: 'init_cbd_code'
   has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at ASC", foreign_key: 'case_id'
   
   key :case_no, String
@@ -24,10 +25,14 @@ class EMSCase < GXTModel
   
   key :patient_id, ObjectId
   key :patient_name, String
+  key :patient_info, String
+  key :pateint_gender, String
+  key :patient_age, String
   
   key :patient_cid, String
   key :patient_hn, String
   key :patient_phone, String
+  
   
   
   key :address, String
@@ -36,12 +41,19 @@ class EMSCase < GXTModel
   key :note, String
   
   
+  key :patient_location, String
+  key :patient_images, Array
+  
+  
       
   key :admit_id, ObjectId
   
   key :zone_id, ObjectId
   
   key :status, String
+  
+  include Mongoid::Timestamps
+
     
 end
 
@@ -209,12 +221,12 @@ class LineAccount < GXTModel
           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'text' => text)
       
       elsif option[:type] == 'raw'
-          
+        puts 'type=raw'+text+' user_id:'+self.user_id
           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'msg' => text)    
       
       end
-     
-     
+      puts res.body
+      return res.body
   #   puts res.body
      
     end
@@ -246,6 +258,123 @@ class LineMessage < GXTModel
 
         
 end
+
+
+
+
+
+class EMSController < GXT
+  
+
+  
+  def acl
+
+    return {:request_ems=>'*',:image_upload=>'*'}
+
+  end
+  
+  def image_upload params
+    
+    begin
+
+    
+    switch @context.settings.name
+    
+    
+    
+    ems_case = EMSCase.find params[:id]
+    
+    # content = params[:capture]['tempfile'].read
+#
+#     filename = params[:capture]['filename']
+#
+    
+    filename= "img.jpg"
+    index = params[:capture].index(',')+1
+    content = Base64.decode64(params[:capture][index..-1]) 
+   
+    connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+   
+    grid = Mongo::Grid::FSBucket.new(connection.database)
+    
+    fid = grid.upload_from_stream(filename,content)
+    
+    
+    meta = {}
+    meta['sender'] = 'NA'
+    meta['recipient'] = 'NA'
+    meta['recipient_type'] = 'NA'
+    meta['filename'] = filename
+    meta['ts'] = Time.now.to_i
+    meta['type'] = 'image'
+    meta['media_type'] = 'image'
+
+    station_id = nil
+
+    i = meta
+
+
+    msg = Message.create :admit_id=> ems_case.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>i['type'], :file_id=>fid, :station_id=>station_id
+
+
+
+
+
+  rescue =>error
+   puts  error.backtrace
+  end
+
+    
+    return 'ok'
+    
+  end
+  
+  
+  def send_sms params
+    
+    ems_case = EMSCase.find params[:id]
+    
+    body = {"message"=>Setting.get("tracking_sms","EMS Tracking Service กรุณากด : <TRACKING-URL>"), "sender"=>Setting.get("sms_sender","Demo-SMS"), "phone" => ems_case.contact_phone , "url"=> "#{Setting.get("host_url","https://pcm-life.com:1792")}/#{@context.settings.name}/EMS/request_ems?id=#{ems_case.id}" }
+
+    require 'uri'
+    require 'net/http'
+    require 'openssl'
+
+    url = URI("https://portal-otp.smsmkt.com/api/send-message")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Post.new(url)
+    request["Accept"] = 'application/json'
+    request["Content-Type"] = 'application/json'
+    request["api_key"] = Setting.get("sms_api_key")
+    request["secret_key"] = Setting.get("sms_secret_key")
+
+    request.body = body.to_json
+    puts  body.to_json
+    response = http.request(request)
+    url = "show?id=#{ems_case.id}"
+    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="1;URL='+url+'">'
+    
+  end
+ 
+  
+  
+  
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+
+
+
 
 class LineAccountController < GXTDocument
   

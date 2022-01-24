@@ -1,9 +1,9 @@
 
 
 
-		<h5>
-			<strong>รายละเอียดของผู้ป่วย</strong>
-		</h5>
+		<!-- <h5>
+			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
+		</h5> -->
 		<div class="row">
 			<div class="col-12 col-lg-4 col-xl-4">
 				<div class="card">
@@ -12,7 +12,7 @@
 					</p>
 					<div class="input-group px-3 pb-3">
 						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
-						<textarea name="record[chief_complain]" class="form-control"><%=record.chief_complain%></textarea>
+						<textarea name="record[chief_complain]" id="record_chief_complain" class="form-control"><%=record.chief_complain%></textarea>
 					</div>
 					<p class="px-3">
 						CBD code
@@ -33,10 +33,16 @@
 					%><input name='record[contact_name]' value="<%=record.contact_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุล" aria-label="default input example">
 					<p class="px-3">
 						เบอร์ติดต่อ
-					</p><%# f.input(:contact_phone,:value=>record.contact_phone,:placeholder=>"xxx-xxx-xxxxx", :class=>'form-control mb-3 mx-3 w-auto') %><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+					</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 					<p class="px-3">
 						ชื่อ-นามสกุลผู้ป่วย
-					</p><%# f.input(:patient_name,:value=>record.patient_name,:placeholder=>"xxx-xxx-xxxxx", :class=>'form-control mb-3 mx-3 w-auto') %><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุลผู้ป่วย" aria-label="default input example">
+					</p><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุลผู้ป่วย" aria-label="default input example">
+					
+					<p class="px-3">
+						ข้อมูลผู้ป่วย
+					</p><input name='record[patient_info]' value="<%=record.patient_info%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="เพศ อายุ" aria-label="default input example">
+					
+					
 					<p class="px-3">
 						Patient Identification <span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="ค้นหา"></span>
 					</p><input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden"> <input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example"> <input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example"> <input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
@@ -61,7 +67,59 @@
 					</div>
 				</div>
 			</div>
+			
+			
+			
+			
+			
 			<div class="col-12 col-lg-8 col-xl-8">
+				
+				
+				
+				
+				<div class="card radius-10">
+					<div class="card-header bg-transparent">
+						<div class="d-flex align-items-center">
+							<div>
+								<h6 class="mb-0">
+									ภาพเหตุ
+								</h6>
+							</div>
+						</div>	
+					</div>			
+				  <div class="card-body">
+						
+			
+			<div class="row">
+			<div>
+				<%
+				
+				imgs = Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
+				
+			
+					
+				%>
+				
+				<% for img in imgs %>
+				
+				<%
+				if img
+					url = "../Message/content?id=#{img.id}" 
+				
+				%>	
+				<img src="<%=url%>" width="140">
+				<%
+				end
+				%>
+				
+				
+				<% end %>
+			</div>
+			</div>
+			
+			</div>
+			</div>
+		
 				<div class="card radius-10">
 					<div class="card-header bg-transparent">
 						<div class="d-flex align-items-center">
@@ -101,6 +159,9 @@
  						        width: 100%;  /* The width is the width of the web page */
  						       }
 						    </style>
+							
+						
+							
 						<div class="row">
 						<div class="col-md-6">
 							<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>

@@ -88,7 +88,9 @@ Update ... <%=Time.now%>
 <% end %>
 <input type="submit" name="update" value="Update" class="btn btn-success"> 
 
-<a href="<%=get_path "show?case_id=#{ems_case.id}" %>" class="btn " data-remote="true" data-remote-update="command">Cancel</a>
+<a href="<%=get_path "destroy?id=#{ems_command.id}&case_id=#{ems_case.id}" %>" class="btn btn-danger" data-remote="true" data-remote-update="command">Destroy</a>
+
+<a href="<%=get_path "show?&case_id=#{ems_case.id}" %>" class="btn " data-remote="true" data-remote-update="command">Cancel</a>
 
 
 </form>
