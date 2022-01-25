@@ -1,15 +1,16 @@
 <input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
 <div class="row">
-<div class="col">
-<h5><strong>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</strong></h5>
+  <div class="col">
+  <h5><strong>แนวทางการซักประวัติเพิ่มเติมจากญาติผู้เจ็บป่วยฉุกเฉิน</strong></h5>
+  </div>
+  <div class="col">
+    <div class="btn-group" role="group" aria-label="First group">
+      <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
+      <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
+    </div>
+  </div>
 </div>
-<div class="col">
-<div class="btn-group" role="group" aria-label="First group">
-  <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
-  <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
-</div>
-</div>
-</div>
+<div class="row">
 <div class="col-12 col-lg-8 col-xl-8">
   <%
         flows = EMSKWorkflow.all()
@@ -95,7 +96,46 @@
 
 
 <div class="col-12 col-lg-4 col-xl-4">
+  <div class="card radius-10">
+    <div class="card-header bg-transparent">
+      <div class="d-flex align-items-center">
+        <div>
+          <h6 class="mb-0">
+            บันทึกเหตุการณ์
+          </h6>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      
+      <div class="alert border-0 border-start border-5 border-danger alert-dismissible fade show py-2">
+        <div class="d-flex align-items-center">
+          <div class="font-35 text-danger"><i class="bx bxs-info-circle"></i>
+          </div>
+          <div class="ms-3">
+            <h6 class="mb-0 text-danger">ยืนยันการเรียกฉุกเฉิน</h6>
+            <div>A simple danger alert—check it out!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert border-0 border-start border-5 border-secondary alert-dismissible fade show py-2">
+        <div class="d-flex align-items-center">
+          <div class="font-35 text-secondary"><i class="bx bxs-info-circle"></i>
+          </div>
+          <div class="ms-3">
+            <h6 class="mb-0 text-secondary">ยืนยันการเรียกฉุกเฉิน</h6>
+            <div>A simple danger alert—check it out!</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!--card-->
 </div>
+
+</div><!--row-->
+
 <div id="prearrival_panel">
   result
 </div>

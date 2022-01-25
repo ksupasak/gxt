@@ -19,15 +19,22 @@ end
 <% if record%>
 บันทึกสำเร็จ
 <div id="rec" class="visually-hidden">
-<div class="card radius-10 border shadow-none">
-      <div class="card-body">
-        <div class="row d-flex align-items-center">
-          <div class="col-10">
-            <p class="mb-0 "><%=record.name%></p>
-          </div>
-          <div class="col align-self-end">
-            <a href="./flow_show?id=<%=record.id%>" class="btn btn-light">edit</a>
-          </div>
+    <div id="<%=record.id%>">
+      <div class="card radius-10 border shadow-none">
+        <div class="card-body">
+          <div class="row d-flex align-items-center">
+            <div class="col-10">
+              <div class="row">
+                <div class="col-2"><%=record.order%></div>
+                <div class="col-10"><p class="mb-0 "><%=record.name%></p></div>
+                <div class="col-2"></div>
+                <div class="col-10"><p class="mb-0 "><%=record.name_en%></p></div>
+              </div>              
+            </div>
+            <div class="col align-self-end">
+              <a href="javascript:editProcess('<%=record.id%>');" class="btn btn-light">edit</a>
+            </div>
+          </div> 
         </div>
       </div>
     </div>

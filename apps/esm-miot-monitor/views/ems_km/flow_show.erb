@@ -10,7 +10,7 @@
 <div class="col-12 col-lg-8 col-xl-8">
   <form action="<%= get_path 'process_create'%>" method="post" data-remote='true' data-remote-update="kprocess_panel">
     <input type="hidden" name="record[kworkflow_id]" value="<%=flow.id%>">
-    <div class="card-body p-0">
+    <!--<div class="card-body p-0">
       <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
       <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
       <datalist id="datalistOptions">
@@ -20,7 +20,7 @@
         </option><option value="Los Angeles">
         </option><option value="Chicago">
         </option></datalist>
-    </div>
+    </div>-->
 
     <br>
     <div id="kprocess_list">
@@ -33,14 +33,18 @@
         <div class="card-body">
           <div class="row d-flex align-items-center">
             <div class="col-10">
-              <%=p.order%><p class="mb-0 "><%=p.name%></p>
-              <p class="mb-0 "><%=p.name_en%></p>
+              <div class="row">
+                <div class="col-2"><%=p.order%></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name%></p></div>
+                <div class="col-2"></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name_en%></p></div>
+              </div>
             </div>
             <div class="col align-self-end">
               <!--<a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>-->
               <a href="javascript:editProcess('<%=p.id%>');" class="btn btn-light">edit</a>
             </div>
-          </div>
+          </div> 
         </div>
       </div>
     </div>
@@ -87,16 +91,36 @@
 
 <div class="col-12 col-lg-4 col-xl-4">
 </div>
+
 <div id="kprocess_panel">
   result
 </div>
 
 </div>
-</div>
+</div><!--card-->
+
+
+<div class="modal fade" id="actionModal" tabindex="-1" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Action</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur.</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div><!--modal-->
 
 <script>
 
-
+function addAction(pid){
+  $("#actionModal").modal('toggle');
+}
 
 function reloadProcess(){
   wid = $("#wid").val()

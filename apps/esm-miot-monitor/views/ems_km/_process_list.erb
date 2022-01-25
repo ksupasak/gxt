@@ -8,8 +8,12 @@
     <div class="card-body">
         <div class="row d-flex align-items-center">
         <div class="col-10">
-            <%=p.order%><p class="mb-0 "><%=p.name%></p>
-            <p class="mb-0 "><%=p.name_en%></p>
+              <div class="row">
+                <div class="col-2"><%=p.order%></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name%></p></div>
+                <div class="col-2"></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name_en%></p></div>
+              </div>
         </div>
         <div class="col align-self-end">
             <!--<a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>-->
