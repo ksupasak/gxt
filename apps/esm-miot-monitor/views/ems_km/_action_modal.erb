@@ -1,0 +1,45 @@
+<%
+    wfs = EMSKWorkflow.all()
+    processs = EMSKProcess.where(:kworkflow_id=>params[:wid]).all()
+%>
+<label for="m_sel" class="form-label">Select</label>
+<select id="m_sel" class="form-select mb-3" aria-label="">
+    <option selected="y">Y</option>
+    <option value="n">N</option>
+</select>
+<label for="m_action" class="form-label">To Do</label>
+<select id="m_action" class="form-select mb-3" aria-label="">
+    <option value="1">Go to process</option>
+    <option value="2">New workflow</option>
+    <option value="3">Alert message</option>
+    <option value="4">CPR</option>
+</select>        
+<label for="m_process" class="form-label">Process</label>
+<select id="m_process" class="form-select mb-3" aria-label="">
+    <option value=""></option>
+    <% for p in processs %>
+        <option value="<%=p.id%>"><%=p.order%>. <%=p.name%></option>
+    <% end %>
+</select>  
+
+<label for="m_flow" class="form-label">Workflow</label>
+<select id="m_flow" class="form-select mb-3" aria-label="">
+    <option value=""></option>
+    <% for wf in wfs %>
+        <option value="<%=wf.id%>"><%=wf.name%></option>
+    <% end %>
+</select>     
+        
+<label for="m_message" class="form-label">Message</label>
+<input id="m_message" type="text" class="form-control" >   
+<script>
+function actionChange(){
+    t = $("#m_action").val()
+    $("#m_flow,#m_process,#m_message,label[for=m_flow],label[for=m_process],label[for=m_message]").hide()
+    if(t=='1') $("#m_process,label[for=m_process]").show()
+    if(t=='2') $("#m_flow,label[for=m_flow]").show()
+    if(t=='3') $("#m_message,label[for=m_message]").show()
+}
+actionChange()
+$("#m_action").change(actionChange)
+</script>   

@@ -107,10 +107,12 @@
         <h5 class="modal-title">Action</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur.</div>
+      <div class="modal-body">
+        
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary">Add</button>
       </div>
     </div>
   </div>
@@ -119,6 +121,12 @@
 <script>
 
 function addAction(pid){
+  wid = $("#wid").val()
+  $.ajax({
+    url: "../EmsKM/action_modal?wid="+wid+"&pid="+pid,
+  }).done(function(html) {
+    $( '.modal-body' ).html(html);
+  });
   $("#actionModal").modal('toggle');
 }
 
