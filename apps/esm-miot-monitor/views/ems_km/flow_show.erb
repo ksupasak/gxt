@@ -7,7 +7,8 @@
 <div class="card-body">
 <h1><%=flow.name%></h1>
 <input type="hidden" id="wid" value="<%=params[:id]%>">
-<div class="col-12 col-lg-8 col-xl-8">
+<input type="hidden" id="m_process_id" value="">
+<div class="col-12 col-lg-12 col-xl-12">
   <form action="<%= get_path 'process_create'%>" method="post" data-remote='true' data-remote-update="kprocess_panel">
     <input type="hidden" name="record[kworkflow_id]" value="<%=flow.id%>">
     <!--<div class="card-body p-0">
@@ -24,31 +25,7 @@
 
     <br>
     <div id="kprocess_list">
-    <%
-        processs = EMSKProcess.where(:kworkflow_id=>flow.id).all()
-        for p in processs
-    %>
-    <div id="<%=p.id%>">
-      <div class="card radius-10 border shadow-none">
-        <div class="card-body">
-          <div class="row d-flex align-items-center">
-            <div class="col-10">
-              <div class="row">
-                <div class="col-2"><%=p.order%></div>
-                <div class="col-10"><p class="mb-0 "><%=p.name%></p></div>
-                <div class="col-2"></div>
-                <div class="col-10"><p class="mb-0 "><%=p.name_en%></p></div>
-              </div>
-            </div>
-            <div class="col align-self-end">
-              <!--<a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>-->
-              <a href="javascript:editProcess('<%=p.id%>');" class="btn btn-light">edit</a>
-            </div>
-          </div> 
-        </div>
-      </div>
-    </div>
-    <%  end%>
+    
     </div><!--kprocess_list-->
 
 
@@ -112,7 +89,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
+        <a href="javascript:saveAction()" class="btn btn-primary">Add</a>
       </div>
     </div>
   </div>
@@ -122,12 +99,42 @@
 
 function addAction(pid){
   wid = $("#wid").val()
+  $("#m_process_id").val(pid)
   $.ajax({
     url: "../EmsKM/action_modal?wid="+wid+"&pid="+pid,
   }).done(function(html) {
     $( '.modal-body' ).html(html);
   });
   $("#actionModal").modal('toggle');
+}
+
+function saveAction(){
+  kprocess_id=$("#m_process_id").val()
+  kworkflow_id=$("#wid").val()
+  name=$("#m_sel").val()
+  type=$("#m_action").val()
+  message=$("#m_message").val()
+  linkto_process_id=$("#m_process").val()
+  linkto_workflow_id=$("#m_flow").val()
+  //alert("name="+name+" kprocess_id="+kprocess_id)
+  $.ajax({
+    type:"POST",
+    url:"../EmsKM/action_create",
+    data:{record:{kworkflow_id:kworkflow_id,kprocess_id:kprocess_id,name:name,type:type,message:message,linkto_process_id:linkto_process_id,linkto_workflow_id:linkto_workflow_id}}
+  }).done(function(data){
+    reloadProcess()
+    $("#actionModal").modal('toggle');
+  })
+}
+
+function delAction(id){
+  if(confirm('Are you sure?')){   
+    $.ajax({
+      url:"../EMSKAction/destroy?id="+id,
+    }).done(function(data){
+      reloadProcess()
+    })
+  }
 }
 
 function reloadProcess(){
@@ -138,6 +145,8 @@ function reloadProcess(){
     $( '#kprocess_list' ).html(html);
   });
 }
+reloadProcess()
+
 function editProcess(pid){
   $.ajax({
     url: "../EmsKM/process_edit?pid="+pid,
@@ -159,11 +168,13 @@ function updateProcess(pid){
   })
 }
 function delProcess(pid){
-  $.ajax({
-    url: "../EmsKM/process_del?pid="+pid,
-  }).done(function(html) {
-    reloadProcess()
-  });
+  if(confirm('Are you sure?')){   
+    $.ajax({
+      url: "../EmsKM/process_del?pid="+pid,
+    }).done(function(html) {
+      reloadProcess()
+    });
+  }
 }
 </script>
 <% end #if params%>

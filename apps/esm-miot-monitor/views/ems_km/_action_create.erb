@@ -1,0 +1,23 @@
+
+	
+<% if request.post? 
+
+
+	
+if params[:record]
+
+	p = params[:record]
+	
+	record = EMSKAction.create p
+			
+end
+	
+
+
+%>
+<% if record%>
+บันทึกสำเร็จ
+
+<% end #if record%>
+
+<% end #if request%>

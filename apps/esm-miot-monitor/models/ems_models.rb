@@ -121,9 +121,17 @@ class EMSKAction < GXTModel
   
   key :name, String
 
+  key :type, String
+
+  key :message, String
+
   key :linkto, Float
+  key :linkto_process_id, ObjectId
+  key :linkto_workflow_id, ObjectId
 
   key :kprocess_id, ObjectId
+
+  key :kworkflow_id, ObjectId
         
 end
 
