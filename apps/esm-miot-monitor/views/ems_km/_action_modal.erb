@@ -9,9 +9,9 @@
 </select>
 <label for="m_action" class="form-label">To Do</label>
 <select id="m_action" class="form-select mb-3" aria-label="">
-    <option value="3">Alert message</option>
-    <option value="1">Go to process</option>
-    <option value="2">New workflow</option>
+    <option value="1">Alert message</option>
+    <option value="2">Go to process</option>
+    <option value="3">New workflow</option>
     <option value="4">CPR</option>
 </select>        
 <label for="m_process" class="form-label">Process</label>
@@ -36,9 +36,9 @@
 function actionChange(){
     t = $("#m_action").val()
     $("#m_flow,#m_process,#m_message,label[for=m_flow],label[for=m_process],label[for=m_message]").hide()
-    if(t=='1') $("#m_process,label[for=m_process]").show()
-    if(t=='2') $("#m_flow,label[for=m_flow]").show()
-    if(t=='3') $("#m_message,label[for=m_message]").show()
+    if(t=='1') $("#m_message,label[for=m_message]").show()
+    if(t=='2') $("#m_process,label[for=m_process]").show()
+    if(t=='3') $("#m_flow,label[for=m_flow]").show()
 }
 actionChange()
 $("#m_action").change(actionChange)

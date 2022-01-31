@@ -3,7 +3,6 @@
 
 	
 if params[:record] and params[:cpid]
-# if params[:case_id] and params[:kworkflow_id]
     record = EMSCaseProcess.find params[:cpid]
 	p = params[:record]
     if record
@@ -11,7 +10,18 @@ if params[:record] and params[:cpid]
     else
 	    record = EMSCaseProcess.create p
 	end
-	# record = EMSCaseWorkflow.create :case_id=>params[:case_id],:kworkflow_id=>params[:kworkflow_id]
+
+	#Action
+	actions = EMSKAction.where(:kprocess_id=>record.kprocess_id,:name=>record.action).all()
+	for a in actions
+		if a.type=='1' #Alert message
+			# Message.create :content=>a.message
+		elsif a.type=='2' #Go to process
+		elsif a.type=='3' #New workflow
+			EMSCaseWorkflow.create :case_id=>record.case_id,:kworkflow_id=>a.linkto_workflow_id
+		elsif a.type=='4' #CPR
+		end
+	end
 			
 end
 	
