@@ -5,7 +5,18 @@
 
 <div class="card">
 <div class="card-body">
-<h1><%=flow.name%></h1>
+<div class="row">
+<div class="col-9"><h3><%=flow.name%></h3></div>
+<div class="col-3">
+
+<a href="index" class="btn btn-light"><< Back</a>
+<a href="flow_json?id=<%=params[:id]%>" target="_blank" class="btn btn-light">JSON</a>
+<a href="javascript:delFlow('<%=params[:id]%>');" class="btn btn-light" >&nbsp;<i class="bx bx-trash"></i></a>
+
+</div>
+</div>
+
+
 <input type="hidden" id="wid" value="<%=params[:id]%>">
 <input type="hidden" id="m_process_id" value="">
 <div class="col-12 col-lg-12 col-xl-12">
@@ -173,6 +184,16 @@ function delProcess(pid){
       url: "../EmsKM/process_del?pid="+pid,
     }).done(function(html) {
       reloadProcess()
+    });
+  }
+}
+function delFlow(id){
+  if(confirm('Are you sure?')){   
+    
+    $.ajax({
+      url: "../EmsKM/flow_del?id="+id,
+    }).done(function(html) {
+      window.location.href="../EmsKM/index"
     });
   }
 }

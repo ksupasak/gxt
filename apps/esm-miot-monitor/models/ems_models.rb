@@ -135,6 +135,16 @@ class EMSKAction < GXTModel
         
 end
 
+class EMSKBackup < GXTModel
+  
+  include Mongoid::Document
+  
+  key :name, String
+  key :code, String
+  include Mongoid::Timestamps
+        
+end
+
 class EMSCaseWorkflow < GXTModel
   
   include Mongoid::Document
@@ -422,6 +432,10 @@ class EMSKProcessController < GXTDocument
 end
 
 class EMSKActionController < GXTDocument
+  
+end
+
+class EMSKBackupController < GXTDocument
   
 end
 
