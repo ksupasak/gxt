@@ -7,6 +7,10 @@ if params[:record]
 	if record
 		cps = EMSCaseProcess.where(:case_workflow_id=>record.id).all()
 		for cp in cps
+			ms = Message.where(:file_id=>cp.id).all()
+			for m in ms
+				m.destroy
+			end
 			cp.destroy
 		end
 	end

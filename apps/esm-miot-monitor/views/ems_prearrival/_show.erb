@@ -36,11 +36,9 @@
         m_cp = Hash[case_processs.collect{|i| [i.kprocess_id,i]}.compact]
         case_flows_ids = case_flows.collect{|i| i.kworkflow_id}
         select_flows = flows.collect{|i| i if !case_flows_ids.index(i.id)}.compact
-        for f in select_flows
+      
     %>
-    <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
-    
-    <%  end %>
+  
 
     <%
         for cf in case_flows
@@ -82,15 +80,21 @@
         <div class="card-body">
           <!--<div class="d-flex align-items-center">-->
             <div class="row <%=nowclass%>" id="<%=pc.id%>" cwid="<%=cf.id%>">
-              <div class="col-8 col-md">
+              <div class="col-9 col-md">
                 <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> </p>
-                <input type="text" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-<%=pc.id%>" value="<%=cpnote%>">
+                <input type="hidden" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-<%=pc.id%>" value="<%=cpnote%>">
+                <%  if cpnote!=''%>
+                <div class="shadow p-2 m-2 rounded"><%=cpnote%></div>
+                <%  end %>
               </div>
-              <div class="col-2 col-md-1">
+              <div class="col-1 col-md-1">
                 <a href="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','y');" class="btn <%=yclass%>">&nbsp;<i class="bx bx-check"></i>&nbsp;</a>
               </div>
-              <div class="col-2  col-md-1">
+              <div class="col-1  col-md-1">
                 <a href="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','n')" class="btn <%=nclass%>">&nbsp;<i class="bx bx-x"></i>&nbsp;</a>
+              </div>
+              <div class="col-1  col-md-1">
+                <a href="javascript:modalNote('<%=pc.id%>','<%=cpid%>')" class="btn btn-light">&nbsp;<i class="bx bx-edit"></i>&nbsp;</a>
               </div>
             </div>
           <!--</div>-->
@@ -109,7 +113,7 @@
 %>
 
 <div class="col-12 col-lg-4 col-xl-4">
-  <div class="card radius-10">
+  <div class="card radius-10 sticky-top">
     <div class="card-header bg-transparent">
       <div class="d-flex align-items-center">
         <div>
@@ -159,11 +163,68 @@
 
 </div><!--row-->
 
+
+<%for f in select_flows
+    %>
+    <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
+    
+    <%  end %>
 <div id="prearrival_panel">
   result
 </div>
 
+<div class="modal fade" id="actionModal" tabindex="-1" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Note</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" class="form-control form-control-sm mb-3" placeholder="pid" name="" id="note-pid" value="">
+        <input type="hidden" class="form-control form-control-sm mb-3" placeholder="cpid" name="" id="note-cpid" value="">
+        <input type="text" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-add" value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="javascript:addNote()" class="btn btn-primary">Add</a>
+      </div>
+    </div>
+  </div>
+</div><!--modal-->
+
 <script>
+function modalNote(pid,cpid){
+  note = $("#"+pid).find("#note-"+pid).val()
+  $("#note-add").val(note)
+  $("#note-pid").val(pid)
+  $("#note-cpid").val(cpid)
+  
+  
+  $("#actionModal").on('shown.bs.modal',function(e){
+    $("#note-add").focus()
+  })
+  $("#actionModal").modal('toggle');
+  
+  
+}
+function addNote(){
+  case_id = $("#pre_case_id").val()
+  pid = $("#note-pid").val()
+  cpid = $("#note-cpid").val()
+  note = $("#note-add").val()
+  cwid = $("#"+pid).attr("cwid")
+  // alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_process_create",
+    data:{record:{case_id:case_id,case_workflow_id:cwid,kprocess_id:pid,note:note},cpid:cpid}
+  }).done(function(data){
+    $("#actionModal").modal('toggle');
+    reloadPrearrival()
+  })
+}
+
 function updateProcess(pid,cpid,action){
   case_id = $("#pre_case_id").val()
   note = $("#"+pid).find("#note-"+pid).val()
@@ -214,6 +275,12 @@ function delFlow(fid){
 $(document).ready(function(){
   $(".add-flow").click(function(){
     addFlow($(this).attr("fid"))
+  })
+
+  $("#note-add").keypress(function(e){
+    if(e.which == 13) {
+        addNote()
+    }
   })
 
   $('.t').each(function(){

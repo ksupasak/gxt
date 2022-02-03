@@ -96,9 +96,10 @@ class EMSKWorkflow < GXTModel
   include Mongoid::Document
   
   key :name, String
-  
-  key :code, String
-      
+  key :code, String      
+  key :type, String
+  key :visible, String
+
 end
 
 class EMSKProcess < GXTModel
