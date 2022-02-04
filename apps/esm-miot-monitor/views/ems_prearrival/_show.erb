@@ -14,6 +14,8 @@
 <div class="col-12 col-lg-8 col-xl-8">
   <%
         flows = EMSKWorkflow.all()
+        cbd_codes = EMSCode.all()
+        m_cbd_codes = cbd_codes.collect{|i| [i.id,i.code]}.compact.to_h
   %>
   <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="prearrival_panel">
     <div class="card-body p-0">
@@ -31,6 +33,19 @@
         record = EMSCase.find params[:case_id]
 
         m_f_name = Hash[flows.collect{|i| [i.id,i.name]}.compact]
+        case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
+        if case_flows.size()==0
+          flow_init = flows.collect{|i| i if i.type=='init'}.compact
+          for fi in flow_init
+            EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
+          end
+          if record.init_cbd_code
+            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code]}.compact 
+            for fi in flow_cbd
+              EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
+            end
+          end
+        end
         case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
         case_processs = EMSCaseProcess.where(:case_id=>record.id).all()
         m_cp = Hash[case_processs.collect{|i| [i.kprocess_id,i]}.compact]
