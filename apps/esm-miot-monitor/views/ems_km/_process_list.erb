@@ -1,6 +1,11 @@
 <%
     if params[:wid]
+    wfs = EMSKWorkflow.all()
     processs = EMSKProcess.where(:kworkflow_id=>params[:wid]).all()
+    actions = EMSKAction.where(:kworkflow_id=>params[:wid]).all()
+    atype = {'1'=>'Alert message','2'=>'Go to process','3'=>'New workflow','4'=>'CPR',}
+    m_porder = Hash[processs.collect{|i| [i.id,i.order]}.compact]
+    m_wname = Hash[wfs.collect{|i| [i.id,i.name]}.compact]
     for p in processs
 %>
 <div id="<%=p.id%>">
@@ -8,12 +13,38 @@
     <div class="card-body">
         <div class="row d-flex align-items-center">
         <div class="col-10">
-            <%=p.order%><p class="mb-0 "><%=p.name%></p>
-            <p class="mb-0 "><%=p.name_en%></p>
+              <div class="row">
+                <div class="col-2"><%=p.order%></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name%></p></div>
+                <div class="col-2"></div>
+                <div class="col-10"><p class="mb-0 "><%=p.name_en%></p></div>
+            <% 
+                pactions = actions.collect{|i| i if i.kprocess_id==p.id}.compact
+                if pactions.size>0
+            %>
+                <div class="col-12"><br><br></div>
+                <div class="col-2">Action : </div>
+                <div class="col-10 ">
+                <% for a in pactions 
+                        atarget = ''
+                        atarget = ' : '+a.message if a.type=='1'
+                        atarget = ' : '+m_porder[a.linkto_process_id].to_s if a.type=='2'
+                        atarget = ' : '+m_wname[a.linkto_workflow_id].to_s if a.type=='3'
+                        aclass = 'primary'
+                        aclass = 'danger' if a.name.downcase=="n"
+                %>
+                <a href="javascript:delAction('<%=a.id%>')" class="btn btn-light px-2 m-1">&nbsp;<i class="bx bx-trash"></i></a>
+                <span class="btn btn-outline-<%=aclass%> px-3"><%=a.name%></span>
+                    <%="#{atype[a.type]} #{atarget}"%><br>
+                <%  end #for a%>
+                </div>
+            <%  end #if%>
+              </div><!--row-->
         </div>
-        <div class="col align-self-end">
+        <div class="col ">
             <!--<a href="./flow_show?id=<%=p.id%>" class="btn btn-light">edit</a>-->
-            <a href="javascript:editProcess('<%=p.id%>');" class="btn btn-light">edit</a>
+            <a href="javascript:editProcess('<%=p.id%>');" class="btn btn-light m-1"> <i class="bx bx-edit"></i> edit&nbsp;&nbsp;&nbsp;&nbsp; </a>
+            <a href="javascript:addAction('<%=p.id%>');" class="btn btn-light m-1"> <i class="bx bx-plus-circle"></i> action </a>
         </div>
         </div>
     </div>

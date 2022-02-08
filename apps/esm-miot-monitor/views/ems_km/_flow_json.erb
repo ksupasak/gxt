@@ -1,0 +1,14 @@
+<%
+    if params[:id]
+    flow = EMSKWorkflow.find params[:id]
+    processs = EMSKProcess.where(:kworkflow_id=>params[:id]).all()
+    actions = EMSKAction.where(:kworkflow_id=>params[:id]).all()
+    processs.each_with_index{|p,index|
+        as = actions.collect{|i| i if i.kprocess_id==p.id}.compact
+        processs[index][:action]=as if as.size>0
+    }
+    flow[:process] = processs
+
+%>
+<%=flow.to_json%>
+<%  end #if param[:id]%>

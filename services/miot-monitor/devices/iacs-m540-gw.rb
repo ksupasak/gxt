@@ -17,6 +17,7 @@ require_relative 'iacs-lib'
 
 # M540 data on this port
 
+puts 'hi'
 
 module Device
 
@@ -174,7 +175,8 @@ module Device
           puts
         end
         
-        
+
+	#puts m.keys.collect{|i| "#{i} = #{m[i]}"}.join("\n")
         
         true_hr = nil
       
@@ -258,7 +260,10 @@ module Device
 
         vs[:bp] = "#{bp_sys}/#{bp_dia}"
 
-	      vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
+	#vs[:temp] = (m['1-104-0-1-2']/10.0) if m['1-104-0-1-2']
+
+	vs[:temp] = (m['26-11-0-1-17']/10.0) if m['26-11-0-1-17']
+
 
         vs[:msg] = m['msg'] if m['msg']
         #	puts map.keys.sort.inspect

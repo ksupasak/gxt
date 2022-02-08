@@ -1,9 +1,15 @@
 
 <div class="card">
 <div class="card-body">
-<h1>Kownledge Management</h1>
 
-<div class="col-12 col-lg-8 col-xl-8">
+<div class="row">
+<div class="col-9"><h1>Knowledge Management</h1></div>
+<div class="col-3">
+<a href="_flow_import_json" target="_blank" class="btn btn-light">Import JSON</a>
+</div>
+</div>
+
+<div class="col-12 col-lg-12 col-xl-12">
   <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
     <div class="card-body p-0">
       <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>

@@ -96,9 +96,10 @@ class EMSKWorkflow < GXTModel
   include Mongoid::Document
   
   key :name, String
-  
-  key :code, String
-      
+  key :code, String      
+  key :type, String
+  key :visible, String
+
 end
 
 class EMSKProcess < GXTModel
@@ -121,9 +122,27 @@ class EMSKAction < GXTModel
   
   key :name, String
 
+  key :type, String
+
+  key :message, String
+
   key :linkto, Float
+  key :linkto_process_id, ObjectId
+  key :linkto_workflow_id, ObjectId
 
   key :kprocess_id, ObjectId
+
+  key :kworkflow_id, ObjectId
+        
+end
+
+class EMSKBackup < GXTModel
+  
+  include Mongoid::Document
+  
+  key :name, String
+  key :code, String
+  include Mongoid::Timestamps
         
 end
 
@@ -415,6 +434,10 @@ class EMSKProcessController < GXTDocument
 end
 
 class EMSKActionController < GXTDocument
+  
+end
+
+class EMSKBackupController < GXTDocument
   
 end
 
