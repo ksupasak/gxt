@@ -175,7 +175,8 @@ class EMSCommand < GXTModel
   key :ambulance_id, ObjectId
   key :note, String
 
-        
+  include Mongoid::Timestamps
+          
 end
 
 
