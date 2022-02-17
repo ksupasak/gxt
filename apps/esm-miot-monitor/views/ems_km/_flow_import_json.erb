@@ -9,8 +9,10 @@ if request.post?
         a_input = p[:action]
         EMSKProcess.create p.except(:action)
         %><%#=a_input.inspect%><%
-        for a in a_input
-            EMSKAction.create a
+        if a_input
+            for a in a_input
+                EMSKAction.create a
+            end
         end
     end
 
