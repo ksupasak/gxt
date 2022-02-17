@@ -1,5 +1,6 @@
 <%
     if params[:id]
+    flows = []
     flow = EMSKWorkflow.find params[:id]
     processs = EMSKProcess.where(:kworkflow_id=>params[:id]).all()
     actions = EMSKAction.where(:kworkflow_id=>params[:id]).all()
@@ -8,7 +9,7 @@
         processs[index][:action]=as if as.size>0
     }
     flow[:process] = processs
-
+    flows << flow
 %>
-<%=flow.to_json%>
+<%=flows.to_json%>
 <%  end #if param[:id]%>
