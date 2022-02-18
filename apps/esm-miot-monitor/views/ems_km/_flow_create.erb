@@ -9,7 +9,12 @@ if params[:record]
 	p = params[:record]
 	
 	record = EMSKWorkflow.create p
-			
+	fs = EMSKWorkflow.all()
+  o =0.0
+  os = fs.collect{|i| i.order if i.order}.compact
+  o = os.max if os.size>0
+  o+=1
+  record.update_attributes :order=>o
 end
 	
 

@@ -10,7 +10,7 @@
 </div>
 </div>
 <%
-  flows = EMSKWorkflow.all()
+  flows = EMSKWorkflow.order(:order=>1).all()
 %>
 <div class="col-12 col-lg-12 col-xl-12">
     <div class="card-body p-0">
