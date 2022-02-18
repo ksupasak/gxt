@@ -99,6 +99,7 @@ class EMSKWorkflow < GXTModel
   key :code, String      
   key :type, String
   key :visible, String
+  key :order, Float
 
 end
 
