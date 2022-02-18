@@ -6,30 +6,31 @@
 <div class="col-9"><h1>Knowledge Management</h1></div>
 <div class="col-3">
 <a href="_flow_import_json" target="_blank" class="btn btn-light">Import JSON</a>
+<a href="_flow_json?id=all" target="_blank" class="btn btn-light">JSON All</a>
 </div>
 </div>
-
+<%
+  flows = EMSKWorkflow.all()
+%>
 <div class="col-12 col-lg-12 col-xl-12">
-  <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
     <div class="card-body p-0">
-      <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
-      <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+      <label for="searchName" class="form-label">ค้นหาอาการ</label>
+      <input class="form-control" list="datalistOptions" id="searchName" placeholder="Type to search...">
       <datalist id="datalistOptions">
-        <option value="San Francisco">
-        </option><option value="New York">
-        </option><option value="Seattle">
-        </option><option value="Los Angeles">
-        </option><option value="Chicago">
-        </option></datalist>
+      <%  for f in flows %>
+        <option value="<%=f.name%>"></option>
+      <%  end %>
+        </datalist>
+
     </div>
+  <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
 
     <br>
     <div id="kworkflow_list">
     <%
-        flows = EMSKWorkflow.all()
         for f in flows
     %>
-    <div class="card radius-10 border shadow-none">
+    <div class="card radius-10 border shadow-none dfname" fname="<%=f.name%>">
       <div class="card-body">
         <div class="row d-flex align-items-center">
           <div class="col-10">
@@ -61,3 +62,16 @@
 
 </div>
 </div>
+<script>
+$("#searchName").keyup(function(){
+  s = $(this).val().toLowerCase()
+  $(".dfname").each(function(i,v){
+    if($(v).attr("fname").toLowerCase().indexOf(s)==-1){ 
+      $(v).hide()
+    }else{
+      $(v).show()
+    }
+    if(s=='') $(v).show()
+  })
+})
+</script>
