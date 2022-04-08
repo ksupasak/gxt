@@ -58,6 +58,11 @@ def get_vital_sign tip, station_name="-"
   last = nil
 
   a = true
+  
+  
+  mapx = {}
+  
+  
   begin
 
   while true 
@@ -68,6 +73,9 @@ def get_vital_sign tip, station_name="-"
     # puts '1'
   msg_c = "\x00\x00\x00\x00\x00\x00~\x01\x8A\xC1\x00\x00\x00\xCA\x00)\x00\x06\x00\x00\x00\x00\x00\x00ICU|B288A\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
   
+  # msg_c = "\x00\x00\x00\x00\x00\x00~\x01\x8A\xC1\x00\x00\x00\xCA\x00)\x00\x06\x00\x00\x00\x00\x00\x00EDOT|BED3\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+  # \x01\x04\x00\x00\xC0\xA8\x01\nb\n@{OT|BED3\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x01\a\xD0\x00\x1F\x05\x00\x00\x11\x02\"\x00\x13\a\xD0\x00\f\a\xD0\x00\r\a\xD0\x00\x1C\a\xD0\x00\x0E\a\xD0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+ 
   # puts "B450 "
   # puts msg_c.bytes.inspect
 
@@ -79,9 +87,10 @@ def get_vital_sign tip, station_name="-"
   tx[9] = ips[3]
   # puts HOST_IP
   tx = tx.collect{|i| i.chr}.join
-  # puts tx.bytes.inspect 
-  
-  u2.send tx, 0, tip,2000  
+  # puts tx.bytes.inspect
+  #
+  # puts 'send acc'
+  u2.send tx, 0, tip, 2000  
   
   # puts '1.2'
   data = nil
@@ -115,6 +124,9 @@ def get_vital_sign tip, station_name="-"
   # send token
   u2.send tx, 0, tip,2000
 
+
+  # puts 'send acc 2'
+
   end  
   
   # puts '3'
@@ -123,13 +135,39 @@ def get_vital_sign tip, station_name="-"
     data = u2.recvfrom(1000)
   }
   
+  # puts 'send acc 3'
+  
   # puts data.inspect
   msg = data[0]
 
   #
-  # msg.size.times do |i|
-  #   puts "#{i}\t#{msg[i].inspect}\t#{msg[i]}\t#{msg[i].ord}"
-  # end
+  msg.size.times do |i|
+    # puts "#{i}\t#{msg[i].inspect}\t#{msg[i]}\t#{msg[i].ord}"
+    # puts "#{i}\t#{msg[i].ord}"
+    
+    
+    mapx[i] = [] unless mapx[i]
+    
+    unless mapx[i].index(msg[i].ord)
+      
+      
+      mapx[i] << msg[i].ord
+    
+      
+    end
+    
+
+  end
+
+  msg.size.times do |i| 
+    
+    if mapx[i].size > 0
+      puts "#{i}\t#{mapx[i].join("\t")}"
+    end
+    
+  end
+   
+  
 
 # puts '4'
 # puts msg.size

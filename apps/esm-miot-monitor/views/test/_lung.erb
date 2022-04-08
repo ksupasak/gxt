@@ -1,0 +1,671 @@
+<html>
+<head>
+    <title>Medical IOT Solution</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
+	<link href="/open-iconic/font/css/open-iconic-foundation.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="" rel="stylesheet">
+	<script src="/vendor/jquery-1.9.1.min.js"></script>
+  <script src="/vendor/d3/d3.min.cus.js"></script>
+
+
+  <style>
+	#chart {
+	  text-align: center;
+/*	  margin-top: 40px;*/
+  }
+  .main-panel{
+  	
+	  width:800px;
+	  height:400px;
+	  border:1px solid gray;
+	  background:black;
+  }
+  .header{
+/*	  height:50px;*/
+	  background:gray;
+  }
+  .footer{
+/*	  height:50px;*/
+	  background:gray;
+  }
+  .primary{
+	  text-align:center;
+  }
+  .scaler path{
+  	  stroke:gray;
+  }
+  .scaler .tick{
+  	  stroke:gray;
+  }
+  .scaler .tick line{
+  	  stroke:gray;
+  }
+  </style>
+</head>
+<body style="background:#333;;padding:0px;margin:0px;color:white;width:800px;height:480;border:1px solid blue">
+
+<div class="header row">
+	<div class="col">
+	<div class="row">
+		<div class="col">
+			<button id="x" value="Mode" class="btn">Monitor</button>
+		</div>
+			
+		<div class="col">
+			<center>
+			<button id="x" value="Mode" class="btn d-flex justify-content-center">Patient</button>
+		</center>
+		</div>
+			
+		<div class="col">
+			<button id="x" value="Mode" class="btn float-right">00:00</button>
+		</div>
+	</div>
+	</div>
+</div>
+	
+<div id="single-view" class="main-panel row">
+<div class="primary col"></div>
+</div>	
+
+<div id="dual-view" class="main-panel row ">	
+<div class="primary col"></div>
+<div class="secondary col"></div>
+</div>
+
+<div class="footer row">
+	<div class="col">
+	<div class="row dflex">
+		<div class="col-5">
+			<button id="adt" class="btn" value="Mode">ADT</button>
+			<button id="toggle" class="btn" value="Mode">Mode</button>
+			<button id="toggle-ghost" class="btn" value="Mode">Ghost</button>
+			<button id="reset-mark" class="btn" value="Mode">Reset</button>
+			
+		</div>
+		<div class="col-2">
+			<center>
+				<span class="mode-title" >Mode</span>
+			</center>
+		</div>
+		<div class="col-5 ">
+			<button id="setting" class="btn float-right" value="Mode">Settings</button>
+		</div>
+	<div>
+	</div>
+</div>
+
+<div class="vpl1 view">
+  <div id="vpl"></div>
+
+</div>	
+
+<div class="vfl1 view">
+  <div id="vfl">VFL</div>
+</div>	
+
+
+<div class="trend view">
+    <div id="trend">Trend</div>
+</div>	
+
+</div class="">	
+
+	
+
+<%
+	
+data = <<EOF		
+0	25.00
+2	27.43
+4	31.07
+6	31.98
+8	35.01
+10	62.91
+12	98.40
+14	140.55
+16	173.31
+18	189.08
+20	200.00
+18	195.15
+16	189.08
+14	182.71
+12	166.94
+10	146.62
+8	116.90
+6	81.41
+4	56.85
+2	35.92
+0	28.64
+EOF
+	
+	lines = data.split("\n").collect{|i| t = i.strip.split(" ").collect{|j| j.strip}; {'x'=>t[0].to_i, 'y'=>t[1].to_i}}
+	
+
+	
+gdata = <<EOF		
+0	20.83
+2	22.86
+4	25.89
+6	26.65
+8	29.18
+10	52.43
+12	82.00
+14	117.13
+16	144.43
+18	157.57
+20	166.67
+18	162.63
+16	157.57
+14	152.26
+12	139.12
+10	122.18
+8	97.42
+6	67.84
+4	47.38
+2	29.93
+0	23.87
+EOF
+	
+	glines = gdata.split("\n").collect{|i| t = i.strip.split(" ").collect{|j| j.strip}; {'x'=>t[0].to_i, 'y'=>t[1].to_i}}
+		
+		
+%>
+
+<script>
+	
+	var modes = [];
+	var current_mode = 0;
+
+
+	modes.push(['Single PVL','single',['vpl1']])
+	modes.push(['Dual PVL','dual',['vpl1','trend']])
+	modes.push(['Single FVL','single',['vfl1']])
+	modes.push(['Dual FVL','dual',['vfl1','trend']])
+	modes.push(['Combine View','dual',['vpl1','vfl1']])
+
+
+	$('.main-panel').hide()
+	$('.view').hide()
+
+
+	function show(stage){
+		$('#'+stage+"-view").show();
+	}
+
+
+	function showMode(mode_id){
+		$('.main-panel').hide()
+		$('.view').hide()
+		ms = modes[mode_id];
+
+		title = ms[0]
+		view = ms[1]
+		components = ms[2]
+
+		dview = $('#'+view+"-view")
+
+		dlist = ["primary","secondary"]
+
+		for(var ix in components){
+
+			i = components[ix];
+			d = $('.'+i)
+			d.show();
+			primary = dview.find("."+dlist[ix])
+			d.appendTo(primary)
+		}
+		$('.mode-title').html(title)
+
+		show(view)
+
+	}
+
+	showMode(1)
+
+	function toggle(){
+
+		current_mode++;
+
+		if(current_mode>modes.length-1)current_mode=0;
+		// alert(current_mode)
+		showMode(current_mode)
+
+
+	}
+
+	$('#toggle').click(toggle);
+
+</script>
+
+<script>
+	
+	
+	
+	class Lung {
+		
+		
+	  constructor(height, width) {
+	    this.height = height;
+	    this.width = width;
+	
+		this.tindex = 0;
+		this.vindex = 0;
+		this.lastx=null;
+		this.lasty=null;
+		this.vpl = <%=lines.to_json %>
+		this.gvpl = <%=glines.to_json %>
+	
+		this.vplx = <%=lines.to_json %>
+	
+		this.ghost_show = false;
+		
+		this.reload();
+		this.interval = 200;
+		
+		
+		
+	  }
+	
+	
+
+	
+
+ genValue(){
+    // console.log(this)
+  //
+  //   console.log(this.vindex)
+	var d = this.vplx[this.vindex];
+	// console.log(vindex)
+	// console.log(d)
+
+	// console.log(vplx)
+	let v = d['x']
+	let p = d['y']
+	// console.log("x = "+vindex+","+vplx.length)
+	//
+	this.receiveValue(v,p)
+	this.vindex++;
+	this.tindex++;
+	if(this.vindex>this.vplx.length-1){
+		this.vindex=0;
+		$('.vpl-path').remove()
+	}
+	
+	if(this.tindex > 50){
+		this.tindex=0;
+		$('.trend-path').remove()
+	}
+		
+}
+
+toggleGhost(){
+	
+	if(this.ghost_show){
+		$('.ghost').hide();
+		this.ghost_show = false;
+	}else{
+		$('.ghost').show();
+		this.ghost_show = true;
+	}
+	
+}
+resetMark(){
+	
+	
+	$('.marker').remove();
+
+	
+}
+
+ receiveValue(v,p){
+	 
+	// console.log("vp = "+v+","+p)
+	
+	
+
+	if(this.lastx!=null){	
+
+		
+		
+		
+	  let ldata = [{'x':this.lastx,'y':this.lasty},{'x':v,'y':p}]
+  	  const line = d3
+  	  .line()
+  	  .x(dataPoint => this.xScale(dataPoint.x))
+  	  .y(dataPoint => this.yScale(dataPoint.y));
+		
+		// Add path
+		const path = this.grp
+		  .append("path")
+		  .attr("transform", `translate(${this.margin.left},30)`)
+		  .datum(ldata)
+		  .attr('class','vpl-path')
+		  .attr("fill", "none")
+		  .attr("stroke", "yellow")
+		  .attr("stroke-linejoin", "round")
+		  .attr("stroke-linecap", "round")
+		  .attr("stroke-width", 1.5)
+		  .attr("d", line);
+
+
+		const pathLength = path.node().getTotalLength();
+
+
+		const transitionPath = d3
+		  .transition()
+		  .ease(d3.easeLinear)
+		  .duration(this.interval);
+  
+	  	path
+	  	  .attr("stroke-dashoffset", pathLength)
+	  	  .attr("stroke-dasharray", pathLength)
+	  	  .transition(transitionPath)
+	  	  .attr("stroke-dashoffset", 0);
+  
+
+		const linex = d3
+		  .line()
+		  .x(function(d,i){
+		  		console.log(i)
+			  return this.txScale(this.tindex+i);
+			  
+		  }.bind(this))
+		  .y(dataPoint => this.tyScale(dataPoint.y));
+		
+		// Add path
+		const tpath = this.grp_trend
+		  .append("path")
+		  .attr("transform", `translate(${this.margin.left},30)`)
+		  .datum(ldata)
+		  .attr('class','trend-path')
+		  .attr("fill", "none")
+		  .attr("stroke", "yellow")
+		  .attr("stroke-linejoin", "round")
+		  .attr("stroke-linecap", "round")
+		  .attr("stroke-width", 1.5)
+		  .attr("d", linex);
+
+
+		const tpathLength = tpath.node().getTotalLength();
+
+
+		const ttransitionPath = d3
+		  .transition()
+		  .ease(d3.easeLinear)
+		  .duration(this.interval);
+  
+	  	tpath
+	  	  .attr("stroke-dashoffset", tpathLength)
+	  	  .attr("stroke-dasharray", tpathLength)
+	  	  .transition(ttransitionPath)
+	  	  .attr("stroke-dashoffset", 0);
+  
+		
+		
+	}
+	
+	this.lastx = v;
+	this.lasty = p;
+	
+}
+
+chartClick(){
+
+		
+	    var coords = d3.mouse(this.svg.node());
+
+		let x = this.xScale.invert(coords[0]-this.margin.left)
+		let y = this.yScale.invert(coords[1]-this.margin.top-30)
+
+	  	console.log(""+x+", "+y+"  "+coords[0]+", "+coords[1])
+		
+	this.svg.append("circle")
+    .style("stroke", "gray")
+	.style("opacity", 0.8)
+	.attr("class","marker")
+    .style("fill", "#331")
+    .attr("r", 8)
+    .attr("cx", coords[0])
+    .attr("cy",coords[1] );
+	
+	this.svg.append('text')
+	  .attr('x', coords[0]+15)
+	  .attr('y', coords[1]+5)
+	  .attr("class","marker")
+	  .attr('fill', 'gray')
+	  .style("font-size", 16)
+	  .text("("+parseInt(x*10)/10+", "+parseInt(y)+")")
+	
+	
+	
+	
+	
+
+}
+
+	 reload(){	
+    
+	
+		 
+
+    setInterval(this.genValue.bind(this),200);
+
+
+    this.data = vpl
+	// Create SVG and padding for the chart
+
+	this.margin = { top: 0, bottom: 20, left: 30, right: 20 };
+
+
+	this.svg_chart = d3
+	  .select("#trend")
+	  .append("svg")
+	  .attr("height", 300+50)
+	  .attr("width", 350)
+
+
+// Create scales
+this.tyScale = d3
+  .scaleLinear()
+  .range([100, 0])
+  .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
+this.txScale = d3
+  .scaleLinear()
+  .range([0, 300])
+  .domain([0,40]);
+  
+  
+
+const linex = d3
+  .line()
+  .x(dataPoint => this.txScale(dataPoint.x))
+  .y(dataPoint => this.tyScale(dataPoint.y));
+
+
+
+	    this.trend = this.svg_chart.append("g").attr("transform", `translate(${this.margin.left},0)`);
+
+	
+	   this.grp_trend = this.trend
+  		.append("g")
+  		.attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
+
+	    //
+	    // const xpath = this.grp_trend
+	    // .append("path")
+	    // .attr("transform", `translate(${this.margin.left},30)`)
+	    // .datum(this.vpl)
+	    //
+	    // .attr("fill", "none")
+	    // .attr("stroke", "#331")
+	    // .attr("stroke-linejoin", "round")
+	    // .attr("stroke-linecap", "round")
+	    // .attr("stroke-width", 1.5)
+	    // .attr("d", linex);
+
+
+
+  	// Add the Y Axis
+  	this.trend
+  	  .append("g")
+  	  .attr('class','scaler')
+  	  .attr("stroke", "#c6bf90")
+  	  .attr("transform", `translate(0, 30)`)
+  	  .call(d3.axisLeft(this.tyScale));
+
+
+
+
+  /////////////////////////////////////////////////////
+  
+	this.svg = d3
+	  .select("#vpl")
+	  .append("svg")
+	  .attr("height", 300+50)
+	  .attr("width", 380)
+	
+	
+	this.svg.on("click", this.chartClick.bind(this));
+
+	this.chart = this.svg.append("g").attr("transform", `translate(${this.margin.left},0)`);
+	const width = +this.svg.attr("width") - this.margin.left - this.margin.right;
+	const height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
+	this.grp = this.chart
+	  .append("g")
+	  .attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
+
+	// Create scales
+	this.yScale = d3
+	  .scaleLinear()
+	  .range([height, 0])
+	  .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
+	this.xScale = d3
+	  .scaleLinear()
+	  .range([0, width])
+	  .domain(d3.extent(this.vpl, dataPoint => dataPoint.x));
+
+	const line = d3
+	  .line()
+	  .x(dataPoint => this.xScale(dataPoint.x))
+	  .y(dataPoint => this.yScale(dataPoint.y));
+
+	const line2 = d3
+	  .line()
+	  .x(dataPoint => this.xScale(dataPoint.x))
+	  .y(dataPoint => this.yScale(dataPoint.y));
+
+
+
+
+
+	// // Add path
+	// const path = grp
+	//   .append("path")
+	//   .attr("transform", `translate(${margin.left},0)`)
+	//   .datum(vpl)
+	//   .attr("fill", "none")
+	//   .attr("stroke", "yellow")
+	//   .attr("stroke-linejoin", "round")
+	//   .attr("stroke-linecap", "round")
+	//   .attr("stroke-width", 1.5)
+	//   .attr("d", line);
+
+
+
+
+	// const pathLength = path.node().getTotalLength();
+	//
+	//
+	// // D3 provides lots of transition options, have a play around here:
+	// // https://github.com/d3/d3-transition
+	// const transitionPath = d3
+	//   .transition()
+	//   .ease(d3.easeSin)
+	//   .duration(3000);
+
+  	// path
+  	//   .attr("stroke-dashoffset", pathLength)
+  	//   .attr("stroke-dasharray", pathLength)
+  	//   .transition(transitionPath)
+  	//   .attr("stroke-dashoffset", 0);
+	
+  // console.log(this.gvpl)
+// Add path
+  const gpath = this.grp
+  .append("path")
+  .attr("transform", `translate(${this.margin.left},30)`)
+  .datum(this.gvpl)
+  .attr("class", "ghost")
+  .attr("fill", "none")
+  .attr("stroke", "#331")
+  .attr("stroke-linejoin", "round")
+  .attr("stroke-linecap", "round")
+  .attr("stroke-width", 1.5)
+  .attr("d", line2);
+  
+
+  	const gpathLength = gpath.node().getTotalLength();
+
+	
+	if(this.show_ghost){
+		$('.ghost').show();
+	}else{
+		$('.ghost').hide();
+	}
+	
+
+
+	//   	// D3 provides lots of transition options, have a play around here:
+	//   	// https://github.com/d3/d3-transition
+	//   	const gtransitionPath = d3
+	//   	  .transition()
+	//   	  .ease(d3.easeSin)
+	//   	  .duration(3000);
+	//
+	//
+	//
+	//
+	// gpath
+	//   .attr("stroke-dashoffset", gpathLength)
+	//   .attr("stroke-dasharray", gpathLength)
+	//   .transition(gtransitionPath)
+	//   .attr("stroke-dashoffset", 0);
+
+	// Add the X Axis
+	this.chart
+	  .append("g")
+	  .attr('class','scaler')
+	  .attr("stroke", "#c6bf90")
+	  .attr("transform", `translate(0,${height})`)
+	  .call(d3.axisBottom(this.xScale).ticks(this.data.length));
+	// Add the Y Axis
+	this.chart
+	  .append("g")
+	  .attr('class','scaler')
+	  .attr("stroke", "#c6bf90")
+	  .attr("transform", `translate(0, 30)`)
+	  .call(d3.axisLeft(this.yScale));
+	  
+	
+	 } 
+ 
+ 
+ } 
+
+
+ 		const lung = new Lung(100,100); // ReferenceError
+	
+
+		$('#toggle-ghost').click(lung.toggleGhost).bind(lung);
+		$('#reset-mark').click(lung.resetMark).bind(lung);
+  
+  
+	 </script>
+	  
+	  </body>
+	  </html>
+	  
