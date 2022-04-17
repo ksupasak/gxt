@@ -28,7 +28,7 @@ require 'sinatra/cross_origin'
 configure do
   enable :cross_origin
 end
-
+set :allow_origin, :any
 # use Rack::SslEnforcer
 
 # set :session_secret, 'asdfa2342923422f1adc05c837fa234230e3594b93824b00e930ab0fb94b'

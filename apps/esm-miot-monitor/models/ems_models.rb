@@ -387,6 +387,9 @@ class EMSController < GXT
   end
   
   
+
+  
+  
   def send_sms params
     
     ems_case = EMSCase.find params[:id]

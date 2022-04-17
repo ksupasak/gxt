@@ -1,5 +1,7 @@
 <script src="<%=url_for('hls/hls.js')%>"></script>
 
+
+
 <%
 
 ems_case = EMSCase.find params[:id]
@@ -330,7 +332,11 @@ end
 	<div  class="col-4 order-1 ">
 					<div class="row">
 					<div class="col">
-						<iframe class="dvr" src="http://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=80030753&account=admin&password=minadadmin" style="width:100%;height:300px;border:1px solid"></iframe>
+						<center>
+						<video controls preload="none"  autoplay style="100%" height="288" data-setup="{}">
+							<source id="dvr" src="http://103.76.181.125:6604/hls/1_80030753_0_1.m3u8?JSESSIONID=45fa0acc3e264fa8bb53da71f8739961" type="application/x-mpegURL">
+						</video>
+					</center>
 					</div>
 					
 					<script>
@@ -352,7 +358,16 @@ end
 						
 						tele_path =  prefix+"/Sas/tele?resourceId=<%=ambu.name%>"
 					
-				        $('.dvr').attr( "src", dvr_path);
+					
+						json = `curl "http://103.76.181.125:8080/StandardApiAction_login.action?account=admin&password=minadadmin"`
+						
+						obj = JSON.parse json
+						
+						jsession = obj['jsession']
+					
+						dvr_path = "http://103.76.181.125:6604/hls/1_#{ambu.device_no}_0_1.m3u8?JSESSIONID=#{jsession}"
+						
+				        $('#dvr').attr( "src", dvr_path);
 					  
 						<% end %>
 					   
@@ -361,7 +376,7 @@ end
 					<% end %>
 					</script>
 					   
-					<span class="text-primary"><%=ambu.to_json.inspect%></span>
+					<span class="text-primary"></span>
 					</div>
 					<div class="row">
 						
@@ -1210,3 +1225,4 @@ result
 	//
 
 </script>	
+	
