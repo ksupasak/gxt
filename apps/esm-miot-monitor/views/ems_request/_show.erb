@@ -3,7 +3,12 @@
 	record = EMSCase.find params[:id]
 	
 %>
+	<div class="row" >
 	
+	
+<div class="col-12 ">
+
+<!-- <h5 class="text-primary">Request</h5>	 -->
 	
 <form action="<%= get_path 'update'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
 	
@@ -26,3 +31,7 @@
 <script>
 	refresh_remote()
 </script>
+	
+	
+</div>
+</div>

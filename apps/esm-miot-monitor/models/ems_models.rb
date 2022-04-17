@@ -34,7 +34,7 @@ class EMSCase < GXTModel
   key :patient_phone, String
   
   
-  
+  key :location, String
   key :address, String
   key :latlng, String
   
@@ -65,9 +65,14 @@ class EMSCode < GXTModel
   
   key :name, String
   
+  key :color, String
+  
   key :cls, String
       
   key :description, String
+  
+  key :group_id, ObjectId
+  
   
   def get_class
     
@@ -78,6 +83,19 @@ class EMSCode < GXTModel
     
   end
       
+    
+end
+
+class EMSCodeGroup < GXTModel
+  
+  include Mongoid::Document
+  
+  key :code, String
+  
+  key :name, String
+      
+  key :description, String
+  
     
 end
 
@@ -99,7 +117,10 @@ class EMSKWorkflow < GXTModel
   key :code, String      
   key :type, String
   key :visible, String
-  key :order, Float
+  key :color, String
+  key :order, Integer
+  key :group, Integer
+  key :template, String # workflow_code
 
 end
 
@@ -108,10 +129,9 @@ class EMSKProcess < GXTModel
   include Mongoid::Document
   
   key :name, String
-
   key :name_en, String
-  
-  key :order, Float
+  key :order, Integer
+  key :tag, String
 
   key :kworkflow_id, ObjectId
       
@@ -257,6 +277,22 @@ class LineAccount < GXTModel
         
 end
 
+
+class EMSDVR < GXTModel
+  
+  include Mongoid::Document
+
+  key :name, String
+  key :device_id, String
+  key :connection, String
+  key :note, String
+  key :latlng, String
+  key :channels, Integer
+  key :type, String
+        
+end
+
+
 class LineMessage < GXTModel
   
   include Mongoid::Document
@@ -394,7 +430,9 @@ end
 
 
 
-
+class EMSDVRController < GXTDocument
+  
+end
 
 
 class LineAccountController < GXTDocument

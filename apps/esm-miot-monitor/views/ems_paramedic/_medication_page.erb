@@ -45,7 +45,7 @@
 	medication_admit_id = admit_id
 	
 	$.ajax({
-	  url: "<%= get_path 'medication_partial'%>?admit_id="+medication_admit_id,
+	  url: "<%= get_path "medication_partial" %>?admit_id="+medication_admit_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '#medication-partial' ).html(data);

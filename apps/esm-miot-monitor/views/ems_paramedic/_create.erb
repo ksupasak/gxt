@@ -1,1 +1,8 @@
-<%=params.inspect%>
+
+<%
+
+	admit = Admit.find params[:id]
+	admit.update_attributes :station_id=>params[:admit][:station_id]
+	
+%>
+

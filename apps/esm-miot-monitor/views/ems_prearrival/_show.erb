@@ -1,3 +1,20 @@
+<style>
+	.card-body-x{
+		padding:5px;
+	}
+	.primary{
+		
+		background:#e5f1ff;
+	}
+	.shadow-x{
+		background:#fff377;
+		border:0.5px solid gray;
+	}
+	.action{
+		color:red;
+	}
+</style>
+	
 <input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
 <div class="row">
   <div class="col">
@@ -40,10 +57,21 @@
             EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
           end
           if record.init_cbd_code
-            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code]}.compact 
+			  
+			group = EMSCodeGroup.find record.init_code.group_id
+			
+			tcode =  EMSKWorkflow.where(:code=>record.init_code.code).first
+			gcolor = nil
+			gcolor = EMSKWorkflow.where(:color=>"#{tcode.color}_add", :group=>tcode.group).first
+			  
+            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code] or ( gcolor and gcolor.code==i.code )  or i.code=="#{group.code}instruction" or i.code=="#{group.code}report" }.compact 
             for fi in flow_cbd
               EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
             end
+			
+			
+			
+			
           end
         end
         case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
@@ -51,6 +79,8 @@
         m_cp = Hash[case_processs.collect{|i| [i.kprocess_id,i]}.compact]
         case_flows_ids = case_flows.collect{|i| i.kworkflow_id}
         select_flows = flows.collect{|i| i if !case_flows_ids.index(i.id)}.compact
+		
+		
       
     %>
   
@@ -60,24 +90,26 @@
           processes = EMSKProcess.where(:kworkflow_id=>cf.kworkflow_id).all()
           isnow = false
     %>
-    <div class="card p-2 radius-10 border shadow-none">
+    <div class="card-x p-2 radius-10 border shadow-none">
       <div class="row">
       <div class="col-9"><h5><%=m_f_name[cf.kworkflow_id]%></h5></div>
       <div class="col-1"><a href="javascript:delFlow('<%=cf.kworkflow_id%>');" class="btn btn-sm btn-light" >Remove</a></div>
       </div>
       <%  for pc in processes %>
       <%
+	  		actions = EMSKAction.where(:kprocess_id=>pc.id).all
+	  
             newclass="btn-light"
             yclass=newclass
             nclass=newclass
             cpid = "new"
             cpnote = ""
             cp = m_cp[pc.id]
-            pclass= "card radius-10 border border-1 shadow-none "
+            pclass= "card-x radius-10 border border-1 shadow-none "
             nowclass = ""
             if cp
               cpid = cp.id 
-              pclass += " border-primary"
+              pclass += " primary"
               cpnote = cp.note  
               yclass="btn-outline-primary" if cp.action=='y'
               nclass="btn-outline-danger" if cp.action=='n'
@@ -88,18 +120,25 @@
                 isnow = true
               end
             end
+			
+			nowclass=""
 
       %>
        <div class="<%=pclass%>">
       <!--<div class="card radius-10 border border-1 <%=pclass%> shadow-none">-->
-        <div class="card-body">
+        <div class="card-body-x">
           <!--<div class="d-flex align-items-center">-->
             <div class="row <%=nowclass%>" id="<%=pc.id%>" cwid="<%=cf.id%>">
-              <div class="col-9 col-md">
-                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> </p>
+              <div class="col-9 col-md" onclick="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','y');">
+                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> 
+				
+				<% if actions.size > 0 %>
+				<span class="action">*<%=actions.size%></span>
+				<% end %>
+				</p>
                 <input type="hidden" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-<%=pc.id%>" value="<%=cpnote%>">
                 <%  if cpnote!=''%>
-                <div class="shadow p-2 m-2 rounded"><%=cpnote%></div>
+                <div class="shadow-x p-2 m-2 rounded"><%=cpnote%></div>
                 <%  end %>
               </div>
               <div class="col-1 col-md-1">
@@ -178,12 +217,14 @@
 
 </div><!--row-->
 
-
+<% if false %>
 <%for f in select_flows
     %>
     <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
     
     <%  end %>
+
+<% end %>
 <div id="prearrival_panel">
   result
 </div>
@@ -242,6 +283,10 @@ function addNote(){
 
 function updateProcess(pid,cpid,action){
   case_id = $("#pre_case_id").val()
+
+	
+	$('#'+pid).parent().parent().addClass("primary")
+
   note = $("#"+pid).find("#note-"+pid).val()
   cwid = $("#"+pid).attr("cwid")
   // alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)

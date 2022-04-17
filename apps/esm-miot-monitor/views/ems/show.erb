@@ -41,7 +41,9 @@ code = EMSCode.find record.init_cbd_code
 				<div>
 					<h4 class="my-1 "><%=record.case_no%></h4>
 					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
-					<p class="mb-0 font-13">Location : <%=record.address  %> </p>
+					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
+					<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
+					
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
 				</div>
@@ -103,7 +105,7 @@ code = EMSCode.find record.init_cbd_code
 				</div>
 			</a>
 		</li>
-		<li class="nav-item" role="presentation">
+		<li class="nav-item" role="presentation" >
 			<a class="nav-link commandcontent" data-bs-toggle="tab"     href="#commandcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
@@ -113,7 +115,7 @@ code = EMSCode.find record.init_cbd_code
 			</a>
 		</li>
 		
-		<li class="nav-item" role="presentation">
+		<!-- <li class="nav-item" role="presentation">
 			<a class="nav-link operationcontent" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
@@ -121,10 +123,10 @@ code = EMSCode.find record.init_cbd_code
 					<div class="tab-title">Operation</div>
 				</div>
 			</a>
-		</li>
+		</li> -->
 		
 		<li class="nav-item" role="presentation">
-			<a class="nav-link" data-bs-toggle="tab" id="paramediccontent" href="#paramediccontent" role="tab" aria-selected="false">
+			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
 					</div>
@@ -145,11 +147,16 @@ code = EMSCode.find record.init_cbd_code
 		
 		
 	</ul>
-	<div class="tab-content py-3">
+	<div class="tab-content " >
 		
 		<div class="tab-pane fade " id="requestcontent" role="tabpanel">
 		
-
+		<!-- <p  class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-ambulance"></i>&nbsp;&nbsp;Request</h4>
+		<hr/>
+		</p> -->
+		
+			<p>
 				<div class="request"></div>
 				<script>
 					
@@ -163,15 +170,21 @@ code = EMSCode.find record.init_cbd_code
 					
 					
 				</script>
-			
+			</p>
 		</div>
 		
 		<div class="tab-pane fade" id="prearrivalcontent" role="tabpanel">
 		
+		<!-- <p  class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-agenda"></i>&nbsp;&nbsp;Pre Arrival</h4>
+		<hr/>
+		</p> -->
+		
 		
 		<p>
-			
 		<div class="prearrival"></div>
+		</p>
+		
 		<script>
 			
 			$.ajax({
@@ -185,15 +198,17 @@ code = EMSCode.find record.init_cbd_code
 			
 		</script>
 			
-		</p>
 		
 		
 		</div>
 		
 		
-		<div class="tab-pane fade" id="commandcontent" role="tabpanel">
+		<div class="tab-pane fade" id="commandcontent" role="tabpanel" style="margin:0px">
 		
-		
+		<!-- <p class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-bullhorn"></i>&nbsp;&nbsp;Command</h4>
+		<hr/>
+		</p> -->
 		<p>
 			
 			
@@ -263,18 +278,18 @@ code = EMSCode.find record.init_cbd_code
 		
 		
 		<p>
-			<div class="paramedic"></div>
+			<div class="paramedic">ffff</div>
 			<script>
-			
+
 				$.ajax({
-			    url: "../EmsParamedic/show",
+			    url: "../EmsParamedic/show?id=<%=params[:id]%>",
 				  context: document.body
 				}).done(function(html) {
 			
 				  $( '.paramedic' ).html(html);
 				});
-			
-			
+
+
 			</script>
 			
 		</p>
@@ -346,7 +361,15 @@ code = EMSCode.find record.init_cbd_code
 <%=init_map%>
 
 
-	<% if true %><div class="msg" style="font-size:0.8em;height:200px">ffff</div><% end %>
+	<% if true %><div class="msg" style="font-size:0.8em;height:200px;margin:100px">
+		
+		<center>
+			
+			
+			<div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status"> <span class="">Loading...</span>
+								</div>
+		</center>
+	</div><% end %>
 <script>
 	
 	
@@ -385,4 +408,3 @@ code = EMSCode.find record.init_cbd_code
   
 	
 </script>
-

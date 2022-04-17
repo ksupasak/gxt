@@ -47,12 +47,12 @@ gem 'rqrcode'
 gem 'pdfkit'
 gem 'prawn'
 
-gem 'serialport'
+# gem 'serialport'
 # gem 'rpi_gpio'
 
 
 gem 'rest-client'
 gem 'rest-graph'
 gem 'eventmachine'
-
+gem 'roo'
 gem 'rack-ssl-enforcer'

@@ -19,6 +19,7 @@ module EsmMiotMonitor
     key :start_latlng, String
     key :stop_latlng, String
     
+    key :ems_command_id, ObjectId
     
     key :departure_log_id, ObjectId
     key :arrival_log_id, ObjectId

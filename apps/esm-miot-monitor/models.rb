@@ -385,12 +385,14 @@ class AdmitLog  < GXTModel
   
   key :admit_id, ObjectId
   key :addressbook_id, ObjectId
+  key :ems_command_id, ObjectId
   key :name, String
   key :address, String 
   key :status, String
   key :latlng, String
   key :note, String
   key :stamp, Time
+  key :mile_meter, Integer
   key :sort_order, Integer
   key :parent, Integer
   include Mongoid::Timestamps

@@ -928,23 +928,28 @@ MSG
                  patient = Patient.create :hn=>ref
                  admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now)
                  
-              else
+                else
                 
-                 admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
+                   admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
                 
-                 unless admit
-                   admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-                 else
-                   if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
-                     admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
-                     admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-                   end
-                 end
+                     unless admit
+                       admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                     else
+                       if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+                         admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+                         admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                       end
+                     end
                 
-              end
+                end
                
                
-             end
+            else
+                
+                admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
+                
+            
+            end
              
              
              if admit 
@@ -1293,12 +1298,15 @@ MSG
                 ad[:note] = i.note
                   
                 result[:admit_data][i.id] = ad
+              
                 
               end
               
+                result[:admit_id] = list.collect{|i| i.id}
+              
             end
             
-            
+            result[:ok] = 'Soup'
             
             # puts result.to_json
             path = "miot/#{name}/z/#{z.name}"
@@ -1317,12 +1325,15 @@ MSG
             
             now = Time.now
             
+             # puts 'enter 0 '
+             
             app.settings.senses[name].each_pair do |k,v|
               
               # store to sense
-                
-               if v['station_id'] and v['admit_id'] 
+              
+               if v['station_id'] and v['admit_id']
                  
+                 # puts 'enter 1 '
                  
                  # admit = Admit.find v['admit_id'] 
                  
@@ -1366,7 +1377,7 @@ MSG
                        
 
                        
-                     app.settings.last_map[v['station_id']] = lt
+                       app.settings.last_map[v['station_id']] = lt
                   
                      end
                      
@@ -1375,7 +1386,8 @@ MSG
                  end
                  
 
-
+                 
+                 # puts 'enter 2 '
                
                   
                  px = {:admit_id=>v['admit_id'], :station_id => v['station_id'],  :stop_time=>now, :start_time=>start_time,:bp=>v['bp'],:temp=>v['temp'],:co2=>v['co2'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now}  
