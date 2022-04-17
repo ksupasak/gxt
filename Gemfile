@@ -46,7 +46,7 @@ gem 'chunky_png'
 gem 'rqrcode'
 gem 'pdfkit'
 gem 'prawn'
-
+gem "sinatra-cross_origin"
 # gem 'serialport'
 # gem 'rpi_gpio'
 
