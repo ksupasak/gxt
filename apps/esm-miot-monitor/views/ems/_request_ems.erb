@@ -12,6 +12,18 @@ if request.post?
 	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location]
 
 
+    admit = Admit.find ems_case.admit_id
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+
+    @context.settings.redis.publish(path, send_msg)	
 
 
 %>

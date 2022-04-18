@@ -30,12 +30,27 @@ if request.post?
 				sort_order = cols[4]
 				template = nil
 				template = cols[5] if cols[5] and cols[5].size > 0   
+				type = cols[6]
 				
-				map[code] = {:group=>g, :color=>color, :code=>code, :name=>"#{code} #{text}", :processes=>[], :order=>g, :template=>template}  unless map[code]
 				
-				map[code][:processes] << {:name=>text,:order=>sort_order}  
+				unless map[code]
+				
+					map[code] = {:group=>g, :color=>color, :code=>code, :name=>"#{code} #{text}", :processes=>[], :order=>g, :template=>template, :type=>type}  
+					
+					if color!='instruction' and color!='report' and color!='red_add' and color!='yellow_add'  
+						map[code][:processes] << {:name=>text,:order=>sort_order}  
+					end
+				
+				else
+					
+					map[code][:processes] << {:name=>text,:order=>sort_order}  
+					
+				end
+				
+				# map[code][:name] = "" if color=='instruction'
 				
 				if color!='instruction' and color!='report'
+					
 					cmap[code] = {:code=>code, :name=>"#{code} #{text}",:type=>'CBD', :description=>text, :group=>g, :color=>color}
 				end
 				 

@@ -271,7 +271,9 @@
 				</div>
 				<div class="col-8">
 								
+							<form action="<%=get_path "update_tracking" %>" method="POST">
 								
+									
 								<%
 									
 								logs = AdmitLog.where(:ems_command_id=>cm.id, :admit_id=>admit.id).sort(:sort_order=>1).all
@@ -282,7 +284,7 @@
 								<table class='table'>
 								<thead>
 									<tr>
-										<th>รายการ</th><th>เวลา</th><th>เลข กม.</th><th></th><th></th>
+										<th>รายการ</th><th>เวลา</th><th>Tdiff</th><th>เลข กม.</th><th></th>
 								
 									</tr>
 								</thead>
@@ -297,7 +299,10 @@
 										<%=i.name%>
 									</td>
 									<td><% if i.stamp %>
-										<%=i.stamp.localtime.strftime("%H:%M")%> <v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
+										
+										<%=i.stamp.localtime.strftime("%H:%M")%> 
+										
+										<v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
 										<% end %>
 			
 									</td>
@@ -309,11 +314,16 @@
 										<% end %>
 									</td>
 									<td>
+										<% if i.status=='COMPLETED'%>
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:100px">
+										<% end %>
+									</td>
+									<td>
 										<%=i.note%>
 									</td>
 									<td>
 										<% if i.status=='PENDING'%>
-									  	<%= link_to 'Check', "check?id=#{params[:id]}&admit_log_id=#{i.id}", :class=>'btn btn-sm btn-success'%>
+									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>'btn btn-sm btn-success check-log' %>
 										<% end%>
 									</td>
 		
@@ -324,7 +334,12 @@
 									</tbody>
 								</table>
 	
-	
+								
+								
+								<input type="submit" name="Update"> <a href="<%=get_path "x?id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="c<%=cm.id%>">เพิ่มเส้นทาง</a>
+								
+								
+							</form>
 								
 								
 								
@@ -332,18 +347,6 @@
 								
 								
 								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								<br/>
-								<a href="<%=get_path "send_message?id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="c<%=cm.id%>">เพิ่มเส้นทาง</a>
 								
 				</div>
 				</div>	
@@ -368,6 +371,28 @@
 		</div>
 		
 		<% end %>
+		
+		
+		<script>
+			
+			$('.check-log').click(function(e){
+				
+				target = $(this).attr('href')
+				
+				$.ajax({
+			    url: target,
+				  context: document.body
+				}).done(function(html) {
+			
+					reload_command_content();
+				  
+				});
+				
+				e.preventDefault();
+				
+			})
+			
+		</script>
 		
 			<a href="<%=get_path "create?case_id=#{ems_case.id}" %>" class="btn btn-info" data-remote="true" data-remote-update="command">เพิ่มทีม</a>
 			

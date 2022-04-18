@@ -56,3 +56,5 @@ gem 'rest-graph'
 gem 'eventmachine'
 gem 'roo'
 gem 'rack-ssl-enforcer'
+
+gem 'google-cloud-translate-v2'

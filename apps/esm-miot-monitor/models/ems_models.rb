@@ -44,7 +44,7 @@ class EMSCase < GXTModel
   key :patient_location, String
   key :patient_images, Array
   
-  
+  key :tracking_status, String
       
   key :admit_id, ObjectId
   
@@ -374,6 +374,18 @@ class EMSController < GXT
     msg = Message.create :admit_id=> ems_case.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>i['type'], :file_id=>fid, :station_id=>station_id
 
 
+    admit = Admit.find ems_case.admit_id
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+
+    @context.settings.redis.publish(path, send_msg)
 
 
 
@@ -415,8 +427,9 @@ class EMSController < GXT
     request.body = body.to_json
     puts  body.to_json
     response = http.request(request)
+    ems_case.update_attributes :tracking_status=>'SENT'
     url = "show?id=#{ems_case.id}"
-    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="1;URL='+url+'">'
+    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="0;URL='+url+'">'
     
   end
  

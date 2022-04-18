@@ -61,7 +61,10 @@ code = EMSCode.find record.init_cbd_code
 					<h4 class="my-1 text-info"><%= record.contact_phone%></h4>
 					<p class="mb-0 font-13">ผู้แจ้งเหตุ : <%= record.contact_name%>  ระบบ Tracking : 
 						
-						<%=link_to "[Demo]", "request_ems?id=#{record.id}", :target=>"_blank"%></p>
+						<%=link_to "[Demo]", "request_ems?id=#{record.id}", :target=>"_blank"%>
+						
+						SMS : <%=record.tracking_status%>
+					</p>
 						
 					<p class="mb-0 font-13"></p>
 					
@@ -159,7 +162,7 @@ code = EMSCode.find record.init_cbd_code
 			<p>
 				<div class="request"></div>
 				<script>
-					
+					function reload_request_content(){
 					$.ajax({
 					  url: "../EmsRequest/show?id=<%=params[:id]%>",
 					  context: document.body
@@ -168,6 +171,8 @@ code = EMSCode.find record.init_cbd_code
 					  $( '.request' ).html(html);
 					});
 					
+					}
+					reload_request_content();
 					
 				</script>
 			</p>
@@ -231,6 +236,7 @@ code = EMSCode.find record.init_cbd_code
 			  
 			    <% else %>
 			
+				function reload_command_content(){
 				$.ajax({
 			    url: "../EmsCommand/show?case_id=<%=params[:id]%>",
 				  context: document.body
@@ -238,6 +244,8 @@ code = EMSCode.find record.init_cbd_code
 			
 				  $( '#command' ).html(html);
 				});
+				}
+				reload_command_content();
 				
 				
 				<% end %>
@@ -278,7 +286,7 @@ code = EMSCode.find record.init_cbd_code
 		
 		
 		<p>
-			<div class="paramedic">ffff</div>
+			<div class="paramedic"></div>
 			<script>
 
 				$.ajax({
@@ -402,6 +410,16 @@ code = EMSCode.find record.init_cbd_code
 	  console.log("package="+m.data.length)
 	  
 	  show(m.data)
+	  
+		lines = m.data.split("\n")
+	
+		// console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Zone.Message'){
+			
+			reload_request_content()
+		
+		}
+	  
 	
   }
   
