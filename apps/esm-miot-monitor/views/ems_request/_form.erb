@@ -5,7 +5,7 @@
 			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
 		</h5> -->
 		<div class="row">
-			<div class="col-12 col-lg-4 col-xl-4">
+			<div class="col-12 col-lg-3 col-xl-3">
 				<div class="card">
 					<div class="card-header bg-transparent">
 						
@@ -99,7 +99,7 @@
 			
 			
 			
-			<div class="col-12 col-lg-8 col-xl-8">
+			<div class="col-12 col-lg-9 col-xl-9">
 				
 				
 				
@@ -210,16 +210,19 @@
 						</div>					
 						</div>
 						<br/>
-						<div id="dashboard-map" style="height: 400px">
+						<div class="row">
+							
+						<div id="dashboard-map" class="col" style="height:60vh">
 							map
 						</div>
 						<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
 						
-						<div id="dashboard-map-2" style="height: 400px">
+						<div id="dashboard-map-2"  class="col"  style="height:60vh">
 							map
 						</div>
 						
-						
+						</div>
+					
 						<script>
 							
 							latlng = [13.69313508354787, 100.69198345629769]
@@ -341,6 +344,9 @@
 							  }
 									
 							})
+						
+							map1.init()
+							map2.init()
 						
 						</script>
 						

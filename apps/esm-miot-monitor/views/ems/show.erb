@@ -4,6 +4,10 @@
 	
 record = EMSCase.find params[:id]
 code = EMSCode.find record.init_cbd_code
+
+
+session[:case_id] = record.id
+
    
 %>
 
@@ -87,9 +91,13 @@ code = EMSCode.find record.init_cbd_code
 	</div>	
 </div>				
 
-<div class="card">
-<div class="card-body">
-	<ul id="nav-tab-main" class="nav nav-tabs nav-primary" role="tablist">
+<div class="">
+<div class="">
+	
+	
+	<div class="ems_case"></div>
+	
+	<!-- <ul id="nav-tab-main" class="nav nav-tabs nav-primary" role="tablist">
 		<li class="nav-item" role="presentation">
 			<a class="nav-link  requestcontent" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
 				<div class="d-flex align-items-center">
@@ -117,8 +125,8 @@ code = EMSCode.find record.init_cbd_code
 				</div>
 			</a>
 		</li>
-		
-		<!-- <li class="nav-item" role="presentation">
+
+		 <li class="nav-item" role="presentation">
 			<a class="nav-link operationcontent" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
@@ -126,8 +134,8 @@ code = EMSCode.find record.init_cbd_code
 					<div class="tab-title">Operation</div>
 				</div>
 			</a>
-		</li> -->
-		
+		</li> 
+
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
@@ -137,7 +145,7 @@ code = EMSCode.find record.init_cbd_code
 				</div>
 			</a>
 		</li>
-		
+
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#dischargecontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
@@ -147,10 +155,10 @@ code = EMSCode.find record.init_cbd_code
 				</div>
 			</a>
 		</li>
-		
-		
-	</ul>
-	<div class="tab-content " >
+
+
+	</ul> -->
+	<div class="tab-contentx " >
 		
 		<div class="tab-pane fade " id="requestcontent" role="tabpanel">
 		
@@ -162,18 +170,18 @@ code = EMSCode.find record.init_cbd_code
 			<p>
 				<div class="request"></div>
 				<script>
-					function reload_request_content(){
-					$.ajax({
-					  url: "../EmsRequest/show?id=<%=params[:id]%>",
-					  context: document.body
-					}).done(function(html) {
-					
-					  $( '.request' ).html(html);
-					});
-					
-					}
-					reload_request_content();
-					
+					// function reload_request_content(){
+					// $.ajax({
+					//   url: "../EmsRequest/show?id=<%=params[:id]%>",
+					//   context: document.body
+					// }).done(function(html) {
+					//
+					//   $( '.request' ).html(html);
+					// });
+					//
+					// }
+					// reload_request_content();
+					//
 				</script>
 			</p>
 		</div>
@@ -192,14 +200,14 @@ code = EMSCode.find record.init_cbd_code
 		
 		<script>
 			
-			$.ajax({
-		    url: "../EmsPrearrival/show?case_id=<%=params[:id]%>",
-			  context: document.body
-			}).done(function(html) {
-			
-			  $( '.prearrival' ).html(html);
-			});
-			
+			// $.ajax({
+			// 		    url: "../EmsPrearrival/show?case_id=<%=params[:id]%>",
+			//   context: document.body
+			// }).done(function(html) {
+			//
+			//   $( '.prearrival' ).html(html);
+			// });
+			//
 			
 		</script>
 			
@@ -225,28 +233,28 @@ code = EMSCode.find record.init_cbd_code
 					if commands.size == 0 
 				%>
 				
-				$.ajax({
-			    url: "../EmsCommand/create?case_id=<%=params[:id]%>",
-				  context: document.body
-				}).done(function(html) {
-			
-				  $( '#command' ).html(html);
-				});
+				// $.ajax({
+				// 			    url: "../EmsCommand/create?case_id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '#command' ).html(html);
+				// });
 			  
 			  
 			    <% else %>
 			
-				function reload_command_content(){
-				$.ajax({
-			    url: "../EmsCommand/show?case_id=<%=params[:id]%>",
-				  context: document.body
-				}).done(function(html) {
-			
-				  $( '#command' ).html(html);
-				});
-				}
-				reload_command_content();
-				
+				// function reload_command_content(){
+				// $.ajax({
+				// 			    url: "../EmsCommand/show?case_id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '#command' ).html(html);
+				// });
+				// }
+				// reload_command_content();
+				//
 				
 				<% end %>
 			
@@ -267,13 +275,13 @@ code = EMSCode.find record.init_cbd_code
 			<div class="operation"></div>
 			<script>
 			
-				$.ajax({
-			    url: "../EmsOperation/show?id=<%=params[:id]%>",
-				  context: document.body
-				}).done(function(html) {
-			
-				  $( '.operation' ).html(html);
-				});
+				// $.ajax({
+				// 			    url: "../EmsOperation/show?id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.operation' ).html(html);
+				// });
 			
 			
 			</script>
@@ -289,13 +297,13 @@ code = EMSCode.find record.init_cbd_code
 			<div class="paramedic"></div>
 			<script>
 
-				$.ajax({
-			    url: "../EmsParamedic/show?id=<%=params[:id]%>",
-				  context: document.body
-				}).done(function(html) {
-			
-				  $( '.paramedic' ).html(html);
-				});
+				// $.ajax({
+				// 			    url: "../EmsParamedic/show?id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.paramedic' ).html(html);
+				// });
 
 
 			</script>
@@ -312,16 +320,16 @@ code = EMSCode.find record.init_cbd_code
 			
 			<div class="discharge"></div>
 			<script>
-			
-				$.ajax({
-			    url: "../EmsDischarge/show",
-				  context: document.body
-				}).done(function(html) {
-			
-				  $( '.discharge' ).html(html);
-				});
-			
-			
+				//
+				// $.ajax({
+				// 			    url: "../EmsDischarge/show",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.discharge' ).html(html);
+				// });
+				//
+				//
 			</script>
 		</p>
 		
@@ -354,10 +362,10 @@ code = EMSCode.find record.init_cbd_code
 		$(document).ready(function(){
 
 			if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
-				 $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+				 // $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
 				
 			}else{
-				 $('.nav-tabs a[href="#requestcontent"]').tab('show');
+				 // $('.nav-tabs a[href="#requestcontent"]').tab('show');
 			}
 
 		})

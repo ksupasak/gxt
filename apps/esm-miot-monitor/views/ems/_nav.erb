@@ -6,16 +6,152 @@
 				<div class="menu-title">Dashboard</div>
 			</a>
 		</li>
-		<li  class="btn">
-			<a href="./create">
-				<div class="menu-title"><i class="bx bx-plus"></i> New Request</div>
+
+		<%
+			
+		case_id = session[:case_id]
+			 
+		ems_case = EMSCase.find case_id
+
+		%>
+		<%	
+			
+		if ems_case
+						
+			
+			
+		%>
+		<li class="mm-active">
+			<a href="show?id=<%=ems_case.id%>&page=request" class="has-arrow">
+				<div class="parent-icon"><i class="bx bx-support"></i>
+				</div>
+				<div class="menu-title"><%=ems_case.case_no%></div>
 			</a>
+			<ul  class="mm-show mm-collapse">
+		
+			<li >
+				<a href="javascript:reload_request_content()"><i class="bx bx-right-arrow-alt"></i>Request</a>
+			</li>
+				
+			<li >
+				<a href="javascript:reload_prearrival_content()"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
+			</li>
+			<li >
+				<a href="javascript:reload_command_content()"><i class="bx bx-right-arrow-alt"></i>Commander</a>
+			</li>
+			<li >
+				<a href="javascript:reload_paramedic_content()"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
+			</li>
+			<li >
+				<a href="javascript:reload_paramedic_content()"><i class="bx bx-right-arrow-alt"></i>EMR</a>
+			</li>
+			<li >
+				<a href="show?id=<%=ems_case.id%>&page=request"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
+			</li>
+				
+				
+			</ul>
+		
 		</li>
+		<script>
+			
+			
+			
+			
+			
+			
+			
+			function reload_request_content(){
+			
+				$.ajax({
+				  url: "../EmsRequest/show?id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+				  $( '.ems_case' ).html(html);
+				});
+			
+			}
+			
+			function reload_prearrival_content(){
+				
+				$.ajax({
+			    url: "../EmsPrearrival/show?case_id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+			
+				  $( '.ems_case' ).html(html);
+				});
+				
+			}
+			
+			// reload_request_content();
+			
+			
+			
+			function reload_command_content(){
+				
+			<% 
+				commands = EMSCommand.where(:case_id=>ems_case.id).all
+				if commands.size == 0 
+			%>
+			
+			$.ajax({
+				url: "../EmsCommand/create?case_id=<%=ems_case.id%>",
+			  context: document.body
+			}).done(function(html) {
+
+			  $( '.ems_case' ).html(html);
+			});
+			
+			<% else %>
+			
+			$.ajax({
+				url: "../EmsCommand/show?case_id=<%=ems_case.id%>",
+			  context: document.body
+			}).done(function(html) {
+
+			  $( '.ems_case' ).html(html);
+			});
+			
+			<% end %>
+			
+			}
+			
+			
+			function reload_paramedic_content(){
+				$.ajax({
+			    url: "../EmsParamedic/show?id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+
+				  $( '.ems_case' ).html(html);
+				});
+			
+			}
+			
+			
+		
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</script>
+		
+		<% end %>
+		
 		<li>
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
-				<div class="menu-title">Operation</div>
+				<div class="menu-title">Open</div>
 			</a>
 			<ul class="mm-show mm-collapse">
 				<% 
@@ -28,11 +164,17 @@
 					code_class= code.get_class
 					
 				%>
-				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-right-arrow-alt"></i><%=i.case_no%> &nbsp;&nbsp;<span class="badge bg-<%=code_class%>" ><%=code.code%></span></a>
+				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-taxi"></i><%=i.case_no%> &nbsp;&nbsp;<span class="badge bg-<%=code_class%>" ><%#code.code%></span></a>
 				</li>
 				<% end %>
 			
 			</ul>
+			<li  class="">
+				<a href="./create">
+					<div class=""><i class="bx bx-plus"></i> New Request</div>
+				</a>
+			</li>
+			
 		</li>
 		<li class="menu-label">History</li>
 		<li>
@@ -63,3 +205,18 @@
 		</li>
 		
 	</ul>
+	
+	<script>
+		
+		if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
+			 // $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+			 // alert('df')
+			
+		}else{
+			// alert('ve')
+			 // $('.nav-tabs a[href="#requestcontent"]').tab('show');
+		}
+		
+		
+		
+	</script>
