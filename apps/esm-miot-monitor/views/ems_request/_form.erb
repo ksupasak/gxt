@@ -1,6 +1,14 @@
 
 
-
+<style>
+	
+	.w-auto{
+		width:90% !important;
+		flex:1 1 auto;
+/*		width:1%;*/
+	}
+	
+	</style>
 		<!-- <h5>
 			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
 		</h5> -->
@@ -211,15 +219,17 @@
 						</div>
 						<br/>
 						<div class="row">
-							
-						<div id="dashboard-map" class="col" style="height:60vh">
+						<div class="col-12 col-xl-6">	
+						<div id="dashboard-map" class="" style="height:60vh">
 							map
+						</div>
 						</div>
 						<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
-						
-						<div id="dashboard-map-2"  class="col"  style="height:60vh">
+						<div class="col-12 col-xl-6">	
+						<div id="dashboard-map-2"  class=""  style="height:60vh">
 							map
 						</div>
+					</div>
 						
 						</div>
 					

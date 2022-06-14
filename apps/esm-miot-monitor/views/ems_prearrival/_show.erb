@@ -6,6 +6,10 @@
 		
 		background:#e5f1ff;
 	}
+	
+	html.dark-theme .primary{
+		background: #000!important
+	 }
 	.shadow-x{
 		background:#fff377;
 		border:0.5px solid gray;
@@ -155,9 +159,9 @@
 		  
 		  isnow = false
     %>
-    <div class="card-x p-2 radius-10 border shadow-none"  style="background-color:#eee" >
+    <div class="card-x p-2 radius-10 border shadow-none bg-light"   >
       <div class="row">
-      <div class="col-9"><h5><%=m_f_name[cf.kworkflow_id]%></h5></div>
+      <div class="col-9"><h5 class=""><%=m_f_name[cf.kworkflow_id]%></h5></div>
       <div class="col-1"><a href="javascript:delFlow('<%=cf.kworkflow_id%>');" class="btn btn-sm btn-light" >Remove</a></div>
       </div>
       <%  for pc in processes %>
@@ -234,7 +238,7 @@
 %>
 
 <div class="col-12 col-lg-4 col-xl-4">
-  <div class="card radius-10 sticky-top">
+  <div class="card radius-10 "> <!-- sticky-top -->
     <div class="card-header bg-transparent">
       <div class="d-flex align-items-center">
         <div>

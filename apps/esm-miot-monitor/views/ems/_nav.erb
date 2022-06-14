@@ -30,23 +30,23 @@
 			<ul  class="mm-show mm-collapse">
 		
 			<li >
-				<a href="javascript:reload_request_content()"><i class="bx bx-right-arrow-alt"></i>Request</a>
+				<a class="tab-request" ><i class="bx bx-right-arrow-alt"></i>Request</a>
 			</li>
 				
 			<li >
-				<a href="javascript:reload_prearrival_content()"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
+				<a class="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
 			</li>
 			<li >
-				<a href="javascript:reload_command_content()"><i class="bx bx-right-arrow-alt"></i>Commander</a>
+				<a class="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
 			</li>
 			<li >
-				<a href="javascript:reload_paramedic_content()"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
+				<a class="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
 			</li>
 			<li >
-				<a href="javascript:reload_paramedic_content()"><i class="bx bx-right-arrow-alt"></i>EMR</a>
+				<a class="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
 			</li>
 			<li >
-				<a href="show?id=<%=ems_case.id%>&page=request"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
+				<a class="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
 			</li>
 				
 				
@@ -58,10 +58,18 @@
 			
 			
 			
+			function setTab(tab){
+				sessionStorage.setItem("main-tab", tab)
+			}
 			
+			function getTab(){
+				return sessionStorage.getItem("main-tab")
+			}
 			
 			
 			function reload_request_content(){
+				
+				setTab('request')
 			
 				$.ajax({
 				  url: "../EmsRequest/show?id=<%=ems_case.id%>",
@@ -72,8 +80,12 @@
 			
 			}
 			
+			$('.tab-request').click(reload_request_content)
+			
 			function reload_prearrival_content(){
 				
+				setTab('prearrival')
+			
 				$.ajax({
 			    url: "../EmsPrearrival/show?case_id=<%=ems_case.id%>",
 				  context: document.body
@@ -84,12 +96,14 @@
 				
 			}
 			
-			// reload_request_content();
+			$('.tab-prearrival').click(reload_prearrival_content)
 			
 			
 			
 			function reload_command_content(){
 				
+				setTab('command')
+			
 			<% 
 				commands = EMSCommand.where(:case_id=>ems_case.id).all
 				if commands.size == 0 
@@ -117,8 +131,15 @@
 			
 			}
 			
+			$('.tab-command').click(reload_command_content)
+			
+			
 			
 			function reload_paramedic_content(){
+				
+				setTab('paramedic')
+			
+				
 				$.ajax({
 			    url: "../EmsParamedic/show?id=<%=ems_case.id%>",
 				  context: document.body
@@ -129,10 +150,82 @@
 			
 			}
 			
+			$('.tab-paramedic').click(reload_paramedic_content)
 			
+			
+			function reload_emr_content(){
+				
+				setTab('emr')
+			
+				
+				$.ajax({
+			    url: "../EmsEMR/show?id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+
+				  $( '.ems_case' ).html(html);
+				});
+			
+			}
+			
+			$('.tab-emr').click(reload_emr_content)
+			
+			
+			function reload_discharge_content(){
+				
+				setTab('discharge')
+			
+				
+				$.ajax({
+			    url: "../EmsDischarge/show?id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+
+				  $( '.ems_case' ).html(html);
+				});
+			
+			}
+			$('.tab-discharge').click(reload_discharge_content)
 		
 			
 			
+			// switch(getTab()){
+	//
+	// 		case "request":
+	// 			reload_request_content();
+	// 			break;
+	//
+	// 		case "command":
+	// 			reload_command_content();
+	// 			break;
+	//
+	// 		case "prearrival":
+	// 			reload_prearrival_content();
+	// 			break;
+	//
+	// 		case "paramedic":
+	// 			reload_paramedic_content();
+	// 			break;
+	//
+	// 		case "emr":
+	// 			reload_emr_content();
+	// 			break;
+	//
+	// 		case "discharge":
+	// 			reload_discharge_content();
+	// 			break;
+	//
+	// 		default :
+	// 			reload_request_content();
+	//
+	// 		}
+			
+	if(getTab()!=null){
+
+		$('.tab-'+getTab()).click()
+		
+		$('.tab-'+getTab()).parent().addClass("mm-active")
+	}
 			
 			
 			
