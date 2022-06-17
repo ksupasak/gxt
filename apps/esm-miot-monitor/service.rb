@@ -642,13 +642,12 @@ MSG
 
        begin 
        
-       
+       # switch context for name 
+         
        name =  tag.split('/')[1]
-       
        switch name, 'esm-miot-monitor'
-       
-       
        redis = settings.redis
+       
        
        # forward to redis
        # redis.publish("miot/#{@context.settings.name}/in", msg_data)
@@ -673,20 +672,6 @@ MSG
        case cmd 
         
        when 'Monitor.Update'
-         
-         
-#             # puts result.to_json
-#             path = "miot/monitor"
-#           # EM.next_tick do
-# msg = <<MSG
-# #{'Monitor.Update'} #{path}
-# #{body}
-# MSG
-#
-# # puts msg
-#             redis.publish(path, msg)
-       
-         
          
        when 'Station.Update'
          
@@ -718,20 +703,7 @@ MSG
               
             
           end
-          
-          # station = Station.find k
-          #
-          # if station
-          #
-          #    ambu = Ambulance.find v['ambulance_id']
-          #
-          #    ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
-          #
-          #    staiton_status[k] = v
-          #
-          #
-          # end
-          
+
           
         end
         
@@ -962,6 +934,7 @@ MSG
               
               old = settings.senses[name][station_name]
               old = old.clone if old
+              
               odata = settings.senses[name][station_name]
               odata = {} unless odata
          
@@ -1058,7 +1031,7 @@ MSG
                # keep sensing data
                
                settings.senses[name][station_name] = odata
-               settings.live[name][station_name] = 10
+               settings.live[name][station_name] = 5
          
                data = odata
                
@@ -1205,6 +1178,8 @@ MSG
                    
                   # puts v.inspect
                   
+                  
+                  
                   if arg and v['ol'] == 1
                     
                     
@@ -1245,6 +1220,34 @@ MSG
             stations.each do |s|
 
             arg = app.settings.senses[name][s.name]
+            
+            # puts "live #{s.name} = #{settings.live[name][s.name]}" 
+            settings.live[name][s.name]-=1 if settings.live[name][s.name] and settings.live[name][s.name]>0
+            
+            if  settings.live[name][s.name]==0 
+              
+              # settings.senses[name].delete s.name
+              settings.live[name].delete s.name
+              
+              e = settings.senses[name][s.name]
+              
+              e['pr'] = '-'
+              e['spo2'] = '-'
+              e['bp'] = '-'
+              e['hr'] = '-'
+              e['rr'] = '-'
+              e['temp'] = '-'
+              e['co2'] = '-'
+              e['msg'] = 'Disconnected'
+              
+              
+              
+              puts "Deleted #{s.name}"
+              
+            end
+            
+            
+            
             if arg
             ambu = Ambulance.where(:station_id=>s.id).first
             # puts ambu.id if ambu
@@ -1306,7 +1309,7 @@ MSG
               
             end
             
-            result[:ok] = 'Soup'
+            result[:ok] = 'OK'
             
             # puts result.to_json
             path = "miot/#{name}/z/#{z.name}"
