@@ -840,7 +840,7 @@ MSG
          
             
              ref = "-"
-             ref = pdata['ref'] if pdata['ref']
+             ref = pdata['ref'] if pdata['ref'] 
 
              data = "{}"
              data = pdata['data'] if pdata['data']
