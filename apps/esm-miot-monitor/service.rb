@@ -1238,7 +1238,7 @@ MSG
               e['rr'] = '-'
               e['temp'] = '-'
               e['co2'] = '-'
-              e['msg'] = 'Disconnected'
+              e['msg'] = '-'
               
               
               
