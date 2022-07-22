@@ -1,3 +1,4 @@
+
 <html>
 <head>
     <title>Medical IOT Solution</title>
@@ -61,7 +62,7 @@
 		</div>
 			
 		<div class="col">
-			<button id="x" value="Mode" class="btn float-right">00:00</button>
+			<button id="x" value="Mode" class="btn  timer float-right">00:00</button>
 		</div>
 	</div>
 	</div>
@@ -114,8 +115,17 @@
 
 </div class="">	
 
+<%
+		# , [310, 50, -4, 0, 0], [311, 50, -4, 0, 0], [312, 50, -4, 0, 0
+		
+		
+lung_data = File.open(File.join(File.dirname(__FILE__),'lung.tsv')).read().split("\n").collect{|i| t = i.split("\t").collect{|j| j.to_i} ; {'x'=>t[1], 'y'=>t[3], 'z'=>t[2] }  }
 	
+interval = 10
 
+	
+%>
+<%#lung_data.inspect %>
 <%
 	
 data = <<EOF		
@@ -256,15 +266,15 @@ EOF
 		this.vindex = 0;
 		this.lastx=null;
 		this.lasty=null;
-		this.vpl = <%=lines.to_json %>
-		this.gvpl = <%=glines.to_json %>
+		this.vpl = <%=lung_data.to_json %>
+		this.gvpl = <%=lung_data.to_json %>
 	
-		this.vplx = <%=lines.to_json %>
+		this.vplx = <%=lung_data.to_json %>
 	
 		this.ghost_show = false;
 		
 		this.reload();
-		this.interval = 200;
+		this.interval = <%=interval%>;
 		
 		
 		
@@ -272,7 +282,20 @@ EOF
 	
 	
 
-	
+	  timer(){
+	  	
+		var currentdate = new Date(); 
+		var datetime = "" + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+		
+		$('.timer').html(datetime)		
+				
+				
+	  }
 
  genValue(){
     // console.log(this)
@@ -285,17 +308,18 @@ EOF
 	// console.log(vplx)
 	let v = d['x']
 	let p = d['y']
+	let f = d['z']
 	// console.log("x = "+vindex+","+vplx.length)
 	//
-	this.receiveValue(v,p)
+	this.receiveValue(v,p,f)
 	this.vindex++;
 	this.tindex++;
-	if(this.vindex>this.vplx.length-1){
+	if(this.vindex> this.vplx.length-1){
 		this.vindex=0;
 		$('.vpl-path').remove()
 	}
 	
-	if(this.tindex > 50){
+	if(this.tindex > this.vplx.length-1){
 		this.tindex=0;
 		$('.trend-path').remove()
 	}
@@ -321,7 +345,11 @@ resetMark(){
 	
 }
 
- receiveValue(v,p){
+getInterval(){
+	return this.interval
+}
+
+ receiveValue(v,p,f){
 	 
 	// console.log("vp = "+v+","+p)
 	
@@ -332,7 +360,9 @@ resetMark(){
 		
 		
 		
-	  let ldata = [{'x':this.lastx,'y':this.lasty},{'x':v,'y':p}]
+	  let ldata = [{'x':this.lastx,'y':this.lasty,'z':this.lastz},{'x':v,'y':p,'z':f}]
+		
+		
   	  const line = d3
   	  .line()
   	  .x(dataPoint => this.xScale(dataPoint.x))
@@ -365,18 +395,42 @@ resetMark(){
 	  	  .attr("stroke-dasharray", pathLength)
 	  	  .transition(transitionPath)
 	  	  .attr("stroke-dashoffset", 0);
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
   
 
 		const linex = d3
 		  .line()
 		  .x(function(d,i){
-		  		console.log(i)
-			  return this.txScale(this.tindex+i);
+		  	  return this.txScale(this.tindex+i);
 			  
 		  }.bind(this))
 		  .y(dataPoint => this.tyScale(dataPoint.y));
+		  
+		  
+
+		const linez = d3
+		  .line()
+		  .x(function(d,i){
+		  	  return this.txScale(this.tindex+i);
+			  
+		  }.bind(this))
+		  .y(dataPoint => this.tzScale(dataPoint.z)); 
+		  
 		
-		// Add path
+		// Add path 2 ==============================================================================================
+		  
 		const tpath = this.grp_trend
 		  .append("path")
 		  .attr("transform", `translate(${this.margin.left},30)`)
@@ -404,12 +458,40 @@ resetMark(){
 	  	  .transition(ttransitionPath)
 	  	  .attr("stroke-dashoffset", 0);
   
-		
+		// Add path 2 ==============================================================================================
+		  
+		const tpath2 = this.grp_trend
+		  .append("path")
+		  .attr("transform", `translate(${this.margin.left},200)`)
+		  .datum(ldata)
+		  .attr('class','trend-path')
+		  .attr("fill", "none")
+		  .attr("stroke", "green")
+		  .attr("stroke-linejoin", "round")
+		  .attr("stroke-linecap", "round")
+		  .attr("stroke-width", 1.5)
+		  .attr("d", linez);
+
+
+		const tpathLength2 = tpath.node().getTotalLength();
+
+
+		const ttransitionPath2 = d3
+		  .transition()
+		  .ease(d3.easeLinear)
+		  .duration(this.interval);
+  
+	  	tpath2
+	  	  .attr("stroke-dashoffset", tpathLength2)
+	  	  .attr("stroke-dasharray", tpathLength2)
+	  	  .transition(ttransitionPath2)
+	  	  .attr("stroke-dashoffset", 0);
 		
 	}
 	
 	this.lastx = v;
 	this.lasty = p;
+	this.lastz = f;
 	
 }
 
@@ -452,7 +534,8 @@ chartClick(){
 	
 		 
 
-    setInterval(this.genValue.bind(this),200);
+    setInterval(this.genValue.bind(this),<%= interval %>);
+    setInterval(this.timer.bind(this),1000);
 
 
     this.data = vpl
@@ -473,19 +556,27 @@ this.tyScale = d3
   .scaleLinear()
   .range([100, 0])
   .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
+  
 this.txScale = d3
   .scaleLinear()
-  .range([0, 300])
-  .domain([0,40]);
+  .range([0, 100])
+  .domain([0,340]);
   
-  
+this.tzScale = d3
+  .scaleLinear()
+  .range([100, 0])
+  .domain([d3.min(this.vpl, dataPoint => dataPoint.z), d3.max(this.vpl, dataPoint => dataPoint.z)]);
+   
 
 const linex = d3
   .line()
   .x(dataPoint => this.txScale(dataPoint.x))
   .y(dataPoint => this.tyScale(dataPoint.y));
 
-
+const linez = d3
+  .line()
+  .x(dataPoint => this.txScale(dataPoint.x))
+  .y(dataPoint => this.tyScale(dataPoint.z));
 
 	    this.trend = this.svg_chart.append("g").attr("transform", `translate(${this.margin.left},0)`);
 
@@ -517,6 +608,12 @@ const linex = d3
   	  .attr("transform", `translate(0, 30)`)
   	  .call(d3.axisLeft(this.tyScale));
 
+  	this.trend
+  	  .append("g")
+  	  .attr('class','scaler')
+  	  .attr("stroke", "#c6bf90")
+  	  .attr("transform", `translate(0, 200)`)
+  	  .call(d3.axisLeft(this.tzScale));
 
 
 
@@ -537,6 +634,12 @@ const linex = d3
 	this.grp = this.chart
 	  .append("g")
 	  .attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
+	  
+	// this.vfl = this.chart2
+// 	  .append("g")
+// 	  .attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
+//
+	  
 
 	// Create scales
 	this.yScale = d3
@@ -547,6 +650,13 @@ const linex = d3
 	  .scaleLinear()
 	  .range([0, width])
 	  .domain(d3.extent(this.vpl, dataPoint => dataPoint.x));
+	
+	this.zScale = d3
+	  .scaleLinear()
+	  .range([height, 0])
+	  .domain([d3.min(this.vpl, dataPoint => dataPoint.y), d3.max(this.vpl, dataPoint => dataPoint.y)]);
+	  
+	  
 
 	const line = d3
 	  .line()
@@ -651,7 +761,17 @@ const linex = d3
 	  .call(d3.axisLeft(this.yScale));
 	  
 	
-	 } 
+	
+ 
+	 // this.chart
+	 //   .append("g")
+	 //   .attr('class','scaler')
+	 //   .attr("stroke", "#c6bf90")
+	 //   .attr("transform", `translate(0, 200)`)
+	 //   .call(d3.axisLeft(this.zScale));
+  
+
+ } 
  
  
  } 

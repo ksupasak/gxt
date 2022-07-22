@@ -54,7 +54,7 @@ loop {
             
             
             
-            his_get_patient_uri = URI("http://10.99.0.109/systemx-poc/api/patient/#{query_hn}")
+            his_get_patient_uri = URI("http://10.99.0.109/systemx/api/patient/#{query_hn}")
  
     
   
