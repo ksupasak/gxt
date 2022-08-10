@@ -194,7 +194,11 @@ class Station < GXTModel
   key :stream_url, ObjectId
   include Mongoid::Timestamps
   def to_s
-    self.name
+     
+    res = self.name.split("_")[1..-1].join("_")
+    res = self.title if self.title and self.title!=""
+     
+    return res
   end
 end
 

@@ -161,7 +161,7 @@ a.link-info:hover{
 	<div class="row" style="background:#666">
 		
 		<div class="col-2 text-left ">
-		<%= link_to station_id,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		<%= link_to station,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
 		<div class="col-5 text-center">
 			<%
@@ -1065,6 +1065,11 @@ if record
 		   	
 			   for(var j=0;j<16;j++){
 				jid = ''+j
+				   
+				   if( 	lead_data[jid].length>1000){
+				   	 	lead_data[jid]= []
+				   }
+				   
 			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
 			
 			  	 

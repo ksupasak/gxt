@@ -16,11 +16,11 @@
 	i = station.name
 	%>
 
-<div id="<%=station%>"  class=" col-12 station active-station " style="border-right:0px solid #888">
+<div id="<%=i%>"  class=" col-12 station active-station " style="border-right:0px solid #888">
 	<div class="row" style="background:#666">
 		
 		<div class="col-2 text-left ">
-		<%= link_to station.name,"../Station/show?id=#{station.id}",:class=>'btn' %>
+		<%= link_to station.to_s,"../Station/show?id=#{station.id}",:class=>'btn' %>
 		</div>
 		<div class="col-7 text-center">
 			<%
@@ -595,6 +595,13 @@ if record
 			  
 			    // wave_data.push(obj['wave']);
 		   		// wave_data = wave_data.concat(obj['wave']);
+				
+				if(wave_data.length > 1000){
+					wave_data = null
+					wave_data = []
+					
+				}
+				
 				for(var j=0;j<obj['wave'].length;j++){
 					wave_data.push(obj['wave'][j]);
 				}
@@ -605,10 +612,17 @@ if record
 		   if(obj['leads']){
 		   	
 			   for(var j=0;j<14;j++){
+				   
 				jid = ''+j
-			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
+			   	
+				if(lead_data[jid].length>1000){
+					lead_data[jid] = null
+					lead_data[jid] = []
+				}
+				
+				lead_data[jid] = lead_data[jid].concat(obj['leads'][jid])
 			
-			   console.log(lead_data[jid].length)
+			    console.log(lead_data[jid].length)
 				   
 			   }
 			

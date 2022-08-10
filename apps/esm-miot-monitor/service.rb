@@ -751,10 +751,18 @@ MSG
          station = Station.where(:name=>station_name).first
          
          unless station
-                zone = Zone.first 
-                zone_id = nil
-                zone_id = zone.id if zone
-                station = Station.create(:name=>station_name, :title=>station_name,:zone_id=>zone_id)
+           
+            zone = nil
+            if station_name.index("_")
+              zone = Zone.where(:name=>station_name.split("_")[0]).first
+            end
+            
+            zone = Zone.first unless zone
+            zone_id = nil
+            zone_id = zone.id if zone
+            station = Station.create(:name=>station_name,:zone_id=>zone_id)
+            
+            
          end
          
          
@@ -825,9 +833,15 @@ MSG
   
   
          
-  
+         # data sensing
   
        when 'Data.Sensing'
+         
+         # puts 'sense'
+     #
+     #     puts body
+     #
+     #     puts puts
          
              pdata =  ActiveSupport::JSON.decode(body)
          
@@ -859,10 +873,15 @@ MSG
              station = Station.where(:name=>station_name).first
              
              unless station
-                    zone = Zone.first 
+               zone = nil
+               if station_name.index("_")
+                 zone = Zone.where(:name=>station_name.split("_")[0]).first
+               end
+            
+               zone = Zone.first unless zone
                     zone_id = nil
                     zone_id = zone.id if zone
-                    station = Station.create(:name=>station_name, :title=>station_name,:zone_id=>zone_id)
+                    station = Station.create(:name=>station_name ,:zone_id=>zone_id)
              end
              
              
@@ -931,7 +950,7 @@ MSG
              
              
               settings.senses[name] = {} unless  settings.senses[name] 
-              
+              puts settings.senses[name].keys
               old = settings.senses[name][station_name]
               old = old.clone if old
               
@@ -1029,6 +1048,8 @@ MSG
                settings.live[name] = {} unless  settings.live[name]
                
                # keep sensing data
+               
+               puts settings.senses[name].keys.inspect 
                
                settings.senses[name][station_name] = odata
                settings.live[name][station_name] = 5
@@ -1216,9 +1237,11 @@ MSG
 
             end
             
-            
+        
             stations.each do |s|
-
+                
+            # puts "#{name} "+ app.settings.senses[name].keys.inspect
+                
             arg = app.settings.senses[name][s.name]
             
             # puts "live #{s.name} = #{settings.live[name][s.name]}" 
@@ -1265,26 +1288,26 @@ MSG
             
             result = {:time=>Time.now, :list=>snames,:data=>app.settings.senses[name].select{|k,v| snames.index(k) }}
             
-                      #
+             puts result.inspect          #
             
             
             
             if z.mode == 'aoc'
             
-            if list = Ambulance.all and list.size > 0 
+                    if list = Ambulance.all and list.size > 0 
                 
-              result[:ambu_data] = {}
+                      result[:ambu_data] = {}
               
-              for i in list
-                am = i
-                admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
-                am[:admit_id] = admit.id if admit
-                  
-                result[:ambu_data][i.id] = am
-                
-              end
+                      for i in list
+                            am = i
+                            admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
+                            am[:admit_id] = admit.id if admit
               
-            end
+                            result[:ambu_data][i.id] = am
+            
+                      end
+              
+                    end
             end
             
             if list = Admit.where(:status=>'Admitted', :zone_id=>z.id).all and list.size > 0 

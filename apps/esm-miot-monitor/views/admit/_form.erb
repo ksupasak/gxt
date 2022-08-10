@@ -94,6 +94,7 @@ stations_map.collect!{|i|
 }
 
 %>
+
 <div class="col-6 col-sm-3">
 <label for="product-name">Station SN</label>
 
@@ -136,7 +137,7 @@ $('#station-sn').keypress(function(event) {
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
-<% for j in stations.collect{|k| [k.id,"#{k.name} #{k.ip} #{k.zone.name if k.zone}"]} %>
+<% for j in stations.collect{|k| [k.id,"#{k} "]} %>
   <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
 <% end %>
 </select>
@@ -145,11 +146,14 @@ $('#station-sn').keypress(function(event) {
 <%
 	
 name = 'zone_id'
-options = Zone.all.collect{|i| [i.name,i.id]}
 
 zone_id = Zone.first.id
 zone_id = @current_zone if @current_zone
 zone_id = @record.zone_id if @record.zone_id	
+
+options = Zone.where(:id=>zone_id).collect{|i| [i.name,i.id]}
+
+
 	
 %>
 <div class="col-6 col-sm-3">
