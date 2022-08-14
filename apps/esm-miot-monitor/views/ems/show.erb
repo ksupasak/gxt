@@ -37,43 +37,184 @@ session[:case_id] = record.id
 					</div>
 				</div>-->
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-xl-2">
+<div class="row row-cols-1 row-cols-md-3 row-cols-xl-3">
 	<div class="col">
 		<div class="card radius-10 border-start border-0 border-3 border-<%=code.get_class%>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
-				<div>
-					<h4 class="my-1 "><%=record.case_no%></h4>
-					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
-					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
+				<div class="row" >
+					
+				
+					<div class="row">
+						
+						<div class="col-6">
+							<h4 class="my-1 ">
+								
+								<%=record.case_no%>
+					
+							</h4>
+					
+						</div>
+						
+						<div class="col-6">
+							<h4 class="my-1 text-info">
+								<%=record.contact_phone%>
+					
+							</h4>
+						</div>
+					
+					</div>
+					
+					
+					<div class="row">
+						
+						<div class="col-6">
+							ผู้แจ้ง : <span class="contact_name"><%=record.contact_name%></span>
+						</div>
+						
+					<div class="col-6">
+						<label class="phone">สถานที่<label> : <span class="contact_name"><%=record.location%></span>
+					</div>
+					
+					
+					</div>
+					
+				
+				
+					<div class="row">
+					
+						<div class="col-12">
+							<label class="phone">อาการนำ<label> : <span class="cheif_complain"><%=record.chief_complain%></span>
+						</div>
+					
+					
+				
+					</div>
+				
+				
+		
+					<!-- <p class="mb-0 text-secondary">
+
+
+					ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%>
+
+
+
+					</p>
+					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p> -->
 					<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
 					
 				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
-				</div>
+				
+				
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div> -->
 			</div>
 		</div>
 		</div>
 	</div>
 	
 	<div class="col">
+		<div class="card radius-10 border-start border-0 border-3 border-<%=code.get_class%>">
+		<div class="card-body">
+			<div class="d-flex align-items-center">
+					<div class="row">
+				
+				<div class="row">
+					
+					<div class="col-6">
+						<h4 class="my-1 ">
+							
+							ผู้ป่วย <%=record.patient_gender%> <%=record.patient_age%>
+				
+						</h4>
+				
+					</div>
+					
+					<div class="col-6">
+						<h4 class="my-1 text-danger">
+							<%=record.init_code.name.split(" ")[0]%>
+				
+						</h4>
+					</div>
+				
+				</div>
+				
+	
+				
+				<div class="row">
+					
+					<div class="col-6">
+						CID : <span class=":init_cbd_code"><%=record.patient_cid%></span>
+					</div>
+					
+					<div class="col-6">
+						<label class="phone">HN : <label> <span class="contact_name"><%=record.patient_hn%></span>
+					</div>
+				
+				</div>
+				
+				
+				<div class="row">
+				
+					<div class="col-12">
+						<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain"><%=record.patient_underlying%></span>
+					</div>
+				
+				
+			
+				</div>
+				
+				
+			</div>
+				<!-- <div>
+					<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] %></h4>
+					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
+					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
+
+
+				</div> -->
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div> -->
+			</div>
+		</div>
+		</div>
+	</div>
+	
+	
+	<div class="col">
 		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
-				<div>
-					<p class="mb-0 text-secondary">Contact info</p>
-					<h4 class="my-1 text-info"><%= record.contact_phone%></h4>
-					<p class="mb-0 font-13">ผู้แจ้งเหตุ : <%= record.contact_name%>  ระบบ Tracking : 
-						
-						<%=link_to "[Demo]", "request_ems?id=#{record.id}", :target=>"_blank"%>
-						
-						SMS : <%=record.tracking_status%>
-					</p>
-						
-					<p class="mb-0 font-13"></p>
+				
+				
+				<div class="row">
 					
+					<div class="col-6">
+						VS : <span class="init_cbd_code">vs</span>
+					</div>
+					
+					<div class="col-6">
+						<label class="phone">HN : <label> <span class="contact_name"><%=record.patient_hn%></span>
+					</div>
+				
 				</div>
 				
+				
+				<!-- <div>
+					<p class="mb-0 text-secondary">Contact info</p>
+					<h4 class="my-1 text-info"><%= record.contact_phone%></h4>
+					<p class="mb-0 font-13">ผู้แจ้งเหตุ : <%= record.contact_name%>  ระบบ Tracking :
+
+						<%=link_to "[Demo]", "request_ems?id=#{record.id}", :target=>"_blank"%>
+
+						SMS : <%=record.tracking_status%>
+					</p>
+
+					<p class="mb-0 font-13"></p>
+
+				</div>
+				 -->
 		
 				<div class="widgets-icons-2 rounded-circle  bg-gradient-bloody text-white ms-auto">
 					<a href="send_sms?id=<%=record.id%>" >
@@ -415,9 +556,9 @@ session[:case_id] = record.id
   ws.onmessage = function(m) { 
 	  
 	  
-	  console.log("package="+m.data.length)
+	  // console.log("package="+m.data.length)
 	  
-	  show(m.data)
+	  // show(m.data)
 	  
 		lines = m.data.split("\n")
 	

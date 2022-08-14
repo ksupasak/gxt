@@ -1,5 +1,9 @@
 <%= inline(this,:'../lib/_map')  %>
-	
+<% 
+
+		session.delete :case_id
+
+%>	
 	
 <script src="/rocker/assets/js/jquery.min.js"></script>
 <!--<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -146,7 +150,7 @@
 		<div class="tab-pane fade active show" id="requestcontent" role="tabpanel">
 			<p>
 				
-				<%# inline(this,:'../ems_request/_show')  %><br/>
+				<%# inline(this,:'../ems_request/_show')  %>
 
 				<div class="request"></div>
 				<script>

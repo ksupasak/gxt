@@ -63,6 +63,19 @@ if params[:record]
 	
 	ambu = Ambulance.find params[:record][:ambulance_id]
 	
+	# default station id to esmcase and admit
+	
+	if ambu.station_id
+		
+		admit.update_attributes :station_id=>ambu.station_id unless admit.station_id
+		
+		ems_case.update_attributes :station_id=>ambu.station_id unless ems_case.station_id
+		
+	end
+	
+	
+	
+	
 	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
 	
 	

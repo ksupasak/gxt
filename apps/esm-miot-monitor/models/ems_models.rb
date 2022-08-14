@@ -26,12 +26,16 @@ class EMSCase < GXTModel
   key :patient_id, ObjectId
   key :patient_name, String
   key :patient_info, String
-  key :pateint_gender, String
+  key :patient_gender, String
   key :patient_age, String
   
   key :patient_cid, String
   key :patient_hn, String
   key :patient_phone, String
+  
+  key :patient_underlying, String
+  
+  
   
   
   key :location, String
@@ -47,6 +51,9 @@ class EMSCase < GXTModel
   key :tracking_status, String
       
   key :admit_id, ObjectId
+  
+  key :station_id, ObjectId
+  
   
   key :zone_id, ObjectId
   

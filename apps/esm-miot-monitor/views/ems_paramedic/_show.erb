@@ -31,7 +31,6 @@ end
 	
 %>
 
-
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Paramedic </div>
 					<div class="ps-3">
@@ -283,7 +282,7 @@ end
 
 		<div class="row">
 
-		<div class="col-8 "  >
+		<div class="col-9 "  >
 		<div class="row" style="my-2">
 		
 			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
@@ -341,7 +340,7 @@ end
 			</div>
 	    </div>
 		</div>
-		<div class="col-4 "  >
+		<div class="col-3 "  >
 		<%= inline(this,:'_message_page') %>
 		
 		<script>
@@ -662,7 +661,7 @@ end
 <input type="hidden" name="id" value="<%=admit.id%>">
 Station : 
 <% fieldset(:admit) do |f| %>	
-<%= f.select(:station_id, Station.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
+<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
 <% end %>
 
 </div>
@@ -957,7 +956,7 @@ result
 	
 		// active = $('.active-station').size()
 		
-		show(''+m.data)
+		// show(''+m.data)
 		
 
 		

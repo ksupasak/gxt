@@ -6,6 +6,8 @@
 		
 	cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).limit(4).all()
 	
+	session.delete :case_id
+	
 	
 	%>
 	<% for i in cases 
