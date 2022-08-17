@@ -1180,6 +1180,9 @@ MSG
        
         EM.add_periodic_timer(1) do
           
+          
+          begin
+          
           puts '.'
           now = Time.now
           inow = now.to_i
@@ -1599,8 +1602,13 @@ MSG
           
           end
           
-        end
           
+      
+          
+        end
+      rescue Exception=>e
+        puts e.inspect
+      end
           
       #     if app.settings.apps_rv
 #
