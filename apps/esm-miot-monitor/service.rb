@@ -1392,7 +1392,9 @@ MSG
                      end
                 
                 # each Station
-                
+                if  active_list[name] 
+                  
+                  
                 active_list[name].values.each do |s|
                   
                   
@@ -1579,7 +1581,7 @@ MSG
                 
                 
                 
-                
+                  end
                 
                 
                 
