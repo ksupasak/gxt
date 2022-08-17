@@ -1429,7 +1429,7 @@ MSG
                                                #
                             #       # store to sense
                             #
-                                   if v['station_id'] and v['admit_id']
+                                   if v and v['station_id'] and v['admit_id']
 
                                      # puts 'enter 1 '
 
