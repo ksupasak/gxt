@@ -1248,8 +1248,12 @@ MSG
                       
                     end
                   
-                  
-                  
+                   unless active_zone[app.settings.name]
+                     puts "Problem :"
+                     puts app.settings.name.inspect
+                     puts active_zone.inspect
+                     puts
+                   else
                       active_zone[app.settings.name].values.each  do |z|
 
                               puts "Check Zone : #{z.name}"
@@ -1295,7 +1299,7 @@ MSG
 
                       end
                   
-                  
+                    end
                     
 
                   end
