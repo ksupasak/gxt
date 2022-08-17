@@ -1308,7 +1308,7 @@ MSG
                 # puts  active_zone[app.settings.name].inspect
                #  puts  active_list[app.settings.name].inspect
                 
-                
+               if  active_zone[app.settings.name]
                 active_zone[app.settings.name].values.each  do |z|
                   
                   
@@ -1389,7 +1389,7 @@ MSG
           
                   
                 end
-                  
+                     end
                 
                 # each Station
                 
