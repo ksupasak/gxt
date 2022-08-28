@@ -1181,6 +1181,9 @@ MSG
         EM.add_periodic_timer(1) do
           
           
+          eout = File.open("err_service.log","a")
+          
+          
           begin
           
           puts '.'
@@ -1607,7 +1610,16 @@ MSG
           
         end
       rescue Exception=>e
+        
         puts e.inspect
+        puts e.backtrace
+        
+
+        
+        eout.puts e.inspect
+        eout.puts e.backtrace
+        
+        
       end
           
       #     if app.settings.apps_rv
