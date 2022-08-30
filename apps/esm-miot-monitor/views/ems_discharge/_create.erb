@@ -14,6 +14,6 @@
 			record.update_attributes :status=>'Completed', :completed_at=>Time.now
 	# update_attributies
 	
-%><%=admit.to_json  %>
-Discharge <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
+%>
+Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
 <% end %>
