@@ -185,7 +185,7 @@ session[:case_id] = record.id
 	<div class="col">
 		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
-			<div class="d-flex align-items-center">
+			<div class="d-flex justify-content-between">
 				
 				
 				<div class="row">
@@ -218,10 +218,17 @@ session[:case_id] = record.id
 		
 				<div class="widgets-icons-2 rounded-circle  bg-gradient-bloody text-white ms-auto">
 					<a href="send_sms?id=<%=record.id%>" >
-					<i class='bx bx-message-detail text-white '></i>
+						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
 			
+	
+				<div class="widgets-icons-2 rounded-circle  bg-gradient-scooter text-white ms-auto">
+					<a href="https://pcm-life.com:4443/#/<%=record.case_no%>" target="_blank">
+						<i class='bx bx-camera text-white '></i>
+					</a>
+				</div>
+		
 		
 				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
 					<i class='bx bxs-phone'></i>
