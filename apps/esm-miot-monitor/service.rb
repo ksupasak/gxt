@@ -1334,7 +1334,7 @@ MSG
                    
                   if z.mode == 'aoc' || z.mode == 'ems'
 
-                          if list = ambu_map[name][z.id] and list.size > 0
+                          if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0
 
                             result[:ambu_data] = {}
 
@@ -1554,17 +1554,21 @@ MSG
 
                                    end
 
+                                  
+                                   if v
+                                  
+                                        # clear wave
+                                        v['wave'] = []
 
-                                  # clear wave
-                                  v['wave'] = []
+                                        # clear leads
+                                        if v['leads']
+                                          v['leads'].each_pair do |l,lv|
+                                              v['leads'][l] = []
+                                          end
+                                        end
 
-                                  # clear leads
-                                  if v['leads']
-                                    v['leads'].each_pair do |l,lv|
-                                        v['leads'][l] = []
-                                    end
+
                                   end
-
                             
                             
                             
