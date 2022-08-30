@@ -56,7 +56,7 @@ location = "#{Setting.get(:aoc_center)}"
 locaiton = "#{ems_case.patient_location}" if ems_case.patient_location 
 
 	
-
+conf_url = "https://pcm-life.com:4443/\#/#{ems_case.case_no}"
 	
 	
 %>	
@@ -80,15 +80,20 @@ locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 		<div class="col">
 			<div class="card radius-10 border-start border-0 border-3 border-info">
 			<div class="card-body">
-				<div class="d-flex align-items-center">
-					<div>
+				<div class="d-flex justify-content-between">
+					<div class="col-9">
 						<p class="mb-0 text-secondary">Contact info</p>
 						<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
 						<p class="mb-0 font-13"></p>
-				
+						
+						
+						
 					</div>
-					<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
-					</div>
+					<span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span>
+			
+					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+
+					</div> -->
 				</div>
 			</div>
 			</div>
@@ -165,8 +170,8 @@ locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 								<p>
 								พิกัดตำแหน่ง 
 								
-								<span style="float:right"><a  id = "find-me" class="">อ่านตำแหน่ง</a></span>
-							</p>
+								<span style="float:right"><a  id = "find-me" class="btn btn-outline-success">อ่านตำแหน่ง</a></span>
+							   </p>
 								<div id="dashboard-map" style="height: 300px">
 									map
 								</div>
@@ -201,7 +206,7 @@ locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 					<div class="col">
 					<p>
 					รูปถ่าย
-					<span style="float:right"><a   class="take-picture ">ถ่ายภาพ</a></span>
+					<span style="float:right"><a   class="take-picture btn btn-info">ถ่ายภาพ</a></span>
 					</p>
 					</div>
 				</div>

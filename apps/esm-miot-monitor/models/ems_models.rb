@@ -59,6 +59,8 @@ class EMSCase < GXTModel
   
   key :status, String
   
+  key :completed_at, DateTime
+  
   include Mongoid::Timestamps
 
     
