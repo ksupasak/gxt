@@ -244,7 +244,7 @@ MSG
      if count%ls==0
  
 
-       if count%2==0
+       if count%60==0
          bp = "#{100+rand(22)}/#{70+rand(20)}"
          bp_stamp = Time.now
        else

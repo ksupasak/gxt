@@ -163,11 +163,12 @@ for i in medications
 end	
 
 for i in records
-
-	k = i.stamp.localtime.strftime("%H:%M:%S")
-	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
-
+	
+	if i.stamp
+		k = i.stamp.localtime.strftime("%H:%M:%S") 
+		tmap[k] = [] unless tmap[k]
+		tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
+	end
 end	
 	
 	

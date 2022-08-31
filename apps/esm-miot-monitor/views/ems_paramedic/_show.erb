@@ -99,7 +99,7 @@ end
 
 	}
 
-	.station .co2{color:yellow;
+	.station .co2{color:#BBB234;
 
 	}
 
@@ -125,9 +125,20 @@ end
 
 	}
 
+	.station .score{
+		color:black;
+
+	}
+	.station .alert-msg{
+		color:black;
+
+	}
+
+
 	.station-top .value{
 		font-size:1.2em;
 	}
+	
 
 /*	.btn {
 		color:#eee;
@@ -187,7 +198,7 @@ end
 	}
 
 	.vs-val {
-		border:1px solid #333;border-radius: 4px;
+		border:1px solid #ccc;margin:5px;border-radius: 4px;
 	}
 	</style>
 
@@ -231,8 +242,9 @@ end
 <!-- Patient Identity End -->
 
 <!-- Flow Sheet -->
-
-<div id="panel" class="row" style="border:0px solid blue;background:#111;color:#ddd;">
+<div class="card">
+<div class="card-body">
+<div id="panel" class="row" style="border:0px solid blue;background:#fff;color:#ddd;">
 
 
 <div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
@@ -249,7 +261,9 @@ end
 					font-size:0.8em;
 					padding:0px;
 					
-		            background-color: #21272c;
+/*		            background-color: #21272c;*/
+		            background-color: #fff;
+					
 		            border: 0px solid #000;
 		           border-radius: 4px;
 		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
@@ -336,7 +350,7 @@ end
 			
 			
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
-			<%= inline(this,:'_flowsheet2')  %>
+			<%= inline(this,:'_flowsheet')  %>
 			</div>
 	    </div>
 		</div>
@@ -635,6 +649,8 @@ end
 
 </div>
 
+</div>
+</div>
 
 
 
@@ -704,7 +720,7 @@ result
 					{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
 					{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
 					{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
-		],records:null};
+				],records:null};
 			
 			records = [];
 			
@@ -719,7 +735,7 @@ result
 				
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
 		    
-			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(1200).sort(:start_time=>-1).to_a.reverse
+			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
 			
 			
 		    
@@ -852,7 +868,7 @@ result
     		 .attr("class", "info-svg")
 
 	     var g = viewport.append("g")
-		    .attr("transform", "translate(0,0)");
+		 .attr("transform", "translate(0,0)");
 		
 		 gfx = GFX()
 		 .svg(g)
