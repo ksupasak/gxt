@@ -208,31 +208,11 @@ end
 
 
 
-<div class="row">
-	
-	<div class="col-9">
-	
-		
-		
-	</div>
-	
-	
-	<div class="col-3">
-		
-		
-		
-	</div>
-
-
-</div>
-
-
-
 <%
 	
 		station_id = "StationID"
 		station_id = station.name if station
-	flowsheet = true
+	flowsheet = false
 	
 %>
 
@@ -243,9 +223,9 @@ end
 <!-- Patient Identity End -->
 
 <!-- Flow Sheet -->
-<div class="card">
-<div class="card-body">
-<div id="panel" class="row" style="border:0px solid blue;background:#fff;color:#ddd;">
+<div class="">
+<div class="">
+<div id="panel" class="row" style="border:0px solid blue;background:#333;color:#ddd;">
 
 
 <div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
@@ -300,7 +280,7 @@ end
 		<div class="col-9 "  >
 		<div class="row" style="my-2">
 		
-			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
+			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:none;">
 	
 				<div class="row d-flex justify-content-center" style="padding:0px" >
 							<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
@@ -352,12 +332,12 @@ end
 			</div>
 			
 			
-			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
-			<%= inline(this,:'_flowsheet')  %>
-			</div>
+		<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
+		<%= inline(this,:'_flowsheet')  %>
+		</div>
 	    </div>
 		</div>
-		<div class="col-3 "  >
+		<div class="col-3 " style="<%='display:none' unless flowsheet%>" >
 		<%= inline(this,:'_message_page') %>
 		
 		<script>
@@ -373,7 +353,7 @@ end
 
 
 
-<div class="row" style="display:none">
+<div class="row" >
 						
 	<div  class="col-4 order-1 ">
 					<div class="row">
@@ -985,9 +965,9 @@ result
 			
 		
 			updateMessage();
-
-			// reload_message("<%=params[:id]%>")
 			
+			// reload_message("<%=params[:id]%>")
+			reload_message("<%=admit.id%>")
 		
 		}
 		else		
@@ -1021,21 +1001,21 @@ result
 	  // 				// wave_data = obj['wave'];
 	  // 		   }
 		   
-				// 		   if(obj['leads']){
-				//
-				// 			   for(var j=0;j<16;j++){
-				//
-				// jid = ''+j
-				// ji = lx[j];
-				// jii = jix[ji];
-				//
-				// if(obj['leads'][jii]){
-				// 			   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
-				// }
-				//
-				// 			   }
-				//
-				// 		   }
+						   if(obj['leads']){
+
+							   for(var j=0;j<16;j++){
+
+				jid = ''+j
+				ji = lx[j];
+				jii = jix[ji];
+
+				if(obj['leads'][jii]){
+							   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
+				}
+
+							   }
+
+						   }
 		    			
 			
 			//  // console.log(obj)

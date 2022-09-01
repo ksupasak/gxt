@@ -10,7 +10,11 @@ session[:case_id] = record.id
 
    
 %>
-
+<style>
+	.v{
+		color:blue;
+	}
+	</style>
 
 <!--<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Components</div>
@@ -38,8 +42,8 @@ session[:case_id] = record.id
 				</div>-->
 
 <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3">
-	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-<%=code.get_class%>">
+	<div class="col-12 col-xl-4">
+		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div class="row" >
@@ -47,7 +51,7 @@ session[:case_id] = record.id
 				
 					<div class="row">
 						
-						<div class="col-6">
+						<div class="col-7">
 							<h4 class="my-1 ">
 								
 								<%=record.case_no%>
@@ -56,7 +60,7 @@ session[:case_id] = record.id
 					
 						</div>
 						
-						<div class="col-6">
+						<div class="col-5">
 							<h4 class="my-1 text-info">
 								<%=record.contact_phone%>
 					
@@ -68,12 +72,12 @@ session[:case_id] = record.id
 					
 					<div class="row">
 						
-						<div class="col-6">
+						<div class="col-7">
 							ผู้แจ้ง : <span class="contact_name"><%=record.contact_name%></span>
 						</div>
 						
-					<div class="col-6">
-						<label class="phone">สถานที่<label> : <span class="contact_name"><%=record.location%></span>
+					<div class="col-5">
+						<label class="phone">สถานที่<label> : <span class="contact_name v"><%=record.location%></span>
 					</div>
 					
 					
@@ -84,7 +88,7 @@ session[:case_id] = record.id
 					<div class="row">
 					
 						<div class="col-12">
-							<label class="phone">อาการนำ<label> : <span class="cheif_complain"><%=record.chief_complain%></span>
+							<label class="phone">อาการนำ<label> : <span class="cheif_complain v"><%=record.chief_complain%></span>
 						</div>
 					
 					
@@ -114,15 +118,15 @@ session[:case_id] = record.id
 		</div>
 	</div>
 	
-	<div class="col">
-		<div class="card radius-10 border-start border-0 border-3 border-<%=code.get_class%>">
+	<div class="col-12 col-xl-4">
+		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 					<div class="row">
 				
 				<div class="row">
 					
-					<div class="col-6">
+					<div class="col-7">
 						<h4 class="my-1 ">
 							
 							ผู้ป่วย <%=record.patient_gender%> <%=record.patient_age%>
@@ -131,7 +135,7 @@ session[:case_id] = record.id
 				
 					</div>
 					
-					<div class="col-6">
+					<div class="col-5">
 						<h4 class="my-1 text-danger">
 							<%=record.init_code.name.split(" ")[0]%>
 				
@@ -144,23 +148,30 @@ session[:case_id] = record.id
 				
 				<div class="row">
 					
-					<div class="col-6">
-						CID : <span class=":init_cbd_code"><%=record.patient_cid%></span>
+					<div class="col-7">
+						ผู้ป่วย : <span class=":init_cbd_code v"><%=record.patient_name%></span>
 					</div>
 					
-					<div class="col-6">
-						<label class="phone">HN : <label> <span class="contact_name"><%=record.patient_hn%></span>
+					<div class="col-5">
+						CID : <span class=":init_cbd_code v"><%=record.patient_cid%></span>
 					</div>
+					
+				
 				
 				</div>
 				
 				
 				<div class="row">
+					
 				
-					<div class="col-12">
-						<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain"><%=record.patient_underlying%></span>
+				
+					<div class="col-7">
+						<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain v"><%=record.patient_underlying%></span>
 					</div>
-				
+					
+				<div class="col-5">
+					<label class="phone">HN : <label> <span class="contact_name v"><%=record.patient_hn%></span>
+				</div>
 				
 			
 				</div>
@@ -181,8 +192,16 @@ session[:case_id] = record.id
 		</div>
 	</div>
 	
+	<%
+		
+	station = record.admit.station
 	
-	<div class="col">
+		
+	station_id = "StationID"
+	station_id = station.name if station
+		
+	%>
+	<div class="col-12 col-xl-4">
 		<div class="card radius-10 border-start border-0 border-3 border-info">
 		<div class="card-body">
 			<div class="d-flex justify-content-between">
@@ -191,7 +210,15 @@ session[:case_id] = record.id
 				<div class="row">
 					
 					<div class="col-6">
-						VS : <span class="init_cbd_code">vs</span>
+						VS : 
+						
+						<div class="station <%=station_id%>">
+						<div class="hr">
+								<div class="value" style="font-size:1em">-</div>
+						</div>
+						</div>
+						
+						
 					</div>
 					
 					<div class="col-6">
@@ -215,21 +242,31 @@ session[:case_id] = record.id
 
 				</div>
 				 -->
-		
-				<div class="widgets-icons-2 rounded-circle  bg-gradient-bloody text-white ms-auto">
+				<div class="col-6">
+					
+					
+					<div class="widgets-icons-2  <%=' bg-gradient-bloody ' if true %>text-white ms-auto" style="float:left;margin:5px">
+						<a href="monitor?id=<%=record.id%>" target="_blank" >
+							<i class='bx bx-message-detail text-white '></i>
+						</a>
+					</div>
+					
+					
+					
+				<div class="widgets-icons-2  <%=' bg-gradient-bloody ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="float:left;margin:5px">
 					<a href="send_sms?id=<%=record.id%>" >
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
 			
 	
-				<div class="widgets-icons-2 rounded-circle  bg-gradient-scooter text-white ms-auto">
+				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="float:left;margin:5px">
 					<a href="https://pcm-life.com:4443/#/<%=record.case_no%>" target="_blank">
 						<i class='bx bx-camera text-white '></i>
 					</a>
 				</div>
 		
-		
+			</div>
 				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
 					<i class='bx bxs-phone'></i>
 				</div> -->
@@ -572,7 +609,7 @@ session[:case_id] = record.id
 		// console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Zone.Message'){
 			
-			reload_request_content()
+			// reload_request_content()
 		
 		}
 	  
