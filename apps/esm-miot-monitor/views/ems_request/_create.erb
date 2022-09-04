@@ -10,7 +10,30 @@ if params[:record]
 	
 	patient_id = nil
 	patient = Patient.find p[:patient_id] if p[:patient_id]
+	patient = Patient.where(:hn=>p[:patient_hn]).first unless patient 
 	
+	if patient 
+		
+		p[:patient_name] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		p[:patient_gender] = "#{patient.gender}"
+		p[:patient_age] = "#{patient.age}"
+		
+		p[:patient_cid] = "#{patient.public_id}"
+		p[:patient_phone] = "#{patient.contact_phone}"
+		p[:patient_underlying] = p[:patient_underlying]+" #{patient.underlying}"
+		
+		
+	end
+	
+    # key :patient_name, String
+    # key :patient_info, String
+    # key :patient_gender, String
+    # key :patient_age, String
+    #  key :patient_cid, String
+  # key :patient_hn, String
+  # key :patient_phone, String
+  #
+  # key :patient_underlying, String
 	unless patient
 		
 		patient = Patient.create :name=>p[:patient_name], :hn=>p[:patient_hn], :public_id=>p[:patient_cid], :contact_name=>p[:contact_name], :contact_phone=>p[:patient_phone],:zone_id=>session[:current_zone]
@@ -46,7 +69,7 @@ end
 
 
 %>
-<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>">
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>&tab=command">
 
 
 <% else %>

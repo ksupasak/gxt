@@ -240,7 +240,7 @@ conf_url = "https://pcm-life.com:4443/\#/#{ems_case.case_no}"
 					
 					<%
 				
-					imgs = Message.where(:admit_id=>ems_case.id).sort(:created_at=>-1).all
+					imgs = Message.where(:admit_id=>ems_case.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
 					
 					%>
 				

@@ -1,0 +1,19 @@
+<% 
+
+  if request.post?
+		
+		
+			record = EMSCase.find params[:id]
+			
+			
+			
+			admit = record.admit
+			
+			admit.discharge
+			
+			record.update_attributes :status=>'Completed', :completed_at=>Time.now
+	# update_attributies
+	
+%>
+Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
+<% end %>

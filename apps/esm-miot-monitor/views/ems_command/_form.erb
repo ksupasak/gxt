@@ -22,19 +22,25 @@
 					</div>
 					<p class="px-3">
 						
-					รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
+					Ambulance / รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
 						
 					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
 					
 					
 				
 					
+					<p class="px-3">
+						
+					Communication / สื่อสาร<span style="float:right"></span>
+						
+					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					
 					
 					
 					
 					<p class="px-3">
 						
-					เจ้าหน้าที่<span style="float:right">
+					EMS / เจ้าหน้าที่<span style="float:right">
 					<input class="btn btn-info btn-sm" id="select-officer" data-bs-toggle="modal" data-bs-target="#selectProviderModal" type="submit" value="เลือก"></span>
 						
 					</p>
@@ -48,7 +54,7 @@
 						<div class="" style="padding:0 20px 20px 20px;border:0px solid">
 					
 						
-						<div class="command-provider-<%=record.id%>">
+						<div class="command-provider-<%=record.id%> row">
 						
 						<% for i in ems_providers
 							
@@ -57,7 +63,7 @@
 						%>
 						
 													
-						<div class="chip chip-md">
+						<div class="chip chip-md col-3">
 							<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=provider.name%>
 						</div>
 						
@@ -85,14 +91,16 @@
 																			providers = Provider.all()
 																			
 																		%>	
+																		<div class="row">
 																		<% for i in providers %>
 																		
-																		<div class="chip chip-md chip-select " provider_id="<%=i.id%>" >
+																		<div class="chip chip-md chip-select  col-3" provider_id="<%=i.id%>" >
 																			<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=i.name%>
 																		</div>
 																		
 																		<% end %>
 																		</div>
+																	</div>
 																
 																		<div class="modal-footer">
 																			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

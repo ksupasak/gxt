@@ -1,0 +1,24 @@
+<h1>EMR</h1>
+<%
+	
+		record = EMSCase.find params[:id]
+	
+		admit = record.admit
+	
+%>
+<%= admit.to_json  %>
+
+<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
+<input type="hidden" name="id" value="<%=record.id%>" >
+<div class="input-group mb-3">
+<input type="text" class="form-control" name="username" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"> <span class="input-group-text" id="basic-addon2">@example.com</span>
+</div>
+
+<input type="submit" name="create" value="create">
+
+</form>
+
+<div id="discharge_panel">
+
+</div>
+

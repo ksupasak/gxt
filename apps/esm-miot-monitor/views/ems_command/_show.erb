@@ -130,25 +130,12 @@
 						mapc = new EMSMap('dashboard-map-c');
 						
 						mapc.setPosition(latlng[0], latlng[1])
-						mapc.setMarkerPosition(latlng[0], latlng[1])
-						
+						mapc.setMarkerPosition(latlng[0], latlng[1])						
 						mapc.changeMarkerPosition(function(marker){
-							
-							// var pos = marker.position
-	// 						$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-	//
-	//
-	//
-	// 						map1.geocode({'location':pos},function(result){
-	//
-	// 							$('#record_address').val(result.formatted_address)
-	//
-	// 						})
-	//
-	// 						map2.setPosition(pos.lat(), pos.lng())
-	// 						map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-								
+
 						}.bind(this))
+						
+						
 						
 						<% for cm in commands %>
 							
@@ -165,6 +152,7 @@
 							directionsService = new google.maps.DirectionsService;
 				  	      	directionsDisplay = new google.maps.DirectionsRenderer;
 				  		    directionsDisplay.setMap(mapc.map);
+							
 							mapc.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
 								
 								
@@ -317,16 +305,17 @@
 								<table class='table'>
 								<thead>
 									<tr>
-										<th>รายการ</th><th>เวลา</th><th>Tdiff</th><th>เลข กม.</th><th></th>
+										<th>รายการ</th><th>เวลา</th><th>Tdiff</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
 								
 									</tr>
 								</thead>
+									<tbody>
 								<% for i in logs 
 	
 								parent_map[i.sort_order] = i
 		
 								%>
-								<tbody>
+							
 								<tr>
 									<td>
 										<%=i.name%>
@@ -351,16 +340,32 @@
 										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:100px">
 										<% end %>
 									</td>
-									<td>
-										<%=i.note%>
-									</td>
-									<td>
+								
+									<td>	<%=i.note%>
 										<% if i.status=='PENDING'%>
 									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>'btn btn-sm btn-success check-log' %>
 										<% end%>
 									</td>
-		
-		
+									
+									<%=i.status%><%
+											
+																		#route = AocCaseRoute.where(:arrival_log_id=>i.id).first
+									route = AocCaseRoute.where(:departure_log_id=>i.id).first # unless route
+									
+									if route
+										
+									%>
+									<td rowspan="2" valign="middle">
+								
+									   ETA
+									   (<%=format("%0.1f",route.act_duration/60) if route.act_duration%> min, <%=format("%0.1f",route.act_distance/1000.0) if route.act_distance%> km)
+									   <br/>
+									 <%=route.status%>
+									</td>
+									<% else %>
+									<td></td>
+									<% end %>
+									
 								</tr>
 
 								<% end %>
@@ -416,7 +421,8 @@
 			    url: target,
 				  context: document.body
 				}).done(function(html) {
-			
+					
+					
 					reload_command_content();
 				  
 				});
@@ -460,8 +466,8 @@
 				
 					</div>
 				
-					<div class="card-body">
-			
+					<div class="card-body message-partial" style="overflow:scroll;">
+							<!-- <div style="height:3000px;background:red">f</div> -->
 					</div>
 					
 			
@@ -474,6 +480,59 @@
 	
 
 	<script>
+		
+		
+		
+	
+		
+		function command_process(lines){
+			
+			
+			objs = JSON.parse(lines[1])
+			
+			console.log(objs)
+			
+	
+			
+			// console.log(lines[0].split(" ")[0])
+			if(lines[0].split(" ")[0]=='Zone.Message'){
+			
+				reload_message("<%=admit.id%>")
+		
+			}
+	  
+			
+		}
+		
+		current_process = command_process
+		
+		var message_admit_id= null
+		
+		function reload_message(admit_id){
+		
+
+
+		message_admit_id = admit_id
+	
+		// reload_nurse_note(admit_id)
+		// reload_medication(admit_id)
+		
+
+		$.ajax({
+		  url: "<%= "../EmsParamedic/message_partial"%>?admit_id="+message_admit_id,
+		  context: document.body
+		}).done(function(data) {
+		  $( '.message-partial' ).html(data);
+	  	 // alert($( '.chat' ).height())
+	  $('.panel-body').scrollTop(100000000)
+		 
+
+		});
+	
+		}
+		
+		reload_message("<%=admit.id%>")
+		
 	
 		refresh_remote()
 	</script>

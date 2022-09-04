@@ -140,7 +140,7 @@
 						mx = h1w+20;
 						mw = w-h1w-h3w;
 						chartHeight = 0;
-						rowxHeight = 150	
+						rowxHeight = 120	
 						
 						
 						
@@ -389,6 +389,8 @@
 					 .call(xAxis_2);
 					 
 					 
+ 				
+					 
 		   	    // svg.append("g")
    	    // 		   	      .attr("transform", "translate(0," + 300 + ")")
    	    // 		   	      .call(d3.axisBottom(xscale_1).tickSize(-300).ticks(10));
@@ -426,27 +428,27 @@
 			            	.attr("class", "rowx")
 							.attr("transform", "translate(0," + currentY +")");
 					
-   					h1 = g.append("rect")
-   			        .attr("x", h1w)
-   			        .attr("rx", 0)
-   			        .attr("ry", 0)
-   			        .attr("width", contentWidth/2)
-   			        .attr("height", rowxHeight)
-   					.attr("fill","red")
-   			        .attr("fill-opacity", 0.10)
-   			        .attr("stroke", "#999999")
-   			        .attr("stroke-width", "1px")
-					.on("click", function() {
-				             var coords = d3.mouse(this);
-							 // console.log(""+coords[0]+","+coords[1])
-					});
-					
+   					// h1 = g.append("rect")
+		//    			        .attr("x", h1w)
+		//    			        .attr("rx", 0)
+		//    			        .attr("ry", 0)
+		//    			        .attr("width", contentWidth/2)
+		//    			        .attr("height", rowxHeight)
+		//    					.attr("fill","red")
+		//    			        .attr("fill-opacity", 0.10)
+		//    			        .attr("stroke", "#999999")
+		//    			        .attr("stroke-width", "1px")
+		// 			.on("click", function() {
+		// 		             var coords = d3.mouse(this);
+		// 					 // console.log(""+coords[0]+","+coords[1])
+		// 			});
+		//
 					
    					h2 = g.append("rect")
-   			        .attr("x", h1w+contentWidth/2)
+   			        .attr("x", h1w+0)
    			        .attr("rx", 0)
    			        .attr("ry", 0)
-   			        .attr("width", contentWidth/2)
+   			        .attr("width", contentWidth)
    			        .attr("height", rowxHeight)
    					.attr("fill",fillcolor)
    			        .attr("fill-opacity", 0.10)
@@ -535,7 +537,7 @@
 							.text(""+r.name)
 							.style("font-size", "12px")
 							// .attr('text-anchor','middle')
-							.attr('stroke','#ccc')
+							.attr('stroke','#666')
 							
 							
 							}
@@ -569,11 +571,11 @@
 						
 						g.append("rect")
 						.attr("x",xi)
-						.attr("y",(y+ry-20))
-                        .attr("rx", 3)
-                        .attr("ry", 3)
-                        .attr("width", wi)
-                        .attr("height", "24")
+						.attr("y",(y+ry-13))
+                        .attr("rx", 1)
+                        .attr("ry", 1)
+                        .attr("width", 5)
+                        .attr("height", "10")
 						.attr("fill",randomColor)
                         .attr("fill-opacity", 0.25)
                         .attr("stroke", "#999999")
@@ -581,11 +583,11 @@
 
 
 						g.append("text")
-						.attr("transform", "translate("+(xi+5)+","+(y+ry-5)+")")
+						.attr("transform", "translate("+(xi+10)+","+(y+ry-5)+")")
 						.text(""+r.name+" : "+r.description)
 						.style("font-size", "12px")
 						// .attr('text-anchor','middle')
-						.attr('stroke','#ccc')
+						.attr('stroke','#666')
 						}
 
 						
@@ -808,6 +810,8 @@
 					             var coords = d3.mouse(this);
 								 // console.log(""+coords[0]+","+coords[1])
 						});
+						
+	 				
 						
 						
 	   					// h2 = g.append("rect")

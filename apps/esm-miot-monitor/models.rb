@@ -107,6 +107,8 @@ class Provider < GXTModel
    key :license, String
    key :user_id, ObjectId
    key :line_account_id, ObjectId
+   key :code, String
+   key :zone_id, String
    
   
 end
@@ -220,6 +222,9 @@ class Message < GXTModel
   key :content, String
   key :file_id, ObjectId
   key :sender_user_id, ObjectId
+  
+  key :channel_id, ObjectId
+  
   include Mongoid::Timestamps
 end
 
@@ -568,6 +573,7 @@ class Patient  < GXTModel
   key :addr_present, String 
   key :parent, String 
   key :note, String 
+  key :underlying, String
   
   
   
@@ -723,7 +729,11 @@ class Ambulance  < GXTModel
   key :last_location, String
   key :last_address, String
   key :last_speed, Float
+  
   key :device_no, String
+  key :msg_channel, String
+  
+  
   include Mongoid::Timestamps
   
   
@@ -1114,6 +1124,8 @@ class MessageController < GXTDocument
   def content params
    
     message = model.find params[:id]
+    
+    puts "ERR:#{Mongoid::Config.clients["default"]['hosts'].inspect}"
     
     connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
    

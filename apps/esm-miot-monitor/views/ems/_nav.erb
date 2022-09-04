@@ -22,7 +22,7 @@
 			
 		%>
 		<li class="mm-active">
-			<a href="show?id=<%=ems_case.id%>&page=request" class="has-arrow">
+			<a href="show?id=<%=ems_case.id%>&page=dashboard" class="has-arrow tab-dashboard">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%></div>
@@ -59,6 +59,8 @@
 			
 			
 			function setTab(tab){
+				$('.mm-active').removeClass("mm-active");
+				$('.tab-'+tab).parent().addClass("mm-active")
 				sessionStorage.setItem("main-tab", tab)
 			}
 			
@@ -67,10 +69,41 @@
 			}
 			
 			
+			var current_content = null;
+			var current_process = null;
+			
+			
+			
+			function update_message(){
+				
+				if(current_content){
+					// alert('doifj')
+					current_content.call();
+				}
+				
+				
+			}
+			
+			
+			function process_message(m){
+				
+				
+				if(current_process!=null){
+					// alert('doifj')
+					current_process.call(this, m)
+				}
+			}
+			
+			
 			function reload_request_content(){
 				
-				setTab('request')
+				
+				current_content = reload_request_content;
 			
+				
+				setTab('request')
+				
+				
 				$.ajax({
 				  url: "../EmsRequest/show?id=<%=ems_case.id%>",
 				  context: document.body
@@ -83,6 +116,8 @@
 			$('.tab-request').click(reload_request_content)
 			
 			function reload_prearrival_content(){
+				
+				current_content = reload_prearrival_content;
 				
 				setTab('prearrival')
 			
@@ -101,6 +136,9 @@
 			
 			
 			function reload_command_content(){
+				
+				current_content = null;
+				
 				
 				setTab('command')
 			
@@ -139,6 +177,7 @@
 				
 				setTab('paramedic')
 			
+				current_content = null;
 				
 				$.ajax({
 			    url: "../EmsParamedic/show?id=<%=ems_case.id%>",
@@ -156,13 +195,13 @@
 			function reload_emr_content(){
 				
 				setTab('emr')
-			
+		
 				
 				$.ajax({
 			    url: "../EmsEMR/show?id=<%=ems_case.id%>",
 				  context: document.body
 				}).done(function(html) {
-
+				
 				  $( '.ems_case' ).html(html);
 				});
 			
@@ -187,7 +226,21 @@
 			}
 			$('.tab-discharge').click(reload_discharge_content)
 		
+			function reload_dashboard_content(){
+				
+				setTab('dashboard')
 			
+				
+				$.ajax({
+			    url: "dashboard?id=<%=ems_case.id%>",
+				  context: document.body
+				}).done(function(html) {
+
+				  $( '.ems_case' ).html(html);
+				});
+			
+			}
+			$('.tab-dashboard').click(reload_dashboard_content)
 			
 			// switch(getTab()){
 	//
@@ -225,6 +278,7 @@
 		$('.tab-'+getTab()).click()
 		
 		$('.tab-'+getTab()).parent().addClass("mm-active")
+		
 	}
 			
 			
@@ -264,7 +318,9 @@
 			</ul>
 			<li  class="">
 				<a href="./create">
-					<div class=""><i class="bx bx-plus"></i> New Request</div>
+					<div class=""><i class="bx bx-plus"></i> </div>
+					
+					<div class="menu-title">New Request</div>
 				</a>
 			</li>
 			
@@ -274,13 +330,13 @@
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-calendar"></i>
 				</div>
-				<div class="menu-title">Today Operation</div>
+				<div class="menu-title">24Hr Operation</div>
 			</a>
 			
 			<ul class="mm-show mm-collapse">
 				<% 
 					
-				cases = EMSCase.where(:status=>"Completed").sort(:case_no=>-1).all()
+				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-84600}).sort(:case_no=>-1).limit(10).all()
 				
 				%>
 				<% for i in cases 
@@ -298,12 +354,12 @@
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-check-circle"></i>
 				</div>
-				<div class="menu-title">Today Completed</div>
+				<div class="menu-title">Completed</div>
 			</a>
 			<ul class="mm-collapse">
 				<% 
 					
-				cases = EMSCase.where(:status=>"Discharged").sort(:case_no=>1).all()
+				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-84600}).limit(5).sort(:case_no=>1).all()
 				
 				%>
 				<% for i in cases %>

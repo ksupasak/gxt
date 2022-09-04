@@ -1,8 +1,49 @@
 
 <%
 
-	admit = Admit.find params[:id]
-	admit.update_attributes :station_id=>params[:admit][:station_id]
+	ems_case = EMSCase.find params[:id]
 	
+	admit = ems_case.admit
+	
+	if true #unless ems_case.paramedic_status
+		
+		if params[:admit][:status]=='STARTED'
+		
+		ems_case.update_attributes :paramedic_status=>'STARTED', :paramedic_start_at=>Time.now
+		
+		admit.update_attributes :station_id=>params[:admit][:station_id]
+		
+		record = admit.nurse_records.create :name=>"EMD", :description=>"Start Paramedic", :start_time=>Time.now, :stop_time=>Time.now
+	    
+		elsif params[:admit][:status]=='FINISHED'
+		
+		ems_case.update_attributes :paramedic_status=>'FINISHED', :paramedic_stop_at=>Time.now
+		
+		record = admit.nurse_records.create :name=>"EMD", :description=>"Stop Paramedic", :start_time=>Time.now, :stop_time=>Time.now
+	   		
+		end
+		
+		# key :name,  String
+	    #
+	    # key :description, String
+	    #
+	    # key :admit_id, ObjectId
+	    #
+	    # key :start_time, Time
+	    # key :stop_time, Time
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)		
+		
+	end
+						        
 %>
 
+
+
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=../EMS/show?id=<%=ems_case.id%>&page=dashboard">

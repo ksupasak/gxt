@@ -158,13 +158,29 @@ def self.registered(app)
               ambus = Ambulance.where(:device_no=>{'$ne'=>''}).all
               list = []
               
-              for i in ambus 
+              
+              
+              
+              ems_cases = EMSCase.where(:status=>{'$ne'=>'Completed'}).all
+              
+               
+              for c in ems_cases
+              
+              ems_commands = EMSCommand.where(:case_id=>c.id).all
+               
+              admit = c.admit 
+              
+              
+               
+              for cmd in ems_commands 
                 
-                admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted' ).first
+                i = cmd.ambulance
+                
+               #Admit.where(:ambulance_id=>i.id, :status=>'Admitted' ).first
                 
                 if admit
                   
-                  route = AocCaseRoute.where(:admit_id=>admit.id,:status=>'SCHEDULED').sort(:sort_order=>1).first
+                  route = AocCaseRoute.where(:admit_id=>admit.id,:status=>'STARTED').sort(:sort_order=>-1).first
                   
                   if route
                     
@@ -177,7 +193,7 @@ def self.registered(app)
                     
                     unless route.est_distance
                       # fill estimate distance
-                     
+                      puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                       direction = google_direction(route.start_latlng, route.stop_latlng, key)
                       
                       
@@ -188,8 +204,10 @@ def self.registered(app)
                     end
                     
                     
-                    if i.last_speed and i.last_speed > 10 or route.act_distance ==nil
-                    
+                    if i.last_speed > 10 or route.act_distance ==nil #  and i.last_speed and 
+                     
+                     puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
+                     
                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
                     direction = cache_directions[kcache]
                     
@@ -198,7 +216,17 @@ def self.registered(app)
                       cache_directions[kcache] = direction
                     end
                     
-                    puts cache_directions.keys
+path = "miot/#{name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                		settings.redis.publish(path, send_msg)                    
+                    
+                    
+                    # puts cache_directions.keys
                     # unless route.act_distance
                       # fill estimate distance
                     if direction[:status]=='200 OK'
@@ -276,7 +304,7 @@ def self.registered(app)
                       
                   end
                   
-                  
+                  end
                   
                 end
                 
@@ -298,10 +326,15 @@ def self.registered(app)
        EM.add_periodic_timer(1) do
        
          
+         
+        
+         
          if app.settings.apps_rv
            
-         for name in app.settings.apps_rv['esm-miot-monitor']
+         for name in app.settings.apps_rv['esm-miot-monitor'].uniq
            switch name, 'esm-miot-monitor'
+         
+          puts "#{name} XXXX"
          
           if device_map[name] and device_map[name][:url] #cms_url = Setting.where(:name=>'cms_url').first and cms_url
          
@@ -318,10 +351,10 @@ def self.registered(app)
              puts device_map[name][:url]
              uri = URI(device_map[name][:url])
              
-             use_ssl = true
+             use_ssl = false
 
              http = Net::HTTP.new(uri.host, uri.port)
-             http.use_ssl = use_ssl
+             # http.use_ssl = use_ssl
              http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
              result = nil
@@ -375,7 +408,7 @@ def self.registered(app)
             ambu = map[:ambu]
             admit = map[:admit]
             
-          
+         
             req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
             
             # puts  ambu.name
@@ -387,14 +420,16 @@ def self.registered(app)
             # puts json.inspect
             sp = 0
             sp = json['sp']/10.0 if json['sp']
+            
             result = {:station_id=> ambu.station_id , :device_id=>ambu.device_no,:lat=>json['mlat'], :lng=>json['mlng'], :sp=>sp, :ol=>json['ol'], :hx=>json['hx']} 
             
             puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
             
-            results[ambu.id] = result
+            results[ambu.id] = result if json['mlat'].to_i!=0
             
            
           end
+          
           
           
             path = "miot/#{name}/in"
@@ -411,9 +446,10 @@ MSG
          end
           
             
-         rescue Exception
+         rescue Exception=>e
            
-             
+           puts e.inspect 
+           
            http = nil
            
            
@@ -494,11 +530,29 @@ MSG
                    sz = i['recipient'].split('.')
                    zone = nil
                    station = nil
+                   channel = nil
+                   puts msg.inspect 
+                   
+                   channel_name = i['recipient']
+                   
+                   channel = EMSChannel.where(:name=>channel_name).first
+                   
+                   channel = EMSChannel.create(:name=>channel_name) unless channel
+                   
+                   # pattern : [station_name]          
+                   
+                   puts sz.inspect
+                            
+                   
                    if sz.size==1
                      station = Station.where(:name=>sz[0]).first
                      if station
                        zone = station.zone
                      end
+                     
+                   # pattern : [station_name].[zone].[solution]
+                   
+                      
                    elsif sz.size==3 and sz[2] == name
                      zone = Zone.where(:name=> /#{sz[1]}/i).first
                      
@@ -514,8 +568,25 @@ MSG
                        station = Station.where(:name=>sz[1], :zone_id=>zone.id).first
                      end
                    end 
+                 
                    
-                   station_id = station.id if station
+                   ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).first
+                   
+                   if ems_case
+                     
+                     station = Station.find ems_case.station_id
+                     
+                     zone = Zone.find ems_case.zone_id
+                       
+                   end
+                   
+                   
+                   
+                   
+                   if station
+                   
+                   
+                   station_id = station.id 
                    
                    admit_id = nil
                    admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
@@ -542,17 +613,17 @@ MSG
 
             
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
+                     msg = Message.create :channel_id=> channel.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> media['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>media['type'], :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
 
                    else
                      puts "Sender #{i['sender']} To #{i['recipient']} Text #{i['text']}  "
                      
-                     msg = Message.create :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id, :admit_id=>admit_id
+                     msg = Message.create :channel_id=> channel.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['text'], :ts=> i['ts'], :type=>i['type'], :station_id=>station_id, :admit_id=>admit_id
                      
                      
                    end
-                   
+                   end
                   
                    # puts "xxxxx #{zone.inspect }"
                    # puts "xxxxx #{station.inspect }"

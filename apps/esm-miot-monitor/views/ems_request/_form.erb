@@ -198,16 +198,20 @@
 						
 						
 						
-						
+					
 						
 					</div>	
-					<% unless params[:id]%>	
-					<input type="submit" name="create" value="Create" class="btn btn-success">
-					<% end %>
+				
 				</div>
 			
 			</div>
-			
+			<div class="col-12">
+			<% unless params[:id]%>	
+			<input type="submit" name="create" value="Create" class="btn btn-success">
+			<% else %>
+			<input type="submit" name="create" value="Update" class="btn btn-info">
+			<% end %>
+			</div><br/>
 			<div class="col-12 ">
 		
 				
@@ -297,6 +301,7 @@
 						</div>
 					
 						<script>
+							$(document).ready(function(){
 							
 							latlng = [13.69313508354787, 100.69198345629769]
 							
@@ -322,11 +327,11 @@
 								
 							
 								
-								map1.geocode({'location':pos},function(result){
-
-									$('#record_address').val(result.formatted_address)
-
-								})
+								// map1.geocode({'location':pos},function(result){
+	//
+	// 								$('#record_address').val(result.formatted_address)
+	//
+	// 							})
 								
 								map2.setPosition(pos.lat(), pos.lng())
 								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -339,26 +344,20 @@
 								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 						
 								
-								map2.geocode({'location':pos},function(result){
-
-									$('#record_address').val(result.formatted_address)
-
-								})
+								// map2.geocode({'location':pos},function(result){
+	//
+	// 								$('#record_address').val(result.formatted_address)
+	//
+	// 							})
 								
 								map1.setPosition(pos.lat(), pos.lng())
 								map1.setMarkerPosition(pos.lat(), pos.lng(), false)
 							})
-				
-						</script>
-						
-						
-					
-						
-						<script>
+			
 							
 							function address_search(e){
 								
-								
+							
 									var address = $('#record_location').val()
 								
 									map1.geocode({'address':address},function(result){
@@ -417,9 +416,10 @@
 							  }
 									
 							})
+							
+							
+						})
 						
-							map1.init()
-							map2.init()
 						
 						</script>
 						
@@ -447,7 +447,7 @@
 									<div>
 										<%
 				
-										imgs = Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
+										imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
 				
 			
 					

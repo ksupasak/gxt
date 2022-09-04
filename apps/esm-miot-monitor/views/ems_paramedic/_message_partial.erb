@@ -15,7 +15,7 @@
 				
 				if admit 
 				
-				nurse_records = admit.nurse_records
+				nurse_records = admit.nurse_records.limit(30).sort(:start_time=>-1).all
 				
 				for m in nurse_records
 				
@@ -33,7 +33,7 @@
 					
 				end
 				
-				records = admit.records
+				records = admit.records.limit(30).sort(:created_at=>-1).all
 				for m in records
 				
 					console << [m.created_at, :record, m]
@@ -47,8 +47,10 @@
 					
 				end
 			
-				msgs = admit.messages.desc(:created_at).all :limit=>10
-				
+				msgs = admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+				# msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+			
+				# Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
 				
 				for m in msgs
 				
@@ -61,14 +63,14 @@
 				
 				console.collect!{|i| i if i[0]}.compact!
 			
-				console.sort!{|a,b| b[0]<=>a[0] }
+				console.sort!{|a,b| a[0]<=>b[0] }
 			
 			
 			%>
 
 
 			
-			<div class="container">
+			<div class="col-12" style="border:1px ;color:#666">
 				
 				
 			    <div class="row">
@@ -84,7 +86,38 @@
 			                </div>
 			            <div class="panel-collapse " id="collapseOne">
 			                <div class="panel-body" id="panel-body">
-			                    <ul class="chat" id="chat">
+			                    <div class="chat chat-content" id="chat">
+									<!-- <div class="alert border-0 border-start border-5 border-secondary alert-dismissible fade show py-2">
+																		<div class="d-flex align-items-center">
+																			<div class="font-35 text-secondary"><i class="bx bx-tag-alt"></i>
+																			</div>
+																			<div class="ms-3">
+																				<h6 class="mb-0">Secondary Alerts</h6>
+																				<div>A simple secondary alert—check it out!</div>
+																			</div>
+																		</div>
+																		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+																	</div> -->
+										
+									<!-- <div class="chat-content-leftside">
+										<div class="d-flex">
+											<i class="bx bx-tag-alt"></i>
+											<div class="flex-grow-1 ms-2">
+												<p class="mb-0 chat-time">Harvey, 2:35 PM</p>
+												<p class="chat-left-msg">Hi, harvey where are you now a days?</p>
+											</div>
+										</div>
+									</div> -->
+									
+									<!-- <div class="chat-content-rightside">
+										<div class="d-flex ms-auto">
+											<div class="flex-grow-1 me-2">
+												<p class="mb-0 chat-time text-end">you, 2:37 PM</p>
+												<p class="chat-right-msg">I am in USA</p>
+											</div>
+										</div>
+									</div> -->
+									
 									
 		<% while (item = console.shift)!=nil
 		
@@ -98,17 +131,14 @@
 					
 		
 		%>
-									
-			                        <li class="left clearfix">
-										<span class="chat-img pull-left">
-											<%=sender%>
-			                            <!-- <img src="http://placehold.it/50/55C1E7/fff&text=<%=sender%>" alt="User Avatar" class="img-circle" /> -->
-			                        	</span>
-			                            <div class="chat-body clearfix">
-			                                <div class="msg-header" style="">
-			                                    <strong class="primary-font"><%= i.sender %></strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
-			                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.ts).strftime("%H:%M") if i.ts%></small>
-			                                </div>
+		
+		
+		<div class="chat-content-leftside">
+			<div class="d-flex ">
+				<div class="flex-grow-1 me-2">
+					<p class="mb-0 chat-time ">EMS <%=sender%>, <%=Time.at(i.ts).strftime("%H:%M") if i.ts%></p>
+						
+			                     
 			                                <p>
 					  						
 					  						<% if i.type == 'image' 
@@ -142,30 +172,29 @@
 
 												
 											<% else %>
-					  						<p><%=i.content%></p>
+					  						<p class="chat-left-msg"><%=i.content%></p>
 					  						<% end %>
 			                                </p>
-			                            </div>
-			                        </li>
+			                          
+									  
+					
+							  				</div>
+							  			</div>
+							  		</div>
+									  
+									  
 	    	<% elsif item[1]==:nurse %>    
-					 	    <li class="left clearfix">
-							<span class="chat-img pull-right">
-								NR
-                            <!-- <img src="http://placehold.it/50/FCBA32/fff&text=NR" alt="User Avatar" class="img-circle" /> -->
-                        	</span>
-                            <div class="chat-body clearfix">
-                                <div class="msg-header"  style="">
-                                    <strong class="">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
-                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
-                                </div>
-                                <p>
-		  							
-							
-		  						<p><%=i.description%></p>
-		  					
-                                </p>
-                            </div>
-						</li>
+					
+						
+						<div class="chat-content-rightside">
+							<div class="d-flex ms-auto">
+								<div class="flex-grow-1 me-2">
+									<p class="mb-0 chat-time text-end">EMD Note, <%=Time.at(i.created_at).strftime("%H:%M") %></p>
+									<p class="chat-right-msg"><%=i.description%></p>
+								</div>
+							</div>
+						</div>
+						
 	    	<% elsif item[1]==:med %>    
 					 	    <li class="left clearfix">
 							<span class="chat-img pull-right">
@@ -185,26 +214,44 @@
                                 </p>
                             </div>
 						</li>						
+						
+						
 	    	<% elsif item[1]==:log %>    
-					 	    <li class="left clearfix">
-							<span class="chat-img pull-right">
-								LOG
-                            <!-- <img src="http://placehold.it/50/2D39DF/fff&text=LOG" alt="User Avatar" class="img-circle" /> -->
-                        	</span>
-                            <div class="chat-body clearfix">
-                                <div class="msg-header"  style="">
-                                    <strong class="">Nurse Record</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
-                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
-                                </div>
-                                <p>
-		  							
-							
-		  						<p><%=i.name%></p>
-		  					
-                                </p>
-                            </div>
-						</li>			
+					 	
+						
+						<div class="alert border-0 border-start border-5 border-warning alert-dismissible fade show py-2">
+							<div class="d-flex align-items-center">
+								<div class="font-35 text-warning"><i class="bx bx-tag-alt"></i>
+								</div>
+								<div class="ms-3">
+									<h6 class="mb-0">LOG       <span class="glyphicon glyphicon-time"></span><%=Time.at(i.updated_at).strftime("%H:%M") %></small></h6>
+									<div><p><%=i.name%></p></div>
+								</div>
+							</div>
+							<!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+						</div>
+						
+						
 	    	<% elsif item[1]==:record %>    
+			
+			
+			
+			
+			
+			<div class="alert border-0 border-start border-5 border-info alert-dismissible fade show py-2">
+				<div class="d-flex align-items-center">
+					<div class="font-35 text-info"><i class="bx bx-info-square"></i>
+					</div>
+					<div class="ms-3">
+						<h6 class="mb-0">Vital</h6>
+						<div><p>PR : <%=i.pr%>, SPO2 : <%=i.spo2%>, NIBP : <%=i.bp%> , TEMP : <%=i.temp%></p></div>
+					</div>
+				</div>
+				<!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
+			</div>
+			
+			
+			<% if false %>
 			
 	 	    <li class="left clearfix">
 			<span class="chat-img pull-right">
@@ -225,13 +272,13 @@
                                 </p>
                             </div>
 						</li>			
-		 	
+		 	<% end %>
 	 
 	  <% end %>
 		 
    <% end %>
 			                  
-			                    </ul>
+			                    </div>
 			                </div>
 			                <!-- <div class="panel-footer">
 			                    <div class="input-group">

@@ -31,7 +31,13 @@ end
 	
 %>
 
-<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3" style="border:0px solid red">
+	
+	
+
+	
+	
+	
 	<% if false %>
 					<div class="breadcrumb-title pe-3">Paramedic </div>
 					<div class="ps-3">
@@ -63,6 +69,7 @@ end
 					</div>
 				</div>
 <% end %>
+</div>
 <style>
 	.station .label{
 		font-size:0.8em;
@@ -201,57 +208,7 @@ end
 	.vs-val {
 		border:1px solid #ccc;margin:5px;border-radius: 4px;
 	}
-	</style>
 
-
-
-
-
-
-<div class="row">
-	
-	<div class="col-9">
-	
-		
-		
-	</div>
-	
-	
-	<div class="col-3">
-		
-		
-		
-	</div>
-
-
-</div>
-
-
-
-<%
-	
-		station_id = "StationID"
-		station_id = station.name if station
-	flowsheet = true
-	
-%>
-
-
-
-
-
-<!-- Patient Identity End -->
-
-<!-- Flow Sheet -->
-<div class="card">
-<div class="card-body">
-<div id="panel" class="row" style="border:0px solid blue;background:#fff;color:#ddd;">
-
-
-<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
-
-
-		<style>
 		        .viewport {
 		            top: 0px;
 		            left: 0px;
@@ -295,9 +252,39 @@ end
 				}*/
 		</style>
 
+
+
+
+<%
+	
+		station_id = "StationID"
+		station_id = station.name if station
+	flowsheet = true
+	
+%>
+
+
+
+
+
+<!-- Patient Identity End -->
+
+<!-- Flow Sheet -->
+<div class="card" style="border:0px solid blue">
+	
+	
+<div class="card-body">
+
+<div id="panel" class="row" style="border:0px solid blue;background:#fff;color:#ddd;">
+
+
+<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
+
 		<div class="row">
 
-		<div class="col-9 "  >
+		<div class="col-9"  >
+			
+			
 		<div class="row" style="my-2">
 		
 			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
@@ -322,13 +309,11 @@ end
 								<div class="vs-val col-1  col-lg-1 col-sm-1 temp">
 									<span class="label">Temp</span>
 									<div class="value">-</div>
-								</div>
-								<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
+							</div>
+							<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
 									<span class="label">RR</span>
 									<div class="value">-</div>
-								</div>
-		
-				
+							</div>
 					
 							<div class="vs-val col-1 col-lg-1 col-sm-1 co2">
 				    			<span class="label">CO<sub>2</sub></span>
@@ -347,17 +332,46 @@ end
 								</div>
 							</div>
 		
-					 </div>
+					</div>
 	
 			</div>
+
+			<% if ems_case.paramedic_status=='STARTED' or ems_case.paramedic_status=='FINISHED'  %>
 			
-			
-			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%>">
+			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%> ;border:1px solid ">
 			<%= inline(this,:'_flowsheet')  %>
 			</div>
+			<% end %>
+
+			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel">
+
+			<div class="input-group mb-3">
+			<input type="hidden" name="id" value="<%=ems_case.id%>">
+			<input type="hidden" name="admit_id" value="<%=admit.id%>">
+			<label>Status :</label>
+			
+			<% fieldset(:admit) do |f| %>	
+			<%= f.select(:status, [['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
+			<% end %>
+			
+			<label>Station :</label>
+			
+			<% fieldset(:admit) do |f| %>	
+			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
+			<% end %>
+
+			</div>
+
+			<input type="submit" name="update" value="update">
+
+			</form>
 	    </div>
-		</div>
-		<div class="col-3 "  >
+		
+		
+	</div>
+		
+		<div class="col-3 " style="border:1px solid;" >
+			
 		<%= inline(this,:'_message_page') %>
 		
 		<script>
@@ -650,23 +664,9 @@ end
 
 
 
-<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel">
-
-<div class="input-group mb-3">
-<input type="hidden" name="id" value="<%=admit.id%>">
-Station : 
-<% fieldset(:admit) do |f| %>	
-<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
-<% end %>
-
-</div>
-
-<input type="submit" name="update" value="update">
-
-</form>
 
 <div id="paramedic_panel">
-result
+
 </div>
 
 
@@ -674,15 +674,18 @@ result
 
 		<script type="text/javascript">
 	    
-
-			$(document).ready(function(){
-				
-				
-				
+ var gfx = null;
+ 		
+		
+		
+ 
+		$(document).ready(function(){
+			
+			if(gfx==null){		
 				
  			 var lead_data = {};
 		  	 var wave_data = [];
-			 var gfx = null;
+			
 		
 			var data = [100,200,100,200];
 
@@ -842,7 +845,7 @@ result
 	
 			console.log(settings);
 	
-
+			
 			 var viewport = d3.select(".viewport").append("svg")
     		 .attr("class", "info-svg")
 
@@ -856,7 +859,7 @@ result
 		 .viewport(d3.select(".viewport"));
 		 gfx.data(settings);
 		 d3.select("svg").call(gfx);
-
+		 
 		 window.addEventListener("resize", gfx.resize);
 		
 	
@@ -877,20 +880,20 @@ result
 	  var plot_pos = {};
 	  
 	
-   ws.onopen    = function()  { show('websocket opened'); 
-	
-	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
-	
-	  };
-   ws.onclose   = function()  { show('websocket closed'); 
-		
-	 	setTimeout(function () {
-	 		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-	 		    }, 2000); //will call the function after 2 secs.
-	 		
-
-   }
-   
+	//    ws.onopen    = function()  { show('websocket opened');
+	//
+	//   	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+	// gfx.resize()
+	//   };
+	//    ws.onclose   = function()  { show('websocket closed');
+	//
+	//  	setTimeout(function () {
+	//  		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	//  		    }, 2000); //will call the function after 2 secs.
+	//
+	//
+	//    }
+	//
    
    function updateMessage(){
    	
@@ -946,16 +949,17 @@ result
    		var lx = <%=lx.to_json.html_safe%>
    		var jix = <%=jix.to_json.html_safe%>
 		console.log(jix)
+   
+   
+   
+   
+   
+   	function paramedic_process(lines){
+   	
+        <% if ems_case.status!='Completed' %>
+	  
 	
-   ws.onmessage = function(m) { 
-	
-		// active = $('.active-station').size()
-		
-		// show(''+m.data)
-		
-
-		
-		lines = m.data.split("\n")
+		// lines = m.data.split("\n")
 		
 		// console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Alert'){
@@ -986,7 +990,7 @@ result
 		
 			updateMessage();
 
-			// reload_message("<%=params[:id]%>")
+			reload_message("<%=admit.id%>")
 			
 		
 		}
@@ -1150,6 +1154,226 @@ result
 			
 		}
 		 }
+		 
+		 <% end %>
+		 
+   	}
+   	
+   
+   
+   
+   
+   
+   	current_process = paramedic_process
+   
+   
+   		
+   
+	
+   ws.onmessage = function(m) { 
+	
+		// active = $('.active-station').size()
+		
+		// show(''+m.data)
+		
+
+		
+		// lines = m.data.split("\n")
+	//
+	// 	// console.log(lines[0].split(" ")[0])
+	// 	if(lines[0].split(" ")[0]=='Alert'){
+	// 		data = JSON.parse(lines[1])
+	//
+	// 		// alert(data['alert'])
+	//
+	// 		$('#'+data['station']).addClass('bp_alert_2');
+	// 		$('#'+data['station']+' .msg').html(data['alert']);
+	//
+	// 		// play sound
+	// 		ion.sound.play("bell_ring");
+	//
+	// 	}else
+	// 	if(lines[0].split(" ")[0]=='Data.Image'){
+	//
+	// 		lines.shift()
+	// 		img = lines.join("")
+	// 		// alert('image '+m.data.length)
+	//
+	// 		$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+	//
+	//
+	// 	}
+	// 	else
+	// 	if(lines[0].split(" ")[0]=='Zone.Message'){
+	//
+	//
+	// 		updateMessage();
+	//
+	// 		reload_message("<%=admit.id%>")
+	//
+	//
+	// 	}
+	// 	else
+	// 	if(lines[0].split(" ")[0]=='ZoneUpdate'){
+	//
+	//
+	// 	data = JSON.parse(lines[1])
+	// 		//
+	// 		// if(data['list'].length!=active)
+	// 		// window.location.href = "index";
+	//
+	//
+	//
+	// 	$('#timer').html(data['time'])
+	//
+	// 	for(var id in data['list']){
+	// 		i = data['list'][id]
+	// 		console.log("update " + i)
+	// 		if($('#'+i).length > 0){
+	// 		obj = data['data'][i]
+	//
+	//
+	// 	  // if(obj['wave']){
+	//   //
+	//   // 			    // wave_data.push(obj['wave']);
+	//   // 		   		// wave_data = wave_data.concat(obj['wave']);
+	//   // 				for(var j=0;j<obj['wave'].length;j++){
+	//   // 					wave_data.push(obj['wave'][j]);
+	//   // 				}
+	//   // 				// console.log(wave_data);
+	//   // 				// wave_data = obj['wave'];
+	//   // 		   }
+	//
+	// 			// 		   if(obj['leads']){
+	// 			//
+	// 			// 			   for(var j=0;j<16;j++){
+	// 			//
+	// 			// jid = ''+j
+	// 			// ji = lx[j];
+	// 			// jii = jix[ji];
+	// 			//
+	// 			// if(obj['leads'][jii]){
+	// 			// 			   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
+	// 			// }
+	// 			//
+	// 			// 			   }
+	// 			//
+	// 			// 		   }
+	//
+	//
+	// 		//  // console.log(obj)
+	// 		// $('#'+i+' .hn').html(obj['ref'])
+	// 		//
+	// 		// if($('#'+i+' .bp').html()!=obj['bp']){
+	// 		// 	$('#'+i).addClass('bp_alert');
+	// 		// 	$('#'+i).removeClass('bp_alert_2');
+	// 		// 	$('#'+i+' .msg').html("-");
+	// 		// }else{
+	// 		// 	$('#'+i).removeClass('bp_alert');
+	// 		// 	// $('#'+i).removeClass('bp_alert_2');
+	// 		// 	// $('#'+i+' .msg').html("-");
+	// 		// }
+	// 		//
+	// 		// $('#'+i+' .bp .value').html(obj['bp'])
+	// 		//
+	// 		// $('#'+i+' .temp .value').html(obj['temp'])
+	// 		//
+	// 		// $('#'+i+' .pr .value').html(obj['pr'])
+	// 		// $('#'+i+' .hr .value').html(obj['hr'])
+	// 		//
+	// 		//
+	// 		//
+	// 		// $('#'+i+' .rr .value').html(obj['rr'])
+	// 		// $('#'+i+' .spo2 .value').html(obj['spo2'])
+	// 		// $('#'+i+' .co2 .value').html(obj['co2'])
+	// 		//
+	// 		//
+	// 		// $('#'+i+' .score .value').html(obj['score'])
+	// 		//
+	// 		// $('#'+i+' .alert-msg .value').html(obj['msg'])
+	//
+	//
+	// 		 // console.log(obj)
+	// 		$('.'+i+' .hn').html(obj['ref'])
+	//
+	// 		if($('.'+i+' .bp').html()!=obj['bp']){
+	// 			$('.'+i).addClass('bp_alert');
+	// 			$('.'+i).removeClass('bp_alert_2');
+	// 			$('.'+i+' .msg').html("-");
+	// 		}else{
+	// 			$('.'+i).removeClass('bp_alert');
+	// 			// $('#'+i).removeClass('bp_alert_2');
+	// 			// $('#'+i+' .msg').html("-");
+	// 		}
+	//
+	// 		$('.'+i+' .bp .value').html(obj['bp'])
+	//
+	// 		$('.'+i+' .temp .value').html(obj['temp'])
+	//
+	// 		$('.'+i+' .pr .value').html(obj['pr'])
+	// 		$('.'+i+' .hr .value').html(obj['hr'])
+	//
+	//
+	//
+	// 		$('.'+i+' .rr .value').html(obj['rr'])
+	// 		$('.'+i+' .spo2 .value').html(obj['spo2'])
+	// 		$('.'+i+' .co2 .value').html(obj['co2'])
+	//
+	//
+	// 		$('.'+i+' .score .value').html(obj['score'])
+	//
+	// 		$('.'+i+' .alert-msg .value').html(obj['msg'])
+	//
+	//
+	//
+	//
+	// 		<% if googlemap %>
+	// 		if(obj['lat']!=''){
+	//
+	// 		lat = parseFloat(obj['lat'])
+	// 		lng = parseFloat(obj['lng'])
+	//
+	// 		setPosition(lat,lng)
+	//
+	// 		}
+	// 			<% end %>
+	// 		bp = obj['bp'].split('/')
+	//
+	// 		hr = parseInt(obj['hr'])
+	// 		pr = parseInt(obj['pr'])
+	// 		spo2 = parseInt(obj['spo2'])
+	// 		co2 = parseInt(obj['co2'])
+	// 		rr = parseInt(obj['rr'])
+	// 		temp = parseInt(obj['temp'])
+	//
+	//
+	// 		if(isNaN(hr))hr=0;
+	// 		if(isNaN(pr))pr=0;
+	// 		if(isNaN(spo2))spo2=0;
+	// 		if(isNaN(rr))rr=0;
+	// 		if(isNaN(co2))co2=0;
+	//
+	// 		if(isNaN(temp))rr=0;
+	//
+	// 		// console.log('ok')
+	//
+	// 	    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,co2:co2,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+	//
+	// 		gfx.tick({update:[{name:'vitalsign',append:vs}]});
+	//
+	//
+	//
+	//
+	// 		}else{
+	// 				setTimeout(function () {
+	// 			       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+	// 			    }, 2000); //will call the function after 2 secs.
+	//
+	// 		}
+	//
+	// 	}
+	// 	 }
+	}
 	 };
 
 

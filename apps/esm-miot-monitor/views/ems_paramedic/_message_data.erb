@@ -32,7 +32,8 @@ for m in admit.medication_records
 	
 end
 
-records = admit.records
+records = DataRecord.where(:admit_id=>admit.id, :stamp=>{'$gte'=>(Time.now-600)}).all
+
 for m in records
 
 	console << [m.created_at, :record,"#{ m.bp_sys}/#{ m.bp_dia}", m]

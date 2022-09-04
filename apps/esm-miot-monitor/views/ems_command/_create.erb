@@ -46,6 +46,10 @@ if params[:record]
 	
 	record = EMSCommand.create p
 	
+	channel = EMSChannel.find record.channel_id
+	
+	ems_case.update_attributes :channel_id=>channel.id if channel
+	
 	providers = record.providers
 	for i in providers
 		i.destroy
@@ -81,8 +85,7 @@ if params[:record]
 	
 	a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
 	a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
-	
-	r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'SCHEDULED'
+	r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED'
 	
 	
 	b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4

@@ -8,6 +8,10 @@ class EMSCase < GXTModel
   
   belongs_to :init_code, :class_name=>'EsmMiotMonitor::EMSCode', foreign_key: 'init_cbd_code'
   has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at ASC", foreign_key: 'case_id'
+  belongs_to :channel, :class_name=>'EsmMiotMonitor::EMSChannel', foreign_key: 'channel_id'
+  
+  belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
+  
   
   key :case_no, String
   
@@ -35,7 +39,7 @@ class EMSCase < GXTModel
   
   key :patient_underlying, String
   
-  
+  key :channel_id, ObjectId
   
   
   key :location, String
@@ -58,6 +62,11 @@ class EMSCase < GXTModel
   key :zone_id, ObjectId
   
   key :status, String
+  
+  key :paramedic_status , String
+  key :paramedic_start_at , DateTime
+  key :paramedic_stop_at , DateTime
+  
   
   key :completed_at, DateTime
   
@@ -223,6 +232,7 @@ class EMSCommand < GXTModel
   key :init_command, String
   key :ambulance_id, ObjectId
   key :note, String
+  key :channel_id, String
 
   include Mongoid::Timestamps
           
@@ -302,6 +312,14 @@ class EMSDVR < GXTModel
 end
 
 
+class EMSChannel < GXTModel
+   include Mongoid::Document
+  key :name, String
+  key :zone_id, ObjectId
+  
+end
+
+
 class LineMessage < GXTModel
   
   include Mongoid::Document
@@ -378,9 +396,9 @@ class EMSController < GXT
     station_id = nil
 
     i = meta
+    
 
-
-    msg = Message.create :admit_id=> ems_case.id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>i['type'], :file_id=>fid, :station_id=>station_id
+    msg = Message.create :admit_id=> ems_case.admit_id, :sender=> i['sender'], :recipient=> i['recipient'], :recipient_type=> i['recipient_type'], :content=> i['filename'], :ts=> i['ts'], :type=>i['type'], :media_type=>i['type'], :file_id=>fid, :station_id=>station_id
 
 
     admit = Admit.find ems_case.admit_id
@@ -468,6 +486,10 @@ class LineMessageController < GXTDocument
   
 end
 
+class EMSChannelController < GXTDocument
+  
+end
+
 class EMSCaseController < GXTDocument
   
 end
@@ -476,6 +498,13 @@ class EMSCodeController < GXTDocument
   
 end
 
+class EMSParamedicController < GXTDocument
+  
+end
+
+class EmsEMRController < GXTDocument
+  
+end
 
 class EMSCaseWorkflowController < GXTDocument
   

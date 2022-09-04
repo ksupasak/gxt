@@ -35,6 +35,14 @@ module EsmMiotMonitor
     
     key :note, String
     
+    def to_s
+      if self.act_duration  
+        return "#{format("%0.1f",self.act_duration/100.0)}m (#{format("%0.1f",self.act_distance/1000.0)}km)"
+      else
+        return "N/A"
+      end
+    end
+    
     
     include Mongoid::Timestamps
     
