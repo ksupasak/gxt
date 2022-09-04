@@ -571,7 +571,10 @@ MSG
                  
                    
                    ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).first
+                   
                    puts ems_case.id if ems_case
+                   
+                   puts EMSCase.where(:channel_id=>channel.id).count
                    
                    if ems_case
                      
