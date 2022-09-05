@@ -63,13 +63,21 @@ if params[:record]
 		
 	counter.update(:count=>counter.count+1)
 	
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)		
 	
 end
 	
 
 
 %>
-<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>&tab=command">
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>&page=command">
 
 
 <% else %>

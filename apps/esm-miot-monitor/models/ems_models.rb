@@ -91,14 +91,44 @@ class EMSCode < GXTModel
   
   key :group_id, ObjectId
   
+  def  get_color
+      
+    c = self.code
+    
+    
+      
+    i = c.to_i
+    
+    j = c[-1..-1].to_i
+    j = c[-2..-1].to_i if c[-2..-1].to_i > j 
+    
+    il = i.to_s.length
+    jl = j.to_s.length
+    
+    th_color = "#{c[il..-(jl+1)]}"
+    
+    
+  end
   
   def get_class
     
-    cls = 'primary'
+    color = self.get_color
     
-    cls = self.cls if self.cls
+    cls = 'info'
     
-    
+    case color
+    when "แดง"
+      cls = "danger"
+    when "เหลือง"
+      cls = "warning"
+    when "เขียว"
+      cls = "success"
+    when "ขาว"
+      cls = "primary"
+    else
+    end
+   
+    return cls 
   end
       
     

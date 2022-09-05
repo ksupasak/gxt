@@ -20,7 +20,14 @@ if params[:record]
 		
 	
 	record.update_attributes p
-	
+
+path = "miot/#{@context.settings.name}/z/#{record.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)			
 	
 end
 	

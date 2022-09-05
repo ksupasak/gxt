@@ -18,14 +18,17 @@
 			
 		if ems_case
 						
-			
+			cls = ems_case.init_code.get_class
 			
 		%>
 		<li class="mm-active">
-			<a href="show?id=<%=ems_case.id%>&page=dashboard" class="has-arrow tab-dashboard">
+			<a href="show?id=<%=ems_case.id%>&page=dashboard" class="has-arrow tab-dashboard border-<%=cls%>">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
-				<div class="menu-title"><%=ems_case.case_no%></div>
+				<div class="menu-title"><%=ems_case.case_no%><br/>
+		
+				<span class="badge bg-<%=cls%>" ><%=ems_case.init_code.code%></span>
+				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
 		
@@ -311,7 +314,11 @@
 					code_class= code.get_class
 					
 				%>
-				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-taxi"></i><%=i.case_no%> &nbsp;&nbsp;<span class="badge bg-<%=code_class%>" ><%#code.code%></span></a>
+				<li class="<%='mm-active' if i.id==params[:id]%>" > <a href="show?id=<%=i.id%>" class=" text-<%=%>"><i class="bx bx-taxi"></i><%=i.case_no%>&nbsp;
+			
+						
+					
+					<span class="badge bg-<%=code_class%>" ><%=code.code%></span></a>
 				</li>
 				<% end %>
 			

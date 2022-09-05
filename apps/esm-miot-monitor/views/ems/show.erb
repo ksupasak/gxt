@@ -9,6 +9,8 @@ code = EMSCode.find record.init_cbd_code
 
 session[:case_id] = record.id
 
+
+cls = record.init_code.get_class
    
 %>
 <style>
@@ -44,7 +46,7 @@ session[:case_id] = record.id
 
 <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3">
 	<div class="col-12 col-xl-4">
-		<div class="card radius-10 border-start border-0 border-3 border-info">
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div class="row" >
@@ -53,7 +55,7 @@ session[:case_id] = record.id
 					<div class="row">
 						
 						<div class="col-7">
-							<h4 class="my-1 ">
+							<h4 class="my-1 text-<%=cls%>">
 								
 								<%=record.case_no%>
 					
@@ -120,7 +122,7 @@ session[:case_id] = record.id
 	</div>
 	
 	<div class="col-12 col-xl-4">
-		<div class="card radius-10 border-start border-0 border-3 border-info">
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 					<div class="row">
@@ -137,7 +139,7 @@ session[:case_id] = record.id
 					</div>
 					
 					<div class="col-5">
-						<h4 class="my-1 text-danger">
+						<h4 class="my-1 text-<%=cls%>">
 							<%=record.init_code.name.split(" ")[0]%>
 				
 						</h4>
@@ -203,7 +205,7 @@ session[:case_id] = record.id
 		
 	%>
 	<div class="col-12 col-xl-4">
-		<div class="card radius-10 border-start border-0 border-3 border-info" >
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>" >
 		<div class="card-body" style="border:0px solid">
 			
 			<div class="" style="border:0px solid">
@@ -639,7 +641,11 @@ session[:case_id] = record.id
 				  $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
 				
 			}
-
+			<% else %>
+		
+			
+	
+			
 			<% end %>
 			
 			
