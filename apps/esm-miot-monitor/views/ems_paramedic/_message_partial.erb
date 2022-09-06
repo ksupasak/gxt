@@ -1,13 +1,32 @@
 			<%
-			
-				admit = Admit.find params[:admit_id]
 				
-				# puts admit.inspect 
+				admtis = []
+				
+				if params[:admit_id]
+				
+			
+					admits = Admit.where(:_id=>params[:admit_id]).all
+				
+				
+				else
+				
+				
+					admits = Admit.where(:status=>'Admitted', :zone_id=>params[:zone_id]).all
+				
+				
+				end
+				
+				
+				
+				puts "/////////Admit Count : #{admits.size}"
+				
+				for admit in admits 
+					
 				
 				
 			    station = admit.station
 				
-			    zone = station.zone
+			    zone = station.zone if station
 				
 				console = []
 				
@@ -56,6 +75,8 @@
 				
 					console << [m.created_at, :msg, m]
 					
+				end
+				
 				end
 				
 				end

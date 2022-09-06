@@ -342,27 +342,32 @@ end
 			<%= inline(this,:'_flowsheet')  %>
 			</div>
 			<% end %>
-
-			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel">
+			<hr/>
+			<h4>Paramedic Status</h4>
+			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
 			<div class="input-group mb-3">
 			<input type="hidden" name="id" value="<%=ems_case.id%>">
 			<input type="hidden" name="admit_id" value="<%=admit.id%>">
-			<label>Status :</label>
+			<div >
+			<label>Select Status :</label>
 			
 			<% fieldset(:admit) do |f| %>	
 			<%= f.select(:status, [['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
 			<% end %>
+			</div>
 			
-			<label>Station :</label>
+			<div>
+			<label>Select Station :</label>
 			
 			<% fieldset(:admit) do |f| %>	
 			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
 			<% end %>
-
+		
+		    </div>
 			</div>
 
-			<input type="submit" name="update" value="update">
+			<input type="submit" name="update" value="Submit">
 
 			</form>
 	    </div>
