@@ -285,7 +285,7 @@ end
 		<div class="col-9"  >
 			
 			
-		<div class="row" style="my-2">
+		<div class="row charting" style="my-2">
 		
 			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 	
@@ -374,13 +374,13 @@ end
 		
 		
 	</div>
-		
+	
 		<div class="col-3 " style="border:1px solid;" >
 			
 		<%= inline(this,:'_message_page') %>
 		
 		<script>
-			reload_message("<%=admit.id%>")
+			reload_message("<%=ems_case.id%>","<%=admit.id%>")
 		</script>
 			
 		
@@ -1478,4 +1478,5 @@ end
 	//
 
 </script>	
+	<%= inline(this,:'../home/_scoring') %>
 	

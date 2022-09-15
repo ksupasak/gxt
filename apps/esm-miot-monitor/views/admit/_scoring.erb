@@ -252,7 +252,9 @@ if(value!="-"){
 <% for i in cond_map.keys %>
 
 value = $('#<%=station_name%> .<%=i%> .value').html()
-value = $('.<%=i%> .value').text() 
+value = $('.<%=i%> .value').first().text() 
+
+
 
 if('<%=i%>'=='bp_sys')value = $('#<%=station_name%> .bp .value').html().split("/")[0];
 if('<%=i%>'=='bp_dia')value = $('#<%=station_name%> .bp .value').html().split("/")[1];
