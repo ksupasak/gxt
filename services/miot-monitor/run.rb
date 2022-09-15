@@ -92,6 +92,15 @@ if select_monitor=='nc3a'
  }
 end
 
+
+if select_monitor=='carescape'
+  puts 'monitor select = carescape'
+ threads << Thread.new {
+ # Device::monitor_comen_nc3a(ws)
+ Device::monitor_b450_v1(ws)
+ }
+end
+
 if select_monitor=='nc3a_live'
   puts 'monitor select = nc3a live'
  threads << Thread.new {

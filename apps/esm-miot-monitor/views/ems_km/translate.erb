@@ -1,0 +1,52 @@
+<%
+	
+	
+	
+	
+	
+require "google/cloud/translate/v2"
+
+
+
+# translation = translate.translate "n หากไม่รู้สึกตัว ดูเรื่อง ไม่รู้สึกตัว/หายใจปกติ - การดูแลทางหายใจผู้ป่วยที่ไม่ได้มีสาเหตุจากการบาดเจ็บ ตามคำสั่งแนะนำ ส่วนที่ IV", to: "en"
+# out = translation.text #=> "Salve mundi!"
+#
+#
+	
+processes = EMSKProcess.all()
+
+cache = {}
+
+for i in processes
+
+	cache[i.name] = i.name_en
+	
+end
+
+	
+for i in processes
+	
+	if i.name_en=="" or i.name_en == nil and i.name!=nil and i.name!=""
+		
+		en = cache[i.name]
+		
+		unless cache[i.name]
+		
+		translate = Google::Cloud::Translate::V2.new(
+		  key: Setting.get("google_api_key")
+		)
+		translation = translate.translate i.name, to: "en"
+		
+		en = translation.text
+			
+		end
+		
+		
+		puts "#{i.name} to #{en}"
+		i.update_attributes :name_en=> en
+	
+	end
+end	
+	
+	
+%><%=processes.size%>

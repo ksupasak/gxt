@@ -2,6 +2,8 @@
 require_relative 'models/er_models'
 require_relative 'models/health_models'
 require_relative 'models/aoc_models'
+require_relative 'models/ems_models'
+
 
 module EsmMiotMonitor
   
@@ -13,11 +15,13 @@ class User < GXTModel
  
   belongs_to :role, :class_name=>'EsmMiotMonitor::Role'
   key :login, String
+  key :name, String
   key :salt,  String
   key :passcode, String
   key :pattern, String
   key :hashed_password,  String
   key :last_accessed, DateTime
+  key :picture_id, ObjectId
   key :role_id, ObjectId
   key :email, String
    include Mongoid::Timestamps
@@ -58,6 +62,15 @@ class User < GXTModel
     Digest::SHA1.hexdigest(pass+salt)
   end
   
+  def get_name
+    
+    name = self.login
+    name = self.name if self.name and self.name.size>0 
+    
+    return name
+  end
+  
+  
 end
 
 class Role < GXTModel
@@ -92,7 +105,10 @@ class Provider < GXTModel
    key :phone, String
    key :email, String
    key :license, String
-   
+   key :user_id, ObjectId
+   key :line_account_id, ObjectId
+   key :code, String
+   key :zone_id, String
    
   
 end
@@ -180,7 +196,11 @@ class Station < GXTModel
   key :stream_url, ObjectId
   include Mongoid::Timestamps
   def to_s
-    self.name
+     
+    res = self.name.split("_")[1..-1].join("_")
+    res = self.title if self.title and self.title!=""
+     
+    return res
   end
 end
 
@@ -202,6 +222,9 @@ class Message < GXTModel
   key :content, String
   key :file_id, ObjectId
   key :sender_user_id, ObjectId
+  
+  key :channel_id, ObjectId
+  
   include Mongoid::Timestamps
 end
 
@@ -371,12 +394,14 @@ class AdmitLog  < GXTModel
   
   key :admit_id, ObjectId
   key :addressbook_id, ObjectId
+  key :ems_command_id, ObjectId
   key :name, String
   key :address, String 
   key :status, String
   key :latlng, String
   key :note, String
   key :stamp, Time
+  key :mile_meter, Integer
   key :sort_order, Integer
   key :parent, Integer
   include Mongoid::Timestamps
@@ -548,6 +573,7 @@ class Patient  < GXTModel
   key :addr_present, String 
   key :parent, String 
   key :note, String 
+  key :underlying, String
   
   
   
@@ -703,7 +729,11 @@ class Ambulance  < GXTModel
   key :last_location, String
   key :last_address, String
   key :last_speed, Float
+  
   key :device_no, String
+  key :msg_channel, String
+  
+  
   include Mongoid::Timestamps
   
   
@@ -1094,6 +1124,8 @@ class MessageController < GXTDocument
   def content params
    
     message = model.find params[:id]
+    
+    puts "ERR:#{Mongoid::Config.clients["default"]['hosts'].inspect}"
     
     connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
    

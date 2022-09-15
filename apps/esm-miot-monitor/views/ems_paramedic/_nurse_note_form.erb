@@ -1,0 +1,58 @@
+<%
+
+	admit = Admit.find(params[:admit_id])
+	
+	patient = admit.patient
+	score = admit.score
+	station = admit.station
+	
+	staiton_name = ""
+	
+	station_name = station.name if station and station.name
+	
+
+	
+	# data = settings.senses[settings.name][station_name]
+	# if data and data['bp'] and t = data['bp'].split("/")
+	# 	data['bp_sys'] = t[0].to_i
+	# 	data['bp_dia'] = t[1].to_i
+	#
+	# end
+	
+	
+	record = nil
+	
+	if params[:id]
+		
+		record = admit.nurse_records.find params[:id]
+	else
+		record = admit.nurse_records.new
+		record.admit_id = admit.id
+		record.start_time = Time.now 
+	end
+	
+
+%>
+<div class="form-group">
+	
+<input type="hidden" name="admit_id" value="<%=record.admit_id %>">
+<div class="field">
+<label>Time</label>
+<div class="value">
+ 	<!-- <select name="time">
+		<option value="1">1</option>
+	</select > -->
+	
+	<%=text_field_tag  "record[start_time]", "#{record.start_time}", :id=>"datetimepicker3",:class=>'form-control'%>
+	
+</div>
+</div>
+
+
+ <div class="field">
+ <label>Note</label>
+ <div class="value">
+<textarea name="record[description]" class="form-control" id="nurse_note_desc" style="width:100%"><%=record.description%></textarea>
+ </div>
+ </div>
+ </div>

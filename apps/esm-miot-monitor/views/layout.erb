@@ -168,11 +168,12 @@ border-bottom: 2px solid #3147FF;
 	         <a class="dropdown-item" href="../ScoreItem/index">Score-Item</a>
 	         <a class="dropdown-item" href="../ScoreCondition/index">Score-Condition</a>
 			<a class="dropdown-item" href="../AddressBook/index">AddressBook</a>
+		
 			  <a class="dropdown-item" href="../Sense/index">Data</a>
 	 		 </div>
           </li>
 		  
-		  <% if @current_zone and  @current_zone.mode=='smart_aoc' and @current_role=='admin'%>
+		  <% if @current_zone and  (@current_zone.mode=='aoc' or @current_zone.mode=='ems')  and @current_role=='admin'%>
          
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AOC</a>
@@ -182,7 +183,7 @@ border-bottom: 2px solid #3147FF;
 				  
 				  <a class="dropdown-item" href="../AocCaseReport/index">AocCaseReport</a>
 				  <a class="dropdown-item" href="../AocCaseRoute/index">AocCaseRoute</a>
-				  
+				    <a class="dropdown-item" href="../EMSChannel/index">Channel</a>
 				  <a class="dropdown-item" href="../Sas/dashboard">Dashboard</a>
 				   <a class="dropdown-item" href="../Message/index">Messages</a>
 		 		 </div>

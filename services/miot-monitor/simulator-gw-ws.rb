@@ -83,7 +83,7 @@ ws = connect solution, host, port
 
 puts "Start"
 count = 0
-ls = 10
+ls = 20
 
 bp = '119/80'
 bp_stamp = Time.now
@@ -237,21 +237,22 @@ MSG
      
      
     
-     count += 1
+     count -= 1
 
    
 
-     if count%ls==0
+     if count < 0 
  
 
-       if count%2==0
+       if true #count%60==0
          bp = "#{100+rand(22)}/#{70+rand(20)}"
          bp_stamp = Time.now
        else
          puts 'spot without bp'
          bp = nil
        end
-       ls = 20+rand(10)
+       
+       count = 60+rand(30)
        
        data[:spot] = true
        puts "Data sent #{count} times + BP : #{bp}"

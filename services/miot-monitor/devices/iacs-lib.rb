@@ -37,7 +37,7 @@ end
 
 def self.parser l
   
-  puts l.size
+#  puts l.size
   
   if l.size > 0 
    
@@ -94,7 +94,7 @@ def self.parser l
     
   end
   
-  puts "start #{tag} #{pos}" if debug
+#  puts "start #{tag} #{pos}" if debug
   
   
  count = 5000
@@ -102,7 +102,7 @@ def self.parser l
     key = nil
     len = nil
     res = ''
-     puts 'cur '+tag + " pos "+pos.to_s if true
+ #    puts 'cur '+tag + " pos "+pos.to_s if true
     if tag == '012'
       len = 12
     elsif tag == '0200' # range 40 values 
@@ -141,7 +141,7 @@ def self.parser l
        
        
     elsif tag == '00' or tag =='0120'    # normal key value
-      puts 'xxxx'+tag.to_s+" "+pos.to_s
+     # puts 'xxxx'+tag.to_s+" "+pos.to_s
          res = get_val l, pos+30
          key =l[pos+14..pos+18].join("-")
          len = 36
@@ -157,7 +157,7 @@ def self.parser l
          break if l[pos+i*2+5] == 0
          s<<l[pos+i*2+5].chr 
        end
-         puts 'xxxx'+tag.to_s+" "+pos.to_s+" msg =  #{s.join()}"
+         #puts 'xxxx'+tag.to_s+" "+pos.to_s+" msg =  #{s.join()}"
          if s.size > 0 
            
            map['msg'] = s.join()
@@ -178,18 +178,18 @@ def self.parser l
           s<<l[i*2+65].chr
         end
         
-        puts "Bed #{s.join.strip}"
+        #puts "Bed #{s.join.strip}"
         map['bed'] = s.join.strip
         
 
     elsif tag == '015'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
+       #puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
         len = 252
     elsif tag == '024'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
+       #puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
         len = 194
     elsif tag == '00'
-       puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
+       #puts 'xxxx'+tag.to_s+" "+pos.to_s+" "+l.size.to_s
       # puts "Tag : #{tag} " 
     else
       

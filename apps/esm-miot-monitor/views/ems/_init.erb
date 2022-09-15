@@ -1,0 +1,13 @@
+<%
+	
+	@current_zone = Zone.find session[:current_zone]
+	
+%>
+<script>
+
+	function show(msg){
+		
+		$('.msg').html(msg)
+	}
+
+</script>

@@ -1,0 +1,469 @@
+<style>
+	.card-body-x{
+		padding:5px;
+	}
+	.primary{
+		
+		background:#e5f1ff;
+	}
+	
+	html.dark-theme .primary{
+		background: #000!important
+	 }
+	.shadow-x{
+		background:#fff377;
+		border:0.5px solid gray;
+	}
+	.action{
+		color:red;
+	}
+</style>
+
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Pre Arrival </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i><strong></strong></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+				    <div class="btn-group" role="group" aria-label="First group">
+				      <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
+				      <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
+				    </div>
+					</div>
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+<input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
+
+
+
+<div class="row">
+	
+	
+<div class="col-12 col-lg-8 col-xl-8 ">
+
+<div class="card">
+
+<div class="card-body">
+  <%
+        flows = EMSKWorkflow.all()
+        cbd_codes = EMSCode.all()
+        m_cbd_codes = cbd_codes.collect{|i| [i.id,i.code]}.compact.to_h
+  %>
+  <form action="<%= get_path 'case_select_cbd'%>" id="flow_search" method="post" >
+    <div class="card-body p-0">
+      <datalist id="datalistOptions">
+        <%  for f in flows%>
+        <option value="<%=f.name%>"></option>
+        <%  end %>
+        </datalist>
+    </div>
+
+    <br>
+    <%
+        record = EMSCase.find params[:case_id]
+
+        m_f_name = Hash[flows.collect{|i| [i.id,i.name]}.compact]
+        case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
+        if case_flows.size()==0
+          flow_init = flows.collect{|i| i if i.type=='init'}.compact
+          for fi in flow_init
+            EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
+          end
+          if record.init_cbd_code and false
+			  
+			group = EMSCodeGroup.find record.init_code.group_id
+			
+			tcode =  EMSKWorkflow.where(:code=>record.init_code.code).first
+			gcolor = nil
+			gcolor = EMSKWorkflow.where(:color=>"#{tcode.color}_add", :group=>tcode.group).first
+			  
+            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code] or ( gcolor and gcolor.code==i.code )  or i.code=="#{group.code}instruction" or i.code=="#{group.code}report" }.compact 
+			
+			orders = %w{red_add yello_add instruction report}
+			
+			flow_cbd.sort! do |a,b| 
+					
+				ia = orders.index(a.color)
+				ib = orders.index(b.color)
+				ia = -1 if ia==nil
+				ib = -1 if ib==nil
+				
+				ia<=>ib
+				
+			end
+			
+			
+			
+            for fi in flow_cbd
+              EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
+            end
+			
+			
+			
+			
+          end
+        end
+		
+        case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
+        case_processs = EMSCaseProcess.where(:case_id=>record.id).all()
+        m_cp = Hash[case_processs.collect{|i| [i.kprocess_id,i]}.compact]
+        case_flows_ids = case_flows.collect{|i| i.kworkflow_id}
+        select_flows = flows.collect{|i| i if !case_flows_ids.index(i.id) and i.type!='CBD' and i.color!='red' and i.color!='yellow' and i.color!='white' and i.color!='green' and i.color!='red_add' and i.color!='yellow_add' and i.color!='instruction' and i.color!='report'}.compact
+		
+		
+      
+    %>
+  
+
+    <%
+        for cf in case_flows
+			
+          processes = []
+		  
+		  ori =  EMSKWorkflow.find cf.kworkflow_id
+		  
+		  if ori.template and ori.template!="" 
+			 
+			temp =  EMSKWorkflow.where(:code=>cf.template).first 
+			 
+  		  	processes = EMSKProcess.where(:kworkflow_id=>temp.id).all()
+		    		
+				
+				
+		  else	  
+		  
+		  	processes = EMSKProcess.where(:kworkflow_id=>cf.kworkflow_id).all()
+          
+	  	  end
+		  
+		  isnow = false
+    %>
+    <div class="card-x p-2 radius-10 border shadow-none bg-light"   >
+      <div class="row">
+      <div class="col-9"><h5 class=""><%=m_f_name[cf.kworkflow_id]%></h5></div>
+      <div class="col-1"><a href="javascript:delFlow('<%=cf.kworkflow_id%>');" class="btn btn-sm btn-light" >Remove</a></div>
+      </div>
+      <%  for pc in processes %>
+      <%
+	  		actions = EMSKAction.where(:kprocess_id=>pc.id).all
+	  
+            newclass="btn-light"
+            yclass=newclass
+            nclass=newclass
+            cpid = "new"
+            cpnote = ""
+            cp = m_cp[pc.id]
+            pclass= "card-x radius-10 border border-1 shadow-none "
+            nowclass = ""
+            if cp
+              cpid = cp.id 
+              pclass += " primary"
+              cpnote = cp.note  
+              yclass="btn-outline-primary" if cp.action=='y'
+              nclass="btn-outline-danger" if cp.action=='n'
+              nowclass = ""
+            else
+              if !isnow
+                nowclass = "alert border-0 border-start border-5 border-primary"
+                isnow = true
+              end
+            end
+			
+			nowclass=""
+
+      %>
+       <div class="<%=pclass%>">
+      <!--<div class="card radius-10 border border-1 <%=pclass%> shadow-none">-->
+        <div class="card-body-x">
+          <!--<div class="d-flex align-items-center">-->
+            <div class="row <%=nowclass%>" id="<%=pc.id%>" cwid="<%=cf.id%>">
+              <div class="col-9 col-md" onclick="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','y');">
+                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> 
+				
+				<% if actions.size > 0 %>
+				<span class="action">*<%=actions.size%></span>
+				<% end %>
+				</p>
+                <input type="hidden" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-<%=pc.id%>" value="<%=cpnote%>">
+                <%  if cpnote!=''%>
+                <div class="shadow-x p-2 m-2 rounded"><%=cpnote%></div>
+                <%  end %>
+              </div>
+              <div class="col-1 col-md-1">
+                <a href="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','y');" class="btn <%=yclass%>">&nbsp;<i class="bx bx-check"></i>&nbsp;</a>
+              </div>
+              <div class="col-1  col-md-1">
+                <a href="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','n')" class="btn <%=nclass%>">&nbsp;<i class="bx bx-x"></i>&nbsp;</a>
+              </div>
+              <div class="col-1  col-md-1">
+                <a href="javascript:modalNote('<%=pc.id%>','<%=cpid%>')" class="btn btn-light">&nbsp;<i class="bx bx-edit"></i>&nbsp;</a>
+              </div>
+            </div>
+          <!--</div>-->
+        </div>
+      </div>   
+
+      <%  end #for pc %>
+    </div>
+    	  <br/>
+    <%  end %>
+    <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
+  <input type="hidden" name="record[case_id]" value="<%=params[:case_id]%>" >
+    <input type="text" name="record[text]" class="alert-warning form-control flow-search-value" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+    
+
+  </form>
+</div></div>
+ </div>
+<%
+    ms = Message.where(:admit_id=>record.admit_id).all()
+%>
+
+<div class="col-12 col-lg-4 col-xl-4">
+  <div class="card radius-10 "> <!-- sticky-top -->
+    <div class="card-header bg-transparent">
+      <div class="d-flex align-items-center">
+        <div>
+          <h6 class="mb-0">
+            บันทึกเหตุการณ์ 
+          </h6>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+          
+      <%  
+          m_case_note = case_processs.collect{|i| [i.id,i.note]}.compact.to_h
+          for m in ms 
+            mclass = "danger"
+            mclass = "secondary" if m.media_type != 'alert'
+            if m.type=='text' 
+      %>
+      <div class="alert border-0 border-start border-5 border-<%=mclass%> alert-dismissible fade show py-2">
+        <div class="d-flex align-items-center">
+          <div class="font-35 text-<%=mclass%>"><i class="bx bxs-info-circle"></i>
+          </div>
+          <div class="ms-3">
+            <h6 class="mb-0 text-<%=mclass%>"><%=m.content%></h6>
+            <div><%=m.created_at.strftime('%H:%M:%S')%> <%=m_case_note[m.file_id]%></div>
+          </div>
+        </div>
+      </div>  
+      <%    elsif m.type=='cpr'%>    
+      <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show py-2">
+        <div class="d-flex align-items-center">
+          <div class="font-35 text-white"><i class="bx bx-pulse"></i>
+          </div>
+          <div class="ms-3">
+            <h6 class="mb-0 text-white">CPR</h6>
+            <div class="text-white"><%=m.created_at.strftime('%H:%M:%S')%></div>
+          </div>
+        </div>
+        <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+      </div>        
+      <%    end #if %>
+      <%  end #for %>
+
+    </div>
+  </div><!--card-->
+</div>
+
+</div><!--row-->
+
+<% if true %>
+<%for f in select_flows
+    %>
+    <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
+    
+    <%  end %>
+
+<% end %>
+<div id="prearrival_panel">
+  result
+</div>
+
+<div class="modal fade" id="actionModal" tabindex="-1" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Note</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" class="form-control form-control-sm mb-3" placeholder="pid" name="" id="note-pid" value="">
+        <input type="hidden" class="form-control form-control-sm mb-3" placeholder="cpid" name="" id="note-cpid" value="">
+        <input type="text" class="form-control form-control-sm mb-3" placeholder="note" name="" id="note-add" value="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="javascript:addNote()" class="btn btn-primary">Add</a>
+      </div>
+    </div>
+  </div>
+</div><!--modal-->
+
+<script>
+
+
+$('#flow_search').submit(function(e){
+
+	addCBD($('.flow-search-value').val())
+
+	e.preventDefault();
+	
+})
+	
+
+
+function modalNote(pid,cpid){
+  note = $("#"+pid).find("#note-"+pid).val()
+  $("#note-add").val(note)
+  $("#note-pid").val(pid)
+  $("#note-cpid").val(cpid)
+  
+  
+  $("#actionModal").on('shown.bs.modal',function(e){
+    $("#note-add").focus()
+  })
+  $("#actionModal").modal('toggle');
+  
+  
+}
+function addNote(){
+  case_id = $("#pre_case_id").val()
+  pid = $("#note-pid").val()
+  cpid = $("#note-cpid").val()
+  note = $("#note-add").val()
+  cwid = $("#"+pid).attr("cwid")
+  // alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_process_create",
+    data:{record:{case_id:case_id,case_workflow_id:cwid,kprocess_id:pid,note:note},cpid:cpid}
+  }).done(function(data){
+    $("#actionModal").modal('toggle');
+    reloadPrearrival()
+  })
+}
+
+function updateProcess(pid,cpid,action){
+  case_id = $("#pre_case_id").val()
+
+	
+	$('#'+pid).parent().parent().addClass("primary")
+
+  note = $("#"+pid).find("#note-"+pid).val()
+  cwid = $("#"+pid).attr("cwid")
+  // alert('pid='+pid+' \ncwid='+cwid+' \ncpid='+cpid+' \naction='+action+' \nnote='+note)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_process_create",
+    data:{record:{case_id:case_id,case_workflow_id:cwid,kprocess_id:pid,action:action,note:note},cpid:cpid}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+
+function addCBD(text){
+  case_id = $("#pre_case_id").val()
+  // alert(fid)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_select_cbd",
+    data:{record:{case_id:case_id,text:text}}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+
+function reloadPrearrival(){
+  case_id = $("#pre_case_id").val()
+  $.ajax({
+    url: "../EmsPrearrival/show?case_id="+case_id,
+    context: document.body
+  }).done(function(html) {
+  
+    $( '.ems_case' ).html(html);
+  });
+}
+
+function addFlow(fid){
+  case_id = $("#pre_case_id").val()
+  // alert(fid)
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_workflow_create",
+    data:{record:{case_id:case_id,kworkflow_id:fid}}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+function delFlow(fid){
+  case_id = $("#pre_case_id").val()
+  $.ajax({
+    type:"POST",
+    url:"../EmsPrearrival/case_workflow_del",
+    data:{record:{case_id:case_id,kworkflow_id:fid}}
+  }).done(function(data){
+    reloadPrearrival()
+  })
+}
+
+$(document).ready(function(){
+  $(".add-flow").click(function(){
+    addFlow($(this).attr("fid"))
+  })
+
+  $("#note-add").keypress(function(e){
+    if(e.which == 13) {
+        addNote()
+    }
+  })
+
+  $('.t').each(function(){
+      obj = $(this)
+    
+      en = obj.attr('en')
+      th = obj.html()
+      obj.attr('th', th)
+      //obj.html(th)    
+
+  })
+
+
+  $('.btn_lang').click(function(e){
+      
+      btn_obj = $(this)
+      lang = btn_obj.attr('lang')
+      $('.btn_lang').removeClass('btn-secondary').addClass('btn-outline-secondary')
+      $(this).removeClass('btn-outline-secondary').addClass('btn-secondary')
+      
+      $('.t').each(function(){
+        obj = $(this)
+        text = obj.attr(lang)
+        obj.html(text)    
+        e.preventDefault()
+      })
+  })
+
+
+})
+</script>

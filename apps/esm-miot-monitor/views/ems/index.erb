@@ -1,0 +1,432 @@
+<%= inline(this,:'_init')  %>
+<%= inline(this,:'_style')  %>
+<%= inline(this,:'../lib/_map')  %>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<div class="row">
+<div class="col-12">
+<div class="row row-cols-1 row-cols-md-4 row-cols-xl-4">
+	
+	
+	<% 
+		
+	cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).limit(4).all()
+	
+	session.delete :case_id
+	
+	
+	%>
+	<% for i in cases 
+	
+		code = i.init_code
+		cls = code.get_class
+	%>
+
+
+	
+	<div class="col">
+		<a href="show?id=<%=i.id%>">
+		<div class="card radius-10 border-start border-0 border-3 border-<%= code.get_class %>">
+		<div class="card-body">
+			<div class="d-flex align-items-center">
+				<div>
+					<h4 class="my-1 text-<%=cls%> "><%=i.case_no%></h4>
+					<p class="mb-0 text-secondary">ผู้ป่วย : <%=i.patient_name%></p>
+					<p class="mb-0 font-13">Code : <%= code.code  if code%> </p> 	
+					<p class="mb-0 text-secondary">อาการ : <%=i.chief_complain[0..20]%></p>
+					
+				
+				</div>
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div> -->
+			</div>
+		</div>
+		</div>
+	</a>
+	</div>
+	<% end %>	
+	
+</div>
+
+
+<div class="row">
+	<div class="col-9">
+    <div class="card radius-10">
+	<div class="card-body">	
+	<div id="dashboard-map" class="" style="height:60vh">
+		map
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	<div class="col-3">
+		
+	    <div class="card radius-10">
+		<div class="card-body">
+			events
+		<div class="message-partial"></div>
+		</div>
+		</div>	
+	</div>
+
+</div>
+
+
+<div class="row" style="display:none">
+                   <div class="col-10 col-lg-8">
+                      <div class="card radius-10">
+						  <div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h6 class="mb-0">Sales Overview</h6>
+								</div>
+								<div class="dropdown ms-auto">
+									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="javascript:;">Action</a>
+										</li>
+										<li><a class="dropdown-item" href="javascript:;">Another action</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li><a class="dropdown-item" href="javascript:;">Something else here</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="d-flex align-items-center ms-auto font-13 gap-2 my-3">
+								<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" style="color: #14abef"></i>Sales</span>
+								<span class="border px-1 rounded cursor-pointer"><i class="bx bxs-circle me-1" style="color: #ffc107"></i>Visits</span>
+							</div>
+							<div class="chart-container-1"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+								<canvas id="chart1" width="826" height="260" class="chartjs-render-monitor" style="display: block; width: 826px; height: 260px;"></canvas>
+							  </div>
+						  </div>
+						  <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3 g-0 row-group text-center border-top">
+							<div class="col">
+							  <div class="p-3">
+								<h5 class="mb-0">24.15M</h5>
+								<small class="mb-0">Overall Visitor <span> <i class="bx bx-up-arrow-alt align-middle"></i> 2.43%</span></small>
+							  </div>
+							</div>
+							<div class="col">
+							  <div class="p-3">
+								<h5 class="mb-0">12:38</h5>
+								<small class="mb-0">Visitor Duration <span> <i class="bx bx-up-arrow-alt align-middle"></i> 12.65%</span></small>
+							  </div>
+							</div>
+							<div class="col">
+							  <div class="p-3">
+								<h5 class="mb-0">639.82</h5>
+								<small class="mb-0">Pages/Visit <span> <i class="bx bx-up-arrow-alt align-middle"></i> 5.62%</span></small>
+							  </div>
+							</div>
+						  </div>
+					  </div>
+				   </div>
+				   <div class="col-12 col-lg-4">
+                       <div class="card radius-10">
+						   <div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<h6 class="mb-0">Trending Products</h6>
+								</div>
+								<div class="dropdown ms-auto">
+									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+									</a>
+									<ul class="dropdown-menu">
+										<li><a class="dropdown-item" href="javascript:;">Action</a>
+										</li>
+										<li><a class="dropdown-item" href="javascript:;">Another action</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li><a class="dropdown-item" href="javascript:;">Something else here</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="chart-container-2 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+								<canvas id="chart2" width="385" height="220" class="chartjs-render-monitor" style="display: block; width: 385px; height: 220px;"></canvas>
+							  </div>
+						   </div>
+						   <ul class="list-group list-group-flush">
+							<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Jeans <span class="badge bg-success rounded-pill">25</span>
+							</li>
+							<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">T-Shirts <span class="badge bg-danger rounded-pill">10</span>
+							</li>
+							<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Shoes <span class="badge bg-primary rounded-pill">65</span>
+							</li>
+							<li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">Lingerie <span class="badge bg-warning text-dark rounded-pill">14</span>
+							</li>
+						</ul>
+					   </div>
+				   </div>
+				   
+				   
+				   
+				   
+				</div>
+				
+				
+				
+</div>
+
+
+
+
+</div >
+<div class="msg text-success">
+</div>
+
+
+	<script>
+
+		var latlngbounds; 
+
+		$(document).ready(function(){
+		
+			latlng = [13.69313508354787, 100.69198345629769]
+		
+		
+		
+			map1 = new EMSMap('dashboard-map',{movable:true});
+			map1.setPosition(latlng[0], latlng[1])
+			// map1.setMarkerPosition(latlng[0], latlng[1])
+	
+		
+	
+	
+			map1.changeMarkerPosition(function(marker){
+								
+								
+								
+								
+											// var pos = marker.position
+			// 								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+			//
+			//
+			//
+			// 								// map1.geocode({'location':pos},function(result){
+			// 	//
+			// 	// 								$('#record_address').val(result.formatted_address)
+			// 	//
+			// 	// 							})
+			//
+			// 								map2.setPosition(pos.lat(), pos.lng())
+			// 								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+									
+		
+			}.bind(this))
+		
+		
+		function loadMap() {
+		
+		
+			latlng2 = [13.68313508354787, 100.69198345629769]
+		
+			
+			map = map1.getMap()
+	
+			
+			
+	
+			<%
+				
+			cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
+			
+			%>
+	
+			var latlng = []; 
+			
+			var pos = new google.maps.LatLng(latlng2[0],latlng2[1] )
+			latlng.push(new google.maps.LatLng(pos))
+			marker = new google.maps.Marker({position: pos, map: map})
+			
+			<% for i in cases %>
+		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
+			
+			var pos = new google.maps.LatLng(<%=i.latlng%> )
+			marker = new google.maps.Marker({position: pos, map: map})
+		    <% end %>
+			
+			
+			latlngbounds = new google.maps.LatLngBounds();
+			for (var i = 0; i < latlng.length; i++) {
+			    latlngbounds.extend(latlng[i]);
+			}
+			map.fitBounds(latlngbounds);
+			
+			
+	
+			if(map.getZoom()>15)
+				map.setZoom(15);
+			
+			
+			
+			
+			
+			
+	    }
+	
+		setTimeout(loadMap,700);
+		
+		
+	
+	
+		});
+		
+		var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+						
+		function update(lines){
+			
+			
+			obj = JSON.parse(lines[1])
+			
+			// console.log(obj['ambu_data'])
+			
+			var keys = Object.keys(obj['ambu_data']);
+
+			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+
+				// url: "<%=url_for "img/aoc/ambu.svg"%>",
+
+			for(ai in values){
+				
+				a = values[ai]
+				
+				map_icon = {
+				  path: car,
+				  scale: 0.9,
+				  strokeColor: 'white',
+				  strokeWeight: .10,
+				  fillOpacity: 1,
+				  fillColor: '#303bef',
+				  offset: '5%',
+				// size: new google.maps.Size(sizeX, sizeY),
+//         				origin: new google.maps.Point(0, 0),
+//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+				  // rotation: parseInt(heading[i]),
+				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+				};
+		 	   
+			    var t = a['last_location'].split(",")
+				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+				if(map!=null)
+			    marker_map = new google.maps.Marker({position: pos,icon: map_icon,  map: map});
+				
+				latlngbounds.extend(pos);
+			
+			}
+			
+		  
+			
+			map.fitBounds(latlngbounds);
+		
+			
+			
+		}
+		
+		
+		function reload_message(){
+		
+
+
+	
+		// reload_nurse_note(admit_id)
+		// reload_medication(admit_id)
+		
+
+		$.ajax({
+		  url: "<%= "../EmsParamedic/message_partial?zone_id=#{@current_zone.id}"%>",
+		  context: document.body
+		}).done(function(data) {
+		  $( '.message-partial' ).html(data);
+	  	 // alert($( '.chat' ).height())
+	   $('.panel-body').scrollTop(100000000)
+		 
+
+		});
+	
+		}
+		
+		reload_message()
+		
+
+	</script>
+<span class="material-symbols-outlined">
+airport_shuttle
+</span>
+		
+				<%=init_map%>
+		
+<script>
+	
+	
+  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+  
+  
+  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+
+  ws.onopen    = function()  { show('websocket opened'); 
+	
+  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+
+
+  };
+
+
+  ws.onclose   = function()  { show('websocket closed'); 
+
+ 	setTimeout(function () {
+       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    }, 2000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) { 
+	  
+	  
+	
+	  
+	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
+	  
+	  
+		lines = m.data.split("\n")
+	
+		// console.log(lines[0].split(" ")[0])
+		
+		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+		
+			window.location.reload();
+	
+		}else
+		if(lines[0].split(" ")[0]=='Zone.Message'){
+			
+			reload_message()
+		
+		}else
+		
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+			update(lines)
+			
+			
+		}
+	  
+
+	  
+	
+  }
+  
+  
+  
+  
+  
+	
+</script>

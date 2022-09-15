@@ -363,7 +363,7 @@ var message_admit_id = null;
 		
 		
 	$.ajax({
-	  url: "message_partial?admit_id="+message_admit_id,
+	  url: "<%= get_path "message_partial" %>?admit_id="+message_admit_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '.message-partial' ).html(data);

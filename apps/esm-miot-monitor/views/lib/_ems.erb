@@ -1,0 +1,92 @@
+<%
+
+
+
+    def self.get_time
+    
+        return Time.now.strftime("%d/%m/%Y %H:%H")
+
+    end
+
+
+%>
+
+<script>
+
+	function refresh_remote(){
+		
+
+		$('*[data-remote="true"]').each(function(){
+			
+		    var target = $( this );
+		   	console.log(target)
+			if ( target.is( "form" ) ) {
+			
+
+			$(this).unbind('submit')
+			$(this).submit(function(e){
+				
+				
+				
+			    var form = $(this);
+			    var url = form.attr('action');
+				var id = form.attr('data-remote-update')
+			
+	    		$(this).find('input[type="submit"]').attr('disabled','disabled');
+			
+			
+			    $.ajax({
+			              type: "POST",
+			              url: url,
+			              data: form.serialize(),
+			              success: function(data)
+			              {
+			                  $('#'+id).html(data)
+							  $(this).removeAttr('disabled');
+					      }
+			    });
+				
+				e.preventDefault();
+			
+				return false;
+				
+			})		 
+		    
+			}else if(target.is("a")){
+			
+				$(this).unbind('click')
+				$(this).click(function(e){
+				
+					var url = $(this).attr('href')
+					var id = $(this).attr('data-remote-update')
+				    $.ajax({
+				              type: "GET",
+				              url: url,
+				              success: function(data)
+				              {
+				                  $('#'+id).html(data)
+								  $(this).removeAttr('disabled');
+						      }
+				    });
+					
+					
+					e.preventDefault();
+
+					return false;
+				});
+				
+
+			
+			}
+
+		})
+		
+		
+	}
+	
+	$(document).ready(function(){
+		
+		refresh_remote();
+
+	})
+</script>	

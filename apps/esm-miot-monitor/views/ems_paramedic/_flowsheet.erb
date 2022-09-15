@@ -1,0 +1,1168 @@
+<script>		
+		function GFX() {
+			
+			
+		    var enter = null,
+    		update = null,
+    		exit = null,
+			context = null,
+		    svg = null,
+			render = null,
+			viewport = null,
+			viewportWidth = 0,
+			viewportHeight = 0,
+			xscale=null,
+			yscale=null,
+			colorScale =  d3.scaleOrdinal(d3.schemeCategory10);// d3.scale.category20(),
+			dispatch = d3.dispatch("pageDown","pageUp"),
+			startTime=Date.now(),
+			endTime=null,
+			drag=false,
+			active=false,
+			cmap= null;
+		
+			
+		    function gfx(container) {
+					
+					
+				cmap = {};
+				hidden = {};
+				
+				colors = [];
+				
+				function colorScale(i){
+					
+					switch(i) {
+					  case 'pr':
+					    return '#00b3b7'
+					    break;
+					  case 'hr':
+					    return '#01bf02'
+					    break;
+				  	  case 'bp_sys':
+				    	return '#5990b7'
+				    	break;
+			  	  	  case 'bp_dia':
+			    		return '#5990b7'
+			    		break;
+		  		  	  case 'spo2':
+		    			return '#00b3b7'
+		    		    break;
+	  			  	  case 'temp':
+	    				return '#2F50E2'
+	    			    break;
+  			  	  case 'rr':
+    				return '#b7851d'
+    			    break;
+			  	  case 'co2':
+  				return '#bcaf06'
+  			    break;
+					  default:
+					    return 'blue'
+					}
+					
+					
+				}
+				
+				var randomColor = (function(){
+				  var golden_ratio_conjugate = 0.618033988749895;
+				  var h = Math.random();
+
+				  var hslToRgb = function (h, s, l){
+				      var r, g, b;
+
+				      if(s == 0){
+				          r = g = b = l; // achromatic
+				      }else{
+				          function hue2rgb(p, q, t){
+				              if(t < 0) t += 1;
+				              if(t > 1) t -= 1;
+				              if(t < 1/6) return p + (q - p) * 6 * t;
+				              if(t < 1/2) return q;
+				              if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+				              return p;
+				          }
+
+				          var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+				          var p = 2 * l - q;
+				          r = hue2rgb(p, q, h + 1/3);
+				          g = hue2rgb(p, q, h);
+				          b = hue2rgb(p, q, h - 1/3);
+				      }
+
+				      return '#'+Math.round(r * 255).toString(16)+Math.round(g * 255).toString(16)+Math.round(b * 255).toString(16);
+				  };
+  
+				  return function(){
+				    h += golden_ratio_conjugate;
+				    h %= 1;
+				    return hslToRgb(h, 0.5, 0.60);
+				  };
+				})();
+					
+					
+		        function render(resize) {
+					
+					// console.log('render')
+					
+					if (true){
+		            if (true) { 
+		                
+						viewportWidth = parseInt(viewport.style("width"));
+						viewportHeight = parseInt(viewport.style("height"));
+						
+						
+		            }
+					
+		
+					
+					
+				    
+					// console.log(active)
+					
+					
+   				 container.each(function() {
+				  
+					 	
+				  
+    				  	var rowxSelection = container.selectAll(".rowx").data(context['components']);
+    				   
+					
+   						w = viewportWidth;
+						h = viewportHeight;
+						
+						h1w = 80;
+						h3w = 80;
+						
+						rh = 200;
+						
+						h3x = w-h3w;
+						mx = h1w+20;
+						mw = w-h1w-h3w;
+						chartHeight = 0;
+						rowxHeight = 120	
+						
+						
+						
+						// console.log(context);
+						
+						
+						// console.log(w)
+					
+     					  //   	              g = rowxSelection.enter().append("g")
+   					  //
+   					  //     	              .attr("class", "rowx")
+   					  // .attr("transform", function(d,i) {
+   					  //     	                         return "translate(0," + ((i * rh)) + ")";
+   					  //     	                });
+					  container.selectAll(".rowx").remove();
+					  
+      	              var fillcolor = '#cccccc'
+					  xscale = d3.scaleTime().range([0, mw]);
+
+					  yscale = d3.scaleLinear().range([chartHeight-10, 10]);
+
+
+ 			      var g = svg.append("g")
+					    .attr("class", "rowx")
+      			  	    .attr("transform", "translate(0,0)");
+
+      			  		
+// 						//# blue bar
+//
+
+		   					g.append("rect")
+		   			        .attr("x", h1w)
+							.attr("y", chartHeight)
+		   			        .attr("rx", 3)
+		   			        .attr("ry", 3)
+		   			        .attr("width", w-h1w-h3w)
+		   			        .attr("height", 30)
+		   					.attr("fill",fillcolor)
+		   			        .attr("fill-opacity", 0.10)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+						    .on("mousedown", function() {
+						             var coords = d3.mouse(this);
+
+									 xtime = coords[0];
+									 // console.log("md "+coords[0]+" = "+ xscale.invert(coords[0]))
+									 if(drag==false){
+										 drag = true;
+										 startTime = xscale.invert(coords[0]-mx);
+										 endTime = null
+									 }
+							})
+							.on("click",function(){
+
+								// alert('sidfj')
+
+							})
+						    .on("mouseup", function() {
+						             var coords = d3.mouse(this);
+
+									 xtime = coords[0];
+									 // console.log("mu "+coords[0]+" = "+ xscale.invert(coords[0]))
+									 if(drag==true){
+										 drag = false;
+										 endTime = xscale.invert(coords[0]-mx);
+										 // endTime = Date.now();
+
+									 }
+							})
+						    .on("mouseout", function() {
+
+										 // drag = false;
+									// console.log('out')
+							})
+							.on("mousemove", function(){
+
+				             		var coords = d3.mouse(this);
+							 	    // console.log("m "+coords[0]+","+coords[1])
+									 if(drag){endTime = xscale.invert(coords[0]-mx);
+
+									// console.log(startTime+" "+endTime+" "+drag)
+									if(startTime!=null&&endTime!=null&&xscale!=null){
+									svg.select('.rowxx').remove();
+			              	 		g = svg.append("g")
+			            			.attr("class", "rowxx")
+									.attr("transform", "translate("+mx+",100)");
+									x1 = xscale(startTime)
+									x2 = xscale(endTime)
+									if(x2>x1){
+				   					h1 = g.append("rect")
+				   			        .attr("x", x1)
+									.attr("y", 0)
+				   			        .attr("rx", 3)
+				   			        .attr("ry", 3)
+				   			        .attr("width", x2-x1 )
+				   			        .attr("height", 30)
+				   					.attr("fill",'#111')
+				   			        .attr("fill-opacity", 0.10)
+				   			        .attr("stroke", "#999999")
+				   			        .attr("stroke-width", "1px")
+										}
+
+									}}
+
+
+							})
+
+//
+							// console.log(startTime+" "+endTime+" ")
+							if(startTime!=null&&endTime!=null&&xscale!=null){
+
+			              	g = svg.append("g")
+			            	.attr("class", "rowx")
+							.attr("transform", "translate("+mx+",100)");
+							x1 = xscale(startTime)
+							x2 = xscale(endTime)
+							if(x2>x1){
+		   					h1 = g.append("rect")
+				   			        .attr("x", x1)
+									.attr("y", 0)
+				   			        .attr("rx", 3)
+				   			        .attr("ry", 3)
+				   			        .attr("width", x2-x1 )
+		   					.attr("fill",'#111')
+		   			        .attr("fill-opacity", 0.10)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+
+							}}
+
+
+
+
+				 	    
+
+					    xscale = d3.scaleTime()
+					        .range([0, mw]);
+
+					 	yscale = d3.scaleLinear()
+					        .range([chartHeight-10, 10]);
+
+
+						var xAxis = d3.axisBottom(xscale);//.tickFormat(function(d){ return d.x;});
+						var yAxis = d3.axisLeft(yscale);
+
+
+
+						r = []
+
+						for(var ci in context['components']){
+								c = context['components'][ci];
+								r = r.concat(c['records'])
+						}
+						// console.log(r)
+						
+						xscale.domain(d3.extent(r, function(d) { return d.time; }));
+						
+						
+		
+					currentY = chartHeight+30
+					contentWidth = 	w-h1w-h3w
+						
+					console.log("cw = "+contentWidth)
+						
+					if(r.length>0){
+				    xscale_1 = d3.scaleTime()
+				        .range([ 0,mw/2]);
+					var xAxis_1 = d3.axisTop(xscale_1);//.tickFormat(function(d){ return d.x;});
+					}
+					
+					
+						
+			    	// xscale_2 = d3.scaleTime()
+// 					.range([mw/2,mw]);
+					
+						
+			    	xscale_2 = d3.scaleTime()
+					.range([0,mw]);
+					
+					var xAxis_2 = d3.axisTop(xscale_2);//.tickFormat(function(d){ return d.x;});
+					
+						
+					r = []
+					r2 = []
+					
+					
+					data = []
+					
+						
+					now = new Date()
+					// 5 mins
+					from_now = (now.getTime())-600000
+
+					for(var ci in context['components']){
+							c = context['components'][ci];
+							data = c['records']
+							if(ci==0)
+							for(var ri in c['records']){
+								i = c['records'][ri]
+								
+								
+								// if(i.time-from_now>=0)
+// 									r2.push(i)
+// 								else
+									// r.push(i)
+									
+									
+								// console.log('A'+ i.time+ ' B'+ from_now+ " = "+(i.time-from_now))
+								if(i.time-from_now>=0){
+									r2.push(i)
+								}
+								// else
+// 									r.push(i)
+								
+							}
+					}
+					
+					
+					
+					if(r.length>0){
+						
+					xscale_1.domain(d3.extent(r, function(d) { return d.time; }));
+					
+					g = svg.append("g")
+					.attr("class", "rowx")
+					.attr("transform", "translate("+h1w+"," + 0 +")");
+					 g.append("g")
+					 .attr("class", "x axis")
+					 .attr("transform", "translate(0," + currentY + ")")
+					 .attr("stroke","#aaa")
+					 .call(xAxis_1);
+					 
+					}
+					
+					
+					xscale_2.domain(d3.extent(r2, function(d) { return d.time; }));
+					
+					 
+					g = svg.append("g")
+					.attr("class", "rowx")
+					.attr("transform", "translate("+h1w+"," + 0 +")");
+					 g.append("g")
+					 .attr("class", "x axis")
+					 .attr("transform", "translate(0," + currentY + ")")
+					 .attr("stroke","#aaa")
+					 .call(xAxis_2);
+					 
+					 
+ 				
+					 
+		   	    // svg.append("g")
+   	    // 		   	      .attr("transform", "translate(0," + 300 + ")")
+   	    // 		   	      .call(d3.axisBottom(xscale_1).tickSize(-300).ticks(10));
+						   //
+						   // 		   	    svg.append("g")
+						   // .attr("transform", "translate(100," + 300 + ")")
+						   //    	    		   	      .call(d3.axisLeft(yscale).tickSize(-300).ticks(10))
+						   //    	    		   	      // .select(".domain").remove()
+						   //
+						   //    	    		     		svg.selectAll(".tick line").attr("stroke", "#cbcbcb")
+						   //
+					 
+						
+					
+					for(var ci in context['components']){
+						c = context['components'][ci];
+						
+						cmap[c['name']] = c
+						type = c['type']
+						if(type=='vs'){
+						
+						fillcolor = '#cccccc'
+							
+						}
+						
+						
+						
+						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					
+					if(type=='event'){
+							
+							
+                	g = svg.append("g")
+			            	.attr("class", "rowx")
+							.attr("transform", "translate(0," + currentY +")");
+					
+   					// h1 = g.append("rect")
+		//    			        .attr("x", h1w)
+		//    			        .attr("rx", 0)
+		//    			        .attr("ry", 0)
+		//    			        .attr("width", contentWidth/2)
+		//    			        .attr("height", rowxHeight)
+		//    					.attr("fill","red")
+		//    			        .attr("fill-opacity", 0.10)
+		//    			        .attr("stroke", "#999999")
+		//    			        .attr("stroke-width", "1px")
+		// 			.on("click", function() {
+		// 		             var coords = d3.mouse(this);
+		// 					 // console.log(""+coords[0]+","+coords[1])
+		// 			});
+		//
+					
+   					h2 = g.append("rect")
+   			        .attr("x", h1w+0)
+   			        .attr("rx", 0)
+   			        .attr("ry", 0)
+   			        .attr("width", contentWidth)
+   			        .attr("height", rowxHeight)
+   					.attr("fill",fillcolor)
+   			        .attr("fill-opacity", 0.10)
+   			        .attr("stroke", "#999999")
+   			        .attr("stroke-width", "1px")
+					.on("click", function() {
+				             var coords = d3.mouse(this);
+							 // console.log(""+coords[0]+","+coords[1])
+					});
+					
+					
+					
+					
+					
+					console.log('render '+ c['records'].length);
+					
+					for(var ri in c['records']){
+
+					    r = c['records'][ri]	
+						
+						// alert(r)
+						stop_time = new Date()
+						if(r.stop_time!=null)
+						  stop_time = r.stop_time       
+						
+   					   
+							ry = 0 ;
+						
+						switch(r.name) {
+						  case 'nurse':
+							 if(r.description.length>20)
+						   	 ry = 20 
+						    break;
+						  case 'record':
+						     ry = 40
+							    break;
+					      case 'med':
+							  ry = 60
+							  break;
+						  case 'log':
+							  ry= 80
+						    break;
+						  default:
+						    // code block
+						}
+							
+						
+
+
+							xi = xscale_1(r.time)+h1w;
+							wi = xscale_1(stop_time)-xscale_1(r.time);
+							
+							if(xi+wi>h1w){
+							
+							
+							
+							
+							if(wi+xi>contentWidth/2+h1w)
+							wi = contentWidth/2-xi+h1w;
+								
+							
+							if(xi<h1w){
+								wi +=xi
+								xi = h1w;
+								
+							}
+							
+							
+							if(wi<0)wi=0;	
+							
+	   					    g.append("rect")
+							.attr("x",xi)
+							.attr("y",(y+ry-20))
+	                        .attr("rx", 3)
+	                        .attr("ry", 3)
+	                        .attr("width", wi)
+	                        .attr("height", "24")
+							.attr("fill",randomColor)
+	                        .attr("fill-opacity", 0.25)
+	                        .attr("stroke", "#999999")
+	                        .attr("stroke-width", "2px");
+
+							if(false)
+							g.append("text")
+							.attr("transform", "translate("+(xi)+","+(y+ry-5)+")")
+							.text(""+r.name)
+							.style("font-size", "12px")
+							// .attr('text-anchor','middle')
+							.attr('stroke','#666')
+							
+							
+							}
+
+
+
+					   
+						
+						xi = xscale_2(r.time)+h1w;
+						wi = xscale_2(stop_time)-xscale_2(r.time)
+						
+						
+						
+						if(wi+xi>h1w){
+						
+						// if(xi<contentWidth/2+h1w)
+	// 						xi = contentWidth/2+h1w;
+						
+						
+						
+					
+						
+						if(wi>contentWidth+h1w);
+						// wi = contentWidth+h1w-xi;
+						
+						 // console.log(r)
+ // 						 console.log(""+xscale_2(r.time)+" "+wi)
+						
+						
+						
+						
+						g.append("rect")
+						.attr("x",xi)
+						.attr("y",(y+ry-13))
+                        .attr("rx", 1)
+                        .attr("ry", 1)
+                        .attr("width", 5)
+                        .attr("height", "10")
+						.attr("fill",randomColor)
+                        .attr("fill-opacity", 0.25)
+                        .attr("stroke", "#999999")
+                        .attr("stroke-width", "2px");
+
+
+						g.append("text")
+						.attr("transform", "translate("+(xi+10)+","+(y+ry-5)+")")
+						.text(""+r.name+" : "+r.description)
+						.style("font-size", "12px")
+						// .attr('text-anchor','middle')
+						.attr('stroke','#666')
+						}
+
+						
+					}
+					
+					
+					
+						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					
+					
+					
+					
+					}
+					else
+					
+					
+					
+					if(type=='med'){
+					
+					
+						y = 30;
+						rowxh = 30;
+						header = 0;
+						vmargin = 10;
+						total_height = 20;		
+							
+                	g = svg.append("g")
+			            	.attr("class", "rowx")
+							.attr("transform", "translate(0," + currentY +")");
+					
+   					h1 = g.append("rect")
+   			        .attr("x", h1w)
+   			        .attr("rx", 0)
+   			        .attr("ry", 0)
+   			        .attr("width", contentWidth)
+   			        .attr("height", c['params'].length*rowxh+c['params'].length*5)
+   					.attr("fill",fillcolor)
+   			        .attr("fill-opacity", 0.10)
+   			        .attr("stroke", "#999999")
+   			        .attr("stroke-width", "1px")
+					.on("click", function() {
+				             var coords = d3.mouse(this);
+							 // console.log(""+coords[0]+","+coords[1])
+					});
+					
+					
+   					h2 = g.append("rect")
+   			        .attr("x", h1w+contentWidth)
+   			        .attr("rx", 0)
+   			        .attr("ry", 0)
+   			        .attr("width", contentWidth)
+   			        .attr("height",  c['params'].length*rowxh+c['params'].length*5)
+   					.attr("fill",fillcolor)
+   			        .attr("fill-opacity", 0.10)
+   			        .attr("stroke", "#999999")
+   			        .attr("stroke-width", "1px")
+					.on("click", function() {
+				             var coords = d3.mouse(this);
+							 // console.log(""+coords[0]+","+coords[1])
+					});
+					
+					
+					
+					for(var pi in c['params']){
+														p = c['params'][pi]
+
+														g.append("text")
+														.attr("transform", "translate(10,"+(y+pi*rowxh)+")")
+														.text(p)
+														.attr('stroke','#ccc')
+
+	
+														for(var ri in c['records']){
+
+														   r = c['records'][ri]
+
+														   if(r[p]!=null){
+															   
+															   
+															stop_time = new Date()
+															if(r.stop_time!=null)
+															  stop_time = r.stop_time       
+
+															
+															xi = xscale_1(r.time)+h1w;
+															wi = xscale_1(stop_time)-xscale_1(r.time);
+															
+															if(xi+wi>h1w){
+															
+															
+															
+															
+															if(wi+xi>contentWidth+h1w)
+															wi = contentWidth-xi;
+																
+															
+															if(xi<h1w){
+																wi +=xi
+																
+																xi = h1w;
+																
+															}
+															if(wi<0)wi=0;	
+									   					    g.append("rect")
+															.attr("x",xi)
+															.attr("y",(y+pi*rowxh-20))
+									                        .attr("rx", 3)
+									                        .attr("ry", 3)
+									                        .attr("width", wi)
+									                        .attr("height", "24")
+															.attr("fill",randomColor)
+									                        .attr("fill-opacity", 0.25)
+									                        .attr("stroke", "#999999")
+									                        .attr("stroke-width", "2px");
+
+															if(wi>0)
+															g.append("text")
+															.attr("transform", "translate("+(xi)+","+(y+pi*rowxh-5)+")")
+															.text("R="+r[p]['r']+"ml/mins, V="+r[p]['v'])
+															.style("font-size", "12px")
+															// .attr('text-anchor','middle')
+															.attr('stroke','#ccc')
+															
+															
+															}
+															
+															xi = xscale_2(r.time)+h1w;
+															wi = xscale_2(stop_time)-xscale_2(r.time)
+															
+															
+															if(wi+xi>contentWidth+h1w){
+															
+															if(xi<contentWidth+h1w){
+																// wi = wi-xi
+																xi = contentWidth+h1w;
+															
+															}
+															
+															
+															
+														
+															
+															if(wi+xi>contentWidth+h1w)
+																wi = contentWidth-xi+h1w;
+															
+									   					    g.append("rect")
+															
+															
+   															.attr("x",xi)
+   															.attr("y",(y+pi*rowxh-20))
+   									                        .attr("rx", 3)
+   									                        .attr("ry", 3)
+   									                        .attr("width", wi)
+   									                        .attr("height", "24")
+   															.attr("fill",randomColor)
+   									                        .attr("fill-opacity", 0.25)
+   									                        .attr("stroke", "#999999")
+   									                        .attr("stroke-width", "2px");
+
+
+   															g.append("text")
+   															.attr("transform", "translate("+(xi)+","+(y+pi*rowxh-5)+")")
+   															.text("R="+r[p]['r']+"ml/mins, V="+r[p]['v'])
+   															.style("font-size", "12px")
+   															// .attr('text-anchor','middle')
+   															.attr('stroke','#ccc')
+															
+															}
+															
+															
+														
+															
+															
+															
+															
+														}
+														
+													}
+														total_height+=rowxh
+												}
+							
+						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
+							
+					currentY+=total_height
+							
+						}
+						else
+						if(type=='vs'){
+							
+							
+							var data = c['records']
+							
+						for(var gi in c['groups']){
+								
+						
+								
+							group = c['groups'][gi]
+								
+								
+						 
+								
+								
+								
+  	                	g = svg.append("g")
+				            	.attr("class", "rowx")
+								.attr("transform", "translate(0," + currentY +")");
+						
+	   					h1 = g.append("rect")
+	   			        .attr("x", h1w)
+	   			        .attr("rx", 0)
+	   			        .attr("ry", 0)
+	   			        .attr("width", contentWidth)
+	   			        .attr("height", rowxHeight)
+	   					.attr("fill",fillcolor)
+	   			        .attr("fill-opacity", 0.10)
+	   			        .attr("stroke", "#999999")
+	   			        .attr("stroke-width", "1px")
+						.on("click", function() {
+					             var coords = d3.mouse(this);
+								 // console.log(""+coords[0]+","+coords[1])
+						});
+						
+	 				
+						
+						
+	   					// h2 = g.append("rect")
+	//    			        .attr("x", h1w+contentWidth/2)
+	//    			        .attr("rx", 0)
+	//    			        .attr("ry", 0)
+	//    			        .attr("width", contentWidth/2)
+	//    			        .attr("height", rowxHeight)
+	//    					.attr("fill",fillcolor)
+	//    			        .attr("fill-opacity", 0.10)
+	//    			        .attr("stroke", "#999999")
+	//    			        .attr("stroke-width", "1px")
+	// 					.on("click", function() {
+	// 				             var coords = d3.mouse(this);
+	// 							 // console.log(""+coords[0]+","+coords[1])
+	// 					});
+						
+						// draw
+						
+						
+						
+				 			yscale = d3.scaleLinear()
+				        	.range([rowxHeight, 10],);		
+						    
+							
+							
+							
+							var maxYValues = group['params'].map(function(p) { 
+								if(hidden[p]!=true)
+							        return d3.max(data, function(value) { return value[p]; })
+									
+							});
+								
+							maxY = d3.max(maxYValues);
+							
+							var minYValues = group['params'].map(function(p) { 
+								if(hidden[p]!=true)
+							        return d3.min(data, function(value) { return value[p]; })
+							});
+								
+							minY = d3.min(minYValues);
+								
+								
+							yscale.domain([minY-10,maxY]);
+							 
+							  
+							  
+							var yAxis = d3.axisRight(yscale).tickSize(-mw).ticks(5);
+							
+						
+							
+								g = svg.append("g")
+								.attr("class", "rowx")
+								.attr("transform", "translate("+(mw+80)+"," + (currentY-rowxHeight) +")");
+								 g.append("g")
+								 .attr("class", "x axis")
+								 .attr("transform", "translate(0," + rowxHeight + ")")
+								 .attr("stroke","#aaa")
+								 .call(yAxis);
+								 
+								 
+						   	     // svg.append("g")
+ 	     // 						   	  	.attr("transform", "translate(100," + 300 + ")")
+ 	     // 						      	    		   	      .call(d3.axisLeft(yscale).tickSize(-300).ticks(10))
+ 	     // 						      	    		   	      // .select(".domain").remove()
+ 	     //
+ 	     						      	    		     		svg.selectAll(".tick line").attr("stroke", "#cbcbcb")
+								 
+
+							for (var pi  in group['params']) {
+
+								 p = group['params'][pi]
+
+							  // yscale.domain(d3.extent(data, function(d) { return d[p]; }));
+									
+  						      // yscale.domain(d3.extent(data, function(d) { return d[p]; }));
+						
+         	                	g = svg.append("g")
+ 				            	.attr("class", "rowx")
+ 								.attr("transform", "translate("+0+"," + currentY +")");
+
+								g.append("text")
+								.attr("transform", "translate(10,"+(pi*30+30)+")")
+								.attr('ci',p)
+								.attr("stroke", colorScale(p))
+								.text('# '+p+" ")
+								
+
+								.on('click',function(){
+
+									p = d3.select(this).attr('ci')
+									
+									if(hidden[p]){
+										hidden[p] = false;
+									}else{
+										hidden[p] = true;
+									}
+									
+									render();
+	//
+								})
+
+								if(hidden[p]!=true){
+								
+								// var line = d3.line()
+		// 				         .x(function(d) { return xscale_1(d.time); })
+		// 				         .y(function(d) { return yscale(d[p]); })
+
+								var line_2 = d3.line()
+						         .x(function(d) { return xscale_2(d.time); })
+						         .y(function(d) { return yscale(d[p]); })
+								 // .curve(d3.curveCatmullRom.alpha(0.5))
+								if(r.length>0){
+									
+									
+	         	                g = svg.append("g")
+	 				            	.attr("class", "rowx")
+	 								.attr("transform", "translate("+h1w+"," + currentY +")");
+										
+									
+							   // g = g.append("g")
+	   //    						       	 	 g.append("path")
+	   //    						             .datum(r)
+	   //    						             .attr("class", "line")
+	   //    									 .attr("d", line)
+	   //
+	   //    		    						 .attr("stroke", colorScale(p))
+	   //    								     .attr("stroke-width", 2)
+	   //    									 .attr("fill", "none");
+								}
+
+ 	         	                g = svg.append("g")
+ 	 				            	.attr("class", "rowx")
+ 	 								.attr("transform", "translate("+(h1w)+"," + currentY +")");
+								
+									// console.log(data)
+							   g = g.append("g")
+						       	 	 g.append("path")
+						             .datum(r2)
+						             .attr("class", "line")
+									 .attr("d", line_2)
+		    						 .attr("stroke", colorScale(p))
+								     .attr("stroke-width", 2)
+									 .attr("fill", "none");
+
+								 }
+
+								}
+
+
+ 						
+							
+								
+							currentY+=rowxHeight	
+								
+								
+								
+							}
+							
+							
+							
+						}
+						
+						
+						
+						
+					}
+						
+						
+						
+						
+						
+						
+						
+				  
+				  
+   				  });
+				 
+				 
+		        }
+					
+					
+					
+			}
+					 
+				  gfx.render = render;     	 	
+		                                                  // call render on scrolling event
+       		      render(true);     
+					
+					
+		    }
+			
+		    // gfx.render = function(resize) {
+    // 			           console.log('resixe')                                    // placeholder function that is overridden at runtime
+    // 		    };
+			
+			
+	 		gfx.tick2 = function(data){
+			
+	
+			
+			if(data['update']){
+				
+				for(var id in data['update'] ){
+					
+					i = data['update'][id];
+					
+					if(c = cmap[i['name']]){
+						
+						// alert(i['list'].length)
+						c['records'] = i['list']
+						
+					}
+					
+				}	
+				
+				gfx.render(true)
+				// alert('render')
+			
+			}
+			
+		
+			
+		}
+			gfx.tick = function(data){
+			
+				
+				if(data['update']){
+					
+					for(var id in data['update'] ){
+						
+						i = data['update'][id];
+						
+						if(c = cmap[i['name']]){
+							for(var rd in i['append']){
+								r = i['append'][rd]
+								cmap[i['name']]['records'].push(r);
+								// console.log(cmap[i['name']]['records'])
+								// cmap[i['name']]['records'].shift();
+							}
+							
+							// console.log("r")
+							// cmap[i['name']]['records'].push()
+							
+							
+							
+							
+						}
+							
+						
+						
+						
+						
+					}
+					
+					
+					
+					gfx.render(true)
+					
+					
+					
+				}
+				
+				
+				
+				
+			}
+			
+			
+			
+             enter  = function(rowxSelection) {
+                 rowxSelection.append("rect")
+                     .attr("rx", 3)
+                     .attr("ry", 3)
+                     .attr("width", "250")
+                     .attr("height", "24")
+                     .attr("fill-opacity", 0.25)
+                     .attr("stroke", "#999999")
+                     .attr("stroke-width", "2px");
+                 rowxSelection.append("text")
+                     .attr("transform", "translate(10,15)");
+             };
+             update = function(rowxSelection) {
+                 rowxSelection.select("rect")
+                     .attr("fill", function(d) {
+                         return colorScale(d.id);
+                     });
+                 rowxSelection.select("text")
+                     .text(function (d,i) {
+                         return (i + 1) + ". " + d;
+                     });
+             };
+
+             exit = function(rowxSelection) {
+             };
+		
+			
+
+		    gfx.data = function(_) {
+		        if (!arguments.length) return context;
+		        context = _;
+		        return gfx;
+		    };
+
+		    gfx.active = function(_) {
+		        if (!arguments.length) return context;
+		        active = _;
+		        return gfx;
+		    };
+			
+		    gfx.startTime = function(_) {
+		        if (!arguments.length) return context;
+		        startTime = _;
+		        return gfx;
+		    };
+			
+		
+		 	gfx.resize = function(e){
+				// width = document.body.clientWidth;
+				width = $('.viewport').width();
+			
+				// $('.viewport').css('width',width);
+				gfx.render(true)
+
+		 	}
+			
+		    gfx.endTime = function(_) {
+		        if (!arguments.length) return context;
+		        endTime = _;
+		        return gfx;
+		    };
+			
+		    gfx.svg = function(_) {
+		        if (!arguments.length) return svg;
+		        svg = _;
+		        return gfx;
+		    };
+
+		    gfx.viewport = function(_) {
+		        if (!arguments.length) return viewport;
+		        viewport = _;
+		        return gfx;
+		    };
+			
+		    // d3.rebind(gfx, dispatch, "on");
+			
+
+		    return gfx;
+			
+		}
+		
+</script>
+
+

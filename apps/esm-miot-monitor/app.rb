@@ -53,7 +53,95 @@ MSG
     
 end
 
+class APIController < GXT
+  
+  def acl
+    
+    return '*'
+    
+  end
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
 
+
+
+class EmsRequestController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+class EmsPrearrivalController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class EmsCommandController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+class EmsOperationController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class EmsParamedicController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class EmsDischargeController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+class EmsKMController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
+
+
+
+class UITemplateController < GXT
+  
+  def default_layout
+    return :rocker_layout
+  end
+ 
+end
   
 class TestController < GXT
 
