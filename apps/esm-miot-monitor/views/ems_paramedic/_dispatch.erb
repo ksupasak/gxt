@@ -38,10 +38,12 @@
       <div class="modal-body">
 
       <div class="row">
-        <% for i in map[g] %>
+        <% if map[g]
+          for i in map[g] %>
         <div class="col-12 mt-3">
           <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100"  code="<%=i.code%>" > <%=i.name%></a>
         </div>
+        <% end %>
         <% end %>
       </div>
 
