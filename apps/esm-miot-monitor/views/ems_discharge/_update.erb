@@ -1,0 +1,94 @@
+<%
+
+  if request.post?
+
+
+			record = EMSCase.find params[:id]
+
+
+
+			admit = record.admit
+
+			admit.discharge
+
+      record.update_attributes params[:record]
+
+			record.update_attributes :status=>'Completed', :completed_at=>Time.now
+
+
+	# update_attributies
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+
+%>
+Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
+<% else %>
+
+
+
+<form action="<%= get_path 'update'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
+<input type="hidden" name="id" value="<%=ems_case.id%>">
+
+<div class="row">
+
+<div class="col-lg-6">
+
+<div class="card">
+  <div class="card-header bg-primary bbg-gradient text-white ">
+
+    Discharge Information
+
+  </div>
+<div class="card-body">
+
+<% fieldset(:record) do |f| %>
+  <%= inline(this,:'_form', :this=>this, :f=>f, :ems_case=> ems_case)  %>
+<% end %>
+
+  <br/>
+  <input type="submit" name="Discharge" value="Update" class="btn btn-info">
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-6">
+  <div class="card">
+
+  <div class="card-header bg-secondary bbg-gradient ">
+
+    <div class="">
+            <h6 class="mb-0 text-white">
+              ข้อมูลเหตุฉุกเฉิน :
+            </h6>
+          </div>
+
+  </div>
+
+  <div class="card-body">
+
+
+
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+</form>
+<% end %>

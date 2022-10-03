@@ -1,0 +1,104 @@
+<%
+
+  ems_case = EMSCase.find params[:id]
+
+  admit = Admit.find params[:admit_id]
+
+
+  notify_message = false;
+  reload = false;
+  popup = false;
+
+
+
+
+  stamp = Time.now unless params[:stamp]
+  cmd = params[:cmd]
+
+  if params[:assessment_id]==""
+      record = admit.nurse_records.create :name=>"Paramedic" , :description=>params[:cmd], :start_time=>stamp
+      notify_message = true;
+
+  else
+
+      assessment = EMSAssessment.find params[:assessment_id]
+      notify_message = true;
+
+      case cmd
+
+      when 'cpr'
+
+        if ems_case.cpr_status=="STARTED"
+
+        else
+
+           ems_case.update_attributes :cpr_status=>'STARTED', :cpr_start_at=>Time.now
+           record = admit.nurse_records.create :name=>"Paramedic" ,:description=> assessment.name, :start_time=>stamp
+           reload = true;
+        end
+      when 'stop'
+
+          ems_case.update_attributes :cpr_status=>'STOPED'
+          record = admit.nurse_records.create :name=>"Paramedic" ,:description=> assessment.name, :start_time=>stamp
+          reload = true;
+
+      when 'ekg'
+
+          if ems_case.cpr_status=="STARTED"
+
+            record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EKG : Confirm rhythm", :start_time=>stamp
+
+          else
+            record = admit.nurse_records.create :name=>"Paramedic" ,:description=> assessment.name, :start_time=>stamp
+
+          end
+      when 'rhy'
+
+          if ems_case.cpr_status=="STARTED"
+
+            record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EKG : Confirm rhythm", :start_time=>stamp
+            else
+            record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"Please start CPR", :start_time=>stamp
+
+          end
+      when 'str'
+
+
+        popup = true
+
+
+      else
+
+      end
+
+
+
+  end
+
+
+
+
+
+if notify_message
+
+  path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+  msg = 'NULL'
+  send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+@context.settings.redis.publish(path, send_msg)
+end
+
+%>
+<% if reload %>
+<script>
+    window.location.reload();
+</script>
+<% end %>
+<% if popup %>
+<script>
+    window.open("<%="../EMS/show"%>?page=emr&id=<%="#{ems_case.id}"%>", 'window name', 'window settings');
+</script>
+<% end %>

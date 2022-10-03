@@ -1,29 +1,29 @@
 
 <div class="modal fade" id="scoring-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="color:black">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      
+    <div class="modal-content modal-score">
+
     </div>
   </div>
 </div>
 <script>
 
 function call_submit(id, score_id, mode){
-	
+
 	$.ajax({
 	  url: "../Admit/scoring?id="+id+"&score_id="+score_id+"&mode="+mode,
 	  context: document.body
 	}).done(function(data) {
-	  $('.modal-content').html(data);
+	  $('.modal-score').html(data);
 	//   $('#scoring-modal').modal({
 	//     backdrop: 'static',
 	//     keyboard: false
 	// })
-	
+
   $('#scoring-modal').modal('show')
-	
+
 	// alert(""+id+" "+score_id+" "+mode)
-	
+
 	});
 }
 

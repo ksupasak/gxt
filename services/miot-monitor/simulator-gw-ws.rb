@@ -15,7 +15,7 @@ end
 
 
 
-name = 'Bed01' 
+name = 'Bed01'
 name = ARGV[0] if ARGV[0]
 
 
@@ -28,7 +28,7 @@ port = 1792
 
 
 solution = host.split(".")[0]
-solution = ARGV[3] if ARGV[3] 
+solution = ARGV[3] if ARGV[3]
 
 gps = true
 
@@ -44,7 +44,7 @@ ws.on :message do |msg|
   if lines[0]=='print'
     open("| lpr", "w") { |f| f.puts lines[1..-1] }
   end
-  
+
 end
 
 ws.on :open do
@@ -61,7 +61,7 @@ ws.on :error do |e|d
    puts 'will retry connect ..'
    sleep 1
    puts 'retry connect ..'
-   ws = connect() 
+   ws = connect()
    bind_event ws
    puts 'retry connect ..'
 end
@@ -70,13 +70,13 @@ end
 
 
 
-lead_idx = 0 
+lead_idx = 0
 leads = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 while true
 
 
-begin 
+begin
 
 ws = connect solution, host, port
 
@@ -94,19 +94,19 @@ bind_event ws
 period = 0
 
 EventMachine.run {
-  
+
   puts 'start em'
-  
+
   EM.add_periodic_timer(1) do
-  
-  
-  
-  
-    
+
+
+
+
+
      now = Time.now
      stamp = now.to_json
 
-     
+
 data = {}
 wave = []
 
@@ -121,14 +121,14 @@ max = 1024
 min = -1024
 
 rps.times do |i|
-  
+
   # y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
 #   wave << format("%.3f",y).to_f
 #
  wave <<  50-(lead_template[lead_idx*s].to_f / 1024) *50
  lead_idx += 1
  lead_idx = 0 if lead_idx*s > lead_template.size
- 
+
   # period += rand(10)
 end
 
@@ -139,49 +139,49 @@ s2 = 2
 # puts wave
 
 # data[:wave] = wave
- 
+
 
 data[:leads] = {} unless data[:leads]
 
 
 16.times do |x|
-  
-  # data[:leads][x] = [] unless data[:leads][x] 
-  
+
+  # data[:leads][x] = [] unless data[:leads][x]
+
   id = leads[x]
   wave = []
-  
+
   rps2.times do |i|
-  
+
     # y = Math.sin(300*w/rps*i*Math::PI/180)*rand()*50+50
   #   wave << format("%.3f",y).to_f
   #
    # wave <<  50-(lead_template[id*s2].to_f / 1024) *50
-   
+
    # if(x==2)
    #
    #   wave << 1
    # else
-       wave << lead_template[id*s2] if lead_template[id*s2] 
-       
-       
-   # end   
-     
-     
-   
-   
+       wave << lead_template[id*s2] if lead_template[id*s2]
+
+
+   # end
+
+
+
+
    id += 1
    id = 0 if id*s2 > lead_template.size
- 
+
     # period += rand(10)
   end
   data[:leads][x] = wave
-  
+
   leads[x] = id
-  
-end 
- 
- 
+
+end
+
+
 msg = <<MSG
 Data.Sensing device_id=#{name}
 #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
@@ -189,23 +189,23 @@ MSG
     # puts msg
     puts "send #{Time.now}"
  ws.send(msg)
-     
-  
+
+
   end
-  
+
   sx = rand()*0.11
   sy = rand()*0.11
   sp = rand()*360
-  
-  
+
+
   # timer method
   EM.add_periodic_timer(1) do
-    
-    
+
+
      now = Time.now
      stamp = now.to_json
 
-     
+
      data = {}
 
 
@@ -213,36 +213,36 @@ MSG
      data[:pr] = 60 + rand(60)
      data[:hr] = data[:pr]
      data[:rr] = 18 + rand(4)
-     data[:temp] = 36 + rand(4) 
-     
-     data[:co2] = 30 + rand(20) 
-     
+     data[:temp] = 36 + rand(4)
+
+     data[:co2] = 30 + rand(20)
+
      data[:spo2] = 90+rand(10)
-     
+
      if gps
-     
+
      data[:lat] = 13.6908282+0.005*Math.cos((Time.now.to_i*2+sp)*Math::PI/180)+sx
      data[:lng] = 100.6987491+0.005*Math.sin((Time.now.to_i*2+sp)*Math::PI/180)+sy
      # puts Time.now.to_i%360+90
      data[:dvr_sp] = 3
      data[:dvr_hx] = Time.now.to_i*2%360
      data[:dvr_ol] = 1
-     
+
      end
-     
-     data[:msg] = "ALERT:#{Time.now.inspect}"
-     
-     # puts data.inspect 
-     
-     
-     
-    
+
+     data[:msg] = "ALERT:#{Time.now.strftime("%H:%M:%S")}"
+
+     # puts data.inspect
+
+
+
+
      count -= 1
 
-   
 
-     if count < 0 
- 
+
+     if count < 0
+
 
        if true #count%60==0
          bp = "#{100+rand(22)}/#{70+rand(20)}"
@@ -251,16 +251,16 @@ MSG
          puts 'spot without bp'
          bp = nil
        end
-       
+
        count = 60+rand(30)
-       
+
        data[:spot] = true
        puts "Data sent #{count} times + BP : #{bp}"
-       
+
      end
-    
-  
-  
+
+
+
      data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
 msg = <<MSG
 Data.Sensing device_id=#{name}
@@ -268,13 +268,13 @@ Data.Sensing device_id=#{name}
 MSG
     # puts msg
      ws.send(msg)
-  
-  
-    
-  end
-  
 
-  
+
+
+  end
+
+
+
 }
 
 
@@ -282,12 +282,9 @@ MSG
 rescue Exception=>e
   puts "Try to connect in 5 seconds due to : #{e}"
   puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
-  
+
   sleep(5)
 end
-  
+
 
 end
-
-
-

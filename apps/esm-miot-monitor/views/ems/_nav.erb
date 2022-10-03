@@ -8,158 +8,147 @@
 		</li>
 
 		<%
-			
+
 		case_id = session[:case_id]
-			 
+
 		ems_case = EMSCase.find case_id
 
 		%>
-		<%	
-			
+		<%
+
 		if ems_case
-						
+
 			cls = ems_case.init_code.get_class
-			
+
 		%>
 		<li class="mm-active">
 			<a href="show?id=<%=ems_case.id%>&page=dashboard" class="has-arrow tab-dashboard border-<%=cls%>">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%><br/>
-		
+
 				<span class="badge bg-<%=cls%>" ><%=ems_case.init_code.code%></span>
 				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
-		
+
 			<li >
-				<a class="tab-request" ><i class="bx bx-right-arrow-alt"></i>Request</a>
+				<a id="tab-request" ><i class="bx bx-right-arrow-alt"></i>Request</a>
 			</li>
-				
+
 			<li >
-				<a class="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
-			</li>
-			<li >
-				<a class="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
+				<a id="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
 			</li>
 			<li >
-				<a class="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
+				<a id="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
 			</li>
 			<li >
-				<a class="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
+				<a id="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
 			</li>
 			<li >
-				<a class="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
+				<a id="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
 			</li>
-				
-				
+			<li >
+				<a id="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
+			</li>
+
+
 			</ul>
-		
+
 		</li>
 		<script>
-			
-			
-			
-			
+
+
+
+
 			function setTab(tab){
 				$('.mm-active').removeClass("mm-active");
 				$('.tab-'+tab).parent().addClass("mm-active")
 				sessionStorage.setItem("main-tab", tab)
 			}
-			
+
 			function getTab(){
-				return sessionStorage.getItem("main-tab")
+				t = sessionStorage.getItem("main-tab")
+				<%="t = '#{params[:page]}' " if params[:page]%>
+
+				return t
 			}
-			
-			
+
+
 			var current_content = null;
 			var current_process = null;
-			
-			
-			
+
+
+
 			function update_message(){
-				
+
 				if(current_content){
 					// alert('doifj')
 					current_content.call();
 				}
-				
-				
+
+
 			}
-			
-			
+
+
 			function process_message(m){
-				
-				
+
+
 				if(current_process!=null){
 					// alert('doifj')
 					current_process.call(this, m)
 				}
 			}
-			
-			
+
+
 			function reload_request_content(){
-				
-				
+
+
 				current_content = reload_request_content;
-			
-				
+
+
 				setTab('request')
-				
-				
+
+
 				$.ajax({
 				  url: "../EmsRequest/show?id=<%=ems_case.id%>",
 				  context: document.body
 				}).done(function(html) {
 				  $( '.ems_case' ).html(html);
 				});
-			
+
 			}
-			
-			$('.tab-request').click(reload_request_content)
-			
+
+			$('#tab-request').click(reload_request_content)
+
 			function reload_prearrival_content(){
-				
+
 				current_content = reload_prearrival_content;
-				
+
 				setTab('prearrival')
-			
+
 				$.ajax({
 			    url: "../EmsPrearrival/show?case_id=<%=ems_case.id%>",
 				  context: document.body
 				}).done(function(html) {
-			
+
 				  $( '.ems_case' ).html(html);
 				});
-				
-			}
-			
-			$('.tab-prearrival').click(reload_prearrival_content)
-			
-			
-			
-			function reload_command_content(){
-				
-				current_content = null;
-				
-				
-				setTab('command')
-			
-			<% 
-				commands = EMSCommand.where(:case_id=>ems_case.id).all
-				if commands.size == 0 
-			%>
-			
-			$.ajax({
-				url: "../EmsCommand/create?case_id=<%=ems_case.id%>",
-			  context: document.body
-			}).done(function(html) {
 
-			  $( '.ems_case' ).html(html);
-			});
-			
-			<% else %>
-			
+			}
+
+			$('#tab-prearrival').click(reload_prearrival_content)
+
+
+
+			function reload_command_content(){
+
+				current_content = null;
+
+
+				setTab('command')
+
+
 			$.ajax({
 				url: "../EmsCommand/show?case_id=<%=ems_case.id%>",
 			  context: document.body
@@ -167,21 +156,20 @@
 
 			  $( '.ems_case' ).html(html);
 			});
-			
-			<% end %>
-			
+
 			}
-			
-			$('.tab-command').click(reload_command_content)
-			
-			
-			
+
+			$('#tab-command').click(reload_command_content)
+
+
+
 			function reload_paramedic_content(){
-				
+
+
 				setTab('paramedic')
-			
+
 				current_content = null;
-				
+
 				$.ajax({
 			    url: "../EmsParamedic/show?id=<%=ems_case.id%>",
 				  context: document.body
@@ -189,35 +177,35 @@
 
 				  $( '.ems_case' ).html(html);
 				});
-			
+
 			}
-			
-			$('.tab-paramedic').click(reload_paramedic_content)
-			
-			
+
+			$('#tab-paramedic').click(reload_paramedic_content)
+
+
 			function reload_emr_content(){
-				
+
 				setTab('emr')
-		
-				
+
+
 				$.ajax({
 			    url: "../EmsEMR/show?id=<%=ems_case.id%>",
 				  context: document.body
 				}).done(function(html) {
-				
+
 				  $( '.ems_case' ).html(html);
 				});
-			
+
 			}
-			
-			$('.tab-emr').click(reload_emr_content)
-			
-			
+
+			$('#tab-emr').click(reload_emr_content)
+
+
 			function reload_discharge_content(){
-				
+
 				setTab('discharge')
-			
-				
+
+
 				$.ajax({
 			    url: "../EmsDischarge/show?id=<%=ems_case.id%>",
 				  context: document.body
@@ -225,15 +213,15 @@
 
 				  $( '.ems_case' ).html(html);
 				});
-			
+
 			}
-			$('.tab-discharge').click(reload_discharge_content)
-		
+			$('#tab-discharge').click(reload_discharge_content)
+
 			function reload_dashboard_content(){
-				
+
 				setTab('dashboard')
-			
-				
+
+
 				$.ajax({
 			    url: "dashboard?id=<%=ems_case.id%>",
 				  context: document.body
@@ -241,10 +229,10 @@
 
 				  $( '.ems_case' ).html(html);
 				});
-			
+
 			}
-			$('.tab-dashboard').click(reload_dashboard_content)
-			
+			$('#tab-dashboard').click(reload_dashboard_content)
+
 			// switch(getTab()){
 	//
 	// 		case "request":
@@ -275,28 +263,32 @@
 	// 			reload_request_content();
 	//
 	// 		}
-			
+
 	if(getTab()!=null){
 
-		$('.tab-'+getTab()).click()
-		
-		$('.tab-'+getTab()).parent().addClass("mm-active")
-		
+	// $('.tab-'+getTab()).each(function(){
+	//   alert('pjdifdf '+getTab())
+	// })
+
+		$('#tab-'+getTab()).click()
+		//
+		// $('.tab-'+getTab()).parent().addClass("mm-active")
+
 	}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
+
+
+
 		</script>
-		
+
 		<% end %>
-		
+
 		<li>
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-support"></i>
@@ -304,33 +296,33 @@
 				<div class="menu-title">Open</div>
 			</a>
 			<ul class="mm-show mm-collapse">
-				<% 
-					
+				<%
+
 				cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
-				
+
 				%>
-				<% for i in cases 
-					code = EMSCode.find i.init_cbd_code 
+				<% for i in cases
+					code = EMSCode.find i.init_cbd_code
 					code_class= code.get_class
-					
+
 				%>
 				<li class="<%='mm-active' if i.id==params[:id]%>" > <a href="show?id=<%=i.id%>" class=" text-<%=%>"><i class="bx bx-taxi"></i><%=i.case_no%>&nbsp;
-			
-						
-					
+
+
+
 					<span class="badge bg-<%=code_class%>" ><%=code.code%></span></a>
 				</li>
 				<% end %>
-			
+
 			</ul>
 			<li  class="">
 				<a href="./create">
 					<div class=""><i class="bx bx-plus"></i> </div>
-					
+
 					<div class="menu-title">New Request</div>
 				</a>
 			</li>
-			
+
 		</li>
 		<li class="menu-label">History</li>
 		<li>
@@ -339,22 +331,22 @@
 				</div>
 				<div class="menu-title">24Hr Operation</div>
 			</a>
-			
+
 			<ul class="mm-show mm-collapse">
-				<% 
-					
+				<%
+
 				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-84600}).sort(:case_no=>-1).limit(10).all()
-				
+
 				%>
-				<% for i in cases 
-					code = EMSCode.find i.init_cbd_code 
+				<% for i in cases
+					code = EMSCode.find i.init_cbd_code
 					code_class= code.get_class
-					
+
 				%>
 				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-taxi"></i><%=i.case_no%> &nbsp;&nbsp;<span class="badge bg-<%=code_class%>" ><%#code.code%></span></a>
 				</li>
 				<% end %>
-			
+
 			</ul>
 		</li>
 		<li>
@@ -364,32 +356,32 @@
 				<div class="menu-title">Completed</div>
 			</a>
 			<ul class="mm-collapse">
-				<% 
-					
+				<%
+
 				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-84600}).limit(5).sort(:case_no=>1).all()
-				
+
 				%>
 				<% for i in cases %>
 				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-right-arrow-alt"></i><%=i.case_no%></a>
 				</li>
 				<% end %>
-			
+
 			</ul>
 		</li>
-		
+
 	</ul>
-	
+
 	<script>
-		
+
 		if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
 			 // $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
 			 // alert('df')
-			
+
 		}else{
 			// alert('ve')
 			 // $('.nav-tabs a[href="#requestcontent"]').tab('show');
 		}
-		
-		
-		
+
+
+
 	</script>

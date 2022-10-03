@@ -1,10 +1,10 @@
 <%= inline(this,:'../lib/_map')  %>
-<% 
+<%
 
 		session.delete :case_id
 
-%>	
-	
+%>
+
 <script src="/rocker/assets/js/jquery.min.js"></script>
 <!--<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
 					<div class="breadcrumb-title pe-3">Components</div>
@@ -84,7 +84,7 @@
 </div>	 -->
 <div class="card">
 <div class="card-body">
-	<ul class="nav nav-tabs nav-primary" role="tablist">
+<!-- 	<ul class="nav nav-tabs nav-primary" role="tablist">
 		<li class="nav-item" role="presentation">
 			<a class="nav-link active" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
 				<div class="d-flex align-items-center">
@@ -94,7 +94,7 @@
 				</div>
 			</a>
 		</li>
-		<!-- <li class="nav-item" role="presentation">
+		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#prearrivalcontent" role="tab" aria-selected="false">
 				<div class="d-flex align-items-center">
 					<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
@@ -142,94 +142,98 @@
 				</div>
 			</a>
 		</li> -->
-		
-		
+
+
 	</ul>
+
+
+	<h4> New EMS Request</h4>
+
 	<div class="tab-content py-3">
-		
+
 		<div class="tab-pane fade active show" id="requestcontent" role="tabpanel">
 			<p>
-				
+
 				<%# inline(this,:'../ems_request/_show')  %>
 
 				<div class="request"></div>
 				<script>
-					
+
 					$.ajax({
 					  url: "../EmsRequest/create",
 					  context: document.body
 					}).done(function(html) {
-					
+
 					  $( '.request' ).html(html);
 					});
-					
-					
+
+
 				</script>
-				
+
 			</p>
 		</div>
-		
+
 		<div class="tab-pane fade" id="prearrivalcontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
-		
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
-		
+
+
 		<div class="tab-pane fade" id="commandcontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
-			
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="operationcontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
-			
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="paramediccontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
-			
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="dischargecontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
-			
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
-	
-		
-		
-		
-		
+
+
+
+
+
+
 	</div>
 </div>
 </div>

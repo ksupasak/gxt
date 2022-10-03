@@ -1,0 +1,182 @@
+
+<%
+
+  record = ems_case
+
+
+
+%>
+<div class="row g-3">
+
+
+<div class="col-4">
+<label class="form-label" for="operation_result">ผลปฏิบัติการ</label>
+<%= f.select(:operation_result, [['found','พบเหตุ'],['not_found','ไม่พบเหตุ']], :value=>record.operation_result, :class=>' form-select ') %>
+</div>
+
+<div class="col-4">
+<label class="form-label" for="operation_hospital">สถานที่เกิดเหตุ</label>
+<%= f.select(:operation_hospital, [['out_hospital','นอกโรงพยาบาล'],['in_hospital','ในโรงพยาบาล']], :value=>record.operation_hospital, :class=>' form-select') %>
+</div>
+
+<div class="col-4">
+<label class="form-label " for="discharge_stamp">เวลา</label>
+<input class="form-control" type="text" name="record[discharge_stamp]" id="" value="<%=record.discharge_stamp%>">
+</div>
+
+
+<div class="clear"></div>
+<div class="col-8">
+<label class="form-label " for="operation_cancel_reason">กรณีไม่พบเหตุ</label>
+<input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_reason%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="operation_cancel_at">แจ้งยกเลิกเวลา</label>
+<input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_at%>">
+</div>
+<div class="clear"></div>
+
+<div class="col-8">
+<label class="form-label " for="diagnosis">Diagnosis</label>
+<input class="form-control" type="text" name="record[diagnosis]" id="" value="<%=record.diagnosis%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
+<input class="form-control" type="text" name="record[patient_reimbursement]" id="" value="<%=record.patient_reimbursement%>">
+</div>
+
+
+<div class="col-4">
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" name="record[bls_request]" id="bls_request">
+		<label class="form-check-label" for="bls_request">ร้องขอแหล่งสนับสนุน</label>
+	</div>
+</div>
+
+<div class="col-4">
+  <input class="form-check-input" type="checkbox" name="record[bls_onscene]" id="bls_onscene">
+  <label class="form-check-label" for="bls_onscene">BLS ถึงที่เกิดเหตุก่อน</label>
+</div>
+
+
+<div class="col-4">
+  <input class="form-check-input" type="checkbox" name="record[bls_cpr]" id="bls_cpr">
+  <label class="form-check-label" for="bls_cpr">CPR</label>
+</div>
+
+<div class="col-12">
+<label class="form-label " for="bls_operation">ทีมสนับสนุนผู้ปฏิบัติงานแบบใด</label>
+<input class="form-control" type="text" name="record[bls_operation]" id="" value="<%=record.bls_operation%>">
+</div>
+
+<div class="col-4">
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" name="record[special_request]" id="special_request">
+		<label class="form-check-label" for="special_request">Activated specialist</label>
+	</div>
+</div>
+
+<div class="col-8">
+<!-- <label class="form-label " for="special_type">Type of specialist team</label> -->
+<%= f.select(:special_type, ['','ECMO Team','Neuro','G-Trauma', 'Cardio', 'PED/GYN'], :value=>record.special_type, :class=>' form-select') %>
+
+</div>
+
+<hr/>
+<div class="col-12">
+<label class="form-label " for="screening_vital">Vital Sign at Screening</label>
+
+<div class="row">
+
+  <div class="col-3">
+  <label class="form-label " for="screen_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[screen_sbp]" id="" value="<%=record.screen_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[screen_dbp]" id="" value="<%=record.screen_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_hr">HR</label>
+  <input class="form-control" type="text" name="record[screen_hr]" id="" value="<%=record.screen_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_rr">RR</label>
+  <input class="form-control" type="text" name="record[screen_rr]" id="" value="<%=record.screen_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[screen_spo2]" id="" value="<%=record.screen_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[screen_gcs]" id="" value="<%=record.screen_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_temp">BT</label>
+  <input class="form-control" type="text" name="record[screen_temp]" id="" value="<%=record.screen_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[screen_dtx]" id="" value="<%=record.screen_dtx%>">
+  </div>
+</div>
+
+</div>
+
+
+
+<div class="col-8">
+<label class="form-label " for="transfer_hospital">โรงพยาบาลปลายทาง</label>
+<input class="form-control" type="text" name="record[transfer_hospital]" id="" value="<%=record.transfer_hospital%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="transfer_hn">Transfer HN</label>
+<input class="form-control" type="text" name="record[transfer_hn]" id="" value="<%=record.transfer_hn%>">
+</div>
+
+<hr/>
+
+<label class="form-label " for="">Evaluation</label>
+
+<div class="col-4">
+<label class="form-label " for="dispatch_time">Dispatch Time (minutes)</label>
+<input class="form-control" type="text" name="record[dispatch_time]" id="" value="<%=record.dispatch_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="activation_time">Activate Time (minutes)</label>
+<input class="form-control" type="text" name="record[activation_time]" id="" value="<%=record.activation_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="response_time">Response Time (minutes)</label>
+<input class="form-control" type="text" name="record[response_time]" id="" value="<%=record.response_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="onscene_time">On Scene Time (minutes)</label>
+<input class="form-control" type="text" name="record[onscene_time]" id="" value="<%=record.onscene_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="transfer_time">Transfer Time (minutes)</label>
+<input class="form-control" type="text" name="record[transfer_time]" id="" value="<%=record.transfer_time%>">
+</div>
+
+
+<div class="col-6">
+<label class="form-label " for="over_activate_time_reason">ทำไม  Activate Time มากกว่า 2 นาที ? </label>
+<input class="form-control" type="text" name="record[over_activate_time_reason]" id="" value="<%=record.over_activate_time_reason%>">
+</div>
+
+<div class="col-6">
+<label class="form-label " for="over_response_time_reason">ทำไม  Response Time มากกว่า 8 นาที</label>
+<input class="form-control" type="text" name="record[over_response_time_reason]" id="" value="<%=record.over_response_time_reason%>">
+</div>
+
+<div class="col-6">
+<label class="form-label " for="over_time_managment">ท่านมีวิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</label>
+<input class="form-control" type="text" name="record[over_time_managment]" id="" value="<%=record.over_time_managment%>">
+</div>
+
+</div>

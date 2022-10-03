@@ -3,6 +3,7 @@
 
   document = EMRDocument.where(:name=>params[:document]).first
   ems_case = EMSCase.find params[:case_id]
+  record = EMRRecord.find params[:id]
 
   if request.post?
 
@@ -10,8 +11,7 @@
   document.update_attributes :schema=>params[:schema]
 
 
-    record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
-
+    record.update_attributes :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
 
 
 %>
@@ -21,13 +21,14 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_ca
 
 
 
-    record = EMRRecord.new
 
-    values = {}
+
+    values = record.data
 
 %>
-<form action="<%=get_path 'create'%>" id="form" method="post">
+<form action="<%=get_path 'update'%>" id="form" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
+<input type="hidden" name="id" value="<%=record.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
 <input type="hidden" name="schema" id="schema" value="">
 
@@ -35,7 +36,7 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_ca
 <%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case)  %>
 <% end %>
 <br/>
-<input type="submit" value="Create" class="btn btn-success">
+<input type="submit" value="Update" class="btn btn-success">
 </form>
 <% end %>
 
