@@ -13,7 +13,6 @@ gem 'puma'
 gem 'mqtt'
 gem 'thin'
 
-gem 'pusher'
 
 gem 'parallel'
 

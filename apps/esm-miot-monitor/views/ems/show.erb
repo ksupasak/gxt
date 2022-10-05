@@ -643,12 +643,13 @@ cls = record.init_code.get_class
 				  $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
 
 			}else{
-				 // $('.tab-dashboard').click()
+
+				 $('.tab-dashboard').click()
 			}
 
 			<% else %>
 
-		 $('.nav-tabs a[href="'<%=params[:page]%>'"]').tab('show');
+		 $('.nav-tabs a[href="<%=params[:page]%>"]').tab('show');
 
 			<% end %>
 

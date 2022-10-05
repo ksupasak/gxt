@@ -22,7 +22,7 @@
 
 		%>
 		<li class="mm-active">
-			<a href="show?id=<%=ems_case.id%>&page=dashboard" class="has-arrow tab-dashboard border-<%=cls%>">
+			<a  id="tab-dashboard" href="show?id=<%=ems_case.id%>" class="tab-dashboard has-arrow tab-dashboard border-<%=cls%>">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%><br/>
@@ -31,25 +31,30 @@
 				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
+<!--
+				<li >
+					<a id="tab-dashboard" ><i class="bx bx-right-arrow-alt"></i>Dash</a>
+				</li> -->
+
 
 			<li >
-				<a id="tab-request" ><i class="bx bx-right-arrow-alt"></i>Request</a>
+				<a id="tab-request" class="tab-request"><i class="bx bx-right-arrow-alt"></i>Request</a>
 			</li>
 
 			<li >
-				<a id="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
+				<a id="tab-prearrival"  class="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
 			</li>
 			<li >
-				<a id="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
+				<a id="tab-command" class="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
 			</li>
 			<li >
-				<a id="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
+				<a id="tab-paramedic" class="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Paramedic</a>
 			</li>
 			<li >
-				<a id="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
+				<a id="tab-emr" class="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
 			</li>
 			<li >
-				<a id="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
+				<a id="tab-discharge" class="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
 			</li>
 
 
@@ -57,7 +62,6 @@
 
 		</li>
 		<script>
-
 
 
 
@@ -69,6 +73,7 @@
 
 			function getTab(){
 				t = sessionStorage.getItem("main-tab")
+
 				<%="t = '#{params[:page]}' " if params[:page]%>
 
 				return t
@@ -119,7 +124,7 @@
 
 			}
 
-			$('#tab-request').click(reload_request_content)
+			$('.tab-request').click(reload_request_content)
 
 			function reload_prearrival_content(){
 
@@ -267,7 +272,7 @@
 	if(getTab()!=null){
 
 	// $('.tab-'+getTab()).each(function(){
-	//   alert('pjdifdf '+getTab())
+	  // alert('get Tab =  '+getTab())
 	// })
 
 		$('#tab-'+getTab()).click()

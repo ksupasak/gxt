@@ -1,20 +1,18 @@
 
-<% require_relative 'lib'%>
-<%
-  @record = record
-%>
+
 <div class="card">
 <div class="card-header bg-primary text-white">
 
-<center>STROKE</center>
+<center>STEMI fast track</center>
 </div>
 <div class="card-body">
 
   <div class="row">
 
-<%= text_string this, 'stroke', :col=>6 %>
-<%= text_string this, 'stroke_2', :label=>'sofj osidfids f',:col=>6 %>
-<%= radio_string this, 'response', :label=>'sofj osidfids f',  :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
+  <div class="col-6">
+  <label for="">Type</label>
+  <input name="record[stroke]" type="text" value="<%=record['stroke']%>" class="field form-control" field_type="text_string" >
+  </div>
 
   <div class="col-6">
   <label for="">label</label>
