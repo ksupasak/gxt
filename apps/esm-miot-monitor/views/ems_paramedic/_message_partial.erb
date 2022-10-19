@@ -106,8 +106,8 @@
 			                    </div>
 			                </div>
 			            <div class="panel-collapse " id="collapseOne">
-			                <div class="panel-body" id="panel-body">
-			                    <div class="chat chat-content" id="chat">
+			                <div class="panel-body-x" id="panel-body">
+			                    <div class="chatx chat-content-x" id="chat">
 									<!-- <div class="alert border-0 border-start border-5 border-secondary alert-dismissible fade show py-2">
 																		<div class="d-flex align-items-center">
 																			<div class="font-35 text-secondary"><i class="bx bx-tag-alt"></i>
@@ -217,24 +217,22 @@
 						</div>
 
 	    	<% elsif item[1]==:med %>
-					 	    <li class="left clearfix">
-							<span class="chat-img pull-right">
-								MED
-                            <!-- <img src="http://placehold.it/50/A01111/fff&text=MED" alt="User Avatar" class="img-circle" /> -->
-                        	</span>
-                            <div class="chat-body clearfix">
-                                <div class="msg-header"  style="">
-                                    <strong class="">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
-                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
-                                </div>
-                                <p>
 
-
-		  						<p><%=i.name%></p>
-
-                                </p>
-                            </div>
-						</li>
+				<div class="alert border-0 border-start border-5 border-warning alert-dismissible fade show py-2">
+					<div class="d-flex align-items-center">
+						<div class="font-35 text-warning"><i class="bx bx-plus-medical"></i>
+						</div>
+						<div class="ms-3 col-10">
+								<h6 class="mb-0">Med
+									<span style="float:right"><%=Time.at(i.created_at).strftime("%H:%M") %></span>
+								</h6>
+							<div>
+							<p class="mb-0 chat-time text-end"> </p>
+							<p class="chat-right-msg"><%=i.name%></p>
+							</div>
+						</div>
+					</div>
+				</div>
 
 
 	    	<% elsif item[1]==:log %>
@@ -319,4 +317,5 @@
 			<script>
 				// var objDiv = document.getElementById("panel-body");
 	// 			objDiv.scrollTop = objDiv.scrollHeight;
+	  $('.element-tab').scrollTop(100000000)
 			</script>

@@ -5,6 +5,19 @@
   labels = ['Track', 'Assess', 'Proc', 'Med', 'EMR']
   groups = %w{track assessment proc med emr}
 
+  sub_groups = {}
+
+
+  for i in items
+
+    if i.type=='group'
+        labels << i.name
+        groups << i.code
+        sub_groups[i.code]=true
+    end
+
+  end
+
   map = {}
 
   for i in items
@@ -21,10 +34,13 @@
 <div class="row">
 
 <% groups.each_with_index do |g,gi| %>
-
+<%
+  unless sub_groups[g]
+%>
 <div class="col-4  mb-3">
 <a href="#" class="dispatch_group btn  btn-sm bg-gradient btn-primary w-100"  data-bs-toggle="modal"  data-bs-target="#dispatch_<%=g%>" name="<%=g%>" > <%=labels[gi]%></a>
 </div>
+<% end %>
 
 
 <!-- Modal -->
@@ -84,8 +100,18 @@
 
       console.log(found)
       assessment_id = found['_id']
+
+
+
     }
 
+    if(found!=null&&found['type']=='group'){
+
+        $('#dispatch_'+found['code']).modal('show')
+
+
+    }
+    else{
 
       var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id;
 
@@ -104,6 +130,8 @@
              }
       });
 
+    }
+
 
   }
 
@@ -121,14 +149,15 @@
 
 
   	$(".note-message").submit(function(e) {
-
+      e.preventDefault();
     cmd = $('#note-value').val()
-
+    // alert('cmd = ' +cmd)
       dispatch_command(cmd);
 
-     e.preventDefault(); // avoid to execute the actual submit of the form.
+     // avoid to execute the actual submit of the form.
 
 
+       	$('#note-value').val('')
 /*
 
 
@@ -158,7 +187,6 @@
  }
 */
 
-  	$('#note-value').val('')
 
   });
 

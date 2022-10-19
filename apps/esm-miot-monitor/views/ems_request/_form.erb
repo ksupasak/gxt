@@ -13,7 +13,7 @@
 			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
 		</h5> -->
 		<div class="row">
-			<div class="col-12 col-lg-8 col-xl-8">
+			<div class="col-12 col-lg-6 col-xl-6">
 				<div class="card  ">
 					<div class="card-header bg-primary bbg-gradient ">
 
@@ -38,7 +38,7 @@
 
 					<div class="row">
 
-						<div class="col-4">
+						<div class="col-12 col-sm-6">
 
 							<%
 
@@ -102,7 +102,7 @@
 
 
 
-						<div class="col-4">
+						<div class="col-12 col-sm-6">
 
 							  <%
 
@@ -161,14 +161,7 @@
 
 
 
-						<div class="col-4">
-
-
-
-
-
-
-
+						<!-- <div class="col-4">
 
 
 							<p class="px-3">
@@ -192,9 +185,7 @@
 
 
 
-
-
-						</div>
+						</div> -->
 
 
 
@@ -205,162 +196,268 @@
 				</div>
 
 			</div>
-			<div class="col-12">
+			<!-- <div class="col-12">
 			<% unless params[:id]%>
 			<input type="submit" name="create" value="Create" class="btn btn-success">
 			<% else %>
 			<input type="submit" name="create" value="Update" class="btn btn-info">
 			<% end %>
-			</div><br/>
-			<div class="col-12 ">
+			</div><br/> -->
 
 
-
-
-				<div class="card radius-10">
-					<div class="card-header bg-primary bg-gradient ">
-						<div class="d-flex align-items-center">
-							<div class="">
-								<h6 class="mb-0 text-white">
-									ตำแหน่งเหตุ :
-								</h6>
-							</div>
-							<div class="dropdown ms-auto">
-								<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
-								<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
-									<li>
-										<a class="dropdown-item" href="javascript:;">Action</a>
-									</li>
-									<li>
-										<a class="dropdown-item" href="javascript:;">Another action</a>
-									</li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li>
-										<a class="dropdown-item" href="javascript:;">Something else here</a>
-									</li>
-								</ul>
-							</div>
-
-
-
-
+			<div class="card ">
+				<div class="card-header bg-gradient bg-primary">
+					<div class="d-flex align-items-center">
+						<div>
+							<h6 class="mb-0 text-primaryx text-white">
+								ภาพเหตุ :
+							</h6>
 						</div>
 					</div>
-					<div class="card-body">
-						<style>
-						       /* Set the size of the div element that contains the map */
-						      #dashboard-map {
-						        height: 380px;  /* The height is 400 pixels */
-						        width: 100%;  /* The width is the width of the web page */
-						       }
- 						      #dashboard-map-2 {
- 						        height: 380px;  /* The height is 400 pixels */
- 						        width: 100%;  /* The width is the width of the web page */
- 						       }
-						    </style>
+				</div>
+				<div class="card-body">
+
+
+							<div class="row">
+								<div>
+									<%
+
+									imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
+
+									if imgs.size>0
+
+									%>
+
+									<% for img in imgs %>
+
+									<%
+									if img
+										url = "../Message/content?id=#{img.id}"
+
+									%>
+									<img src="<%=url%>" width="140">
+									<%
+									end
+									%>
+
+
+									<% end %>
+
+									<%
+								else
+									%>
+								<center style="padding:40px">	No Images</center>
+									<%
+									end
+									%>
+
+								</div>
+							</div>
+
+				</div>
+
+
+		</div>
 
 
 
-						<div class="row">
-						<div class="col-md-4">
-						<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
-						<div class="input-group  px-3"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-						<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
-						</div>
+			</div>
 
-						</div>
-						<div class="col-md-4">
-							<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
-							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-							<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+
+
+			<div class="col-12 col-lg-6 col-xl-6">
+				<div class="col-12 ">
+
+
+
+
+					<div class="card radius-10">
+						<div class="card-header bg-primary bg-gradient ">
+							<div class="d-flex align-items-center">
+								<div class="">
+									<h6 class="mb-0 text-white">
+										ตำแหน่งเหตุ :
+									</h6>
+								</div>
+								<div class="dropdown ms-auto">
+									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+									<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+										<li>
+											<a class="dropdown-item" href="javascript:;">Action</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Another action</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Something else here</a>
+										</li>
+									</ul>
+								</div>
+
+
+
+
 							</div>
 						</div>
-						<div class="col-md-4">
-							<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
-							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-							<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+						<div class="card-body">
+							<style>
+										 /* Set the size of the div element that contains the map */
+										#dashboard-map {
+											height: 250px;  /* The height is 400 pixels */
+											width: 100%;  /* The width is the width of the web page */
+										 }
+										#dashboard-map-2 {
+											height: 250px;  /* The height is 400 pixels */
+											width: 100%;  /* The width is the width of the web page */
+										 }
+									</style>
+
+
+
+							<div class="row">
+							<div class="col-md-8">
+							<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
+							<div class="input-group  px-3">
+								<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+							<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+							</div>
+
+							</div>
+							<div class="col-md-4" style="display:none">
+								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
+								<div class="input-group">
+									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+								<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
+								<div class="input-group">
+									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								</div>
+							</div>
+							</div>
+							<br/>
+							<div class="row">
+							<div class="col-12">
+							<div id="dashboard-map" class="" style="height:60vh">
+								map
+							</div>
+							</div>
+								</div>
+							<div class="row "  style="display:none">
+							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
+							<div class="col-12">
+							<div id="dashboard-map-2"  class=""  style="height:60vh">
+								map
 							</div>
 						</div>
-						</div>
-						<br/>
-						<div class="row">
-						<div class="col-12 col-xl-6">
-						<div id="dashboard-map" class="" style="height:60vh">
-							map
-						</div>
-						</div>
-						<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
-						<div class="col-12 col-xl-6">
-						<div id="dashboard-map-2"  class=""  style="height:60vh">
-							map
-						</div>
-					</div>
 
-						</div>
+							</div>
 
-						<script>
-							$(document).ready(function(){
+							<script>
+								$(document).ready(function(){
 
-							latlng = [13.69313508354787, 100.69198345629769]
+								latlng = [13.69313508354787, 100.69198345629769]
 
-							<% if record.latlng and record.latlng.index(',') %>
-							latlng = [<%=record.latlng%>]
-							<% end %>
+								<% if record.latlng and record.latlng.index(',') %>
+								latlng = [<%=record.latlng%>]
+								<% end %>
 
 
 
-							map1 = new EMSMap('dashboard-map',{movable:true});
-							map1.setPosition(latlng[0], latlng[1])
-							map1.setMarkerPosition(latlng[0], latlng[1])
+								map1 = new EMSMap('dashboard-map',{movable:true});
+								map1.setPosition(latlng[0], latlng[1])
+								map1.setMarkerPosition(latlng[0], latlng[1])
 
-							map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
-							map2.setPosition(latlng[0], latlng[1])
-							map2.setMarkerPosition(latlng[0], latlng[1])
-
-
-							map1.changeMarkerPosition(function(marker){
-
-								var pos = marker.position
-								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
+								map2.setPosition(latlng[0], latlng[1])
+								map2.setMarkerPosition(latlng[0], latlng[1])
 
 
+								map1.changeMarkerPosition(function(marker){
 
-								// map1.geocode({'location':pos},function(result){
-	//
-	// 								$('#record_address').val(result.formatted_address)
-	//
-	// 							})
-
-								map2.setPosition(pos.lat(), pos.lng())
-								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-
-							}.bind(this))
-
-							map2.changeMarkerPosition(function(marker){
-
-								var pos = marker.position
-								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+									var pos = marker.position
+									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
 
-								// map2.geocode({'location':pos},function(result){
-	//
-	// 								$('#record_address').val(result.formatted_address)
-	//
-	// 							})
 
-								map1.setPosition(pos.lat(), pos.lng())
-								map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-							})
+									// map1.geocode({'location':pos},function(result){
+									//
+									// 		$('#record_address').val(result.formatted_address)
+									//
+									// 	})
+
+									map2.setPosition(pos.lat(), pos.lng())
+									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+								}.bind(this))
+
+								map2.changeMarkerPosition(function(marker){
+
+									var pos = marker.position
+									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
 
-							function address_search(e){
+									// map2.geocode({'location':pos},function(result){
+			//
+			// 								$('#record_address').val(result.formatted_address)
+			//
+			// 							})
+
+									map1.setPosition(pos.lat(), pos.lng())
+									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+								})
 
 
-									var address = $('#record_location').val()
+								function address_search(e){
 
-									map1.geocode({'address':address},function(result){
+
+										var address = $('#record_location').val()
+
+										map1.geocode({'address':address},function(result){
+
+											// $('#record_address').val(result.formatted_address)
+
+											var pos = result.geometry.location;
+
+											map1.setPosition(pos.lat(), pos.lng())
+											map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+											map2.setPosition(pos.lat(), pos.lng())
+											map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+										})
+
+										e.preventDefault();
+										return false;
+
+								}
+
+
+								$('#record_location').keydown(function(e){
+									if(e.keyCode == 13) {
+										address_search(e)
+											e.preventDefault()
+											return false;
+										}
+								});
+
+								$('#record_address').change(address_search);
+
+
+								$('#record_latlng').keydown(function(e){
+
+
+								if(event.keyCode == 13) {
+									var address = $(this).val()
+									latlng = address.split(",")
+									var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
+
+									map1.geocode({'location':latlng},function(result){
 
 										// $('#record_address').val(result.formatted_address)
 
@@ -373,109 +470,24 @@
 
 									})
 
-									e.preventDefault();
-									return false;
-
-							}
-
-
-							$('#record_location').keydown(function(e){
-								if(e.keyCode == 13) {
-									address_search(e)
-	   								e.preventDefault()
-	   								return false;
-	   							}
-							});
-
-							$('#record_address').change(address_search);
-
-
-							$('#record_latlng').keydown(function(e){
-
-
-							if(event.keyCode == 13) {
-								var address = $(this).val()
-								latlng = address.split(",")
-								var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
-
-								map1.geocode({'location':latlng},function(result){
-
-									// $('#record_address').val(result.formatted_address)
-
-									var pos = result.geometry.location;
-
-									map1.setPosition(pos.lat(), pos.lng())
-									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-									map2.setPosition(pos.lat(), pos.lng())
-									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+									e.preventDefault()
+									 return false;
+									}
 
 								})
 
-								e.preventDefault()
-								 return false;
-							  }
+														map1.init()
+														map2.init()
 
 							})
 
-													map1.init()
-													map2.init()
 
-						})
+							</script>
 
-
-						</script>
-
-					</div>
-				</div>
-		    </div>
-			</div>
-			<div class="col-12 col-lg-4 col-xl-4">
-
-
-				<div class="card ">
-					<div class="card-header bg-gradient bg-primary">
-						<div class="d-flex align-items-center">
-							<div>
-								<h6 class="mb-0 text-primaryx text-white">
-									ภาพเหตุ :
-								</h6>
-							</div>
 						</div>
 					</div>
-				  <div class="card-body">
-
-
-								<div class="row">
-									<div>
-										<%
-
-										imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
-
-
-
-										%>
-
-										<% for img in imgs %>
-
-										<%
-										if img
-											url = "../Message/content?id=#{img.id}"
-
-										%>
-										<img src="<%=url%>" width="140">
-										<%
-										end
-										%>
-
-
-										<% end %>
-									</div>
-								</div>
-
 					</div>
 
-
-			</div>
 
 
 

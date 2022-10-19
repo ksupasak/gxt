@@ -52,11 +52,7 @@ records = admit.medication_records
 			<%=link_to i.start_time.localtime().strftime("%H:%M:%S"), '#', :id=>"#{i.id}" %>
 
 		    <% end %>
-		</td><td><%=i.name%> <span class="<%='on' if i.status=='ON'%>">(<%=i.status%>)</span></td>
-
-		</td><td><%=i.concentration%></td>
-		</td><td><%=i.rate%></td>
-		</td>
+		</td><td><%=i.name%> <span class="<%='on' if i.status=='ON'%>"></span></td>
 		<td>
 			<% if i.stop_time
 			est_intake = i.est_intake
@@ -69,8 +65,12 @@ records = admit.medication_records
 
 			<%=i.volume%>
 
-		    <% end %>
+			<% end %>
 		</td>
+		</td><td><%=i.concentration%></td>
+		</td><td><%=i.rate%></td>
+		</td>
+
 
 
 	</tr>

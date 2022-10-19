@@ -6,45 +6,70 @@
 <div class="card">
 <div class="card-header bg-primary text-white">
 
-<center>STROKE</center>
+<center>Stoke fast track</center>
 </div>
 <div class="card-body">
 
   <div class="row">
 
-<%= text_string this, 'stroke', :col=>6 %>
-<%= text_string this, 'stroke_2', :label=>'sofj osidfids f',:col=>6 %>
-<%= radio_string this, 'response', :label=>'sofj osidfids f',  :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
+<div class="col-12">
+<h4>Stoke screen : FAST</h4>
+<%
+  list = <<LIST
+1|ปวดศีรษะ
+2|ปวดท้อง
+3|ใจสั่น
+4|หอบเหนื่อย
+5|ชักเกร็ง
+6|เจ็บหน้าอก
+7|วูบ/เป็นลม/หมดสติ
+8|Cardiac arrest
+10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
+LIST
 
-  <div class="col-6">
-  <label for="">label</label>
-  <textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" > <%=record['note']%></textarea>
-  </div>
+%>
+<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
+</div>
+<div class="col-12">
+<h4>Management</h4>
+<%
+  list = <<LIST
+1|consult แพทย์เวร/Cardio
+2|Aspirin 325 mg
+3|Ticagerlor 180 mg
+4|Clopidogrel 300 mg
+5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
+6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
+7|on pacing
+8|Active ECMO time ...
+LIST
 
-  <div class="col-6">
-  <label for="">label</label>
-  <textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" > <%=record['note']%></textarea>
-  </div>
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+<div class="col-12"><br/></div>
+<div class="col-12">
+<h4>Diagnosis</h4>
+<%
+  list = <<LIST
+1|STEMI at
+2|NSTEMI - ACS
+99|Other ...
+4|Door to wire target <= 90 min Time ... min
+5|Dx. to wire target <= 60 Time ... min
+LIST
 
-  </div>
-
- <hr/>
-
- <div class="row">
-
- <div class="col-3">
- <label for="">Type</label>
- <input name="record[stroke]" type="text" value="<%=record['stroke']%>" class="field form-control" field_type="text_string" >
- </div>
-
- <div class="col-3">
- <label for="">label</label>
- <textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" > <%=record['note']%></textarea>
- </div>
-
-
- </div>
+%>
+<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
 
 
 </div>
+
+
+
+ </div>
+
+
 </div>

@@ -81,38 +81,50 @@
 				<nav class="navbar navbar-expand">
 					<div class="mobile-toggle-menu"><i class="bx bx-menu"></i>
 					</div>
-					<div class="search-bar flex-grow-1">
+					<!-- <div class="search-bar flex-grow-1">
 						<div class="position-relative search-bar-box">
 							<input type="text" class="form-control search-control" placeholder="Type to search...">
 							<span class="position-absolute top-50 search-show translate-middle-y"><i class="bx bx-search"></i></span>
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class="bx bx-x"></i></span>
 						</div>
-					</div>
+					</div> -->
 
 					<div class=" flex-grow-1">
-						<div class="position-relative search-bar-box">
-						<div id="timer" class="text-secondary" style="font-size:1.5em">
-						</div>
-						<script>
-							// const weekday = ["Sun","Mon","Tue","Wed","Thu","Fr","Sat"];
-					//
-					// 		setInterval(function () {
-					//
-					// 			var currentdate = new Date();
-					// 			var datetime = "" + weekday[currentdate.getDay()] + " "
-					// 			  + currentdate.getDate() + "/"
-					// 	                + (currentdate.getMonth()+1)  + "/"
-					// 	                + currentdate.getFullYear() + "  "
-					// 	                + currentdate.getHours() + ":"
-					// 	                + currentdate.getMinutes() + ":"
-					// 	                + currentdate.getSeconds();
-					// 			$('#timer').html(datetime)
-					//
-					// 		}, 1000);
-						</script>
+						<div class="position-relative search-bar-box"  style="font-size:1.2em">
+							<%=Setting.get('default_center_name')%>
 						</div>
 					</div>
 
+				 <div class="top-menu">
+					 <div id="clock" class="text-secondary" style="font-size:1.2em">
+				 	</div>
+				 	<script>
+				 		const weekday = ["Sun","Mon","Tue","Wed","Thu","Fr","Sat"];
+						function fn(n){
+								return n > 9 ? "" + n: "0" + n;
+						}
+				 		setInterval(function () {
+
+				 			var currentdate = new Date();
+				 			// var datetime = "" + weekday[currentdate.getDay()] + " "
+				 			// 						+ currentdate.getDate() + "/"
+				 			// 						+ (currentdate.getMonth()+1)  + "/"
+				 			// 						+ currentdate.getFullYear() + "  "
+				 			// 						+ currentdate.getHours() + ":"
+				 			// 						+ currentdate.getMinutes() + ":"
+				 			// 						+ currentdate.getSeconds();
+   						var datetime = "" + weekday[currentdate.getDay()] + " "
+																			+ currentdate.getDate() + "/"
+																			+ (currentdate.getMonth()+1)  + "/"
+																			+ currentdate.getFullYear() + "  "
+																			+ fn(currentdate.getHours()) + ":"
+																			+ fn(currentdate.getMinutes())+ ":"
+																			+ fn(currentdate.getSeconds());
+				 			$('#clock').html(datetime)
+
+				 		}, 1000);
+				 	</script>
+					 </div>
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center">
 							<li class="nav-item mobile-search-icon">

@@ -594,10 +594,6 @@
 
 
 
-						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 					}
@@ -618,46 +614,46 @@
 			            	.attr("class", "rowx")
 							.attr("transform", "translate(0," + currentY +")");
 
-   					h1 = g.append("rect")
-   			        .attr("x", h1w)
-   			        .attr("rx", 0)
-   			        .attr("ry", 0)
-   			        .attr("width", contentWidth)
-   			        .attr("height", c['params'].length*rowxh+c['params'].length*5)
-   					.attr("fill",fillcolor)
-   			        .attr("fill-opacity", 0.10)
-   			        .attr("stroke", "#999999")
-   			        .attr("stroke-width", "1px")
-					.on("click", function() {
-				             var coords = d3.mouse(this);
-							 // console.log(""+coords[0]+","+coords[1])
-					});
+   				// 	h1 = g.append("rect")
+   			  //       .attr("x", h1w)
+   			  //       .attr("rx", 0)
+   			  //       .attr("ry", 0)
+   			  //       .attr("width", contentWidth)
+   			  //       .attr("height", c['params'].length*rowxh+c['params'].length*5)
+   				// 	.attr("fill",fillcolor)
+   			  //       .attr("fill-opacity", 0.10)
+   			  //       .attr("stroke", "#999999")
+   			  //       .attr("stroke-width", "1px")
+					// .on("click", function() {
+				  //            var coords = d3.mouse(this);
+					// 		 // console.log(""+coords[0]+","+coords[1])
+					// });
 
 
-   					h2 = g.append("rect")
-   			        .attr("x", h1w+contentWidth)
-   			        .attr("rx", 0)
-   			        .attr("ry", 0)
-   			        .attr("width", contentWidth)
-   			        .attr("height",  c['params'].length*rowxh+c['params'].length*5)
-   					.attr("fill",fillcolor)
-   			        .attr("fill-opacity", 0.10)
-   			        .attr("stroke", "#999999")
-   			        .attr("stroke-width", "1px")
-					.on("click", function() {
-				             var coords = d3.mouse(this);
-							 // console.log(""+coords[0]+","+coords[1])
-					});
-
+   				// 	h2 = g.append("rect")
+   			  //       .attr("x", h1w+contentWidth)
+   			  //       .attr("rx", 0)
+   			  //       .attr("ry", 0)
+   			  //       .attr("width", contentWidth)
+   			  //       .attr("height",  c['params'].length*rowxh+c['params'].length*5)
+   				// 	.attr("fill",fillcolor)
+   			  //       .attr("fill-opacity", 0.10)
+   			  //       .attr("stroke", "#999999")
+   			  //       .attr("stroke-width", "1px")
+					// .on("click", function() {
+				  //            var coords = d3.mouse(this);
+					// 		 // console.log(""+coords[0]+","+coords[1])
+					// });
+					//
 
 
 					for(var pi in c['params']){
 														p = c['params'][pi]
 
-														g.append("text")
-														.attr("transform", "translate(10,"+(y+pi*rowxh)+")")
-														.text(p)
-														.attr('stroke','#ccc')
+														// g.append("text")
+														// .attr("transform", "translate(10,"+(y+pi*rowxh)+")")
+														// .text(p)
+														// .attr('stroke','#ccc')
 
 
 														for(var ri in c['records']){
@@ -748,12 +744,12 @@
    									                        .attr("stroke-width", "2px");
 
 
-   															g.append("text")
-   															.attr("transform", "translate("+(xi)+","+(y+pi*rowxh-5)+")")
-   															.text("R="+r[p]['r']+"ml/mins, V="+r[p]['v'])
-   															.style("font-size", "12px")
-   															// .attr('text-anchor','middle')
-   															.attr('stroke','#ccc')
+   															// g.append("text")
+   															// .attr("transform", "translate("+(xi)+","+(y+pi*rowxh-5)+")")
+   															// .text("R="+r[p]['r']+"ml/mins, V="+r[p]['v'])
+   															// .style("font-size", "12px")
+   															// // .attr('text-anchor','middle')
+   															// .attr('stroke','#ccc')
 
 															}
 
@@ -766,7 +762,7 @@
 														}
 
 													}
-														total_height+=rowxh
+														// total_height+=rowxh
 												}
 
 						// spot panel /////////////////////////////////////////////////////////////////////////////////////////////////////

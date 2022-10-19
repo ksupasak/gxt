@@ -1,0 +1,31 @@
+
+<table class="table table-striped">
+<%
+
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j[0] %></th>
+	<% end %>
+	<th></th>
+	</tr>
+</thead>
+<tbody>
+<%
+	for i in this.model.where({}).sort(:sort_order=>1).all
+%>
+<tr>
+	<% for j in keys %>
+		<td><%=i[j[0]] %></td>
+	<% end %>
+	<td>
+	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default' %>
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>

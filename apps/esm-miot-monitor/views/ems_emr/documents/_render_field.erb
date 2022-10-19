@@ -21,7 +21,7 @@ col = options[:col] if options[:col]
     options[:value].each_with_index do |i,j|
 %>
 
-<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i %> value="<%=i%>" class="field"  field_type="radio_string" >
+<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i %> value="<%=i%>" class="field" field_type="radio_string" >
 <label for="<%=name%>_<%=j%>"><%=i.humanize%></label>
 &nbsp;
 &nbsp;
@@ -41,22 +41,24 @@ col = options[:col] if options[:col]
 <%
     if options[:value]
 %>
-<input type="hidden"  name="record[<%=name%>]" value="<%=record[name]%>" id="data-<%=name%>">
+<input type="hidden"  name="record[<%=name%>]" class="field" value="<%=record[name]%>" id="data-<%=name%>">
+
 <%
     ls = []
     ls = record[name].split("|") if record[name]
     options[:value].each_with_index do |i,j|
-
+    val = i
+    label = val.humanize
+    val,label = val.split("|") if options[:pair]==true
 %>
 <%= "<div class='#{options[:col_item]}'>" if options[:col_item]%>
-<input type="checkbox" id="<%=name%>_<%=j%>"  <%='checked' if ls.index(i) %> value="<%=i%>" class="field check_<%=name%>"  field_type="check_string" >
-<label for="<%=name%>_<%=j%>"><%=i.humanize%></label>
+<input type="checkbox" id="<%=name%>_<%=j%>"  <%='checked' if ls.index(val) %> value="<%=val%>" class=" check_<%=name%>"  field_type="check_string" >
+<label for="<%=name%>_<%=j%>"><%=label%></label>
 &nbsp;
 &nbsp;
 &nbsp;
 <%= "</div>" if options[:col_item]%>
 <% end %>
-<%= "</div>" if options[:col_item]%>
 </div>
 <script>
     $('.check_<%=name%>').change(function(){

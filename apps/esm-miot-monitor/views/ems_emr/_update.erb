@@ -15,7 +15,7 @@
 
 
 %>
-Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+Update ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
 <% else %>
 <%
 
@@ -42,23 +42,25 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_ca
 
 <script>
 
-  $("#form").submit(function(){
+  $("#form").submit(function(e){
 
     fields = []
-
+    // e.preventDefault()
     $('.field').each(function(){
 
         cname =  $(this).attr("name")
+        // alert(cname)
         start =  cname.indexOf('[')
+
         column = cname.substring(start+1, cname.length-1)
 
         f = {'name':column,'type':$(this).attr('field_type')}
         fields.push(f)
 
     })
-
+    // alert(JSON.stringify(fields))
     $('#schema').val(JSON.stringify(fields))
-
+    // return false;
   });
 
 </script>

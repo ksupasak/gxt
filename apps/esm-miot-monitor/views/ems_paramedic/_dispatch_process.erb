@@ -1,7 +1,7 @@
 <%
 
   ems_case = EMSCase.find params[:id]
-
+  @ems_case = ems_case
   admit = Admit.find params[:admit_id]
 
 
@@ -61,13 +61,60 @@
             record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"Please start CPR", :start_time=>stamp
 
           end
+
+      when 'ambu'
+
+        %>
+          <%= inline(this,:'dispatch/_patient_ambu', :local=>{:ems_case=>ems_case}) %>
+        <%
+
+      when 'vf'
+
+          %>
+            <%= inline(this,:'dispatch/_rhy_vf', :local=>{:ems_case=>ems_case}) %>
+          <%
+
+      when 'ett'
+
+              %>
+                <%= inline(this,:'dispatch/_ett', :local=>{:ems_case=>ems_case}) %>
+              <%
+
+
       when 'str'
 
 
         popup = true
 
 
+
       else
+
+        if assessment and assessment.data!=""
+
+          obj = JSON.parse(assessment.data)
+
+          if obj and obj['med']
+
+              medication = Medication.where(:name=>obj['med']).first
+              medication = Medication.create(:name=>obj['med']) unless medication
+              now = Time.now
+              title = "#{medication.name} #{obj['volume']} #{obj['unit']}"
+              med_record = MedicationRecord.create :admit_id=>admit.id, :name=>title, :volume=>obj['volume'], :unit_type=>obj['unit'], :start_time=>now
+
+
+
+          end
+
+
+
+
+        else
+
+          record = admit.nurse_records.create :name=>"Paramedic" ,:description=>""+assessment.name, :start_time=>stamp
+
+        end
+
 
       end
 
@@ -94,7 +141,7 @@ end
 %>
 <% if reload %>
 <script>
-    window.location.reload();
+    window.location="show?id=<%=ems_case.id%>&page=paramedic"
 </script>
 <% end %>
 <% if popup %>

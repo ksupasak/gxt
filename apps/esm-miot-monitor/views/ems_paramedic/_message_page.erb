@@ -46,128 +46,34 @@
 	  background-color: DodgerBlue !important;
 	  color: #ffffff;
 	}
+
+
+
+
 	</style>
 
+<!-- <div class="col alert alert-danger sticky-bottom">
 
+dfdf
 
-<form action="<%=get_path "nurse_note_create"%>" class="note-message" method="post" enctype="multipart/form-data" >
-
-
-<div class="row" style="margin-top:10px;border:0px solid">
-
-		<div class="col-12">
-		<div class="row">
-		<div class="autocomplete col-12" >
-			<div role="group">
- 		  	  <input name="record[description]" type="text" id="note-value" class="secondary-blue" placeholder="Note, Command, Msg" style="padding:5px; border:1px solid #bbb;border-radius: 4px;"/><br/><br/>
-			</div>
-		</div>
-
-
-		<!-- <input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable col-3' style="" />  -->
-
-		<!-- -->
-		</div>
-
-
-
-		<!-- <div class="row">
-
-			<div class="col-4">
-			<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
-			</div>
-			<div class="col-4">
-			<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
-			</div>
-		</div> -->
-
-
-
-
-		<div class="row">
-
-		<!-- <div class="dropdown">
-			<button class="btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">Primary</button>
-			<ul class="dropdown-menu" style="">
-				<li><a class="dropdown-item" href="#">Action</a>
-				</li>
-				<li><a class="dropdown-item" href="#">Another action</a>
-				</li>
-				<li><a class="dropdown-item" href="#">Something else here</a>
-				</li>
-			</ul>
-		</div> -->
-		<div class="btn-group col-4" role="group" aria-label="Basic example">
-		  <button type="button" id="msg-dashboard" class="msg-btn btn  btn-sm btn-secondary btn-pcm context">Event</button>
-		  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
-		</div>
-
-
-		<div class="btn-group col-4" role="group" aria-label="Basic example">
-		  <button type="button" id="msg-medication" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Med</button>
-		  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
-		</div>
-
-		<div class="btn-group col-4" role="group" aria-label="Basic example">
-		  <button type="button"   id="msg-track" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Track</button>
-		  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
-		</div>
-
-
-
-		</div>
-
-	</div>
-</div>
-
-
-<div class="row" style="margin-top:10px;border:0px solid;">
-
-<div class="col-12" style="border:0px solid">
-
-<!-- <div class="btn-group" role="group" aria-label="Basic example">
-  <button type="button"   class="msg-btn btn btn-secondary btn-success context">Dashboard</button>
 </div> -->
-<div class="row">
+<!-- <div class="d-flex align-items-start flex-column bg-success" style="height: 100%;">
+  <div class="mb-auto p-2">Flex item-1</div>
+  <div class="p-2">Flex item-2</div>
+  <div class="p-2">Flex item-3</div>
+</div> -->
+<!--
+<div class="d-flex align-items-end flex-column bg-info" style="height: 200px;">
+  <div class="p-2">Flex item-a</div>
+  <div class="p-2">Flex item-b</div>
+  <div class="mt-auto p-2">Flex item-c</div>
+</div> -->
 
-						<div class="btn-group col-4" role="group" aria-label="Basic example">
-						  <button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
-						  <select id="score_id" class="w-100" style="background:#ccc;height:2.5em">
-						    <option value="">-</option>
-							<%
-						    for s in Score.all %>
-						    <option <%#'selected="selected"' if s.id==score_id %> value="<%=s.id%>"><%=s.name%></option>
-						   <% end %>
-						  </select>
-						  <button type="button"  id="nurse_note_add" class="btn btn-secondary">+</button>
-						</div>
-
-						<div class="btn-group col-4" role="group" aria-label="Basic example">
-						  <button type="button" i class="summary-btn btn btn-warning  context">Summary</button>
-						</div>
-
-</div>
-
-	<%= inline(this,:'_cpr_partial') %>
-
-<div class="row">
-<div class="col-12">
-
-	<%= inline(this,:'_dispatch') %>
-
-</div>
-
-</div>
-
-
-
-</div>
-</div>
 
 	<div class="" style="padding-top:10px">
 
 	<div class="element-tab msg-dashboard-tab "  style="overflow:auto;border:1px solid #ccc;padding:5px">
-	<div class="message-partial " class="h-100">
+	<div class="message-partial " class="">
 	</div>
 	</div>
 
@@ -181,6 +87,134 @@
 
 
 	</div>
+
+
+
+
+
+	<% if true %>
+
+	<form action="<%=get_path "nurse_note_create"%>" class="note-message" method="post" enctype="multipart/form-data" >
+
+
+	<div class="row" style="margin-top:10px;border:0px solid;">
+
+			<div class="col-12">
+			<div class="row">
+			<div class="autocomplete col-12" >
+				<div role="group">
+	 		  	  <input name="record[description]" type="text" id="note-value" class="secondary-blue" placeholder="Note, Command, Msg" style="padding:5px; border:1px solid #bbb;border-radius: 4px;"/><br/><br/>
+				</div>
+			</div>
+
+
+			<!-- <input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable col-3' style="" />  -->
+
+			<!-- -->
+			</div>
+
+
+
+			<!-- <div class="row">
+
+				<div class="col-4">
+				<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
+				</div>
+				<div class="col-4">
+				<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
+				</div>
+			</div> -->
+
+
+
+
+			<div class="row">
+
+			<!-- <div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">Primary</button>
+				<ul class="dropdown-menu" style="">
+					<li><a class="dropdown-item" href="#">Action</a>
+					</li>
+					<li><a class="dropdown-item" href="#">Another action</a>
+					</li>
+					<li><a class="dropdown-item" href="#">Something else here</a>
+					</li>
+				</ul>
+			</div> -->
+			<div class="btn-group col-4" role="group" aria-label="Basic example">
+			  <button type="button" id="msg-dashboard" class="msg-btn btn  btn-sm btn-secondary btn-pcm context">Event</button>
+			  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
+			</div>
+
+			<div class="btn-group col-4" role="group" aria-label="Basic example">
+				<button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
+			</div>
+
+			<div class="btn-group col-4" role="group" aria-label="Basic example">
+			  <button type="button" id="msg-medication" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Med</button>
+			  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
+			</div>
+
+			<!-- <div class="btn-group col-4" role="group" aria-label="Basic example">
+			  <button type="button"   id="msg-track" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Track</button>
+			  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
+			</div> -->
+
+
+			</div>
+
+		</div>
+
+
+
+	<div class="row" style="margin-top:10px;border:0px solid;">
+
+	<div class="col-12" style="border:0px solid">
+
+	<!-- <div class="btn-group" role="group" aria-label="Basic example">
+	  <button type="button"   class="msg-btn btn btn-secondary btn-success context">Dashboard</button>
+	</div> -->
+	<div class="row">
+
+							<div class="btn-group col-4" role="group" aria-label="Basic example">
+							  <!-- <button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button> -->
+							  <select id="score_id" class="w-100" style="background:#ccc;height:2.5em">
+							    <option value="">Score</option>
+								<%
+							    for s in Score.all %>
+							    <option <%#'selected="selected"' if s.id==score_id %> value="<%=s.id%>"><%=s.name%></option>
+							   <% end %>
+							  </select>
+							  <button type="button"  id="nurse_note_add" class="btn btn-secondary">+</button>
+							</div>
+
+							<div class="btn-group col-4" role="group" aria-label="Basic example">
+							  <button type="button" i class="summary-btn btn btn-warning  context">Summary</button>
+							</div>
+
+	</div>
+
+		<%= inline(this,:'_cpr_partial') %>
+
+	<div class="row">
+	<div class="col-12">
+
+		<%= inline(this,:'_dispatch') %>
+
+	</div>
+
+	</div>
+	</div>
+	</div>
+	</div>
+
+
+
+	</form>
+
+
+
+	<% end %>
 
 
 
@@ -310,9 +344,6 @@
 
 
 
-</form>
-
-
 
 <script>
 
@@ -352,7 +383,7 @@ $('.summary-btn').click(function(e){
 	}).done(function(data) {
 	  $( '.charting' ).html(data);
 
-	  // $('.panel-body').scrollTop(100000000)
+  $('.element-tab').scrollTop(100000000)
 
 	});
 
@@ -410,7 +441,7 @@ var message_admit_id = null;
 	}).done(function(data) {
 	  $( '.message-partial' ).html(data);
 
-	  $('.panel-body').scrollTop(100000000)
+	   $('.element-tab').scrollTop(100000000)
 
 
 		update_message();
@@ -420,7 +451,7 @@ var message_admit_id = null;
 	}
 
 	// $('#medication_add').click(create_medication);
-
+ // $('.panel-body-x').scrollTop(100000000)
 	// reload_message();
 
 
