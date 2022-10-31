@@ -11,7 +11,7 @@
 	<div class="row" >
 
 
-	<div class="col-12">
+	<div class="col-12 col-lg-8 col-xl-8">
 
 		<div class="row">
 
@@ -187,15 +187,14 @@
 								if loc and loc.index(',')
 									loc=loc.split(",").collect{|i| i.to_f}
 							%>
-						 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
+							var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
 						 target = new google.maps.LatLng(latlng[0], latlng[1] )
-						 var target2 = new google.maps.LatLng(latlng[0]-0.01, latlng[1]-0.01 )
 
 							directionsService = new google.maps.DirectionsService;
 				  	  directionsDisplay = new google.maps.DirectionsRenderer;
 				  		directionsDisplay.setMap(mapc.map);
 
-							mapc.drawPath(directionsService,directionsDisplay, start,target,[target2],function(rs){
+							mapc.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
 
 
 								a = $('#send-msg-<%=cm.id%>')
@@ -356,7 +355,7 @@
 								<table class='table'>
 								<thead>
 									<tr>
-										<th>รายการ</th><th>เวลา</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
+										<th>รายการ</th><th>เวลา</th><th>Tdiff</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
 
 									</tr>
 								</thead>
@@ -372,14 +371,14 @@
 										<%=i.name%>
 									</td>
 									<td><% if i.stamp %>
-										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
-										<%#i.stamp.localtime.strftime("%H:%M")%>
+
+										<%=i.stamp.localtime.strftime("%H:%M")%>
 
 										<v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
 										<% end %>
 
 									</td>
-									<td style="display:none">
+									<td>
 										<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp
 										lap = (i.stamp - p.stamp).to_i/60
 										 %>
@@ -388,7 +387,7 @@
 									</td>
 									<td>
 										<% if i.status=='COMPLETED'%>
-										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:80px">
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:100px">
 										<% end %>
 									</td>
 
@@ -406,10 +405,10 @@
 									if route
 
 									%>
-									<td rowspan="2" valign="middle" style="font-size:0.8em">
+									<td rowspan="2" valign="middle">
 
-									   ETA<br/>
-									   <%=format("%0.1f",route.act_duration/60) if route.act_duration%> min <br/> <%=format("%0.1f",route.act_distance/1000.0) if route.act_distance%> km
+									   ETA
+									   (<%=format("%0.1f",route.act_duration/60) if route.act_duration%> min, <%=format("%0.1f",route.act_distance/1000.0) if route.act_distance%> km)
 									   <br/>
 									 <%=route.status%>
 									</td>
@@ -499,7 +498,7 @@
 </div>
 
 
-		<div class="col-12 ">
+		<div class="col-12 col-lg-4 col-xl-4">
 
 
 			<div class="card transfer-panel" style="display:none">
@@ -571,7 +570,7 @@
 
 
 
-						for h in hospitals[0..10]
+						for h in hospitals
 
 
 						%>
@@ -579,7 +578,7 @@
 
 
 							<tr class="hospital h<%=h.id%>">
-								<td><a href="javascript:select_hospital('<%=h.id%>')" class="select-hospital" hid="<%=h.id%>"><%=h.name%></a></td>
+								<td><%=h.name%></td>
 								<td><%=h.district%></td>
 								<td id="d<%=h.id%>" ><%=format("%.2f",h['distance'])%></td>
 								<td><%=h.ct_scan%></td>
@@ -629,7 +628,7 @@
 		</div>
 
 
-		<div class="card" style="display:none">
+		<div class="card">
 
 				<div class="card-header">
 
@@ -696,16 +695,16 @@
 		// reload_medication(admit_id)
 
 
-		// $.ajax({
-		//   url: "<%= "../EmsParamedic/message_partial"%>?admit_id="+message_admit_id,
-		//   context: document.body
-		// }).done(function(data) {
-		//   $( '.message-partial' ).html(data);
-	  // 	 // alert($( '.chat' ).height())
-	  // $('.panel-body').scrollTop(100000000)
-		//
-		//
-		// });
+		$.ajax({
+		  url: "<%= "../EmsParamedic/message_partial"%>?admit_id="+message_admit_id,
+		  context: document.body
+		}).done(function(data) {
+		  $( '.message-partial' ).html(data);
+	  	 // alert($( '.chat' ).height())
+	  $('.panel-body').scrollTop(100000000)
+
+
+		});
 
 		}
 

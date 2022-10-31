@@ -47,7 +47,7 @@ if request.post?
        	   cols = row.map { |cell| cell.value }
 
 					 		puts cols.inspect
-							
+
     	   g = cols[0].to_i
 		   if g>0
 
@@ -87,26 +87,37 @@ if request.post?
 
 
 
-	   cmap.each_pair do |k,v|
-
-		  	w = EMSCode.where(:code=>k).first
-
-			unless w
-				w = EMSCode.create :code=>v[:code], :name=>v[:name], :description=>v[:description], :color=>v[:color]
-			end
-
-			g = EMSCodeGroup.where(:code=>v[:group].to_s).first
-			unless g
-				g = EMSCodeGroup.create :code=>v[:group].to_s
-			end
-
-			w.update_attributes :group_id=>g.id
 
 
 
-		end
+	   end
 
-	   map.each_pair do |k,v|
+     puts 'insert'
+
+     
+     	   cmap.each_pair do |k,v|
+
+     		  	w = EMSCode.where(:code=>k).first
+
+     			unless w
+     				w = EMSCode.create :code=>v[:code], :name=>v[:name], :description=>v[:description], :color=>v[:color]
+     			end
+
+     			g = EMSCodeGroup.where(:code=>v[:group].to_s).first
+     			unless g
+     				g = EMSCodeGroup.create :code=>v[:group].to_s
+     			end
+
+     			w.update_attributes :group_id=>g.id
+
+
+
+     		end
+
+
+
+
+     map.each_pair do |k,v|
 
 		  	w = EMSKWorkflow.where(:code=>k).first
 			if w
@@ -139,7 +150,6 @@ if request.post?
 
 	   end
 
-	   end
 
 
 end
