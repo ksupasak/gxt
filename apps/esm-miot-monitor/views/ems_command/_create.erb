@@ -49,6 +49,8 @@ if params[:record]
 	channel = EMSChannel.find record.channel_id
 
 	ems_case.update_attributes :channel_id=>channel.id if channel
+	ems_case.update_attributes :dispatch_at=>Time.now
+
 
 	providers = record.providers
 	for i in providers
@@ -130,7 +132,7 @@ Update ... <%=Time.now%>
 <div class="card ">
 <div class="card-header bg-primary bbg-gradient text-white">
 
-	Command Information 
+	Command Information
 
 	</div>
 <div class="card-body">

@@ -74,6 +74,7 @@ class EMSCase < GXTModel
 
   key :chief_complain, String
 
+
   key :request_cbd_code, ObjectId
 
   key :init_cbd_code, ObjectId
@@ -89,6 +90,8 @@ class EMSCase < GXTModel
   key :patient_info, String
   key :patient_gender, String
   key :patient_age, String
+  key :patient_nationality, String
+
 
   key :patient_cid, String
   key :patient_hn, String
@@ -97,7 +100,11 @@ class EMSCase < GXTModel
   key :patient_underlying, String
 
   key :ems_type, String
+  key :ems_trauma, String
   key :scene_triage, String
+
+  key :code_155, String
+
 
 
 
@@ -108,6 +115,7 @@ class EMSCase < GXTModel
   key :address, String
   key :latlng, String
   key :note, String
+  key :dispatch_at, DateTime
 
 
   key :patient_location, String
@@ -161,6 +169,8 @@ class EMSCase < GXTModel
   key :operation_note, String
 
   key :operation_result, String
+  key :operation_result_detail, String
+
   key :operation_hospital, String
   key :operation_cancel, String
   key :operation_cancel_reason, String
@@ -185,8 +195,9 @@ class EMSCase < GXTModel
   key :onscene_time, Integer
   key :transfer_time, Integer
 
-  key :distance_from_scene, Integer
   key :distance_from_dispatch, Integer
+  key :distance_from_hospital, Integer
+
 
 
   key :over_activate_time_reason, String
@@ -210,6 +221,7 @@ end
 class EMSCode < GXTModel
 
   include Mongoid::Document
+  belongs_to :group, :class_name=>'EsmMiotMonitor::EMSCodeGroup', foreign_key: 'group_id'
 
   key :code, String
 
@@ -666,6 +678,10 @@ MSG
 end
 
 class EMSAssessmentController < GXTDocument
+
+end
+
+class EmsReportController < GXT
 
 end
 

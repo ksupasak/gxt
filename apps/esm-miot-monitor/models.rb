@@ -108,6 +108,7 @@ class Provider < GXTModel
    key :user_id, ObjectId
    key :line_account_id, ObjectId
    key :code, String
+   key :role, String
    key :zone_id, String
 
 
