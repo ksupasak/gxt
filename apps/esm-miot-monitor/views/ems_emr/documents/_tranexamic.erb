@@ -5,71 +5,62 @@
 %>
 <div class="card">
 <div class="card-header bg-primary text-white">
-
-<center>STEMI fast track</center>
+<center>Tranexamic protocol</center>
 </div>
-<div class="card-body">
 
+<div class="card-body">
   <div class="row">
 
 <div class="col-12">
-<h4>อาการรับแจ้ง</h4>
+<h6 class="mb-0 text-primary">ตำแหน่งที่บาดเจ็บ</h6>
 <%
   list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
+1|Extremity
+2|Trunk (Go to Management)
 LIST
 
 %>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
+<%= check_string this, 'position', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 %>
 </div>
+
+<div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>Management</h4>
+<h6 class="mb-0 text-primary">Indication of Tranexamic acid </h6>
 <%
   list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
+1|Onset within 3 hours
+2|Age 18 to 90 years old
+3|Internal organ injury
+4|Blunt injury
+5|Active bleeding
+6|Risk of internal hemorrhage : BP < 90 mmHg or > 100 bpm or sign of shock
+LIST
+
+%>
+<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Management</h6>
+<%
+  list = <<LIST
+1|Controlled oxygen therapy keep O2sat > 95 %
+2|Titration crystalloid solution to maintain
+3|Controlled SBP > 90 mmHG or keep Map 65
+4|Tranexamic acid 1 g in 100 ml drip in 10 min or slowly push in 10 min IV fluid
+5|Group match Massive transfusion
 LIST
 
 %>
 <%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
 </div>
+
 <div class="col-12"><br/></div>
-<div class="col-12">
-<h4>Diagnosis</h4>
-<%
-  list = <<LIST
-1|STEMI at
-2|NSTEMI - ACS
-99|Other ...
-4|Door to wire target <= 90 min Time ... min
-5|Dx. to wire target <= 60 Time ... min
-LIST
-
-%>
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
 
 
-</div>
-
-
-
- </div>
-
-
-</div>
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

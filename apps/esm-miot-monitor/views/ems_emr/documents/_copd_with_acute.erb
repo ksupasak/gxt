@@ -6,70 +6,73 @@
 <div class="card">
 <div class="card-header bg-primary text-white">
 
-<center>STEMI fast track</center>
+<center>COPD with acute exacerbation</center>
 </div>
 <div class="card-body">
 
   <div class="row">
 
 <div class="col-12">
-<h4>อาการรับแจ้ง</h4>
+<h6 class="mb-0 text-primary">1. มีประวัติสงสัยว่าผู้ป่วยน่าจะวินิจฉัย COPD AE </h6>
 <%
   list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
+1|โรคประจำตัว COPD
+2|หอบเหนื่อยมากขึ้น ในระยะเวลาอันสั้น ( ระยะเวลาเป็นวันถึงสัปดาห์) 
+3|แน่นหน้าอก หายใจมีเสียงวี๊ด พ่นยาไม่ดีขึ้น
+4|ไอเสมหะมากขึ้น
 LIST
 
 %>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
+<%= check_string this, 'history', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
 </div>
+
+<div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>Management</h4>
+<h6 class="mb-0 text-primary">2. มีภาวะUnstableหรือไหม</h6>
 <%
   list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
+1|RR>28bpm.: Yes, No       
+2|O2sat < 90% : Yes, No
+LIST
+
+%>
+<%= check_string this, 'status', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">2.1 Stable</h6>
+<h6 class="mb-0 text-primary"> Management</h6>
+<%
+  list = <<LIST
+1|controlled oxygen therapy ( Mask with bag /nasal cannula) keep O2sat > 90 %
+2|Bronchodilator ( Ventolin or Beradual MDI 4 puff via spacer pre q 15 mins)
+3|Systemic corticosteroid ( Dexamethasone 4 – 8 mg IV 
+4|IV fluid ( isotonic solution)
 LIST
 
 %>
 <%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
 </div>
+
 <div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>Diagnosis</h4>
+<h6 class="mb-0 text-primary">2.2 Unstable</h6>
 <%
   list = <<LIST
-1|STEMI at
-2|NSTEMI - ACS
-99|Other ...
-4|Door to wire target <= 90 min Time ... min
-5|Dx. to wire target <= 60 Time ... min
+1|Acute altered mental status?
+2|Definite airway ( on ETT)
 LIST
 
 %>
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
-
-
+<%= check_string this, 'unstable_management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
 </div>
 
+<div class="col-12"><br/></div>
 
-
- </div>
-
-
-</div>
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

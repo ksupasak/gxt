@@ -5,15 +5,14 @@
 %>
 <div class="card">
 <div class="card-header bg-primary text-white">
-
-<center>STEMI fast track</center>
+<center>Bradycardia</center>
 </div>
-<div class="card-body">
 
+<div class="card-body">
   <div class="row">
 
 <div class="col-12">
-<h4>อาการรับแจ้ง</h4>
+<h6 class="mb-0 text-primary">อาการรับแจ้ง</h6>
 <%
   list = <<LIST
 1|ปวดศีรษะ
@@ -31,7 +30,7 @@ LIST
 <%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
 </div>
 <div class="col-12">
-<h4>Management</h4>
+<h6 class="mb-0 text-primary">Management</h6>
 <%
   list = <<LIST
 1|consult แพทย์เวร/Cardio
@@ -49,7 +48,7 @@ LIST
 </div>
 <div class="col-12"><br/></div>
 <div class="col-12">
-<h4>Diagnosis</h4>
+<h6 class="mb-0 text-primary">Diagnosis</h6>
 <%
   list = <<LIST
 1|STEMI at
@@ -60,16 +59,15 @@ LIST
 LIST
 
 %>
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
 
-
-</div>
-
-
-
- </div>
-
+<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>6 %>
+<%= check_string this, 'diagnosis22', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>6 %>
 
 </div>
+
+
+<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

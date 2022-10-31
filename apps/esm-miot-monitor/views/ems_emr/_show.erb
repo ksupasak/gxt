@@ -77,31 +77,35 @@
 
 <div class="col-lg-4">
 <div class="card">
-<div class="card-header bg-secondary text-white">
+<div class="card-header bg-primary text-white">
+Offline protocol
 </div>
+
 <div class="card-body">
+<div class="accordion accordion-flush">
 <% for doc in documents %>
 
-	<li>
-	<a href="<%=get_path 'create'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>" class="btn btn-info  emr-create-btn">+ <%=doc.title%></a>
+	<div class="accordion-item">
+	<div class="accordion-body">
+	<a href="<%=get_path 'create'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>" class="  emr-create-btn">+ <%=doc.title%></a>
 	<%
 			records = EMRRecord.where(:case_id=>record.id, :document_id=>doc.id).all
 	%>
-	<ul>
-		<% for i in records %>
-		<li>
-		<a href="<%=get_path 'update'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>&id=<%=i.id%>" class="btn btn-outline-info emr-update-btn">Record <%=i.stamp%></a>
-		</li>
-		<% end %>
-	</ul>
-
-	</li>
+		<div class="accordion">
+			<% for i in records %>
+			<div class="accordion-item">
+			<a href="<%=get_path 'update'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>&id=<%=i.id%>" class="text-dark emr-update-btn">Record <%=i.stamp.strftime('%d/%m/%Y %H:%M') if i.stamp%></a>
+			</div>
+			<% end %>
+		</div>
+	</div>
+	</div>
 <% end %>
 </div>
-</div>
-</div>
-
-</div>
+</div><!--card-body-->
+</div><!--card-->
+</div><!--col-->
+</div><!--row-->
 
 <script>
 	$('.emr-create-btn').click(function(e){

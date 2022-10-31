@@ -5,71 +5,82 @@
 %>
 <div class="card">
 <div class="card-header bg-primary text-white">
-
-<center>STEMI fast track</center>
+<center>Opioil overdose</center>
 </div>
-<div class="card-body">
 
+<div class="card-body">
   <div class="row">
 
+<div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>อาการรับแจ้ง</h4>
 <%
   list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
+1|Triad symptoms: Alteration of consciousness + Miosis (Pinpoint pupil) **+ Respiratory depression (Bradypnea)
 LIST
 
 %>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
+<%= check_string this, 'opioil_1', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>12 %>
 </div>
+
+<div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>Management</h4>
 <%
   list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
+1|RR<10, Miosis, Unresponsive, และสงสัย Opioid toxidrome
+LIST
+
+%>
+<%= check_string this, 'opioil_2', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>12 %>
+
+
+<div class="row">
+<div class="col-1"></div>
+<%
+  list = <<LIST
+1|Open airway (Head tilt-chin lift)
+2|Support ventilation โดยทำ Bag-mask ventilation
+3|รายงาน พอป. พิจารณาเตรียม naloxone
+LIST
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>11 %>
+
+<div class="col-1"></div>
+<div class="col-11">
+IV : Opioid Naive (0.4 mg.)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;: Chronic used (0.04 mg.)<br>
+IM : 2 mg.<br>
+ให้ dose ถัดไปในขนาดสองเท่าของ dose ก่อนหน้า q.2-3 นาทีจน RR>10 (Max 10 mg.) หรือ breathing spontaneously
+</div>
+
+</div>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|RR<10,O2Sat <95%,
+LIST
+
+%>
+<%= check_string this, 'opioil_3', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+<div class="row">
+<div class="col-1"></div>
+<%
+  list = <<LIST
+1|ใส่ท่อช่วยหายใจ ขนาด naloxone ผ่าน ท่อช่วยหายใจขนาด 2-2.5x ของขนาดปกติ
 LIST
 
 %>
 <%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
 </div>
+</div>
+
 <div class="col-12"><br/></div>
-<div class="col-12">
-<h4>Diagnosis</h4>
-<%
-  list = <<LIST
-1|STEMI at
-2|NSTEMI - ACS
-99|Other ...
-4|Door to wire target <= 90 min Time ... min
-5|Dx. to wire target <= 60 Time ... min
-LIST
 
-%>
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
-
-
-</div>
-
-
-
- </div>
-
-
-</div>
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

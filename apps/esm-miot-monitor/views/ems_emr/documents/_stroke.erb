@@ -5,71 +5,87 @@
 %>
 <div class="card">
 <div class="card-header bg-primary text-white">
-
-<center>Stoke fast track</center>
+<center>Stroke fast track</center>
 </div>
-<div class="card-body">
 
+<div class="card-body">
   <div class="row">
 
 <div class="col-12">
-<h4>Stoke screen : FAST</h4>
-<%
-  list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
-LIST
+<h6 class="mb-0 text-primary">Stoke screen : FAST</h6>
+<table class="table table-bordered">
+<tr>
+<td>คะแนน</td>
+<td>คะแนน 0</td>
+<td>คะแนน 1</td>
+<td>คะแนน 2</td>
+</tr>
+<tr>
+<td>ปากเบี้ยว</td>
+<td>ไม่มี</td>
+<td>มุมปากไม่เท่ากัน</td>
+<td>มุมปากไม่ขยับเมื่อยิ้ม</td>
+</tr>
+<tr>
+<td>แขนอ่อนแรง</td>
+<td>ไม่อ่อนแรง</td>
+<td>ข้างเดียว พอยกได้</td>
+<td>ข้างเดียว ยกแขนขึ้นไม่ได้เลย</td>
+</tr>
+<tr>
+<td>การพูด</td>
+<td>ปกติ</td>
+<td>พูดไม่ชัด</td>
+<td>พูดไม่ได้ ตะกุกตะกัก ไม่รู้เรื่อง</td>
+</tr>
+<tr>
+<td colspan="4" align="center">คะแนน ≥1 = STROKE</td>
+</tr>
+</table>
 
-%>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
-</div>
-<div class="col-12">
-<h4>Management</h4>
-<%
-  list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
-LIST
+<center>
+***อ่อนแรงด้านซ้าย ประเมินเพิ่ม !!
+</center>
 
-%>
-<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+<table class="table table-bordered">
+<tr>
+<td>คะแนน</td>
+<td>คะแนน 0</td>
+<td>คะแนน 2</td>
+</tr>
+<tr>
+<td>การกรอกตา</td>
+<td>ปกติ</td>
+<td>ตา ข้าง มองด้านหนึ่งตลอดเวลา</td>
+</tr>
+<tr>
+<td>ไม่สนใจร่างกายครึ่งซีก</td>
+<td>ไม่มี</td>
+<td>ไม่สนใจร่างกายครึ่งซีกหรือไม่รู้ว่าเป็นแขนของตัวเอง</td>
+</tr>
+</table>
+
+คะแนนรวม 2 ส่วน _______ คะแนน ( > 4 พิจารณา Thrombectomy : โรงพยาบาลระดับ 3 )
+
 </div>
+
 <div class="col-12"><br/></div>
+
 <div class="col-12">
-<h4>Diagnosis</h4>
-<%
+  <div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สำรวจ ศักยภาพ Stroke **</div>
+  <%
   list = <<LIST
-1|STEMI at
-2|NSTEMI - ACS
-99|Other ...
-4|Door to wire target <= 90 min Time ... min
-5|Dx. to wire target <= 60 Time ... min
+1|Door to CT time .......... Min
+2|Door to needle time...........min
+3|Door to intervention time ............. Min
 LIST
 
 %>
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างองิ ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
 
+<%= check_string this, 'timer', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>6 %>
 
 </div>
 
-
-
- </div>
-
-
-</div>
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->
