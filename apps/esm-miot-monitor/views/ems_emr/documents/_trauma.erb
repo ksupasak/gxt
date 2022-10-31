@@ -1,8 +1,17 @@
 
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Trauma</center>
+</div>
 
-<div class="row">
+<div class="card-body">
+  <div class="row">
 
-<div class="col-12">
+  <div class="col-12">
 <input name="record[stroke]" type="text" value="<%=record['stroke']%>" class="field form-control" field_type="text_string" >
 </div>
 
@@ -10,4 +19,13 @@
 <label for="">label</label>
 <textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" > <%=record['note']%></textarea>
 </div>
-</div>
+
+<div class="col-12"><br/></div>
+
+
+  <div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->
+
