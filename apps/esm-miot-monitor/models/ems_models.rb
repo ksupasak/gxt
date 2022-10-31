@@ -26,7 +26,7 @@ class EMSHospital < GXTModel
   key :phone, String
   key :status, String
   key :type, String
-
+  key :level, String
   key :ct_scan, String
   key :mri, String
   key :rt_pa, String
@@ -699,6 +699,11 @@ class EMSCaseController < GXTDocument
 end
 
 class EMSCodeController < GXTDocument
+
+end
+
+
+class EMSCodeGroupController < GXTDocument
 
 end
 

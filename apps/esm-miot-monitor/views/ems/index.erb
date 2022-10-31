@@ -266,6 +266,25 @@
 				map.setZoom(15);
 
 
+				<%
+							hospitals = EMSHospital.all()
+				%>
+
+				<% for i in hospitals %>
+
+				var posx = new google.maps.LatLng(<%=i.latlng%> )
+				var image = "<%=url_for("ems/h#{i.level}.png")%>";
+				 markerx = new google.maps.Marker({position: posx, map: map,
+					 icon:image
+				 })
+				 markerx.addListener("click", () => {
+				 });
+
+
+				<% end %>
+
+
+
 
 
 

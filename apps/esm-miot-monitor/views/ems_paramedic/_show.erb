@@ -718,13 +718,18 @@ end
 
 			now = Date.now();
 
+
 			<%
 			if admit
 
 
+      now =  Time.now()
+      min10 = now-600
+
+
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
 
-			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
+			senses = Sense.collection.find({:admit_id=>admit.id,:start_time=>{'$gt'=>min10}},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
 
 
 

@@ -1,0 +1,9 @@
+
+<li><%= link_to 'Export', url('export'),:target=>'_blank' %></li>
+<li>Import (.csv) :
+  <form action="import" method="post" enctype="multipart/form-data">
+    <label for="fname">File import:</label>
+    <input type="file" id="lname" name="file"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+  </li>

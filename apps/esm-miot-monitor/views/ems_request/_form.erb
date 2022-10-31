@@ -83,13 +83,67 @@
 					CBD code
 
 					<span class="" style="float:right" >
-						<a href="#" class="btn btn-info btn-sm">เลือก</a>
+						<a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">เลือก</a>
 					</span>
 					</p>
 
 					<div class="input-group px-3 pb-3">
 					<%= f.select(:init_cbd_code, EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
 					</div>
+
+
+
+					<!-- Modal -->
+					<div class="modal fade" id="selectCodeModal" tabindex="-1" aria-hidden="true" style="display: none;">
+						<div class="modal-dialog modal-dialog-centered modal-xl">
+							<div class="modal-content">
+								<div class="modal-header bg-primary bbg-gradient text-white">
+									<h5 class="modal-title text-white">CBD Code
+
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+
+									<div class="row">
+										<%
+
+
+											groups = EMSCodeGroup.all()
+
+
+											n = 3
+											m = groups.size/n
+
+
+
+											groups.size.times do |gi|
+
+
+											i = m*(gi%n)+gi/n
+											i += 1 if gi%n!=0
+											g = groups[i]
+
+											# if i != 12
+
+										%>
+
+										<div class="col-4 card btn btn-info" style="text-align:left">
+
+											 <a href="#" class='w-100 align-middle' ><%=g.code%> <%=g.name%></a>
+
+										</div>
+										<% end %>
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
 
 					<p class="px-3">
 						Underlying Disease | โรคประจำตัว

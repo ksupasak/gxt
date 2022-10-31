@@ -123,13 +123,13 @@
 
 
 						mapc.ready(function(){
-							const image =
-						    "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+							// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+							// const image = "<%=url_for('ems/h0.png')%>";
 
 						<% for i in hospitals %>
 
 				 		var posx = new google.maps.LatLng(<%=i.latlng%> )
-
+						var image = "<%=url_for("ems/h#{i.level}.png")%>";
 						 markerx = new google.maps.Marker({position: posx, map: mapc.map,
 							 icon:image
 						 })
@@ -158,7 +158,7 @@
 
 												reg = new RegExp(key,'i');
 												console.log(reg)
-												if(h['name'].match(reg)||(key=='mri'&&h['mri']=='YES')||(key=='ct'&&h['ct_scan']=='YES')||(key=='rt'&&h['rt_pa']=='YES')){
+												if(h['name'].match(reg)||h['level'].match(reg)||(key=='mri'&&h['mri']=='YES')||(key=='ct'&&h['ct_scan']=='YES')||(key=='rt'&&h['rt_pa']=='YES')){
 													markerx.setVisible(true);
 													$('.h'+h['_id']).show();
 												}
@@ -530,8 +530,49 @@
 								<th>Throm</th>
 
 								</tr>
-						<% for h in hospitals
-							distance =0
+						<%
+
+						def self.deg2rad(deg)
+								return deg * (3.1414/180)
+						end
+
+						def self.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2)
+							r = 6371; # Radius of the earth in km
+							dLat = deg2rad(lat2-lat1);  # deg2rad below
+							dLon = deg2rad(lon2-lon1);
+							a =
+								Math.sin(dLat/2) * Math.sin(dLat/2) +
+								Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+								Math.sin(dLon/2) * Math.sin(dLon/2)
+								;
+							c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							d = r * c; # Distance in km
+							return d;
+						end
+
+						clat,clng = ems_case.latlng.split(",").collect{|i| i.strip.to_f}
+
+						hospitals.collect{|h|
+
+							hlat,hlng = h.latlng.split(",").collect{|i| i.strip.to_f}
+							distance = getDistanceFromLatLonInKm(hlat,hlng,clat,clng)
+							h['distance'] = distance
+
+						}
+
+						hospitals.sort! do |a,b|
+
+
+								a['distance']<=>b['distance']
+
+						end
+
+
+
+
+						for h in hospitals
+
+
 						%>
 
 
@@ -539,7 +580,7 @@
 							<tr class="hospital h<%=h.id%>">
 								<td><%=h.name%></td>
 								<td><%=h.district%></td>
-								<td id="d<%=h.id%>" >-</td>
+								<td id="d<%=h.id%>" ><%=format("%.2f",h['distance'])%></td>
 								<td><%=h.ct_scan%></td>
 								<td><%=h.mri%></td>
 								<td><%=h.rt_pa%></td>
@@ -575,7 +616,7 @@
 							%>
 
 								d = getDistanceFromLatLonInKm(<%=latlng[0]%>,<%=latlng[1]%>,target.lat(), target.lng())
-								$('#d<%=h.id%>').html(d.toFixed(2))
+								// $('#d<%=h.id%>').html(d.toFixed(2))
 
 							<% end%>
 
