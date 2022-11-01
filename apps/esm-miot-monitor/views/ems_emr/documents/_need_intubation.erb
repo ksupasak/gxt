@@ -12,44 +12,32 @@
   <div class="row">
 
 <div class="col-12">
-<h6 class="mb-0 text-primary">อาการรับแจ้ง</h6>
-<%
-  list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
-LIST
-
-%>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
+<h6 class="mb-0 text-primary">Need Intubation</h6>
+<%= radio_string this, 'intubation', :value=>%w{yes no}, :col=>12 %>
 </div>
-<div class="col-12">
-<h6 class="mb-0 text-primary">Management</h6>
-<%
-  list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
-LIST
 
-%>
-<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
 <div class="col-12"><br/></div>
 
+<div class="col-12">
+<h6 class="mb-0 text-primary">Cardiac arrest/Unresponsive</h6>
+<%= radio_string this, 'unresponsive', :value=>%w{yes no}, :col=>12 %>
+</div>
 
-  <div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
+<div class="col-12"><br/></div>
+<div class="col-12">
+<h6 class="mb-0 text-primary">Crash airway algorithms</h6>
+<%
+  list = <<LIST
+1|Ventilation failure
+2|Oxygenation failure
+3|Protect airway
+LIST
+
+%>
+<%= check_string this, 'airway', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
 
   </div><!--row-->
 </div><!--card body-->
