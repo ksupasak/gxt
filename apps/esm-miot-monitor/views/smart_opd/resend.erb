@@ -1,7 +1,8 @@
 <% 
 
 records = DataRecord.where(:send_status=>{'$ne'=>true}).order(:created_at=>-1).limit(100).sort{|a,b| b.stamp<=>a.stamp}
-
+puts DataRecord.count
+puts records.size
 
 
 list = []
@@ -12,15 +13,7 @@ for i in records
 
 result = nil
 
-bp = i.bp
-bps = i.bp.split("/")
-bp_sys = bps[0]
-bp_dia = bps[1]
 
-pr = i.pr
-
-weight = i.weight
-height = i.height
 admit = Admit.find i.admit_id
 
 if admit
@@ -37,9 +30,10 @@ result = i.send_record url
 
 list << {:id=>i.id, :result=>result}
 
+end
+
 ##############################################################
 
-end
 
 end
 
