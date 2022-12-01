@@ -1,0 +1,159 @@
+
+<%
+
+ems_case  = EMSCase.find params[:case_id]
+ems_command = EMSCommand.find params[:id]
+
+
+if request.post?
+
+
+
+if params[:record]
+
+	p = params[:record]
+
+	ems_case.update_attributes p
+
+
+  r2 = AocCaseRoute.where(:ems_command_id=>ems_command.id, :sort_order=>10).first
+
+	if r2
+
+		hospital = EMSHospital.find params[:record][:transfer_hospital_id]
+		r2.update_attributes :stop_latlng=>hospital.latlng, :address=>"นำส่ง #{hospital.name}"
+		b2 = AdmitLog.where(:ems_command_id=>ems_command.id, :sort_order=>5).first
+		b2.update_attributes :latlng=>hospital.latlng , :name=>"ถึงโรงพยาบาล<br/>#{hospital.name}"
+	end
+  #
+  #
+  #
+	# AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
+  #
+  #
+	# a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
+	# a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+	# r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED'
+  #
+  #
+	# b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4
+	# b2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+	# r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED'
+  #
+  #
+	# c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
+	# c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
+	# r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED'
+  #
+  #
+	# AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
+  #
+
+
+
+end
+
+
+
+%>
+Update ... <%=Time.now%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=show?id=<%=ems_case.id%>">
+
+
+<% else %>
+
+<%
+
+  record = ems_case
+
+	# init_command = "เหตุ : #{ems_case.patient_info} อาการ : #{ems_case.chief_complain} รหัส : #{ems_case.init_code.name}"
+	# ems_command.init_command = init_command
+
+%>
+
+<form action="<%= get_path 'update_route' %>" method="post" data-remote='true' data-remote-update="reqeust-panel">
+<% fieldset(:record) do |f| %>
+
+<input type="hidden" name="case_id" value="<%=ems_case.id%>">
+<input type="hidden" name="id" value="<%=ems_command.id%>">
+
+
+<div class="card ">
+<div class="card-header bg-primary bbg-gradient text-white">
+
+	Transfer Information
+
+	</div>
+<div class="card-body">
+
+<%# inline(this,:'_form', :this=>this, :f=>f, :record=>ems_command, :ems_case=> ems_case)  %>
+<%
+
+  hospitals = EMSHospital.where({}).sort(:created_at=>1).all()
+
+%>
+
+<div class="row">
+      <div class="col-4">
+      <label class="form-label " for="route_type">ประเภทเส้นทาง</label>
+      <%= f.select(:route_type, ['ถนนปกติ','ทางด่วนพิเศษ','ทางอากาศ'] , :value=>record.route_type,:class=>'form-select ') %>
+      </div>
+      <div class="col-4">
+      <label class="form-label " for="transfer_hospital">นำส่งโรงพยาบาล</label>
+      <%= f.select(:transfer_hospital_id, [['','']]+hospitals.collect{|i| [i.id,i.name]}, :value=>record.transfer_hospital_id,:class=>'form-select ') %>
+      </div>
+      <div class="col-4">
+      <label class="form-label " for="transfer_hospital">โรงพยาบาล</label>
+      <input class="form-control" type="text" name="record[transfer_hospital]" id="record_transfer_hospital" value="<%=record.transfer_hospital%>">
+      </div>
+</div>
+<script>
+
+  // var hospitals = <%=hospitals.to_json%>
+
+
+  $('#record_transfer_hospital_id').change(function(){
+
+    v = $(this).val()
+    for(var ix in hospitals){
+      i = hospitals[ix]
+      if(i['_id']==v){
+        $('#record_transfer_hospital').val(i['name'])
+      }
+    }
+
+  })
+
+  function select_hospital(id){
+
+    $('#record_transfer_hospital_id').val(id)
+    for(var ix in hospitals){
+      i = hospitals[ix]
+      if(i['_id']==id){
+        $('#record_transfer_hospital').val(i['name'])
+      }
+    }
+
+
+  }
+</script>
+
+</div>
+</div>
+<% end %>
+<input type="submit" name="create" value="Submit" class="btn btn-success">
+
+<a href="<%=get_path "show?case_id=#{ems_case.id}" %>" class="btn " data-remote="true" data-remote-update="command">Cancel</a>
+
+
+</form>
+
+<div id="reqeust-panel">
+
+</div>
+<% end %>
+
+<script>
+	refresh_remote()
+  $('.transfer-panel').show()
+</script>

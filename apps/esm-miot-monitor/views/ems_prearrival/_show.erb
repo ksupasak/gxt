@@ -3,10 +3,10 @@
 		padding:5px;
 	}
 	.primary{
-		
+
 		background:#e5f1ff;
 	}
-	
+
 	html.dark-theme .primary{
 		background: #000!important
 	 }
@@ -30,12 +30,7 @@
 							</ol>
 						</nav>
 					</div>
-					<div class="ms-auto">
-				    <div class="btn-group" role="group" aria-label="First group">
-				      <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
-				      <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
-				    </div>
-					</div>
+
 					<div class="ms-auto">
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary">Settings</button>
@@ -49,19 +44,29 @@
 						</div>
 					</div>
 				</div>
-	
+
 <input type="hidden" id="pre_case_id" value="<%=params[:case_id]%>">
 
 
 
 <div class="row">
-	
-	
+
+
 <div class="col-12 col-lg-8 col-xl-8 ">
 
 <div class="card">
 
+<div class="card-header text-white bg-primary">
+Pre-arrival Instruction :
+
+</div>
 <div class="card-body">
+	<div class="ms-auto">
+		<div class="btn-group" role="group" aria-label="First group">
+			<button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
+			<button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
+		</div>
+	</div>
   <%
         flows = EMSKWorkflow.all()
         cbd_codes = EMSCode.all()
@@ -88,72 +93,72 @@
             EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
           end
           if record.init_cbd_code and false
-			  
+
 			group = EMSCodeGroup.find record.init_code.group_id
-			
+
 			tcode =  EMSKWorkflow.where(:code=>record.init_code.code).first
 			gcolor = nil
 			gcolor = EMSKWorkflow.where(:color=>"#{tcode.color}_add", :group=>tcode.group).first
-			  
-            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code] or ( gcolor and gcolor.code==i.code )  or i.code=="#{group.code}instruction" or i.code=="#{group.code}report" }.compact 
-			
+
+            flow_cbd = flows.collect{|i| i if i.code==m_cbd_codes[record.init_cbd_code] or ( gcolor and gcolor.code==i.code )  or i.code=="#{group.code}instruction" or i.code=="#{group.code}report" }.compact
+
 			orders = %w{red_add yello_add instruction report}
-			
-			flow_cbd.sort! do |a,b| 
-					
+
+			flow_cbd.sort! do |a,b|
+
 				ia = orders.index(a.color)
 				ib = orders.index(b.color)
 				ia = -1 if ia==nil
 				ib = -1 if ib==nil
-				
+
 				ia<=>ib
-				
+
 			end
-			
-			
-			
+
+
+
             for fi in flow_cbd
               EMSCaseWorkflow.create :case_id=>record.id,:kworkflow_id=>fi.id
             end
-			
-			
-			
-			
+
+
+
+
           end
         end
-		
+
         case_flows = EMSCaseWorkflow.where(:case_id=>record.id).all()
         case_processs = EMSCaseProcess.where(:case_id=>record.id).all()
         m_cp = Hash[case_processs.collect{|i| [i.kprocess_id,i]}.compact]
         case_flows_ids = case_flows.collect{|i| i.kworkflow_id}
         select_flows = flows.collect{|i| i if !case_flows_ids.index(i.id) and i.type!='CBD' and i.color!='red' and i.color!='yellow' and i.color!='white' and i.color!='green' and i.color!='red_add' and i.color!='yellow_add' and i.color!='instruction' and i.color!='report'}.compact
-		
-		
-      
+
+
+
     %>
-  
+
 
     <%
         for cf in case_flows
-			
+
           processes = []
-		  
+
 		  ori =  EMSKWorkflow.find cf.kworkflow_id
-		  
-		  if ori.template and ori.template!="" 
-			 
-			temp =  EMSKWorkflow.where(:code=>cf.template).first 
-			 
+
+		  if ori.template and ori.template!=""
+
+			temp =  EMSKWorkflow.where(:code=>cf.template).first
+
   		  	processes = EMSKProcess.where(:kworkflow_id=>temp.id).all()
-		    		
-				
-				
-		  else	  
-		  
+
+
+
+		  else
+
 		  	processes = EMSKProcess.where(:kworkflow_id=>cf.kworkflow_id).all()
-          
+
 	  	  end
-		  
+
 		  isnow = false
     %>
     <div class="card-x p-2 radius-10 border shadow-none bg-light"   >
@@ -164,7 +169,7 @@
       <%  for pc in processes %>
       <%
 	  		actions = EMSKAction.where(:kprocess_id=>pc.id).all
-	  
+
             newclass="btn-light"
             yclass=newclass
             nclass=newclass
@@ -174,9 +179,9 @@
             pclass= "card-x radius-10 border border-1 shadow-none "
             nowclass = ""
             if cp
-              cpid = cp.id 
+              cpid = cp.id
               pclass += " primary"
-              cpnote = cp.note  
+              cpnote = cp.note
               yclass="btn-outline-primary" if cp.action=='y'
               nclass="btn-outline-danger" if cp.action=='n'
               nowclass = ""
@@ -186,7 +191,7 @@
                 isnow = true
               end
             end
-			
+
 			nowclass=""
 
       %>
@@ -196,8 +201,8 @@
           <!--<div class="d-flex align-items-center">-->
             <div class="row <%=nowclass%>" id="<%=pc.id%>" cwid="<%=cf.id%>">
               <div class="col-9 col-md" onclick="javascript:updateProcess('<%=pc.id%>','<%=cpid%>','y');">
-                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%> 
-				
+                <p class="mb-0 t" en="<%=pc.name_en%>"><%=pc.name%>
+
 				<% if actions.size > 0 %>
 				<span class="action">*<%=actions.size%></span>
 				<% end %>
@@ -219,7 +224,7 @@
             </div>
           <!--</div>-->
         </div>
-      </div>   
+      </div>
 
       <%  end #for pc %>
     </div>
@@ -228,7 +233,7 @@
     <label for="exampleDataList" class="form-label">ค้นหาอาการ</label>
   <input type="hidden" name="record[case_id]" value="<%=params[:case_id]%>" >
     <input type="text" name="record[text]" class="alert-warning form-control flow-search-value" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
-    
+
 
   </form>
 </div></div>
@@ -239,23 +244,22 @@
 
 <div class="col-12 col-lg-4 col-xl-4">
   <div class="card radius-10 "> <!-- sticky-top -->
-    <div class="card-header bg-transparent">
-      <div class="d-flex align-items-center">
+    <div class="card-header text-white bg-primary">
+      <div class="d-flex align-items-center ">
         <div>
-          <h6 class="mb-0">
-            บันทึกเหตุการณ์ 
-          </h6>
+            บันทึกเหตุการณ์ :
+
         </div>
       </div>
     </div>
     <div class="card-body">
-          
-      <%  
+
+      <%
           m_case_note = case_processs.collect{|i| [i.id,i.note]}.compact.to_h
-          for m in ms 
+          for m in ms
             mclass = "danger"
             mclass = "secondary" if m.media_type != 'alert'
-            if m.type=='text' 
+            if m.type=='text'
       %>
       <div class="alert border-0 border-start border-5 border-<%=mclass%> alert-dismissible fade show py-2">
         <div class="d-flex align-items-center">
@@ -266,8 +270,8 @@
             <div><%=m.created_at.strftime('%H:%M:%S')%> <%=m_case_note[m.file_id]%></div>
           </div>
         </div>
-      </div>  
-      <%    elsif m.type=='cpr'%>    
+      </div>
+      <%    elsif m.type=='cpr'%>
       <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show py-2">
         <div class="d-flex align-items-center">
           <div class="font-35 text-white"><i class="bx bx-pulse"></i>
@@ -278,7 +282,7 @@
           </div>
         </div>
         <!--<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
-      </div>        
+      </div>
       <%    end #if %>
       <%  end #for %>
 
@@ -292,7 +296,7 @@
 <%for f in select_flows
     %>
     <div class="chip chip-md add-flow" fid="<%=f.id%>"><i class="bx bx-plus"></i> <%=f.name%></div>
-    
+
     <%  end %>
 
 <% end %>
@@ -328,9 +332,9 @@ $('#flow_search').submit(function(e){
 	addCBD($('.flow-search-value').val())
 
 	e.preventDefault();
-	
+
 })
-	
+
 
 
 function modalNote(pid,cpid){
@@ -338,14 +342,14 @@ function modalNote(pid,cpid){
   $("#note-add").val(note)
   $("#note-pid").val(pid)
   $("#note-cpid").val(cpid)
-  
-  
+
+
   $("#actionModal").on('shown.bs.modal',function(e){
     $("#note-add").focus()
   })
   $("#actionModal").modal('toggle');
-  
-  
+
+
 }
 function addNote(){
   case_id = $("#pre_case_id").val()
@@ -367,7 +371,7 @@ function addNote(){
 function updateProcess(pid,cpid,action){
   case_id = $("#pre_case_id").val()
 
-	
+
 	$('#'+pid).parent().parent().addClass("primary")
 
   note = $("#"+pid).find("#note-"+pid).val()
@@ -400,7 +404,7 @@ function reloadPrearrival(){
     url: "../EmsPrearrival/show?case_id="+case_id,
     context: document.body
   }).done(function(html) {
-  
+
     $( '.ems_case' ).html(html);
   });
 }
@@ -440,26 +444,26 @@ $(document).ready(function(){
 
   $('.t').each(function(){
       obj = $(this)
-    
+
       en = obj.attr('en')
       th = obj.html()
       obj.attr('th', th)
-      //obj.html(th)    
+      //obj.html(th)
 
   })
 
 
   $('.btn_lang').click(function(e){
-      
+
       btn_obj = $(this)
       lang = btn_obj.attr('lang')
       $('.btn_lang').removeClass('btn-secondary').addClass('btn-outline-secondary')
       $(this).removeClass('btn-outline-secondary').addClass('btn-secondary')
-      
+
       $('.t').each(function(){
         obj = $(this)
         text = obj.attr(lang)
-        obj.html(text)    
+        obj.html(text)
         e.preventDefault()
       })
   })

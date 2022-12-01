@@ -1,30 +1,34 @@
 
-	
-<% if request.post? 
+
+<% if request.post?
 
 
-	
+
 if params[:record]
 
 	p = params[:record]
-	
+
 	patient_id = nil
 	patient = Patient.find p[:patient_id] if p[:patient_id]
-	patient = Patient.where(:hn=>p[:patient_hn]).first unless patient 
-	
-	if patient 
-		
+
+	if p[:patient_hn] and p[:patient_hn].size>0
+		patient = Patient.where(:hn=>p[:patient_hn]).first unless patient  
+	end
+
+
+	if patient
+
 		p[:patient_name] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
 		p[:patient_gender] = "#{patient.gender}"
 		p[:patient_age] = "#{patient.age}"
-		
+
 		p[:patient_cid] = "#{patient.public_id}"
 		p[:patient_phone] = "#{patient.contact_phone}"
 		p[:patient_underlying] = p[:patient_underlying]+" #{patient.underlying}"
-		
-		
+
+
 	end
-	
+
     # key :patient_name, String
     # key :patient_info, String
     # key :patient_gender, String
@@ -35,34 +39,34 @@ if params[:record]
   #
   # key :patient_underlying, String
 	unless patient
-		
+
 		patient = Patient.create :name=>p[:patient_name], :hn=>p[:patient_hn], :public_id=>p[:patient_cid], :contact_name=>p[:contact_name], :contact_phone=>p[:patient_phone],:zone_id=>session[:current_zone]
-	
-	end		
-	
-	patient_id = patient.id if patient 
-	
-		
-	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id, :status=>'Admitted', :admit_stamp=>Time.now 
-	
+
+	end
+
+	patient_id = patient.id if patient
+
+
+	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id, :status=>'Admitted', :admit_stamp=>Time.now
+
 	p[:admit_id] = admit.id
 	p[:zone_id] = session[:current_zone]
 	p[:patient_id] = patient_id
 	p[:status] = "New"
-	
+
 	counter_key = Time.now.strftime("%y%m")
-	
+
 	counter = EMSCaseCounter.where(:key=>counter_key).first
 	counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
-		
+
 	case_no = "EMS-#{counter_key}-#{format('%04d',counter.count+1)}"
-	
+
 	p[:case_no] = case_no
-	
+
 	record = EMSCase.create p
-		
+
 	counter.update(:count=>counter.count+1)
-	
+
 
 path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 msg = 'NULL'
@@ -70,10 +74,10 @@ send_msg = <<MSG
 #{'Zone.Refresh'} #{path}
 #{msg.to_json}
 MSG
-@context.settings.redis.publish(path, send_msg)		
-	
+@context.settings.redis.publish(path, send_msg)
+
 end
-	
+
 
 
 %>
@@ -83,13 +87,13 @@ end
 <% else %>
 
 <%
-	
+
 	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'',:contact_phone=>'',:patient_name=>''
-	
+
 %>
 
 <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
-<% fieldset(:record) do |f| %>	
+<% fieldset(:record) do |f| %>
 
 <%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case)  %>
 

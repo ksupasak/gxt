@@ -1,7 +1,7 @@
-<% 
+<%
 
 	record = EMSCase.find params[:id]
-	
+
 %>
 
 
@@ -29,19 +29,19 @@
 						</div>
 					</div>
 				</div>
-				
-				
+
+
 
 <div class="row" >
-	
-	
+
+
 <div class="col-12 ">
 
 <!-- <h5 class="text-primary">Request</h5>	 -->
-	
+
 <form action="<%= get_path 'update'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
-	
-<% fieldset(:record) do |f| %>	
+
+<% fieldset(:record) do |f| %>
 
 <input name="id" value="<%= record.id %>" type="hidden">
 
@@ -59,9 +59,9 @@
 
 <script>
 	refresh_remote()
-	
+
 </script>
-	
-	
+
+
 </div>
 </div>

@@ -1,104 +1,104 @@
 			<%
-				
+
 				admtis = []
-				
+
 				if params[:admit_id]
-				
-			
+
+
 					admits = Admit.where(:_id=>params[:admit_id]).all
-				
-				
+
+
 				else
-				
-				
+
+
 					admits = Admit.where(:status=>'Admitted', :zone_id=>params[:zone_id]).all
-				
-				
+
+
 				end
-				
-				
-				
+
+
+
 				puts "/////////Admit Count : #{admits.size}"
-				
-				for admit in admits 
-					
-				
-				
+
+				for admit in admits
+
+
+
 			    station = admit.station
-				
+
 			    zone = station.zone if station
-				
+
 				console = []
-				
-				
-				
-				if admit 
-				
+
+
+
+				if admit
+
 				nurse_records = admit.nurse_records.limit(30).sort(:start_time=>-1).all
-				
+
 				for m in nurse_records
-				
+
 					console << [m.start_time, :nurse, m]
-					
+
 				end
-				
-				
-				
+
+
+
 				for m in admit.medication_records
-				
+
 					console << [m.start_time, :med, m]
-					
+
 					console << [m.stop_time, :med, m] if m.stop_time
-					
+
 				end
-				
+
 				records = admit.records.limit(30).sort(:created_at=>-1).all
 				for m in records
-				
+
 					console << [m.created_at, :record, m]
-					
+
 				end
-				
+
 				records = admit.logs.where(:status=>'COMPLETED').all
 				for m in records
-				
+
 					console << [m.stamp, :log, m]
-					
+
 				end
-			
+
 				msgs = admit.messages.where({}).limit(30).sort(:created_at=>-1).all
 				# msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
-			
+
 				# Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
-				
+
 				for m in msgs
-				
+
 					console << [m.created_at, :msg, m]
-					
+
 				end
-				
+
 				end
-				
+
 				end
-				# puts console.inspect 
-				
+				# puts console.inspect
+
 				console.collect!{|i| i if i[0]}.compact!
-			
+
 				console.sort!{|a,b| a[0]<=>b[0] }
-			
-			
+
+				# console.sort!{|a,b| b[0]<=>a[0] }
 			%>
 
 
-			
+
 			<div class="col-12" style="border:1px ;color:#666">
-				
-				
+
+
 			    <div class="row">
 			        <div class="col-12">
 			            <div class="panel panel-primary" id="panel-primary">
 			                <div class="panel-heading" id="accordion">
-			                    <span class="glyphicon glyphicon-comment"></span> 
+			                    <span class="glyphicon glyphicon-comment"></span>
 			                    <div class="btn-group pull-right">
 			                        <!-- <a type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
 			                            <span class="glyphicon glyphicon-chevron-down"></span>
@@ -106,8 +106,8 @@
 			                    </div>
 			                </div>
 			            <div class="panel-collapse " id="collapseOne">
-			                <div class="panel-body" id="panel-body">
-			                    <div class="chat chat-content" id="chat">
+			                <div class="panel-body-x" id="panel-body">
+			                    <div class="chatx chat-content-x" id="chat">
 									<!-- <div class="alert border-0 border-start border-5 border-secondary alert-dismissible fade show py-2">
 																		<div class="d-flex align-items-center">
 																			<div class="font-35 text-secondary"><i class="bx bx-tag-alt"></i>
@@ -119,7 +119,7 @@
 																		</div>
 																		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 																	</div> -->
-										
+
 									<!-- <div class="chat-content-leftside">
 										<div class="d-flex">
 											<i class="bx bx-tag-alt"></i>
@@ -129,7 +129,7 @@
 											</div>
 										</div>
 									</div> -->
-									
+
 									<!-- <div class="chat-content-rightside">
 										<div class="d-flex ms-auto">
 											<div class="flex-grow-1 me-2">
@@ -138,75 +138,75 @@
 											</div>
 										</div>
 									</div> -->
-									
-									
+
+
 		<% while (item = console.shift)!=nil
-		
-						
+
+
 						i = item[2]
-						
+
 				if item[1]==:msg
-		
+
 					sender = "NA"
 					sender = i.sender[0..2].upcase if i.sender
-					
-		
+
+
 		%>
-		
-		
+
+
 		<div class="chat-content-leftside">
 			<div class="d-flex ">
 				<div class="flex-grow-1 me-2">
 					<p class="mb-0 chat-time ">EMS <%=sender%>, <%=Time.at(i.ts).strftime("%H:%M") if i.ts%></p>
-						
-			                     
+
+
 			                                <p>
-					  						
-					  						<% if i.type == 'image' 
-						
-												
-											
-						
+
+					  						<% if i.type == 'image'
+
+
+
+
 					  							# url  = "/miot/img/svg/aoc-icon.svg"
-					  							url = "../Message/content?id=#{i.id}" 
+					  							url = "../Message/content?id=#{i.id}"
 					  						%>
-					  						
+
 											<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
-											
+
 											<%
 												while  console.first != nil and console.first[1]==:msg and console.first[2].type=='image'
 													item = console.shift
 													i = item[2]
-													url = "../Message/content?id=#{i.id}" 
+													url = "../Message/content?id=#{i.id}"
 											%>
 											<a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
 											<% end %>
 											</center>
-											
-					  						<% elsif i.type == 'voice' 
-												url = "../Message/content?id=#{i.id}" 
+
+					  						<% elsif i.type == 'voice'
+												url = "../Message/content?id=#{i.id}"
 											%>
 											<audio controls>
 											  <source src="<%=url%>" type="audio/mpeg">
 											Your browser does not support the audio element.
 											</audio>
 
-												
+
 											<% else %>
 					  						<p class="chat-left-msg"><%=i.content%></p>
 					  						<% end %>
 			                                </p>
-			                          
-									  
-					
+
+
+
 							  				</div>
 							  			</div>
 							  		</div>
-									  
-									  
-	    	<% elsif item[1]==:nurse %>    
-					
-						
+
+
+	    	<% elsif item[1]==:nurse %>
+
+
 						<div class="chat-content-rightside">
 							<div class="d-flex ms-auto">
 								<div class="flex-grow-1 me-2">
@@ -215,31 +215,29 @@
 								</div>
 							</div>
 						</div>
-						
-	    	<% elsif item[1]==:med %>    
-					 	    <li class="left clearfix">
-							<span class="chat-img pull-right">
-								MED
-                            <!-- <img src="http://placehold.it/50/A01111/fff&text=MED" alt="User Avatar" class="img-circle" /> -->
-                        	</span>
-                            <div class="chat-body clearfix">
-                                <div class="msg-header"  style="">
-                                    <strong class="">Medication</strong> <small class="pull-left text-muted" style="float:right;padding-right:10px">
-                                        <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
-                                </div>
-                                <p>
-		  							
-							
-		  						<p><%=i.name%></p>
-		  					
-                                </p>
-                            </div>
-						</li>						
-						
-						
-	    	<% elsif item[1]==:log %>    
-					 	
-						
+
+	    	<% elsif item[1]==:med %>
+
+				<div class="alert border-0 border-start border-5 border-warning alert-dismissible fade show py-2">
+					<div class="d-flex align-items-center">
+						<div class="font-35 text-warning"><i class="bx bx-plus-medical"></i>
+						</div>
+						<div class="ms-3 col-10">
+								<h6 class="mb-0">Med
+									<span style="float:right"><%=Time.at(i.created_at).strftime("%H:%M") %></span>
+								</h6>
+							<div>
+							<p class="mb-0 chat-time text-end"> </p>
+							<p class="chat-right-msg"><%=i.name%></p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+	    	<% elsif item[1]==:log %>
+
+
 						<div class="alert border-0 border-start border-5 border-warning alert-dismissible fade show py-2">
 							<div class="d-flex align-items-center">
 								<div class="font-35 text-warning"><i class="bx bx-tag-alt"></i>
@@ -251,14 +249,14 @@
 							</div>
 							<!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
 						</div>
-						
-						
-	    	<% elsif item[1]==:record %>    
-			
-			
-			
-			
-			
+
+
+	    	<% elsif item[1]==:record %>
+
+
+
+
+
 			<div class="alert border-0 border-start border-5 border-info alert-dismissible fade show py-2">
 				<div class="d-flex align-items-center">
 					<div class="font-35 text-info"><i class="bx bx-info-square"></i>
@@ -270,35 +268,35 @@
 				</div>
 				<!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> -->
 			</div>
-			
-			
+
+
 			<% if false %>
-			
+
 	 	    <li class="left clearfix">
 			<span class="chat-img pull-right">
 				VS
             <!-- <img src="http://placehold.it/50/05B706/fff&text=VS" alt="User Avatar" class="img-circle" /> -->
         	</span>
-					 
+
                             <div class="chat-body clearfix">
                                 <div class="msg-header">
                                     <strong class="">Vital Sign</strong> <small class="pull-right text-muted" style="float:right;padding-right:10px">
                                         <span class="glyphicon glyphicon-time"></span><%=Time.at(i.created_at).strftime("%H:%M") %></small>
                                 </div>
                                 <p>
-		  							
-							
+
+
 		  						<p>PR : <%=i.pr%>, SPO2 : <%=i.spo2%>, NIBP : <%=i.bp%> , TEMP : <%=i.temp%></p>
-		  					
+
                                 </p>
                             </div>
-						</li>			
+						</li>
 		 	<% end %>
-	 
+
 	  <% end %>
-		 
+
    <% end %>
-			                  
+
 			                    </div>
 			                </div>
 			                <!-- <div class="panel-footer">
@@ -315,9 +313,9 @@
 			        </div>
 			    </div>
 			</div>
-			
+
 			<script>
 				// var objDiv = document.getElementById("panel-body");
 	// 			objDiv.scrollTop = objDiv.scrollHeight;
+	  $('.element-tab').scrollTop(100000000)
 			</script>
-			

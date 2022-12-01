@@ -26,10 +26,10 @@
 	<link rel="stylesheet" href="/rocker/assets/css/header-colors.css">
     <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
     <script src="/vendor/d3/d3.min.cus.js"></script>
-	
+
 		<%= inline(this,:'../lib/_ems')  %>
-	
-	
+
+
 	<title>EMS - Emergency medical services</title>
 <style type="text/css">/* Chart.js */
 @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
@@ -56,32 +56,75 @@
 			<div class="nav-menu" >
 			</div>
 			<script>
+
+			 url = "nav"
+			 <% if params[:page] %>
+			 url = "nav?page=<%=params[:page]%>"
+			<% end %>
 			$.ajax({
-		      url: "nav",
+		      url: url,
 			  context: document.body
 			}).done(function(html) {
-		
+
 			  $( '.nav-menu' ).html(html);
 			});
 			</script>
-			
-			
-			
+
+
+
 			<!--end navigation-->
 		</div></div></div></div><div class="simplebar-placeholder" style="width: auto; height: 1390px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 118px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div></div>
 		<!--end sidebar wrapper -->
 		<!--start header -->
 		<header>
-			<div class="topbar d-flex align-items-center">
+			<div class="topbar d-flex align-items-end">
 				<nav class="navbar navbar-expand">
 					<div class="mobile-toggle-menu"><i class="bx bx-menu"></i>
 					</div>
-					<div class="search-bar flex-grow-1">
+					<!-- <div class="search-bar flex-grow-1">
 						<div class="position-relative search-bar-box">
-							<input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class="bx bx-search"></i></span>
+							<input type="text" class="form-control search-control" placeholder="Type to search...">
+							<span class="position-absolute top-50 search-show translate-middle-y"><i class="bx bx-search"></i></span>
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class="bx bx-x"></i></span>
 						</div>
+					</div> -->
+
+					<div class=" flex-grow-1">
+						<div class="position-relative search-bar-box"  style="font-size:1.2em">
+							<b><%=Setting.get('default_center_name')%></b>
+						</div>
 					</div>
+
+				 <div class="top-menu">
+					 <div id="clock" class="text-secondary" style="font-size:1.2em">
+				 	</div>
+				 	<script>
+				 		const weekday = ["Sun","Mon","Tue","Wed","Thu","Fr","Sat"];
+						function fn(n){
+								return n > 9 ? "" + n: "0" + n;
+						}
+				 		setInterval(function () {
+
+				 			var currentdate = new Date();
+				 			// var datetime = "" + weekday[currentdate.getDay()] + " "
+				 			// 						+ currentdate.getDate() + "/"
+				 			// 						+ (currentdate.getMonth()+1)  + "/"
+				 			// 						+ currentdate.getFullYear() + "  "
+				 			// 						+ currentdate.getHours() + ":"
+				 			// 						+ currentdate.getMinutes() + ":"
+				 			// 						+ currentdate.getSeconds();
+   						var datetime = "" + weekday[currentdate.getDay()] + " "
+																			+ currentdate.getDate() + "/"
+																			+ (currentdate.getMonth()+1)  + "/"
+																			+ currentdate.getFullYear() + "  "
+																			+ fn(currentdate.getHours()) + ":"
+																			+ fn(currentdate.getMinutes())+ ":"
+																			+ fn(currentdate.getSeconds());
+				 			$('#clock').html(datetime)
+
+				 		}, 1000);
+				 	</script>
+					 </div>
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center">
 							<li class="nav-item mobile-search-icon">
@@ -93,6 +136,51 @@
 								</a>
 								<div class="dropdown-menu dropdown-menu-end">
 									<div class="header-notifications-list ps">
+										<!-- <a class="dropdown-item" href="../EMSUnit/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMS</h6>
+												</div>
+											</div>
+										</a> -->
+
+										<a class="dropdown-item" href="../EMSHospital/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Hospital</h6>
+												</div>
+											</div>
+										</a>
+
+										<a class="dropdown-item" href="../Ambulance/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Ambulance</h6>
+												</div>
+											</div>
+										</a>
+
+										<a class="dropdown-item" href="../EMSAssessment/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMS Assessment</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMRDocument/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMR Document</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMRRecord/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMR Record</h6>
+												</div>
+											</div>
+										</a>
 										<a class="dropdown-item" href="../EMSCode/index">
 											<div class="d-flex align-items-center">
 												<div class="flex-grow-1">
@@ -127,7 +215,7 @@
 													<h6 class="msg-name">Line Message</h6>
 												</div>
 											</div>
-										</a>																				
+										</a>
 									</div>
 								</div>
 							</li>
@@ -137,14 +225,18 @@
 								<div class="dropdown-menu dropdown-menu-end">
 									<div class="row row-cols-3 g-3 p-3">
 										<div class="col text-center">
+											<a href="../Provider/index">
 											<div class="app-box mx-auto bg-gradient-cosmic text-white"><i class="bx bx-group"></i>
 											</div>
-											<div class="app-title">Teams</div>
+											<div class="app-title">Providers</div>
+											</a>
 										</div>
 										<div class="col text-center">
+			  							<a href="../Provider/index">
 											<div class="app-box mx-auto bg-gradient-burning text-white"><i class="bx bx-atom"></i>
 											</div>
 											<div class="app-title">Projects</div>
+											</a>
 										</div>
 										<div class="col text-center">
 											<div class="app-box mx-auto bg-gradient-lush text-white"><i class="bx bx-shield"></i>
@@ -438,12 +530,12 @@
 						</ul>
 					</div>
 					<div class="user-box dropdown">
-						
-						<% if @current_user 
-						
-							
+
+						<% if @current_user
+
+
 						%>
-						
+
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<!-- <img src="/rocker/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar"> -->
 							<div class="user-info ps-3">
@@ -456,7 +548,7 @@
 							</li>
 							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-cog"></i><span>Settings</span></a>
 							</li>
-							
+
 							<li>
 								<div class="dropdown-divider mb-0"></div>
 							</li>
@@ -472,16 +564,16 @@
 		<!--start page wrapper -->
 		<div class="page-wrapper">
 			<div class="page-content">
-				
 
-				
 
-				 
+
+
+
 				<%=yield :content%>
 
-					
 
-					 
+
+
 
 			</div>
 		</div>
@@ -596,7 +688,7 @@
 	<!-- Bootstrap JS -->
 	<script src="/rocker/assets/js/bootstrap.bundle.min.js"></script>
 	<!--plugins-->
-	
+
 	<script src="/rocker/assets/plugins/simplebar/js/simplebar.min.js"></script>
 	<script src="/rocker/assets/plugins/metismenu/js/metisMenu.min.js"></script>
 

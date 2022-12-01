@@ -1,0 +1,86 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Opioil overdose</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|Triad symptoms: Alteration of consciousness + Miosis (Pinpoint pupil) **+ Respiratory depression (Bradypnea)
+LIST
+
+%>
+<%= check_string this, 'opioil_1', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|RR<10, Miosis, Unresponsive, และสงสัย Opioid toxidrome
+LIST
+
+%>
+<%= check_string this, 'opioil_2', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>12 %>
+
+
+<div class="row">
+<div class="col-1"></div>
+<%
+  list = <<LIST
+1|Open airway (Head tilt-chin lift)
+2|Support ventilation โดยทำ Bag-mask ventilation
+3|รายงาน พอป. พิจารณาเตรียม naloxone
+LIST
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>11 %>
+
+<div class="col-1"></div>
+<div class="col-11">
+IV : Opioid Naive (0.4 mg.)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;: Chronic used (0.04 mg.)<br>
+IM : 2 mg.<br>
+ให้ dose ถัดไปในขนาดสองเท่าของ dose ก่อนหน้า q.2-3 นาทีจน RR>10 (Max 10 mg.) หรือ breathing spontaneously
+</div>
+
+</div>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|RR<10,O2Sat <95%,
+LIST
+
+%>
+<%= check_string this, 'opioil_3', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+<div class="row">
+<div class="col-1"></div>
+<%
+  list = <<LIST
+1|ใส่ท่อช่วยหายใจ ขนาด naloxone ผ่าน ท่อช่วยหายใจขนาด 2-2.5x ของขนาดปกติ
+LIST
+
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+</div>
+
+<div class="col-12"><br/></div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

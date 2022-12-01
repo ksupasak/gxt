@@ -1,0 +1,30 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Protocol Interhospital ECMO transport</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">ทีมแพทย์พิจารณาเคส</h6>
+<%
+  list = <<LIST
+1|มีข้อบ่งชี้/ข้อห้าม
+2|ไม่มีข้อบ่งชี้/ข้อห้าม
+LIST
+
+%>
+<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

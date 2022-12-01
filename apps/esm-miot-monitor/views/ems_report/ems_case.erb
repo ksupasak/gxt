@@ -1,0 +1,197 @@
+<%
+
+    records = EMSCase.all()
+
+%>
+
+
+<table class="table">
+<thead>
+  <tr>
+      <th>วัน/เดือน/ปีค.ศ. ออกปฏิบัติการ</th>
+      <th>เวรที่ออกปฏิบัติการ (เช้า/บ่าย/ดึก)</th>
+      <th>สถานที่เกิดเหตุ</th>
+      <th>เวลาสั่งการ</th>
+      <th>ประเภทการปฏิบัติการ</th>
+      <th>Paramedic ที่ออกปฏิบัติการ</th>
+      <th>EMT ที่ออกปฏิบัติการ</th>
+      <th>อาการรับแจ้ง (CBD code)</th>
+      <th>เพศ</th>
+      <th>อายุ</th>
+      <th>ข้อมูล ว.8 เพิ่มเติมจากศูนย์ประชานาถ</th>
+      <th>CODE  155  ?</th>
+      <th>ความรุนแรงระดับของ CBG code อยู่ในระดับใด</th>
+      <th>Dispatch Time (minutes)</th>
+      <th>Activate Time (minutes)</th>
+      <th>Response Time (minutes)</th>
+      <th>On Scene Time (minutes)</th>
+      <th>Transfer Time (minutes)</th>
+      <th>ทำไม  Activate Time มากกว่า 2 นาที ? </th>
+      <th>ทำไม  Response Time มากกว่า 8 นาที ? </th>
+      <th>ท่านมีวิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</th>
+      <th>สถานที่เกิดเหตุ</th>
+      <th>Distance from KMCH to Scene (km) ?</th>
+      <th>ประเภทเส้นทางที่เลือกใช้</th>
+      <th>EMT ท่านใดขับรถพยาบาล</th>
+      <th>Distance from scene  to hospital (km) ?</th>
+      <th>ลักษณะการปฏิบัติการ</th>
+      <th>ผลปฏิบัติการ</th>
+      <th>Type</th>
+      <th>กรณีออกปฏิบัติการแล้วไม่พบเหตุ/ ยกเลิกปฏิบัติการ เพราะเหตุใด</th>
+      <th>เวลายกเลิกปฏิบัติการ</th>
+      <th>ท่านมีการทำ CPR หรือไม่?</th>
+      <th>Nationality</th>
+      <th>Scene Triage</th>
+
+
+      <th>SBP แรกรับ</th>
+      <th>DBP แรกรับ</th>
+      <th>HR แรกรับ</th>
+      <th>RR แรกรับ</th>
+      <th>SpO2 แรกรับ</th>
+      <th>GCS แรกรับ</th>
+      <th>Body temperature</th>
+      <th>DTX (mg/dl)</th>
+
+      <th>การนำส่งผู้ป่วยไปโรงพยาบาลปลายทาง ?</th>
+      <th>โรงพยาบาลปลายทาง?</th>
+      <th>HN</th>
+      <th>สิทธิการรักษาพยาบาล<th>
+      <th>ER Triage</th>
+
+      <th>SBP จุดคัดกรอง</th>
+      <th>DBP จุดคัดกรอง</th>
+      <th>HR จุดคัดกรอง</th>
+      <th>RR จุดคัดกรอง</th>
+      <th>SpO2 จุดคัดกรอง</th>
+      <th>GCS จุดคัดกรอง</th>
+      <th>BT จุดคัดกรอง</th>
+      <th>DTX จุดคัดกรอง</th>
+
+      <th>Diagnosis</th>
+
+
+      <th>ท่านได้ร้องขอแหล่งสนับสนุนหรือไหม</th>
+      <th>ทีม BLS อยู่ที่จุดเกิดเหตุก่อนที่ ALS จะถึงหรือไม่?</th>
+      <th>ทีมสนับสนุน เป็นผู้ปฏิบัติงานแบบใด</th>
+      <th>Activated specialist ?</th>
+      <th>Type of specialist team ?</th>
+
+  </tr>
+
+</thead>
+
+<tbody>
+<% for i in records
+
+  init_code = i.init_code
+
+  code_group = init_code.group
+
+  m_providers = {}
+
+   ems_command = EMSCommand.where(:case_id=>i.id).first
+
+   if ems_command
+
+
+   ems_command.providers.each do |cp|
+
+      p = cp.provider
+      if p.role
+        m_providers[p.role] = [] unless m_providers[p.role]
+        m_providers[p.role] << p
+      end
+
+   end
+
+end
+
+%>
+
+<tr>
+  <td><%=i.created_at.strftime("%d/%m/%Y")%></td>
+  <td><%=i.case_no%></td>
+  <td><%=i.location%></td>
+  <td><%=i.dispatch_at.strftime("%H:%M") if i.dispatch_at%></td>
+  <td><%=i.ems_trauma%></td>
+
+  <td><%=m_providers['ems'].collect{|p|p.code}.join(", ") if m_providers['ems']%></td>
+  <td><%=m_providers['emt'].collect{|p|p.code}.join(", ") if m_providers['emt']%></td>
+  <td><%=i.init_code.code if i.init_code%></td>
+  <td><%=i.patient_gender%></td>
+  <td><%=i.patient_age%></td>
+  <td><%=i.chief_complain%></td>
+  <td>#<%=i.code_155%></td>
+  <td><%="#{code_group.code}.#{code_group.name}" if code_group%></td>
+
+
+  <td><%=i.dispatch_time%></td>
+  <td><%=i.activation_time%></td>
+  <td><%=i.response_time%></td>
+  <td><%=i.onscene_time%></td>
+  <td><%=i.transfer_time%></td>
+
+  <td><%=i.over_activate_time_reason%></td>
+  <td><%=i.over_response_time_reason%></td>
+  <td><%=i.over_time_managment%></td>
+  <td><%=i.operation_hospital%></td>
+
+  <td>#<%=i.distance_from_dispatch%></td>
+  <td><%=i.route_type%></td>
+  <td>#<%=ems_command.driver_emt_id if ems_command%></td>
+
+  <td>#<%=i.distance_from_hospital%></td>
+  <td><%=i.ems_type%></td>
+  <td><%=i.operation_result%></td>
+  <td><%=i.operation_result_detail%></td>
+  <td><%=i.operation_cancel_reason%></td>
+  <td><%=i.operation_cancel_at.strftime("%H:%M") if i.operation_cancel_at %></td>
+
+  <td><%=i.cpr_status%></td>
+
+  <td>x<%=i.patient_nationality%></td>
+
+  <td><%=i.scene_triage%></td>
+
+
+  <td><%=i.init_sbp%></td>
+  <td><%=i.init_dbp%></td>
+  <td><%=i.init_hr%></td>
+  <td><%=i.init_rr%></td>
+  <td><%=i.init_spo2%></td>
+  <td><%=i.init_gcs%></td>
+  <td><%=i.init_temp%></td>
+  <td><%=i.init_dtx%></td>
+
+  <td><%=i.transfer_status%></td>
+  <td><%=i.transfer_hospital%></td>
+  <td><%=i.transfer_hn%></td>
+  <td>x<%=i.patient_reimbursement%></td>
+  <td><%=i.er_triage%></td>
+
+  <td><%=i.screen_sbp%></td>
+  <td><%=i.screen_dbp%></td>
+  <td><%=i.screen_hr%></td>
+  <td><%=i.screen_rr%></td>
+  <td><%=i.screen_spo2%></td>
+  <td><%=i.screen_gcs%></td>
+  <td><%=i.screen_temp%></td>
+  <td><%=i.screen_dtx%></td>
+  <td><%=i.diagnosis%></td>
+
+  <td><%=i.bls_request%></td>
+  <td><%=i.bls_onscene%></td>
+  <td><%=i.bls_operation%></td>
+  <td><%=i.special_request%></td>
+  <td><%=i.special_type%></td>
+
+
+
+
+</tr>
+
+<% end %>
+</tbody>
+</table>
+<%#records.to_json %>

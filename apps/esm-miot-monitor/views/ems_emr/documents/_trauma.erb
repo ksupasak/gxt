@@ -1,0 +1,74 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Trauma</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|Accident
+2|Burn
+3|Electrical
+LIST
+
+%>
+<%= check_string this, 'type', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Trauma management</h6>
+<%
+  list = <<LIST
+1|eXanguination
+2|Direct pressure at .......................... time ....... 
+3|Pressure dressing at ........................... time ...... 
+4|Tourniquet at ................................. time .......
+5|Airway
+6|Breathing
+7|Three-side dressing at □ Rt. □ Lt.
+8|Needle decompression at □ Rt. □ 2nd intercostal space midclavicular line
+9|4th-5th intercostal space mid axillary line 
+10|Lt. □ 2nd intercostal space midclavicular line
+11|4th-5th intercostal space mid axillary line **needle ทําไดม้ ํากกวํา่ 1 คร้ัง
+12|Circulation
+13|External bleeding
+14|Internal bleeding
+15|on IV
+16|Crushinjury
+LIST
+
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+<div class="col-12"><br/></div>
+<div class="col-12">
+<%
+  list = <<LIST
+1|Head/Face
+2|Chest
+3|Abdomen
+4|Pelvic
+5|Femur
+6|Extremity
+7|Activate ER/ G trauma time.........
+LIST
+
+%>
+<%= check_string this, 'position', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>12 %>
+</div>
+<div class="col-12"><br/></div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->
+

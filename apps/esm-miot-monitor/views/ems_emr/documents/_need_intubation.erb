@@ -1,0 +1,44 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Need Intubation</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Need Intubation</h6>
+<%= radio_string this, 'intubation', :value=>%w{yes no}, :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Cardiac arrest/Unresponsive</h6>
+<%= radio_string this, 'unresponsive', :value=>%w{yes no}, :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+<div class="col-12">
+<h6 class="mb-0 text-primary">Crash airway algorithms</h6>
+<%
+  list = <<LIST
+1|Ventilation failure
+2|Oxygenation failure
+3|Protect airway
+LIST
+
+%>
+<%= check_string this, 'airway', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

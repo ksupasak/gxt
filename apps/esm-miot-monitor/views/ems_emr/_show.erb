@@ -1,24 +1,137 @@
-<h1>EMR</h1>
+
 <%
-	
+
 		record = EMSCase.find params[:id]
-	
+
 		admit = record.admit
-	
+
+
+		list = %w{patient_assessment stemi stroke cardiac_arrest trauma tranexamic need_intubation interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus}
+
+		list.each_with_index do |i,ix|
+
+			doc = EMRDocument.where(:name=>i).first
+			
+			unless doc
+
+					doc = EMRDocument.create(:name=>i, :title=>i.humanize, :sort_order=>ix)
+
+			end
+
+
+		end
+
+
+		documents = EMRDocument.where({}).sort(:sort_order=>1).all
+
 %>
-<%= admit.to_json  %>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">EMR </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<!-- <ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>request</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong class="">Command</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Pre Arrival</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Assessment</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>EMR</strong></a>
+								</li>
 
-<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
-<input type="hidden" name="id" value="<%=record.id%>" >
-<div class="input-group mb-3">
-<input type="text" class="form-control" name="username" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"> <span class="input-group-text" id="basic-addon2">@example.com</span>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Discharge</strong></a>
+								</li>
+
+							</ol> -->
+
+
+						</nav>
+					</div>
+
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+</div>
+<div class="row">
+<div class="col-lg-8">
+<div id="emr-panel">
+</div>
 </div>
 
-<input type="submit" name="create" value="create">
-
-</form>
-
-<div id="discharge_panel">
-
+<div class="col-lg-4">
+<div class="card">
+<div class="card-header bg-primary text-white">
+Offline protocol
 </div>
 
+<div class="card-body">
+<div class="accordion accordion-flush">
+<% for doc in documents %>
+
+	<div class="accordion-item">
+	<div class="accordion-body">
+	<a href="<%=get_path 'create'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>" class="  emr-create-btn">+ <%=doc.title%></a>
+	<%
+			records = EMRRecord.where(:case_id=>record.id, :document_id=>doc.id).all
+	%>
+		<div class="accordion">
+			<% for i in records %>
+			<div class="accordion-item">
+			<a href="<%=get_path 'update'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>&id=<%=i.id%>" class="text-dark emr-update-btn">Record <%=i.stamp.strftime('%d/%m/%Y %H:%M') if i.stamp%></a>
+			</div>
+			<% end %>
+		</div>
+	</div>
+	</div>
+<% end %>
+</div>
+</div><!--card-body-->
+</div><!--card-->
+</div><!--col-->
+</div><!--row-->
+
+<script>
+	$('.emr-create-btn').click(function(e){
+
+		$.ajax({
+			url: $(this).attr('href') ,
+			context: document.body
+		}).done(function(html) {
+
+			$( '#emr-panel' ).html(html);
+		});
+
+		e.preventDefault();
+
+	})
+	$('.emr-update-btn').click(function(e){
+
+		$.ajax({
+			url: $(this).attr('href') ,
+			context: document.body
+		}).done(function(html) {
+
+			$( '#emr-panel' ).html(html);
+		});
+
+		e.preventDefault();
+
+	})
+</script>

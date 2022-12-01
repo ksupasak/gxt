@@ -1,0 +1,716 @@
+<%
+
+	ems_case = EMSCase.find params[:case_id]
+	admit = Admit.find ems_case.admit_id
+	commands = ems_case.commands
+
+%>
+
+
+
+	<div class="row" >
+
+
+	<div class="col-12">
+
+		<div class="row">
+
+		<div class="col-12">
+
+
+
+			<div class="card radius-10">
+				<div class="card-header bg-transparent">
+					<div class="">
+
+							<h6 class="row">
+							<div class="col">
+								Map :
+
+
+
+							</div>
+							<div class="col-4 d-flex justify-content-end">
+								<input id="search_hospital" name="" class="form-control" type="text" placeholder="Search name, mri, ct, rt"/>
+							</div>
+							</h6>
+
+						<div class="dropdown ms-auto">
+							<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+							<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+								<li>
+									<a class="dropdown-item" href="javascript:;">Action</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="javascript:;">Another action</a>
+								</li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li>
+									<a class="dropdown-item" href="javascript:;">Something else here</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #dashboard-map {
+					        height: 100px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					      #dashboard-map-2 {
+					        height: 100px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+					<!-- <div class="row">
+					<div class="col-md-6">
+						<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
+						<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+						<input name='record[address]' id="record_address" value="<%=ems_case.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
+						<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+						<input name='record[latlng]' id="record_latlng" value="<%=ems_case.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+						</div>
+					</div>
+					</div>
+					<br/>
+					 -->
+					<div id="dashboard-map-c" style="height: 600px">
+						map
+					</div>
+					<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
+
+
+					<script>
+
+						latlng = [13.69313508354787, 100.69198345629769]
+						<% if Setting.get('aoc_center') %>
+						latlng = [<%=Setting.get('aoc_center') %>]
+						<% end %>
+						<% if ems_case.latlng and ems_case.latlng.index(',') %>
+						latlng = [<%=ems_case.latlng%>]
+						<% end %>
+
+					<%
+
+						hospitals = EMSHospital.all()
+
+					%>
+
+					 var hospitals = <%=hospitals.to_json%>
+
+					 var m_hos = {}
+
+
+
+						mapc = new EMSMap('dashboard-map-c');
+
+						mapc.setPosition(latlng[0], latlng[1])
+						mapc.setMarkerPosition(latlng[0], latlng[1])
+						mapc.changeMarkerPosition(function(marker){
+
+						}.bind(this))
+
+
+
+
+						mapc.ready(function(){
+							// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+							// const image = "<%=url_for('ems/h0.png')%>";
+
+						<% for i in hospitals %>
+
+				 		var posx = new google.maps.LatLng(<%=i.latlng%> )
+						var image = "<%=url_for("ems/h#{i.level}.png")%>";
+						 markerx = new google.maps.Marker({position: posx, map: mapc.map,
+							 icon:image
+						 })
+						 markerx.addListener("click", () => {
+							 select_hospital('<%=i.id%>')
+						 });
+
+						 m_hos['<%=i.id%>'] = markerx;
+
+						<% end %>
+
+
+					});
+
+					  $('#search_hospital').keyup(function(e){
+
+								v = e.which
+
+								key = $(this).val()
+								$('.hospital').hide();
+								if(key.length>0){
+										for(var hi in hospitals){
+												h = hospitals[hi];
+												markerx = m_hos[h['_id']]
+											 	markerx.setVisible(false);
+
+												reg = new RegExp(key,'i');
+												console.log(reg)
+												if(h['name'].match(reg)||h['level'].match(reg)||(key=='mri'&&h['mri']=='YES')||(key=='ct'&&h['ct_scan']=='YES')||(key=='rt'&&h['rt_pa']=='YES')){
+													markerx.setVisible(true);
+													$('.h'+h['_id']).show();
+												}
+
+										}
+								}else{
+
+									for(var hi in hospitals){
+											h = hospitals[hi];
+											$('.hospital').show();
+											markerx = m_hos[h['_id']]
+											markerx.setVisible(true);
+									}
+								 }
+
+
+						})
+
+						var target
+						<% for cm in commands %>
+
+						mapc.ready(function(){
+
+							<%
+								loc = cm.ambulance.last_location
+								if loc and loc.index(',')
+									loc=loc.split(",").collect{|i| i.to_f}
+							%>
+						 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
+						 target = new google.maps.LatLng(latlng[0], latlng[1] )
+						 var target2 = new google.maps.LatLng(latlng[0]-0.01, latlng[1]-0.01 )
+
+							directionsService = new google.maps.DirectionsService;
+				  	  directionsDisplay = new google.maps.DirectionsRenderer;
+				  		directionsDisplay.setMap(mapc.map);
+
+							mapc.drawPath(directionsService,directionsDisplay, start,target,[target2],function(rs){
+
+
+								a = $('#send-msg-<%=cm.id%>')
+
+								if(a.attr("href").indexOf("distance")==-1){
+									a.attr("href", a.attr('href')+"&distance="+rs['distance']['text']+"&duration="+rs['duration']['text'])
+								}
+
+								$('#ambu-status-<%=cm.id%>').html(" Distance : "+rs['distance']['text'] + " Time : "+rs['duration']['text'])
+
+
+
+							}.bind(this));
+							<% end %>
+
+						}.bind(this));
+
+						<% end %>
+
+
+						mapc.init()
+					</script>
+
+
+				</div>
+			</div>
+
+	</div>
+
+
+
+
+
+
+
+	<div class="col-12 ">
+
+
+
+		<div class="card">
+			<div class="card-header">
+				<h6 class="row">
+				<div class="col">
+				ชุดปฏิบัติการ
+				</div>
+				<div class="col d-flex justify-content-end">
+
+				</div>
+				</h6>
+			</div>
+			<div class="card-body">
+
+
+
+
+
+
+		<%
+
+
+		for cm in commands
+		%>
+		<div id="c<%=cm.id%>">
+		<div class="card" style="background:#f7f7ff">
+				<div class="card-header">
+
+				<a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-warning btn-sm" data-remote="true"  style="float:right;" data-remote-update="command">แยก Case </a>
+				<a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-info btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command">แก้ไข</a>
+				<a href="<%=get_path "destroy?id=#{cm.id}" %>" class="btn btn-danger btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command">ลบ</a>
+
+				</div>
+
+				<div class="card-body">
+
+
+				<div class="row">
+
+				<div class="col-lg-4">
+
+												<p class="mb-3">
+												คำสั่งการ :
+											    </p>
+												<div class="input-group">
+												<textarea name="record[chief_complain]" id="record_chief_complain" class="form-control">
+<%=cm.init_command%>
+												</textarea>
+												</div>
+												<br/>
+												<p class="mb-3">
+												รถพยาบาล :
+											    </p>
+												<div class="input-group">
+												<div class="form-control">
+													<%=cm.ambulance.name%>
+													<br/>
+													<%=cm.ambulance.last_location%>
+													<br/>
+													<span id="ambu-status-<%=cm.id%>"></span>
+												</div>
+												</div>
+													<br/>
+				<p class="">
+				เจ้าหน้าที่ :
+			    </p>
+				<div class="form-control">
+
+
+					<% for j in cm.providers
+
+						name = j.name
+						provider = nil
+						provider = j.provider
+						name = provider.name if provider
+					%>
+
+						<div class="chip chip-md">
+							<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person">
+							<%=name%>
+						</div><br/>
+
+					<% end %>
+
+
+
+
+				</div>
+	<br/>
+				<p class="">
+				นำส่งโรงพยาบาล :
+					</p>
+				<div class="form-control">
+					<%=ems_case.transfer_hospital%>
+				</div>
+
+
+				<br/>
+				<a href="<%=get_path "send_message?id=#{cm.id}" %>" id="send-msg-<%=cm.id%>" class="btn btn-success btn-sm" data-remote="true"  data-remote-update="c<%=cm.id%>">ส่งคำสั่ง Line</a>
+				<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
+					Transfer
+				</a>
+
+					<br/><br/>
+
+
+				</div>
+				<div class="col-lg-8" style="overflow:scroll">
+
+							<form action="<%=get_path "update_tracking" %>" method="POST">
+
+
+								<%
+
+								logs = AdmitLog.where(:ems_command_id=>cm.id, :admit_id=>admit.id).sort(:sort_order=>1).all
+
+								parent_map = {}
+								%>
+								<p class="text-center font-weight-bold"></p>
+								<table class='table'>
+								<thead>
+									<tr>
+										<th>รายการ</th><th>เวลา</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
+
+									</tr>
+								</thead>
+									<tbody>
+								<% for i in logs
+
+								parent_map[i.sort_order] = i
+
+								%>
+
+								<tr>
+									<td>
+										<%=i.name%>
+									</td>
+									<td><% if i.stamp %>
+										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
+										<%#i.stamp.localtime.strftime("%H:%M")%>
+
+										<v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
+										<% end %>
+
+									</td>
+									<td style="display:none">
+										<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp
+										lap = (i.stamp - p.stamp).to_i/60
+										 %>
+										<w><%= lap %>m</w>
+										<% end %>
+									</td>
+									<td>
+										<% if i.status=='COMPLETED'%>
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:80px">
+										<% end %>
+									</td>
+
+									<td>	<%=i.note%>
+										<% if i.status=='PENDING'%>
+									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>'btn btn-sm btn-success check-log' %>
+										<% end%>
+									</td>
+
+									<%
+
+																		#route = AocCaseRoute.where(:arrival_log_id=>i.id).first
+									route = AocCaseRoute.where(:departure_log_id=>i.id).first # unless route
+
+									if route
+
+									%>
+									<td rowspan="2" valign="middle" style="font-size:0.8em">
+
+									   ETA<br/>
+									   <%=format("%0.1f",route.act_duration/60) if route.act_duration%> min <br/> <%=format("%0.1f",route.act_distance/1000.0) if route.act_distance%> km
+									   <br/>
+									 <%=route.status%>
+									</td>
+									<% else %>
+									<td></td>
+									<% end %>
+
+								</tr>
+
+								<% end %>
+									</tbody>
+								</table>
+
+
+
+								<input type="submit" name="Update" value="Update" class="btn btn-info btn-sm">
+
+
+							</form>
+
+
+
+
+
+
+
+
+				</div>
+				</div>
+
+
+
+
+
+
+
+
+
+
+
+				</div>
+
+				<p class="p-3 mb-0">
+
+
+			</p>
+
+		</div>
+</div>
+		<% end %>
+
+
+		<script>
+
+			$('.check-log').click(function(e){
+
+				target = $(this).attr('href')
+
+				$.ajax({
+			    url: target,
+				  context: document.body
+				}).done(function(html) {
+
+
+					reload_command_content();
+
+				});
+
+				e.preventDefault();
+
+			})
+
+		</script>
+
+			<a href="<%=get_path "create?case_id=#{ems_case.id}" %>" class="btn btn-info" data-remote="true" data-remote-update="command">เพิ่มทีม</a>
+
+
+		</div>
+	</div>
+
+
+
+	</div>
+
+</div>
+
+</div>
+
+
+		<div class="col-12 ">
+
+
+			<div class="card transfer-panel" style="display:none">
+
+					<div class="card-header">
+
+					<h6 class="row">
+						<div class="col">
+						Hospital
+						</div>
+						<div class="col d-flex justify-content-end">
+							right
+						</div>
+					</h6>
+
+					</div>
+
+					<div class="card-body hospital-partial">
+						<div id="update-route">
+							</div>
+						<table class="table">
+							<tr>
+								<th>Name</th>
+								<th>เขต</th>
+								<th>KM</th>
+								<th>CT</th>
+								<th>MRI</th>
+								<th>RT-PA</th>
+								<th>Throm</th>
+
+								</tr>
+						<%
+
+						def self.deg2rad(deg)
+								return deg * (3.1414/180)
+						end
+
+						def self.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2)
+							r = 6371; # Radius of the earth in km
+							dLat = deg2rad(lat2-lat1);  # deg2rad below
+							dLon = deg2rad(lon2-lon1);
+							a =
+								Math.sin(dLat/2) * Math.sin(dLat/2) +
+								Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+								Math.sin(dLon/2) * Math.sin(dLon/2)
+								;
+							c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							d = r * c; # Distance in km
+							return d;
+						end
+
+						clat,clng = ems_case.latlng.split(",").collect{|i| i.strip.to_f}
+
+						hospitals.collect{|h|
+
+							hlat,hlng = h.latlng.split(",").collect{|i| i.strip.to_f}
+							distance = getDistanceFromLatLonInKm(hlat,hlng,clat,clng)
+							h['distance'] = distance
+
+						}
+
+						hospitals.sort! do |a,b|
+
+
+								a['distance']<=>b['distance']
+
+						end
+
+
+
+
+						for h in hospitals[0..10]
+
+
+						%>
+
+
+
+							<tr class="hospital h<%=h.id%>">
+								<td><a href="javascript:select_hospital('<%=h.id%>')" class="select-hospital" hid="<%=h.id%>"><%=h.name%></a></td>
+								<td><%=h.district%></td>
+								<td id="d<%=h.id%>" ><%=format("%.2f",h['distance'])%></td>
+								<td><%=h.ct_scan%></td>
+								<td><%=h.mri%></td>
+								<td><%=h.rt_pa%></td>
+								<td><%=h.thrombectomy%></td>
+
+							</tr>
+
+
+						<% end %>
+						</table>
+
+						<script>
+							function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+							  var R = 6371; // Radius of the earth in km
+							  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+							  var dLon = deg2rad(lon2-lon1);
+							  var a =
+							    Math.sin(dLat/2) * Math.sin(dLat/2) +
+							    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+							    Math.sin(dLon/2) * Math.sin(dLon/2)
+							    ;
+							  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							  var d = R * c; // Distance in km
+							  return d;
+							}
+
+							function deg2rad(deg) {
+							  return deg * (Math.PI/180)
+							}
+
+							<% for h in hospitals
+								latlng = h.latlng.split(",")
+							%>
+
+								d = getDistanceFromLatLonInKm(<%=latlng[0]%>,<%=latlng[1]%>,target.lat(), target.lng())
+								// $('#d<%=h.id%>').html(d.toFixed(2))
+
+							<% end%>
+
+						</script>
+							<!-- <div style="height:3000px;background:red">f</div> -->
+					</div>
+
+
+		</div>
+
+
+		<div class="card" style="display:none">
+
+				<div class="card-header">
+
+				<h6 class="row">
+					<div class="col">
+					Event
+					</div>
+					<div class="col d-flex justify-content-end">
+						right
+					</div>
+				</h6>
+
+				</div>
+
+				<div class="card-body message-partial" style="overflow:scroll;">
+						<!-- <div style="height:3000px;background:red">f</div> -->
+				</div>
+
+
+	</div>
+
+
+	</div>
+
+
+
+
+	<script>
+
+
+
+
+
+		function command_process(lines){
+
+
+			objs = JSON.parse(lines[1])
+
+			console.log(objs)
+
+
+
+			// console.log(lines[0].split(" ")[0])
+			if(lines[0].split(" ")[0]=='Zone.Message'){
+
+				reload_message("<%=admit.id%>")
+
+			}
+
+
+		}
+
+		current_process = command_process
+
+		var message_admit_id= null
+
+		function reload_message(admit_id){
+
+
+
+		message_admit_id = admit_id
+
+		// reload_nurse_note(admit_id)
+		// reload_medication(admit_id)
+
+
+		// $.ajax({
+		//   url: "<%= "../EmsParamedic/message_partial"%>?admit_id="+message_admit_id,
+		//   context: document.body
+		// }).done(function(data) {
+		//   $( '.message-partial' ).html(data);
+	  // 	 // alert($( '.chat' ).height())
+	  // $('.panel-body').scrollTop(100000000)
+		//
+		//
+		// });
+
+		}
+
+		reload_message("<%=admit.id%>")
+
+
+		refresh_remote()
+	</script>

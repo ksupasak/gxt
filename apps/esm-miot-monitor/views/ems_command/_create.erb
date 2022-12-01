@@ -1,19 +1,19 @@
 
-<h2>เพิ่มรายการ Commander</h2>
-		
-		
-<% 
+
+
+
+<%
 
 ems_case  = EMSCase.find params[:case_id]
 
-if request.post? 
+if request.post?
 
 
-	
+
 if params[:record]
 
 	p = params[:record]
-	
+
 	# patient_id = nil
 # 	patient = Patient.find p[:patient_id] if p[:patient_id]
 #
@@ -43,68 +43,70 @@ if params[:record]
 # 	p[:case_no] = case_no
 #
 	p[:case_id] = ems_case.id
-	
+
 	record = EMSCommand.create p
-	
+
 	channel = EMSChannel.find record.channel_id
-	
+
 	ems_case.update_attributes :channel_id=>channel.id if channel
-	
+	ems_case.update_attributes :dispatch_at=>Time.now
+
+
 	providers = record.providers
 	for i in providers
 		i.destroy
 	end
-	
+
 	if params[:providers]
 	for i in params[:providers].split(",")
-			
+
 		command_provider = EMSCommandProvider.create :command_id=>record.id, :provider_id=>i
-		
+
 	end
 	end
-	
+
 	admit = Admit.find ems_case.admit_id
-	
+
 	ambu = Ambulance.find params[:record][:ambulance_id]
-	
+
 	# default station id to esmcase and admit
-	
+
 	if ambu.station_id
-		
+
 		admit.update_attributes :station_id=>ambu.station_id unless admit.station_id
-		
+
 		ems_case.update_attributes :station_id=>ambu.station_id unless ems_case.station_id
-		
+
 	end
-	
-	
-	
-	
+
+
+
+
 	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
-	
-	
+
+
 	a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
 	a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
 	r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED'
-	
-	
+
+
 	b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4
 	b2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
 	r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED'
-	
-	
+
+
 	c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
 	c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
 	r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED'
-	
-	
+
+
 	AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
-	
-		
-	
-	
+
+
+
+
 end
-	
+
 
 
 %>
@@ -115,22 +117,31 @@ Update ... <%=Time.now%>
 <% else %>
 
 <%
-	
+
 	ems_command = EMSCommand.new
-	
+
 	init_command = "เหตุ : #{ems_case.patient_info} อาการ : #{ems_case.chief_complain} รหัส : #{ems_case.init_code.name}"
 	ems_command.init_command = init_command
-	
+
 %>
 
 <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
-<% fieldset(:record) do |f| %>	
+<% fieldset(:record) do |f| %>
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
+
+<div class="card ">
+<div class="card-header bg-primary bbg-gradient text-white">
+
+	Command Information
+
+	</div>
+<div class="card-body">
+
 <%= inline(this,:'_form', :this=>this, :f=>f, :record=>ems_command, :ems_case=> ems_case)  %>
-
-
+</div>
+</div>
 <% end %>
-<input type="submit" name="create" value="Create" class="btn btn-success"> 
+<input type="submit" name="create" value="Create" class="btn btn-success">
 
 <a href="<%=get_path "show?case_id=#{ems_case.id}" %>" class="btn " data-remote="true" data-remote-update="command">Cancel</a>
 

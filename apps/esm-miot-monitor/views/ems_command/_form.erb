@@ -1,107 +1,202 @@
 <%
-	
+
 # record => ems_command
-	
-	
+
+
 %>
 
-		<h5>
-			<strong>สั่งการรถพยาบาล</strong>
-		</h5>
+
 		<div class="row">
-			
-			
+
+
 			<div class="col-12 col-lg-4 col-xl-4">
 				<div class="card">
 					<p class="p-3 mb-0">
-						คำสั่งการ
+						Case Info / คำสั่งการ
 					</p>
 					<div class="input-group px-3 pb-3">
 						<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
 						<textarea name="record[init_command]" class="form-control"><%=record.init_command%></textarea>
 					</div>
 					<p class="px-3">
-						
-					Ambulance / รถพยายาบาล<span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="เลือก"></span>
-						
+
+					Ambulance / รถพยายาบาล<span style="float:right">
+
+						<a class="btn btn-info btn-sm" id="select-ambulance" data-bs-toggle="modal" data-bs-target="#selectAmbulanceModal" type="submit" value="เลือก">เลือก</a>
+					</span>
+
 					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
-					
-					
-				
-					
+
+
+
+
 					<p class="px-3">
-						
+
 					Communication / สื่อสาร<span style="float:right"></span>
-						
+
 					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
-					
-					
-					
-					
+
+
+
+
 					<p class="px-3">
-						
+
 					EMS / เจ้าหน้าที่<span style="float:right">
-					<input class="btn btn-info btn-sm" id="select-officer" data-bs-toggle="modal" data-bs-target="#selectProviderModal" type="submit" value="เลือก"></span>
-						
+
+					<a class="btn btn-info btn-sm" id="select-officer" data-bs-toggle="modal" data-bs-target="#selectProviderModal" type="submit" value="เลือก">เลือก</a></span>
+
 					</p>
-					
+
 					<%
-						
+
 						ems_providers = EMSCommandProvider.where(:command_id=>record.id).all()
-						
+
 					%>
-				
+
 						<div class="" style="padding:0 20px 20px 20px;border:0px solid">
-					
-						
+
+
 						<div class="command-provider-<%=record.id%> row">
-						
+
 						<% for i in ems_providers
-							
-							provider = i.provider 
-						
+
+							provider = i.provider
+
 						%>
-						
-													
+
+
 						<div class="chip chip-md col-3">
 							<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=provider.name%>
 						</div>
-						
+
 						<% end %>
-						
+
 						</div>
-											
+
 						</div>
-					
+
 						<input type="hidden" name="providers" id="selected-providers" value="<%=ems_providers.collect{|i| i.provider_id}.join(",")%>" class="form-control mb-3 mx-3 w-auto">
-					
-					
-			
+
+
+														<!-- Modal -->
+														<div class="modal fade" id="selectAmbulanceModal" tabindex="-1" aria-hidden="true" style="display: none;">
+															<div class="modal-dialog modal-dialog-centered modal-lg">
+																<div class="modal-content">
+																	<div class="modal-header bg-primary bbg-gradient text-white">
+																		<h5 class="modal-title text-white">Ambualance
+
+																		</h5>
+																		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																				ambu
+																	</div>
+																</div>
+															</div>
+														</div>
+
+
+
 															<!-- Modal -->
 															<div class="modal fade" id="selectProviderModal" tabindex="-1" aria-hidden="true" style="display: none;">
-																<div class="modal-dialog modal-dialog-centered">
+																<div class="modal-dialog modal-dialog-centered modal-lg">
 																	<div class="modal-content">
-																		<div class="modal-header">
-																			<h5 class="modal-title">เจ้าหน้าที่</h5>
+																		<div class="modal-header bg-primary bbg-gradient text-white">
+																			<h5 class="modal-title text-white">Search :
+																				<input type="text" id="provider_search" value=""/>
+																			</h5>
 																			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 																		</div>
 																		<div class="modal-body">
 																		<%
-																				
+
 																			providers = Provider.all()
-																			
-																		%>	
-																		<div class="row">
+
+																		%>
+
+																		<div class="row" style="height:30em;overflow:scroll">
 																		<% for i in providers %>
-																		
-																		<div class="chip chip-md chip-select  col-3" provider_id="<%=i.id%>" >
-																			<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=i.name%>
+
+																		<div class="col-4 search-provider " id="provider-<%=i.id%>">
+																		<div class="chip chip-md chip-select  " provider_id="<%=i.id%>" >
+																			<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person">
+																			<%=i.code%> : <%=i.name%>
 																		</div>
-																		
+																		</div>
+
 																		<% end %>
 																		</div>
 																	</div>
-																
+
+																	<script>
+
+
+																			$('#provider_search').change(function(e){
+																				e.preventDefault()
+																				return false;
+																			})
+
+																			$('#provider_search').keyup(function(e){
+
+																					key = $(this).val()
+																					if(e.which == 13){
+																						e.preventDefault();
+																					}
+																					if(key.length>0){
+
+																						$('.search-provider').each(function(){
+																							f = $(this).find('.chip-select')
+																							attr = f.attr('selected')
+																							if (typeof attr !== 'undefined' && attr !== false) {
+
+																							}else{
+																									$(this).hide()
+																							}
+
+																						})
+ 																						var providers = <%=providers.to_json%>
+																						count = 0
+																						last_id = null;
+																						for(var ix in providers){
+
+																							i = providers[ix]
+
+																							if(i['code']==key){
+																								 count +=1 ;
+																								 last_id = i['_id']
+																								 $('#provider-'+i['_id']).show()
+																							}
+
+
+																						}
+
+																						if(count==1&&e.which == 13 ){
+
+																							t = $('#provider-'+last_id).find('.chip-select')
+																							t.attr('selected','selected')
+																							$('#provider_search').val("")
+																							$('.search-provider').show()
+																							$('#provider_search').focus()
+																							t.addClass("bg-info")
+																							e.preventDefault();
+																						}
+
+
+
+																					}
+																					else{
+
+																						$('.search-provider').show()
+
+
+																					 }
+
+																					 	e.preventDefault();
+																						return false;
+
+																			});
+																	</script>
+
 																		<div class="modal-footer">
 																			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 																			<button type="button" class="btn btn-primary officer-select">Select</button>
@@ -109,63 +204,72 @@
 																	</div>
 																</div>
 															</div>
-															
+
 															<script>
-																
+
 																$('.chip-select').click(function(){
-																	
+
 																	selected = $(this).attr("selected")
-																	
+
 																	console.log(selected)
 																	if(selected!='selected'){
-																	
+
 																		$(this).addClass("bg-info")
 																		$(this).attr('selected','selected')
-																		
+																		$('#provider_search').val("")
+																		$('.search-provider').show()
+
 																	}else{
 																		$(this).removeClass("bg-info")
 																		$(this).removeAttr('selected')
 																	}
-																	
-																	
+
+
 																})
-																
+
 																$('.officer-select').click(function(e){
-																	
+
 																	var providers = []
-																	
+
 																	$('.chip-select[selected*="selected"]' ).each(function(){
-																		
+
 																		pid = $(this).attr('provider_id')
 																		providers.push(pid)
-																		
+
 																	})
-																	
-			
+
+
 																	$.ajax({
 																    url: "<%=get_path 'show_providers'%>?providers="+providers.join(","),
 																	  context: document.body
 																	}).done(function(html) {
-			
+
 																	  $( '.command-provider-<%=record.id%>' ).html(html);
 																	});
-			
+
 																	$('#selectProviderModal').modal('hide');
-																	
-			
+
+
 																	$('#selected-providers').val(providers.join(","))
-																	
-																	
+
+
 																	e.preventDefault()
 																	return false;
 																})
-																
+
+																$('#select-ambulance').click(function(e){
+
+																		e.preventDefault();
+																		return false;
+
+																});
+
 																$('#select-officer').click(function(e){
-																	
+
 																	providers = $('#selected-providers').val().split(",")
 																	if(providers.length>0){
 																	$('.chip').removeAttr('selected')
-																
+
 																	for(var ip in providers){
 																			p = providers[ip]
 																			$('.chip-select[provider_id="'+p+'"]').each(function(){
@@ -174,17 +278,32 @@
 																			})
 																	}
 																	}
+
+
+
 																	e.preventDefault();
 																	return false;
 																})
-																
+
+
+																$('#selectProviderModal').on('show.bs.modal', function() {
+
+
+																	setTimeout(function(){
+
+																			$('#provider_search').focus()
+																	}, 500);
+
+
+																});
+
 															</script>
-														
-					
+
+
 				</div>
 			</div>
-			
-			
+
+
 
 				<div class="col-12 col-lg-8 col-xl-8">
 					<div class="card radius-10">
@@ -230,66 +349,57 @@
 							<div class="col-md-6">
 								<label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label>
 								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-								<input name='case[address]' id="record_address" value="<%=ems_case.address%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								<input name='case[address]' id="record_address" value="<%=ems_case.address%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label>
 								<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-								<input name='case[latlng]' id="record_latlng" value="<%=ems_case.latlng%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+								<input name='case[latlng]' id="record_latlng" value="<%=ems_case.latlng%>" readonly="readonly" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
-							</div>					
+							</div>
 							</div>
 							<br/>
 							<div id="dashboard-map-c" style="height: 400px">
 								map
 							</div>
 							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
-					
-				
+
+
 							<script>
 								latlng = [13.69313508354787, 100.69198345629769]
-						
-						
+
+
 								<% if ems_case.latlng and ems_case.latlng.index(',') %>
 								latlng = [<%=ems_case.latlng%>]
 								<% end %>
-						
-						
-						
+
+
+
 								mapc = new EMSMap('dashboard-map-c', {change_marker:false});
 								mapc.setPosition(latlng[0], latlng[1])
 								mapc.setMarkerPosition(latlng[0], latlng[1])
-						
+
 								mapc.changeMarkerPosition(function(marker){
-							
-									// var pos = marker.position
-			// 						$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-			//
-			//
-			//
-			// 						map1.geocode({'location':pos},function(result){
-			//
-			// 							$('#record_address').val(result.formatted_address)
-			//
-			// 						})
-			//
-			// 						map2.setPosition(pos.lat(), pos.lng())
-			// 						map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-								
-								
-								
+
+
+
 								}.bind(this))
-								
+
 						mapc.init()
-									
+
 							</script>
-			
-					
+
+
 						</div>
 					</div>
-	
+
 			</div>
-			
-			
+
+
 		</div>
+<script>
+	$('form input').on('keypress', function(e) {
+    return e.which !== 13;
+});
+</script>

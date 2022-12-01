@@ -2,7 +2,7 @@
 <%= inline(this,:'_style')  %>
 <%= inline(this,:'../lib/_map')  %>
 <%
-	
+
 record = EMSCase.find params[:id]
 code = EMSCode.find record.init_cbd_code
 
@@ -11,7 +11,7 @@ session[:case_id] = record.id
 
 
 cls = record.init_code.get_class
-   
+
 %>
 <style>
 	.v{
@@ -50,56 +50,57 @@ cls = record.init_code.get_class
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div class="row" >
-					
-				
+
+
 					<div class="row">
-						
+
 						<div class="col-7">
 							<h4 class="my-1 text-<%=cls%>">
-								
+
 								<%=record.case_no%>
-					
+
 							</h4>
-					
+
 						</div>
-						
+
 						<div class="col-5">
-							<h4 class="my-1 text-info">
+							<h4 class="my-1 text-info " style="font-size:0.8em">
+
 								<%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
-					
+
 							</h4>
 						</div>
-					
+
 					</div>
-					
-					
+
+
 					<div class="row">
-						
+
 						<div class="col-7">
 							ผู้แจ้ง : <span class="contact_name"><%=record.contact_name%></span>
 						</div>
-						
+
 					<div class="col-5">
 						<label class="phone">สถานที่<label> : <span class="contact_name v"><%=record.location%></span>
 					</div>
-					
-					
+
+
 					</div>
-					
-				
-				
+
+
+
 					<div class="row">
-					
+
 						<div class="col-12">
 							<label class="phone">อาการนำ<label> : <span class="cheif_complain v"><%=record.chief_complain%></span>
 						</div>
-					
-					
-				
+
+
+
 					</div>
-				
-				
-		
+
+
+
 					<!-- <p class="mb-0 text-secondary">
 
 
@@ -110,76 +111,76 @@ cls = record.init_code.get_class
 					</p>
 					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p> -->
 					<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
-					
+
 				</div>
-				
-				
+
+
 				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
 				</div> -->
 			</div>
 		</div>
 		</div>
 	</div>
-	
+
 	<div class="col-12 col-xl-4">
 		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 					<div class="row">
-				
+
 				<div class="row">
-					
+
 					<div class="col-7">
 						<h4 class="my-1 ">
-							
+
 							ผู้ป่วย <%=record.patient_gender%> <%=record.patient_age%>
-				
+
 						</h4>
-				
+
 					</div>
-					
+
 					<div class="col-5">
 						<h4 class="my-1 text-<%=cls%>">
 							<%=record.init_code.name.split(" ")[0]%>
-				
+
 						</h4>
 					</div>
-				
+
 				</div>
-				
-	
-				
+
+
+
 				<div class="row">
-					
+
 					<div class="col-7">
 						ผู้ป่วย : <span class=":init_cbd_code v"><%=record.patient_name%></span>
 					</div>
-					
+
 					<div class="col-5">
 						CID : <span class=":init_cbd_code v"><%=record.patient_cid%></span>
 					</div>
-					
-				
-				
+
+
+
 				</div>
-				
-				
+
+
 				<div class="row">
-					
-				
-				
+
+
+
 					<div class="col-7">
 						<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain v"><%=record.patient_underlying%></span>
 					</div>
-					
+
 				<div class="col-5">
 					<label class="phone">HN : <label> <span class="contact_name v"><%=record.patient_hn%></span>
 				</div>
-				
-			
+
+
 				</div>
-				
-				
+
+
 			</div>
 				<!-- <div>
 					<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] %></h4>
@@ -194,76 +195,76 @@ cls = record.init_code.get_class
 		</div>
 		</div>
 	</div>
-	
+
 	<%
-		
+
 	station = record.admit.station
-	
-		
+
+
 	station_id = "StationID"
 	station_id = station.name if station
-		
+
 	%>
 	<div class="col-12 col-xl-4">
 		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>" >
 		<div class="card-body" style="border:0px solid">
-			
+
 			<div class="" style="border:0px solid">
-				
-				
+
+
 				<div class="row">
-					
+
 					<div class="col-6" style="">
 						<%
-							
-							
+
+
 							command = EMSCommand.where(:case_id=>record.id).first
-							
+
 							if command
-							
+
 								ambu = command.ambulance
-								route = AocCaseRoute.where(:ems_command_id=>command.id, :status=>'STARTED').first 
-							
+								route = AocCaseRoute.where(:ems_command_id=>command.id, :status=>'STARTED').first
+
 						%>
 						<div class="row">
 						<div class="col-12">
-							
+
 							<h5 class="my-1 ">
-							
+
 								<%=ambu.name%> (<%=ambu.plate_license%>)
-				
+
 							</h5>
-				
+
 						</div>
 						</div>
-						
-						
+
+
 						<div class="row">
 						<div class="col-12">
-							
-												
-								Route : <%=route%> 
-				
-						
-				
+
+
+								Route : <%=route%>
+
+
+
 						</div>
 						</div>
-						
+
 						<div class="row">
 						<div class="col-12">
-							
-												
-								Channel : <%=record.channel.name if record.channel%> 
-				
-						
-				
+
+
+								Channel : <%=record.channel.name if record.channel%>
+
+
+
 						</div>
 						</div>
 						<% end %>
-						
-						
-						
-						
+
+
+
+
 					</div>
 				<!-- <div>
 					<p class="mb-0 text-secondary">Contact info</p>
@@ -280,35 +281,35 @@ cls = record.init_code.get_class
 				</div>
 				 -->
 				<div class="col-6 d-flex justify-content-end " style="">
-					
-				
+
+
 				<div class="widgets-icons-2  <%=' bg-gradient-blooker ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
 					<a href="request_ems?id=<%="#{record.id}"%>" target="_blank">
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
-				
+
 				<div class="widgets-icons-2  <%=' bg-gradient-bloody ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
 					<a href="send_sms?id=<%=record.id%>" >
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
-					
-		
-			
-	
+
+
+
+
 				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">
 					<a href="https://pcm-life.com:4443/#/<%=record.case_no%>" >
 						<i class='bx bx-webcam text-white '></i>
 					</a>
 				</div>
-				
+
 				<div class="widgets-icons-2  <%=' bg-gradient-ohhappiness ' if true %>text-white ms-auto" style="margin:5px">
 						<a href="monitor?id=<%=record.id%>" target="_blank" >
 							<i class='bx bx-home-heart text-white '></i>
 						</a>
 				</div>
-		
+
 			</div>
 			</div>
 				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
@@ -317,34 +318,34 @@ cls = record.init_code.get_class
 			</div>
 		</div>
 		</div>
-	</div>	
-</div>				
+	</div>
+</div>
 
 <div class="">
 <div class="">
 
 <div class="d-block d-sm-none" >
-	
+
 	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
 		<button type="button" class="tab-request btn btn-outline-primary">Request</button>
 		<button type="button" class="tab-prearrival btn btn-outline-primary">PreArrival</button>
 		<button type="button" class="tab-command btn btn-outline-primary">Command</button>
  	 </div>
-	 
-	 
+
+
  	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
-	 
+
 		<button type="button" class="tab-paramedic btn btn-outline-primary">Paramedic</button>
 		<button type="button" class="tab-emr btn btn-outline-primary">EMR</button>
 		<button type="button" class="tab-discharge btn btn-outline-primary">Discharge</button>
-		
+
 	</div>
 
-	
+
 </div>
-	
+
 	<div class="ems_case"></div>
-	
+
 	<!-- <ul id="nav-tab-main" class="nav nav-tabs nav-primary" role="tablist">
 		<li class="nav-item" role="presentation">
 			<a class="nav-link  requestcontent" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
@@ -382,7 +383,7 @@ cls = record.init_code.get_class
 					<div class="tab-title">Operation</div>
 				</div>
 			</a>
-		</li> 
+		</li>
 
 		<li class="nav-item" role="presentation">
 			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
@@ -407,15 +408,15 @@ cls = record.init_code.get_class
 
 	</ul> -->
 	<div class="tab-contentx " >
-		
-		
+
+
 		<div class="tab-pane fade " id="dashboardcontent" role="tabpanel">
-		
+
 		<!-- <p  class="tab-header">
 		<h4 class="text-primary"><i class="lni lni-ambulance"></i>&nbsp;&nbsp;Request</h4>
 		<hr/>
 		</p> -->
-		
+
 			<p>
 				<div class="dashboard"> dasbhoard</div>
 				<script>
@@ -434,15 +435,15 @@ cls = record.init_code.get_class
 				</script>
 			</p>
 		</div>
-		
-		
+
+
 		<div class="tab-pane fade " id="requestcontent" role="tabpanel">
-		
+
 		<!-- <p  class="tab-header">
 		<h4 class="text-primary"><i class="lni lni-ambulance"></i>&nbsp;&nbsp;Request</h4>
 		<hr/>
 		</p> -->
-		
+
 			<p>
 				<div class="request"></div>
 				<script>
@@ -461,21 +462,21 @@ cls = record.init_code.get_class
 				</script>
 			</p>
 		</div>
-		
+
 		<div class="tab-pane fade" id="prearrivalcontent" role="tabpanel">
-		
+
 		<!-- <p  class="tab-header">
 		<h4 class="text-primary"><i class="lni lni-agenda"></i>&nbsp;&nbsp;Pre Arrival</h4>
 		<hr/>
 		</p> -->
-		
-		
+
+
 		<p>
 		<div class="prearrival"></div>
 		</p>
-		
+
 		<script>
-			
+
 			// $.ajax({
 			// 		    url: "../EmsPrearrival/show?case_id=<%=params[:id]%>",
 			//   context: document.body
@@ -484,31 +485,31 @@ cls = record.init_code.get_class
 			//   $( '.prearrival' ).html(html);
 			// });
 			//
-			
+
 		</script>
-			
-		
-		
+
+
+
 		</div>
-		
-		
+
+
 		<div class="tab-pane fade" id="commandcontent" role="tabpanel" style="margin:0px">
-		
+
 		<!-- <p class="tab-header">
 		<h4 class="text-primary"><i class="lni lni-bullhorn"></i>&nbsp;&nbsp;Command</h4>
 		<hr/>
 		</p> -->
 		<p>
-			
-			
+
+
 			<div id="command"></div>
 			<script>
-				
-				<% 
+
+				<%
 					commands = EMSCommand.where(:case_id=>record.id).all
-					if commands.size == 0 
+					if commands.size == 0
 				%>
-				
+
 				// $.ajax({
 				// 			    url: "../EmsCommand/create?case_id=<%=params[:id]%>",
 				//   context: document.body
@@ -516,10 +517,10 @@ cls = record.init_code.get_class
 				//
 				//   $( '#command' ).html(html);
 				// });
-			  
-			  
+
+
 			    <% else %>
-			
+
 				// function reload_command_content(){
 				// $.ajax({
 				// 			    url: "../EmsCommand/show?case_id=<%=params[:id]%>",
@@ -531,26 +532,26 @@ cls = record.init_code.get_class
 				// }
 				// reload_command_content();
 				//
-				
+
 				<% end %>
-			
+
 			</script>
-			
-			
-			
+
+
+
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="operationcontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
+
 			<div class="operation"></div>
 			<script>
-			
+
 				// $.ajax({
 				// 			    url: "../EmsOperation/show?id=<%=params[:id]%>",
 				//   context: document.body
@@ -558,17 +559,17 @@ cls = record.init_code.get_class
 				//
 				//   $( '.operation' ).html(html);
 				// });
-			
-			
+
+
 			</script>
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="paramediccontent" role="tabpanel">
-		
-		
+
+
 		<p>
 			<div class="paramedic"></div>
 			<script>
@@ -583,17 +584,17 @@ cls = record.init_code.get_class
 
 
 			</script>
-			
+
 		</p>
-		
-		
+
+
 		</div>
-		
+
 		<div class="tab-pane fade" id="dischargecontent" role="tabpanel">
-		
-		
+
+
 		<p>
-			
+
 			<div class="discharge"></div>
 			<script>
 				//
@@ -608,26 +609,26 @@ cls = record.init_code.get_class
 				//
 			</script>
 		</p>
-		
-		
+
+
 		</div>
-		
-	
-		
-		
-		
-		
+
+
+
+
+
+
 	</div>
 </div>
 </div>
 <script>
-		
+
 		$('.nav-link').each(function(){
 
 			obj = $(this)
 			if(obj.attr('data-bs-toggle')=='tab'){
 				$(this).click(function(e){
-					
+
 					obj = $(this)
 					sessionStorage.setItem("last_tab", obj.attr('href'));
 				})
@@ -637,56 +638,60 @@ cls = record.init_code.get_class
 
 		$(document).ready(function(){
 			<% unless params[:page] %>
+
 			if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
 				  $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
-				
+
+			}else{
+
+				 $('.tab-dashboard').click()
 			}
+
 			<% else %>
-		
-			
-	
-			
+
+		 $('.nav-tabs a[href="<%=params[:page]%>"]').tab('show');
+
 			<% end %>
-			
-			
-			
+
+
+
 
 		})
 
-		
-		
+
+
 </script>
 
 <%=init_map%>
 
 
 	<% if true %><div class="msg" style="font-size:0.8em;height:200px;margin:100px">
-		
+
 		<center>
-			
-			
+
+
 			<div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status"> <span class="">Loading...</span>
 								</div>
 		</center>
 	</div><% end %>
 <script>
-	
-	
+
+
   tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
-  
-  
+
+
   var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
 
 
-  ws.onopen    = function()  { show('websocket opened'); 
-	
+  ws.onopen    = function()  { show('websocket opened');
+
   	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
 
 
   };
 
 
-  ws.onclose   = function()  { show('websocket closed'); 
+  ws.onclose   = function()  { show('websocket closed');
 
  	setTimeout(function () {
        // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
@@ -695,27 +700,27 @@ cls = record.init_code.get_class
 
   }
 
-  ws.onmessage = function(m) { 
-	  
-	  
+  ws.onmessage = function(m) {
+
+
 	  // console.log("package="+m.data.length)
-	  
+
 	  // show(m.data)
-	  
+
 		lines = m.data.split("\n")
-	
+
 		// console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Zone.Message'){
-			
+
 			update_message()
-		
+
 		}
-	  
+
 	    process_message(lines)
-	  
-	
+
+
   }
-  
-  
-	
+
+
+
 </script>

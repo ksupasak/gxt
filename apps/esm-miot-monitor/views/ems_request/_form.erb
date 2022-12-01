@@ -1,22 +1,22 @@
 
 
 <style>
-	
+
 	.w-auto{
 		width:90% !important;
 		flex:1 1 auto;
 /*		width:1%;*/
 	}
-	
+
 	</style>
 		<!-- <h5>
 			<strong>รายละเอียดเหตุฉุกเฉิน</strong>
 		</h5> -->
 		<div class="row">
-			<div class="col-12 col-lg-9 col-xl-9">
+			<div class="col-12 col-lg-6 col-xl-6">
 				<div class="card  ">
-					<div class="card-header bg-success bbg-gradient ">
-						
+					<div class="card-header bg-primary bbg-gradient ">
+
 						<div class="">
 							<h6 class="mb-0 text-white">
 								ข้อมูลเหตุฉุกเฉิน :
@@ -24,22 +24,22 @@
 						</div>
 								<!-- <h6 class="">
 								<div class="col text-white">
-									
+
 								</div>
 								<div class="col d-flex justify-content-end">
 
 								</div>
 								</h6> -->
-								
+
 					</div>
-					
+
 					<div class="card-body">
-						
-						
-					<div class="row">	
-						
-						<div class="col-4">
-							
+
+
+					<div class="row">
+
+						<div class="col-12 col-sm-6">
+
 							<%
 
 							def record.input name
@@ -47,28 +47,28 @@
 						   end
 
 						   %>
-							
-						     
+
+
 							<div class="row">
-							
-								<div class="col-6">	 
-							
+
+								<div class="col-6">
+
 									<p class="px-3">
 										ผู้แจ้ง
 									</p><input name='record[contact_name]' value="<%=record.contact_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุล" aria-label="default input example">
-								
+
 								</div>
-							
-								<div class="col-6">	 
-							
+
+								<div class="col-6">
+
 									<p class="px-3 ">
 										เบอร์ติดต่อ
 									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
-						
+
 								</div>
-						
+
 							</div>
-							
+
 							<p class="px-3">
 								Chief Complain
 							</p>
@@ -76,100 +76,147 @@
 								<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
 								<textarea name="record[chief_complain]" id="record_chief_complain" rows="2" class="form-control"><%=record.chief_complain%></textarea>
 							</div>
-							
-						
+
+
 					<p class="px-3">
-			
+
 					CBD code
-		
+
 					<span class="" style="float:right" >
-						<a href="#" class="btn btn-info btn-sm">เลือก</a>
+						<a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">เลือก</a>
 					</span>
 					</p>
-		
+
 					<div class="input-group px-3 pb-3">
 					<%= f.select(:init_cbd_code, EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
 					</div>
-					
+
+
+
+					<!-- Modal -->
+					<div class="modal fade" id="selectCodeModal" tabindex="-1" aria-hidden="true" style="display: none;">
+						<div class="modal-dialog modal-dialog-centered modal-xl">
+							<div class="modal-content">
+								<div class="modal-header bg-primary bbg-gradient text-white">
+									<h5 class="modal-title text-white">CBD Code
+
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+
+									<div class="row">
+										<%
+
+
+											groups = EMSCodeGroup.all()
+
+
+											n = 3
+											m = groups.size/n
+
+
+
+											groups.size.times do |gi|
+
+
+											i = m*(gi%n)+gi/n
+											i += 1 if gi%n!=0
+											g = groups[i]
+
+											# if i != 12
+
+										%>
+
+										<div class="col-4 card btn btn-info" style="text-align:left">
+
+											 <a href="#" class='w-100 align-middle' ><%=g.code%> <%=g.name%></a>
+
+										</div>
+										<% end %>
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
 					<p class="px-3">
 						Underlying Disease | โรคประจำตัว
 					</p><input name='record[patient_underlying]' value="<%=record.patient_underlying%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="โรคประจำตัว" aria-label="default input example">
-					
-				
-							
-							
+
+
+
+
 						</div>
-						
-	
-						
-						<div class="col-4">
-							
+
+
+
+						<div class="col-12 col-sm-6">
+
 							  <%
-							  	
+
 							  admit_id = record.admit_id
 							  patient = nil
-							  
-							  if admit_id 
-								 
+
+							  if admit_id
+
 								  admit = Admit.find admit_id
-								 
-								  patient = Patient.find admit.patient_id 
-								  
+
+								  patient = Patient.find admit.patient_id
+
 							  end
-									
-								
+
+
 							  %>
-							
+
 								<p class="px-3">
 									Patient Name / ชื่อ-นามสกุลผู้ป่วย
 								</p><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุลผู้ป่วย" aria-label="default input example">
-					
-						
-												
+
+
+
 								<div class="row">
-							
-								<div class="col-6">	 
-				
+
+								<div class="col-6">
+
 									<p class="px-3">
 										Gender / เพศ
 									</p><input name='record[patient_gender]' value="<%=record.patient_gender if patient%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
-					
+
 								</div>
-				
-								<div class="col-6">	 
-				
+
+								<div class="col-6">
+
 									<p class="px-3 ">
-										Age / อายุ 
+										Age / อายุ
 									</p><input name='record[patient_age]' value="<%=record.patient_age if patient %>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
-			
+
 								</div>
-					
+
 							</div>
-							
-							
+
+
 									<p class="px-3">
 										Patient Identification <span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="ค้นหา"></span>
 									</p>
 									<input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden">
 									<input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
 									<input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example"> <input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
-						
-						
+
+
 						</div>
-						
-						
-						
-						
-						
-						<div class="col-4">
-							
-							
-					
-							
-							
-						
-							
-							
+
+
+
+
+
+						<!-- <div class="col-4">
+
 
 							<p class="px-3">
 								ผู้ป่วยมีสติหรือไม่
@@ -192,297 +239,315 @@
 
 
 
-							
-							
-						</div>
-						
-						
-						
-					
-						
-					</div>	
-				
+						</div> -->
+
+
+
+
+
+					</div>
+
 				</div>
-			
+
 			</div>
-			<div class="col-12">
-			<% unless params[:id]%>	
+			<!-- <div class="col-12">
+			<% unless params[:id]%>
 			<input type="submit" name="create" value="Create" class="btn btn-success">
 			<% else %>
 			<input type="submit" name="create" value="Update" class="btn btn-info">
 			<% end %>
-			</div><br/>
-			<div class="col-12 ">
-		
-				
-				
-		
-				<div class="card radius-10">
-					<div class="card-header bg-success bg-gradient ">
-						<div class="d-flex align-items-center">
-							<div class="">
-								<h6 class="mb-0 text-white">
-									ตำแหน่งเหตุ :
-								</h6>
-							</div>
-							<div class="dropdown ms-auto">
-								<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
-								<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
-									<li>
-										<a class="dropdown-item" href="javascript:;">Action</a>
-									</li>
-									<li>
-										<a class="dropdown-item" href="javascript:;">Another action</a>
-									</li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li>
-										<a class="dropdown-item" href="javascript:;">Something else here</a>
-									</li>
-								</ul>
-							</div>
-							
-							
-							
-							
+			</div><br/> -->
+
+
+			<div class="card ">
+				<div class="card-header bg-gradient bg-primary">
+					<div class="d-flex align-items-center">
+						<div>
+							<h6 class="mb-0 text-primaryx text-white">
+								ภาพเหตุ :
+							</h6>
 						</div>
 					</div>
-					<div class="card-body">
-						<style>
-						       /* Set the size of the div element that contains the map */
-						      #dashboard-map {
-						        height: 380px;  /* The height is 400 pixels */
-						        width: 100%;  /* The width is the width of the web page */
-						       }
- 						      #dashboard-map-2 {
- 						        height: 380px;  /* The height is 400 pixels */
- 						        width: 100%;  /* The width is the width of the web page */
- 						       }
-						    </style>
-							
-						
-							
-						<div class="row">
-						<div class="col-md-4">
-						<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
-						<div class="input-group  px-3"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-						<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
-						</div>
-						
-						</div>
-						<div class="col-md-4">
-							<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
-							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-							<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+				</div>
+				<div class="card-body">
+
+
+							<div class="row">
+								<div>
+									<%
+
+									imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
+
+									if imgs.size>0
+
+									%>
+
+									<% for img in imgs %>
+
+									<%
+									if img
+										url = "../Message/content?id=#{img.id}"
+
+									%>
+									<img src="<%=url%>" width="140">
+									<%
+									end
+									%>
+
+
+									<% end %>
+
+									<%
+								else
+									%>
+								<center style="padding:40px">	No Images</center>
+									<%
+									end
+									%>
+
+								</div>
+							</div>
+
+				</div>
+
+
+		</div>
+
+
+
+			</div>
+
+
+
+			<div class="col-12 col-lg-6 col-xl-6">
+				<div class="col-12 ">
+
+
+
+
+					<div class="card radius-10">
+						<div class="card-header bg-primary bg-gradient ">
+							<div class="d-flex align-items-center">
+								<div class="">
+									<h6 class="mb-0 text-white">
+										ตำแหน่งเหตุ :
+									</h6>
+								</div>
+								<div class="dropdown ms-auto">
+									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+									<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+										<li>
+											<a class="dropdown-item" href="javascript:;">Action</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Another action</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li>
+											<a class="dropdown-item" href="javascript:;">Something else here</a>
+										</li>
+									</ul>
+								</div>
+
+
+
+
 							</div>
 						</div>
-						<div class="col-md-4">
-							<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
-							<div class="input-group"> <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-							<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-0 " type="text" placeholder="ที่อยู่" aria-label="default input example"> 
+						<div class="card-body">
+							<style>
+										 /* Set the size of the div element that contains the map */
+										#dashboard-map {
+											height: 250px;  /* The height is 400 pixels */
+											width: 100%;  /* The width is the width of the web page */
+										 }
+										#dashboard-map-2 {
+											height: 250px;  /* The height is 400 pixels */
+											width: 100%;  /* The width is the width of the web page */
+										 }
+									</style>
+
+
+
+							<div class="row">
+							<div class="col-md-8">
+							<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
+							<div class="input-group  px-3">
+								<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+							<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 							</div>
-						</div>					
+
+							</div>
+							<div class="col-md-4" style="display:none">
+								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
+								<div class="input-group">
+									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+								<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								</div>
+							</div>
+							<div class="col-md-4">
+								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
+								<div class="input-group">
+									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								</div>
+							</div>
+							</div>
+							<br/>
+							<div class="row">
+							<div class="col-12">
+							<div id="dashboard-map" class="" style="height:60vh">
+								map
+							</div>
+							</div>
+								</div>
+							<div class="row "  style="display:none">
+							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
+							<div class="col-12">
+							<div id="dashboard-map-2"  class=""  style="height:60vh">
+								map
+							</div>
 						</div>
-						<br/>
-						<div class="row">
-						<div class="col-12 col-xl-6">	
-						<div id="dashboard-map" class="" style="height:60vh">
-							map
-						</div>
-						</div>
-						<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
-						<div class="col-12 col-xl-6">	
-						<div id="dashboard-map-2"  class=""  style="height:60vh">
-							map
-						</div>
-					</div>
-						
-						</div>
-					
-						<script>
-							$(document).ready(function(){
-							
-							latlng = [13.69313508354787, 100.69198345629769]
-							
-							<% if record.latlng and record.latlng.index(',') %>
-							latlng = [<%=record.latlng%>]
-							<% end %>
-							
-							
-							
-							map1 = new EMSMap('dashboard-map',{movable:true});
-							map1.setPosition(latlng[0], latlng[1])
-							map1.setMarkerPosition(latlng[0], latlng[1])
-							
-							map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
-							map2.setPosition(latlng[0], latlng[1])
-							map2.setMarkerPosition(latlng[0], latlng[1])
-						
-							
-							map1.changeMarkerPosition(function(marker){
-								
-								var pos = marker.position
-								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-								
-							
-								
-								// map1.geocode({'location':pos},function(result){
-	//
-	// 								$('#record_address').val(result.formatted_address)
-	//
-	// 							})
-								
-								map2.setPosition(pos.lat(), pos.lng())
-								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-									
-							}.bind(this))
-							
-							map2.changeMarkerPosition(function(marker){
-								
-								var pos = marker.position
-								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-						
-								
-								// map2.geocode({'location':pos},function(result){
-	//
-	// 								$('#record_address').val(result.formatted_address)
-	//
-	// 							})
-								
-								map1.setPosition(pos.lat(), pos.lng())
-								map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-							})
-			
-							
-							function address_search(e){
-								
-							
-									var address = $('#record_location').val()
-								
-									map1.geocode({'address':address},function(result){
+
+							</div>
+
+							<script>
+								$(document).ready(function(){
+
+								latlng = [13.69313508354787, 100.69198345629769]
+
+								<% if record.latlng and record.latlng.index(',') %>
+								latlng = [<%=record.latlng%>]
+								<% end %>
+
+
+
+								map1 = new EMSMap('dashboard-map',{movable:true});
+								map1.setPosition(latlng[0], latlng[1])
+								map1.setMarkerPosition(latlng[0], latlng[1])
+
+								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
+								map2.setPosition(latlng[0], latlng[1])
+								map2.setMarkerPosition(latlng[0], latlng[1])
+
+
+								map1.changeMarkerPosition(function(marker){
+
+									var pos = marker.position
+									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+
+
+
+									// map1.geocode({'location':pos},function(result){
+									//
+									// 		$('#record_address').val(result.formatted_address)
+									//
+									// 	})
+
+									map2.setPosition(pos.lat(), pos.lng())
+									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+								}.bind(this))
+
+								map2.changeMarkerPosition(function(marker){
+
+									var pos = marker.position
+									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+
+
+									// map2.geocode({'location':pos},function(result){
+			//
+			// 								$('#record_address').val(result.formatted_address)
+			//
+			// 							})
+
+									map1.setPosition(pos.lat(), pos.lng())
+									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+								})
+
+
+								function address_search(e){
+
+
+										var address = $('#record_location').val()
+
+										map1.geocode({'address':address},function(result){
+
+											// $('#record_address').val(result.formatted_address)
+
+											var pos = result.geometry.location;
+
+											map1.setPosition(pos.lat(), pos.lng())
+											map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+											map2.setPosition(pos.lat(), pos.lng())
+											map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+										})
+
+										e.preventDefault();
+										return false;
+
+								}
+
+
+								$('#record_location').keydown(function(e){
+									if(e.keyCode == 13) {
+										address_search(e)
+											e.preventDefault()
+											return false;
+										}
+								});
+
+								$('#record_address').change(address_search);
+
+
+								$('#record_latlng').keydown(function(e){
+
+
+								if(event.keyCode == 13) {
+									var address = $(this).val()
+									latlng = address.split(",")
+									var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
+
+									map1.geocode({'location':latlng},function(result){
 
 										// $('#record_address').val(result.formatted_address)
-									
+
 										var pos = result.geometry.location;
-									
+
 										map1.setPosition(pos.lat(), pos.lng())
 										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
 										map2.setPosition(pos.lat(), pos.lng())
 										map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-								
+
 									})
-									
-									e.preventDefault();
-									return false;
-								
-							}
-							
-							
-							$('#record_location').keydown(function(e){
-								if(e.keyCode == 13) {
-									address_search(e)
-	   								e.preventDefault()
-	   								return false;
-	   							}
-							});
-							
-							$('#record_address').change(address_search);
-							
-							
-							$('#record_latlng').keydown(function(e){
-   
-   							
-							if(event.keyCode == 13) {
-								var address = $(this).val()
-								latlng = address.split(",")
-								var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
-								
-								map1.geocode({'location':latlng},function(result){
 
-									// $('#record_address').val(result.formatted_address)
-									
-									var pos = result.geometry.location;
-									
-									map1.setPosition(pos.lat(), pos.lng())
-									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-									map2.setPosition(pos.lat(), pos.lng())
-									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-								
+									e.preventDefault()
+									 return false;
+									}
+
 								})
-								
-								e.preventDefault()
-								 return false;
-							  }
-									
-							})
-							
-							
-						})
-						
-						
-						</script>
-						
-					</div>
-				</div>
-		    </div>
-			</div>
-			<div class="col-12 col-lg-3 col-xl-3">
-			
-			
-				<div class="card radius-10">
-					<div class="card-header bg-transparent">
-						<div class="d-flex align-items-center">
-							<div>
-								<h6 class="mb-0 text-primaryx">
-									ภาพเหตุ :
-								</h6>
-							</div>
-						</div>	
-					</div>			
-				  <div class="card-body">
-						
-			
-								<div class="row">
-									<div>
-										<%
-				
-										imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
-				
-			
-					
-										%>
-				
-										<% for img in imgs %>
-				
-										<%
-										if img
-											url = "../Message/content?id=#{img.id}" 
-				
-										%>	
-										<img src="<%=url%>" width="140">
-										<%
-										end
-										%>
-				
-				
-										<% end %>
-									</div>
-								</div>
-			
-					</div>
-					
-					
-			</div>
-			
-			
-			
-			
-			
-			</div>
-			
-		
-			</div>
-			
-	
 
+														map1.init()
+														map2.init()
+
+							})
+
+
+							</script>
+
+						</div>
+					</div>
+					</div>
+
+
+
+
+
+
+			</div>
+
+
+			</div>

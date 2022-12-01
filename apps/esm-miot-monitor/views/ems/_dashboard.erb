@@ -1,15 +1,15 @@
 <%
-	
-	
+
+
 	ems_case =  EMSCase.find params[:id]
-	
+
 	zone = ems_case.zone
-	
+
 	admit = ems_case.admit
-	
+
 	patient = admit.patient
-	
-	
+
+
 %>
 
 
@@ -24,8 +24,8 @@
 <div class="col-12 col-lg-4">
 <div class="card card-x radius-10 border-start border-0 border-3 border-success">
 <div class="card-body">
-	<h5>Request</h5>
-	
+	<h5><a class="tab-request" >Request</a></h5>
+
 	<% if ems_case %>
 	<li>Request at : <%=ems_case.created_at.strftime("%d-%m-%Y %H:%M")%> (<%=format('%.1f',(Time.now-ems_case.created_at)/60.0)%>mins)</li>
 	<li>Address : <%=ems_case.address%></li>
@@ -38,12 +38,12 @@
 <%
 	status = 'info'
 	list = nil
-	if ems_case 
-		
+	if ems_case
+
 		list = EMSCaseWorkflow.where(:case_id=>ems_case.id).all
-		
-		status = 'success' if list.size>0 
-		
+
+		status = 'success' if list.size>0
+
 	end
 %>
 <div class="col-12 col-lg-4">
@@ -52,15 +52,15 @@
 	<h5>PreArrival</h5>
 		<% if ems_case %>
 	<%
-		
+
 		list = EMSCaseWorkflow.where(:case_id=>ems_case.id).all
-		
-		for i in list 
+
+		for i in list
 			wf = EMSKWorkflow.find i.kworkflow_id
 			ps = EMSCaseProcess.where(:case_id=>ems_case.id,:case_workflow_id=>i.id).count
 	%>
 	<li><%=wf.name  if wf%> (<%=ps%>)</li>
-	
+
 	<% end %>
 
 	<% end %>
@@ -70,12 +70,12 @@
 <%
 	status = 'info'
 	list = nil
-	if ems_case 
-		
+	if ems_case
+
 		list = EMSCommand.where(:case_id=>ems_case.id).all
-		
-		status = 'success' if list.size>0 
-		
+
+		status = 'success' if list.size>0
+
 	end
 %>
 <div class="col-12 col-lg-4">
@@ -84,28 +84,28 @@
 	<h5>Command</h5>
 		<% if ems_case %>
 	<%
-		
-	
-		
-		for i in list 
-			
-		ambu = Ambulance.find i.ambulance_id 
-		
+
+
+
+		for i in list
+
+		ambu = Ambulance.find i.ambulance_id
+
 		providers = i.providers
-		
-		
-		
+
+
+
 		route = AocCaseRoute.where(:status=>'STARTED', :admit_id=>admit.id).first
 	%>
 	<li>Ambu : <%=ambu.name %> (<%=ambu.plate_license%>)</li>
 	<li>Route : <% if route %><%=route.address %> <%=route.to_s%><% end %> </li>
-	
+
 	<% for p in providers
 	provider = p.provider
-	 %>	
+	 %>
 	<li>EMS : <%=provider.name if provider%> (<%=provider.code%> <%=p.position%>) </li>
 	<% end %>
-	
+
 	<% end %>
 
 	<% end %>
@@ -116,11 +116,11 @@
 <%
 	status = 'info'
 	list = nil
-	
+
 	status = 'warning' if ems_case.paramedic_start_at
-	
+
 	status = 'success' if ems_case.paramedic_stop_at
-	
+
 %>
 <div class="col-12 col-lg-4">
 <div class="card card-x radius-10 border-start border-0 border-3 border-<%=status%>">
@@ -138,7 +138,7 @@
 <div class="card card-x radius-10 border-start border-0 border-3 border-info">
 <div class="card-body">
 	<h5>EMR</h5>
-	
+
 	<li>N/A</li>
 </div>
 </div>
@@ -147,7 +147,7 @@
 <%
 	status = 'info'
 	list = nil
-	
+
 	status = 'success' if admit.status=='Discharged'
 %>
 
@@ -155,13 +155,13 @@
 <div class="card  card-x radius-10 border-start border-0 border-3 border-<%=status%>">
 <div class="card-body">
 	<h5>Discharge</h5>
-	
+
 	<li>Status : <%=ems_case.status%></li>
 	<li>Admit : <%=admit.status%></li>
 	<li>Discharge at : <% if admit.discharge_stamp %><%=admit.discharge_stamp.strftime("%d-%m-%Y %H:%M")%> (<%=format('%.1f',(Time.now-admit.discharge_stamp)/60.0)%>mins)  <% end %></li>
 	<li>Case Duration : <% if admit.discharge_stamp %><%=format('%.1f', (admit.discharge_stamp.to_i - ems_case.created_at.to_i)/60.0 )%> mins (Request-Discharge) <% end %></li>
-	
-	
+
+
 </div>
 </div>
 </div>
@@ -176,7 +176,7 @@
 <div class="card radius-10 border-start border-0 border-3 border-info">
 <div class="card-body">
 	<h5>Events</h5>
-</div>	
+</div>
 </div>
 </div>
 </div>

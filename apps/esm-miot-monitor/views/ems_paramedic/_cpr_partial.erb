@@ -1,0 +1,40 @@
+<%
+  ems_case = EMSCase.find params[:id]
+  if ems_case.cpr_status=="STARTED"
+%>
+<div class="row">
+<div class="col-12 mt-3">
+<a href="#" class="btn btn-warning cpr-btn text-white">-</a>
+</div>
+
+</div>
+<script>
+  function updateCPR(){
+    start = Date.parse("<%=ems_case.cpr_start_at%>");
+    now = new Date()
+
+    t = 120- Math.round(((now - start)/1000)%120)
+
+    $('.cpr-btn').text("Next confirm in : "+t)
+
+    
+    if(t<=10){
+
+          $('.cpr-btn').removeClass("btn-warning")
+          $('.cpr-btn').addClass("btn-danger")
+
+
+    }else{
+
+      $('.cpr-btn').removeClass("btn-danger")
+      $('.cpr-btn').addClass("btn-warning")
+
+    }
+
+
+  }
+
+  setInterval(updateCPR, 1000);
+</script>
+
+<% end %>
