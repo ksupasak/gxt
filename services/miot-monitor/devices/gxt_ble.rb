@@ -1,9 +1,18 @@
 module BLE
 
+class CharDesc
 
+def flag?(flag_name)
+  
+  flags.include?(flag_name) or flags.include?('indicate')
+
+end
+
+end
 
 def self.start ws
 
+if true
 
 # Selecter adapter
 $a = BLE::Adapter.new('hci0')
@@ -61,7 +70,7 @@ for i in $a.devices
       if  (d.alias=='TAIDOC TD1261' or d.alias=='TAIDOC TD1107' )
 
          #     puts "Found #{d.alias} #{i}"
-
+             if false
 
               d.on_signal do |intf,props|
 
@@ -80,21 +89,34 @@ for i in $a.devices
               
             end
             
-            
+            end
             
             #puts 'connect '+devices.inspect
             d.connect
 
-
+	    o = d.refresh!
+		
+	  
 
             if devices[i] == nil
 
-                    service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
+                           service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
                            char_uuid = '00002a1c-0000-1000-8000-00805f9b34fb'
-
+			
+                           #00002a1c-0000-1000-8000-00805f9b34fb
+ 			  # puts d.characteristics(service_uuid).join("\n")
+				
+		            
                              d.services.each do |s|
+
+			
                             if s==service_uuid
-                                    d.subscribe_indicate(service_uuid,char_uuid) do |raw|
+				   
+				  
+					
+
+
+                                    d.subscribe(service_uuid,char_uuid) do |raw|
                                     puts '***********indicate'
 				    puts raw.bytes.inspect 
 				    puts raw.unpack("H*")
@@ -132,6 +154,8 @@ EOM
      end          
           
     
+ end
+
   end
   
   if false

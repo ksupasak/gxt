@@ -114,6 +114,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rest-graph (2.0.3)
+    rexml (3.2.5)
     rqrcode (2.0.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -176,6 +177,7 @@ DEPENDENCIES
   eventmachine
   faye-websocket
   hiredis
+  mini_portile2 (= 2.6.1)
   mongo
   mongoid
   mongoid-grid_fs
@@ -192,6 +194,7 @@ DEPENDENCIES
   resque
   rest-client
   rest-graph
+  rexml
   rqrcode
   serialport
   sinatra

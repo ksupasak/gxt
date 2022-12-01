@@ -66,3 +66,5 @@ gem 'rack-ssl-enforcer'
 
 
 gem 'nokogiri'
+gem 'mini_portile2', '2.6.1'
+gem 'rexml'

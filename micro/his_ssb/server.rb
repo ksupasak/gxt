@@ -18,8 +18,8 @@ require_relative '../lib/miot'
  
   # set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
  
-  set :endpoint, 'https://localhost:9293'
-  set :ssb_connection_key, '123456'
+  set :endpoint, 'https://10.10.2.131:12123'
+  set :ssb_connection_key, '34522DBE-1E62-4EEC-B049-7C85C9C11012'
   
   puts settings.endpoint
 
@@ -60,6 +60,8 @@ require_relative '../lib/miot'
     
     
       uri = URI("#{settings.endpoint}/IVitalSign/AccessToken/Request")
+
+	puts "uri #{uri}"
       
       headers = {'Content-Type' =>'application/json', 'SSB-Connection-Key'=>settings.ssb_connection_key}
       
@@ -88,7 +90,7 @@ CNX
 
       request = Net::HTTP::Get.new(uri.request_uri)
       request.set_form_data(data)
-      
+     
       request.body = data.to_json
       puts "ss #{request.body}"
 
@@ -107,7 +109,7 @@ CNX
     
       puts '============= FINISH 2 ==================='
     
-    
+      puts response.inspect 
       
       obj = JSON.parse(response.body)
   
