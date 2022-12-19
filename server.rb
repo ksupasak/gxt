@@ -64,9 +64,11 @@ require 'em-hiredis'
 require 'redis'
 require "hiredis"
 
+
+
 redis_url = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
 redis = Redis.new(url: redis_url,:driver => :hiredis)
-puts "REDIS CONFIG : #{redis_url}" 
+puts "REDIS CONFIG : #{redis_url}"
 # redis = EM::Hiredis.connect "redis://#{@conf_redis_host}:#{@conf_redis_port}/#{@conf_redis_db}"
 
 
@@ -74,9 +76,9 @@ set :redis, redis
 set :redis_host, REDIS_HOST
 set :redis_port, REDIS_PORT
 set :redis_db, REDIS_DB
-set :redis_password, REDIS_PASS 
+set :redis_password, REDIS_PASS
 
-
+# end
 
 # Server configuration
 
@@ -138,5 +140,3 @@ end
 
 # =========================================
 require_relative 'lib'
-
-

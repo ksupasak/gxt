@@ -4,12 +4,12 @@
     <title>Medical IOT Solution</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
-	<link href="/open-iconic/font/css/open-iconic-foundation.css" rel="stylesheet">
+    <link href="https://localhost:1792/miot/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://localhost:1792/open-iconic/font/css/open-iconic-foundation.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="" rel="stylesheet">
-	<script src="/vendor/jquery-1.9.1.min.js"></script>
-  <script src="/vendor/d3/d3.min.cus.js"></script>
+	<script src="https://localhost:1792/vendor/jquery-1.9.1.min.js"></script>
+  <script src="https://localhost:1792/vendor/d3/d3.min.cus.js"></script>
 
 
   <style>
@@ -113,15 +113,15 @@
     <div id="trend">Trend</div>
 </div>
 
-</div class="">
-
+</div >
+   <div id="msgsx"></div>
 <%
 		# , [310, 50, -4, 0, 0], [311, 50, -4, 0, 0], [312, 50, -4, 0, 0
 
 
-lung_data = File.open(File.join(File.dirname(__FILE__),'lung.tsv')).read().split("\n").collect{|i| t = i.split("\t").collect{|j| j.to_i} ; {'x'=>t[1], 'y'=>t[3], 'z'=>t[2] }  }
+lung_data =  File.open(File.join(File.dirname(__FILE__),'lung.tsv')).read().split("\n").collect{|i| t = i.split("\t").collect{|j| j.to_i} ; {'x'=>t[1], 'y'=>t[3], 'z'=>t[2] }  }
 
-interval = 10
+interval = 15
 
 
 %>
@@ -267,9 +267,8 @@ EOF
 		this.lastx=null;
 		this.lasty=null;
 		this.vpl = <%=lung_data.to_json %>
-		this.gvpl = <%=lung_data.to_json %>
-
-		this.vplx = <%=lung_data.to_json %>
+		this.gvpl = this.vpl // <%=lung_data.to_json %>
+		this.vplx = this.vpl // <%=lung_data.to_json %>
 
 		this.ghost_show = false;
 
@@ -297,7 +296,41 @@ EOF
 
 	  }
 
- genValue(){
+
+    genValue(){
+
+     // var d = this.vplx[this.vindex];
+     if(this.vplx.length > 60){
+
+     var d = this.vplx.shift();
+
+     if(d!=null){
+
+     let v = d['x']
+     let p = d['y']
+     let f = d['z']
+     // console.log("x = "+vindex+","+vplx.length)
+     //
+     this.receiveValue(v,p,f)
+     this.vindex++;
+     this.tindex++;
+     if(this.vindex>300&&v<100&&p<100){
+       this.vindex=0;
+       $('.vpl-path').remove()
+     }
+
+     if(this.tindex > 1000){
+       this.tindex=0;
+       $('.trend-path').remove()
+     }
+
+     }
+}
+
+
+    }
+
+ genValue2(){
     // console.log(this)
   //
   //   console.log(this.vindex)
@@ -348,6 +381,26 @@ resetMark(){
 getInterval(){
 	return this.interval
 }
+ready(){
+
+   this.vplx = []
+
+}
+ enQueue(json){
+
+
+   for(var ix in json){
+     i = json[ix]
+
+     if(i!=null){
+     this.vplx.push({x:i[0],y:i[1],z:i[2]})
+     }
+   }
+
+   console.log(this.vplx.length)
+
+  }
+
 
  receiveValue(v,p,f){
 
@@ -371,7 +424,7 @@ getInterval(){
 		// Add path
 		const path = this.grp
 		  .append("path")
-		  .attr("transform", `translate(${this.margin.left},30)`)
+		  .attr("transform", `translate(${this.margin.left},0)`)
 		  .datum(ldata)
 		  .attr('class','vpl-path')
 		  .attr("fill", "none")
@@ -395,17 +448,6 @@ getInterval(){
 	  	  .attr("stroke-dasharray", pathLength)
 	  	  .transition(transitionPath)
 	  	  .attr("stroke-dashoffset", 0);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -552,21 +594,34 @@ chartClick(){
 
 
 // Create scales
-this.tyScale = d3
-  .scaleLinear()
-  .range([100, 0])
-  .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
-
+// this.tyScale = d3
+//   .scaleLinear()
+//   .range([100, 0])
+//   .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
+//
+// this.txScale = d3
+//   .scaleLinear()
+//   .range([0, 100])
+//   .domain([0,340]);
+//
+// this.tzScale = d3
+//   .scaleLinear()
+//   .range([100, 0])
+//   .domain([d3.min(this.vpl, dataPoint => dataPoint.z), d3.max(this.vpl, dataPoint => dataPoint.z)]);
 this.txScale = d3
   .scaleLinear()
   .range([0, 100])
   .domain([0,340]);
 
+this.tyScale = d3
+  .scaleLinear()
+  .range([100, 0])
+  .domain([0, 3000]);
+
 this.tzScale = d3
   .scaleLinear()
   .range([100, 0])
-  .domain([d3.min(this.vpl, dataPoint => dataPoint.z), d3.max(this.vpl, dataPoint => dataPoint.z)]);
-
+  .domain([-800, 200]);
 
 const linex = d3
   .line()
@@ -708,7 +763,7 @@ const linez = d3
   const gpath = this.grp
   .append("path")
   .attr("transform", `translate(${this.margin.left},30)`)
-  .datum(this.gvpl)
+  .datum(this.vpl)
   .attr("class", "ghost")
   .attr("fill", "none")
   .attr("stroke", "#331")
@@ -757,7 +812,7 @@ const linez = d3
 	  .append("g")
 	  .attr('class','scaler')
 	  .attr("stroke", "#c6bf90")
-	  .attr("transform", `translate(0, 30)`)
+	  .attr("transform", `translate(0, 0)`)
 	  .call(d3.axisLeft(this.yScale));
 
 
@@ -784,37 +839,45 @@ const linez = d3
 		$('#reset-mark').click(lung.resetMark).bind(lung);
 
 
-	 </script>
-   <form id="form">
-     <input type="text" id="input" value="send a message"></input>
-   </form>
-   <div id="msgs"></div>
-   <script type="text/javascript">
+
    window.onload = function(){
      (function(){
        var show = function(el){
-         return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
-       }(document.getElementById('msgs'));
+         return function(msg){
 
-       var ws       = new WebSocket('wss://localhost:9292/');
-       ws.onopen    = function()  { show('websocket opened'); };
+           // el.innerHTML = msg + '<br />' + el.innerHTML;
+           console.log(msg)
+
+          }
+       }(document.getElementById('msgsx'));
+
+       var ws       = new WebSocket('ws://localhost:8080/');
+       ws.onopen    = function()  { show('websocket opened');
+
+          lung.ready()
+
+     };
        ws.onclose   = function()  { show('websocket closed'); }
-       ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+       ws.onmessage = function(m) {
+
+          json = JSON.parse(m.data)
+
+          lung.enQueue(json)
+
+       };
 
        var sender = function(f){
-         var input     = document.getElementById('input');
-         input.onclick = function(){ input.value = "" };
-         f.onsubmit    = function(){
-           ws.send(input.value);
-           input.value = "send a message";
-           return false;
-         }
+         // var input     = document.getElementById('input');
+         // input.onclick = function(){ input.value = "" };
+         // f.onsubmit    = function(){
+         //   ws.send(input.value);
+         //   input.value = "send a message";
+         //   return false;
+         // }
        }(document.getElementById('form'));
      })();
    }
    </script>
 
 	  </body>
-
-
 	  </html>

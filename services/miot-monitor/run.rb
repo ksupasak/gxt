@@ -29,6 +29,9 @@ require_relative 'devices/gps/gps'
 require_relative 'devices/nihon_defib_gw'
 require_relative 'devices/xovic_hl7_gw'
 
+require_relative 'devices/unity'
+
+
 
 
 unless HOST_IP
@@ -53,9 +56,9 @@ MIOT::post_config
 $global_position = ""
 
 threads = []
-puts ARGV.inspect 
+puts ARGV.inspect
 
-ws = MIOT::connect 
+ws = MIOT::connect
 
 
 # threads << Thread.new {
@@ -65,7 +68,7 @@ ws = MIOT::connect
 # threads << Thread.new {
 # Device::monitor_vista_120_v1(ws)
 # }
-# 
+#
 # sleep 1
 # # puts 'send'
 # #
@@ -78,7 +81,7 @@ ws = MIOT::connect
 #  end
 # #
 #
- 
+
 unless select_monitor
  threads << Thread.new {
  Device::monitor_iacs_m540(ws)
@@ -132,15 +135,23 @@ if select_monitor=='xovic_hl7'
  }
 end
 
+
+if select_monitor=='unity'
+  puts 'monitor select = unity'
+ threads << Thread.new {
+ Device::monitor_unity(ws)
+ }
+end
+
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
 # }
 #
-#  
+#
 # threads << Thread.new {
 # Device::monitor_vista_120_s(ws)
 # }
-# 
+#
 # threads << Thread.new {
 # Device::monitor_vista_120_s_v2(ws)
 # }
@@ -151,7 +162,7 @@ end
 # Device::gps_test_server(ws)
 # }
 
-for i in threads  
+for i in threads
   i.run
 end
 

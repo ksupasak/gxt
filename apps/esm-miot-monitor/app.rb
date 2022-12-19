@@ -320,6 +320,12 @@ class HomeController < GXT
 
   def websocket request
 
+       EM.run do
+
+                      c = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
+                      puts "REDIS CONFIG SERVICE 1 : #{c}"
+                      redisx = EM::Hiredis.connect c
+
         request.websocket do |ws|
 
 
@@ -351,12 +357,30 @@ class HomeController < GXT
 
              redis = @context.settings.redis
 
-             # forward to redis
-             redis.publish("miot/#{@context.settings.name}/in", msg_data)
+             # @context.settings.redis = redis
 
+            # puts msg_data
+             # fast check header
+
+             if msg_data[0..2] == 'PTT'
+               puts 'Forward to PTT'
+
+               # redis.publish("PTT/miot/z/0", msg_data)
+
+
+               redisx.publish("PTT/#{@context.settings.name}/in", msg_data)
+
+
+             else
+
+             # forward to redis
+               redis.publish("miot/#{@context.settings.name}/in", msg_data)
+
+             end
 
 
              msgs = msg_data.split("EOL\n")
+
 
              for msg in msgs
 
@@ -446,10 +470,10 @@ class HomeController < GXT
                   icmd = t[0]
                   ipath = t[1]
 
-                  if icmd=='Zone'
+                  if icmd=='Zone' or icmd=='PTT'
                     puts '****************'
 
-                    puts "#{ipath} #{ch_map.inspect}"
+
                     ch = ipath
 
                     unless ch_map[ch]
@@ -459,7 +483,7 @@ class HomeController < GXT
 
                     ch_map[ch][:ws][wsname] = true
 
-
+                        puts "#{ipath} #{ch_map.inspect}"
 
 
                   else
@@ -593,7 +617,7 @@ class HomeController < GXT
          end
 
   end
-
+end
 
   end
 

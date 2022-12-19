@@ -11,22 +11,22 @@ require_relative '../lib/miot'
 
   set :bind, '0.0.0.0'
   set :port, 9292
-  
-  
 
- 
- 
+
+
+
+
   # set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
- 
-  set :endpoint, 'https://localhost:9293'
-  set :ssb_connection_key, '123456'
-  
+
+  set :endpoint, 'https://10.10.2.131:12123'
+  set :ssb_connection_key, '34522DBE-1E62-4EEC-B049-7C85C9C11012'
+
   puts settings.endpoint
 
-  
-  
-  
-  
+
+
+
+
   #
   unless HOST_IP
   HOST_IP = IPSocket.getaddress(Socket.gethostname)
@@ -55,30 +55,100 @@ require_relative '../lib/miot'
   ws = MIOT::connect
 
 
+class CaseSensitiveGet < Net::HTTP::Get
+  def initialize_http_header(headers)
+    @header = {}
+    headers.each{|k,v| @header[k.to_s] = [v] }
+  end
 
-  def login 
-    
-    
+  def [](name)
+    puts "READ HEADERE #{name} #{@header[name.to_s].inspect}"
+
+    if name=='Content-Type'
+    return @header[name.to_s][0]
+	else
+    return @header[name.to_s]
+   end
+  end
+
+  def []=(name, val)
+    puts "Write #{name} #{val}"
+
+    if val
+      @header[name.to_s] = [val]
+    else
+      @header.delete(name.to_s)
+    end
+  end
+
+  def capitalize(name)
+    name
+  end
+end
+
+
+class CaseSensitivePost < Net::HTTP::Post
+  def initialize_http_header(headers)
+    @header = {}
+    headers.each{|k,v| @header[k.to_s] = [v] }
+  end
+
+  def [](name)
+    puts "READ HEADERE #{name} #{@header[name.to_s].inspect}"
+     if name=='Content-Type'
+       puts "READ xxx"
+
+   return @header[name.to_s][0]
+       else
+    return [@header[name.to_s]]
+   end
+
+
+
+  end
+
+  def []=(name, val)
+
+     puts "Write #{name} #{val}"
+    if val
+      @header[name.to_s] = [val]
+    else
+      @header.delete(name.to_s)
+    end
+  end
+
+  def capitalize(name)
+    name
+  end
+end
+
+
+
+  def login
+
+
       uri = URI("#{settings.endpoint}/IVitalSign/AccessToken/Request")
-      
+
+	puts "uri #{uri}"
+
       headers = {'Content-Type' =>'application/json', 'SSB-Connection-Key'=>settings.ssb_connection_key}
-      
+
       data = {}
-      
+
       content = <<CNX
-      { }
+  { }
 CNX
       data = JSON.parse(content)
-      
+
       puts data.to_json
-    
+
 
   #    res = Net::HTTP.post_form  uri, data
-      
-   #   puts res.body
-      
 
-      
+   #   puts res.body
+  #  each_capitalized
+
+
 
       # Full control
       http = Net::HTTP.new(uri.host, uri.port)
@@ -86,126 +156,172 @@ CNX
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
 
-      request = Net::HTTP::Get.new(uri.request_uri)
+#      request = Net::HTTP::Get.new(uri.request_uri)
+      request = CaseSensitiveGet.new(uri.request_uri)
       request.set_form_data(data)
-      
+
       request.body = data.to_json
       puts "ss #{request.body}"
+      request['accept'] = '*/*'
+      request['content-type']  = "application/json"
 
-      # Tweak headers, removing this will default to application/x-www-form-urlencoded
+      request["Accept-Encoding"] = request["accept-encoding"]
+
+      request['accept-encoding'] = nil
+  # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
       request["SSB-Connection-Key"] = settings.ssb_connection_key
       # request["Authorization"] = 'Bearer '+settings.token
 
-      puts '============= DEBUG ==================='
-    
-      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
-      puts request.inspect 
-      
+ #    request.add_field "Content-Type", "application/json"
+  #    request.add_field "SSB-Connection-Key", settings.ssb_connection_key
+
+
+      puts '============= DEBUG Login Header ==================='
+
+     request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+#      puts request.inspect
+
 
       response = http.request(request)
-    
-      puts '============= FINISH 2 ==================='
-    
-    
-      
+
+      puts '============= FINISH Login ==================='
+
+      puts response.body
+
+    	puts
+
       obj = JSON.parse(response.body)
-  
-      
-      puts obj.inspect 
-      
+
+
+      # puts obj.inspect
+
       settings.set :token, obj['Data']['AccessToken']
-      
+
       return {:r=>obj['success'],:http=>http}
-      
-      
+
+
   end
-  
-  
+
+
   get '/login' do
     login
     return settings.token
   end
- 
+
 
 
 # service to get patient data
 
-  get '/get_patient_by_hn' do 
-    
+  get '/get_patient_by_hn' do
+
     begin
-    
+
     puts 'Get Patient'
-  hn = params[:hn]  
-  
+
+
+      hn = params[:hn]
+
       http =  login[:http]
-  
-      
+
+
       uri = URI("#{settings.endpoint}/IVitalSign/GetPatientInfo")
-    
+
       data = {}
-      
+
       content = <<CNX
       {
-      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"20200213_0145_1"
+      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"20221215_349_1"
       }
 CNX
       data = JSON.parse(content)
-      
-      
-    
+
+
+
 
       # Full control
       # http = Net::HTTP.new(uri.host, uri.port)
  #      http.use_ssl = true if uri.instance_of? URI::HTTPS
  #      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
  #      http.read_timeout = 10 # seconds
- 
-       # http = Net::HTTP.new(uri.host, uri.port)
-       
-       # data['accessToken'] = settings.token
-      
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(data)
-      request.body = data.to_json
-      
-      puts request.body.inspect
 
-      # puts 'tok '+ht.inspect 
+       # http = Net::HTTP.new(uri.host, uri.port)
+
+       # data['accessToken'] = settings.token
+
+      # request = Net::HTTP::Post.new(uri.request_uri, {'Authorization'=>'Bearer '+settings.token})
+      request = Net::HTTP::Post.new(uri.request_uri)
+
+      # request = CaseSensitivePost.new(uri.request_uri)
+
+
+      request.set_form_data(data)
+
+
+      request.body = data.to_json
+      # request.body = content
+
+
+      # puts request.body.inspect
+      puts "============= REQUEST inspect ==========="
+      # puts request.header.inspect
+
+
+      # puts 'tok '+ht.inspect
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = 'Bearer '+settings.token
-      
 
-      puts '============= DEBUG ==================='
-    
+      request["Authorization"] = 'Bearer '+settings.token
+
+       #request['Accept'] = ['*/*']
+        # request.delete('content-type')
+
+       #
+       puts request.to_hash
+       puts request.body
+
+      #request['content-type']  = "application/json"
+
+
+
+      #request["Accept-Encoding"] = request["accept-encoding"]
+
+       # request['accept-encoding'] = nil
+
+
+
+      puts '============= DEBUG Get Patient HEADER ==================='
+
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
       response = http.request(request)
-    
-      puts '============= FINISH ==================='
-    
+
+      puts '============= FINISH Get Patient ==================='
+
       puts response.body
-      
+
+      puts '============= ================ ==================='
+
+
       dobj = JSON.parse(response.body)
-  
-      
-      puts dobj.inspect 
-      
+
+
+      puts dobj.inspect
+
       obj = dobj['Data']
-      
+
       robj = {}
-  
+
       # birth_date = Date.new obj['dateOfBirth'][4..7].to_i-543, obj['dateOfBirth'][2..3].to_i, obj['dateOfBirth'][0..1].to_i
       # birth_date = Date.new obj['dateOfBirth'][0..3].to_i, obj['dateOfBirth'][4..5].to_i, obj['dateOfBirth'][6..7].to_i
-      
-      
+
+
       dob = obj['DOB']
       birth_date = Date.new(dob[0..3].to_i, dob[4..5].to_i, dob[6..-1].to_i)
-      
+
       names = obj['Name'].split(" ")
-      
-  
+
+
       robj[:hn] = obj['HN']
       # robj[:pid] = obj['pid']
       robj[:first_name] = names[1]
@@ -214,20 +330,20 @@ CNX
       robj[:gender] = obj['Gender']
       robj[:birth_date] = birth_date
       robj[:vn] = obj['VN']
-      # robj[:age] = 
+      # robj[:age] =
       robj[:full_name] = "#{robj[:first_name]} #{robj[:last_name]}"
-  
-      puts birth_date.inspect 
-      
-      
+
+      puts birth_date.inspect
+
+
       result = {:status=>'200 OK', :record=>robj}
-  
-  
+
+
 
       return result.to_json
-	
-        
-  
+
+
+
 rescue Net::ReadTimeout => exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
         msg = "NOT reachable (ReadTimeout)"
@@ -238,52 +354,74 @@ rescue Net::OpenTimeout => exception
         msg = "NOT reachable (OpenTimeout)"
          result = {:status=>'404 ERROR', :msg=>msg}
        #  sleep 10
-rescue Exception =>exception        
+rescue Exception =>exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
-    
-        result = {:status=>'404 ERROR', :msg=>msg}
+        puts exception.inspect
+    	puts exception.backtrace
+   	 result = {:status=>'404 ERROR', :msg=>msg}
 end
-  
-puts result.inspect 
-  
+
+puts result.inspect
+
 end
- 
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
 # service to get patient data
 
-  post '/send' do 
-  
-  hn = params[:hn]  
-  
-  
-  
+  get '/send' do
+
+
+  unless params[:hn]
+
+
+    params[:hn] = '10999999'
+    params[:staff_id] ="00001"
+    params[:record_id] = ""
+    params[:record_at] = Time.now.strftime("%Y-%m-%dT%H:%M:S")
+
+
+    params['pr']= "80"
+    params['rr']= "20"
+    params['spo2']= "99"
+    params['bp_sys']= "120"
+    params['bp_dia']= "80"
+    params['temp']= "36.5"
+    params['weight']= "108.4"
+    params['height']= "180.2"
+
+  end
+
+
+  hn = params[:hn]
+
+
   ##############################################################
-  
+
   puts 'Call send '+params.inspect
 
-  begin    
+  begin
 
-  if login
-  
-      
+  if  http = login[:http]
+
+
       uri = URI("#{settings.endpoint}/IVitalSign/UpdateVitalSign")
-      
+
       data = {}
-      
-      content = <<CNX
-      {
-      "mrn": "4210003"
-      }
-CNX
-   
-   
-   
+#
+#       content = <<CNX
+#       {
+#       "mrn": "4210003"
+#       }
+# CNX
+
+
+
 # [{
 # "mrn": "0000001",
 # "locationId": "",
@@ -294,8 +432,8 @@ CNX
 # "recordDate": "15/03/2020 13:26:22.767", "staffId": "",
 # "remark": ""
 # },{...},{...}]
-   
-   
+
+
       # senses = {'pr'=>['PR','bpm'],'rr'=>['RR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
       senses = {}
       senses['pr']=['Pulse','bpm']
@@ -308,57 +446,59 @@ CNX
       senses['weight']=['BodyWeight','kg']
       senses['height']=['BodyHeight','cm']
       senses['pain']=['PainScale','']
-      
-      
+
+
       puts
-      puts params.inspect 
+      puts params.inspect
       puts
-      
+
       list = []
-      
+
       hn = params[:hn]
       location_id = ''
-      exam_id = params[:record_id]
+      # exam_id = params[:record_id]
       record_at = Date.parse(params[:record_at])
       staff_id = params[:staff_id]
-      
-      
+
+
       data = {}
       data['FormatType'] = 'BCH'
       data['VisitType'] = 'OPD'
       data['HN'] = hn
-      
-      data['VisitDate'] = Time.now.strftime("%y%m%d")
-      data['VN'] = ''
+
+      data['VisitDate'] = Time.now.strftime("%Y%m%d")
+      data['VN'] = '349'
       data['PrescriptionNo'] = '1'
-      
-      
-      data['ReportDateTime'] = record_at.strftime("%y%m%d%H%M%S")
+
+
+      data['ReportDateTime'] = record_at.strftime("%Y%m%d%H%M%S")
       data['ReportByUID'] = params[:staff_id]
-      
-      
+
+
       for s in senses.keys
         v = senses[s]
-        if params[s] and params[s].size>0 
-        
-        data[v[0]] = params[s]   
-        
+        if params[s] and params[s].size>0
+
+        data[v[0]] = params[s]
+
         end
       end
-   
-       
-   
-      
+
+
+
+
       puts data.inspect
-    
 
-      # Full control
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.instance_of? URI::HTTPS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.read_timeout = 10 # seconds
 
+      # # Full control
+      # http = Net::HTTP.new(uri.host, uri.port)
+      # http.use_ssl = true if uri.instance_of? URI::HTTPS
+      # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # http.read_timeout = 10 # seconds
+
+      # request = CaseSensitivePost.new(uri.request_uri)
       request = Net::HTTP::Post.new(uri.request_uri)
+
       request.body = data.to_json
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
@@ -366,30 +506,30 @@ CNX
       request["Authorization"] = 'Bearer '+settings.token
 
       puts '============= DEBUG ==================='
-    
+
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
       response = http.request(request)
-    
+
       puts '============= FINISH ==================='
-    
-    
-      
+
+      puts response.body
+
       dobj = JSON.parse(response.body)
-  
-      
-      puts dobj.inspect 
 
 
-      
-      if dobj['ResponseStatus']['StatusCode']=='100' 
+      puts dobj.inspect
+
+
+
+      if dobj['ResponseStatus']['StatusCode']=='100'
         res = {'success'=>true}
-        result = {:status=>'200 OK', :msg=>res.to_json}      
+        result = {:status=>'200 OK', :msg=>res.to_json}
       else
         result = {:status=>'404 ERROR', :msg=>dobj.to_json}
       end
-      
-  
+
+
 #
 #
 #       begin
@@ -441,15 +581,15 @@ CNX
 
 
       return result.to_json
-	
-        
-  
+
+
+
   else
-    
+
        return "Error Login"
-  
-  end  
-  
+
+  end
+
 rescue Net::ReadTimeout => exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
         msg = "NOT reachable (ReadTimeout)"
@@ -460,15 +600,15 @@ rescue Net::OpenTimeout => exception
         msg = "NOT reachable (OpenTimeout)"
          result = {:status=>'404 ERROR', :msg=>msg}
        #  sleep 10
-rescue Exception =>exception        
+rescue Exception =>exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
         puts msg
         result = {:status=>'404 ERROR', :msg=>msg}
 end
-  
-puts result.inspect 
-  
+
+puts result.inspect
+
 end
 #
 #
