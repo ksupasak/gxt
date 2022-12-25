@@ -1,0 +1,37 @@
+<%
+
+   case_record = EMSCase.find(params[:id])
+
+   if params[:cmd]=='case_accept'
+
+    command = EMSCommand.find(params[:command_id])
+
+    if command
+        provider = Provider.first
+        command.update_attributes :driver_emt_id=>provider.id
+    end
+
+  elsif params[:cmd]=='route_accept'
+
+     route = AocCaseRoute.find(params[:route_id])
+
+     if route
+
+         route.update_attributes :response=>'NOTIFED'
+
+     end
+
+
+   elsif params[:cmd]=='case_denied'
+
+   elsif params[:cmd]=='tracking'
+
+    
+
+   end
+
+
+%>
+<center>Processing..</center>
+<%#params.to_json%>
+<meta http-equiv="Refresh" content="0; url='index'" />

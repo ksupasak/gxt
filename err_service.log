@@ -1,0 +1,736 @@
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCase.where(:admit_id=>i.id).first
+                                                    ^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'
+#<NameError: uninitialized constant EsmMiotMonitor::EMSCaseRecord
+
+                                      case_record = EMSCaseRecord.where(:admit_id=>i.id).first
+                                                    ^^^^^^^^^^^^^
+Did you mean?  EsmMiotMonitor::EMSCaseProcess>
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1541:in `block (5 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1528:in `block (4 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1480:in `block (3 levels) in registered'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `each'
+/Users/soup/Desktop/new_project/git/gxt/apps/esm-miot-monitor/service.rb:1354:in `block (2 levels) in registered'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/em/timers.rb:56:in `fire'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `call'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run_machine'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/eventmachine-1.2.7/lib/eventmachine.rb:195:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/backends/base.rb:75:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/thin/server.rb:162:in `start'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/thin-1.8.1/lib/rack/handler/thin.rb:22:in `run'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1575:in `start_server'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/base.rb:1509:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-contrib-2.2.0/lib/sinatra/reloader.rb:260:in `run!'
+/Users/soup/.rvm/gems/ruby-3.1.0/gems/sinatra-2.2.0/lib/sinatra/main.rb:45:in `block in <module:Sinatra>'

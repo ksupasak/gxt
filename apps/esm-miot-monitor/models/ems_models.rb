@@ -52,8 +52,9 @@ class EMSCase < GXTModel
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
 
 
+  key :team_id, String
 
-
+  key :ambulance_id, ObjectId
 
   key :admit_id, ObjectId
 
@@ -206,7 +207,28 @@ class EMSCase < GXTModel
   key :over_time_managment, String
 
 
+  def relocation_target latlng
 
+      admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
+      puts 'Relocat '+self.admit_id.to_s 
+      for i in admit_log_list
+
+          i.update_attributes :latlng=>latlng
+
+          if i.sort_order==3
+              aoc_case_routes = AocCaseRoute.where(:arrival_log_id=>i.id).all
+              for aoc_case_route in aoc_case_routes
+              if aoc_case_route
+                  aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation'
+              end
+            end
+          end
+
+      end
+
+
+
+  end
 
 
 
@@ -763,5 +785,21 @@ end
 class EMSCommandProviderController < GXTDocument
 end
 
+
+class EMSEmtController < GXT
+
+  def acl
+
+    return '*'
+
+  end
+
+
+    def default_layout
+      return :'ems_emt/layout'
+    end
+
+
+end
 
 end

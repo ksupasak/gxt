@@ -1,0 +1,8 @@
+<%
+zone = Zone.find session[:current_zone]
+if params[:ambu_id]
+ambu = Ambulance.find(params[:ambu_id])
+session[:current_ambu] = ambu.id
+end
+%>
+<meta http-equiv="Refresh" content="0; url='index'" />

@@ -1,5 +1,4 @@
 
-
 <style>
 
 	.w-auto{
@@ -15,7 +14,7 @@
 		<div class="row">
 			<div class="col-12 col-lg-6 col-xl-6">
 				<div class="card  ">
-					<div class="card-header bg-primary bbg-gradient ">
+					<div class="card-header bg-primary bbg-gradient text-white">
 
 						<div class="">
 							<h6 class="mb-0 text-white">
@@ -258,6 +257,43 @@
 			<% end %>
 			</div><br/> -->
 
+
+	<div class="card ">
+				<div class="card-header bg-gradient bg-primary">
+					<div class="d-flex align-items-center">
+						<div>
+							<h6 class="mb-0 text-primaryx text-white">
+								สั่งการ
+							</h6>
+						</div>
+					</div>
+				</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-6">
+									<input name='record[team_id]' value="<%=record.team_id%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Team ID" aria-label="default input">
+							</div>
+
+							<div class="col-6">
+								<select class="form-select mb-3" name='record[ambulance_id]' aria-label="Default select example">
+									<option selected="">-</option>
+									<%
+											zone = Zone.find(session[:current_zone])
+											ambu_list = Ambulance.where(:zone_id=>zone).all
+											for ambu in ambu_list
+									%>
+									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> ><%=ambu.name %></option>
+									<% end %>
+								</select>
+
+							</div>
+						</div>
+
+
+					​<div>
+			</div>
+		</div>
+	</div>
 
 			<div class="card ">
 				<div class="card-header bg-gradient bg-primary">

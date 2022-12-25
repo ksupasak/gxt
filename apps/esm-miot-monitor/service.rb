@@ -1485,7 +1485,8 @@ MSG
                   snames = active_list[app.settings.name].values.collect{|i| i.name if i['zone_id']==z.id }.compact
 
                   result = {:time=>Time.now, :list=>snames,:data=>app.settings.senses[name].select{|k,v| snames.index(k) }}
-
+                  emt_result = nil
+                  emt_result = {:time=>Time.now, :ems_data=>{}} if z.mode=='ems'
 
                   admits = admit_map[name][z.id]
 
@@ -1523,6 +1524,8 @@ MSG
 
                                 result[:admit_data] = {}
 
+
+
                                 for i in admits
 
                                   ad = {}
@@ -1532,6 +1535,26 @@ MSG
                                   ad[:station_name] = i.station.name if i.station
                                   ad[:note] = i.note
 
+                                  puts i.id
+
+                                  if z.mode == 'ems'
+
+                                      case_record = EMSCase.where(:admit_id=>i.id).first
+
+                                      if case_record
+
+                                          commands = EMSCommand.where(:case_id=>case_record.id).all
+
+                                          routes = AocCaseRoute.where(:admit_id=>i.id, :response=>nil).all
+
+
+                                          emt_result[:ems_data][case_record.id] = {:case_record=>case_record, :commands=>commands, :routes=>routes}
+
+                                      end
+
+
+
+                                  end
                                   result[:admit_data][i.id] = ad
 
 
@@ -1541,7 +1564,7 @@ MSG
 
                               end
 
-                              result[:ok] = 'OK'
+                              result[:status] = '200 OK'
 
                               # puts result.to_json
                               path = "miot/#{name}/z/#{z.name}"
@@ -1550,11 +1573,17 @@ msg = <<MSG
 #{'ZoneUpdate'} #{path}
 #{result.to_json}
 MSG
+redis.publish(path, msg)
 
-# puts msg
-            redis.publish(path, msg)
-
-
+if z.mode=='ems'
+puts 'ems'
+path = "miot/#{name}/z/#{z.name}/EMT"
+msg = <<MSG
+#{'EMSUpdate'} #{path}
+#{emt_result.to_json}
+MSG
+redis.publish(path, msg)
+end
 
                 end
                      end

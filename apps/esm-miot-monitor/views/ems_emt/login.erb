@@ -1,0 +1,15 @@
+<%
+  zone = Zone.find session[:current_zone]
+  ambu_list = Ambulance.where(:zone_id=>zone.id)
+
+%>
+<div class="row">
+<% for i in ambu_list %>
+<div class="card">
+<a href="select_emt?ambu_id=<%=i.id%>">
+<%= i.name %>
+</a>
+</div>
+<% end %>
+</div>
+<%=link_to 'Back', 'index'%>
