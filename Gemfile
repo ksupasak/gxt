@@ -57,3 +57,4 @@ gem 'roo'
 gem 'rack-ssl-enforcer'
 
 gem 'google-cloud-translate-v2'
+gem 'wkhtmltopdf-binary'

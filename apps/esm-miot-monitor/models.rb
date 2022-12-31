@@ -351,6 +351,10 @@ class Admit < GXTModel
   key :case_no, String
   key :room_no, String
   key :bed_no, String
+
+  key :export, String 
+
+
    include Mongoid::Timestamps
  timestamps!
 
@@ -1237,6 +1241,14 @@ end
 
 
 class AdmitController < GXTDocument
+
+
+  def acl
+    # return {:login=>'*',:auto=>'*'}
+    return {:partial=>'*', :pdf=>'*'}
+
+  end
+
 
   def submit_data params
 

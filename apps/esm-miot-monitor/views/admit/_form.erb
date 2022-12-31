@@ -137,7 +137,7 @@ $('#station-sn').keypress(function(event) {
 
 <select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
-<% for j in stations.collect{|k| [k.id,"#{k} "]} %>
+<% for j in stations.collect{|k| [k.id,"#{k} @ #{k.name} "]} %>
   <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
 <% end %>
 </select>

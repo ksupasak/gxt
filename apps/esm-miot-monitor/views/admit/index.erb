@@ -1,15 +1,15 @@
 <br/>
 <h3>Patient Admission <%= link_to '+Admit', "create", :class=>'btn btn-success' %></h3>
-<% 
+<%
 mpatients = nil
 unless params[:query]
-	
+
 	# admits = Admit.limit(20).sort(:created_at=>-1).all
-	
+
 	admits = Admit.where(:zone_id=>session[:current_zone]).sort(:created_at=>-1).all
-	
+
 	# admits = Admit.all
-	
+
 else
 	query = params[:query]
 	patients = Patient.where('$or'=>[{:hn=>/#{query}/i},{:first_name=>/#{query}/i},{:last_name=>/#{query}/i}]).all
@@ -17,16 +17,16 @@ else
 	admits = []
 	mpatients = {}
 	for i in patients
-		mpatients[i.id] = true 
+		mpatients[i.id] = true
 		admit = Admit.where(:patient_id=>i.id).first
 		admits << admit
 	end
-	
+
 end
 %>
 <p>
 <form action="index">
-	
+
 Search : <input type="text" name="query" value="<%=params[:query]%>" />
 
 <input type="submit" value="Search" />
@@ -34,7 +34,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 </p>
 
 <%#inline  this, :'_list' %>
-<table class="table"> 
+<table class="table">
 	<thead>
 			<tr>
 					<th>Case No.</th>
@@ -44,23 +44,23 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 					<th>Age</th>
 					<th>DateTime</th>
 					<th>Duration</th>
-					
+					<th>Export</th>
 					<th></th>	<th></th>
 			</tr>
-					
+
 	</thead>
 	<tbody>
 
-<% 
+<%
 
 %w{Admitted Discharged}.each do |type|
-	
+
 	admits = Admit.where(:status=>type,:zone_id=>session[:current_zone] ).sort('updated_at'=>-1).limit(20).all
 	# admits = Admit.all
 	if mpatients
-	admits = admits.collect{|i| i if mpatients[i.patient_id]}.compact	
+	admits = admits.collect{|i| i if mpatients[i.patient_id]}.compact
 	end
-	
+
 	admits = [] unless admits
 %>
 
@@ -71,59 +71,61 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 </tr>
 
 		<% for i in admits
-			
-			
+
+
 		patient = Patient.find i.patient_id
-		
+
 		unless patient
-			
+
 			i.destroy
-			
+
 		else
-			
-	
+
+
 		station = Station.find i.station_id
-		
+
 		ambu = Ambulance.find i.ambulance_id
-		
+
 		%>
-		<tr>	
-			
+		<tr>
+
 				<td>
 					<%=link i.an, "show?id=#{i.id}"%>
-					
+
 				</td>
 				<td><%=link patient.hn,  "show?id=#{i.id}"%>
 				</td>
-				<td><%=link "#{patient.first_name} #{patient.last_name}","show?id=#{i.id}"%> 
+				<td><%=link "#{patient.first_name} #{patient.last_name}","show?id=#{i.id}"%>
  				</td>
 				<td><%=patient.gender%></th>
 				<td><%=patient.age%></th>
-				
+
 				<td>
 					<%=i.admit_stamp.strftime("%H:%M") if i.admit_stamp %><%=' - '+i.discharge_stamp.strftime("%H:%M") if i.discharge_stamp%>
 				</td>
-				
+
 				<td><%
-						
-					hours = 0 
-					mins = 0 
-					
+
+					hours = 0
+					mins = 0
+
 					if i.discharge_stamp and i.admit_stamp
-					
+
 					total = ((i.discharge_stamp - i.admit_stamp)/60).to_i
-					
+
 					mins = total%60
 					hours = total/60
-					
-					
+
+
 				%>
 					<%="#{hours} hours" if hours > 0 %> <%="#{mins} mins" if mins > 0 %>
 				<% else %>
 					-
 				<% end %>
 				</td>
-				
+				<td>
+					<%=link 'Export', "export?id=#{i.id}"%>
+				</td>
 				<td>
 					<%=link 'Review', "show?id=#{i.id}"%>
 				</td>
@@ -133,7 +135,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 		</tr>
 		<% end %>
 		<% end %>
-		
+
 	<% end %>
 	</tbody>
 </table>
@@ -141,7 +143,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 
 
 <script>
-	
-	
-	
+
+
+
 </script>

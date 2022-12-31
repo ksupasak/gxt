@@ -279,7 +279,9 @@ modal('#modal_notification')
   function connect(){
 
 
-  ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+  // ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+  ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
 
   ws.onopen    = function()  { show('websocket opened');
