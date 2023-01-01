@@ -385,10 +385,10 @@ airport_shuttle
 <script>
 
 
-  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+  tag = 'wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index";
 
 
-  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+  var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
 
   ws.onopen    = function()  { show('websocket opened');

@@ -28,7 +28,11 @@ before do
   # only   [solution].domain.com
   t = request.host.split(".")
   paths = request.path.split("/")
-
+  puts paths.inspect 
+  
+  app_name = paths[1]
+  app_name = paths[2] if app_name =='ws'
+  
   if paths[1]!='barcode' and paths[1]!='promptpay'
 
   # puts "-  Host : #{t.inspect } Path : #{paths.inspect} #{ @default_app.inspect }"
@@ -37,13 +41,13 @@ before do
     @prefix_solution = true
     solution_name = t[0]  # solution_name
 
-  elsif t.size==2 and app = settings.apps[paths[1]]
+  elsif t.size==2 and app = settings.apps[app_name]
 
-    solution_name =  paths[1] if paths[1]
+    solution_name =  app_name if app_name
 
   elsif t.size==4 and t[-1].to_i!=0 or request.host=='localhost' # when using ip
 
-   solution_name = paths[1] if paths[1]
+   solution_name = app_name if app_name
 
   end
 
@@ -291,6 +295,16 @@ before '/:gxt/:service/:operation' do
 
 end
 
+
+get '/ws/:gxt/:service/:operation' do
+ process_request
+end
+
+post '/ws/:gxt/:service/:operation' do
+  process_request
+end
+
+
 get '/:gxt/:service/:operation' do
  process_request
 end
@@ -300,18 +314,15 @@ post '/:gxt/:service/:operation' do
 end
 
 
-
-
 get '/:service/:operation' do
   process_request
 end
 
-
 post '/:service/:operation' do
-
   process_request
-
 end
+
+
 
 
 get '/barcode' do
