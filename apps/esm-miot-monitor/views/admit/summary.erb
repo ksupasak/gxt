@@ -22,6 +22,11 @@ print_area.close();
 	<br/>
 <form>
 	<div style="float:right">
+		<%if Setting.get('admit_export') %>
+		
+	    <a class="btn btn-warning" href="export?id=<%=admit.id%>">Export</a>
+		
+		<% end %>
     <input type="button" value="Print" onclick="window.print()" class="btn btn-info">
 </div>
   </form>

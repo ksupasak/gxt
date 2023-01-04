@@ -522,7 +522,22 @@ name = 'glucose'
   <div class="form-group">
     <label for="product-name"><%=i[0].humanize%></label>
     <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
-  </div><% end %>
+  </div>
 <% end %>
+  
+  
 <% end %>
 
+
+<% end %>
+<%if Setting.get('admit_export') %>
+  <div class="form-group">
+    <label for="product-name">Export Status</label>
+    <input type="text" class="form-control" id="record-export_status" name="record[export_status]" value="<%=@record['export_status']%>" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="product-name">Export Log</label>
+    <input type="text" class="form-control" id="record-export_log%>" name="record[export_log]" value="<%=Rack::Utils.escape_html(@record.export_log)%>" placeholder="">
+  </div>
+		  
+<% end %>

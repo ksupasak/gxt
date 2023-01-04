@@ -18,6 +18,8 @@ if export = Setting.get('admit_export')
   uri = URI("#{export}?admit_id=#{admit.id}")
   res = Net::HTTP.post_form(uri, 'hn' => admit.patient.hn, 'admit_id'=> admit.id, 'solution'=>name)
   result =  res.body  if res.is_a?(Net::HTTPSuccess)
+  
+  admit.update_attributes :export_status=>'PROCESSING'
 
 
 end
