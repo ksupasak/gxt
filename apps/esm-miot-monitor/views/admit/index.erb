@@ -44,7 +44,9 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 					<th>Age</th>
 					<th>DateTime</th>
 					<th>Duration</th>
+					<% if Setting.get('admit_export')%>
 					<th>Export</th>
+					<% end %>
 					<th></th>	<th></th>
 			</tr>
 
@@ -123,9 +125,11 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 					-
 				<% end %>
 				</td>
+				<% if Setting.get('admit_export')%>
 				<td>
-					<%=link 'Export', "export?id=#{i.id}"%>
+					<%=link 'Export', "export?id=#{i.id}"%> <%=i.export_status%>
 				</td>
+				<% end %>
 				<td>
 					<%=link 'Review', "show?id=#{i.id}"%>
 				</td>

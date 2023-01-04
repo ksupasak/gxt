@@ -3,3 +3,5 @@ log
 err_service.log
 services/monitor/conf.rb
 Gemfile.lock
+log/access.log
+log/nginx.pid

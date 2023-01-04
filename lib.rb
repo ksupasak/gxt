@@ -28,7 +28,7 @@ before do
   # only   [solution].domain.com
   t = request.host.split(".")
   paths = request.path.split("/")
-  puts paths.inspect 
+  # puts paths.inspect 
   
   app_name = paths[1]
   app_name = paths[2] if app_name =='ws'

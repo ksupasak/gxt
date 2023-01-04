@@ -352,7 +352,10 @@ class Admit < GXTModel
   key :room_no, String
   key :bed_no, String
 
-  key :export, String 
+  key :export_status, String 
+  key :export_log, String 
+  
+  
 
 
    include Mongoid::Timestamps
@@ -777,7 +780,7 @@ class Setting  < GXTModel
   def self.get name, default=nil
       record = self.where(:name=>name).first
       unless record
-        record = self.create :name=>name, :value=>default
+        record = self.create :name=>name, :value=>default if default != nil
       end
       return record.value
   end
@@ -1245,7 +1248,7 @@ class AdmitController < GXTDocument
 
   def acl
     # return {:login=>'*',:auto=>'*'}
-    return {:partial=>'*', :pdf=>'*'}
+    return {:partial=>'*', :pdf=>'*', :data_json=>'*', :data_commit=>'*'}
 
   end
 
