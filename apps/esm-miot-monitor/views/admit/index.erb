@@ -103,7 +103,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 				<td><%=patient.age%></th>
 
 				<td>
-					<%=i.admit_stamp.strftime("%D/%m/%y %H:%M") if i.admit_stamp %><%=' - '+i.discharge_stamp.strftime("%H:%M") if i.discharge_stamp%>
+					<%=i.admit_stamp.strftime("%D %H:%M") if i.admit_stamp %><%=' - '+i.discharge_stamp.strftime("%H:%M") if i.discharge_stamp%>
 				</td>
 
 				<td><%
