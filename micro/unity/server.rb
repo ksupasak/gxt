@@ -65,9 +65,45 @@ require_relative '../lib/miot'
       end
     end
   end
+  
+  
+  
+  
+  EM.next_tick do
+
+    idx = 0
+
+    buffer = []
+
+    
+   
+    EM.add_periodic_timer(1) do
+
+       puts "tick #{buffer.size}"
 
 
 
+       EM.next_tick {
+
+         settings.sockets.each{|s|
+
+           s.send(buffer.to_json)
+
+         }
+
+         buffer.clear
+       }
+
+
+    end
+
+
+  end
+  
+  
+
+
+  if false 
 
  EM.next_tick do
 
@@ -115,11 +151,10 @@ require_relative '../lib/miot'
       }
 
 
-
-
-
-
    end
 
 
  end
+
+
+end

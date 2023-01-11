@@ -378,7 +378,7 @@ $('.summary-btn').click(function(e){
 
 
 	$.ajax({
-	  url: "<%="../EMS/summary"%>?id="+ems_case_id,
+	  url: "<%="../Admit/summary"%>?id="+ems_case_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '.charting' ).html(data);

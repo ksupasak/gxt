@@ -352,10 +352,10 @@ class Admit < GXTModel
   key :room_no, String
   key :bed_no, String
 
-  key :export_status, String 
-  key :export_log, String 
-  
-  
+  key :export_status, String
+  key :export_log, String
+
+
 
 
    include Mongoid::Timestamps
@@ -782,7 +782,8 @@ class Setting  < GXTModel
       unless record
         record = self.create :name=>name, :value=>default if default != nil
       end
-      return record.value
+      value = record.value if record
+      return value
   end
 end
 

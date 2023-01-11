@@ -51,7 +51,7 @@ class EMSCase < GXTModel
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
 
-
+  key :dispatch_note, String
   key :team_id, String
 
   key :ambulance_id, ObjectId
@@ -210,7 +210,7 @@ class EMSCase < GXTModel
   def relocation_target latlng
 
       admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
-      puts 'Relocat '+self.admit_id.to_s 
+      puts 'Relocat '+self.admit_id.to_s
       for i in admit_log_list
 
           i.update_attributes :latlng=>latlng

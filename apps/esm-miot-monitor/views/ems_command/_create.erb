@@ -120,6 +120,10 @@ Update ... <%=Time.now%>
 
 	ems_command = EMSCommand.new
 
+  ems_command.channel_id = ems_case.channel_id
+	ems_command.ambulance_id = ems_case.ambulance_id
+
+
 	init_command = "เหตุ : #{ems_case.patient_info} อาการ : #{ems_case.chief_complain} รหัส : #{ems_case.init_code.name}"
 	ems_command.init_command = init_command
 
