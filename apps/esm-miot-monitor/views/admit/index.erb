@@ -67,7 +67,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 %>
 
 <tr>
-	<td colspan="9" class="alert-warning">
+	<td colspan="10" class="alert-warning">
 	<span class=" "><%=type%></span>
 	</td>
 </tr>
@@ -134,6 +134,7 @@ Search : <input type="text" name="query" value="<%=params[:query]%>" />
 					<%=link 'Review', "show?id=#{i.id}"%>
 				</td>
 				<td>
+					<%=link 'Discharge', "discharge?id=#{i.id}", :class=>' btn-outline-danger ' if i.admit_stamp<Time.now-86400 and i.discharge_stamp == nil %>
 					<%=link 'Edit', "edit?id=#{i.id}"%>
 				</td>
 		</tr>
