@@ -1,33 +1,38 @@
 <%
-	
+
 	ems_command = EMSCommand.find(params[:id])
-	
+
 	admit_log = AdmitLog.find params[:admit_log_id]
-	
-	
-	
+
+
+
 	if ems_command and admit_log
-		
-	
-	    
+
+
+
 		logs = AdmitLog.where(:ems_command_id=>ems_command.id).all
-		index = 0 
+		index = 0
 		index = logs.index(admit_log)-1
-		index = 0 if index<0 
+		index = 0 if index<0
 		plog = logs[index]
+
+		ambulance = ems_command.ambulance
+		ambulance.update_attributes :last_mile=> mile_meter if ambulance
+
+
 		admit_log.update_attributes :stamp=>Time.now, :mile_meter=>plog.mile_meter, :status=>"COMPLETED"
-		
+
 		to_route = AocCaseRoute.where(:departure_log_id=>admit_log.id).first
 		to_route.update_attributes :status=>'STARTED' if to_route
-		
-		
+
+
 		from_route = AocCaseRoute.where(:arrival_log_id=>admit_log.id).first
 		from_route.update_attributes :status=>'COMPLETED' if from_route
-		
-		
-		
+
+
+
 		admit = Admit.find admit_log.admit_id
-		
+
 
 		path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 		msg = 'NULL'
@@ -36,11 +41,11 @@
 #{msg.to_json}
 MSG
 		@context.settings.redis.publish(path, send_msg)
-			
+
 		# key :latlng, String
 		# 	    key :stamp, Time
 		# 	    key :mile_meter, Integer
-		
+
 	end
 
 

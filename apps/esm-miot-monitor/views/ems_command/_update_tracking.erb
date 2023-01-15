@@ -10,7 +10,8 @@ if request.post? and params[:log]
 	params[:log].keys.each do |k|
 
 		admit_log = AdmitLog.find k
-
+		ambulance = ems_command.ambulance
+		ambulance.update_attributes :last_mile=> params[:log][k][:mile_meter] if ambulance
 		admit_log.update_attributes :mile_meter=> params[:log][k][:mile_meter], :stamp=>params[:log][k][:stamp]
 
 

@@ -737,6 +737,7 @@ class Ambulance  < GXTModel
   key :last_location, String
   key :last_address, String
   key :last_speed, Float
+  key :last_mile, Integer
 
   key :device_no, String
   key :msg_channel, String

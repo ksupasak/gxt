@@ -24,12 +24,14 @@ record = @current_case
      com = com_list[0]
      admit = record.admit
 
+     last_mile = com.ambulance.last_mile
+
      last_log = admit.logs.where(:status=>'PENDING').sort(:sort_order=>1).first
-
      current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
-
-
      previous_log = admit.logs.where(:admit_id=>last_log.admit_id, :sort_order=>last_log.sort_order-1).first if last_log
+
+
+     last_mile = previous_log.mile_meter if previous_log  and  previous_log.mile_meter
 
    end
 
@@ -63,7 +65,7 @@ record = @current_case
       </div>
       <div class="modal-body" style="font-size:1.5em">
         <center>
-        <input type="text" class="mile_meter" value="<%=previous_log.mile_meter if previous_log%>" style="width:120px;text-align:center;font-size:1.5em"/>
+        <input type="text" class="mile_meter" value="<%=last_mile %>" style="width:120px;text-align:center;font-size:1.5em"/>
         </center>
 
       </div>
@@ -130,9 +132,13 @@ record = @current_case
     </div>
     <div class="col-12">
       <% if current_route %>
-      <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532 -->
+      <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
       <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
-        NAV</a>
+        NAV</a>-->
+
+        <a href="https://www.google.com/maps/dir/<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
+          NAV</a>
+
 
         <% end %>
     </div>
@@ -391,6 +397,9 @@ modal('#modal_notification')
                if(noti_status==false){
               console.log('EMT case noti')
               // console.log(cmd)
+
+               $('.noti_title').html("Route Update / Transfer");
+
                $('.noti_msg').html("Change Route");
 
                $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])

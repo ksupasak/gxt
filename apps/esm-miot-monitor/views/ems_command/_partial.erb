@@ -365,6 +365,12 @@
 
 								parent_map[i.sort_order] = i
 
+
+									last_mile = cm.ambulance.last_mile
+									last_mile = i.mile_meter if i.mile_meter
+
+
+
 								%>
 
 								<tr>
@@ -388,7 +394,7 @@
 									</td>
 									<td>
 										<% if i.status=='COMPLETED'%>
-										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=i.mile_meter%>" style="width:80px">
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=last_mile%>" style="width:80px">
 										<% end %>
 									</td>
 

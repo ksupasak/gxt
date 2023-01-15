@@ -19,6 +19,15 @@
 		mile_meter = plog.mile_meter
 		mile_meter = params[:mile_meter] if params[:mile_meter]
 
+
+		ambulance = ems_command.ambulance
+
+		if ambulance
+
+			ambulance.update_attributes :last_mile=> mile_meter
+
+		end
+
 		admit_log.update_attributes :stamp=>Time.now, :mile_meter=>mile_meter, :status=>"COMPLETED"
 
 		to_route = AocCaseRoute.where(:departure_log_id=>admit_log.id).first
