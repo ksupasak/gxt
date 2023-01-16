@@ -626,23 +626,23 @@ cls = record.init_code.get_class
 		$('.nav-link').each(function(){
 
 			obj = $(this)
-			if(obj.attr('data-bs-toggle')=='tab'){
+			// if(obj.attr('data-bs-toggle')=='tab'){
 				$(this).click(function(e){
 
 					obj = $(this)
 					sessionStorage.setItem("last_tab", obj.attr('href'));
 				})
-			}
+			// }
 
 		})
 
 		$(document).ready(function(){
 			<% unless params[:page] %>
-
-			if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
-				  $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+			tab =  sessionStorage.getItem("last_tab")
+			if(tab != null&&tab.length>0){
 
 			}else{
+				// alert('no '+sessionStorage.getItem("last_tab"))
 
 				 $('.tab-dashboard').click()
 			}

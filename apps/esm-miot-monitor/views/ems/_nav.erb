@@ -66,13 +66,14 @@
 
 
 			function setTab(tab){
+
 				$('.mm-active').removeClass("mm-active");
 				$('.tab-'+tab).parent().addClass("mm-active")
-				sessionStorage.setItem("main-tab", tab)
+				sessionStorage.setItem("last_tab", tab)
 			}
 
 			function getTab(){
-				t = sessionStorage.getItem("main-tab")
+				t = sessionStorage.getItem("last_tab")
 
 				<%="t = '#{params[:page]}' " if params[:page]%>
 
@@ -224,7 +225,7 @@
 
 			function reload_dashboard_content(){
 
-				setTab('dashboard')
+				// setTab('dashboard')
 
 
 				$.ajax({
@@ -274,7 +275,7 @@
 	// $('.tab-'+getTab()).each(function(){
 	  // alert('get Tab =  '+getTab())
 	// })
-
+	  // alert('j')
 		$('#tab-'+getTab()).click()
 		//
 		// $('.tab-'+getTab()).parent().addClass("mm-active")
@@ -391,12 +392,12 @@
 	<script>
 
 		if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
-			 // $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+			 $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
 			 // alert('df')
 
 		}else{
 			// alert('ve')
-			 // $('.nav-tabs a[href="#requestcontent"]').tab('show');
+			 $('.nav-tabs a[href="#requestcontent"]').tab('show');
 		}
 
 

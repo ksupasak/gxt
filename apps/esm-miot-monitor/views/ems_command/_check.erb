@@ -17,6 +17,8 @@
 		plog = logs[index]
 
 		ambulance = ems_command.ambulance
+
+		mile_meter  = plog.mile_meter
 		ambulance.update_attributes :last_mile=> mile_meter if ambulance
 
 

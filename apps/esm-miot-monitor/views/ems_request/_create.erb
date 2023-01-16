@@ -1,5 +1,5 @@
 
-
+<%= inline(this,:'../lib/_map')  %>
 <% if request.post?
 
 
@@ -113,6 +113,8 @@ end
 </div>
 <% end %>
 <script>
-	$('#record_chief_complain').focus()
+	$('#record_contact_phone').focus()
 	refresh_remote()
 </script>
+
+<%=init_map%>

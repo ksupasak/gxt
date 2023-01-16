@@ -62,7 +62,7 @@
 
 									<p class="px-3 ">
 										เบอร์ติดต่อ
-									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>"  id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 
 								</div>
 
@@ -418,7 +418,7 @@
 
 
 							<div class="row">
-							<div class="col-md-8">
+							<div class="col-md-6">
 							<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
 							<div class="input-group  px-3">
 								<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
@@ -426,14 +426,14 @@
 							</div>
 
 							</div>
-							<div class="col-md-4" style="display:none">
+							<div class="col-md-6" style="display:none">
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
 								<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
