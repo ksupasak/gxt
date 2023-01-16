@@ -1,4 +1,7 @@
 require "base64"
+require "uri"
+require "net/http"
+
 module EsmMiotMonitor
 
 
@@ -230,7 +233,16 @@ class EMSCase < GXTModel
 
   end
 
+  def noti_message
 
+    ems_case = self
+    channel = EMSChannel.find ems_case.channel_id
+    ambulance = Ambulance.find ems_case.ambulance_id
+    message = "#{ems_case.case_no} รหัส: #{ems_case.init_code.code} ผู้ป่วย: #{ems_case.patient_gender} #{ems_case.patient_age}ปี อาการ: #{ems_case.chief_complain}\nติดต่อ: #{ems_case.contact_phone} สถานที่: #{ems_case.location}\nคำสั่ง: #{ems_case.dispatch_note} ทีม: #{channel.name if channel} รถ: #{ambulance.name if ambulance}"
+
+      return message
+
+  end
 
 
 
@@ -801,5 +813,48 @@ class EMSEmtController < GXT
 
 
 end
+
+
+class EMSConnectController < GXT
+
+end
+
+class EMSConnect
+
+
+  def self.line_noti params
+
+
+    url = URI("https://notify-api.line.me/api/notify")
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    line_access_code = Setting.get('line_access_code')
+    if line_access_code
+    message = params[:message]
+
+    request = Net::HTTP::Post.new(url)
+    request["Authorization"] = "Bearer #{line_access_code}"
+    request["Content-Type"] = "application/x-www-form-urlencoded"
+    request.body = "message=#{ERB::Util.url_encode(message)}"
+
+    response = https.request(request)
+    puts response.read_body
+
+    return response.read_body
+
+    else
+
+    return "NA"
+
+    end
+
+  end
+
+
+end
+
+
 
 end

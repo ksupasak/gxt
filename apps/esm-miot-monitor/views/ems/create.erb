@@ -3,6 +3,15 @@
 
 		session.delete :case_id
 
+		noti_new_case_text = Setting.get('noti_new_case')
+
+		if noti_new_case_text
+
+		message = eval("\"#{noti_new_case_text}\"")
+
+    result =  EMSConnect.line_noti :message=>message
+		end
+
 %>
 
 <script src="/rocker/assets/js/jquery.min.js"></script>
@@ -14,7 +23,7 @@
 
 		<div class="tab-pane fade active show" id="requestcontent" role="tabpanel">
 			<p>
-			
+
 				<%# inline(this,:'../ems_request/_show')  %>
 
 				<div class="request"></div>
