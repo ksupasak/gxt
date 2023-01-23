@@ -325,7 +325,7 @@
 						<div>
 							<%
 
-							imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
+							imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>-1).all
 
 							if imgs.size>0
 
