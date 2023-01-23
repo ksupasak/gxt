@@ -20,7 +20,7 @@ def self.registered(app)
      settings.set :ch_map,  {}
      settings.set :last_map, {}
      settings.set :zello_map, {}
-     settings.set :station_status, {}
+     settings.set :ambu_status, {}
 
 
 
@@ -75,10 +75,8 @@ def self.registered(app)
                                            for i in ws_list
                                               ws = settings.ws_map[i]
                                               if ws
-                                               # EM.next_tick do
-                                                 # puts "send to #{i}"
+
                                                  ws.send message
-                                              # end
                                             end
 
                                            end
@@ -196,7 +194,7 @@ def self.registered(app)
 
                     unless route.est_distance
                       # fill estimate distance
-                      puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      # puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                       direction = google_direction(route.start_latlng, route.stop_latlng, key)
 
 
@@ -209,7 +207,7 @@ def self.registered(app)
 
                     if i.last_speed > 10 or route.act_distance ==nil #  and i.last_speed and
 
-                     puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
+                     # puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
 
                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
                     direction = cache_directions[kcache]
@@ -364,7 +362,7 @@ MSG
 
              http.start do |http|
 
-             req = Net::HTTP::Get.new("/StandardApiAction_login.action?account=admin&password=admin")
+             req = Net::HTTP::Get.new("/StandardApiAction_login.action?account=admin&password=minadadmin")
 
              response = http.request(req)
              json = JSON.parse(response.body)
@@ -439,7 +437,7 @@ MSG
             puts "path #{path}"
 
 send_msg = <<MSG
-#{'Station.Update'} #{path}
+#{'Ambu.Update'} #{path}
 #{results.to_json}
 MSG
             redis.publish(path, send_msg)
@@ -714,13 +712,86 @@ MSG
                 begin
 
 
-                  redis.pubsub.psubscribe('PTT/*/in') do |channel, message|
+                  redis.pubsub.psubscribe('ptt/*/in') do |channel, message|
 
-                          puts "msg in message #{channel} : #{message.size} :"
-                          t = Thread.new{
-                            puts 'Send to '+"PTT/miot/z/0"
-                            redis.publish("PTT/miot/z/0", message)
-                          }
+                          puts "msg in ptt #{channel} : #{message.size} :"
+
+                          t = channel.split("/")
+                          name = t[1]
+
+                          puts "PTT Rquest #{name}"
+
+                          switch name, 'esm-miot-monitor'
+
+                          # t = Thread.new{
+
+                            lines = message.split("\n")
+                            ptt_channel = lines[0].split('=')[-1]
+                            puts "Send to ptt/#{name}/z/#{ptt_channel}"
+                            obj = JSON.parse(lines[1])
+                            # puts obj.inspect
+                            redis.publish("ptt/#{name}/z/#{ptt_channel}", message)
+
+
+                            if true # record
+
+                              filename = obj['filename']
+                              content =   Base64.decode64(obj['file'])
+
+                              connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+                              grid = Mongo::Grid::FSBucket.new(connection.database)
+
+                              fid = grid.upload_from_stream(filename,content)
+
+                              station_id = nil
+                              admit_id = nil
+                              zone = nil
+                              ems_channel = EMSChannel.where(:name=>obj['channel']).first
+
+
+                              if ems_channel
+
+                                  ems_case = EMSCase.where(:channel_id=>ems_channel.id, :status=>"New").first
+
+                                  if ems_case
+                                      zone = ems_case.zone
+                                      admit_id = ems_case.admit_id
+                                      station_id = ems_case.station_id if ems_case.station_id
+
+                                  end
+
+                              end
+
+                              if ems_channel
+
+                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
+
+                              if zone
+                              # puts result.to_json
+                              path = "miot/#{name}/z/#{zone.name}"
+
+
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                              # puts msg
+                              redis.publish(path, send_msg)
+
+
+                            end
+
+                              end
+
+
+                            end
+
+
+
+
+                          # }
 
 
                   end
@@ -805,7 +876,43 @@ MSG
 
        when 'Monitor.Update'
 
-       when 'Station.Update'
+
+       when 'GPS.Update'
+
+
+         json = JSON.parse(body)
+
+
+         settings.ambu_status[name] = {} unless settings.ambu_status[name]
+         ambu_status = settings.ambu_status[name]
+
+         for i in json
+
+           if i['device_type']=='ambu'
+
+             ambu_status[i["id"]] = i
+
+           elsif i['device_type']=='ambu_name'
+            puts 'x'
+             ambu = Ambulance.where(:name=>i["name"]).first
+             if ambu
+                i["id"] = ambu.id.to_s
+                ambu_status[i["id"]] = i
+
+             end
+
+
+          end
+
+
+
+         end
+
+
+
+
+
+       when 'Ambu.Update'
 
 
         # puts "#{channel}: #{tag}: \n#{message} #{Time.now.to_f}"
@@ -813,28 +920,30 @@ MSG
         json = JSON.parse(body)
 
 
-        settings.station_status[name] = {} unless settings.station_status[name]
-        staiton_status = settings.station_status[name]
-
-
+        settings.ambu_status[name] = {} unless settings.ambu_status[name]
+        ambu_status = settings.ambu_status[name]
 
 
         json.each_pair do |k,v|
 
-           ambu = Ambulance.find k
-           puts "GPS #{k}"
 
-           puts v.inspect
-
-          if ambu
+                ambu_status[k] = v
 
 
-             ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
-
-             staiton_status[v['station_id']] = v
-
-
-          end
+          #  ambu = Ambulance.find k
+          #  puts "GPS #{k}"
+          #
+          #  puts v.inspect
+          #
+          # if ambu
+          #
+          #
+          #    ambu.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+          #
+          #    station_status[v['station_id']] = v
+          #
+          #
+          # end
 
 
         end
@@ -955,7 +1064,7 @@ MSG
 
            v = data
            puts 'insert'
-           DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data
+           DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'],:co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data
 
 
 
@@ -1118,7 +1227,7 @@ MSG
                   puts data
 
                   v = data
-                  DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
+                  DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
 
                 end
 
@@ -1137,7 +1246,7 @@ MSG
                   #puts v.inspect
                   puts "BP = #{data['bp']} #{old_stamp.inspect } #{data['bp_stamp'].inspect}"
                   bp_sys,bp_dia = v['bp'].split('/')
-                  DataRecord.create :station_id=>station.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
+                  DataRecord.create :station_id=>station.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
 
 
 
@@ -1440,6 +1549,21 @@ MSG
 
                                             if list = Ambulance.where(:zone_id=>z.id).all and list.size > 0
 
+                                              ambu_status = app.settings.ambu_status[name]
+
+                                              if ambu_status
+
+                                              for i in list
+
+                                                if v = ambu_status[i.id.to_s]
+
+                                                  i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+
+                                                end
+
+                                              end
+
+                                              end
 
                                               ambu_map[name] = {} unless ambu_map[name]
 
@@ -1506,6 +1630,10 @@ MSG
 
                             result[:ambu_data] = {}
 
+                            ambu_status = app.settings.ambu_status[name]
+
+                            # puts ambu_status.inspect
+
                             for i in list
                                   am = i
 
@@ -1514,6 +1642,17 @@ MSG
                                   admit = l[0] if l.size==1
 
                                   am[:admit_id] = admit.id if admit
+
+                                  if ambu_status and v = ambu_status[am.id.to_s]
+
+                                      # puts 'Set Location'
+
+                                      am.last_location = "#{v['lat']},#{v['lng']}"
+
+                                      # ambu_status.delete am.id.to_s
+
+                                  end
+
 
                                   result[:ambu_data][i.id] = am
 
@@ -1694,7 +1833,7 @@ end
 
                                            bp_sys,bp_dia = v['bp'].split('/')
 
-                                           DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :stamp=> now
+                                           DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :co2=>v['co2'], :rr=>v['rr'], :temp=>v['temp'], :stamp=> now
 
 
 

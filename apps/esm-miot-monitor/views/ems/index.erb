@@ -184,7 +184,7 @@
 
 
 	<script>
-
+		var map;
 		var latlngbounds;
 
 		$(document).ready(function(){
@@ -300,7 +300,12 @@
 
 		var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
 
+
+		var ambu_map = {}
+
+
 		function update(lines){
+
 
 
 			obj = JSON.parse(lines[1])
@@ -311,11 +316,15 @@
 
 			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
 
-				// url: "<%=url_for "img/aoc/ambu.svg"%>",
+
 
 			for(ai in values){
 
 				a = values[ai]
+
+
+
+
 
 				map_icon = {
 				  path: car,
@@ -332,10 +341,30 @@
 				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
 				};
 
-			    var t = a['last_location'].split(",")
+
+
+				var t = a['last_location'].split(",")
 				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
-				if(map!=null)
-			    marker_map = new google.maps.Marker({position: pos,icon: map_icon,  map: map});
+
+        marker = ambu_map[a['_id']]
+
+
+				if(marker==null){
+
+
+						marker_map = new google.maps.Marker({position: pos,icon: map_icon,  map: map});
+						ambu_map[a['_id']] = marker_map
+							console.log('new')
+
+
+				}else{
+						marker_map = 	ambu_map[a['_id']]
+						marker_map.setPosition(pos)
+						console.log('set')
+
+				}
+
+
 
 				latlngbounds.extend(pos);
 
@@ -345,9 +374,9 @@
 
 			map.fitBounds(latlngbounds);
 
-
-
 		}
+
+
 
 
 		function reload_message(){
@@ -393,6 +422,7 @@ airport_shuttle
 
   ws.onopen    = function()  { show('websocket opened');
 
+
   	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
 
 
@@ -409,7 +439,6 @@ airport_shuttle
   }
 
   ws.onmessage = function(m) {
-
 
 
 
@@ -432,7 +461,7 @@ airport_shuttle
 		}else
 
 		if(lines[0].split(" ")[0]=='ZoneUpdate'){
-
+			if(map!=null)
 			update(lines)
 
 

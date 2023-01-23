@@ -346,7 +346,7 @@ class HomeController < GXT
 
            ws.onmessage do |msg_data|
 
-             # puts msg_data
+             puts msg_data
 
              # begin
 
@@ -359,7 +359,7 @@ class HomeController < GXT
 
              # @context.settings.redis = redis
 
-            # puts msg_data
+
              # fast check header
 
              if msg_data[0..2] == 'PTT'
@@ -368,7 +368,14 @@ class HomeController < GXT
                # redis.publish("PTT/miot/z/0", msg_data)
 
 
-               redisx.publish("PTT/#{@context.settings.name}/in", msg_data)
+               redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
+
+
+             elsif msg_data[0..2] == 'GPS'
+
+               # puts msg_data
+
+               redis.publish("miot/#{@context.settings.name}/in", msg_data)
 
 
              else

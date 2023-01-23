@@ -140,7 +140,20 @@ end
 
   <div class="card-body">
 
-    dsfadsf
+    <div class="summary">sss</div>
+		<script>
+			alert('dijfodf')
+			$.ajax({
+			  url: "<%="../EMS/summary"%>?id="+<%=record.id%>,
+			  context: document.body
+			}).done(function(data) {
+			  $( '.summary' ).html(data);
+
+
+			});
+
+		</script>
+
 
   </div>
 </div>

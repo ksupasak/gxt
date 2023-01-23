@@ -225,7 +225,7 @@
 
 			function reload_dashboard_content(){
 
-				// setTab('dashboard')
+				setTab('dashboard')
 
 
 				$.ajax({
@@ -237,7 +237,11 @@
 				});
 
 			}
-			$('#tab-dashboard').click(reload_dashboard_content)
+			$('#tab-dashboard').click(function(e){
+				// e.preventDefault()
+
+				reload_dashboard_content();
+			})
 
 			// switch(getTab()){
 	//

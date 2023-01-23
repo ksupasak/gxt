@@ -342,7 +342,7 @@ end
 			</div>
 			<% end %>
 			<hr/>
-			<h4>Paramedic Status</h4>
+			<h4>Device Connect</h4>
 			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
 			<div class="input-group mb-3">
@@ -357,7 +357,7 @@ end
 			</div>
 
 			<div>
-			<label>Select Station :</label>
+			<label>Select Device :</label>
 
 			<% fieldset(:admit) do |f| %>
 			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>

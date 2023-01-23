@@ -186,8 +186,8 @@
 					  						<% elsif i.type == 'voice'
 												url = "../Message/content?id=#{i.id}"
 											%>
-											<audio controls>
-											  <source src="<%=url%>" type="audio/mpeg">
+											<audio controls preload="none">
+											  <source src="<%=url%>"  type='video/3gpp; codecs="mp4v.20.8, samr"' >
 											Your browser does not support the audio element.
 											</audio>
 
@@ -195,7 +195,7 @@
 											<% else %>
 					  						<p class="chat-left-msg"><%=i.content%></p>
 					  						<% end %>
-			                                </p>
+
 
 
 

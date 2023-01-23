@@ -1,7 +1,7 @@
 <%= inline(this,:'_init')  %>
 <%= inline(this,:'_style')  %>
 <%= inline(this,:'../lib/_map')  %>
-<% 
+<%
 
 record = EMSCase.find params[:id]
 admit = record.admit
@@ -11,39 +11,25 @@ patient = admit.patient
 
 %>
 
-<script type="text/javascript">
-        
-    function codespeedy(){
-
-var print_div = document.getElementById("printout");
-var print_area = window.open();
-print_area.document.write(print_div.innerHTML);
-print_area.document.close();
-print_area.focus();
-print_area.print();
-print_area.close();
-// This is the code print a particular div element
-    }
-  </script>
 	<br/>
 <form>
 	<div style="float:right">
-    <input type="button" value="Print" onclick="window.print()" class="btn btn-info">
+    <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info">
 </div>
   </form>
 <style>
 	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
 	   background-color: #a3efef;
 	}
-	
+
 	@media print {
 		.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
 		   background-color: #a3efef !important;
-        -webkit-print-color-adjust: exact; 
+        -webkit-print-color-adjust: exact;
 		}
 		.navbar{
 			display:none;
-			 -webkit-print-color-adjust: exact; 
+			 -webkit-print-color-adjust: exact;
 		}
 	}
 </style>
@@ -54,11 +40,10 @@ print_area.close();
 		            left: 0px;
 		            overflow-y: auto;
 		            right: 0px;
-		            height: 1200px;
-					width: 500px;
+
 					font-size:0.8em;
 					padding:0px;
-					
+
 		            background-color: white;
 		            border: 0px solid #000;
 		           border-radius: 4px;
@@ -84,187 +69,316 @@ print_area.close();
 					margin-bottom:1em
 				}
 				h5{
-					border :1px solid #265d5c;padding:10px;
-/*		            border: 0px solid #000;*/
-		           border-radius: 4px;
+
 				}
 		</style>
 
-<div id="printout">
-<h2>Patient Summary : <%=patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
-<hr/>
+
+
+    <%
+
+
+    notes = admit.nurse_records
+
+    medications = admit.medication_records
+
+    records = admit.records
+
+    tmap = {}
+    mmap = {}
+
+    for i in notes
+
+    	k = i.start_time.localtime
+    	tmap[k] = [] unless tmap[k]
+    	tmap[k] << ['Note',i.description]
+
+
+    end
+
+    for i in medications
+    	if i.start_time
+    		k = i.start_time.localtime
+    		tmap[k] = [] unless tmap[k]
+        mmap[k] = [] unless mmap[k]
+
+    		tmap[k] << ['Med',"#{i.name if i} "]
+        mmap[k] << ['Med',"#{i.name if i} "]
+
+      end
+    	if i.stop_time
+    		k = i.stop_time.localtime
+    		tmap[k] = [] unless tmap[k]
+        mmap[k] = [] unless mmap[k]
+
+    		tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+        mmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+
+
+    	end
+    end
+
+    # for i in records
+    #
+    # 	if i.stamp
+    # 		k = i.stamp.localtime.strftime("%Y-%m-%d %H:%M:%S")
+    # 		tmap[k] = [] unless tmap[k]
+    # 		tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
+    # 	end
+    # end
+
+
+    %>
+
+<div id="printout" style="border:1px solid;padding:5px ">
 
 <div class="row">
 
-<div class="col-4">
-<strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
-<strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
-<%
 
-admit.discharge_stamp = Time.now unless admit.discharge_stamp
-
-u = 'mins'
-	total  = (admit.discharge_stamp - admit.admit_stamp)/60
-	
-	if total > 1
-		u = 'hours'
-		total  = (admit.discharge_stamp - admit.admit_stamp)/3600 
-	end
-	
-	if total > 24
-		u = 'days'
-		total  = (admit.discharge_stamp - admit.admit_stamp)/3600/24 if total > 24
-	
-	end
-%>
-<strong>Total time</strong> : <%=format("%0.2f",total) %> <%=u %> <br/>
-</div >
-
-<div class="col-4">
-<strong>BMI</strong> : <%=admit.bmi%><br/>
-<strong>Weight</strong> : <%=admit.weight%> kg<br/>
-<strong>Height</strong> : <%=admit.height%> cm<br/>
-<strong>Glucose</strong> : <%=admit.glucose%> mmol/L<br/>
+    <div class="row">
+      <div class="col-4">
 
 
-</div>
-
-</div >
-
-
-
-
-
-<%
-	
-		
-notes = admit.nurse_records
-
-medications = admit.medication_records
-
-records = admit.records
-
-tmap = {}
-
-for i in notes
-
-	k = i.start_time.localtime.strftime("%Y-%m-%d %H:%M:%S")
-	tmap[k] = [] unless tmap[k]
-	tmap[k] << ['Note',i.description]
-	
-	
-end
-
-for i in medications
-	if i.start_time
-		k = i.start_time.localtime.strftime("%Y-%m-%d %H:%M:%S")
-		tmap[k] = [] unless tmap[k]
-		tmap[k] << ['Med',"#{i.name if i} ON Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Set(#{format("0.04f",i.volume)} ml)"]
-	end
-	if i.stop_time
-		k = i.stop_time.localtime.strftime("%Y-%m-%d %H:%M:%S")
-		tmap[k] = [] unless tmap[k]
-		tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
-	end
-end	
-
-for i in records
-	
-	if i.stamp
-		k = i.stamp.localtime.strftime("%Y-%m-%d %H:%M:%S") 
-		tmap[k] = [] unless tmap[k]
-		tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
-	end
-end	
-	
-	
-%>
-
-
-<title>Summary of activities</title>
-<hr/>
-<h4>Event History:</h4>
-<table class='table table-striped '>
-	<caption></caption>
-	<thead>
-		<tr>
-			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% for t in tmap.keys.sort 
-		lines = tmap[t]
-		for i in lines
-			
-			type =i[0]
-			des = i[1]
-			
-		%>
-		<tr>
-			<td><%=t%></td><td><%=type%></td><td><%=des%></td>
-		</tr>
-		<% end %>
-		<% end %>
-	</tbody>
+        <table>
+        <tr>
+          <th>Patient Name</th>   <td><%=record.patient_name%></td>
+        </tr>
+        <tr>
+          <th>Patient ID</th>     <td><%=record.case_no%></td>
+        </tr>
+        <tr>
+          <th>Patient Age</th>    <td><%=record.patient_age%></td>
+        </tr>
+        <tr>
+          <th>Patient Sex</th>    <td><%=record.patient_gender%></td>
+        </tr>
 </table>
+
+
+      </div>
+
+
+    <div class="col-4">
+
+    <strong>Init Code</strong> : <%=record.init_code.name%> <br/>
+    <strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
+    <strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
+    <%
+
+    admit.discharge_stamp = Time.now unless admit.discharge_stamp
+
+    u = 'mins'
+    	total  = (admit.discharge_stamp - admit.admit_stamp)/60
+
+    	if total > 1
+    		u = 'hours'
+    		total  = (admit.discharge_stamp - admit.admit_stamp)/3600
+    	end
+
+    	if total > 24
+    		u = 'days'
+    		total  = (admit.discharge_stamp - admit.admit_stamp)/3600/24 if total > 24
+
+    	end
+    %>
+    <strong>Total time</strong> : <%=format("%0.2f",total) %> <%=u %> <br/>
+    </div >
+
+    <div class="col-4">
+    <strong>BMI</strong> : <%=admit.bmi%><br/>
+    <strong>Weight</strong> : <%=admit.weight%> kg<br/>
+    <strong>Height</strong> : <%=admit.height%> cm<br/>
+    <strong>Glucose</strong> : <%=admit.glucose%> mmol/L<br/>
+
+
+    </div>
+
+    </div >
+
+
+
+</div>
+
+<br/>
+<style>
+.time{
+  width:100px
+}
+</style>
+
+<div class="row">
+
+<div class="col-12">
+<strong>
+Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+</strong>
+<%
+  n = 10
+
+  (records.size/n.to_f).ceil.times do |t|
+
+  list = records[t*n..(t+1)*n].compact
+  plist = {:hr=>"HR (bpm)",:bp=>"NIBP (mmHg)",:rr=>"Resp (rpm)",:co2=>"ETCO2 (mmHg)",:spo2=>"SpO2 (%)",:temp=>"T1 (C)"}
+
+%>
+
+<table class="table table-striped " style="font-size:0.8em">
+<thead>
+  <tr>
+    <th>Date Time</th>
+      <% for ti in list %>
+        <td><%=ti.stamp.strftime("%H:%M")%>
+        </td>
+      <% end %>
+  </tr>
+</thead>
+<tbody>
+<% for p in plist.keys %>
+  <tr>
+    <th><%=plist[p]%></th>
+    <% for ti in list %>
+    <td><%=ti[p]%></td>
+    <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+<% end %>
+</div>
+</div>
+
+
+<div class="row">
+
+<div class="col-12">
+  <strong>
+  Event Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+  </strong>
+
+
+
+  <table class='table table-striped ' style="font-size:0.8em">
+  	<caption></caption>
+  	<thead>
+  		<tr>
+  			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<% for t in tmap.keys.sort
+  		lines = tmap[t]
+  		for i in lines
+  			type =i[0]
+  			des = i[1]
+  		%>
+  		<tr>
+  			<td class="time"><%=t.strftime("%H:%M:%S")%></td><td><%=type%></td><td><%=des%></td>
+  		</tr>
+  		<% end %>
+  		<% end %>
+  	</tbody>
+  </table>
+
+
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div class="col-12">
+  <strong>
+  Medication Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+  </strong>
+
+
+
+  <table class='table table-striped ' style="font-size:0.8em">
+  	<caption></caption>
+  	<thead>
+  		<tr>
+  			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<% for t in mmap.keys.sort
+  		lines = mmap[t]
+  		for i in lines
+  			type =i[0]
+  			des = i[1]
+  		%>
+  		<tr>
+  			<td class="time"><%=t.strftime("%H:%M:%S")%></td><td><%=type%></td><td><%=des%></td>
+  		</tr>
+  		<% end %>
+  		<% end %>
+  	</tbody>
+  </table>
+
+
+
+</div>
+
 </div>
 
 
 
-		<div class="row">
+		<div class="row" style="">
 
 		<div class="col-12 "  >
-<div id="printout">
-<h2>Patient Summary : <%=patient%> (HN : <%=patient.hn%>), <%=admit.bed_no%> - <%=admit.zone.name if admit.zone%></h2>
-<hr/>
-<h4>Flowsheet : </h4>
-<hr/>
-		<div class="row" style="my-2">
-			<div class="col-12 viewport" style="width:1000px">
-			<%= inline(this,:'../Admit/_flowsheet_print')  %>
+
+<strong>
+      Flow Sheet ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+</strong>
+
+		<div class="row" >
+			<div class="col-12 viewport" style="border:0px solid;height:600px">
+			<%= inline(this,:'../ems_paramedic/_flowsheet')  %>
+
 			</div>
 	    </div>
 		</div>
-	</div>
-</div>
-	</div>
+
+
 	<script>
-	
+
 		var settings = {version:'1.0'};
 
 	    var components = [];
 
 		// vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],records:null};
-		
+
 		vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],
 		groups:[{params:['pr','hr'],range:[0,200],range_auto:true,show:true},
 		{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
 		{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
 		{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
 	],records:null};
-		
+
 		records = [];
 
 		now = Date.now();
-		
+
 		<%
 		if admit
 		senses = Sense.where(:admit_id=>admit.id).limit(3000).sort(:start_time.desc).all.reverse
-	    
-		
-		
+
+
+
 		list =[]
 		now = Time.now
-		
+
 		if true
-		
-		senses.each_with_index do |i,ii| 
-		
+
+		senses.each_with_index do |i,ii|
+
 			o = ActiveSupport::JSON.decode(i.vs)
-			
+
 			if o
-				o.each do |j| 
-					
+				o.each do |j|
+
 					# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
 					bp = [0,0]
 					bp = j['bp'].split("/") if j['bp']
@@ -272,89 +386,79 @@ end
 						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:(j['pr']!='-' and j['pr'])?j['pr']:0, :spo2=>(j['spo2']!='-' and j['spo2'])?j['spo2']:0, hr:j['hr']?j['hr']:0, co2:j['co2']?j['co2']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
 					# end
 					# list.push :time=>now-(senses.size-ii),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(ii*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
-			
+
 				end
-				
+
 			end
-			
+
 		end
-		
-		
+
+
 		else
-		
+
 			for i in DataRecord.where(:admit_id=>admit.id).all
-		
+
 				# o = ActiveSupport::JSON.decode(i.data)
-				
+
 			list.push :time=>i.stamp,:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
-			
-			# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
-			
-				# if o['vs']
-				# 	for j in o['vs']
-				#
-				# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
-				# 		bp = j['bp'].split("/")
-				# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
-				# 	end
-				#
-				# end
-			
+
+
+
 			end
-		
+
 		end
-		
-		
-		for j in list 	
+
+
+		for j in list
 		%>
 		j = <%=j.to_json.html_safe%>
 		records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia'],co2:j['co2']});
 		<% end %>
 			<% end %>
 		//records = <%= list.to_json.html_safe %>
-	
+
 		// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
 		// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
 		// records.push({time:now+200000,hr:110,rr:20,bp_sys:163,bp_dia:120});
 		// records.push({time:now+300000,hr:90,rr:20,bp_sys:100,bp_dia:60});
 		// records.push({time:now+400000,hr:99,rr:20,bp_sys:103,bp_dia:90});
-		
-		
+
+
 		vs['records'] = records;
-		
+
 		<%
-			
+
 			meds = admit.medication_records
 			med_map = {}
 			for i in meds
-				
+
 				k = i.name
-				
+
 				med_map[k] = [] unless med_map[k]
 				med_map[k] << i
-			
+
 			end
-			
-			
+
+
 		%>
 
-	
+
 
 		// med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl','0.9%NSS'],records:null};
-		
+
 		med = {name:'medication',type:'med',show:true,params:<%=med_map.keys.to_json.html_safe%>,records:null};
-		
+
 		records = [];
-		<% for i in meds 
-		
+		<% for i in meds
+
 			stop_time = Time.now
 			stop_time = i.stop_time if i.stop_time
 		%>
-		
+
 		records.push({time:new Date(<%=i.start_time.localtime.to_json%>),stop_time: new Date(<%=stop_time.localtime.to_json%>),'<%=i.name %>':{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
-		
+
 		<% end %>
-		
+
 		// records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
 	// 	records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
 
@@ -375,7 +479,7 @@ end
 
      var g = viewport.append("g")
 	    .attr("transform", "translate(0,0)");
-	
+
 	 gfx = GFX()
 	 .svg(g)
 	 .startTime(Date.now())
@@ -383,6 +487,132 @@ end
 	 .viewport(d3.select(".viewport"));
 	 gfx.data(settings);
 	 d3.select("svg").call(gfx);
-	 
+
 	</script>
-	 
+
+
+
+  <div class="row">
+
+  <div class="col-12">
+    <strong>
+    Communiction Summary
+    </strong>
+
+<%
+
+    messages = Message.where(:admit_id=>admit.id).all
+
+%>
+
+
+    <table class='table table-striped ' style="font-size:0.8em">
+    	<caption></caption>
+    	<thead>
+    		<tr>
+    			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<%
+    console = []
+
+        records = admit.logs.where(:status=>'COMPLETED').all
+        for m in records
+
+          console << [m.stamp, :log, m]
+
+        end
+
+        msgs = admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+        # msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+
+        # Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
+
+        for m in msgs
+
+          console << [m.created_at, :msg, m]
+
+        end
+
+
+        %>
+
+        <% for l in console.sort{|a,b| a[0]<=>b[0]}
+          type = l[1]
+          i = l[2]
+        %>
+
+    		<tr>
+    			<td class="time">
+            <%=l[0].strftime("%H:%M:%S")%>
+          </td>
+
+          <td><%=type%></td>
+
+          <td>
+            <% if type == :log %>
+            <%= i.name %>
+            <% elsif type == :msg %>
+            <% if i.type == 'image'
+
+
+
+
+              # url  = "/miot/img/svg/aoc-icon.svg"
+              url = "../Message/content?id=#{i.id}"
+            %>
+
+          <center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+
+          <%
+            while  console.first != nil and console.first[1]==:msg and console.first[2].type=='image'
+              item = console.shift
+              i = item[2]
+              url = "../Message/content?id=#{i.id}"
+          %>
+          <a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+          <% end %>
+          </center>
+
+            <% elsif i.type == 'voice'
+            url = "../Message/content?id=#{i.id}"
+          %>
+          <audio controls>
+            <source src="<%=url%>"  type='video/3gpp; codecs="mp4v.20.8, samr"'>
+          Your browser does not support the audio element.
+          </audio>
+
+
+          <% else %>
+            <p class="chat-left-msg"><%=i.content%></p>
+            <% end %>
+  <% end %>
+          </td>
+    		</tr>
+    		<% end %>
+    	</tbody>
+    </table>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+    function codespeedy(){
+
+var print_div = document.getElementById("printout");
+var print_area = window.open();
+print_area.document.write(print_div.innerHTML);
+print_area.document.close();
+print_area.focus();
+print_area.print();
+// print_area.close();
+// This is the code print a particular div element
+    }
+  </script>

@@ -252,12 +252,28 @@ record = @current_case
   latlng = [<%=record.latlng%>]
   <% end %>
 
-
+  <%
+     if @current_ambulance
+ %>
+      latlng = [<%=@current_ambulance.last_location%>]
+<% end %>
 
   map1 = new EMSMap('dashboard-map',{movable:true});
   map1.setPosition(latlng[0], latlng[1])
   map1.setMarkerPosition(latlng[0], latlng[1])
 	map1.changeMarkerPosition(function(marker){
+
+    if(ws!=null&&ws_ready){
+
+      latlng = marker.getPosition();
+      console.log(latlng)
+      lat = ""+latlng.lat()+","+latlng.lng()
+
+      ws.send('GPS.Update name=*\n[{"device_type":"ambu","id":"<%=@current_ambulance.id%>","lat":'+latlng.lat()+',"lng":'+latlng.lng()+'}]')
+    }
+
+
+
 
   });
 
@@ -318,6 +334,7 @@ modal('#modal_notification')
   }
 
   var ws = null
+  var ws_ready = false
 
   function connect(){
 
@@ -331,7 +348,7 @@ modal('#modal_notification')
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
     ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>"]')
-
+    ws_ready = true;
 
   };
 
