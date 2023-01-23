@@ -397,7 +397,19 @@ class HomeController < GXT
 
                       ems_case.update_attributes :patient_name=>patient_name, :patient_cid=>patient_cid, :patient_age=>patient_age, :patient_gender=>patient_gender
 
-                      puts msg_data.inspect 
+                      puts msg_data.inspect
+
+
+                      connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+                      grid = Mongo::Grid::FSBucket.new(connection.database)
+
+                      filename = "pic.jpg"
+                      content =  Base64.decode64(obj['image'])
+                      fid = grid.upload_from_stream(filename,content)
+
+                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> "CardReader", :recipient=> "", :recipient_type=> "NA", :content=> "PIC#{ems_case.id}.jpg", :ts=> Time.now.to_i, :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
 
                   end
 
