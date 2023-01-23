@@ -370,6 +370,39 @@ class HomeController < GXT
 
                redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
 
+             elsif msg_data[0..2] == 'Pat'
+
+               puts msg_data
+
+               lines = msg_data.split("\n")
+
+               obj = JSON.parse(lines[1])
+
+               ambu = Ambulance.where(:name=>obj['ambu_name']).first
+               if ambu
+
+                  ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+
+                  if ems_case
+
+                      patient_name = "#{obj['prefix_name']}#{obj['first_name']} #{obj['last_name']}"
+                      patient_cid = obj['cid']
+                      patient_gender = obj['gender']
+
+                      age = Time.now.year - (obj['birth_date'][0..3].to_i-543)
+
+                      patient_age = "#{age}"
+
+                      puts msg_data
+
+                      ems_case.update_attributes :patient_name=>patient_name, :patient_cid=>patient_cid, :patient_age=>patient_age, :patient_gender=>patient_gender
+
+                      puts msg_data.inspect 
+
+                  end
+
+               end
+
 
              elsif msg_data[0..2] == 'GPS'
 
