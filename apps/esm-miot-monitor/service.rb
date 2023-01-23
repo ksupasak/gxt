@@ -1742,8 +1742,9 @@ end
 
                 active_list[name].values.each do |s|
 
+                    if settings.live[name]
 
-                    settings.live[name][s.name]-=1 if settings.live[name][s.name] and settings.live[name][s.name]>0
+                    settings.live[name][s.name]-=1 if  settings.live[name][s.name] and settings.live[name][s.name]>0
 
                     if  settings.live[name][s.name]==0
 
@@ -1934,6 +1935,7 @@ end
 
 
 
+              end
 
 
 
