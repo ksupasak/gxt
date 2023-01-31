@@ -639,11 +639,13 @@ cls = record.init_code.get_class
 		$(document).ready(function(){
 			<% unless params[:page] %>
 			tab =  sessionStorage.getItem("last_tab")
+
 			if(tab != null&&tab.length>0){
 
 			}else{
 				// alert('no '+sessionStorage.getItem("last_tab"))
-
+				tab = 'dashboard'
+				sessionStorage.setItem("last_tab", tab)
 
 			}
  		// $('.tab-dashboard').click()
