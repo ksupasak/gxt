@@ -24,7 +24,7 @@
 <div class="col-12 col-lg-4">
 <div class="card card-x radius-10 border-start border-0 border-3 border-success">
 <div class="card-body">
-	<h5><a class="tab-request" >Request</a></h5>
+	<h5>Request</h5>
 
 	<% if ems_case %>
 	<li>Request at : <%=ems_case.created_at.strftime("%d-%m-%Y %H:%M")%> (<%=format('%.1f',(Time.now-ems_case.created_at)/60.0)%>mins)</li>
@@ -175,7 +175,23 @@
 
 <div class="card radius-10 border-start border-0 border-3 border-info">
 <div class="card-body">
-	<h5>Events</h5>
+	<h5>Case Summary</h5>
+
+	<div class="summary">-</div>
+	<script>
+
+		$.ajax({
+			url: "<%="../EMS/summary"%>?id=<%=ems_case.id%>",
+			context: document.body
+		}).done(function(data) {
+			$( '.summary' ).html(data);
+
+
+		});
+
+	</script>
+
+
 </div>
 </div>
 </div>

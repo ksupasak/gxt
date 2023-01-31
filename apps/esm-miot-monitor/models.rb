@@ -291,7 +291,7 @@ class Admit < GXTModel
   has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time ASC"
   has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time ASC"
 
-  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "stamp ASC"
+  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "sort_order ASC"
   has_many :messages, :class_name=>'EsmMiotMonitor::Message', order: "ts ASC"
 
 

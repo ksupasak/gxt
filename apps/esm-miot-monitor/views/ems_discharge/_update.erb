@@ -1,9 +1,9 @@
 <%
+record = EMSCase.find params[:id]
 
   if request.post?
 
 
-			record = EMSCase.find params[:id]
 
 
 
@@ -28,12 +28,13 @@ MSG
 
 
 %>
+
 Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
 <% else %>
 
 
 
-<form action="<%= get_path 'update'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
+<form action="<%= get_path 'update'%>" method="post">
 <input type="hidden" name="id" value="<%=ems_case.id%>">
 
 <div class="row">
@@ -41,7 +42,7 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 <div class="col-lg-6">
 
 <div class="card">
-  <div class="card-header bg-primary bbg-gradient text-white ">
+  <div class="card-header bg-secondary bbg-gradient text-white ">
 
     Discharge Information
 
@@ -64,11 +65,11 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 <div class="col-lg-6">
   <div class="card">
 
-  <div class="card-header bg-secondary bbg-gradient ">
+  <div class="card-header bg-primary bbg-gradient ">
 
     <div class="">
             <h6 class="mb-0 text-white">
-              ข้อมูลเหตุฉุกเฉิน :
+             Case Summary :
             </h6>
           </div>
 
@@ -76,7 +77,19 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 
   <div class="card-body">
 
+    <div class="summary">-</div>
+    <script>
 
+      $.ajax({
+        url: "<%="../EMS/summary"%>?id=<%=record.id%>",
+        context: document.body
+      }).done(function(data) {
+        $( '.summary' ).html(data);
+
+
+      });
+
+    </script>
 
   </div>
 </div>

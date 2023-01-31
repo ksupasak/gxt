@@ -11,10 +11,11 @@ patient = admit.patient
 
 %>
 
-	<br/>
 <form>
-	<div style="float:right">
-    <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info">
+	<div style="float:right" class="print-btn">
+    <!-- <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info"> -->
+
+		<a href="../EMS/print_summary?id=<%=record.id%>" target="_blank" class="btn btn-info">Print</a>
 </div>
   </form>
 <style>
@@ -130,7 +131,7 @@ patient = admit.patient
 
     %>
 
-<div id="printout" style="border:1px solid;padding:5px ">
+<div id="printout" style="border:0px solid gray;  ">
 
 <div class="row">
 
@@ -141,16 +142,16 @@ patient = admit.patient
 
         <table>
         <tr>
-          <th>Patient Name</th>   <td><%=record.patient_name%></td>
+          <th>Patient Name : </th>   <td><v><%=record.patient_name%></v></td>
         </tr>
         <tr>
-          <th>Patient ID</th>     <td><%=record.case_no%></td>
+          <th>Patient ID : </th>     <td><v><%=record.case_no%></v></td>
         </tr>
         <tr>
-          <th>Patient Age</th>    <td><%=record.patient_age%></td>
+          <th>Age : </th>    <td><v><%=record.patient_age%></v></td>
         </tr>
         <tr>
-          <th>Patient Sex</th>    <td><%=record.patient_gender%></td>
+          <th>Gender : </th>    <td><v><%=record.patient_gender%></v></td>
         </tr>
 </table>
 
@@ -160,9 +161,9 @@ patient = admit.patient
 
     <div class="col-4">
 
-    <strong>Init Code</strong> : <%=record.init_code.name%> <br/>
-    <strong>Admit at</strong> : <%=admit.admit_stamp%> <br/>
-    <strong>Discharge at</strong> : <%=admit.discharge_stamp%> <br/>
+    <t>Init Code</t> : <v><%=record.init_code.name%></v> <br/>
+    <t>Admit at</t> : <v><%=admit.admit_stamp.strftime("%d/%m/%y-%H:%M")%></v> <br/>
+    <t>Discharge at</t> : <v><%=admit.discharge_stamp.strftime("%d/%m/%y-%H:%M") if admit.discharge_stamp%></v> <br/>
     <%
 
     admit.discharge_stamp = Time.now unless admit.discharge_stamp
@@ -181,14 +182,14 @@ patient = admit.patient
 
     	end
     %>
-    <strong>Total time</strong> : <%=format("%0.2f",total) %> <%=u %> <br/>
+    <t>Total time</t> : <%=format("%0.2f",total) %> <%=u %> <br/>
     </div >
 
     <div class="col-4">
-    <strong>BMI</strong> : <%=admit.bmi%><br/>
-    <strong>Weight</strong> : <%=admit.weight%> kg<br/>
-    <strong>Height</strong> : <%=admit.height%> cm<br/>
-    <strong>Glucose</strong> : <%=admit.glucose%> mmol/L<br/>
+    <t>BMI</t> : <%=admit.bmi%><br/>
+    <t>Weight</t> : <%=admit.weight%> kg<br/>
+    <t>Height</t> : <%=admit.height%> cm<br/>
+    <t>Glucose</t> : <%=admit.glucose%> mmol/L<br/>
 
 
     </div>
@@ -204,13 +205,387 @@ patient = admit.patient
 .time{
   width:100px
 }
+
+t{
+	font-weight: bold;
+
+	display:inline-block
+}
+v{
+	color:blue;
+}
+strong
+{
+	font-size:1.2em;
+	padding-bottom:20px;
+}
 </style>
+
+
+
+
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+
+<div class="row">
+
+<div class="col-12">
+
+<h5>
+EMD Summary
+</h5>
+
+<div class="row">
+
+<div class="col-4 d-flex" >
+<div class="row">
+
+<div class="col-12" id="record_case_type">
+<t >ลักษณะ :</t>  <v><%=record.case_type%></v>
+</div>
+
+</div>
+</div>
+<!---------------------------------------------------->
+
+<div class="col-4">
+<div class="row">
+	<div class="col-12">
+	<t>ผลปฏิบัติการ :</t>  <v><%=record.operation_result%></v>
+	</div>
+</div>
+</div>
+
+<!---------------------------------------------------->
+
+<div class="col-4">
+<div class="row">
+
+ <% if  record.operation_result=='not_found' %>
+	<div class="col-12">
+	<t>กรณีไม่พบเหตุ :</t>  <v><%=record.operation_cancel_reason%></v>
+	</div>
+	<div class="col-12">
+	<t>แจ้งไม่พบเหตุเมื่อ :</t>  <v><%=record.operation_cancel_at%></v>
+	</div>
+<% else %>
+	<div class="col-12">
+	<t>ประเภทผู้ป่วย :</t>  <v><%=record.patient_type%></v>
+	</div>
+<% end %>
+
+</div>
+</div>
+
+</div>
+
+<!---------------------------------------------------->
+<!---------------------------------------------------->
+
+
+
+<div class="row">
+
+			<div class="col-4 d-flex" >
+			<div class="row">
+
+			<div class="col-12" id="record_diagnosis">
+			<t >Diagnosis :</t>  <v><%=record.diagnosis%></v>
+			</div>
+
+			</div>
+			</div>
+
+
+			<div class="col-4 d-flex" >
+			<div class="row">
+
+			<div class="col-12" id="record_patient_reimbursement">
+			<t >สิทธิการรักษา :</t>  <v><%=record.patient_reimbursement%></v>
+			</div>
+
+			</div>
+			</div>
+
+</div>
+
+
+
+
+<div class="row">
+
+
+			<div class="col-6 d-flex" >
+			<t >ทีมสนับสนุน : </t>  <v class="" style="">
+				<%=record.bls_request%> <%=record.bls_onscene%>   <%=record.bls_operation%> <%=record.bls_cpr%>
+			</v>
+			</div>
+
+			<div class="col-6 d-flex" >
+			<t >Specialist : </t>  <v class="" style="">
+				<%=record.special_request%> <%=record.special_type%>
+			</v>
+			</div>
+
+
+			<div class="col-12 d-flex" >
+			<t >ส่งโรงพยาบาล : </t>  <v class="" style="">
+				<%=record.transfer_hospital%> HN : <%=record.transfer_hn%>
+			</v>
+			</div>
+
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<br/>
+
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+
+<div class="row">
+
+<div class="col-12">
+
+<h5>
+EMT Summary
+</h5>
+<div class="row">
+
+<div class="col-6">
+
+<%
+
+		command = EMSCommand.where(:case_id=>record.id).first
+		logs = record.admit.logs
+
+
+%>
+<table class='table table-striped table-bordered' style="font-size:0.8em;">
+	<caption></caption>
+	<thead>
+		<tr>
+			<th scope="col">รายการ</th><th scope="col">Time</th><th scope="col">เลข กม.</th>
+		</tr>
+	</thead>
+	<tbody>
+			<% for i in logs%>
+			<tr>
+				<th><%= i.name %></th>				<td><%= i.stamp.strftime("%H:%M") if i.stamp %></td>				<td><%= i.mile_meter %></td>
+			</tr>
+			<% end %>
+	</tbody>
+</table>
+
+</div>
+
+
+<div class="col-6">
+
+	<table class='table table-striped table-bordered ' style="font-size:0.8em;">
+		<caption></caption>
+		<thead>
+			<tr>
+				<th scope="col">รายการ</th><th scope="col">Time</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Dispatch Time</th> <td><%=record.dispatch_time%></td>
+			</tr>
+			<tr>
+				<th>Active Time</th> <td><%=record.activation_time%></td>
+			</tr>
+			<tr>
+				<th>Response Time</th> <td><%=record.response_time%></td>
+			</tr>
+			<tr>
+				<th>On scene Time</th> <td><%=record.onscene_time%></td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+	  <div class="col-12">
+
+			<h5>
+			Outcome Summary
+			</h5>
+
+		<div class="row">
+
+
+					<!-- <div class="col-3 d-flex" >
+					<t >รหัสรับแจ้ง : </t>  <v class="" style=""> <%=record.init_cbd_color%></v>
+					</div>
+
+					<div class="col-3 d-flex" >
+					<t >รหัส EMD : </t>  <v class="" style=""> <%=record.dispatch_cbd_color%></v>
+					</div>
+
+					<div class="col-3 d-flex" >
+					<t >รหัสที่เกิดเหตุ : </t>  <v class="" style=""> <%=record.scene_cbd_color%></v>
+					</div>
+
+					<div class="col-3 d-flex" >
+					<t >รหัสนำส่ง : </t>  <v class="" style=""> <%=record.screen_cbd_color%></v>
+					</div> -->
+					<div class="col-12">
+
+					<table class='table table-striped ' style="font-size:0.8em">
+						<caption></caption>
+						<thead>
+							<tr>
+								<th scope="col">รหัสรับแจ้ง</th><th scope="col">รหัสโดย EMD</th><th scope="col">รหัสที่เกิดเหตุ</th><th scope="col">รหัสรับนำส่ง</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><%=record.init_cbd_color%></td>	<td><%=record.dispatch_cbd_color%></td>	<td><%=record.scene_cbd_color%></td>	<td><%=record.screen_cbd_color%></td>
+
+							</tr>
+						</tbody>
+						</table>
+					</div>
+
+		</div>
+
+		<b> Vital Sign </b>
+
+		<table class='table table-striped ' style="font-size:0.8em">
+			<caption></caption>
+			<thead>
+				<tr>
+					<th scope="col">Time</th><th scope="col">BP</th><th scope="col">HR</th><th scope="col">RR</th><th scope="col">SPO2</th>
+					<th scope="col">GCS</th><th scope="col">BT</th><th scope="col">DTX</th><th scope="col">SOS Score</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr>
+					<td><%=record.init_vs_stamp.strftime("%H:%M") if record.init_vs_stamp%></td>
+
+					<td><%=record.init_sbp%>/<%=record.init_dbp%></td>
+					<td><%=record.init_hr%></td>
+					<td><%=record.init_rr%></td>
+					<td><%=record.init_spo2%></td>
+					<td><%=record.init_gcs%></td>
+					<td><%=record.init_temp%></td>
+					<td><%=record.init_dtx%></td>
+					<td>NA</td>
+				</tr>
+
+				<tr>
+					<td><%=record.repeat_vs_stamp.strftime("%H:%M") if record.repeat_vs_stamp %></td>
+					<td><%=record.repeat_sbp%>/<%=record.repeat_dbp%></td>
+					<td><%=record.repeat_hr%></td>
+					<td><%=record.repeat_rr%></td>
+					<td><%=record.repeat_spo2%></td>
+					<td><%=record.repeat_gcs%></td>
+					<td><%=record.repeat_temp%></td>
+					<td><%=record.repeat_dtx%></td>
+					<td>NA</td>
+				</tr>
+
+				<tr>
+					<td><%=record.screen_vs_stamp.strftime("%H:%M") if record.screen_vs_stamp%></td>
+
+					<td><%=record.screen_sbp%>/<%=record.screen_dbp%></td>
+					<td><%=record.screen_hr%></td>
+					<td><%=record.screen_rr%></td>
+					<td><%=record.screen_spo2%></td>
+					<td><%=record.screen_gcs%></td>
+					<td><%=record.screen_temp%></td>
+					<td><%=record.screen_dtx%></td>
+					<td>NA</td>
+				</tr>
+
+
+
+	   </tbody>
+		 </table>
+
+		 </div>
+</div>
+
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+
+<div class="row">
+
+<div class="col-12">
+  <h5>
+  EMS Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0] %> to <%=records[-1].stamp.strftime("%H:%M") if records[-1]%> : <%=records.size %> records)
+  </h5>
+
+
+
+  <table class='table table-striped ' style="font-size:0.8em">
+  	<caption></caption>
+  	<thead>
+  		<tr>
+  			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<% for t in tmap.keys.sort
+  		lines = tmap[t]
+  		for i in lines
+  			type =i[0]
+  			des = i[1]
+  		%>
+  		<tr>
+  			<td class="time"><%=t.strftime("%H:%M:%S") if t%></td><td><%=type%></td><td><%=des%></td>
+  		</tr>
+  		<% end %>
+  		<% end %>
+  	</tbody>
+  </table>
+
+	<br/>
+
+
+
+
+
+</div>
+
+</div>
+
+
+
+
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+
+
 
 <div class="row">
 
 <div class="col-12">
 <strong>
-Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> to <%=records[-1].stamp.strftime("%H:%M") if records[-1]%> : <%=records.size %> records)
 </strong>
 <%
   n = 10
@@ -247,50 +622,15 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-
 </div>
 </div>
 
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
+<!-------------------------------------------------------------->
 
 <div class="row">
 
 <div class="col-12">
   <strong>
-  Event Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
-  </strong>
-
-
-
-  <table class='table table-striped ' style="font-size:0.8em">
-  	<caption></caption>
-  	<thead>
-  		<tr>
-  			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
-  		</tr>
-  	</thead>
-  	<tbody>
-  		<% for t in tmap.keys.sort
-  		lines = tmap[t]
-  		for i in lines
-  			type =i[0]
-  			des = i[1]
-  		%>
-  		<tr>
-  			<td class="time"><%=t.strftime("%H:%M:%S")%></td><td><%=type%></td><td><%=des%></td>
-  		</tr>
-  		<% end %>
-  		<% end %>
-  	</tbody>
-  </table>
-
-
-
-</div>
-
-</div>
-
-
-<div class="row">
-
-<div class="col-12">
-  <strong>
-  Medication Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+  Medication Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> to <%=records[-1].stamp.strftime("%H:%M") if records[0]%> : <%=records.size %> records)
   </strong>
 
 
@@ -330,7 +670,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-
 		<div class="col-12 "  >
 
 <strong>
-      Flow Sheet ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-1].stamp.strftime("%H:%M")%> : <%=records.size %> records)
+      Flow Sheet ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> to <%=records[-1].stamp.strftime("%H:%M") if records[-1]%> : <%=records.size %> records)
 </strong>
 
 		<div class="row" >
@@ -495,9 +835,9 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-
   <div class="row">
 
   <div class="col-12">
-    <strong>
+    <h5>
     Communiction Summary
-    </strong>
+    </h5>
 
 <%
 
@@ -553,6 +893,9 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M")%> to <%=records[-
           <td>
             <% if type == :log %>
             <%= i.name %>
+
+						เลขไมล์ : <%= i.mile_meter %>
+
             <% elsif type == :msg %>
             <% if i.type == 'image'
 

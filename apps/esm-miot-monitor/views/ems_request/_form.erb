@@ -270,11 +270,19 @@
 				</div>
 					<div class="card-body">
 						<div class="row">
-							<div class="col-4">
+
+
+							<div class="col-3">
 									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
 
 							</div>
-							<div class="col-4">
+							<div class="col-3">
+								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
+									<option selected="" value="EMS">EMS</option>
+									<option value="Refer">Refer</option>
+								</select>
+							</div>
+							<div class="col-3">
 								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
 									<option selected="">-</option>
 									<%
@@ -286,7 +294,7 @@
 									<% end %>
 								</select>
 							</div>
-							<div class="col-4">
+							<div class="col-3">
 								<select class="form-select mb-3" name='record[ambulance_id]' aria-label="Default select example">
 									<option selected="">-</option>
 									<%

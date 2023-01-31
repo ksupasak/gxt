@@ -64,7 +64,7 @@
 	    <div class="card radius-10">
 		<div class="card-body">
 			events
-		<div class="message-partial" style="height:800px;overflow:scroll"></div>
+		<div class="message-partial" style="height:60vh;overflow:scroll"></div>
 		</div>
 		</div>
 	</div>
@@ -179,7 +179,7 @@
 
 
 </div >
-<div class="msg text-success">
+<div class="msg text-success" style="">
 </div>
 
 
@@ -241,10 +241,11 @@
 			%>
 
 			var latlng = [];
+			var station_image = "<%=url_for("ems/station.png")%>";
 
 			var pos = new google.maps.LatLng(latlng2[0],latlng2[1] )
 			latlng.push(new google.maps.LatLng(pos))
-			marker = new google.maps.Marker({position: pos, map: map})
+			marker = new google.maps.Marker({position: pos, map: map, icon: station_image})
 
 			<% for i in cases %>
 		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
@@ -348,11 +349,14 @@
 
         marker = ambu_map[a['_id']]
 
+				var image = "<%=url_for("ems/ambu.png")%>";
+
+
 
 				if(marker==null){
 
 
-						marker_map = new google.maps.Marker({position: pos,icon: map_icon,  map: map});
+						marker_map = new google.maps.Marker({position: pos,icon: image,  map: map});
 						ambu_map[a['_id']] = marker_map
 							console.log('new')
 

@@ -79,11 +79,20 @@ class EMSCase < GXTModel
   key :chief_complain, String
 
 
-  key :request_cbd_code, ObjectId
+  # key :request_cbd_code, ObjectId
 
   key :init_cbd_code, ObjectId
 
-  key :final_cbd_code, ObjectId
+  key :init_cbd_color, String
+  key :dispatch_cbd_color, String
+  key :scene_cbd_color, String
+  key :screen_cbd_color, String
+
+  key :case_type, String # EMS / Refer
+  key :patient_type, String # Trauma
+
+
+  # key :final_cbd_code, ObjectId
 
   key :contact_name, String
 
@@ -184,12 +193,33 @@ class EMSCase < GXTModel
   key :er_triage, String
   key :diagnosis, String
 
+  key :init_vs_stamp, DateTime
+  key :init_sbp, Integer
+  key :init_dbp, Integer
+  key :init_hr, Integer
+  key :init_rr, Integer
+  key :init_spo2, Integer
+  key :init_gcs, String
+  key :init_temp, Float
+  key :init_dtx, Integer
+
+  key :repeat_vs_stamp, DateTime
+  key :repeat_sbp, Integer
+  key :repeat_dbp, Integer
+  key :repeat_hr, Integer
+  key :repeat_rr, Integer
+  key :repeat_spo2, Integer
+  key :repeat_gcs, String
+  key :repeat_temp, Float
+  key :repeat_dtx, Integer
+  
+  key :screen_vs_stamp, DateTime
   key :screen_sbp, Integer
   key :screen_dbp, Integer
   key :screen_hr, Integer
   key :screen_rr, Integer
   key :screen_spo2, Integer
-  key :screen_gcs, Integer
+  key :screen_gcs, String
   key :screen_temp, Float
   key :screen_dtx, Integer
 
