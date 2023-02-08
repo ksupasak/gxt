@@ -1,4 +1,8 @@
-
+<style>
+.field-item{
+	margin-bottom:20px
+}
+	</style>
 <%
 
 		record = EMSCase.find params[:id]
@@ -6,7 +10,7 @@
 		admit = record.admit
 
 
-		list = %w{patient_assessment stemi stroke cardiac_arrest trauma tranexamic need_intubation interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus}
+		list = %w{patient_assessment stemi cardiac_arrest stroke sepsis trauma tranexamic need_intubation interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus}
 
 		list.each_with_index do |i,ix|
 
@@ -148,4 +152,33 @@ Offline protocol
 		e.preventDefault();
 
 	})
+</script>
+	<link rel="stylesheet" href="/rocker/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css">
+
+<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
+<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
+<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
+<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
+<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
+<script>
+	$('.datepicker').pickadate({
+		selectMonths: true,
+				selectYears: true
+	}),
+	$('.timepicker').pickatime()
+</script>
+<script>
+	$(function () {
+		$('#date-time').bootstrapMaterialDatePicker({
+			format: 'YYYY-MM-DD HH:mm'
+		});
+		$('#date').bootstrapMaterialDatePicker({
+			time: false
+		});
+		$('#timex').bootstrapMaterialDatePicker({
+			date: false,
+			format: 'HH:mm'
+		});
+	});
 </script>

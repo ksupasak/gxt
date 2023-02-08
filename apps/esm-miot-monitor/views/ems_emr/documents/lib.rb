@@ -13,4 +13,8 @@ def text_string this, name, options={}
   return inline(this,'documents/_render_field', :this=>this, :name=>name, :options=>options, :type=>'text_string')
 end
 
+def date_string this, name, options={}
+  return inline(this,'documents/_render_field', :this=>this, :name=>name, :options=>options, :type=>'date_string')
+end
+
 end
