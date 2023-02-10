@@ -3,28 +3,48 @@
 <%
   @record = record
 %>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
 <div class="card">
 <div class="card-header bg-primary text-white">
-<center>Cardiac arrest</center>
+<center>Sepsis</center>
 </div>
 
 <div class="card-body">
   <div class="row">
 
 <div class="col-12">
-  <%= radio_string this, 'witnessed_cardiac_arrest',   :value=>%w{yes no}, :label=>'Witnessed cardiac arrest' %>
-  <%= radio_string this, 'bystander_cpr',   :value=>["ALS/BLS/อาสา", "พลเมืองดี", "No"], :label=>'Bystander CPR' %>
-  <%= radio_string this, 'aed_use',   :value=>["Shockable", "Non-Shockable", "Not use"], :label=>'AED' %>
+<%
+  list = <<LIST
+1|Look very sick/unwell/unconscious/drowning/confuse
+2|History of infection
+3|Have device relate infection
+4|History drug resistance
+5|Temperature high
+6|Major trauma
+7|Age>65 yr.
+8|History drug allergy
+LIST
+%>
+<%= check_string this, 'characteristic', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 , :label=>'Characteristic <span class="mandatory">*</span>'%>
 
-  <%= date_string this, 'last_seen_normal_time', :col=>4 %>
-  <%= date_string this, 'first_seen_abnormal_time', :col=>4 %>
-  <%= date_string this, 'bystander_start_cpr_time', :col=>4 %>
-  <%= date_string this, 'ems_start_cpr_time', :col=>4 %>
+<%= date_string this, 'alert_sepsis_time', :col=>4 , :label=>'Alert sepsis time'%>
 
+<%= select_string this, 'respiratory_rate',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Respiratory rate (คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'o2sat',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Oxygen Saturation (คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'supplement_oxygen',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Supplement Oxygen(คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'temperature',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Temperature (คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'blood_pressure',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Systolic Blood Pressure (คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'heart_rate',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Heart Rate(คะแนน) <span class="mandatory">*</span>'%>
+<%= select_string this, 'consciousness',:value=>%w{0 1 2 3}, :col=>10 , :label=>'NEWS Level of Consciousness(คะแนน) <span class="mandatory">*</span>'%>
 
-  <%= text_string this, 'first_shock_time', :col=>4 %>
+<%= check_string this, 'fluid_resuscitation',:col_item=>'col-4', :col=>12,   :value=>%w{NSS RLS Acetar อื่นๆ}, :label=>'Fluid resuscitation(rate/Total IV เติมลงอื่นๆ) <span class="mandatory">*</span>' %>
+<%= text_string this, 'fluid_resuscitation_other', :col=>4, :label=>''%>
 
-  <input class="result form-control" type="text" id="timexx" placeholder="Date Picker..." data-dtp="dtp_0CpeH">
+<%= date_string this, 'septic_time', :col=>4 , :label=>'Septic W/U time'%>
+<%= date_string this, 'lactate_time', :col=>4 , :label=>'Lactate time'%>
+<%= date_string this, 'antibiotic_time', :col=>4 , :label=>'Antibiotic time'%>
 
 </div>
 
