@@ -1,0 +1,109 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Non trauma</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+
+<%
+  list = <<LIST
+1|Alert
+2|Response to voice
+3|Response to pain
+4|Unresponsive
+LIST
+%>
+<%= select_string this, 'consciousness', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>12 , :label=>'Level of Consciousness  <span class="mandatory">*</span>'%>
+
+<%
+  list = <<LIST
+1|Patent
+2|Stridor
+3|Secretion/Blood
+4|FB
+5|Rigor Mortis
+LIST
+%>
+<%= check_string this, 'airway', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 , :label=>'Airway  <span class="mandatory">*</span>'%>
+
+<%
+  list = <<LIST
+1|No spontaneous breathing
+2|Normal breathing
+3|Abnormal breathing
+4|อื่นๆ
+LIST
+%>
+<%= check_string this, 'breathing', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 , :label=>'Breathing(อื่นๆ กรอกสิ่งที่ผิดปกติ)  <span class="mandatory">*</span>'%>
+<%= text_string this, 'breathing_other', :col=>4, :label=>''%>
+
+<%
+  list = <<LIST
+1|No pulse
+2|Full peripheral pulse
+3|weak peripheral pulse
+4|Pale
+5|Sweat
+6|Cold
+7|CR<2 sec
+8|CR prolong
+9|Livor mortis
+10|อื่นๆ
+LIST
+%>
+<%= check_string this, 'circulation', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 , :label=>'Circulation  <span class="mandatory">*</span>'%>
+<%= text_string this, 'circulation_other', :col=>4, :label=>''%>
+
+<%
+  list = <<LIST
+1|Normal sinus rhythm
+2|Sinus tachycardia
+3|Sinus bradycardia
+4|SVT
+5|AF
+6|VT with pulse
+7|Torsade de point
+8|1st degree AV block 
+9|2nd degree AV block (Mobitz type 1)
+10|2nd degree AV block (Mobitz type 2)
+11|3rd degree AV block
+12|RBBB
+13|LBBB
+14|Pulseless VT
+15|VF
+16|Asystole
+17|PEA
+18|อื่นๆ
+LIST
+%>
+<%= check_string this, 'ekg_monitor', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 , :label=>'EKG Monitor <span class="mandatory">*</span>'%>
+<%= text_string this, 'ekg_monitor_other', :col=>4, :label=>''%>
+
+
+<%= check_string this, 'exposure', :value=>["Normal","Pitting edema","Rash","อื่นๆ"],:col_item=>'col-6', :col=>12 , :label=>'Exposure <span class="mandatory">*</span>'%>
+<%= text_string this, 'exposure_other', :col=>4, :label=>''%>
+
+
+<%= radio_string this, 'diagnosis',   :value=>["Cardiac arrest","STEMI","Stroke","Sepsis","อื่นๆ"], :label=>'Diagnosis(Non-trauma)  <span class="mandatory">*</span>' %>
+<%= text_string this, 'diagnosis_other', :col=>4, :label=>''%>
+
+</div>
+
+<div class="col-12"><br/></div>
+
+
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

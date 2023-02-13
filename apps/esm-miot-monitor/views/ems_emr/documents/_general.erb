@@ -1,0 +1,31 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>General</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+
+<%= text_string this, '', :col=>4, :label=>''%>
+<%= text_string this, '', :col=>4, :label=>''%>
+<%= text_string this, '', :col=>4, :label=>''%>
+
+</div>
+
+<div class="col-12"><br/></div>
+
+
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

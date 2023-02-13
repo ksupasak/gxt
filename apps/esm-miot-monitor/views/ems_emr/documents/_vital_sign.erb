@@ -1,0 +1,53 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Vital sign</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+
+
+<%= text_string this, 'temp', :col=>4, :label=>'Body Temperature <span class="mandatory">*</span>'%>
+<%= text_string this, 'sbp', :col=>4, :label=>'SBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'dbp', :col=>4, :label=>'DBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'pr', :col=>4, :label=>'Pulse Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'rr', :col=>4, :label=>'Respiratory Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'o2sat', :col=>4, :label=>'O2Sat <span class="mandatory">*</span>'%>
+<%= text_string this, 'dtx', :col=>4, :label=>'DTX <span class="mandatory">*</span>'%>
+<div class="col-12"><br></div>
+
+<%= text_string this, 'temp_re', :col=>4, :label=>'Repeat Body Temperature <span class="mandatory">*</span>'%>
+<%= text_string this, 'sbp_re', :col=>4, :label=>'Repeat SBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'dbp_re', :col=>4, :label=>'Repeat DBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'pr_re', :col=>4, :label=>'Repeat Pulse Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'rr_re', :col=>4, :label=>'Repeat Respiratory Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'o2sat_re', :col=>4, :label=>'Repeat O2Sat <span class="mandatory">*</span>'%>
+<%= text_string this, 'dtx_re', :col=>4, :label=>'Repeat DTX <span class="mandatory">*</span>'%>
+<div class="col-12"><br></div>
+
+<%= text_string this, 'temp_ed', :col=>4, :label=>'Body Temperature at ED'%>
+<%= text_string this, 'sbp_ed', :col=>4, :label=>'SBP at ED'%>
+<%= text_string this, 'dbp_ed', :col=>4, :label=>'DBP at ED'%>
+<%= text_string this, 'pr_ed', :col=>4, :label=>'Pulse Rate at ED'%>
+<%= text_string this, 'rr_ed', :col=>4, :label=>'Respiratory Rate at ED'%>
+<%= text_string this, 'o2sat_ed', :col=>4, :label=>'O2Sat at ED'%>
+<%= text_string this, 'dtx_ed', :col=>4, :label=>'DTX at ED'%>
+
+
+
+<div class="col-12"><br/></div>
+
+
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->
