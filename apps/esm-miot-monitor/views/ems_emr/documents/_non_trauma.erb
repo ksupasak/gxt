@@ -90,6 +90,25 @@ LIST
 <%= check_string this, 'ekg_monitor', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>12 , :label=>'EKG Monitor <span class="mandatory">*</span>'%>
 <%= text_string this, 'ekg_monitor_other', :col=>4, :label=>''%>
 
+<h6>GCS <span class="mandatory">*</span></h6>
+<%= radio_string this, 'gcs_e',   :value=>%w{2 3 4 5 6}, :label=>'E' %>
+<%= radio_string this, 'gcs_v',   :value=>%w{2 3 4 5 6}, :label=>'V' %>
+<%= radio_string this, 'gcs_m',   :value=>%w{2 3 4 5 6}, :label=>'M' %>
+
+<h6>Rt.pupil <span class="mandatory">*</span></h6>
+<%= radio_string this, 'rt_pupil_pinpoint',   :value=>["Non RTL","RTL","Slightly"], :label=>'pinpoint' %>
+<%= radio_string this, 'rt_pupil_2',   :value=>["Non RTL","RTL","Slightly"], :label=>'2' %>
+<%= radio_string this, 'rt_pupil_3',   :value=>["Non RTL","RTL","Slightly"], :label=>'3' %>
+<%= radio_string this, 'rt_pupil_4',   :value=>["Non RTL","RTL","Slightly"], :label=>'4' %>
+<%= radio_string this, 'rt_pupil_5',   :value=>["Non RTL","RTL","Slightly"], :label=>'5' %>
+
+<h6>Lt.pupil <span class="mandatory">*</span></h6>
+<%= radio_string this, 'lt_pupil_pinpoint',   :value=>["Non RTL","RTL","Slightly"], :label=>'pinpoint' %>
+<%= radio_string this, 'lt_pupil_2',   :value=>["Non RTL","RTL","Slightly"], :label=>'2' %>
+<%= radio_string this, 'lt_pupil_3',   :value=>["Non RTL","RTL","Slightly"], :label=>'3' %>
+<%= radio_string this, 'lt_pupil_4',   :value=>["Non RTL","RTL","Slightly"], :label=>'4' %>
+<%= radio_string this, 'lt_pupil_5',   :value=>["Non RTL","RTL","Slightly"], :label=>'5' %>
+
 
 <%= check_string this, 'exposure', :value=>["Normal","Pitting edema","Rash","อื่นๆ"],:col_item=>'col-6', :col=>12 , :label=>'Exposure <span class="mandatory">*</span>'%>
 <%= text_string this, 'exposure_other', :col=>4, :label=>''%>
