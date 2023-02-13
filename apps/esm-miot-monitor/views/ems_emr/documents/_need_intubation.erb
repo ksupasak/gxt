@@ -35,7 +35,7 @@ LIST
 <%= check_string this, 'treatment', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 , :label=>'Treatment Exsanguination'%>
 <%= text_string this, 'treatment_other', :col=>8, :label=>''%>
 
-<%= radio_string this, 'intubation_by',   :value=>%w{141 142 143 144 145 146 147 148 149}, :label=>'Intubation by ช่องอื่นๆ เติมชื่อแพทย์ผู้ใส่ <span class="mandatory">*</span>' %>
+<%= check_string this, 'intubation_by',   :value=>%w{141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157},:col_item=>'col-2', :col=>12, :label=>'Intubation by ช่องอื่นๆ เติมชื่อแพทย์ผู้ใส่ <span class="mandatory">*</span>' %>
 <%= text_string this, 'intubation_other', :col=>8, :label=>''%>
 
 <%= radio_string this, 'position',   :value=>["Paramedic","Resident GP","Staff GP"], :label=>'ตำแหน่ง <span class="mandatory">*</span>' %>
