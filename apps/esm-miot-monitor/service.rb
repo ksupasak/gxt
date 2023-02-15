@@ -731,7 +731,9 @@ MSG
 
 
                             puts "Send to ptt/#{name}/z/#{ptt_channel}"
-                            obj = JSON.parse(lines[1])
+                            json = JSON.parse(lines[1])
+
+                            obj = json['data']
                             # puts obj.inspect
                             redis.publish("ptt/#{name}/z/#{ptt_channel}", message)
 
