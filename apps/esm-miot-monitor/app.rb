@@ -430,7 +430,7 @@ class HomeController < GXT
 
                                json = JSON.parse(lines[1])
 
-                              obj = json['data']
+
 
 
                               ambu = Ambulance.where(:name=>json['receiver']).first
@@ -441,7 +441,8 @@ class HomeController < GXT
 
                                 if ems_case
 
-                                      obj = JSON.parse(lines[1])
+                                      obj = json['data']
+
                                       connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
                                       grid = Mongo::Grid::FSBucket.new(connection.database)
