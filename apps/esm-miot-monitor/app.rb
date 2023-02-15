@@ -437,10 +437,13 @@ class HomeController < GXT
 
                               if ambu
 
+                                puts 'found ambu'
+
                                 ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
 
                                 if ems_case
 
+                                  puts 'found case'
                                       obj = json['data']
 
                                       connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
@@ -451,6 +454,7 @@ class HomeController < GXT
                                       content =  Base64.decode64(obj['image'])
                                       fid = grid.upload_from_stream(filename,content)
 
+                                puts 'create msg'
                                       msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> filename, :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
 
                                  end
