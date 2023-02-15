@@ -1155,7 +1155,7 @@ class MessageController < GXTDocument
 
    elsif message.type == 'voice'
 
-    @context.content_type 'audio/3gps'
+    @context.content_type 'audio/3gpp'
 
     end
 
