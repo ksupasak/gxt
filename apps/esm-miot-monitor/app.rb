@@ -370,15 +370,20 @@ class HomeController < GXT
 
                redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
 
-             elsif msg_data[0..2] == 'Pat'
+             elsif msg_data[0..2] == 'PAT'
 
                puts msg_data
 
                lines = msg_data.split("\n")
+               tags = lines[0].split(" ")
+               ambu_name = tags[-1].split('=')[-1]
 
-               obj = JSON.parse(lines[1])
+               eobj = JSON.parse(lines[1])
+
+               obj = eobj['data']
 
                ambu = Ambulance.where(:name=>obj['ambu_name']).first
+
                if ambu
 
                   ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
@@ -411,10 +416,45 @@ class HomeController < GXT
                       msg = Message.create :channel_id=> ems_case.channel_id, :sender=> "CardReader", :recipient=> "", :recipient_type=> "NA", :content=> "PIC#{ems_case.id}.jpg", :ts=> Time.now.to_i, :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
 
 
+
                   end
 
                end
+             elsif msg_data[0..2] == 'IMG'
 
+                              puts msg_data
+
+                              lines = msg_data.split("\n")
+                              tags = lines[0].split(" ")
+                              ambu_name = tags[-1].split('=')[-1]
+
+                               json = JSON.parse(lines[1])
+
+                              obj = json['data']
+
+
+                              ambu = Ambulance.where(:name=>json['receiver']).first
+
+                              if ambu
+
+                                ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+
+                                if ems_case
+
+                                      obj = JSON.parse(lines[1])
+                                      connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+                                      grid = Mongo::Grid::FSBucket.new(connection.database)
+
+                                      filename = obj['filename']
+                                      content =  Base64.decode64(obj['image'])
+                                      fid = grid.upload_from_stream(filename,content)
+
+                                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> filename, :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
+                                 end
+
+                              end
 
              elsif msg_data[0..2] == 'GPS'
 

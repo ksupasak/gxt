@@ -726,7 +726,10 @@ MSG
                           # t = Thread.new{
 
                             lines = message.split("\n")
-                            ptt_channel = lines[0].split('=')[-1]
+                            tags = lines[0].split(" ")
+                            ptt_channel = tags[-1].split('=')[-1]
+
+
                             puts "Send to ptt/#{name}/z/#{ptt_channel}"
                             obj = JSON.parse(lines[1])
                             # puts obj.inspect
@@ -737,7 +740,6 @@ MSG
 
                               filename = obj['filename']
                               content =   Base64.decode64(obj['file'])
-
                               connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
                               grid = Mongo::Grid::FSBucket.new(connection.database)
@@ -877,36 +879,31 @@ MSG
        when 'Monitor.Update'
 
 
-       when 'GPS.Update'
+       when 'GPS.Send'
 
 
          json = JSON.parse(body)
 
 
+
          settings.ambu_status[name] = {} unless settings.ambu_status[name]
          ambu_status = settings.ambu_status[name]
 
-         for i in json
+         obj = json['data']
 
-           if i['device_type']=='ambu'
-
-             ambu_status[i["id"]] = i
-
-           elsif i['device_type']=='ambu_name'
-            puts 'x'
-             ambu = Ambulance.where(:name=>i["name"]).first
-             if ambu
-                i["id"] = ambu.id.to_s
-                ambu_status[i["id"]] = i
-
-             end
+           if obj['device_type']=='mobile'
 
 
-          end
+            ambu = Ambulance.where(:name=>json["receiver"]).first
+
+            ambu_status[ambu.id] = i
+
+
+           end
 
 
 
-         end
+
 
 
 
@@ -1076,7 +1073,7 @@ MSG
 
          # data sensing
 
-       when 'Data.Sensing'
+       when 'Data.Sensing', 'VTS.Send'
 
          # puts 'sense'
      #
