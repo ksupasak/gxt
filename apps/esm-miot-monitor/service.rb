@@ -893,14 +893,14 @@ MSG
 
          json = JSON.parse(body)
          obj = json['data']
-  puts obj.inspect
+
            if obj['device_type']=='mobile'
 
 
 
             ambu = Ambulance.where(:name=>json["receiver"]).first
             if ambu
-                puts 'Found'
+
               ambu_status[ambu.id.to_s] = obj
             end
 
@@ -1558,6 +1558,8 @@ MSG
                                               for i in list
 
                                                 if v = ambu_status[i.id.to_s]
+
+                                                  puts v.inspect 
 
                                                   i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
 
