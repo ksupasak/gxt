@@ -874,7 +874,7 @@ MSG
        headers = t[0].split()
        body = t[1..-1].join("\n")
        cmd = headers[0]
-       path = headers[1]
+
 
        case cmd
 
@@ -884,22 +884,23 @@ MSG
        when 'GPS.Send'
 
 
-         json = JSON.parse(body)
 
 
 
          settings.ambu_status[name] = {} unless settings.ambu_status[name]
          ambu_status = settings.ambu_status[name]
 
+
+         json = JSON.parse(body)
          obj = json['data']
 
            if obj['device_type']=='mobile'
 
 
             ambu = Ambulance.where(:name=>json["receiver"]).first
-
-            ambu_status[ambu.id] = i
-
+            if ambu
+              ambu_status[ambu.id.to_s] = obj
+            end
 
            end
 
