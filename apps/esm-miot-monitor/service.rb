@@ -1613,7 +1613,7 @@ MSG
 
                   puts "Active Zone : #{z.name}"
 
-                  if active_list[app.settings.name]
+                  active_list[app.settings.name] = [] unless active_list[app.settings.name]
 
                   snames = active_list[app.settings.name].values.collect{|i| i.name if i['zone_id']==z.id }.compact
 
@@ -1668,7 +1668,7 @@ MSG
 
 
 
-                end
+
 
 
 
