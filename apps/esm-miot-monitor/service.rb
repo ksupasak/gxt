@@ -893,12 +893,14 @@ MSG
 
          json = JSON.parse(body)
          obj = json['data']
-
+  puts obj.inspect
            if obj['device_type']=='mobile'
+
 
 
             ambu = Ambulance.where(:name=>json["receiver"]).first
             if ambu
+                puts 'Found'
               ambu_status[ambu.id.to_s] = obj
             end
 
