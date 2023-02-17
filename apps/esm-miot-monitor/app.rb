@@ -370,7 +370,7 @@ class HomeController < GXT
 
                redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
 
-             elsif msg_data[0..2] == 'PAT'
+       elsif msg_data[0..2] == 'PAT'
 
                puts msg_data
 
@@ -382,7 +382,7 @@ class HomeController < GXT
 
                obj = eobj['data']
 
-               ambu = Ambulance.where(:name=>obj['ambu_name']).first
+               ambu = Ambulance.where(:name=>eobj['receiver']).first
 
                if ambu
 
@@ -455,7 +455,7 @@ class HomeController < GXT
                                       fid = grid.upload_from_stream(filename,content)
 
                                 puts 'create msg'
-                                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> filename, :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+                                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
 
                                  end
 

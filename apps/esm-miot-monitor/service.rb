@@ -962,17 +962,28 @@ MSG
        when 'Zone.Data'
 
 # store local sensing
-       when 'Data.Spot'
+        when 'Data.Spot' , 'SPOT.Send'
 
          pdata =  ActiveSupport::JSON.decode(body)
 
          station_name = "Untitled"
          station_name = pdata['station'] if pdata['station']
+
+         if cmd == 'SPOT.Send'
+           puts 'SPOT'
+           puts pdata.inspect
+
+
+
+
+          station_name = pdata['receiver']
+         end
          station_idx = "#{name}|#{station_name}"
 
          # fw : data sensing for direct receiver
          # EsmMiotMonitor::dispatch cmd, path, pdata.to_json
 
+          puts station_idx
 
          ref = "-"
          ref = pdata['ref'] if pdata['ref']
@@ -980,7 +991,7 @@ MSG
          data = "{}"
          data = pdata['data'] if pdata['data']
 
-
+         admit = nil
 
          station_id = nil
          station = nil
@@ -992,6 +1003,18 @@ MSG
          # register or retrieve station
 
          station = Station.where(:name=>station_name).first
+
+
+         if cmd == 'SPOT.Send'
+
+           ems_case = EMSCase.where(:status=>"New", :station_id=>station.id).first
+
+           if ems_case
+             puts 'ems_case'
+             admit = ems_case.admit
+           end
+
+         end
 
          unless station
 
@@ -1027,40 +1050,39 @@ MSG
 
          data['score'] = 0
 
-         admit = nil
 
          # inject last score
-
+         unless admit
          if ref and ref!="" and ref !="-"
 
            patient = Patient.where(:hn=>ref).first
 
-           unless patient
+
+
+            unless patient
 
              # previous_admit = Admit.where(:station_id=>station.id,:status=>'Admitted').first
+                   patient = Patient.create :hn=>ref
+                   admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now).first
 
+            else
 
-             patient = Patient.create :hn=>ref
-             admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now)
+                     admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
 
-          else
+                     unless admit
+                       admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                     else
+                       if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+                         admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+                         admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+                       end
+                     end
 
-             admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
-
-             unless admit
-               admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-             else
-               if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
-                 admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
-                 admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-               end
-             end
-
-          end
+            end
 
 
          end
-
+        end
 
          if admit
 
@@ -1090,6 +1112,13 @@ MSG
 
              station_name = "Untitled"
              station_name = pdata['station'] if pdata['station']
+
+             if cmd == 'VTS.Send'
+               puts 'VTS'
+               puts pdata.inspect
+              station_name = pdata['receiver']
+             end
+
              station_idx = "#{name}|#{station_name}"
 
              # fw : data sensing for direct receiver
@@ -1559,7 +1588,7 @@ MSG
 
                                                 if v = ambu_status[i.id.to_s]
 
-                                                  puts v.inspect 
+                                                  puts v.inspect
 
                                                   i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
 
@@ -1638,24 +1667,30 @@ MSG
 
                             ambu_status = app.settings.ambu_status[name]
 
-                            # puts ambu_status.inspect
+                            #puts ambu_status.inspect
+
+                            #puts list.inspect
+                            #puts
+                            #puts admits.inspect
 
                             for i in list
                                   am = i
 
-                                  l = admits.collect{|a| a if a.ambulance_id==i.id }.compact   #            Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
-
-                                  admit = l[0] if l.size==1
-
-                                  am[:admit_id] = admit.id if admit
+                                  # l = admits.collect{|a| a if a.ambulance_id==i.id }.compact   #            Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
+                                  #
+                                  # puts l.inspect
+                                  #
+                                  # admit = l[0] if l.size==1
+                                  #
+                                  # am[:admit_id] = admit.id if admit
 
                                   if ambu_status and v = ambu_status[am.id.to_s]
 
-                                      # puts 'Set Location'
-
                                       am.last_location = "#{v['lat']},#{v['lng']}"
 
-                                      # ambu_status.delete am.id.to_s
+                                      puts "Location #{am.name} #{am.last_location}"
+
+                                      ambu_status.delete am.id.to_s
 
                                   end
 
