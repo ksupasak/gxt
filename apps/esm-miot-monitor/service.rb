@@ -1642,7 +1642,7 @@ MSG
                 active_zone[app.settings.name].values.each  do |z|
 
 
-                  puts "Active Zone : #{z.name}"
+                  puts "Active Zone :#{app.settings.name} #{z.name}"
 
                   active_list[app.settings.name] = [] unless active_list[app.settings.name]
 
