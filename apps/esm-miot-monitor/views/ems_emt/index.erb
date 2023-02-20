@@ -187,6 +187,18 @@ record = @current_case
       </div>
       <%  end %>
 
+      <div class="col-12">
+        <% if current_route %>
+        <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
+        <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
+          NAV</a>-->
+
+          <a href="https://pcm-life.com:4443/#/<%=record.case_no %>" class="btn-nav btn btn-danger text-white px-4  radius-5" style="width:100%;">
+            Video</a>
+
+
+          <% end %>
+      </div>
 
     <% end %>
 
