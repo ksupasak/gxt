@@ -212,7 +212,7 @@ class EMSCase < GXTModel
   key :repeat_gcs, String
   key :repeat_temp, Float
   key :repeat_dtx, Integer
-  
+
   key :screen_vs_stamp, DateTime
   key :screen_sbp, Integer
   key :screen_dbp, Integer

@@ -9,8 +9,8 @@
 
 		admit = record.admit
 
-
-		list = %w{patient_assessment stemi cardiac_arrest stroke sepsis trauma tranexamic need_intubation interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus}
+		 # tranexamic  interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus
+		list = %w{patient_assessment trauma non_trauma stroke stemi cardiac_arrest need_intubation sepsis }
 
 		list.each_with_index do |i,ix|
 

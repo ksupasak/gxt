@@ -333,7 +333,7 @@
 						<div>
 							<%
 
-							imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>-1).all
+							imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>1).all
 
 							if imgs.size>0
 
@@ -470,6 +470,16 @@
 							<script>
 								$(document).ready(function(){
 
+
+									var latlng = [];
+									var station_image = "<%=url_for("ems/station.png")%>";
+
+
+									clatlng = [13.68313508354787, 100.69198345629769]
+									<% if Setting.get("aoc_center") %>
+									clatlng = [<%=Setting.get("aoc_center")%>]
+									<% end %>
+
 								latlng = [13.69313508354787, 100.69198345629769]
 
 								<% if record.latlng and record.latlng.index(',') %>
@@ -481,6 +491,12 @@
 								map1 = new EMSMap('dashboard-map',{movable:true});
 								map1.setPosition(latlng[0], latlng[1])
 								map1.setMarkerPosition(latlng[0], latlng[1])
+
+								var cpos = new google.maps.LatLng(clatlng[0],clatlng[1] )
+								cmap = map1.getMap()
+								markerx = new google.maps.Marker({position: cpos, map: cmap, icon: station_image})
+
+
 
 								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 								map2.setPosition(latlng[0], latlng[1])

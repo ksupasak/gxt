@@ -226,8 +226,10 @@
 		function loadMap() {
 
 
-			latlng2 = [13.68313508354787, 100.69198345629769]
-
+			clatlng = [13.68313508354787, 100.69198345629769]
+			<% if Setting.get("aoc_center") %>
+			clatlng = [<%=Setting.get("aoc_center")%>]
+			<% end %>
 
 			map = map1.getMap()
 
@@ -243,7 +245,7 @@
 			var latlng = [];
 			var station_image = "<%=url_for("ems/station.png")%>";
 
-			var pos = new google.maps.LatLng(latlng2[0],latlng2[1] )
+			var pos = new google.maps.LatLng(clatlng[0],clatlng[1] )
 			latlng.push(new google.maps.LatLng(pos))
 			marker = new google.maps.Marker({position: pos, map: map, icon: station_image})
 

@@ -320,6 +320,8 @@ class HomeController < GXT
 
   def websocket request
 
+
+
        EM.run do
 
                       c = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
@@ -415,6 +417,15 @@ class HomeController < GXT
 
                       msg = Message.create :channel_id=> ems_case.channel_id, :sender=> "CardReader", :recipient=> "", :recipient_type=> "NA", :content=> "PIC#{ems_case.id}.jpg", :ts=> Time.now.to_i, :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
 
+path = "miot/#{@context.settings.name}/z/#{ambu.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                    redisx.publish(path, send_msg)
 
 
                   end
@@ -456,6 +467,17 @@ class HomeController < GXT
 
                                 puts 'create msg'
                                       msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
+
+                                      path = "miot/#{@context.settings.name}/z/#{ambu.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                                      redisx.publish(path, send_msg)
 
                                  end
 

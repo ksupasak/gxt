@@ -5,6 +5,10 @@
 %>
 
 
+
+
+
+
 <table class="table">
 <thead>
   <tr>
@@ -86,7 +90,7 @@
 
   init_code = i.init_code
 
-  code_group = init_code.group
+  code_group = init_code.group if init_code
 
   m_providers = {}
 
@@ -111,7 +115,7 @@ end
 
 <tr>
   <td><%=i.created_at.strftime("%d/%m/%Y")%></td>
-  <td><%=i.case_no%></td>
+  <td><%=link_to i.case_no, "../EMS/show?id=#{i.id}"%></td>
   <td><%=i.location%></td>
   <td><%=i.dispatch_at.strftime("%H:%M") if i.dispatch_at%></td>
   <td><%=i.ems_trauma%></td>
