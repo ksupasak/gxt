@@ -86,6 +86,8 @@ if true
 
 		records = DataRecord.where(:admit_id=>admit.id, :bp_sys=>{"$gte"=>0}).sort(:stamp=>1).all
 
+		if records.size > 0
+
     if records[0]
 				r = records[0]
 				ems_case.init_vs_stamp = r.stamp
@@ -112,6 +114,9 @@ if true
 		<%=records[0].stamp%>
 		<%=records[-1].stamp%>
 <%
+
+end
+
 end
 
 
