@@ -104,7 +104,7 @@
 								</div>
 								<div class="modal-body">
 
-									<div class="row">
+									<div id="cbd-group" class="row">
 										<%
 
 
@@ -127,13 +127,49 @@
 
 										%>
 
-										<div class="col-4 card btn btn-info" style="text-align:left">
-
-											 <a href="#" class='w-100 align-middle' ><%=g.code%> <%=g.name%></a>
-
+										<div class="col-4" >
+											<div class="card radius-10 btn btn-info">
+												<div class="card-body " style="text-align:left">
+											 	<a href="javascript:group('<%=g.id%>')" class='w-100 align-middle' ><%=g.code%> <%=g.name%></a>
+												</div>
+											</div>
 										</div>
 										<% end %>
 									</div>
+									
+									<div id="cbd-list" class="row">
+
+									</div>
+
+									<script>
+									function selCode(code){
+										$("#record_init_cbd_code").val(code)
+										$("#selectCodeModal").modal('hide')
+										$("#cbd-list").html('')
+										$("#cbd-group").show()
+									}
+
+									function selGroup(id){
+										$("#cbd-list").html('')
+										$("#cbd-group").show()
+									}
+									function selColor(c){
+										$(".cbd-color").hide()
+										$("#"+c).show()
+										$(".sel-color").removeClass("text-white").removeClass("bg-primary")
+										$("#sel-"+c).addClass("text-white").addClass("bg-primary")
+									}
+									function group(id){
+										$.ajax({
+											type:'POST',
+											url:'../EMSCode/group_list',
+											data:{id:id},
+										}).done(function(data){
+											$("#cbd-list").html(data)
+											$("#cbd-group").hide()
+										}) 
+									}  
+									</script>
 
 
 								</div>
