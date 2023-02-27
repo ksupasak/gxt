@@ -22,7 +22,7 @@
 </div>
 
 <%  for c in color.keys %>
-<div class="col-3">
+<div class="col-3 cdb-color-group">
     <a href="javascript:selColor('<%=c%>')">
     <div class="card radius-10 sel-color" id="sel-<%=c%>">
 		    <div class="card-body">
@@ -52,5 +52,5 @@
 </div>
 <%  end %>
 <script>
-$(".cbd-color").hide()
+$(".cdb-color-group").hide()
 </script>
