@@ -3,6 +3,7 @@
     codes = EMSCode.where(:group_id=>params[:id]).all
     color = {}
     m_color={'red'=>'แดง','yellow'=>'เหลือง','green'=>'เขียว','white'=>'ขาว','black'=>'ดำ'}
+    m_alert={'red'=>'alert-danger','yellow'=>'alert-warning','green'=>'alert-success','white'=>'','black'=>'alert-dark'}
     for c in codes 
         if !c.color.index 'add'
             color[c.color] = [] unless color[c.color]
@@ -41,7 +42,7 @@
 %>
 <div class="col-12">
     <a href="javascript:selCode('<%=code.id%>')">
-    <div class="card radius-10">
+    <div class="card radius-10 m-1 p-0 <%=m_alert[code.color]%>">
 		    <div class="card-body">
                 <%=code.name%>
             </div>
