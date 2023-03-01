@@ -179,21 +179,29 @@
 
 
 
-								<div class="row">
+								<div class="row no-gutters">
 
-								<div class="col-6">
+								<div class="col-3 no-gutters">
 
 									<p class="px-3">
-										Gender / เพศ
+										Sex
 									</p><input name='record[patient_gender]' value="<%=record.patient_gender if patient%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
-								<div class="col-6">
+								<div class="col-3 no-gutters">
 
 									<p class="px-3 ">
-										Age / อายุ
+										Age
 									</p><input name='record[patient_age]' value="<%=record.patient_age if patient %>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
+
+								</div>
+
+								<div class="col-5">
+
+									<p class="px-3">
+										BOB
+									</p><input name='record[patient_birth_date]' value="<%=record.patient_birth_date.strftime("%d/%m/%Y") if patient and record.patient_birth_date %>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
@@ -273,16 +281,25 @@
 
 
 							<div class="col-3">
+								<p class="px-3">
+								 Command Note :
+								</p>
 									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
 
 							</div>
 							<div class="col-3">
+								<p class="px-3">
+									Case type :
+								</p>
 								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
 									<option selected="" value="EMS">EMS</option>
 									<option value="Refer">Refer</option>
 								</select>
 							</div>
 							<div class="col-3">
+								<p class="px-3">
+									Channel :
+								</p>
 								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
 									<option selected="">-</option>
 									<%
@@ -295,6 +312,9 @@
 								</select>
 							</div>
 							<div class="col-3">
+								<p class="px-3">
+									Ambulance :
+								</p>
 								<select class="form-select mb-3" name='record[ambulance_id]' aria-label="Default select example">
 									<option selected="">-</option>
 									<%

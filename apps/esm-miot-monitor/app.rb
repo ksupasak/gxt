@@ -394,7 +394,16 @@ class HomeController < GXT
 
                       patient_name = "#{obj['prefix_name']}#{obj['first_name']} #{obj['last_name']}"
                       patient_cid = obj['cid']
-                      patient_gender = obj['gender']
+                      gender = "NA"
+                      if obj['gender'] == '1'
+                        gender = "M"
+                      elsif obj['gender'] =='2'
+                        gender = "F"
+                      end
+                      patient_gender = gender
+
+
+                      patient_birth_date = (obj['birth_date'][0..3].to_i-543).to_s+obj['birth_date'][4..-1]
 
                       age = Time.now.year - (obj['birth_date'][0..3].to_i-543)
 
@@ -402,7 +411,7 @@ class HomeController < GXT
 
                       puts msg_data
 
-                      ems_case.update_attributes :patient_name=>patient_name, :patient_cid=>patient_cid, :patient_age=>patient_age, :patient_gender=>patient_gender
+                      ems_case.update_attributes :patient_name=>patient_name, :patient_cid=>patient_cid, :patient_age=>patient_age, :patient_gender=>patient_gender,:patient_birth_date=> patient_birth_date
 
                       puts msg_data.inspect
 

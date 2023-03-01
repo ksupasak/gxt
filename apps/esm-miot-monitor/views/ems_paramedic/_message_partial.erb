@@ -52,11 +52,14 @@
 
 				end
 
-				records = admit.records.limit(30).sort(:created_at=>-1).all
+				records = admit.records.limit(100).sort(:created_at=>-1).all
+				last_bp = "-"
 				for m in records
 
-					console << [m.created_at, :record, m]
-
+					if last_bp!=m.bp
+						console << [m.created_at, :record, m]
+						last_bp = m.bp
+					end
 				end
 
 				records = admit.logs.where(:status=>'COMPLETED').all

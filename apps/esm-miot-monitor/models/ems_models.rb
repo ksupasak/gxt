@@ -103,6 +103,7 @@ class EMSCase < GXTModel
   key :patient_info, String
   key :patient_gender, String
   key :patient_age, String
+  key :patient_birth_date, DateTime
   key :patient_nationality, String
 
 
