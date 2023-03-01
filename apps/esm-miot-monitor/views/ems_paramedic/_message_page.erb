@@ -166,7 +166,9 @@ dfdf
 							<div class="btn-group col-4" role="group" aria-label="Basic example">
 							  <button type="button" class="summary-btn btn btn-warning  context">Summary</button>
 							</div>
-
+							<div class="btn-group col-4" role="group" aria-label="Basic example">
+								<button type="button" class="text-btn btn btn-warning  context">Text</button>
+							</div>
 	</div>
 <script>
 
@@ -351,7 +353,11 @@ $('.msg-btn').click(function(){
 
 	var ems_case_id
 
-$('.summary-btn').click(function(e){
+
+
+
+
+	$('.summary-btn').click(function(e){
 
 
 	e.preventDefault()
@@ -359,7 +365,26 @@ $('.summary-btn').click(function(e){
 
 
 	$.ajax({
-	  url: "<%="../EMS/summary"%>?id="+ems_case_id,
+		url: "<%="../EMS/summary"%>?id="+ems_case_id,
+		context: document.body
+	}).done(function(data) {
+		$( '.charting' ).html(data);
+
+	$('.element-tab').scrollTop(100000000)
+
+	});
+
+	})
+
+$('.text-btn').click(function(e){
+
+
+	e.preventDefault()
+
+
+
+	$.ajax({
+	  url: "<%="../EMS/summary_text"%>?id="+ems_case_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '.charting' ).html(data);

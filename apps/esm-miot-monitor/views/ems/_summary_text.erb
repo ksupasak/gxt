@@ -10,7 +10,6 @@ patient = admit.patient
 
 
 %>
-
 <form>
 	<div style="float:right" class="print-btn">
     <!-- <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info"> -->
@@ -33,9 +32,7 @@ patient = admit.patient
 			 -webkit-print-color-adjust: exact;
 		}
 	}
-</style>
-
-		<style>
+</style><style>
 		        .viewport {
 		            top: 0px;
 		            left: 0px;
@@ -140,8 +137,43 @@ patient = admit.patient
 
 
     %>
-
 <div id="printout" style="border:0px solid gray;  ">
+  <h4>Text summary</h4>
+
+<textarea name="name" rows="30" cols="80">
+
+
+CPR record :
+<%
+
+bin = {}
+for t in tmap.keys.sort
+lines = tmap[t]
+for i in lines
+bt = t.to_i/60
+bin[bt] = {:t=>t,:list=>[]} unless bin[bt]
+bin[bt][:list] << i
+end
+end
+
+
+
+for it in bin.keys.sort
+t = bin[it][:t]
+lines = bin[it][:list]
+%> -เวลา <%=t.strftime("%H:%M") if t%> น. <%
+for i in lines
+  type =i[0]
+  des = i[1]
+%> -- <%=des%> <% end %>
+<% end %>
+
+
+</textarea>
+
+
+</div>
+<div id="printoutx" style="border:0px solid gray; display:none ">
 
 <div class="row">
 
