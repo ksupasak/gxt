@@ -475,8 +475,20 @@ MSG
                                       fid = grid.upload_from_stream(filename,content)
 
                                 puts 'create msg'
-                                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+                                      if  obj['uuid']==nil
+                                        msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+                                      else
 
+                                          old_msg = Message.where(:admit_id=>ems_case.admit_id, :uuid=>obj['uuid']).first
+                                          unless old_msg
+
+                                            msg = Message.create :uuid=>obj[:uuid], :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
+                                          end
+
+
+
+                                      end
 
                                       path = "miot/#{@context.settings.name}/z/#{ambu.zone.name}"
 

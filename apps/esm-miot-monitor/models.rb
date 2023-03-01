@@ -217,6 +217,7 @@ class Message < GXTModel
   key :sender, String # bed name
   key :recipient, String
   key :recipient_type, String
+  key :uuid, String
   key :ts, Integer
   key :type, String
   key :media_type, String
