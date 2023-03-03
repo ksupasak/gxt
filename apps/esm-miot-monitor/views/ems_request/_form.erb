@@ -61,19 +61,28 @@
 								<div class="col-6">
 
 									<p class="px-3 ">
-										เบอร์ติดต่อ
-									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>"  id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+										<span class="t" t="record_contact_phone">เบอร์ติดต่อ</span> *
+									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 
 								</div>
 
 							</div>
+					<div class="row">
+							<div class="col-12">
+							<p class="px-3 ">
+								<span class="t" t="record_location">สถานที่เกิดเหตุ</span> *
+							</p>
+							<input name='record[location]' id="record_location" value="<%=record.location%>" required class="form-control mb-3 mx-3 w-auto " type="text" placeholder="ที่อยู่" >
+						</div>
+					</div>
+
 
 							<p class="px-3">
-								Chief Complain
+								<span class="t" t="record_chief_complain">Chief Complain</span> *
 							</p>
 							<div class="input-group px-3  mb-3">
 								<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
-								<textarea name="record[chief_complain]" id="record_chief_complain" rows="2" class="form-control"><%=record.chief_complain%></textarea>
+								<textarea name="record[chief_complain]" id="record_chief_complain" required rows="2" class="form-control"><%=record.chief_complain%></textarea>
 							</div>
 
 
@@ -318,13 +327,7 @@
 						<div class="row">
 
 
-							<div class="col-3">
-								<p class="px-3">
-								 Command Note :
-								</p>
-									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
 
-							</div>
 							<div class="col-3">
 								<p class="px-3">
 									Case type :
@@ -332,21 +335,6 @@
 								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
 									<option selected="" value="EMS">EMS</option>
 									<option value="Refer">Refer</option>
-								</select>
-							</div>
-							<div class="col-3">
-								<p class="px-3">
-									Channel :
-								</p>
-								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
-									<option selected="">-</option>
-									<%
-											zone = Zone.find(session[:current_zone])
-											channels = EMSChannel.all
-											for ch in channels
-									%>
-									<option value="<%=ch.id%>" <%='selected' if ch.id==record.channel_id %> ><%=ch.name %></option>
-									<% end %>
 								</select>
 							</div>
 							<div class="col-3">
@@ -365,6 +353,31 @@
 								</select>
 
 							</div>
+							<div class="col-3">
+								<p class="px-3">
+									Channel :
+								</p>
+								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
+									<option selected="">-</option>
+									<%
+											zone = Zone.find(session[:current_zone])
+											channels = EMSChannel.all
+											for ch in channels
+									%>
+									<option value="<%=ch.id%>" <%='selected' if ch.id==record.channel_id %> ><%=ch.name %></option>
+									<% end %>
+								</select>
+							</div>
+
+
+							<div class="col-3">
+								<p class="px-3">
+								 Note :
+								</p>
+									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
+
+							</div>
+
 						</div>
 
 
@@ -374,58 +387,7 @@
 	</div>
 
 
-	<div class="card ">
-		<div class="card-header bg-gradient bg-primary">
-			<div class="d-flex align-items-center">
-				<div>
-					<h6 class="mb-0 text-primaryx text-white">
-						ภาพเหตุ :
-					</h6>
-				</div>
-			</div>
-		</div>
-		<div class="card-body">
 
-
-					<div class="row">
-						<div>
-							<%
-
-							imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>1).all
-
-							if imgs.size>0
-
-							%>
-
-							<% for img in imgs %>
-
-							<%
-							if img
-								url = "../Message/content?id=#{img.id}"
-
-							%>
-							<img src="<%=url%>" width="140">
-							<%
-							end
-							%>
-
-
-							<% end %>
-
-							<%
-						else
-							%>
-						<center style="padding:40px">	No Images</center>
-							<%
-							end
-							%>
-
-						</div>
-					</div>
-
-		</div>
-
-</div>
 
 			</div>
 
@@ -472,11 +434,11 @@
 							<style>
 										 /* Set the size of the div element that contains the map */
 										#dashboard-map {
-											height: 250px;  /* The height is 400 pixels */
+											height: 200px;  /* The height is 400 pixels */
 											width: 100%;  /* The width is the width of the web page */
 										 }
 										#dashboard-map-2 {
-											height: 250px;  /* The height is 400 pixels */
+											height: 200px;  /* The height is 400 pixels */
 											width: 100%;  /* The width is the width of the web page */
 										 }
 									</style>
@@ -484,33 +446,26 @@
 
 
 							<div class="row">
-							<div class="col-md-6">
-							<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
-							<div class="input-group  px-3">
-								<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-							<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
-							</div>
 
-							</div>
-							<div class="col-md-6" style="display:none">
+							<div class="col-md-6" >
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[address]' id="record_address" value="<%=record.address%>" readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>"  readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							</div>
 							<br/>
 							<div class="row">
 							<div class="col-12">
-							<div id="dashboard-map" class="" style="height:68vh">
+							<div id="dashboard-map" class="" style="height:45vh">
 								map
 							</div>
 							</div>
@@ -522,6 +477,14 @@
 								map
 							</div>
 						</div>
+
+
+
+
+
+
+
+
 
 							</div>
 
@@ -568,11 +531,11 @@
 
 
 
-									// map1.geocode({'location':pos},function(result){
-									//
-									// 		$('#record_address').val(result.formatted_address)
-									//
-									// 	})
+									map1.geocode({'location':pos},function(result){
+
+											$('#record_address').val(result.formatted_address)
+
+										})
 
 									map2.setPosition(pos.lat(), pos.lng())
 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -628,7 +591,8 @@
 										}
 								});
 
-								$('#record_address').change(address_search);
+
+								$('#record_location').change(address_search);
 
 
 								$('#record_latlng').keydown(function(e){
@@ -672,7 +636,58 @@
 
 
 
+					<div class="card ">
+						<div class="card-header bg-gradient bg-primary">
+							<div class="d-flex align-items-center">
+								<div>
+									<h6 class="mb-0 text-primaryx text-white">
+										ภาพเหตุ :
+									</h6>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
 
+
+									<div class="row">
+										<div>
+											<%
+
+											imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>1).all
+
+											if imgs.size>0
+
+											%>
+
+											<% for img in imgs %>
+
+											<%
+											if img
+												url = "../Message/content?id=#{img.id}"
+
+											%>
+											<img src="<%=url%>" width="140">
+											<%
+											end
+											%>
+
+
+											<% end %>
+
+											<%
+										else
+											%>
+										<center style="padding:40px">	No Images</center>
+											<%
+											end
+											%>
+
+										</div>
+									</div>
+
+						</div>
+
+					</div>
 
 					</div>
 
