@@ -1,3 +1,37 @@
 <center>EMD</center>
 <br/>
-<center>Coming soon</center>
+
+<%
+
+    channels = EMSChannel.all
+
+%>
+<div class="row">
+<% for i in channels %>
+
+<div class="col-12" style="padding:10px">
+
+<a href="#" class="ptt col-12 btn btn-info" channel="<%=i.name%>">
+<%=i.name%>
+</a>
+
+</div>
+
+<% end%>
+</div>
+<script>
+$(document).ready(function(){
+
+$('.ptt').click(function(e){
+
+  ch = $(this).attr('channel')
+  if (typeof device_interface !== 'undefined') {
+    device_interface.ptt_start(ch)
+  }else{
+    console.log("not defined");
+  }
+
+})
+
+})
+</script>
