@@ -587,7 +587,7 @@ class SHCaseReport < GXTModel
   key :result, String
   
   
-  key :bp_sys, Integer
+  key :bp_sys, Integer    
   key :bp_dia, Integer
   key :bp_mean, Integer
   
