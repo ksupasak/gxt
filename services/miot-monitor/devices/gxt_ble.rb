@@ -66,6 +66,18 @@ begin
 
              puts "Found #{d.alias} #{i}"
               
+             lines = []
+
+             lines << "STATUS:T1|T1:0.0"
+
+                msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+
+#                puts msg
+
+#                puts  ws.send(msg)
 
               
 
