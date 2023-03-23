@@ -574,6 +574,185 @@ end
 puts result.inspect
 
 end
+
+
+server = TCPServer.new '0.0.0.0', 9998
+
+last = {}
+last_sec = Time.now.to_i
+
+loop do
+  
+   buff = []
+  
+  
+  
+  Thread.start(server.accept) do |client|
+    
+    begin
+      
+      
+    puts 'connect f'
+      
+    # client.read_timeout = 1
+    buff = []
+   
+    current_hn = nil
+    current_station = nil
+    map = nil
+    flash = false
+    
+    while true
+      
+      content = ""
+      
+      # while buff = client.readline("\r")
+ #        content += buff
+ #        puts buff.inspect
+ #        puts buff.size
+ #      end
+       
+      content = client.readline("\r")
+       
+       puts content.inspect  
+       
+       buff << content 
+        
+       sleep(0.01)
+    end 
+    
+    
+ 
+  
+rescue Exception=>e
+  
+  # "\vMSH|^~\\&|Bansal Station Smart OPD|oni|HIS|BMS-HOSxP|20230323120742||ORU^R01|2701|P|2.3\r"
+  # "PID|1|||9999999999999\r"
+  # "PV1||O|||||||||||||||||\r"
+  # "OBR|1|||||20230323120742||||||||20230323120742\r"
+  # "OBX|1|ST|WEIGHT||71.00|KG.|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|2|ST|HEIGHT||181.6|CM.|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|3|ST|BMI||21.5| Kg/m2|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|4|ST|TEMP||35.5|C|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|5|ST|SYSTOLIC||132|mmHg|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|6|ST|DIASTOLIC||90|mmHg|||||F|||20230323120742|Bansal Station Smart OPD\r"
+  # "OBX|8|ST|PULSE||78|bpm|||||F|||20230323120742|Bansal Station Smart OPD\x1C\r"  
+  
+  map = {}
+  
+  for i in buff
+    
+    t = i.split("|")
+    case t[0]
+    when 'PID'
+      map['HN'] = t[4].strip
+    when 'OBX'
+      x = t[3]
+      y = t[5]
+      map[x] = y.strip
+    else  
+    end  
+    
+    
+  end
+  
+  ##########
+  
+  
+  
+  data = {}
+  data['FormatType'] = 'BCH'
+  data['VisitType'] = 'OPD'
+  data['HN'] = map['HN']
+  data['VisitDate'] = Time.now.strftime("%Y%m%d")
+  data['VN'] = map['HN']
+  data['PrescriptionNo'] = '1'
+  
+  
+  data['ReportDateTime'] = Time.now.strftime("%Y%m%d%H%M%S")
+  data['ReportByUID'] = "-"
+
+
+  senses = {}
+  senses['PULSE']=['Pulse','bpm']
+  senses['SYSTOLIC']=['BPSystolic','mmHg']
+  senses['DIASTOLIC']=['BPDiastolic','mmHg']
+  senses['TEMP']=['Temperature','C']
+  senses['WEIGHT']=['BodyWeight','kg']
+  senses['HEIGHT']=['BodyHeight','cm']
+
+
+
+  for s in senses.keys
+    v = senses[s]
+    if map[s] and map[s].size>0
+
+    data[v[0]] = map[s]
+
+    end
+  end
+
+
+
+
+  puts data.inspect
+  
+   if  http = login[:http]
+     
+   
+ 
+
+    # request = CaseSensitivePost.new(uri.request_uri)
+     request = Net::HTTP::Post.new(uri.request_uri)
+
+     request.body = data.to_json
+
+     # Tweak headers, removing this will default to application/x-www-form-urlencoded
+     request["Content-Type"] = "application/json"
+     request["Authorization"] = 'Bearer '+settings.token
+
+     puts '============= DEBUG ==================='
+
+     response = http.request(request)
+
+     puts '============= FINISH ==================='
+
+     puts response.body
+
+     dobj = JSON.parse(response.body)
+
+
+
+     if dobj['StatusCode']=='100'
+       res = {'success'=>true}
+       result = {:status=>'200 OK', :msg=>res.to_json}
+     else
+       result = {:status=>'404 ERROR', :msg=>dobj.to_json}
+     end
+
+     
+   end
+  
+  
+  
+end
+
+end
+
+sleep(1)
+
+end
+
+     
+  
+  
+  
+  
+  
+
+
+
+
 #
 #
 #   post '/send2' do
