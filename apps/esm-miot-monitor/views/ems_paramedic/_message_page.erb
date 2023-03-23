@@ -106,75 +106,50 @@ dfdf
 	 		  	  <input name="record[description]" type="text" id="note-value" class="secondary-blue" placeholder="Note, Command, Msg" style="padding:5px; border:1px solid #bbb;border-radius: 4px;"/><br/><br/>
 				</div>
 			</div>
-
-
-			<!-- <input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable col-3' style="" />  -->
-
-			<!-- -->
+			</div>
 			</div>
 
+  </div>
+
+  <div class="row" style="margin-top:10px;border:0px solid;">
 
 
-			<!-- <div class="row">
-
-				<div class="col-4">
-				<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
-				</div>
-				<div class="col-4">
-				<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable' style="" />
-				</div>
-			</div> -->
-
-
-
-
-			<div class="row">
-
-			<!-- <div class="dropdown">
-				<button class="btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">Primary</button>
-				<ul class="dropdown-menu" style="">
-					<li><a class="dropdown-item" href="#">Action</a>
-					</li>
-					<li><a class="dropdown-item" href="#">Another action</a>
-					</li>
-					<li><a class="dropdown-item" href="#">Something else here</a>
-					</li>
-				</ul>
-			</div> -->
-			<div class="btn-group col-4" role="group" aria-label="Basic example">
-			  <button type="button" id="msg-dashboard" class="msg-btn btn  btn-sm btn-secondary btn-pcm context">Event</button>
-			  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
-			</div>
-
-			<div class="btn-group col-4" role="group" aria-label="Basic example">
-				<button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
-			</div>
-
-			<div class="btn-group col-4" role="group" aria-label="Basic example">
-			  <button type="button" id="msg-medication" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Med</button>
-			  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
-			</div>
-
-			<!-- <div class="btn-group col-4" role="group" aria-label="Basic example">
-			  <button type="button"   id="msg-track" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Track</button>
-			  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
-			</div> -->
+					<!-- <div class="dropdown">
+						<button class="btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">Primary</button>
+						<ul class="dropdown-menu" style="">
+							<li><a class="dropdown-item" href="#">Action</a>
+							</li>
+							<li><a class="dropdown-item" href="#">Another action</a>
+							</li>
+							<li><a class="dropdown-item" href="#">Something else here</a>
+							</li>
+						</ul>
+					</div> -->
 
 
-			</div>
+					<div class="btn-group col-4" role="group" aria-label="Basic example">
+					  <button type="button" id="msg-dashboard" class="msg-btn btn  btn-sm btn-secondary btn-pcm context">Event</button>
+					  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
+					</div>
+
+					<div class="btn-group col-4" role="group" aria-label="Basic example">
+						<button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
+					</div>
+
+					<div class="btn-group col-4" role="group" aria-label="Basic example">
+					  <button type="button" id="msg-medication" class="msg-btn btn btn-sm btn-secondary btn-pcm context">Med</button>
+					  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
+					</div>
+
+
+
 
 		</div>
 
 
 
+
 	<div class="row" style="margin-top:10px;border:0px solid;">
-
-	<div class="col-12" style="border:0px solid">
-
-	<!-- <div class="btn-group" role="group" aria-label="Basic example">
-	  <button type="button"   class="msg-btn btn btn-secondary btn-success context">Dashboard</button>
-	</div> -->
-	<div class="row">
 
 							<div class="btn-group col-4" role="group" aria-label="Basic example">
 							  <!-- <button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button> -->
@@ -185,15 +160,23 @@ dfdf
 							    <option <%#'selected="selected"' if s.id==score_id %> value="<%=s.id%>"><%=s.name%></option>
 							   <% end %>
 							  </select>
-							  <button type="button"  id="nurse_note_add" class="btn btn-secondary">+</button>
+							  <button type="button"  id="nurse_note_add" class="btn btn-secondary" style="display:none">+</button>
 							</div>
 
 							<div class="btn-group col-4" role="group" aria-label="Basic example">
-							  <button type="button" i class="summary-btn btn btn-warning  context">Summary</button>
+							  <button type="button" class="summary-btn btn btn-warning  context">Summary</button>
 							</div>
-
+							<div class="btn-group col-4" role="group" aria-label="Basic example">
+								<button type="button" class="text-btn btn btn-warning  context">Text</button>
+							</div>
 	</div>
+<script>
 
+	$('#score_id').change(function(){
+			$('#nurse_note_add').click()
+	})
+
+	</script>
 		<%= inline(this,:'_cpr_partial') %>
 
 	<div class="row">
@@ -201,12 +184,12 @@ dfdf
 
 		<%= inline(this,:'_dispatch') %>
 
-	</div>
+
+
 
 	</div>
 	</div>
-	</div>
-	</div>
+
 
 
 
@@ -370,7 +353,11 @@ $('.msg-btn').click(function(){
 
 	var ems_case_id
 
-$('.summary-btn').click(function(e){
+
+
+
+
+	$('.summary-btn').click(function(e){
 
 
 	e.preventDefault()
@@ -378,7 +365,26 @@ $('.summary-btn').click(function(e){
 
 
 	$.ajax({
-	  url: "<%="../EMS/summary"%>?id="+ems_case_id,
+		url: "<%="../EMS/summary"%>?id="+ems_case_id,
+		context: document.body
+	}).done(function(data) {
+		$( '.charting' ).html(data);
+
+	$('.element-tab').scrollTop(100000000)
+
+	});
+
+	})
+
+$('.text-btn').click(function(e){
+
+
+	e.preventDefault()
+
+
+
+	$.ajax({
+	  url: "<%="../EMS/summary_text"%>?id="+ems_case_id,
 	  context: document.body
 	}).done(function(data) {
 	  $( '.charting' ).html(data);

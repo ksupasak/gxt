@@ -1,4 +1,7 @@
 require "base64"
+require "uri"
+require "net/http"
+
 module EsmMiotMonitor
 
 
@@ -51,9 +54,10 @@ class EMSCase < GXTModel
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
 
+  key :dispatch_note, String
+  key :team_id, String
 
-
-
+  key :ambulance_id, ObjectId
 
   key :admit_id, ObjectId
 
@@ -75,11 +79,20 @@ class EMSCase < GXTModel
   key :chief_complain, String
 
 
-  key :request_cbd_code, ObjectId
+  # key :request_cbd_code, ObjectId
 
   key :init_cbd_code, ObjectId
 
-  key :final_cbd_code, ObjectId
+  key :init_cbd_color, String
+  key :dispatch_cbd_color, String
+  key :scene_cbd_color, String
+  key :screen_cbd_color, String
+
+  key :case_type, String # EMS / Refer
+  key :patient_type, String # Trauma
+
+
+  # key :final_cbd_code, ObjectId
 
   key :contact_name, String
 
@@ -90,6 +103,7 @@ class EMSCase < GXTModel
   key :patient_info, String
   key :patient_gender, String
   key :patient_age, String
+  key :patient_birth_date, DateTime
   key :patient_nationality, String
 
 
@@ -180,12 +194,33 @@ class EMSCase < GXTModel
   key :er_triage, String
   key :diagnosis, String
 
+  key :init_vs_stamp, DateTime
+  key :init_sbp, Integer
+  key :init_dbp, Integer
+  key :init_hr, Integer
+  key :init_rr, Integer
+  key :init_spo2, Integer
+  key :init_gcs, String
+  key :init_temp, Float
+  key :init_dtx, Integer
+
+  key :repeat_vs_stamp, DateTime
+  key :repeat_sbp, Integer
+  key :repeat_dbp, Integer
+  key :repeat_hr, Integer
+  key :repeat_rr, Integer
+  key :repeat_spo2, Integer
+  key :repeat_gcs, String
+  key :repeat_temp, Float
+  key :repeat_dtx, Integer
+
+  key :screen_vs_stamp, DateTime
   key :screen_sbp, Integer
   key :screen_dbp, Integer
   key :screen_hr, Integer
   key :screen_rr, Integer
   key :screen_spo2, Integer
-  key :screen_gcs, Integer
+  key :screen_gcs, String
   key :screen_temp, Float
   key :screen_dtx, Integer
 
@@ -206,9 +241,39 @@ class EMSCase < GXTModel
   key :over_time_managment, String
 
 
+  def relocation_target latlng
+
+      admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
+      puts 'Relocat '+self.admit_id.to_s
+      for i in admit_log_list
+
+          i.update_attributes :latlng=>latlng
+
+          if i.sort_order==3
+              aoc_case_routes = AocCaseRoute.where(:arrival_log_id=>i.id).all
+              for aoc_case_route in aoc_case_routes
+              if aoc_case_route
+                  aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation'
+              end
+            end
+          end
+
+      end
 
 
 
+  end
+
+  def noti_message
+
+    ems_case = self
+    channel = EMSChannel.find ems_case.channel_id
+    ambulance = Ambulance.find ems_case.ambulance_id
+    message = "#{ems_case.case_no} รหัส: #{ems_case.init_code.code} ผู้ป่วย: #{ems_case.patient_gender} #{ems_case.patient_age}ปี อาการ: #{ems_case.chief_complain}\nติดต่อ: #{ems_case.contact_phone} สถานที่: #{ems_case.location}\nคำสั่ง: #{ems_case.dispatch_note} ทีม: #{channel.name if channel} รถ: #{ambulance.name if ambulance}"
+
+      return message
+
+  end
 
 
 
@@ -762,6 +827,65 @@ end
 
 class EMSCommandProviderController < GXTDocument
 end
+
+
+class EMSEmtController < GXT
+
+  def acl
+
+    return '*'
+
+  end
+
+
+    def default_layout
+      return :'ems_emt/layout'
+    end
+
+
+end
+
+
+class EMSConnectController < GXT
+
+end
+
+class EMSConnect
+
+
+  def self.line_noti params
+
+
+    url = URI("https://notify-api.line.me/api/notify")
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    line_access_code = Setting.get('line_access_code')
+    if line_access_code
+    message = params[:message]
+
+    request = Net::HTTP::Post.new(url)
+    request["Authorization"] = "Bearer #{line_access_code}"
+    request["Content-Type"] = "application/x-www-form-urlencoded"
+    request.body = "message=#{ERB::Util.url_encode(message)}"
+
+    response = https.request(request)
+    puts response.read_body
+
+    return response.read_body
+
+    else
+
+    return "NA"
+
+    end
+
+  end
+
+
+end
+
 
 
 end

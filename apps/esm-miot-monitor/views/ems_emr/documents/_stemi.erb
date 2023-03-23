@@ -3,78 +3,87 @@
 <%
   @record = record
 %>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
 <div class="card">
-<div class="card-header bg-primary text-white">
 
-<center>STEMI fast track</center>
-</div>
-<div class="card-body">
+  <div class="card-header bg-primary text-white">
+  <center>STEMI fast track</center>
+  </div>
 
-  <div class="row">
+  <div class="card-body">
+    <div class="row">
 
-<div class="col-12">
-<h6 class="mb-0 text-primary">อาการรับแจ้ง</h6>
 <%
   list = <<LIST
-1|ปวดศีรษะ
-2|ปวดท้อง
-3|ใจสั่น
-4|หอบเหนื่อย
-5|ชักเกร็ง
-6|เจ็บหน้าอก
-7|วูบ/เป็นลม/หมดสติ
-8|Cardiac arrest
-10|อาการอื่นๆที่ EKG 12 leads R/O STEMI ระบุ
+1|Chest pain
+2|Dyspnea
+3|Abdominal pain
+4|Alteration of conscious
+5|Cardiac arrest
+6|อื่นๆ
 LIST
-
 %>
-<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>10 %>
-</div>
-<div class="col-12">
-<h6 class="mb-0 text-primary">Management</h6>
-<%
-  list = <<LIST
-1|consult แพทย์เวร/Cardio
-2|Aspirin 325 mg
-3|Ticagerlor 180 mg
-4|Clopidogrel 300 mg
-5|Isordil 1 tap SL (สามารถให้เพิ่มได้)
-6|ทำ EKG 12 leads ซ้ำทุก 5-10 นาที
-7|on pacing
-8|Active ECMO time ...
-LIST
+<%= check_string this, 'chief_complain', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Chief complain of STREMI <span class="mandatory">*</span>'%>
+<%= text_string this, 'chief_complain_other', :col=>8, :label=>'Chief complain other'%>
 
-%>
-<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
-</div>
-<div class="col-12"><br/></div>
-<div class="col-12">
-<h6 class="mb-0 text-primary">Diagnosis</h6>
-<%
-  list = <<LIST
-1|STEMI at
-2|NSTEMI - ACS
-99|Other ...
-4|Door to wire target <= 90 min Time ... min
-5|Dx. to wire target <= 60 Time ... min
-LIST
-
-%>
 <div class="row">
-<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>6 %>
-
+<%= date_string this, 'chest_pain_time', :col=>4 , :label=>'Onset chest pain <span class="mandatory">*</span>'%>
 </div>
+<%= select_string this, 'painscore',:value=>%w{0 1 2 3 4 5 6 7 8 9 10}, :col=>12 , :label=>'Pain score ณ เวลารับแจ้ง <span class="mandatory">*</span>'%>
+  
+<%= select_string this, 'painscore_at_scene',:value=>%w{0 1 2 3 4 5 6 7 8 9 10}, :col=>12 , :label=>'Pain score at scene <span class="mandatory">*</span>'%>
+
+<%= date_string this, 'first_ekg_time', :col=>4 , :label=>'First EKG 12 lead time <span class="mandatory">*</span>'%>
+
+<%= date_string this, 'ems_diagnosis_time', :col=>4 , :label=>'EMS diagnosis time <span class="mandatory">*</span>'%>
+
+<%= date_string this, 'ep_diagnosis_time', :col=>4 , :label=>'EP diagnosis time'%>
+
+<%= text_string this, 'interpretion', :col=>12, :label=>'Interpretion <span class="mandatory">*</span>'%>
+
+<%
+  list = <<LIST
+1|Anterior wall STEMI
+2|Septal wall STEMI
+3|Inferior wall STEMI
+4|Lateral wall STEMI
+5|Posterior wall STEMI
+6|อื่นๆ
+LIST
+%>
+<%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Diagnosis <span class="mandatory">*</span>'%>
+<%= text_string this, 'diagnosis_other', :col=>8, :label=>'Diagnosis other'%>
+
+<div class="row">
+<%= date_string this, 'activate_er_time', :col=>4 , :label=>'Activate ER/Erawam time <span class="mandatory">*</span>'%>
 </div>
+<%= radio_string this, 'transfer',:value=>%w{yes no}, :col=>12 , :label=>'Transfer to PCI center <span class="mandatory">*</span>'%>
+
+<%= date_string this, 'pci_time', :col=>4 , :label=>'PCI time'%>
+
+<%= date_string this, 'fibrinolysis_time', :col=>4 , :label=>'Fibrinolysis time'%>
+
+<%= date_string this, 'asa_time', :col=>4 , :label=>'ASA 81 mg 4 tabs'%>
+
+<%= check_string this, 'isosorbide',:value=>%w{1 2 3 อื่นๆ}, :col=>4 , :label=>'Isosorbide dinitrate SL(tab)'%>
+
+<%= text_string this, 'isosorbide_other', :col=>8, :label=>''%>
+
+<%
+  list = <<LIST
+1|Ticagrelor 2 tab
+2|Clopidogrel 4 tab
+3|อื่นๆ
+LIST
+%>
+<%= check_string this, 'sl', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Other'%>
+<%= text_string this, 'sl_other', :col=>8, :label=>''%>
+
+<%= radio_string this, 'cardiac_arrest',:value=>%w{yes no}, :col=>12 , :label=>'Cardiac Arrest <span class="mandatory">*</span>'%>
 
 
-<div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สารวจ ศักยภาพ STEMI **</div>
-
-
-</div>
-
-
-
- </div>
-
-
-</div>
+    </div><!--row-->
+  </div><!--card body-->
+</div><!--card-->

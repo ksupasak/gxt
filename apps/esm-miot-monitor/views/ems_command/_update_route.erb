@@ -21,7 +21,7 @@ if params[:record]
 	if r2
 
 		hospital = EMSHospital.find params[:record][:transfer_hospital_id]
-		r2.update_attributes :stop_latlng=>hospital.latlng, :address=>"นำส่ง #{hospital.name}"
+		r2.update_attributes :stop_latlng=>hospital.latlng, :address=>"นำส่ง #{hospital.name}", :response=>nil, :note=>'TRANSFER'
 		b2 = AdmitLog.where(:ems_command_id=>ems_command.id, :sort_order=>5).first
 		b2.update_attributes :latlng=>hospital.latlng , :name=>"ถึงโรงพยาบาล<br/>#{hospital.name}"
 	end

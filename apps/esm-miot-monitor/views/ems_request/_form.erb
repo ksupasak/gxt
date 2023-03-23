@@ -1,5 +1,4 @@
 
-
 <style>
 
 	.w-auto{
@@ -15,7 +14,7 @@
 		<div class="row">
 			<div class="col-12 col-lg-6 col-xl-6">
 				<div class="card  ">
-					<div class="card-header bg-primary bbg-gradient ">
+					<div class="card-header bg-primary bbg-gradient text-white">
 
 						<div class="">
 							<h6 class="mb-0 text-white">
@@ -62,19 +61,28 @@
 								<div class="col-6">
 
 									<p class="px-3 ">
-										เบอร์ติดต่อ
-									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+										<span class="t" t="record_contact_phone">เบอร์ติดต่อ</span> *
+									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 
 								</div>
 
 							</div>
+					<div class="row">
+							<div class="col-12">
+							<p class="px-3 ">
+								<span class="t" t="record_location">สถานที่เกิดเหตุ</span> *
+							</p>
+							<input name='record[location]' id="record_location" value="<%=record.location%>" required class="form-control mb-3 mx-3 w-auto " type="text" placeholder="ที่อยู่" >
+						</div>
+					</div>
+
 
 							<p class="px-3">
-								Chief Complain
+								<span class="t" t="record_chief_complain">Chief Complain</span> *
 							</p>
 							<div class="input-group px-3  mb-3">
 								<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
-								<textarea name="record[chief_complain]" id="record_chief_complain" rows="2" class="form-control"><%=record.chief_complain%></textarea>
+								<textarea name="record[chief_complain]" id="record_chief_complain" required rows="2" class="form-control"><%=record.chief_complain%></textarea>
 							</div>
 
 
@@ -105,7 +113,7 @@
 								</div>
 								<div class="modal-body">
 
-									<div class="row">
+									<div id="cbd-group" class="row">
 										<%
 
 
@@ -128,13 +136,51 @@
 
 										%>
 
-										<div class="col-4 card btn btn-info" style="text-align:left">
-
-											 <a href="#" class='w-100 align-middle' ><%=g.code%> <%=g.name%></a>
-
+										<div class="col-4" >
+											<div class="card radius-10 btn btn-info">
+												<a href="javascript:group('<%=g.id%>')" class='w-100 align-middle' >
+												<div class="card-body " style="text-align:left">
+											 	<%=g.code%> <%=g.name%>
+												</div>
+												</a>
+											</div>
 										</div>
 										<% end %>
 									</div>
+
+									<div id="cbd-list" class="row">
+
+									</div>
+
+									<script>
+									function selCode(code){
+										$("#record_init_cbd_code").val(code)
+										$("#selectCodeModal").modal('hide')
+										$("#cbd-list").html('')
+										$("#cbd-group").show()
+									}
+
+									function selGroup(id){
+										$("#cbd-list").html('')
+										$("#cbd-group").show()
+									}
+									function selColor(c){
+										$(".cbd-color").hide()
+										$("#"+c).show()
+										$(".sel-color").removeClass("text-white").removeClass("bg-primary")
+										$("#sel-"+c).addClass("text-white").addClass("bg-primary")
+									}
+									function group(id){
+										$.ajax({
+											type:'POST',
+											url:'../EMSCode/group_list',
+											data:{id:id},
+										}).done(function(data){
+											$("#cbd-list").html(data)
+											$("#cbd-group").hide()
+										})
+									}
+									</script>
 
 
 								</div>
@@ -180,21 +226,29 @@
 
 
 
-								<div class="row">
+								<div class="row no-gutters">
 
-								<div class="col-6">
+								<div class="col-3 no-gutters">
 
 									<p class="px-3">
-										Gender / เพศ
+										Sex
 									</p><input name='record[patient_gender]' value="<%=record.patient_gender if patient%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
-								<div class="col-6">
+								<div class="col-3 no-gutters">
 
 									<p class="px-3 ">
-										Age / อายุ
+										Age
 									</p><input name='record[patient_age]' value="<%=record.patient_age if patient %>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
+
+								</div>
+
+								<div class="col-5">
+
+									<p class="px-3">
+										BOB
+									</p><input name='record[patient_birth_date]' value="<%=record.patient_birth_date.strftime("%d/%m/%Y") if patient and record.patient_birth_date %>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
@@ -259,59 +313,79 @@
 			</div><br/> -->
 
 
-			<div class="card ">
+	<div class="card ">
 				<div class="card-header bg-gradient bg-primary">
 					<div class="d-flex align-items-center">
 						<div>
 							<h6 class="mb-0 text-primaryx text-white">
-								ภาพเหตุ :
+								สั่งการ
 							</h6>
 						</div>
 					</div>
 				</div>
-				<div class="card-body">
+					<div class="card-body">
+						<div class="row">
 
 
-							<div class="row">
-								<div>
+
+							<div class="col-3">
+								<p class="px-3">
+									Case type :
+								</p>
+								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
+									<option selected="" value="EMS">EMS</option>
+									<option value="Refer">Refer</option>
+								</select>
+							</div>
+							<div class="col-3">
+								<p class="px-3">
+									Ambulance :
+								</p>
+								<select class="form-select mb-3" name='record[ambulance_id]' aria-label="Default select example">
+									<option selected="">-</option>
 									<%
-
-									imgs = Message.where(:admit_id=>record.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
-
-									if imgs.size>0
-
+											zone = Zone.find(session[:current_zone])
+											ambu_list = Ambulance.where(:zone_id=>zone).all
+											for ambu in ambu_list
 									%>
-
-									<% for img in imgs %>
-
-									<%
-									if img
-										url = "../Message/content?id=#{img.id}"
-
-									%>
-									<img src="<%=url%>" width="140">
-									<%
-									end
-									%>
-
-
+									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> ><%=ambu.name %></option>
 									<% end %>
+								</select>
 
+							</div>
+							<div class="col-3">
+								<p class="px-3">
+									Channel :
+								</p>
+								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
+									<option selected="">-</option>
 									<%
-								else
+											zone = Zone.find(session[:current_zone])
+											channels = EMSChannel.all
+											for ch in channels
 									%>
-								<center style="padding:40px">	No Images</center>
-									<%
-									end
-									%>
-
-								</div>
+									<option value="<%=ch.id%>" <%='selected' if ch.id==record.channel_id %> ><%=ch.name %></option>
+									<% end %>
+								</select>
 							</div>
 
-				</div>
+
+							<div class="col-3">
+								<p class="px-3">
+								 Note :
+								</p>
+									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
+
+							</div>
+
+						</div>
 
 
+					​<div>
+			</div>
 		</div>
+	</div>
+
 
 
 
@@ -360,11 +434,11 @@
 							<style>
 										 /* Set the size of the div element that contains the map */
 										#dashboard-map {
-											height: 250px;  /* The height is 400 pixels */
+											height: 200px;  /* The height is 400 pixels */
 											width: 100%;  /* The width is the width of the web page */
 										 }
 										#dashboard-map-2 {
-											height: 250px;  /* The height is 400 pixels */
+											height: 200px;  /* The height is 400 pixels */
 											width: 100%;  /* The width is the width of the web page */
 										 }
 									</style>
@@ -372,33 +446,26 @@
 
 
 							<div class="row">
-							<div class="col-md-8">
-							<!-- <label for="inputLastName1" class="form-label px-3"><span class="t" text="address" >ชื่อสถานที่</span></label> -->
-							<div class="input-group  px-3">
-								<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-							<input name='record[location]' id="record_location" value="<%=record.location%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
-							</div>
 
-							</div>
-							<div class="col-md-4" style="display:none">
+							<div class="col-md-6" >
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[address]' id="record_address" value="<%=record.address%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[address]' id="record_address" value="<%=record.address%>" readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>" class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>"  readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							</div>
 							<br/>
 							<div class="row">
 							<div class="col-12">
-							<div id="dashboard-map" class="" style="height:60vh">
+							<div id="dashboard-map" class="" style="height:45vh">
 								map
 							</div>
 							</div>
@@ -411,10 +478,28 @@
 							</div>
 						</div>
 
+
+
+
+
+
+
+
+
 							</div>
 
 							<script>
 								$(document).ready(function(){
+
+
+									var latlng = [];
+									var station_image = "<%=url_for("ems/station.png")%>";
+
+
+									clatlng = [13.68313508354787, 100.69198345629769]
+									<% if Setting.get("aoc_center") %>
+									clatlng = [<%=Setting.get("aoc_center")%>]
+									<% end %>
 
 								latlng = [13.69313508354787, 100.69198345629769]
 
@@ -428,6 +513,12 @@
 								map1.setPosition(latlng[0], latlng[1])
 								map1.setMarkerPosition(latlng[0], latlng[1])
 
+								var cpos = new google.maps.LatLng(clatlng[0],clatlng[1] )
+								cmap = map1.getMap()
+								markerx = new google.maps.Marker({position: cpos, map: cmap, icon: station_image})
+
+
+
 								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 								map2.setPosition(latlng[0], latlng[1])
 								map2.setMarkerPosition(latlng[0], latlng[1])
@@ -440,11 +531,11 @@
 
 
 
-									// map1.geocode({'location':pos},function(result){
-									//
-									// 		$('#record_address').val(result.formatted_address)
-									//
-									// 	})
+									map1.geocode({'location':pos},function(result){
+
+											$('#record_address').val(result.formatted_address)
+
+										})
 
 									map2.setPosition(pos.lat(), pos.lng())
 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -500,7 +591,8 @@
 										}
 								});
 
-								$('#record_address').change(address_search);
+
+								$('#record_location').change(address_search);
 
 
 								$('#record_latlng').keydown(function(e){
@@ -540,6 +632,63 @@
 
 						</div>
 					</div>
+
+
+
+
+					<div class="card ">
+						<div class="card-header bg-gradient bg-primary">
+							<div class="d-flex align-items-center">
+								<div>
+									<h6 class="mb-0 text-primaryx text-white">
+										ภาพเหตุ :
+									</h6>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+
+
+									<div class="row">
+										<div>
+											<%
+
+											imgs = Message.where(:admit_id=>record.admit_id, :type=>'image').sort(:created_at=>1).all
+
+											if imgs.size>0
+
+											%>
+
+											<% for img in imgs %>
+
+											<%
+											if img
+												url = "../Message/content?id=#{img.id}"
+
+											%>
+											<img src="<%=url%>" width="140">
+											<%
+											end
+											%>
+
+
+											<% end %>
+
+											<%
+										else
+											%>
+										<center style="padding:40px">	No Images</center>
+											<%
+											end
+											%>
+
+										</div>
+									</div>
+
+						</div>
+
+					</div>
+
 					</div>
 
 

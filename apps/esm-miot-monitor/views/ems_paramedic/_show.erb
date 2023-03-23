@@ -71,11 +71,11 @@ end
 </div>
 <style>
 	.station .label{
-		font-size:0.8em;
+		font-size:0.6em;
 
 	}
 	.station .value{
-		font-size:3em;
+		font-size:5em;
 		text-align:center;
 
 	}
@@ -143,7 +143,7 @@ end
 
 
 	.station-top .value{
-		font-size:1.2em;
+		font-size:3em;
 	}
 
 
@@ -289,16 +289,17 @@ end
 			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 
 				<div class="row d-flex justify-content-center" style="padding:0px" >
-							<div class="vs-val col-1  col-lg-1 col-sm-1 pr">
+              <div class="vs-val col-2  col-lg-2 col-sm-2 bp">
+            <span class="label">BP</span>
+            <div class="value">-</div>
+              </div>
+
+        	   <div class="vs-val col-1  col-lg-1 col-sm-1 pr">
 								<span class="label">PR</span>
 								<div class="value">-</div>
 							</div>
 							<div class="vs-val col-1  col-lg-1 col-sm-1 spo2">
 								<span class="label">SpO2</span>
-								<div class="value">-</div>
-							</div>
-							<div class="vs-val col-1  col-lg-1 col-sm-1 bp">
-								<span class="label">BP</span>
 								<div class="value">-</div>
 							</div>
 							<div class="vs-val col-1  col-lg-1 col-sm-1 hr">
@@ -324,9 +325,9 @@ end
 								<div class="value">&nbsp;</div>
 							</div>
 
-							<div class="vs-val col-2 col-lg-2  col-sm-2 alert-msg" >
+							<div class="vs-val col-1 col-lg-1  col-sm-1 alert-msg" >
 								<span class="label">MSG</span>
-								<div class="value" style="overflow:hidden;height:30px">
+								<div class="value" style="overflow:hidden;height:30px;font-size:0.8em">
 									&nbsp;
 								</div>
 							</div>
@@ -342,7 +343,7 @@ end
 			</div>
 			<% end %>
 			<hr/>
-			<h4>Paramedic Status</h4>
+			<h4>Device Connect</h4>
 			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
 			<div class="input-group mb-3">
@@ -357,7 +358,7 @@ end
 			</div>
 
 			<div>
-			<label>Select Station :</label>
+			<label>Select Device :</label>
 
 			<% fieldset(:admit) do |f| %>
 			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
@@ -418,7 +419,7 @@ end
 						admit_path = prefix+"/Admit/show?id=<%=admit.id%>"
 						<% end %>
 
-						<% if ambu.device_no and ambu.device_no !="" %>
+						<% if ambu and ambu.device_no and ambu.device_no !="" %>
 
 						// dvr_path = "http://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=ambu.device_no%>&account=admin&password=minadadmin"
 						// dvr_path = "https://103.76.181.125/808gps/open/player/video.html?lang=en&devIdno=<%=ambu.device_no%>&account=admin&password=minadadmin"
@@ -888,7 +889,7 @@ update_message()
 
 
 
-	  var ws       = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+	  var ws       = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
 	  var plot_pos = {};
 

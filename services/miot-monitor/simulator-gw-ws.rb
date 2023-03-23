@@ -7,7 +7,7 @@ require 'eventmachine'
 
 
 def connect solution, host, port
-  connect_url = "wss://#{host}:#{port}/#{solution}/Home/index"
+  connect_url = "wss://#{host}:#{port}/ws/#{solution}/Home/index"
   puts connect_url
   WebSocket::Client::Simple.connect connect_url
 end

@@ -18,7 +18,7 @@
 /*	  margin-top: 40px;*/
   }
   .main-panel{
-  	
+
 	  width:800px;
 	  height:400px;
 	  border:1px solid gray;
@@ -54,25 +54,25 @@
 		<div class="col">
 			<button id="x" value="Mode" class="btn">Monitor</button>
 		</div>
-			
+
 		<div class="col">
 			<center>
 			<button id="x" value="Mode" class="btn d-flex justify-content-center">Patient</button>
 		</center>
 		</div>
-			
+
 		<div class="col">
 			<button id="x" value="Mode" class="btn  timer float-right">00:00</button>
 		</div>
 	</div>
 	</div>
 </div>
-	
+
 <div id="single-view" class="main-panel row">
 <div class="primary col"></div>
-</div>	
+</div>
 
-<div id="dual-view" class="main-panel row ">	
+<div id="dual-view" class="main-panel row ">
 <div class="primary col"></div>
 <div class="secondary col"></div>
 </div>
@@ -85,7 +85,7 @@
 			<button id="toggle" class="btn" value="Mode">Mode</button>
 			<button id="toggle-ghost" class="btn" value="Mode">Ghost</button>
 			<button id="reset-mark" class="btn" value="Mode">Reset</button>
-			
+
 		</div>
 		<div class="col-2">
 			<center>
@@ -102,33 +102,33 @@
 <div class="vpl1 view">
   <div id="vpl"></div>
 
-</div>	
+</div>
 
 <div class="vfl1 view">
   <div id="vfl">VFL</div>
-</div>	
+</div>
 
 
 <div class="trend view">
     <div id="trend">Trend</div>
-</div>	
+</div>
 
-</div class="">	
+</div class="">
 
 <%
 		# , [310, 50, -4, 0, 0], [311, 50, -4, 0, 0], [312, 50, -4, 0, 0
-		
-		
+
+
 lung_data = File.open(File.join(File.dirname(__FILE__),'lung.tsv')).read().split("\n").collect{|i| t = i.split("\t").collect{|j| j.to_i} ; {'x'=>t[1], 'y'=>t[3], 'z'=>t[2] }  }
-	
+
 interval = 10
 
-	
+
 %>
 <%#lung_data.inspect %>
 <%
-	
-data = <<EOF		
+
+data = <<EOF
 0	25.00
 2	27.43
 4	31.07
@@ -151,12 +151,12 @@ data = <<EOF
 2	35.92
 0	28.64
 EOF
-	
-	lines = data.split("\n").collect{|i| t = i.strip.split(" ").collect{|j| j.strip}; {'x'=>t[0].to_i, 'y'=>t[1].to_i}}
-	
 
-	
-gdata = <<EOF		
+	lines = data.split("\n").collect{|i| t = i.strip.split(" ").collect{|j| j.strip}; {'x'=>t[0].to_i, 'y'=>t[1].to_i}}
+
+
+
+gdata = <<EOF
 0	20.83
 2	22.86
 4	25.89
@@ -179,14 +179,14 @@ gdata = <<EOF
 2	29.93
 0	23.87
 EOF
-	
+
 	glines = gdata.split("\n").collect{|i| t = i.strip.split(" ").collect{|j| j.strip}; {'x'=>t[0].to_i, 'y'=>t[1].to_i}}
-		
-		
+
+
 %>
 
 <script>
-	
+
 	var modes = [];
 	var current_mode = 0;
 
@@ -252,49 +252,49 @@ EOF
 </script>
 
 <script>
-	
-	
-	
+
+
+
 	class Lung {
-		
-		
+
+
 	  constructor(height, width) {
 	    this.height = height;
 	    this.width = width;
-	
+
 		this.tindex = 0;
 		this.vindex = 0;
 		this.lastx=null;
 		this.lasty=null;
 		this.vpl = <%=lung_data.to_json %>
 		this.gvpl = <%=lung_data.to_json %>
-	
+
 		this.vplx = <%=lung_data.to_json %>
-	
+
 		this.ghost_show = false;
-		
+
 		this.reload();
 		this.interval = <%=interval%>;
-		
-		
-		
+
+
+
 	  }
-	
-	
+
+
 
 	  timer(){
-	  	
-		var currentdate = new Date(); 
+
+		var currentdate = new Date();
 		var datetime = "" + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
-		
-		$('.timer').html(datetime)		
-				
-				
+
+		$('.timer').html(datetime)
+
+
 	  }
 
  genValue(){
@@ -318,16 +318,16 @@ EOF
 		this.vindex=0;
 		$('.vpl-path').remove()
 	}
-	
+
 	if(this.tindex > this.vplx.length-1){
 		this.tindex=0;
 		$('.trend-path').remove()
 	}
-		
+
 }
 
 toggleGhost(){
-	
+
 	if(this.ghost_show){
 		$('.ghost').hide();
 		this.ghost_show = false;
@@ -335,14 +335,14 @@ toggleGhost(){
 		$('.ghost').show();
 		this.ghost_show = true;
 	}
-	
+
 }
 resetMark(){
-	
-	
+
+
 	$('.marker').remove();
 
-	
+
 }
 
 getInterval(){
@@ -350,24 +350,24 @@ getInterval(){
 }
 
  receiveValue(v,p,f){
-	 
+
 	// console.log("vp = "+v+","+p)
-	
-	
 
-	if(this.lastx!=null){	
 
-		
-		
-		
+
+	if(this.lastx!=null){
+
+
+
+
 	  let ldata = [{'x':this.lastx,'y':this.lasty,'z':this.lastz},{'x':v,'y':p,'z':f}]
-		
-		
+
+
   	  const line = d3
   	  .line()
   	  .x(dataPoint => this.xScale(dataPoint.x))
   	  .y(dataPoint => this.yScale(dataPoint.y));
-		
+
 		// Add path
 		const path = this.grp
 		  .append("path")
@@ -389,48 +389,48 @@ getInterval(){
 		  .transition()
 		  .ease(d3.easeLinear)
 		  .duration(this.interval);
-  
+
 	  	path
 	  	  .attr("stroke-dashoffset", pathLength)
 	  	  .attr("stroke-dasharray", pathLength)
 	  	  .transition(transitionPath)
 	  	  .attr("stroke-dashoffset", 0);
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-		  
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		const linex = d3
 		  .line()
 		  .x(function(d,i){
 		  	  return this.txScale(this.tindex+i);
-			  
+
 		  }.bind(this))
 		  .y(dataPoint => this.tyScale(dataPoint.y));
-		  
-		  
+
+
 
 		const linez = d3
 		  .line()
 		  .x(function(d,i){
 		  	  return this.txScale(this.tindex+i);
-			  
+
 		  }.bind(this))
-		  .y(dataPoint => this.tzScale(dataPoint.z)); 
-		  
-		
+		  .y(dataPoint => this.tzScale(dataPoint.z));
+
+
 		// Add path 2 ==============================================================================================
-		  
+
 		const tpath = this.grp_trend
 		  .append("path")
 		  .attr("transform", `translate(${this.margin.left},30)`)
@@ -451,15 +451,15 @@ getInterval(){
 		  .transition()
 		  .ease(d3.easeLinear)
 		  .duration(this.interval);
-  
+
 	  	tpath
 	  	  .attr("stroke-dashoffset", tpathLength)
 	  	  .attr("stroke-dasharray", tpathLength)
 	  	  .transition(ttransitionPath)
 	  	  .attr("stroke-dashoffset", 0);
-  
+
 		// Add path 2 ==============================================================================================
-		  
+
 		const tpath2 = this.grp_trend
 		  .append("path")
 		  .attr("transform", `translate(${this.margin.left},200)`)
@@ -480,31 +480,31 @@ getInterval(){
 		  .transition()
 		  .ease(d3.easeLinear)
 		  .duration(this.interval);
-  
+
 	  	tpath2
 	  	  .attr("stroke-dashoffset", tpathLength2)
 	  	  .attr("stroke-dasharray", tpathLength2)
 	  	  .transition(ttransitionPath2)
 	  	  .attr("stroke-dashoffset", 0);
-		
+
 	}
-	
+
 	this.lastx = v;
 	this.lasty = p;
 	this.lastz = f;
-	
+
 }
 
 chartClick(){
 
-		
+
 	    var coords = d3.mouse(this.svg.node());
 
 		let x = this.xScale.invert(coords[0]-this.margin.left)
 		let y = this.yScale.invert(coords[1]-this.margin.top-30)
 
 	  	console.log(""+x+", "+y+"  "+coords[0]+", "+coords[1])
-		
+
 	this.svg.append("circle")
     .style("stroke", "gray")
 	.style("opacity", 0.8)
@@ -513,7 +513,7 @@ chartClick(){
     .attr("r", 8)
     .attr("cx", coords[0])
     .attr("cy",coords[1] );
-	
+
 	this.svg.append('text')
 	  .attr('x', coords[0]+15)
 	  .attr('y', coords[1]+5)
@@ -521,18 +521,18 @@ chartClick(){
 	  .attr('fill', 'gray')
 	  .style("font-size", 16)
 	  .text("("+parseInt(x*10)/10+", "+parseInt(y)+")")
-	
-	
-	
-	
-	
+
+
+
+
+
 
 }
 
-	 reload(){	
-    
-	
-		 
+	 reload(){
+
+
+
 
     setInterval(this.genValue.bind(this),<%= interval %>);
     setInterval(this.timer.bind(this),1000);
@@ -556,17 +556,17 @@ this.tyScale = d3
   .scaleLinear()
   .range([100, 0])
   .domain([0, d3.max(this.vpl, dataPoint => dataPoint.y)]);
-  
+
 this.txScale = d3
   .scaleLinear()
   .range([0, 100])
   .domain([0,340]);
-  
+
 this.tzScale = d3
   .scaleLinear()
   .range([100, 0])
   .domain([d3.min(this.vpl, dataPoint => dataPoint.z), d3.max(this.vpl, dataPoint => dataPoint.z)]);
-   
+
 
 const linex = d3
   .line()
@@ -580,7 +580,7 @@ const linez = d3
 
 	    this.trend = this.svg_chart.append("g").attr("transform", `translate(${this.margin.left},0)`);
 
-	
+
 	   this.grp_trend = this.trend
   		.append("g")
   		.attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
@@ -618,14 +618,14 @@ const linez = d3
 
 
   /////////////////////////////////////////////////////
-  
+
 	this.svg = d3
 	  .select("#vpl")
 	  .append("svg")
 	  .attr("height", 300+50)
 	  .attr("width", 380)
-	
-	
+
+
 	this.svg.on("click", this.chartClick.bind(this));
 
 	this.chart = this.svg.append("g").attr("transform", `translate(${this.margin.left},0)`);
@@ -634,12 +634,12 @@ const linez = d3
 	this.grp = this.chart
 	  .append("g")
 	  .attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
-	  
+
 	// this.vfl = this.chart2
 // 	  .append("g")
 // 	  .attr("transform", `translate(-${this.margin.left},-${this.margin.top})`);
 //
-	  
+
 
 	// Create scales
 	this.yScale = d3
@@ -650,13 +650,13 @@ const linez = d3
 	  .scaleLinear()
 	  .range([0, width])
 	  .domain(d3.extent(this.vpl, dataPoint => dataPoint.x));
-	
+
 	this.zScale = d3
 	  .scaleLinear()
 	  .range([height, 0])
 	  .domain([d3.min(this.vpl, dataPoint => dataPoint.y), d3.max(this.vpl, dataPoint => dataPoint.y)]);
-	  
-	  
+
+
 
 	const line = d3
 	  .line()
@@ -702,7 +702,7 @@ const linez = d3
   	//   .attr("stroke-dasharray", pathLength)
   	//   .transition(transitionPath)
   	//   .attr("stroke-dashoffset", 0);
-	
+
   // console.log(this.gvpl)
 // Add path
   const gpath = this.grp
@@ -716,17 +716,17 @@ const linez = d3
   .attr("stroke-linecap", "round")
   .attr("stroke-width", 1.5)
   .attr("d", line2);
-  
+
 
   	const gpathLength = gpath.node().getTotalLength();
 
-	
+
 	if(this.show_ghost){
 		$('.ghost').show();
 	}else{
 		$('.ghost').hide();
 	}
-	
+
 
 
 	//   	// D3 provides lots of transition options, have a play around here:
@@ -759,33 +759,62 @@ const linez = d3
 	  .attr("stroke", "#c6bf90")
 	  .attr("transform", `translate(0, 30)`)
 	  .call(d3.axisLeft(this.yScale));
-	  
-	
-	
- 
+
+
+
+
 	 // this.chart
 	 //   .append("g")
 	 //   .attr('class','scaler')
 	 //   .attr("stroke", "#c6bf90")
 	 //   .attr("transform", `translate(0, 200)`)
 	 //   .call(d3.axisLeft(this.zScale));
-  
 
- } 
- 
- 
- } 
+
+ }
+
+
+ }
 
 
  		const lung = new Lung(100,100); // ReferenceError
-	
+
 
 		$('#toggle-ghost').click(lung.toggleGhost).bind(lung);
 		$('#reset-mark').click(lung.resetMark).bind(lung);
-  
-  
+
+
 	 </script>
-	  
+   <form id="form">
+     <input type="text" id="input" value="send a message"></input>
+   </form>
+   <div id="msgs"></div>
+   <script type="text/javascript">
+   window.onload = function(){
+     (function(){
+       var show = function(el){
+         return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+       }(document.getElementById('msgs'));
+
+       var ws       = new WebSocket('wss://localhost:9292/');
+       ws.onopen    = function()  { show('websocket opened'); };
+       ws.onclose   = function()  { show('websocket closed'); }
+       ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+
+       var sender = function(f){
+         var input     = document.getElementById('input');
+         input.onclick = function(){ input.value = "" };
+         f.onsubmit    = function(){
+           ws.send(input.value);
+           input.value = "send a message";
+           return false;
+         }
+       }(document.getElementById('form'));
+     })();
+   }
+   </script>
+
 	  </body>
+
+
 	  </html>
-	  

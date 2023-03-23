@@ -4,25 +4,25 @@
 
 
 	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
-	
-	
+
+
 
 	for i in keys
-		
-			
+
+
 	name = i[0]
-	
+
 	%>
-	
+
 	<%
 	if name=='zone_id'
-	 
+
 	list = Zone.all
-		
+
 	%>
   <div class="form-group">
     <label for="product-name"><%=i[0].humanize %></label>
-	
+
 	<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
 	<% for j in list.collect{|k| [k.id,"#{k.name}"]} %>
@@ -30,20 +30,36 @@
 	<% end %>
 	</select>
   </div>
-  
+
 	<%
 	elsif name=='station_id'
-	 
+
 	list = Station.all
-		
+
 	%>
   <div class="form-group">
     <label for="product-name"><%=i[0].humanize %></label>
-	
+
 	<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
 
 	<% for j in list.collect{|k| [k.id,"#{k.name} @ #{k.zone.name if k.zone}"]} %>
 	  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+	<%
+elsif name=='msg_channel'
+
+	list = EMSChannel.all
+
+	%>
+  <div class="form-group">
+    <label for="channel_id"><%=i[0].humanize %></label>
+
+	<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+	<% for j in list %>
+	  <option value="<%=j.name%>" <%="selected" if @record[name]==j.name %>><%=j.name%></option>
 	<% end %>
 	</select>
   </div>
@@ -61,7 +77,7 @@
 <!--
 
 <form class="form-inline">
-	
+
   <div class="checkbox">
     <label>
       <input type="checkbox"> Check me out

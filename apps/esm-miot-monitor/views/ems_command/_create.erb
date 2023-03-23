@@ -87,17 +87,17 @@ if params[:record]
 
 	a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
 	a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
-	r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED'
+	r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED', :response=>'PLAN'
 
 
 	b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4
 	b2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
-	r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED'
+	r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED', :response=>'PLAN'
 
 
 	c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
 	c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
-	r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED'
+	r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED', :response=>'PLAN'
 
 
 	AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
@@ -119,6 +119,10 @@ Update ... <%=Time.now%>
 <%
 
 	ems_command = EMSCommand.new
+
+  ems_command.channel_id = ems_case.channel_id
+	ems_command.ambulance_id = ems_case.ambulance_id
+
 
 	init_command = "เหตุ : #{ems_case.patient_info} อาการ : #{ems_case.chief_complain} รหัส : #{ems_case.init_code.name}"
 	ems_command.init_command = init_command

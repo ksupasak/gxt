@@ -26,17 +26,47 @@
 
 
 <div class="clear"></div>
+
+<div class="col-3">
+<label class="form-label" for="init_cbd_color">รหัส รับแจ้ง</label>
+<%= f.select(:init_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.init_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="dispatch_cbd_color">รหัสสี EMD</label>
+<%= f.select(:dispatch_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.dispatch_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="scene_cbd_color">รหัสสี ที่เกิดเหตุ</label>
+<%= f.select(:scene_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.scene_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="screen_cbd_color">รหัสสี นำส่ง</label>
+<%= f.select(:screen_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.screen_cbd_color, :class=>' form-select') %>
+</div>
+
+
+<div class="clear"></div>
 <div class="col-8">
-<label class="form-label " for="operation_cancel_reason">กรณีไม่พบเหตุ</label>
+<label class="form-label " for="init_cbd_color">กรณีไม่พบเหตุ</label>
 <input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_reason%>">
 </div>
 
 <div class="col-4">
 <label class="form-label " for="operation_cancel_at">แจ้งยกเลิกเวลา</label>
-<input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_at%>">
+<input class="form-control" type="text" name="record[operation_cancel_at]" id="" value="<%=record.operation_cancel_at%>">
 </div>
 <div class="clear"></div>
 
+
+<div class="col-4">
+<label class="form-label" for="patient_type">ประเภทผู้ป่วย</label>
+<%= f.select(:patient_type, [['trauma','Trauma'],['non-trauma','Non-Trauma']], :value=>record.patient_type, :class=>' form-select') %>
+</div>
+
+<div class="clear"></div>
 <div class="col-8">
 <label class="form-label " for="diagnosis">Diagnosis</label>
 <input class="form-control" type="text" name="record[diagnosis]" id="" value="<%=record.diagnosis%>">
@@ -84,11 +114,143 @@
 
 </div>
 
+
 <hr/>
+
 <div class="col-12">
-<label class="form-label " for="screening_vital">Vital Sign at Screening</label>
+<div class="row d-flex justify-content-between">
+<div class="col-6">
+<strong>
+  <label class="form-label " for="screening_vital">Vital Sign : Init </label>
+</strong>
+</div>
+
+<div class="col-3">
+
+  <input class="form-control" type="text" name="record[init_vs_stamp]" id="" value="<%=record.init_vs_stamp%>">
+
+</div>
+
+</div>
+<%
+
+
+
+%>
+
 
 <div class="row">
+
+  <div class="col-3">
+  <label class="form-label " for="init_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[init_sbp]" id="" value="<%=record.init_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[init_dbp]" id="" value="<%=record.init_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_hr">HR</label>
+  <input class="form-control" type="text" name="record[init_hr]" id="" value="<%=record.init_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_rr">RR</label>
+  <input class="form-control" type="text" name="record[init_rr]" id="" value="<%=record.init_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[init_spo2]" id="" value="<%=record.init_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[init_gcs]" id="" value="<%=record.init_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_temp">BT</label>
+  <input class="form-control" type="text" name="record[init_temp]" id="" value="<%=record.init_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[init_dtx]" id="" value="<%=record.init_dtx%>">
+  </div>
+</div>
+</div>
+
+<hr/>
+
+<div class="col-12">
+  <div class="col-12">
+  <div class="row d-flex justify-content-between">
+  <div class="col-6">
+  <strong>
+    <label class="form-label " for="screening_vital">Vital Sign : Repeat </label>
+  </strong>
+  </div>
+
+  <div class="col-3">
+
+    <input class="form-control" type="text" name="record[repeat_vs_stamp]" id="" value="<%=record.repeat_vs_stamp%>">
+
+  </div>
+
+  </div>
+  </div>
+<div class="row">
+
+  <div class="col-3">
+  <label class="form-label " for="repeat_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[repeat_sbp]" id="" value="<%=record.repeat_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[repeat_dbp]" id="" value="<%=record.repeat_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_hr">HR</label>
+  <input class="form-control" type="text" name="record[repeat_hr]" id="" value="<%=record.repeat_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_rr">RR</label>
+  <input class="form-control" type="text" name="record[repeat_rr]" id="" value="<%=record.repeat_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[repeat_spo2]" id="" value="<%=record.repeat_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[repeat_gcs]" id="" value="<%=record.repeat_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_temp">BT</label>
+  <input class="form-control" type="text" name="record[repeat_temp]" id="" value="<%=record.repeat_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[repeat_dtx]" id="" value="<%=record.repeat_dtx%>">
+  </div>
+</div>
+</div>
+
+
+<hr/>
+
+<div class="col-12">
+  <div class="row d-flex justify-content-between">
+  <div class="col-6">
+  <strong>
+    <label class="form-label " for="screening_vital">Vital Sign : ED </label>
+  </strong>
+  </div>
+
+  <div class="col-3">
+
+    <input class="form-control" type="text" name="record[screen_vs_stamp]" id="" value="<%=record.screen_vs_stamp%>">
+
+  </div>
+
+  </div>
+<div class="row ">
 
   <div class="col-3">
   <label class="form-label " for="screen_sbp">SBP</label>
@@ -125,9 +287,9 @@
 </div>
 
 </div>
-
-
-
+<hr/>
+<strong><label class="form-label " for="">Transfer</label>
+</strong>
 <div class="col-8">
 <label class="form-label " for="transfer_hospital">โรงพยาบาลปลายทาง</label>
 <input class="form-control" type="text" name="record[transfer_hospital]" id="" value="<%=record.transfer_hospital%>">
@@ -139,9 +301,9 @@
 </div>
 
 <hr/>
-
+<strong>
 <label class="form-label " for="">Evaluation</label>
-
+</strong>
 <div class="col-4">
 <label class="form-label " for="dispatch_time">Dispatch Time (minutes)</label>
 <input class="form-control" type="text" name="record[dispatch_time]" id="" value="<%=record.dispatch_time%>">

@@ -25,16 +25,16 @@
 						<a class="btn btn-info btn-sm" id="select-ambulance" data-bs-toggle="modal" data-bs-target="#selectAmbulanceModal" type="submit" value="เลือก">เลือก</a>
 					</span>
 
-					</p><%= f.select(:ambulance_id, Ambulance.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					</p><%= f.select(:ambulance_id, Ambulance.where({:zone_id=>ems_case.zone_id}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
 
 
 
 
 					<p class="px-3">
 
-					Communication / สื่อสาร<span style="float:right"></span>
+					Communication Team<span style="float:right"></span>
 
-					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.channel_id,:class=>'form-select mb-3 mx-3 w-auto') %>
 
 
 
@@ -66,7 +66,7 @@
 
 
 						<div class="chip chip-md col-3">
-							<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person"><%=provider.name%>
+							<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person"><%=provider.name%>
 						</div>
 
 						<% end %>
@@ -119,7 +119,7 @@
 
 																		<div class="col-4 search-provider " id="provider-<%=i.id%>">
 																		<div class="chip chip-md chip-select  " provider_id="<%=i.id%>" >
-																			<img src="/rocker/assets/images/avatars/avatar-1.png" alt="Contact Person">
+																			<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person">
 																			<%=i.code%> : <%=i.name%>
 																		</div>
 																		</div>

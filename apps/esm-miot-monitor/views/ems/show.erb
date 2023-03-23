@@ -324,24 +324,31 @@ cls = record.init_code.get_class
 <div class="">
 <div class="">
 
-<div class="d-block d-sm-none" >
+<div class="d-block d-lg-none" >
 
 	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
-		<button type="button" class="tab-request btn btn-outline-primary">Request</button>
-		<button type="button" class="tab-prearrival btn btn-outline-primary">PreArrival</button>
-		<button type="button" class="tab-command btn btn-outline-primary">Command</button>
+		<button type="button" tab="request" class="col-4 qlink tab-request btn btn-outline-primary">Request</button>
+		<button type="button" tab="prearrival" class="col-4 qlink tab-prearrival btn btn-outline-primary">PreArrival</button>
+		<button type="button" tab="command" class="col-4 qlink tab-command btn btn-outline-primary">Command</button>
  	 </div>
 
 
  	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
 
-		<button type="button" class="tab-paramedic btn btn-outline-primary">Paramedic</button>
-		<button type="button" class="tab-emr btn btn-outline-primary">EMR</button>
-		<button type="button" class="tab-discharge btn btn-outline-primary">Discharge</button>
+		<button type="button" tab="paramedic"  class="col-4 qlink tab-paramedic btn btn-outline-primary">Paramedic</button>
+		<button type="button" tab="emr"  class="col-4 qlink tab-emr btn btn-outline-primary">EMR</button>
+		<button type="button"  tab="discharge"  class="col-4  qlink tab-discharge btn btn-outline-primary">Discharge</button>
 
 	</div>
 
+	<script>
+	 		$('.qlink').click(function(){
 
+				v = $(this).attr("tab")
+				$('#tab-'+v).click()
+
+			})
+		</script>
 </div>
 
 	<div class="ems_case"></div>
@@ -626,27 +633,29 @@ cls = record.init_code.get_class
 		$('.nav-link').each(function(){
 
 			obj = $(this)
-			if(obj.attr('data-bs-toggle')=='tab'){
+			// if(obj.attr('data-bs-toggle')=='tab'){
 				$(this).click(function(e){
 
 					obj = $(this)
 					sessionStorage.setItem("last_tab", obj.attr('href'));
 				})
-			}
+			// }
 
 		})
 
 		$(document).ready(function(){
 			<% unless params[:page] %>
+			tab =  sessionStorage.getItem("last_tab")
 
-			if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
-				  $('.nav-tabs a[href="' + sessionStorage.getItem("last_tab") + '"]').tab('show');
+			if(tab != null&&tab.length>0){
 
 			}else{
+				// alert('no '+sessionStorage.getItem("last_tab"))
+				tab = 'dashboard'
+				sessionStorage.setItem("last_tab", tab)
 
-				 $('.tab-dashboard').click()
 			}
-
+ 		// $('.tab-dashboard').click()
 			<% else %>
 
 		 $('.nav-tabs a[href="<%=params[:page]%>"]').tab('show');
@@ -680,7 +689,7 @@ cls = record.init_code.get_class
   tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
 
 
-  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+  var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
 
   ws.onopen    = function()  { show('websocket opened');

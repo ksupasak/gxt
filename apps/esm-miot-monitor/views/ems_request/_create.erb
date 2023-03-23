@@ -1,5 +1,5 @@
 
-
+<%= inline(this,:'../lib/_map')  %>
 <% if request.post?
 
 
@@ -12,7 +12,7 @@ if params[:record]
 	patient = Patient.find p[:patient_id] if p[:patient_id]
 
 	if p[:patient_hn] and p[:patient_hn].size>0
-		patient = Patient.where(:hn=>p[:patient_hn]).first unless patient  
+		patient = Patient.where(:hn=>p[:patient_hn]).first unless patient
 	end
 
 
@@ -67,6 +67,12 @@ if params[:record]
 
 	counter.update(:count=>counter.count+1)
 
+  if line_noti = Setting.get('line_access_code')
+
+	  message = record.noti_message
+		result =  EMSConnect.line_noti :message=>message
+
+	end
 
 path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 msg = 'NULL'
@@ -107,6 +113,8 @@ end
 </div>
 <% end %>
 <script>
-	$('#record_chief_complain').focus()
+	$('#record_contact_phone').focus()
 	refresh_remote()
 </script>
+
+<%=init_map%>

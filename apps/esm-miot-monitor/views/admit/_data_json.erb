@@ -1,0 +1,8 @@
+<%
+		
+admit = Admit.find params[:id]
+records = DataRecord.where(:admit_id=> admit.id).all
+res = {:patient=>admit.patient, :admit=>admit, :records=>records}
+
+	
+%><%=res.to_json%>

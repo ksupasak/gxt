@@ -3,89 +3,40 @@
 <%
   @record = record
 %>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
 <div class="card">
-<div class="card-header bg-primary text-white">
-<center>Stroke fast track</center>
-</div>
 
-<div class="card-body">
-  <div class="row">
+  <div class="card-header bg-primary text-white">
+  <center>Stroke</center>
+  </div>
 
-<div class="col-12">
-<h6 class="mb-0 text-primary">Stoke screen : FAST</h6>
-<table class="table table-bordered">
-<tr>
-<td>คะแนน</td>
-<td>คะแนน 0</td>
-<td>คะแนน 1</td>
-<td>คะแนน 2</td>
-</tr>
-<tr>
-<td>ปากเบี้ยว</td>
-<td>ไม่มี</td>
-<td>มุมปากไม่เท่ากัน</td>
-<td>มุมปากไม่ขยับเมื่อยิ้ม</td>
-</tr>
-<tr>
-<td>แขนอ่อนแรง</td>
-<td>ไม่อ่อนแรง</td>
-<td>ข้างเดียว พอยกได้</td>
-<td>ข้างเดียว ยกแขนขึ้นไม่ได้เลย</td>
-</tr>
-<tr>
-<td>การพูด</td>
-<td>ปกติ</td>
-<td>พูดไม่ชัด</td>
-<td>พูดไม่ได้ ตะกุกตะกัก ไม่รู้เรื่อง</td>
-</tr>
-<tr>
-<td colspan="4" align="center">คะแนน ≥1 = STROKE</td>
-</tr>
-</table>
+  <div class="card-body">
+    <div class="row">
 
-<center>
-***อ่อนแรงด้านซ้าย ประเมินเพิ่ม !!
-</center>
+<%= radio_string this, 'fast_track',   :value=>["Yes", "No"], :label=>'Fast track <span class="mandatory">*</span>' %>
 
-<table class="table table-bordered">
-<tr>
-<td>คะแนน</td>
-<td>คะแนน 0</td>
-<td>คะแนน 2</td>
-</tr>
-<tr>
-<td>การกรอกตา</td>
-<td>ปกติ</td>
-<td>ตา ข้าง มองด้านหนึ่งตลอดเวลา</td>
-</tr>
-<tr>
-<td>ไม่สนใจร่างกายครึ่งซีก</td>
-<td>ไม่มี</td>
-<td>ไม่สนใจร่างกายครึ่งซีกหรือไม่รู้ว่าเป็นแขนของตัวเอง</td>
-</tr>
-</table>
-
-คะแนนรวม 2 ส่วน _______ คะแนน ( > 4 พิจารณา Thrombectomy : โรงพยาบาลระดับ 3 )
-
-</div>
-
-<div class="col-12"><br/></div>
+<%= check_string this, 'chief_complain',:col_item=>'col-3', :col=>12,   :value=>%w{weakness dysarthria vertigo seizure อื่นๆ}, :label=>'Chief complain of Stroke <span class="mandatory">*</span>' %>
+<%= text_string this, 'chief_complain_other', :col=>4, :label=>''%>
 
 <div class="col-12">
-  <div class="text-sm text-warning">** โรงพยาบาล 1,2,3 อ้างอิง ตามไฟล์ สำรวจ ศักยภาพ Stroke **</div>
-  <%
-  list = <<LIST
-1|Door to CT time .......... Min
-2|Door to needle time...........min
-3|Door to intervention time ............. Min
-LIST
+<%= select_string this, 'upper_rt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Upper Rt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'upper_lt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Upper Lt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'lower_rt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Lower Rt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'lower_lt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Lower Lt. Motor Power <span class="mandatory">*</span>'%>
 
-%>
+<%= date_string this, 'last_seen_normal_time', :col=>4 , :label=>'Last seen normal <span class="mandatory">*</span>'%>
+<%= date_string this, 'first_seen_abnormal_time', :col=>4 , :label=>'First seen abnormal <span class="mandatory">*</span>'%>
+<%= date_string this, 'stroke_fasttrack_time', :col=>4 , :label=>'EMS Activated stoke fast track time'%>
+<%= date_string this, 'ct_time', :col=>4 , :label=>'CT time'%>
 
-<%= check_string this, 'timer', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>6 %>
+<%= text_string this, 'lvo_score', :col=>4, :label=>'LVO score <span class="mandatory">*</span>'%>
 
+<%= radio_string this, 'transfer',   :value=>["Yes", "No"], :label=>'Transfer stoke unit <span class="mandatory">*</span>' %>
+
+<%= radio_string this, 'thrombectomy',   :value=>["Yes", "No"], :label=>'Thrombectomy' %>
 </div>
-
-  </div><!--row-->
-</div><!--card body-->
+    </div><!--row-->
+  </div><!--card body-->
 </div><!--card-->

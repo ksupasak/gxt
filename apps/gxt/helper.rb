@@ -8,7 +8,7 @@ require 'barby/outputter/png_outputter'
 
 def register_app name, application, extended=nil
 
-  settings.redis.sadd application, name 
+  settings.redis.sadd application, name
 
   for name in settings.redis.smembers(application)
 
@@ -17,13 +17,13 @@ def register_app name, application, extended=nil
   settings.apps_rv[application] = [] unless  settings.apps_rv[application]
   settings.apps_rv[application] << name
   # settings.extended[application] = extended if extended
-  
+
   settings.redis.set "GXT|#{name}",  application
-  # settings.redis.sadd application, name 
-  
+  # settings.redis.sadd application, name
+
   end
-  # settings.redis.set "", name 
-  
+  # settings.redis.set "", name
+
 
 end
 
@@ -34,15 +34,15 @@ def get_solutions application
   # settings.redis.sadd application, name
 
   return  settings.redis.smembers(application)
-  
+
 
 end
 
 
 def google_direction origin, distination, key
-  
+
     	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{origin}&destination=#{distination}&key=#{key}"
-  
+
       uri = URI(url)
 
       data = nil
@@ -52,65 +52,65 @@ def google_direction origin, distination, key
         request = Net::HTTP::Get.new uri
 
         response = http.request request # Net::HTTPResponse object
-        
+
         data = response.body
-        
+
       end
-      
+
       if data
-        
+
     	obj = JSON.parse data
-	
+
       # puts obj.inspect
-	
+
     	if obj['geocoded_waypoints'][0]['geocoder_status']=='OK'
-	
+
     	routes = obj['routes']
-	
+
     	best_route = routes[0]
     	legs = best_route['legs']
     	best_leg_0 = legs[0]
     	best_leg = legs[legs.length-1]
-	
+
     	total_distance = 0
     	total_duration = 0
-	
+
 
     	distance = best_leg_0['distance']
-	
+
     	duration = best_leg_0['duration']
-		 
+
     	for i in legs
-		
+
     		total_distance+= i['distance']['value']
     		total_duration+= i['duration']['value']
-		
+
     	end
-		
+
     	total_duration_i = total_duration/3600.0
-		
-    	total_distance_text = "#{(total_distance/1000).round(1)} km"	
+
+    	total_distance_text = "#{(total_distance/1000).round(1)} km"
     	total_duration_text = ""
-	
-    	h = 0 
+
+    	h = 0
     	total_duration_text += "#{total_duration_i.to_i } hours " if total_duration_i.to_i > 0
-	
-    	m = 0 
-    	m = ((total_duration_i%1)*60).to_i  
-    	total_duration_text += "#{m} mins" 
-	
+
+    	m = 0
+    	m = ((total_duration_i%1)*60).to_i
+    	total_duration_text += "#{m} mins"
+
       puts "Get Direction #{origin} To #{distination}"
-      puts "distance_text #{total_distance_text}"  
-      puts "duration_text #{total_duration_text}"  
-  
-      
+      puts "distance_text #{total_distance_text}"
+      puts "duration_text #{total_duration_text}"
+
+
       return {:status=>'200 OK', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location'], :end_address=>best_leg['end_address'],:end_location=>best_leg['end_location'],:total_distance=>{:text=>total_distance_text,:value=>total_distance},:total_duration=>{:text=>total_duration_text,:value=>total_duration},:distance=>distance, :duration=>duration}
-	   
-      end  
+
       end
-      
+      end
+
       return {:status=>'505 ERROR'}
-  
+
 end
 
 
@@ -124,7 +124,7 @@ def normalize_distance_of_time_argument_to_time(value)
         end
       end
 def time_ago_in_words(from_time, options = {})
-  
+
   distance_of_time_in_words(from_time, Time.now, options) if from_time
 end
 
@@ -194,17 +194,17 @@ def distance_of_time_in_words(from_time, to_time = 0, options = {})
 end
 
 def add_module path, name, mname=nil
-  
+
   require_relative "#{path}/modules/#{name}/controller"
   if mname
     m =  eval(mname)
-    # include m 
-    
+    # include m
+
     # init
-    
+
   end
-  
-    
+
+
 end
 
 
@@ -213,19 +213,19 @@ helpers do
   def username
     session[:identity] ? session[:identity] : '-'
   end
-  
+
   def current_user
     settings.current_user ? settings.current_user : '-'
   end
-  
+
   def current_role
     settings.current_role ? settings.current_role : '-'
   end
-  
-  
+
+
   def link_to name, url, options=nil
-    
-      if options 
+
+      if options
        opt = []
        options.each_pair do |k,v|
         opt << "#{k}='#{v}'"
@@ -234,155 +234,155 @@ helpers do
        end
     class_opt = ''
     class_opt = "class='#{options[:class]}'" if options and options[:class]
-    
+
     "<a href='#{url.html_safe}' #{class_opt} #{opt}>#{name}</a>"
   end
-  
+
   def fn num
     s = n
-    
+
   end
-  
+
   def image_id_tag att_id, options=nil
      att = Attachment.find(att_id)
      opt = ""
-     if options 
+     if options
      opt = []
      options.each_pair do |k,v|
       opt << "#{k}='#{v}'"
      end
      opt = opt.join(" ")
      end
-     
+
      if att
        "<img src='../Attachment/content?id=#{att.id}' #{opt}>"
      end
   end
-  
+
   def form_for name, url, &block
-    
+
       return block
-      
-      
+
+
   end
-  
+
   def text_field_tag name, value, options={}
-      
+
       "<input name='#{name}' type='text' value='#{value}' #{options.collect{|k,v| "#{k}='#{v}'" }.join(" ")} />"
   end
-  
-  
+
+
   def redirect_to url, delay=0
     '<meta http-equiv="refresh" content="'+delay.to_s+'; url='+url+'" />'
   end
-  
+
   def url_for url
     "/#{settings.name}/#{url}"
   end
-  
+
   def view v
       settings.app
   end
-  
-  
+
+
 
   def tabular ps
-    
+
     results = []
-    
+
     for i in ps[:data]
-      
+
     out = []
-		
+
     for c in ps[:model]
 			out << i[c]
 		end
-    
+
     out = yield i, out
-		
+
     results << out
-    
+
     end
-    
-  
+
+
     ps[:out] = results
-  
-    path = File.join("..","..", "gxt" ,"views", "tabular") 
+
+    path = File.join("..","..", "gxt" ,"views", "tabular")
     @context.erb :"#{path}", :locals=>{:this=>self, :ps=>ps}
   end
-  
+
   def data_field model
-      
-      
+
+
       keys = model.keys
       res = keys
       res = keys.collect{|k| k if k[0].!='created_at' and k[0].!='updated_at' and k[0][0]!='_'}.compact
-    
+
       return res
-    
+
   end
-  
+
   def solve this, p
-    
-    
+
+
     path = :"#{params[:service].split(':').underscore}/#{p}"
     # puts "test #{File.join("#{path}.erb")}"
     unless FileTest.exist? File.join(settings.views,"#{path}.erb")
-      path = File.join("..","..", "gxt" ,"views", "document", p.to_s) 
+      path = File.join("..","..", "gxt" ,"views", "document", p.to_s)
     end
     path
-    
+
   end
-  
+
   def send_all msg
     EM.next_tick {  settings.apps_ws[settings.app].each{|s| s.send(msg) } }
   end
-  
+
   def inline this, p, locals={}
-    
-    
+
+
     path = :"#{params[:service].split(':')[-1].underscore}/#{p}"
     # puts "test #{File.join("#{path}.erb")}"
     unless FileTest.exist? File.join(settings.views,"#{path}.erb")
-      path = File.join("..","..", "gxt" ,"views", "document", p.to_s) 
+      path = File.join("..","..", "gxt" ,"views", "document", p.to_s)
     end
     path
-    
+
     partial path, :locals=>{:this=>this}.merge(locals)
-    
+
   end
-  
-  
-  
+
+
+
 end
 
 
-class GXT 
+class GXT
 
-  
 
-def default_layout 
+
+def default_layout
  true
 end
 
 
 
-  
-attr_accessor :request  
-  
-def setRequest request
-  puts request
-   @request
-end  
 
-def request 
+attr_accessor :request
+
+def setRequest request
+  # puts request
+   @request
+end
+
+def request
    return @request
 end
-  
+
 def initialize context, settings
     @context = context
     @settings =  @context.settings
-end  
+end
 
 def controller
   "#{self.class.name.gsub("Controller","").split(':')[-1].underscore}"
@@ -393,56 +393,56 @@ def settings
 end
 
 def switch name
-    
-    settings.set :name, name 
+
+    settings.set :name, name
     settings.set :app, settings.apps[name]
     # MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
     Mongoid.override_database("#{settings.mongo_prefix}-#{settings.name}")
-    
+
 end
 
 def method_missing(m, *args, &block)
-  
+
   ctrl = controller
-     
+
    # puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
-  
+
   # , :layout => false
-   
+
    layout = default_layout
-   
+
    # puts "LOOK #{File.join(@settings.views, self.class.views, ctrl, "_#{m}.erb")}"
-   
+
    if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")
-      
+
       path = File.join(ctrl,m.to_s)
-      
+
    elsif FileTest.exist? File.join(@settings.views, ctrl, "_#{m}.erb")
        path = File.join(ctrl,"_"+m.to_s)
-       layout = false    
-      
-      
+       layout = false
+
+
    elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "#{m}.erb")
-   
+
       path = File.join(self.class.views,ctrl,m.to_s)
-      
-  
-      
+
+
+
    elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "_#{m}.erb")
      path = File.join(self.class.views,ctrl,"_"+m.to_s)
        layout = false
    else
-      
+
       ctrl = 'document'
-      path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s) 
-   
+      path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s)
+
    end
-   
-   puts "path = #{path}"
-   
+
+   # puts "path = #{path}"
+
       @context.erb :"#{path}", :locals=>{:this=>self}, :layout=>layout
-  
-  
+
+
    # @context.erb :"#{self.class.name.gsub("Controller","").downcase}/#{m}"
 end
 
@@ -453,39 +453,39 @@ def name service
 end
 
 class GXTDocument < GXT
-  
-  
+
+
   class_attribute :module_name
-  
-  
-  
+
+
+
   def model
     eval "#{self.class.name.gsub("Controller","")}"
   end
-  
+
   def self.views
     # "../modules/user/views"
     nil
   end
-  
+
   def method_missing(m, *args, &block)
-     
-     
+
+
      ctrl = controller
-       
+
      # puts "test "+ File.join(@settings.views, self.class.views, ctrl, "#{m}.erb") if self.class.views
-   
+
     layout = default_layout
 
-     
+
      if FileTest.exist? File.join(@settings.views, ctrl, "#{m}.erb")
-        
+
         path = File.join(ctrl,m.to_s)
-      
+
      elsif self.class.views and FileTest.exist? File.join(@settings.views, self.class.views, ctrl, "#{m}.erb")
-     
+
         path = File.join(self.class.views,ctrl,m.to_s)
-        
+
      elsif FileTest.exist? File.join(@settings.views, ctrl, "_#{m}.erb")
 
               path = File.join(ctrl,'_'+m.to_s)
@@ -495,18 +495,18 @@ class GXTDocument < GXT
 
               path = File.join(self.class.views,ctrl,'_'+m.to_s)
               layout = false
-              
+
      else
-        
+
         ctrl = 'document'
-        path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s) 
-     
+        path = File.join("..","..", "gxt" ,"views", ctrl, m.to_s)
+
      end
-     
-     puts "path = #{path}"
-     
+
+     # puts "path = #{path}"
+
         @context.erb :"#{path}", :locals=>{:this=>self}, :layout=>layout
-    
+
   end
 end
 

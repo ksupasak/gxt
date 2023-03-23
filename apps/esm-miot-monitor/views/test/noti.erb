@@ -1,0 +1,22 @@
+<%
+# require "uri"
+# require "net/http"
+#
+# url = URI("https://notify-api.line.me/api/notify")
+#
+# https = Net::HTTP.new(url.host, url.port)
+# https.use_ssl = true
+# line_access_code = Setting.get('line_access_code')
+# request = Net::HTTP::Post.new(url)
+# request["Authorization"] = "Bearer #{line_access_code}"
+# request["Content-Type"] = "application/x-www-form-urlencoded"
+# request.body = "message=Hello%20world"
+#
+# response = https.request(request)
+# puts response.read_body
+
+  result =  EMSConnect.line_noti :message=>"Hello world"
+
+%>
+
+<%=result %>

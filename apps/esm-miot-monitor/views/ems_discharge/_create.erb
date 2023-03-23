@@ -77,6 +77,49 @@ end
 rescue Exception=>each
 
 end
+
+
+
+if true
+
+		# records = DataRecord.where(:admit_id=>admit.id).all
+
+		records = DataRecord.where(:admit_id=>admit.id, :bp_sys=>{"$gte"=>0}).sort(:stamp=>1).all
+
+		if records.size > 0
+
+    if records[0]
+				r = records[0]
+				ems_case.init_vs_stamp = r.stamp
+				ems_case.init_sbp = r.bp_sys
+				ems_case.init_dbp = r.bp_dia
+				ems_case.init_hr = r.hr
+				ems_case.init_rr = r.rr
+				ems_case.init_spo2 = r.spo2
+				ems_case.init_temp = r.temp
+
+		end
+		if records[-1]
+				r = records[-1]
+				ems_case.screen_vs_stamp = r.stamp if r.stamp > 0
+				ems_case.screen_sbp = r.bp_sys if r.bp_sys > 0
+				ems_case.screen_dbp = r.bp_dia if r.bp_dia > 0
+				ems_case.screen_hr = r.hr if r.hr > 0
+				ems_case.screen_rr = r.rr if r.rr > 0
+				ems_case.screen_spo2 = r.spo2 if r.spo2 > 0
+				ems_case.screen_temp = r.temp if r.temp > 0
+
+		end
+%>
+		<%=records[0].stamp%>
+		<%=records[-1].stamp%>
+<%
+
+end
+
+end
+
+
 # key :dispatch_time, Integer
 # key :activation_time, Integer
 # key :response_time, Integer
@@ -140,7 +183,19 @@ end
 
   <div class="card-body">
 
-    dsfadsf
+    <div class="summary">-</div>
+		<script>
+			$.ajax({
+				url: "<%="../EMS/summary"%>?id=<%=record.id%>",
+			  context: document.body
+			}).done(function(data) {
+			  $( '.summary' ).html(data);
+
+
+			});
+
+		</script>
+
 
   </div>
 </div>

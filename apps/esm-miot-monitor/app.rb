@@ -320,6 +320,14 @@ class HomeController < GXT
 
   def websocket request
 
+
+
+       EM.run do
+
+                      c = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
+                      puts "REDIS CONFIG SERVICE 1 : #{c}"
+                      redisx = EM::Hiredis.connect c
+
         request.websocket do |ws|
 
 
@@ -351,12 +359,168 @@ class HomeController < GXT
 
              redis = @context.settings.redis
 
-             # forward to redis
-             redis.publish("miot/#{@context.settings.name}/in", msg_data)
+             # @context.settings.redis = redis
 
+
+             # fast check header
+
+             if msg_data[0..2] == 'PTT'
+               puts 'Forward to PTT'
+
+               # redis.publish("PTT/miot/z/0", msg_data)
+
+
+               redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
+
+       elsif msg_data[0..2] == 'PAT'
+
+               puts msg_data
+
+               lines = msg_data.split("\n")
+               tags = lines[0].split(" ")
+               ambu_name = tags[-1].split('=')[-1]
+
+               eobj = JSON.parse(lines[1])
+
+               obj = eobj['data']
+
+               ambu = Ambulance.where(:name=>eobj['receiver']).first
+
+               if ambu
+
+                  ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+
+                  if ems_case
+
+                      patient_name = "#{obj['prefix_name']}#{obj['first_name']} #{obj['last_name']}"
+                      patient_cid = obj['cid']
+                      gender = "NA"
+                      if obj['gender'] == '1'
+                        gender = "M"
+                      elsif obj['gender'] =='2'
+                        gender = "F"
+                      end
+                      patient_gender = gender
+
+
+                      patient_birth_date = (obj['birth_date'][0..3].to_i-543).to_s+obj['birth_date'][4..-1]
+
+                      age = Time.now.year - (obj['birth_date'][0..3].to_i-543)
+
+                      patient_age = "#{age}"
+
+                      puts msg_data
+
+                      ems_case.update_attributes :patient_name=>patient_name, :patient_cid=>patient_cid, :patient_age=>patient_age, :patient_gender=>patient_gender,:patient_birth_date=> patient_birth_date
+
+                      puts msg_data.inspect
+
+
+                      connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+                      grid = Mongo::Grid::FSBucket.new(connection.database)
+
+                      filename = "pic.jpg"
+                      content =  Base64.decode64(obj['image'])
+                      fid = grid.upload_from_stream(filename,content)
+
+                      msg = Message.create :channel_id=> ems_case.channel_id, :sender=> "CardReader", :recipient=> "", :recipient_type=> "NA", :content=> "PIC#{ems_case.id}.jpg", :ts=> Time.now.to_i, :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
+path = "miot/#{@context.settings.name}/z/#{ambu.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                    redisx.publish(path, send_msg)
+
+
+                  end
+
+               end
+             elsif msg_data[0..2] == 'IMG'
+
+                              puts msg_data
+
+                              lines = msg_data.split("\n")
+                              tags = lines[0].split(" ")
+                              ambu_name = tags[-1].split('=')[-1]
+
+                               json = JSON.parse(lines[1])
+
+
+
+
+                              ambu = Ambulance.where(:name=>json['receiver']).first
+
+                              if ambu
+
+                                puts 'found ambu'
+
+                                ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+
+                                if ems_case
+
+                                  puts 'found case'
+                                      obj = json['data']
+
+                                      connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+                                      grid = Mongo::Grid::FSBucket.new(connection.database)
+
+                                      filename = obj['filename']
+                                      content =  Base64.decode64(obj['image'])
+                                      fid = grid.upload_from_stream(filename,content)
+
+                                puts 'create msg'
+                                      if  obj['uuid']==nil
+                                        msg = Message.create :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+                                      else
+
+                                          old_msg = Message.where(:admit_id=>ems_case.admit_id, :uuid=>obj['uuid']).first
+                                          unless old_msg
+
+                                            msg = Message.create :uuid=>obj[:uuid], :channel_id=> ems_case.channel_id, :sender=> obj['sender'], :recipient=> obj['recevier'], :recipient_type=> "NA", :content=> obj['note'], :ts=> obj['ts'], :type=>"image", :media_type=>"image", :file_id=>fid, :admit_id=>ems_case.admit_id
+
+                                          end
+
+
+
+                                      end
+
+                                      path = "miot/#{@context.settings.name}/z/#{ambu.zone.name}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+                                      redisx.publish(path, send_msg)
+
+                                 end
+
+                              end
+
+             elsif msg_data[0..2] == 'GPS'
+
+               # puts msg_data
+
+               redis.publish("miot/#{@context.settings.name}/in", msg_data)
+
+
+             else
+
+             # forward to redis
+               redis.publish("miot/#{@context.settings.name}/in", msg_data)
+
+             end
 
 
              msgs = msg_data.split("EOL\n")
+
 
              for msg in msgs
 
@@ -446,10 +610,8 @@ class HomeController < GXT
                   icmd = t[0]
                   ipath = t[1]
 
-                  if icmd=='Zone'
-                    puts '****************'
+                  if icmd=='Zone' or icmd=='PTT' or icmd=='EMSUpdate'
 
-                    puts "#{ipath} #{ch_map.inspect}"
                     ch = ipath
 
                     unless ch_map[ch]
@@ -459,7 +621,7 @@ class HomeController < GXT
 
                     ch_map[ch][:ws][wsname] = true
 
-
+                        puts "#{ipath} #{ch_map.inspect}"
 
 
                   else
@@ -593,7 +755,7 @@ class HomeController < GXT
          end
 
   end
-
+end
 
   end
 

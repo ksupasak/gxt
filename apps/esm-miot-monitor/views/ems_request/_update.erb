@@ -1,24 +1,31 @@
-<% 
+<%
 
 	record = EMSCase.find params[:id]
-	
-	
-
-if request.post? 
 
 
-	
+
+if request.post?
+
+
+
 if params[:record]
 
 	p = params[:record]
-	
+
 	patient_id = nil
 	patient = Patient.find p[:patient_id] if p[:patient_id]
-	
-	
-	patient_id = patient.id if patient 
-		
-	
+
+
+	patient_id = patient.id if patient
+
+	# if location change then notify
+
+	if p[:latlng] != record.latlng
+
+			record.relocation_target p[:latlng]
+
+	end
+
 	record.update_attributes p
 
 path = "miot/#{@context.settings.name}/z/#{record.zone.name}"
@@ -27,10 +34,10 @@ send_msg = <<MSG
 #{'Zone.Refresh'} #{path}
 #{msg.to_json}
 MSG
-@context.settings.redis.publish(path, send_msg)			
-	
+@context.settings.redis.publish(path, send_msg)
+
 end
-	
+
 
 
 %>

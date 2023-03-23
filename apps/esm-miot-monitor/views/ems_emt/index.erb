@@ -1,0 +1,536 @@
+
+<%= inline(this,:'../lib/_map')  %>
+
+<%= inline(this,:'_init')  %>
+
+
+
+<style>
+       /* Set the size of the div element that contains the map */
+      #dashboard-map {
+        height: 250px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+
+    </style>
+
+<%
+
+record = @current_case
+
+     if record
+
+     com_list = EMSCommand.where(:case_id=>record.id, :ambulance_id=>@current_ambulance.id).all
+
+    if com_list.size==1
+
+     com = com_list[0]
+     admit = record.admit
+
+     last_mile = com.ambulance.last_mile
+
+     last_log = admit.logs.where(:status=>'PENDING').sort(:sort_order=>1).first
+     current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
+     previous_log = admit.logs.where(:admit_id=>last_log.admit_id, :sort_order=>last_log.sort_order-1).first if last_log
+
+
+     last_mile = previous_log.mile_meter if previous_log  and  previous_log.mile_meter
+
+   end
+
+
+
+%>
+
+<style>
+.modal-header{
+  padding:5px;
+}
+.modal-body{
+  padding:5px;
+}
+
+.modal-footer{
+  padding:5px;
+}
+
+</style>
+
+<% if last_log %>
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="modal_tracking" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-sm " style="max-width:300px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><span class="tracking_msg"> <%=last_log.name %></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="font-size:1.5em">
+        <center>
+        <input type="text" class="mile_meter" value="<%=last_mile %>" style="width:120px;text-align:center;font-size:1.5em"/>
+        </center>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <div class="col-4">
+        <a type="button" class="btn btn-secondary btn-success mile-plus">+</a>
+        <a type="button" class="btn btn-secondary btn-danger mile-minus">-</a>
+        </div>
+        <div class="col-7" style="text-align:right">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary mile-submit">Submit</button>
+        </div>
+        <script>
+            $('.mile-plus').click(function(e){
+                v = parseInt($('.mile_meter').val())
+                $('.mile_meter').val(v+1)
+            })
+            $('.mile-minus').click(function(e){
+                v = parseInt($('.mile_meter').val())
+                $('.mile_meter').val(v-1)
+            })
+
+            $('.mile-submit').click(function(e){
+                v = parseInt($('.mile_meter').val())
+
+
+                // Assign handlers immediately after making the request,
+                // and remember the jqxhr object for this request
+                var jqxhr = $.post( "check?id=<%=com.id%>&admit_log_id=<%=last_log.id%>&mile_meter="+v, function() {
+                  console.log("sueccess")
+                  // alert( "success" );
+                  	window.location.reload();
+                })
+                  .done(function() {
+                       console.log( "second success" );
+                  	window.location.reload();
+                  })
+                  .fail(function() {
+                       console.log( "error" );
+                    	window.location.reload();
+                  })
+                  .always(function() {
+                       console.log( "finished" );
+                    	window.location.reload();
+                  });
+
+                // Perform other work here ...
+
+                // Set another completion function for the request above
+                jqxhr.always(function() {
+                     console.log( "second finished" );
+                  	window.location.reload();
+                });
+
+                	window.location.reload();
+
+              //
+              // $.post( "check?id=<%=com.id%>&admit_log_id=<%=last_log.id%>&mile_meter="+v, function( data ) {
+              //
+              //   location.reload();
+              //
+              // });
+
+            })
+
+        </script>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<% end %>
+
+
+
+<% end %>
+
+
+<div class="row no-gutters g-0">
+<div class="col-9">
+<div id="dashboard-map" class="" style="height:60vh">
+  map
+</div>
+</div>
+
+
+
+<div class="col-3">
+  <div class="row  g-3" style="padding-top:5px">
+
+
+        <% if record %>
+    <div class="col-12">
+      <button type="button" class="btn btn-primary px-4  radius-5" style="width:100%;">
+        INFO</button>
+    </div>
+    <div class="col-12">
+      <% if current_route %>
+      <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
+      <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
+        NAV</a>-->
+
+        <a href="https://www.google.com/maps/dir/<%=current_route.stop_latlng.split().join()%>" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
+          NAV</a>
+
+
+        <% end %>
+    </div>
+
+
+      <% if last_log %>
+      <div class="col-12">
+        <a href="#"  data-bs-toggle="modal"  data-bs-target="#modal_tracking" class=" btn-tracking btn btn-success   radius-5" style=" width:100%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;">
+          <%=last_log.name%></a>
+      </div>
+      <%  end %>
+
+      <div class="col-12">
+        <% if current_route %>
+        <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
+        <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
+          NAV</a>-->
+
+          <a href="https://pcm-life.com:4443/#/<%=record.case_no %>" class="btn-nav btn btn-danger text-white px-4  radius-5" style="width:100%;">
+            Video</a>
+
+
+          <% end %>
+      </div>
+
+    <% end %>
+
+      <div class="col">
+        <!-- <button type="button" class="btn btn-primary noti-button"  data-bs-toggle="modal" data-bs-target="#modal_notification">Notification</button>
+        <button type="button" class="btn btn-primary noti-button"  data-bs-toggle="modal" data-bs-target="#modal_tracking">Tracking</button> -->
+          <!-- <button type="button" class="btn btn-primary px-4 radius-30">Primary</button> -->
+      </div>
+      <div class="col">
+          <!-- <button type="button" class="btn btn-primary  px-4 radius-30">Primary</button> -->
+      </div>
+  </div>
+
+</div>
+
+</div>
+
+<div class="row">
+<div class="col">
+	<!-- Button trigger modal -->
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="modal_notification" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title noti_title" id="exampleModalLabel">Notification</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+                <div class="noti_msg"></div>
+                <input type="hidden" class="noti_url_accept" value=""/>
+                <input type="hidden" class="noti_url_denied" value=""/>
+
+          <br/>
+        </div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary modal_notification_denied" data-bs-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary modal_notification_accept">OK</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal-x" style="display: none;" >
+<div class="modal-backdrop fade show"></div>
+</div>
+
+<script>
+
+
+
+  $(document).ready(function(){
+
+
+
+  latlng = [13.69313508354787, 100.69198345629769]
+
+
+  <% if record and  record.latlng and record.latlng.index(',') %>
+  latlng = [<%=record.latlng%>]
+  <% end %>
+
+
+
+  map1 = new EMSMap('dashboard-map',{movable:true});
+  map1.setPosition(latlng[0], latlng[1])
+  map1.setMarkerPosition(latlng[0], latlng[1])
+	map1.changeMarkerPosition(function(marker){
+
+  });
+
+  // map1.init()
+
+})
+
+</script>
+<%= init_map %>
+
+
+<div class="msg" style="color:gray;font-size:0.8em"></div>
+
+<div class="msg2" style="color:gray;font-size:0.8em"></div>
+
+<script>
+
+
+
+
+  var noti_status=false;
+  var modal_id = null;
+
+ function modal(id){
+
+     $(id).css('display','block')
+     $(id).addClass('show')
+     modal_id= id
+     $(id).find('button[data-bs-dismiss="modal"]').each(function(){
+       $(this).click(function(){
+          $(modal_id).hide()
+          $('.modal-x').hide()
+       })
+     })
+     $('.modal-x').show()
+
+
+     // $('.modal-backdrop').addClass('show')
+
+ }
+
+$('.btn-tracking').click(function(){
+// $('#modal_notification').modal('show');
+modal('#modal_tracking')
+
+})
+
+$('.noti-button').click(function(){
+  // $('#modal_notification').modal('show');
+modal('#modal_notification')
+
+})
+
+
+
+  function show(msg){
+    $('.msg2').html(msg)
+  }
+
+  var ws = null
+
+  function connect(){
+
+
+  // ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+  ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+  ws.onopen    = function()  { show('websocket opened');
+
+  	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>"]')
+
+
+  };
+
+
+  ws.onerror = function(){
+
+    noti_msg('Reconnect in 5 seconds')
+    ws.close()
+    // alert('Reconnect in 5 sec')
+    setTimeout(function () {
+        // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+        connect()
+
+     }, 10000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onclose   = function()  { show('websocket closed');
+
+ 	// setTimeout(function () {
+  //      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+  //      connect()
+  //
+  //   }, 10000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) {
+
+
+
+
+	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
+
+
+		lines = m.data.split("\n")
+
+		// console.log(lines[0].split(" ")[0])
+
+		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+
+			window.location.reload();
+
+		}else
+    if(lines[0].split(" ")[0]=='EMSUpdate'){
+
+
+
+       obj = JSON.parse(lines[1])
+
+       jQuery.each(obj['ems_data'], function (key, val) {
+
+       // Object.values().forEach(val => {
+
+         // console.log(val)
+         jQuery.each(val['commands'], function (key, cmd) {
+         // Object.values(val['commands']).forEach(cmd => {
+
+           // console.log('EMT noti')
+
+
+           if(cmd['driver_emt_id']==null){
+             if(noti_status==false){
+
+            // console.log(cmd)
+             $('.noti_title').html("Accept Case");
+
+             $('.noti_msg').html("Case No : "+val['case_record']['case_no']+"<br/>Location : "+val['case_record']['location']+"<br/>Tel : "+val['case_record']['contact_phone']);
+
+
+
+             $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_accept"+"&command_id="+cmd['_id'])
+             $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_denied"+"&command_id="+cmd['_id'])
+             // $('#modal_notification').modal('show');
+             modal('#modal_notification')
+
+             noti_status = true;
+            }
+
+
+           }
+
+
+         });
+
+         jQuery.each(val['routes'], function (key, route) {
+         // Object.values(val['routes']).forEach(route => {
+
+
+
+           if(route['response']==null){
+
+
+             console.log('EMT route')
+
+
+
+               if(noti_status==false){
+              console.log('EMT case noti')
+              // console.log(cmd)
+
+               $('.noti_title').html("Route Update / Transfer");
+
+               $('.noti_msg').html("Change Route");
+
+               $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])
+               $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_denied"+"&route_id="+route['_id'])
+               // $('#modal_notification').modal('show');
+               modal('#modal_notification')
+
+               noti_status = true;
+
+
+
+             }
+
+           }
+
+
+         });
+
+
+
+
+       });
+
+    }else
+
+    if(lines[0].split(" ")[0]=='Zone.Message'){
+
+			// reload_message()
+
+		}else
+
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+
+			update(lines)
+
+
+		}
+
+
+
+
+  }
+
+}
+
+
+
+  $('.modal_notification_accept').click(function(){
+    url = $('.noti_url_accept').val()
+    window.location=url
+
+  })
+
+  $('.modal_notification_denied').click(function(){
+    url = $('.noti_url_denied').val()
+    window.location=url
+
+  })
+
+
+function noti_msg(msg) {
+	Lobibox.notify('warning', {
+		pauseDelayOnHover: true,
+		size: 'mini',
+		rounded: true,
+		delayIndicator: false,
+		icon: 'bx bx-error',
+		continueDelayOnInactiveTab: false,
+		position: 'top center',
+		msg: msg
+	});
+}
+
+
+  function update(lines){
+    console.log(lines)
+    show(lines[0])
+  }
+$(document).ready(function(){
+  connect()
+
+})
+
+
+</script>

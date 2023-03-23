@@ -20,36 +20,34 @@ puts "Info: #{$a.iface} #{$a.address} #{$a.name}"
 
 # Run discovery
 
-puts BLE::ok?
+puts "BLE : "+ BLE::ok?.to_s
 
 $a.start_discovery
 
  
-o_bluez = BLUEZ.object('/org/bluez')
-o_bluez.introspect
-
-
-@o_adapter = BLUEZ.object("/org/bluez/#{@iface}")
-@o_adapter.introspect
+#o_bluez = BLUEZ.object('/org/bluez')
+#o_bluez.introspect
+#@o_adapter = BLUEZ.object("/org/bluez/#{@iface}")
+#@o_adapter.introspect
         
 
 #puts  @o_adapter.methods.sort 
 
-
-address = ['C0:26:DA:01:DA:F0']
-address = ['C0:26:DA:10:C1:92']
-address = [ENV['TEMP_ADDRESS']] if ENV['TEMP_ADDRESS']
+address = []
+address += ['C0:26:DA:01:DA:F0']
+address += ['C0:26:DA:10:C1:92']
+address += [ENV['TEMP_ADDRESS']] if ENV['TEMP_ADDRESS']
 puts "TEMP #{address}"
 
 while true
 
 
 # .introspect # Force refresh
-#puts 'start scan'
-sleep(0.1)
+#puts 'BLE : start scan'
+sleep(1)
 #puts $a.devices.inspect 
 
-#puts BLE::Adapter.list
+puts "BLE : #{BLE::Adapter.list.size}"
 
 
 #address = ['C0:26:DA:01:DA:F0']
@@ -57,50 +55,84 @@ sleep(0.1)
 #puts "TEMP #{address}"
 devices = {}
 
-begin
+
 
 for i in $a.devices
-#    d = $a[i]
 
- #    puts "#{i} #{d.alias}" if d.alias.index "TAIDOC"  
+
+begin
+
+    d = $a[i]
+
+ #     puts "#{i} #{d.alias}" #if d.alias.index "TAIDOC"  
   if address.index(i)
+       
+	
     
     d = $a[i]
 
       if  (d.alias=='TAIDOC TD1261' or d.alias=='TAIDOC TD1107' )
 
+<<<<<<< HEAD
          #     puts "Found #{d.alias} #{i}"
              if false
+=======
+             puts "Found #{d.alias} #{i}"
+              
+             lines = []
+
+             lines << "STATUS:T1|T1:0.0"
+>>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
+
+                msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+
+#                puts msg
+
+#                puts  ws.send(msg)
+
+              
 
               d.on_signal do |intf,props|
 
-              puts "#{intf} #{props.inspect}"
+              puts "BLE : #{intf} #{props.inspect}"
 
-              case intf
-              when BLE::I_DEVICE
-
-
-                      if  props['ServicesResolved']
-                              devices.delete d.address
-                      end
-
-
-              end 
               
-            end
+              end
             
             end
             
             #puts 'connect '+devices.inspect
             d.connect
+	    d.refresh
 
+	    count = 10 
+
+<<<<<<< HEAD
 	    o = d.refresh!
 		
 	  
+=======
 
-            if devices[i] == nil
+	    while count>0
+>>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
+              		count -=1
+                        puts '.'
+                        d = $a[i]
+                        #d.refresh
+                        #puts d.services.size
+
+<<<<<<< HEAD
                            service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
+=======
+                        if d.services.size>0
+
+
+                    	   service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
+>>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
                            char_uuid = '00002a1c-0000-1000-8000-00805f9b34fb'
 			
                            #00002a1c-0000-1000-8000-00805f9b34fb
@@ -109,6 +141,7 @@ for i in $a.devices
 		            
                              d.services.each do |s|
 
+<<<<<<< HEAD
 			
                             if s==service_uuid
 				   
@@ -117,6 +150,12 @@ for i in $a.devices
 
 
                                     d.subscribe(service_uuid,char_uuid) do |raw|
+=======
+
+                            if s == service_uuid
+                                
+				    d.subscribe_indicate(service_uuid,char_uuid) do |raw|
+>>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
                                     puts '***********indicate'
 				    puts raw.bytes.inspect 
 				    puts raw.unpack("H*")
@@ -124,7 +163,7 @@ for i in $a.devices
 					
 					#puts " #{raw.bytes[2]*16+raw.bytes[3]}"
 
-				     	temp = format('%0.1f',(raw.bytes[1])/10.0+25.6)
+				     	temp = format('%0.1f',(raw.bytes[1]+256*raw.bytes[2])/10.0)
 
                 			lines = []
 
@@ -141,14 +180,21 @@ EOM
 
 
                          
-                                    end
-                                    devices[i] = true
-                            end
-                            #devices[i]
-                            end
+                            end  # end sub
+                           
+                            end  # end uuid
+
+             	       end  # end services
+			break
+             	end
+			sleep(0.2)
+            end    
 
 
-            end         
+	    d.disconnect
+	    d.remove
+
+     
       
 
      end          

@@ -217,6 +217,7 @@ class Message < GXTModel
   key :sender, String # bed name
   key :recipient, String
   key :recipient_type, String
+  key :uuid, String
   key :ts, Integer
   key :type, String
   key :media_type, String
@@ -291,7 +292,7 @@ class Admit < GXTModel
   has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time ASC"
   has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time ASC"
 
-  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "stamp ASC"
+  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "sort_order ASC"
   has_many :messages, :class_name=>'EsmMiotMonitor::Message', order: "ts ASC"
 
 
@@ -351,6 +352,13 @@ class Admit < GXTModel
   key :case_no, String
   key :room_no, String
   key :bed_no, String
+
+  key :export_status, String
+  key :export_log, String
+
+
+
+
    include Mongoid::Timestamps
  timestamps!
 
@@ -730,6 +738,7 @@ class Ambulance  < GXTModel
   key :last_location, String
   key :last_address, String
   key :last_speed, Float
+  key :last_mile, Integer
 
   key :device_no, String
   key :msg_channel, String
@@ -773,9 +782,10 @@ class Setting  < GXTModel
   def self.get name, default=nil
       record = self.where(:name=>name).first
       unless record
-        record = self.create :name=>name, :value=>default
+        record = self.create :name=>name, :value=>default if default != nil
       end
-      return record.value
+      value = record.value if record
+      return value
   end
 end
 
@@ -1146,7 +1156,7 @@ class MessageController < GXTDocument
 
    elsif message.type == 'voice'
 
-    @context.content_type 'audio/mpeg3'
+    @context.content_type 'audio/3gpp'
 
     end
 
@@ -1237,6 +1247,14 @@ end
 
 
 class AdmitController < GXTDocument
+
+
+  def acl
+    # return {:login=>'*',:auto=>'*'}
+    return {:partial=>'*', :pdf=>'*', :data_json=>'*', :data_commit=>'*'}
+
+  end
+
 
   def submit_data params
 

@@ -1,0 +1,13 @@
+<%
+
+  admit = Admit.find params[:id]
+  result = ""
+  if params[:admit]
+  	  admit.update_attributes JSON.parse(params[:admit])
+  	  result = "200 OK"
+  else
+	  
+  	  result = "500 No Data"
+  end
+
+%><%= result %><%=params.inspect %>
