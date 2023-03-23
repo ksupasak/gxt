@@ -235,6 +235,8 @@
  
 </div>
 
+<div class="query-value"></div>
+
 <div class="row header">
 	
 	
@@ -1250,7 +1252,7 @@
 	
 			function getPatient(){
 			    hn = $(".hn-value").html().trim()
-	 
+	 			$(".query-value").html(hn)
 				console.log(hn)
 				$.ajax({
 				  url: "find_patient?hn="+hn,
@@ -1270,7 +1272,7 @@
 						age = parseFloat(patient['age'])
 						$('.patient_age').html(parseInt(age))	
 						$('.hn .v-entry').html(patient['hn'])	
-				
+				                 
 						will_reset_hn = true
 			     
 				
@@ -1633,7 +1635,7 @@
 			function prepare(){
 				var data = {};
 				var hn = "<%=params[:hn]%>"
-		
+				var vn = ""
 				var device_id = "<%=Setting.get :serial_number, "00000" %>"
 				<% if params[:device_id] %>
 				device_id = "<%=params[:device_id]%>"
@@ -1656,6 +1658,8 @@
 				var bmi =''
 				var staff_id = ''
 			
+				vn = $('.query-value').html()
+
 				$('.hn .v-entry').each(function(){
 					hn = $(this).html().trim();
 				})
@@ -1712,7 +1716,7 @@
 		
 		
 		
-			 	data = { staff_id:staff_id,  hn: hn, datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr,rr:rr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
+			 	data = { staff_id:staff_id,  hn: hn, vn:vn,  datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr,rr:rr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
 				
 				console.log(data)
 

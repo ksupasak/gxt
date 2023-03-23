@@ -12,7 +12,7 @@ require_relative '../lib/miot'
   set :bind, '0.0.0.0'
   set :port, 9292
   
-  
+  set :last_vn, ""
 
  
  
@@ -213,8 +213,13 @@ CNX
     begin
     
     puts 'Get Patient'
-  hn = params[:hn]  
-  
+     hn = params[:hn]  
+
+      settings.set :last_vn, hn.strip
+
+
+      vn = "#{Time.now.strftime('%Y%m%d')}_#{hn.strip}_1"		
+
       http =  login[:http]
   
       
@@ -224,7 +229,7 @@ CNX
       
       content = <<CNX
       {
-      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":hn
+      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"#{vn.strip}"
       }
 CNX
       data = JSON.parse(content)
@@ -303,7 +308,9 @@ CNX
       robj[:prefix_name] = names[0]
       robj[:gender] = obj['Gender']
       robj[:birth_date] = birth_date
-      robj[:vn] = obj['VN']
+      robj[:vn] = settings.last_vn
+
+      #robj[:vn] = obj['VN']
       # robj[:age] = 
       robj[:full_name] = "#{robj[:first_name]} #{robj[:last_name]}"
   
@@ -418,12 +425,12 @@ CNX
       data['VisitType'] = 'OPD'
       data['HN'] = hn
       
-      data['VisitDate'] = Time.now.strftime("%y%m%d")
-      data['VN'] = ''
+      data['VisitDate'] = Time.now.strftime("%Y%m%d")
+      data['VN'] = settings.last_vn #"20230323_297_1"
       data['PrescriptionNo'] = '1'
       
       
-      data['ReportDateTime'] = record_at.strftime("%y%m%d%H%M%S")
+      data['ReportDateTime'] = Time.now.strftime("%Y%m%d%H%M%S")
       data['ReportByUID'] = params[:staff_id]
       
       
@@ -448,7 +455,9 @@ CNX
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
 
-      request = CaseSensitivePost.new(uri.request_uri)
+     # request = CaseSensitivePost.new(uri.request_uri)
+      request = Net::HTTP::Post.new(uri.request_uri)	
+
       request.body = data.to_json
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
@@ -457,7 +466,7 @@ CNX
 
       puts '============= DEBUG ==================='
     
-      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      #request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
       response = http.request(request)
     
@@ -472,7 +481,7 @@ CNX
 
 
       
-      if dobj['ResponseStatus']['StatusCode']=='100' 
+      if dobj['StatusCode']=='100' 
         res = {'success'=>true}
         result = {:status=>'200 OK', :msg=>res.to_json}      
       else
@@ -554,6 +563,8 @@ rescue Exception =>exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
         puts msg
+	 puts exception.backtrace
+
         result = {:status=>'404 ERROR', :msg=>msg}
 end
   
