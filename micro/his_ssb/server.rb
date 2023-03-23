@@ -22,6 +22,8 @@ require_relative '../lib/miot'
   set :endpoint, 'https://10.10.2.131:12123'
   set :ssb_connection_key, '34522DBE-1E62-4EEC-B049-7C85C9C11012'
   
+
+
   puts settings.endpoint
 
 
@@ -107,6 +109,7 @@ class CaseSensitivePost < Net::HTTP::Post
      puts "Write #{name} #{val}"
     if val
       @header[name.to_s] = val
+      #@header[name.to_s] = [val]
     else
       @header.delete(name.to_s)
     end
@@ -156,9 +159,7 @@ CNX
       puts "ss #{request.body}"
       request['accept'] = '*/*'
       request['content-type']  = "application/json"
-  
       request["Accept-Encoding"] = request["accept-encoding"]    
-
       request['accept-encoding'] = nil
   # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -245,6 +246,7 @@ CNX
        # data['accessToken'] = settings.token
       
       request = Net::HTTP::Post.new(uri.request_uri, {'Authorization'=>'Bearer '+settings.token})
+
       request.set_form_data(data)
 
 
@@ -260,13 +262,11 @@ CNX
       # puts 'tok '+ht.inspect
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      #request["Accept-Encoding"] = request["accept-encoding"]
 
-       # request['accept-encoding'] = nil
+       #
+       puts request.to_hash
+       puts request.body
 
-
-      puts '============= DEBUG Get patient ==================='
-    
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
       response = http.request(request)
@@ -304,11 +304,8 @@ CNX
       robj[:prefix_name] = names[0]
       robj[:gender] = obj['Gender']
       robj[:birth_date] = birth_date
-
       robj[:vn] = settings.last_vn
 
-      #robj[:vn] = obj['VN']
-      # robj[:age] = 
       robj[:full_name] = "#{robj[:first_name]} #{robj[:last_name]}"
 
       puts birth_date.inspect
@@ -442,7 +439,6 @@ end
       data['FormatType'] = 'BCH'
       data['VisitType'] = 'OPD'
       data['HN'] = hn
-
       data['VisitDate'] = Time.now.strftime("%Y%m%d")
       data['VN'] = settings.last_vn #"20230323_297_1"
       data['PrescriptionNo'] = '1'
@@ -469,7 +465,6 @@ end
 
      # request = CaseSensitivePost.new(uri.request_uri)
       request = Net::HTTP::Post.new(uri.request_uri)	
-
 
       request.body = data.to_json
 
