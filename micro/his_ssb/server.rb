@@ -55,6 +55,69 @@ require_relative '../lib/miot'
   ws = MIOT::connect
 
 
+class CaseSensitiveGet < Net::HTTP::Get
+  def initialize_http_header(headers)
+    @header = {}
+    headers.each{|k,v| @header[k.to_s] = [v] }
+  end
+
+  def [](name)
+	
+    if name=='Content-Type'
+    return @header[name.to_s][0]
+	else
+    return @header[name.to_s]
+   end
+  end
+
+  def []=(name, val)
+    if val
+      @header[name.to_s] = [val]
+    else
+      @header.delete(name.to_s)
+    end
+  end
+
+  def capitalize(name)
+    name
+  end
+end
+
+
+class CaseSensitivePost < Net::HTTP::Post
+  def initialize_http_header(headers)
+    @header = {}
+    headers.each{|k,v| @header[k.to_s] = [v] }
+  end
+
+  def [](name)
+    puts "READ HEADERE #{name} #{@header[name.to_s].inspect}"
+     if name=='Content-Type'
+   return @header[name.to_s][0]
+       else
+    return [@header[name.to_s]]
+   end
+
+
+
+  end
+
+  def []=(name, val)
+
+     puts "Write #{name} #{val}"
+    if val
+      @header[name.to_s] = val
+    else
+      @header.delete(name.to_s)
+    end
+  end
+
+  def capitalize(name)
+    name
+  end
+end
+
+
 
   def login 
     
@@ -68,7 +131,7 @@ require_relative '../lib/miot'
       data = {}
       
       content = <<CNX
-      { }
+  { }
 CNX
       data = JSON.parse(content)
       
@@ -78,7 +141,7 @@ CNX
   #    res = Net::HTTP.post_form  uri, data
       
    #   puts res.body
-      
+  #  each_capitalized  
 
       
 
@@ -88,28 +151,40 @@ CNX
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
 
-      request = Net::HTTP::Get.new(uri.request_uri)
+#      request = Net::HTTP::Get.new(uri.request_uri)
+      request = CaseSensitiveGet.new(uri.request_uri)
       request.set_form_data(data)
      
       request.body = data.to_json
       puts "ss #{request.body}"
+      request['accept'] = '*/*'
+      request['content-type']  = "application/json"
+  
+      request["Accept-Encoding"] = request["accept-encoding"]    
 
-      # Tweak headers, removing this will default to application/x-www-form-urlencoded
+      request['accept-encoding'] = nil
+  # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
       request["SSB-Connection-Key"] = settings.ssb_connection_key
       # request["Authorization"] = 'Bearer '+settings.token
 
+ #    request.add_field "Content-Type", "application/json"
+  #    request.add_field "SSB-Connection-Key", settings.ssb_connection_key
+
+
       puts '============= DEBUG ==================='
     
-      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
-      puts request.inspect 
+ #     request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+#      puts request.inspect 
       
 
       response = http.request(request)
     
       puts '============= FINISH 2 ==================='
     
-      puts response.inspect 
+      puts response.body
+
+	puts 
       
       obj = JSON.parse(response.body)
   
@@ -149,12 +224,12 @@ CNX
       
       content = <<CNX
       {
-      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"20200213_0145_1"
+      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":hn
       }
 CNX
       data = JSON.parse(content)
-      
-      
+      puts "XXXX"
+      puts data.inspect 
     
 
       # Full control
@@ -167,7 +242,7 @@ CNX
        
        # data['accessToken'] = settings.token
       
-      request = Net::HTTP::Post.new(uri.request_uri)
+      request = Net::HTTP::Post.new(uri.request_uri, {'Authorization'=>'Bearer '+settings.token})
       request.set_form_data(data)
       request.body = data.to_json
       
@@ -176,10 +251,23 @@ CNX
       # puts 'tok '+ht.inspect 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-      request["Authorization"] = 'Bearer '+settings.token
-      
+     # request["Authorization"] = 'Bearer '+settings.token
+    
+       #request['Accept'] = ['*/*']
+       
 
-      puts '============= DEBUG ==================='
+
+      #request['content-type']  = "application/json"
+
+         
+     
+      #request["Accept-Encoding"] = request["accept-encoding"]
+
+       # request['accept-encoding'] = nil
+
+  
+
+      puts '============= DEBUG Get patient ==================='
     
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
@@ -243,8 +331,8 @@ rescue Net::OpenTimeout => exception
 rescue Exception =>exception        
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
-    
-        result = {:status=>'404 ERROR', :msg=>msg}
+    	puts exception.backtrace
+   	 result = {:status=>'404 ERROR', :msg=>msg}
 end
   
 puts result.inspect 
@@ -360,7 +448,7 @@ CNX
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
 
-      request = Net::HTTP::Post.new(uri.request_uri)
+      request = CaseSensitivePost.new(uri.request_uri)
       request.body = data.to_json
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
