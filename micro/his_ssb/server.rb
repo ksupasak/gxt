@@ -348,7 +348,7 @@ end
 
 # service to get patient data
 
-  get '/send' do
+  post '/send' do
 
 
   unless params[:hn]
