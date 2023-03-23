@@ -11,28 +11,17 @@ require_relative '../lib/miot'
 
   set :bind, '0.0.0.0'
   set :port, 9292
-<<<<<<< HEAD
-  
   set :last_vn, ""
-=======
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
 
 
 
 
   # set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
-<<<<<<< HEAD
  
   set :endpoint, 'https://10.10.2.131:12123'
   set :ssb_connection_key, '34522DBE-1E62-4EEC-B049-7C85C9C11012'
   
-=======
-
-  set :endpoint, 'https://10.10.2.131:12123'
-  set :ssb_connection_key, '34522DBE-1E62-4EEC-B049-7C85C9C11012'
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
   puts settings.endpoint
 
 
@@ -74,12 +63,6 @@ class CaseSensitiveGet < Net::HTTP::Get
   end
 
   def [](name)
-<<<<<<< HEAD
-	
-=======
-    puts "READ HEADERE #{name} #{@header[name.to_s].inspect}"
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
     if name=='Content-Type'
     return @header[name.to_s][0]
 	else
@@ -88,11 +71,6 @@ class CaseSensitiveGet < Net::HTTP::Get
   end
 
   def []=(name, val)
-<<<<<<< HEAD
-=======
-    puts "Write #{name} #{val}"
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
     if val
       @header[name.to_s] = [val]
     else
@@ -115,11 +93,6 @@ class CaseSensitivePost < Net::HTTP::Post
   def [](name)
     puts "READ HEADERE #{name} #{@header[name.to_s].inspect}"
      if name=='Content-Type'
-<<<<<<< HEAD
-=======
-       puts "READ xxx"
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
    return @header[name.to_s][0]
        else
     return [@header[name.to_s]]
@@ -133,11 +106,7 @@ class CaseSensitivePost < Net::HTTP::Post
 
      puts "Write #{name} #{val}"
     if val
-<<<<<<< HEAD
       @header[name.to_s] = val
-=======
-      @header[name.to_s] = [val]
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
     else
       @header.delete(name.to_s)
     end
@@ -149,21 +118,14 @@ class CaseSensitivePost < Net::HTTP::Post
 end
 
 
-<<<<<<< HEAD
-=======
 
   def login
 
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
       uri = URI("#{settings.endpoint}/IVitalSign/AccessToken/Request")
 
 	puts "uri #{uri}"
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       headers = {'Content-Type' =>'application/json', 'SSB-Connection-Key'=>settings.ssb_connection_key}
 
       data = {}
@@ -179,12 +141,6 @@ CNX
   #    res = Net::HTTP.post_form  uri, data
 
    #   puts res.body
-<<<<<<< HEAD
-  #  each_capitalized  
-=======
-  #  each_capitalized
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
 
       # Full control
@@ -196,24 +152,13 @@ CNX
 #      request = Net::HTTP::Get.new(uri.request_uri)
       request = CaseSensitiveGet.new(uri.request_uri)
       request.set_form_data(data)
-<<<<<<< HEAD
-     
-=======
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       request.body = data.to_json
       puts "ss #{request.body}"
       request['accept'] = '*/*'
       request['content-type']  = "application/json"
-<<<<<<< HEAD
   
       request["Accept-Encoding"] = request["accept-encoding"]    
 
-=======
-
-      request["Accept-Encoding"] = request["accept-encoding"]
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       request['accept-encoding'] = nil
   # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -224,7 +169,6 @@ CNX
   #    request.add_field "SSB-Connection-Key", settings.ssb_connection_key
 
 
-<<<<<<< HEAD
       puts '============= DEBUG ==================='
     
  #     request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
@@ -239,22 +183,6 @@ CNX
 
 	puts 
       
-=======
-      puts '============= DEBUG Login Header ==================='
-
-     request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
-#      puts request.inspect
-
-
-      response = http.request(request)
-
-      puts '============= FINISH Login ==================='
-
-      puts response.body
-
-    	puts
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       obj = JSON.parse(response.body)
 
 
@@ -282,18 +210,12 @@ CNX
     begin
 
     puts 'Get Patient'
-<<<<<<< HEAD
      hn = params[:hn]  
 
       settings.set :last_vn, hn.strip
 
 
       vn = "#{Time.now.strftime('%Y%m%d')}_#{hn.strip}_1"		
-=======
-
-
-      hn = params[:hn]
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
       http =  login[:http]
 
@@ -304,7 +226,6 @@ CNX
 
       content = <<CNX
       {
-<<<<<<< HEAD
       "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"#{vn.strip}"
       }
 CNX
@@ -312,15 +233,6 @@ CNX
       puts "XXXX"
       puts data.inspect 
     
-=======
-      "VisitType": "OPD", "VisitDate_VN_PrescriptionNo":"20221215_349_1"
-      }
-CNX
-      data = JSON.parse(content)
-
-
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
       # Full control
       # http = Net::HTTP.new(uri.host, uri.port)
@@ -331,18 +243,8 @@ CNX
        # http = Net::HTTP.new(uri.host, uri.port)
 
        # data['accessToken'] = settings.token
-<<<<<<< HEAD
       
       request = Net::HTTP::Post.new(uri.request_uri, {'Authorization'=>'Bearer '+settings.token})
-=======
-
-      # request = Net::HTTP::Post.new(uri.request_uri, {'Authorization'=>'Bearer '+settings.token})
-      request = Net::HTTP::Post.new(uri.request_uri)
-
-      # request = CaseSensitivePost.new(uri.request_uri)
-
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       request.set_form_data(data)
 
 
@@ -358,48 +260,13 @@ CNX
       # puts 'tok '+ht.inspect
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
-<<<<<<< HEAD
-     # request["Authorization"] = 'Bearer '+settings.token
-    
-       #request['Accept'] = ['*/*']
-       
-
-
-      #request['content-type']  = "application/json"
-
-         
-     
-=======
-
-      request["Authorization"] = 'Bearer '+settings.token
-
-       #request['Accept'] = ['*/*']
-        # request.delete('content-type')
-
-       #
-       puts request.to_hash
-       puts request.body
-
-      #request['content-type']  = "application/json"
-
-
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       #request["Accept-Encoding"] = request["accept-encoding"]
 
        # request['accept-encoding'] = nil
 
-<<<<<<< HEAD
-  
 
       puts '============= DEBUG Get patient ==================='
     
-=======
-
-
-      puts '============= DEBUG Get Patient HEADER ==================='
-
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
       response = http.request(request)
@@ -437,15 +304,11 @@ CNX
       robj[:prefix_name] = names[0]
       robj[:gender] = obj['Gender']
       robj[:birth_date] = birth_date
-<<<<<<< HEAD
+
       robj[:vn] = settings.last_vn
 
       #robj[:vn] = obj['VN']
       # robj[:age] = 
-=======
-      robj[:vn] = obj['VN']
-      # robj[:age] =
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       robj[:full_name] = "#{robj[:first_name]} #{robj[:last_name]}"
 
       puts birth_date.inspect
@@ -472,10 +335,6 @@ rescue Net::OpenTimeout => exception
 rescue Exception =>exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
-<<<<<<< HEAD
-=======
-        puts exception.inspect
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
     	puts exception.backtrace
    	 result = {:status=>'404 ERROR', :msg=>msg}
 end
@@ -583,23 +442,13 @@ end
       data['FormatType'] = 'BCH'
       data['VisitType'] = 'OPD'
       data['HN'] = hn
-<<<<<<< HEAD
-      
+
       data['VisitDate'] = Time.now.strftime("%Y%m%d")
       data['VN'] = settings.last_vn #"20230323_297_1"
       data['PrescriptionNo'] = '1'
       
       
       data['ReportDateTime'] = Time.now.strftime("%Y%m%d%H%M%S")
-=======
-
-      data['VisitDate'] = Time.now.strftime("%Y%m%d")
-      data['VN'] = '349'
-      data['PrescriptionNo'] = '1'
-
-
-      data['ReportDateTime'] = record_at.strftime("%Y%m%d%H%M%S")
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
       data['ReportByUID'] = params[:staff_id]
 
 
@@ -618,19 +467,9 @@ end
       puts data.inspect
 
 
-<<<<<<< HEAD
      # request = CaseSensitivePost.new(uri.request_uri)
       request = Net::HTTP::Post.new(uri.request_uri)	
-=======
-      # # Full control
-      # http = Net::HTTP.new(uri.host, uri.port)
-      # http.use_ssl = true if uri.instance_of? URI::HTTPS
-      # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      # http.read_timeout = 10 # seconds
 
-      # request = CaseSensitivePost.new(uri.request_uri)
-      request = Net::HTTP::Post.new(uri.request_uri)
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
       request.body = data.to_json
 
@@ -639,13 +478,6 @@ end
       request["Authorization"] = 'Bearer '+settings.token
 
       puts '============= DEBUG ==================='
-<<<<<<< HEAD
-    
-      #request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
-=======
-
-      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
       response = http.request(request)
 
@@ -656,16 +488,8 @@ end
       dobj = JSON.parse(response.body)
 
 
-<<<<<<< HEAD
       
       if dobj['StatusCode']=='100' 
-=======
-      puts dobj.inspect
-
-
-
-      if dobj['ResponseStatus']['StatusCode']=='100'
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
         res = {'success'=>true}
         result = {:status=>'200 OK', :msg=>res.to_json}
       else
