@@ -700,6 +700,7 @@ rescue Exception=>e
    if  http = login[:http]
      
    
+     uri = URI("#{settings.endpoint}/IVitalSign/UpdateVitalSign")
  
 
     # request = CaseSensitivePost.new(uri.request_uri)
