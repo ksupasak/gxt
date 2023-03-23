@@ -73,16 +73,12 @@ begin
 
       if  (d.alias=='TAIDOC TD1261' or d.alias=='TAIDOC TD1107' )
 
-<<<<<<< HEAD
-         #     puts "Found #{d.alias} #{i}"
-             if false
-=======
+
              puts "Found #{d.alias} #{i}"
               
              lines = []
 
              lines << "STATUS:T1|T1:0.0"
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
                 msg = <<EOM
 Monitor.Update zone_id=*
@@ -110,14 +106,9 @@ EOM
 
 	    count = 10 
 
-<<<<<<< HEAD
-	    o = d.refresh!
-		
-	  
-=======
+	 
 
 	    while count>0
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
 
               		count -=1
                         puts '.'
@@ -125,14 +116,12 @@ EOM
                         #d.refresh
                         #puts d.services.size
 
-<<<<<<< HEAD
-                           service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
-=======
+
                         if d.services.size>0
 
 
                     	   service_uuid = '00001809-0000-1000-8000-00805f9b34fb'
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
+
                            char_uuid = '00002a1c-0000-1000-8000-00805f9b34fb'
 			
                            #00002a1c-0000-1000-8000-00805f9b34fb
@@ -141,21 +130,12 @@ EOM
 		            
                              d.services.each do |s|
 
-<<<<<<< HEAD
 			
                             if s==service_uuid
 				   
-				  
-					
-
 
                                     d.subscribe(service_uuid,char_uuid) do |raw|
-=======
 
-                            if s == service_uuid
-                                
-				    d.subscribe_indicate(service_uuid,char_uuid) do |raw|
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
                                     puts '***********indicate'
 				    puts raw.bytes.inspect 
 				    puts raw.unpack("H*")
