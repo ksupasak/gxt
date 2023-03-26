@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-err_service.log
-services/monitor/conf.rb
-=======
 tmp
 log
 err_service.log
@@ -9,4 +5,3 @@ services/monitor/conf.rb
 Gemfile.lock
 log/access.log
 log/nginx.pid
->>>>>>> 484f9cea4c8be8d459059bcba13dffefd71f1e5b
