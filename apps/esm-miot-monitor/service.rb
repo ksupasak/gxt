@@ -1504,7 +1504,7 @@ MSG
 
                   # routin 10 sec
 
-                  if inow!=nil and randx[name]==nil and inow+randx[name])%10 == 0 
+                  if inow!=nil and randx[name]==nil and (inow+randx[name])%10 == 0 
 
 
 
