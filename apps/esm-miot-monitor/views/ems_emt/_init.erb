@@ -15,6 +15,15 @@
   if session[:current_ambu]
     @current_ambulance = Ambulance.find(session[:current_ambu])
   end
+  
+  
+  @current_provider = nil
+
+  if session[:current_provider]
+    @current_provider = Provider.find(session[:current_provider])
+  end
+  
+  
   @current_case = nil
 
 

@@ -1,0 +1,8 @@
+<%
+zone = Zone.find session[:current_zone]
+if params[:provider_id]
+provider = Provider.find(params[:provider_id])
+session[:current_provider] = provider.id
+end
+%>
+<meta http-equiv="Refresh" content="0; url='index'" />

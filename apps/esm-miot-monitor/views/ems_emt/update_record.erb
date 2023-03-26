@@ -7,8 +7,18 @@
     command = EMSCommand.find(params[:command_id])
 
     if command
-        # provider = Provider.first
-        # command.update_attributes :driver_emt_id=>provider.id if provider
+		
+		providers = EMSCommandProvider.where(:command_id=>command.id).all
+        
+		if providers.size > 0 
+			
+			provider = Provider.find providers[0].provider_id		
+	        command.update_attributes :driver_emt_id=>provider.id if provider
+			
+		else
+			provider = Provider.first
+	        command.update_attributes :driver_emt_id=>provider.id if provider
+		end
     end
 
   elsif params[:cmd]=='route_accept'
