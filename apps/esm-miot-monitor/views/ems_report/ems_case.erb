@@ -841,7 +841,7 @@ end
 
   <td><%=m_providers['ems'].collect{|p|p.code}.join(", ") if m_providers['ems']%></td>
   <td><%=m_providers['emt'].collect{|p|p.code}.join(", ") if m_providers['emt']%></td>
-  <td><%=Ambulance.find(i.ambulance_id).name if i.ambulance_id %></td>
+  <td><%=Ambulance.find(i.ambulance_id).name if i.ambulance_id and  Ambulance.find(i.ambulance_id) %></td>
   
   <td><%=i.init_code.code if i.init_code%></td>
   <td><%=i.init_cbd_color%></td>
