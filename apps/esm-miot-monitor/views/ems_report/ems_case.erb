@@ -1,85 +1,803 @@
 <%
 
     records = EMSCase.all()
+	
+	transfers = {}
+	reimburses = {}
+	
+	
+	
+	
+	
+	for i in records
+		
+		if i.transfer_hospital	
+		transfers[i.transfer_hospital] = [] unless transfers[i.transfer_hospital] 
+		transfers[i.transfer_hospital]  << i 
+		end
+		
+		if i.patient_reimbursement	
+		reimburses[i.patient_reimbursement] = [] unless reimburses[i.patient_reimbursement] 
+		reimburses[i.patient_reimbursement]  << i 
+		end
+					
+	end
+	
+	
+	
 
 %>
 
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.time.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/rocker/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css">
+<div class="row" >
+<div class="col-12">
+<h1> Case Summary</h1>
+</div>
+</div>
+
+<%
+
+	@current_zone = Zone.find session[:current_zone]
+	
+	now = Time.now 
+
+	from_date = now.beginning_of_month
+	to_date = now.end_of_month
+	
+	if params[:q] and params[:q][:from_date]and params[:q][:to_date]
+		
+		from_date = Date.parse(params[:q][:from_date].split("/").reverse.join("-"))
+		to_date = Date.parse(params[:q][:to_date].split("/").reverse.join("-"))
+		
+			
+	end
+	
+	
+%>
+
+<form action="" method="POST">
+	
+<div class="card">
+							<div class="card-body">
+							
+									<div class="row">
+										
+									<div class="col-2 mb-3">
+										<label class="form-label">From date:</label>
+										<input name="q[from_date]" type="text" class="form-control datepicker" value="<%=from_date.strftime("%Y-%m-%d")%>">
+									</div>
+									
+									<div class="col-2 mb-3">
+										<label class="form-label">To date:</label>
+										<input name="q[to_date]" type="text" class="form-control datepicker" value="<%=to_date.strftime("%Y-%m-%d")%>">
+									</div>
+									<div class="col-2 mb-3">
+										<label class="form-label">From time:</label>
+										<input name="q[from_time]" type="time" class="form-control timepicker" value="<%=params[:q][:from_time] if params[:q]%>">
+									</div>
+									<div class="col-2 mb-3">
+										<label class="form-label">To time:</label>
+										<input name="q[to_time]" type="time" class="form-control timepicker" value="<%=params[:q][:to_time] if params[:q]%>">
+									</div>
+									<div class="col-2 mb-3">
+										<label class="form-label">Section:</label>
+										<select name="q[section]" class="form-control">
+											<option value=""></option>
+											
+											<option value="0">เช้า</option>
+											<option value="1">บ่าย</option>
+											<option value="2">ดึก</option>
+												
+										</select>
+									</div>
+									
+									
+									
+								<div class="col-2 mb-3">
+									<label class="form-label">Ambulance :</label>
+									<select name="r[ambulance_id]" class="form-control">
+										<option value=""></option>
+										
+										<% ambu_list = Ambulance.where(:zone_id=>@current_zone).all 
+										ambu_list.each do |ambu| 
+										%>
+										<option value="<%=ambu.id%>" <%='selected' if params[:r] and params[:r][:ambulance_id]==ambu.id.to_s %> ><%=ambu.name%></option>
+										<% end %>
+											
+									</select>
+								</div>
+								
+								
+								<div class="col-2 mb-3">
+									<label class="form-label">Provider :</label>
+									<select name="q[provider]" class="form-control">
+										<option value=""></option>
+										
+										<% providers =  Provider.where({}).all
+										providers.each do |p| 
+										%>
+										<option value="<%=p.id%>"><%=p.name%> (<%=p.code%>)</option>
+										<% end %>
+											
+									</select>
+								</div>
+								<div class="col-2 mb-3">
+									<label class="form-label">CBD :</label>
+									<select name="q[group_code]" class="form-control">
+										<option value=""></option>
+										<% groups =  EMSCodeGroup.all()
+										groups.each do |group| 
+										%>
+										<option value="<%=group.id%>" <%='selected' if params[:q] and params[:q][:group_code]==group.id.to_s %> ><%=group.code%>. <%=group.name%></option>
+										<% end %>
+											
+									</select>
+								</div>
+								
+								<div class="col-2 mb-3">
+									<label class="form-label">Emergency :</label>
+									<select name="r[init_cbd_color]" class="form-control">
+										<option value=""></option>
+										<% groups =  [['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']]
+										groups.each do |group| 
+										%>
+										<option value="<%=group[0]%>"  <%='selected' if params[:r] and params[:r][:init_cbd_color]==group[0] %>><%=group[1]%></option>
+										<% end %>
+											
+									</select>
+								</div>
+								
+								<div class="col-2 mb-3">
+									<label class="form-label">Transfer :</label>
+									<select name="r[transfer_hospital]" class="form-control">
+										<% ts =  transfers.keys.sort
+										ts.each do |t| 
+										%>
+										<option value="<%=t%>"  <%='selected' if params[:r] and params[:r][:transfer_hospital]==t %>><%=t%></option>
+										<% end %>
+											
+									</select>
+								</div>
+								
+								<div class="col-2 mb-3">
+									<label class="form-label">Reimburse :</label>
+									<select name="r[patient_reimbursement]" class="form-control">
+										<% ts =  reimburses.keys.sort
+										ts.each do |t| 
+										%>
+										<option value="<%=t%>" <%='selected' if params[:r] and params[:r][:patient_reimbursement]==t %> ><%=t%></option>
+										<% end %>
+											
+									</select>
+								</div>
+								</div>
+								
+								
+							</div>
+						</div>
+
+								<div class="col-2 mb-3">
+									<br/>
+									<input type="submit" value="Query" class="btn btn-success"/>
+									<a href="" class="btn ">Reset</a>
+								</div>
+								</div>
+
+</form>
+
+<%
+
+cbd_groups = {}
+
+if request.post?	
+	
+	q = {:created_at=>{'$gte'=>from_date, '$lt'=>to_date}}
+	
+	# q = {}
+	
+	if params[:r]
+		
+		params[:r].each_pair do |k,v|
+			
+			q[k] = v if v and v != ""
+			
+		end
+		
+		
+	end
+	
+	
+	if params[:q]
+		
+		
+		
+		
+		
+		if params[:q][:group_code]!=""
+		groups = EMSCode.where(:group_id=>params[:q][:group_code]).all
+		if groups.size > 0 
+		q[:init_cbd_code]={'$in'=>groups.collect{|i| i.id}}
+		end
+		end
+		
+		
+		
+		records = EMSCase.where(q).all
+	
+	    if params[:q][:from_time]!=""
+			
+		now = Time.now 
+		s1 = Time.parse(params[:q][:from_time],now)
+		s2 = Time.parse(params[:q][:to_time],now)
+		
+		
+	
+	   
+		records = records.collect{|i|
+			
+			# if i.init_cbd_code
+				
+				
+			# end
+	
+			if i.dispatch_at and i.dispatch_at.hour*60+i.dispatch_at.min>= s1.hour*60+s1.min and i.dispatch_at.hour*60+i.dispatch_at.min<= s2.hour*60+s2.min 
+ 				
+				i
+				
+			end
+		
+		}.compact
+		
+		end
+		
+		
+		
+		
+		
+		
+		
+	
+	end
+	
+    
 
 
+	
+	
+%>
+<%#params[:q].to_json%>
+<%#q.to_json.html_safe%>
+
+<% end %>
+<%
+	
+	
+active_times = [0,0,0,0]
+response_times = [0,0,0,0]
+
+	
+	
+records.each do |i|
+	
+		
+	cbd = EMSCode.find i.init_cbd_code
+	
+	if cbd
+			
+			cbd_groups[cbd.group_id] = 0 unless cbd_groups[cbd.group_id] 
+			cbd_groups[cbd.group_id] += 1 
+		
+	end
+	
+	at = -1
+	
+	if i.activation_time
+	
+	if i.activation_time < 2  and i.activation_time > 0 
+		at = 0
+	elsif i.activation_time < 4
+		at = 1
+	elsif i.activation_time < 8
+		at = 2
+	elsif i.activation_time <15
+		at = 3
+	end
+	
+	active_times[at] += at if at >= 0 
+	
+	end
+	
+	at = -1
+	
+	if i.response_time
+	
+	if i.response_time < 2  and i.response_time > 0 
+		at = 0
+	elsif i.response_time < 4
+		at = 1
+	elsif i.response_time < 8
+		at = 2
+	elsif i.response_time <15
+		at = 3
+	end
+	
+	response_times[at] += at if at >= 0 
+	
+	end
+end
+%>
+<div class="col-12">
+<div class="row" style="border:0px black solid">
+                
+   				   <div class="col-12 col-lg-4">
+                          <div class="card radius-10">
+   						   <div class="card-body">
+   							<div class="d-flex align-items-center">
+   								<div>
+   									<h6 class="mb-0">CBD Init</h6>
+   								</div>
+   								<div class="dropdown ms-auto">
+   									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+   									</a>
+   									<ul class="dropdown-menu">
+   										<li><a class="dropdown-item" href="javascript:;">Action</a>
+   										</li>
+   										<li><a class="dropdown-item" href="javascript:;">Another action</a>
+   										</li>
+   										<li>
+   											<hr class="dropdown-divider">
+   										</li>
+   										<li><a class="dropdown-item" href="javascript:;">Something else here</a>
+   										</li>
+   									</ul>
+   								</div>
+   							</div>
+   							<div class="chart-container-3 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+   								<canvas id="chart1" width="884" height="440" class="chartjs-render-monitor" style="display: block; height: 220px; width: 442px;"></canvas>
+   							  </div>
+   						   </div>
+   			
+   					   </div>
+   				   </div>
+   	
+	
+	
+	   <div class="col-12 col-lg-4">
+           <div class="card radius-10">
+			   <div class="card-body">
+				<div class="d-flex align-items-center">
+					<div>
+						<h6 class="mb-0">Ativation Time</h6>
+					</div>
+					<div class="dropdown ms-auto">
+						<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="javascript:;">Action</a>
+							</li>
+							<li><a class="dropdown-item" href="javascript:;">Another action</a>
+							</li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li><a class="dropdown-item" href="javascript:;">Something else here</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="chart-container-2 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+					<canvas id="chart2" width="884" height="440" class="chartjs-render-monitor" style="display: block; height: 220px; width: 442px;"></canvas>
+				  </div>
+			   </div>
+
+		   </div>
+	   </div>
+
+	
+	   <div class="col-12 col-lg-4">
+           <div class="card radius-10">
+			   <div class="card-body">
+				<div class="d-flex align-items-center">
+					<div>
+						<h6 class="mb-0">Response Time</h6>
+					</div>
+					<div class="dropdown ms-auto">
+						<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+						</a>
+				
+					</div>
+				</div>
+				<div class="chart-container-2 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+					<canvas id="chart3" width="884" height="440" class="chartjs-render-monitor" style="display: block; height: 220px; width: 442px;"></canvas>
+				  </div>
+			   </div>
+
+		   </div>
+	   </div>
+	</div>
+	
+	
+		</div>
+	
+	</div>
+				   
+</div>				   
+				   
+				   
+<script>
+	
+	$(function() {
+	    "use strict";
+
+	
+	// chart 1
+
+	  // var ctx = document.getElementById("chart1").getContext('2d');
+  //
+  // 	  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+  // 	      gradientStroke1.addColorStop(0, '#6078ea');
+  // 	      gradientStroke1.addColorStop(1, '#17c5ea');
+  //
+  // 	  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+  // 	      gradientStroke2.addColorStop(0, '#ff8359');
+  // 	      gradientStroke2.addColorStop(1, '#ffdf40');
+  //
+  // 	      var myChart = new Chart(ctx, {
+  // 	        type: 'bar',
+  // 	        data: {
+  // 	          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  // 	          datasets: [{
+  // 	            label: 'Laptops',
+  // 	            data: [65, 59, 80, 81,65, 59, 80, 81,59, 80, 81,65],
+  // 	            borderColor: gradientStroke1,
+  // 	            backgroundColor: gradientStroke1,
+  // 	            hoverBackgroundColor: gradientStroke1,
+  // 	            pointRadius: 0,
+  // 	            fill: false,
+  // 	            borderWidth: 0
+  // 	          }, {
+  // 	            label: 'Mobiles',
+  // 	            data: [28, 48, 40, 19,28, 48, 40, 19,40, 19,28, 48],
+  // 	            borderColor: gradientStroke2,
+  // 	            backgroundColor: gradientStroke2,
+  // 	            hoverBackgroundColor: gradientStroke2,
+  // 	            pointRadius: 0,
+  // 	            fill: false,
+  // 	            borderWidth: 0
+  // 	          }]
+  // 	        },
+  //
+  // 			options:{
+  // 			  maintainAspectRatio: false,
+  // 			  legend: {
+  // 				  position: 'bottom',
+  // 	              display: false,
+  // 				  labels: {
+  // 	                boxWidth:8
+  // 	              }
+  // 	            },
+  // 				tooltips: {
+  // 				  displayColors:false,
+  // 				},
+  // 			  scales: {
+  // 				  xAxes: [{
+  // 					barPercentage: .5
+  // 				  }]
+  // 			     }
+  // 			}
+  // 	      });
+		  
+
+		  // chart 4
+		  //
+		  // var ctx = document.getElementById("chart4").getContext('2d');
+		  //
+		  //   var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+		  //       gradientStroke1.addColorStop(0, '#ee0979');
+		  //       gradientStroke1.addColorStop(1, '#ff6a00');
+		  //
+		  //   var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+		  //       gradientStroke2.addColorStop(0, '#283c86');
+		  //       gradientStroke2.addColorStop(1, '#39bd3c');
+		  //
+		  //   var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+		  //       gradientStroke3.addColorStop(0, '#7f00ff');
+		  //       gradientStroke3.addColorStop(1, '#e100ff');
+		  //
+		  //       var myChart = new Chart(ctx, {
+		  //         type: 'pie',
+		  //         data: {
+		  //           labels: ["Completed", "Pending", "Process"],
+		  //           datasets: [{
+		  //             backgroundColor: [
+		  //               gradientStroke1,
+		  //               gradientStroke2,
+		  //               gradientStroke3
+		  //             ],
+		  //
+		  //              hoverBackgroundColor: [
+		  //               gradientStroke1,
+		  //               gradientStroke2,
+		  //               gradientStroke3
+		  //             ],
+		  //
+		  //             data: [50, 50, 50],
+		  //       borderWidth: [1, 1, 1]
+		  //           }]
+		  //         },
+		  //         options: {
+		  // 		 maintainAspectRatio: false,
+		  //           cutoutPercentage: 0,
+		  //             legend: {
+		  //               position: 'bottom',
+		  //               display: false,
+		  //             labels: {
+		  //                 boxWidth:8
+		  //               }
+		  //             },
+		  // 			tooltips: {
+		  // 			  displayColors:false,
+		  // 			},
+		  //         }
+		  //       });
+		  
+	  
+	 <%
+				
+				
+				groups = cbd_groups.keys.collect{|i| EMSCodeGroup.find i }
+				
+				
+	
+	%>
+	 
+	 
+	// chart 2
+
+	 var ctx = document.getElementById("chart1").getContext('2d');
+
+	  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+	      gradientStroke1.addColorStop(0, '#fc4a1a');
+	      gradientStroke1.addColorStop(1, '#f7b733');
+
+	  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+	      gradientStroke2.addColorStop(0, '#4776e6');
+	      gradientStroke2.addColorStop(1, '#8e54e9');
 
 
+	  var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+	      gradientStroke3.addColorStop(0, '#ee0979');
+	      gradientStroke3.addColorStop(1, '#ff6a00');
+	  
+		var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
+	      gradientStroke4.addColorStop(0, '#42e695');
+	      gradientStroke4.addColorStop(1, '#3bb2b8');
 
-<table class="table">
+	      var myChart = new Chart(ctx, {
+	        type: 'doughnut',
+	        data: {
+	          labels: <%=groups.collect{|i| "#{i.code}.#{i.name}" }.to_json.html_safe%>,
+	          datasets: [{
+	            backgroundColor: [
+	              gradientStroke1,
+	              gradientStroke2,
+	              gradientStroke3,
+	              gradientStroke4,
+	              gradientStroke1,
+	              gradientStroke2,
+	              gradientStroke3,
+	              gradientStroke4
+	            ],
+	            hoverBackgroundColor: [
+	              gradientStroke1,
+	              gradientStroke2,
+	              gradientStroke3,
+	              gradientStroke4
+	            ],
+	            data: <%=groups.collect{|i| cbd_groups[i.id] }.to_json.html_safe%>,
+				borderWidth: [1, 1, 1, 1]
+	          }]
+	        },
+	        options: {
+				maintainAspectRatio: false,
+				cutoutPercentage: 50,
+	            legend: {
+				  position: 'bottom',
+	              display: false,
+				  labels: {
+	                boxWidth:8
+	              }
+	            },
+				tooltips: {
+				  displayColors:false,
+				}
+	        }
+	      });
+		  
+		  
+		  
+		  <%
+		  
+		  
+		  
+		  
+		  %>
+	 	// chart 2
+
+	 	 var ctx = document.getElementById("chart2").getContext('2d');
+
+	 	  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	      gradientStroke1.addColorStop(0, '#fc4a1a');
+	 	      gradientStroke1.addColorStop(1, '#f7b733');
+
+	 	  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	      gradientStroke2.addColorStop(0, '#4776e6');
+	 	      gradientStroke2.addColorStop(1, '#8e54e9');
+
+
+	 	  var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	      gradientStroke3.addColorStop(0, '#ee0979');
+	 	      gradientStroke3.addColorStop(1, '#ff6a00');
+	  
+	 		var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	      gradientStroke4.addColorStop(0, '#42e695');
+	 	      gradientStroke4.addColorStop(1, '#3bb2b8');
+
+	 	      var myChart = new Chart(ctx, {
+	 	        type: 'doughnut',
+	 	        data: {
+	 	          labels: ['<2 mins','<4 mins','<6 mins','>8 mins'],
+	 	          datasets: [{
+	 	            backgroundColor: [
+	 	              gradientStroke1,
+	 	              gradientStroke2,
+	 	              gradientStroke3,
+	 	              gradientStroke4,
+	 	              gradientStroke1,
+	 	              gradientStroke2,
+	 	              gradientStroke3,
+	 	              gradientStroke4
+	 	            ],
+	 	            hoverBackgroundColor: [
+	 	              gradientStroke1,
+	 	              gradientStroke2,
+	 	              gradientStroke3,
+	 	              gradientStroke4
+	 	            ],
+	 	            data: <%=active_times.to_json.html_safe%>,
+	 				borderWidth: [1, 1, 1, 1]
+	 	          }]
+	 	        },
+	 	        options: {
+	 				maintainAspectRatio: false,
+	 				cutoutPercentage: 50,
+	 	            legend: {
+	 				  position: 'bottom',
+	 	              display: false,
+	 				  labels: {
+	 	                boxWidth:8
+	 	              }
+	 	            },
+	 				tooltips: {
+	 				  displayColors:false,
+	 				}
+	 	        }
+	 	      });
+		  
+	 	 	// chart 3
+
+	 	 	 var ctx = document.getElementById("chart3").getContext('2d');
+
+	 	 	  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	 	      gradientStroke1.addColorStop(0, '#fc4a1a');
+	 	 	      gradientStroke1.addColorStop(1, '#f7b733');
+
+	 	 	  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	 	      gradientStroke2.addColorStop(0, '#4776e6');
+	 	 	      gradientStroke2.addColorStop(1, '#8e54e9');
+
+
+	 	 	  var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	 	      gradientStroke3.addColorStop(0, '#ee0979');
+	 	 	      gradientStroke3.addColorStop(1, '#ff6a00');
+	  
+	 	 		var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
+	 	 	      gradientStroke4.addColorStop(0, '#42e695');
+	 	 	      gradientStroke4.addColorStop(1, '#3bb2b8');
+
+	 	 	      var myChart = new Chart(ctx, {
+	 	 	        type: 'doughnut',
+	 	 	        data: {
+	 	 	          labels: ['<2 mins','<4 mins','<6 mins','>8 mins'],
+	 	 	          datasets: [{
+	 	 	            backgroundColor: [
+	 	 	              gradientStroke1,
+	 	 	              gradientStroke2,
+	 	 	              gradientStroke3,
+	 	 	              gradientStroke4,
+	 	 	              gradientStroke1,
+	 	 	              gradientStroke2,
+	 	 	              gradientStroke3,
+	 	 	              gradientStroke4
+	 	 	            ],
+	 	 	            hoverBackgroundColor: [
+	 	 	              gradientStroke1,
+	 	 	              gradientStroke2,
+	 	 	              gradientStroke3,
+	 	 	              gradientStroke4
+	 	 	            ],
+	 	 	            data: <%=response_times.to_json.html_safe%>,
+	 	 				borderWidth: [1, 1, 1, 1]
+	 	 	          }]
+	 	 	        },
+	 	 	        options: {
+	 	 				maintainAspectRatio: false,
+	 	 				cutoutPercentage: 50,
+	 	 	            legend: {
+	 	 				  position: 'bottom',
+	 	 	              display: false,
+	 	 				  labels: {
+	 	 	                boxWidth:8
+	 	 	              }
+	 	 	            },
+	 	 				tooltips: {
+	 	 				  displayColors:false,
+	 	 				}
+	 	 	        }
+	 	 	      });
+});
+
+		  
+</script>
+
+<%#groups.collect{|i| i.name }.to_json.html_safe%>
+<table class="table table-striped mb-0">
 <thead>
   <tr>
-      <th>วัน/เดือน/ปีค.ศ. ออกปฏิบัติการ</th>
-      <th>เวรที่ออกปฏิบัติการ (เช้า/บ่าย/ดึก)</th>
-      <th>สถานที่เกิดเหตุ</th>
-      <th>เวลาสั่งการ</th>
-      <th>ประเภทการปฏิบัติการ</th>
-      <th>Paramedic ที่ออกปฏิบัติการ</th>
-      <th>EMT ที่ออกปฏิบัติการ</th>
-      <th>อาการรับแจ้ง (CBD code)</th>
-      <th>เพศ</th>
-      <th>อายุ</th>
-      <th>ข้อมูล ว.8 เพิ่มเติมจากศูนย์ประชานาถ</th>
+      <th>Date</th>
+      <th>Section</th>
+      <th>Location</th>
+      <th>Dispatch Time</th>
+      <th>Type</th>
+      <th>EMS Team</th>
+      <th>EMT Team</th>
+      <th>Ambu</th>
+      <th>Init CBD </th>
+	  <th>Init Triage</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th ><span style="width:200px">Cheif Comp</span></th>
       <th>CODE  155  ?</th>
-      <th>ความรุนแรงระดับของ CBG code อยู่ในระดับใด</th>
-      <th>Dispatch Time (minutes)</th>
-      <th>Activate Time (minutes)</th>
-      <th>Response Time (minutes)</th>
-      <th>On Scene Time (minutes)</th>
-      <th>Transfer Time (minutes)</th>
-      <th>ทำไม  Activate Time มากกว่า 2 นาที ? </th>
-      <th>ทำไม  Response Time มากกว่า 8 นาที ? </th>
-      <th>ท่านมีวิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</th>
+      <th>Dispatch </th>
+      <th>Activate </th>
+      <th>Response </th>
+      <th>On Scene </th>
+      <th>Transfer </th>
+      <th>AT Over </th>
+      <th>RT Over </th>
+      <th>AT RT Management</th>
       <th>สถานที่เกิดเหตุ</th>
-      <th>Distance from KMCH to Scene (km) ?</th>
-      <th>ประเภทเส้นทางที่เลือกใช้</th>
+      <th>Distance EMD </th>
       <th>EMT ท่านใดขับรถพยาบาล</th>
-      <th>Distance from scene  to hospital (km) ?</th>
+      <th>Distance Hos </th>
       <th>ลักษณะการปฏิบัติการ</th>
       <th>ผลปฏิบัติการ</th>
       <th>Type</th>
-      <th>กรณีออกปฏิบัติการแล้วไม่พบเหตุ/ ยกเลิกปฏิบัติการ เพราะเหตุใด</th>
-      <th>เวลายกเลิกปฏิบัติการ</th>
-      <th>ท่านมีการทำ CPR หรือไม่?</th>
-      <th>Nationality</th>
+      <th>Cancellation</th>
+      <th>CPR</th>
       <th>Scene Triage</th>
-
-
-      <th>SBP แรกรับ</th>
-      <th>DBP แรกรับ</th>
-      <th>HR แรกรับ</th>
-      <th>RR แรกรับ</th>
-      <th>SpO2 แรกรับ</th>
-      <th>GCS แรกรับ</th>
-      <th>Body temperature</th>
-      <th>DTX (mg/dl)</th>
-
-      <th>การนำส่งผู้ป่วยไปโรงพยาบาลปลายทาง ?</th>
       <th>โรงพยาบาลปลายทาง?</th>
       <th>HN</th>
       <th>สิทธิการรักษาพยาบาล<th>
       <th>ER Triage</th>
 
-      <th>SBP จุดคัดกรอง</th>
-      <th>DBP จุดคัดกรอง</th>
-      <th>HR จุดคัดกรอง</th>
-      <th>RR จุดคัดกรอง</th>
-      <th>SpO2 จุดคัดกรอง</th>
-      <th>GCS จุดคัดกรอง</th>
-      <th>BT จุดคัดกรอง</th>
-      <th>DTX จุดคัดกรอง</th>
-
       <th>Diagnosis</th>
 
-
-      <th>ท่านได้ร้องขอแหล่งสนับสนุนหรือไหม</th>
-      <th>ทีม BLS อยู่ที่จุดเกิดเหตุก่อนที่ ALS จะถึงหรือไม่?</th>
-      <th>ทีมสนับสนุน เป็นผู้ปฏิบัติงานแบบใด</th>
-      <th>Activated specialist ?</th>
-      <th>Type of specialist team ?</th>
+      <th>Support</th>
+      <th>Specialist</th>
 
   </tr>
 
@@ -114,6 +832,7 @@ end
 %>
 
 <tr>
+
   <td><%=i.created_at.strftime("%d/%m/%Y")%></td>
   <td><%=link_to i.case_no, "../EMS/show?id=#{i.id}"%></td>
   <td><%=i.location%></td>
@@ -122,17 +841,20 @@ end
 
   <td><%=m_providers['ems'].collect{|p|p.code}.join(", ") if m_providers['ems']%></td>
   <td><%=m_providers['emt'].collect{|p|p.code}.join(", ") if m_providers['emt']%></td>
+  <td><%=Ambulance.find(i.ambulance_id).name if i.ambulance_id %></td>
+  
   <td><%=i.init_code.code if i.init_code%></td>
+  <td><%=i.init_cbd_color%></td>
+  
   <td><%=i.patient_gender%></td>
   <td><%=i.patient_age%></td>
-  <td><%=i.chief_complain%></td>
-  <td>#<%=i.code_155%></td>
-  <td><%="#{code_group.code}.#{code_group.name}" if code_group%></td>
+  <td ><%=i.chief_complain%></td>
+  <td><%=i.code_155%></td>
 
 
   <td><%=i.dispatch_time%></td>
   <td><%=i.activation_time%></td>
-  <td><%=i.response_time%></td>
+  <td><%=i.response_time%></td> 
   <td><%=i.onscene_time%></td>
   <td><%=i.transfer_time%></td>
 
@@ -141,11 +863,11 @@ end
   <td><%=i.over_time_managment%></td>
   <td><%=i.operation_hospital%></td>
 
-  <td>#<%=i.distance_from_dispatch%></td>
+  <td><%=i.distance_from_dispatch%></td>
   <td><%=i.route_type%></td>
-  <td>#<%=ems_command.driver_emt_id if ems_command%></td>
+  <td><%=ems_command.driver_emt_id if ems_command%></td>
 
-  <td>#<%=i.distance_from_hospital%></td>
+  <td><%=i.distance_from_hospital%></td>
   <td><%=i.ems_type%></td>
   <td><%=i.operation_result%></td>
   <td><%=i.operation_result_detail%></td>
@@ -159,29 +881,15 @@ end
   <td><%=i.scene_triage%></td>
 
 
-  <td><%=i.init_sbp%></td>
-  <td><%=i.init_dbp%></td>
-  <td><%=i.init_hr%></td>
-  <td><%=i.init_rr%></td>
-  <td><%=i.init_spo2%></td>
-  <td><%=i.init_gcs%></td>
-  <td><%=i.init_temp%></td>
-  <td><%=i.init_dtx%></td>
+
 
   <td><%=i.transfer_status%></td>
-  <td><%=i.transfer_hospital%></td>
+  <td><%=i.transfer_hospital%> </td>
   <td><%=i.transfer_hn%></td>
   <td>x<%=i.patient_reimbursement%></td>
   <td><%=i.er_triage%></td>
 
-  <td><%=i.screen_sbp%></td>
-  <td><%=i.screen_dbp%></td>
-  <td><%=i.screen_hr%></td>
-  <td><%=i.screen_rr%></td>
-  <td><%=i.screen_spo2%></td>
-  <td><%=i.screen_gcs%></td>
-  <td><%=i.screen_temp%></td>
-  <td><%=i.screen_dtx%></td>
+
   <td><%=i.diagnosis%></td>
 
   <td><%=i.bls_request%></td>
@@ -198,4 +906,23 @@ end
 <% end %>
 </tbody>
 </table>
+
+	<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
 <%#records.to_json %>
+	<script>
+		$('.datepicker').pickadate({
+			selectMonths: true,
+	        selectYears: true
+		}),
+		$('.timepicker').pickatime()
+	</script>	
+		
+		
+		
+		<script src="/rocker/assets/plugins/chartjs/js/Chart.min.js"></script>
+		<script src="/rocker/assets/plugins/chartjs/js/Chart.extension.js"></script>

@@ -54,6 +54,8 @@ class EMSCase < GXTModel
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
 
+  
+
   key :dispatch_note, String
   key :team_id, String
 

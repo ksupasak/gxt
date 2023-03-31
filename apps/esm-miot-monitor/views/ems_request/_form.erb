@@ -18,7 +18,9 @@
 
 						<div class="">
 							<h6 class="mb-0 text-white">
-								ข้อมูลเหตุฉุกเฉิน :
+
+								<span class="t" t="case_info"> Request Info</span>  :
+
 							</h6>
 						</div>
 								<!-- <h6 class="">
@@ -53,28 +55,21 @@
 								<div class="col-6">
 
 									<p class="px-3">
-										ผู้แจ้ง
-									</p><input name='record[contact_name]' value="<%=record.contact_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุล" aria-label="default input example">
+										<span class="t" t="record_contact_name">Caller</span>
+									</p><input name='record[contact_name]' value="<%=record.contact_name%>" class="form-control mb-3 mx-3 w-auto t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
 								</div>
 
 								<div class="col-6">
 
 									<p class="px-3 ">
-										<span class="t" t="record_contact_phone">เบอร์ติดต่อ</span> *
+										<span class="t" t="record_contact_phone">Phone</span> *
 									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 
 								</div>
 
 							</div>
-					<div class="row">
-							<div class="col-12">
-							<p class="px-3 ">
-								<span class="t" t="record_location">สถานที่เกิดเหตุ</span> *
-							</p>
-							<input name='record[location]' id="record_location" value="<%=record.location%>" required class="form-control mb-3 mx-3 w-auto " type="text" placeholder="ที่อยู่" >
-						</div>
-					</div>
+
 
 
 							<p class="px-3">
@@ -96,7 +91,7 @@
 					</p>
 
 					<div class="input-group px-3 pb-3">
-					<%= f.select(:init_cbd_code, EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
+					<%= f.select(:init_cbd_code, [['','']]+EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
 					</div>
 
 
@@ -192,7 +187,10 @@
 
 
 					<p class="px-3">
-						Underlying Disease | โรคประจำตัว
+
+						<span class="t" t="record_patient_underlying">Underlying Disease</span>
+
+
 					</p><input name='record[patient_underlying]' value="<%=record.patient_underlying%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="โรคประจำตัว" aria-label="default input example">
 
 
@@ -221,8 +219,9 @@
 							  %>
 
 								<p class="px-3">
-									Patient Name / ชื่อ-นามสกุลผู้ป่วย
-								</p><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="ชื่อ-นามสกุลผู้ป่วย" aria-label="default input example">
+									<span class="t" t="record_patient_name">Patient Name</span>
+
+								</p><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="" aria-label="default input example">
 
 
 
@@ -256,12 +255,19 @@
 
 
 									<p class="px-3">
-										Patient Identification <span style="float:right"><input class="btn btn-info btn-sm" type="submit" value="ค้นหา"></span>
+										Patient Identification <span style="float:right"><input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
 									</p>
 									<input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden">
 									<input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
 									<input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example"> <input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
 
+									<script>
+											$('.patient-search').click(function(e){
+												
+
+												e.preventDefault();
+											})
+									</script>
 
 						</div>
 
@@ -341,23 +347,29 @@
 								<p class="px-3">
 									Ambulance :
 								</p>
-								<select class="form-select mb-3" name='record[ambulance_id]' aria-label="Default select example">
+								<select class="form-select mb-3" name='record[ambulance_id]' id="record_ambulance_id" aria-label="Default select example">
 									<option selected="">-</option>
 									<%
 											zone = Zone.find(session[:current_zone])
 											ambu_list = Ambulance.where(:zone_id=>zone).all
 											for ambu in ambu_list
 									%>
-									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> ><%=ambu.name %></option>
+									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> channel="<%=EMSChannel.where(:name=>ambu.msg_channel).first.id%>"><%=ambu.name %></option>
 									<% end %>
 								</select>
-
+								<script>
+									$('#record_ambulance_id').change(function(){
+										v = $(this).val()
+										ch = $(this).find(":selected")
+										$('#record_channel_id').val(ch.attr('channel'))
+									})
+								</script>
 							</div>
 							<div class="col-3">
 								<p class="px-3">
 									Channel :
 								</p>
-								<select class="form-select mb-3" name='record[channel_id]' aria-label="Default select example">
+								<select class="form-select mb-3" name='record[channel_id]' id="record_channel_id" aria-label="Default select example">
 									<option selected="">-</option>
 									<%
 											zone = Zone.find(session[:current_zone])
@@ -374,7 +386,7 @@
 								<p class="px-3">
 								 Note :
 								</p>
-									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="Note" aria-label="default input">
+									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3" type="text" placeholder="Note" aria-label="default input">
 
 							</div>
 
@@ -404,7 +416,7 @@
 							<div class="d-flex align-items-center">
 								<div class="">
 									<h6 class="mb-0 text-white">
-										ตำแหน่งเหตุ :
+										<span class="t" t="location">Location</span> :
 									</h6>
 								</div>
 								<div class="dropdown ms-auto">
@@ -442,34 +454,39 @@
 											width: 100%;  /* The width is the width of the web page */
 										 }
 									</style>
+									<div class="row">
+											<div class="col-12">
+											<input name='record[location]' id="record_location" value="<%=record.location%>"  class="form-control  " type="text" placeholder="Address" ><br/>
+										</div>
+									</div>
 
-
-
+									<div class="row">
+									<div class="col-12">
+									<div id="dashboard-map" class="" style="height:45vh">
+										map
+									</div>
+									</div>
+										</div>
+										<br/>
 							<div class="row">
 
 							<div class="col-md-6" >
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="address" >ที่อยู่</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[address]' id="record_address" value="<%=record.address%>" readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[address]' id="record_address" value="<%=record.address%>"  class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							<div class="col-md-6">
 								<!-- <label for="inputLastName1" class="form-label"><span class="t" text="location">พิกัด</span></label> -->
 								<div class="input-group">
 									<!-- <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span> -->
-								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>"  readonly class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
+								<input name='record[latlng]' id="record_latlng" value="<%=record.latlng%>"   class="form-control border-start-1 " type="text" placeholder="ที่อยู่" aria-label="default input example">
 								</div>
 							</div>
 							</div>
 							<br/>
-							<div class="row">
-							<div class="col-12">
-							<div id="dashboard-map" class="" style="height:45vh">
-								map
-							</div>
-							</div>
-								</div>
+
 							<div class="row "  style="display:none">
 							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
 							<div class="col-12">
@@ -497,11 +514,13 @@
 
 
 									clatlng = [13.68313508354787, 100.69198345629769]
+
 									<% if Setting.get("aoc_center") %>
 									clatlng = [<%=Setting.get("aoc_center")%>]
+
 									<% end %>
 
-								latlng = [13.69313508354787, 100.69198345629769]
+								latlng = clatlng
 
 								<% if record.latlng and record.latlng.index(',') %>
 								latlng = [<%=record.latlng%>]
@@ -584,9 +603,12 @@
 
 
 								$('#record_location').keydown(function(e){
+
 									if(e.keyCode == 13) {
+										e.preventDefault()
+
 										address_search(e)
-											e.preventDefault()
+
 											return false;
 										}
 								});
