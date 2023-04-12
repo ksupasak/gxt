@@ -317,6 +317,18 @@ class HomeController < GXT
 
   end
 
+  @@redisx_connection = nil
+
+  def redisx
+    
+    unless @@redisx_connection
+      c = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
+      puts "REDIS CONFIG SERVICE 1 : #{c}"
+      @@redisx_connection = EM::Hiredis.connect c
+    end
+  
+    return @@redisx_connection
+  end
 
   def websocket request
 
@@ -324,9 +336,7 @@ class HomeController < GXT
 
        EM.run do
 
-                      c = "redis://#{":"+REDIS_PASS+"@" if REDIS_PASS}#{REDIS_HOST}:#{REDIS_PORT}/#{REDIS_DB}"
-                      puts "REDIS CONFIG SERVICE 1 : #{c}"
-                      redisx = EM::Hiredis.connect c
+                     
 
         request.websocket do |ws|
 
