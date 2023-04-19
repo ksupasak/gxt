@@ -104,10 +104,24 @@
 
 
 
-          end
+		  elsif  obj and assessment.type=='patient_status'
 
-
-
+          record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"DX : "+assessment.name, :start_time=>stamp
+		  
+		  patient_status = EMSPatientStatus.where(:name=>obj['name']).first 
+		  
+		  if patient_status 
+		  
+		  	case_status = EMSCasePatientStatus.create :case_id=>ems_case.id, :patient_status_id=> patient_status.id, :name=>patient_status.name, :title=>patient_status.title
+		  
+	  	  end
+		  
+	  	  elsif obj 
+				  
+	      record = admit.nurse_records.create :name=>"Paramedic" ,:description=>""+assessment.name, :start_time=>stamp
+				  
+				  
+		  end
 
         else
 

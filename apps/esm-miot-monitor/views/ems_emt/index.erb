@@ -392,9 +392,16 @@ modal('#modal_notification')
 		}else
     if(lines[0].split(" ")[0]=='EMSUpdate'){
 
-
+    
 
        obj = JSON.parse(lines[1])
+		console.log(obj)
+		if(obj['alert']=="1"||obj['alert']=="0"){
+			
+		console.log(obj)
+			
+		}
+		else{
 
        jQuery.each(obj['ems_data'], function (key, val) {
 
@@ -471,6 +478,8 @@ modal('#modal_notification')
 
 
        });
+	   
+	   }
 
     }else
 

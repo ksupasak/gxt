@@ -11,8 +11,25 @@
 
 		message = eval("\"#{noti_new_case_text}\"")
 
-    result =  EMSConnect.line_noti :message=>message
+        result =  EMSConnect.line_noti :message=>message
 		end
+		
+		
+		
+		# path = "miot/#{name}/z/#{z.name}/EMT"
+		
+
+		path = "miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"
+msg = <<MSG
+#{'EMSUpdate'} #{path}
+#{{'alert'=>'1'}.to_json}
+MSG
+	  
+	  
+	
+	  @context.settings.redis.publish(path, msg)		
+		
+		
 
 %>
 

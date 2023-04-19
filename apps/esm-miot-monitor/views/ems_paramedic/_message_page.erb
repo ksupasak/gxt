@@ -114,19 +114,6 @@ dfdf
   <div class="row" style="margin-top:10px;border:0px solid;">
 
 
-					<!-- <div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle " type="button" data-bs-toggle="dropdown" aria-expanded="false">Primary</button>
-						<ul class="dropdown-menu" style="">
-							<li><a class="dropdown-item" href="#">Action</a>
-							</li>
-							<li><a class="dropdown-item" href="#">Another action</a>
-							</li>
-							<li><a class="dropdown-item" href="#">Something else here</a>
-							</li>
-						</ul>
-					</div> -->
-
-
 					<div class="btn-group col-4" role="group" aria-label="Basic example">
 					  <button type="button" id="msg-dashboard" class="msg-btn btn  btn-sm btn-secondary btn-pcm context">Event</button>
 					  <!-- <button type="button"  id="medication_add" class="btn btn-secondary">+</button> -->
@@ -180,13 +167,8 @@ dfdf
 		<%= inline(this,:'_cpr_partial') %>
 
 	<div class="row">
-	<div class="col-12">
-
+	<div class="col-12" id="dispath-panel">
 		<%= inline(this,:'_dispatch') %>
-
-
-
-
 	</div>
 	</div>
 
@@ -208,9 +190,9 @@ dfdf
 <script>
 	var command = ["Ultra Sound","US", "Vital Sign", "VS", "CPR", "NEWS", "SOS"];
 
+	function autocomplete(inp, arr) {}
 
-
-	function autocomplete(inp, arr) {
+	function autocomplete2(inp, arr) {
 	  /*the autocomplete function takes two arguments,
 	  the text field element and an array of possible autocompleted values:*/
 	  var currentFocus;
@@ -308,8 +290,6 @@ dfdf
 	}
 
 
-	// autocomplete(document.getElementById("form-autocomplete"), command);
-
 
 
 
@@ -401,7 +381,7 @@ var message_admit_id = null;
 <%#
 
 	$(".note-message").submit(function(e) {
-
+   
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
     var form = $(this);
@@ -460,5 +440,21 @@ var message_admit_id = null;
  // $('.panel-body-x').scrollTop(100000000)
 	// reload_message();
 
+  	$(".note-message").submit(function(e) {
+      e.preventDefault();
+	  
+      cmd = $('#note-value').val()
+      
+	  // alert('cmd = ' +cmd)
+      
+	  dispatch_command(cmd);
+
+     // avoid to execute the actual submit of the form.
+
+
+       	$('#note-value').val('')
+
+
+  });
 
 </script>

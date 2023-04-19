@@ -1,9 +1,47 @@
 <%
 
-  items = EMSAssessment.all
 
-  labels = ['Track', 'Assess', 'Proc', 'Med', 'EMR']
-  groups = %w{track assessment proc med emr}
+	ems_case = EMSCase.find params[:id] 
+
+	patient_status = ""
+	case_note = ""
+	patient_status_cls = ""
+	
+	
+	
+	
+	
+
+	case_status = EMSCasePatientStatus.where(:case_id=>ems_case.id).last
+
+	if   case_status
+		patient_status = case_status.title 
+		patient_status_cls = 'btn btn-danger'
+
+		case_note = "#{format("%.1f min ago",(Time.now-case_status.created_at).to_i/60.0)}"
+		
+		status_protocol = EMSPatientStatus.find case_status.patient_status_id
+		
+		status_items = EMSPatientStatusItem.where(:patient_status_id=>status_protocol.id).all
+		
+	
+	    items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).all
+		
+		
+
+	else
+		
+		
+	    items = EMSAssessment.all
+		
+		
+	end
+
+	
+
+
+  labels = ['Track', 'Assess', 'Proc', 'Med', 'EMR', 'Status']
+  groups = %w{track assessment proc med emr status}
 
   sub_groups = {}
 
@@ -27,7 +65,9 @@
 
 
   end
+	
 
+	
 %>
 <br/>
 
@@ -48,7 +88,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><%=labels[gi]%></h5>
+        <h5 class="modal-title"><%=labels[gi]%> : 
+		<span class="<%=patient_status_cls%>"><%=patient_status%></span> <span class="<%=patient_status_cls%>"><%=case_note%></span>
+		</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -109,7 +151,6 @@
 
         $('#dispatch_'+found['code']).modal('show')
 
-
     }
     else{
 
@@ -148,48 +189,7 @@
 
 
 
-  	$(".note-message").submit(function(e) {
-      e.preventDefault();
-    cmd = $('#note-value').val()
-    // alert('cmd = ' +cmd)
-      dispatch_command(cmd);
-
-     // avoid to execute the actual submit of the form.
-
-
-       	$('#note-value').val('')
-/*
-
-
-     if(found==null){
-
-
-
-      var form = $(this);
-
-  	var url = form.attr('action')+"?admit_id="+ message_admit_id;
-
-      $.ajax({
-             type: "POST",
-             url: url,
-             data: form.serialize(), // serializes the form's elements.
-             success: function(data)
-             {
-                 // $('#nurse_note-partial').html(data)// show response from the php script.
-  			   // $('#admit-modal').modal('toggle');
-  			   $('#form-autocomplete').val("");
-             }
-      });
-
-
-
-
- }
-*/
-
-
-  });
-
+  	
 
 
 
