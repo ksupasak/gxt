@@ -605,8 +605,9 @@ MSG
              when 'WS.Select'
 
                ch_map = @context.settings.ch_map
-
-
+               
+               begin
+               
                puts  "msg from #{@context.settings.name} #{msg}"
                wsname = path.split("=")[-1]
                wsname = ws.hash
@@ -651,6 +652,13 @@ MSG
 
 
                puts "#---- #{  @context.settings.cmd_map.inspect}"
+               
+               
+             rescue Exception=>e 
+               
+               puts e.inspect 
+               
+             end
 
       # store remote sensing
 
