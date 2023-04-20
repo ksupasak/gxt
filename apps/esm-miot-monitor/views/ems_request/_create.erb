@@ -82,7 +82,7 @@ MSG
 @context.settings.redis.publish(path, send_msg)
 
 
-path = "miot/#{@context.settings.name}/z/#{admit.zone.name}/EMT"
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}/IOT"
 msg = <<MSG
 #{'EMSUpdate'} #{path}
 #{{'alert'=>'0'}.to_json}
