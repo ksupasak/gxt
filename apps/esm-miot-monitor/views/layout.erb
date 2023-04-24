@@ -51,7 +51,7 @@ border-bottom: 2px solid #3147FF;
 .container{
 	background:#fff;
 	box-shadow: 0px 0px 15px #111;
-	border-radius:5px;	
+	border-radius:5px;
 }
 .logo-pcm{
   height:3vh;
@@ -63,12 +63,12 @@ border-bottom: 2px solid #3147FF;
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark  fixed-top navbar-pcm ">
-		
+
       <a class="navbar-brand" href="../User/logout" >
       <!--<image src="<%=url_for 'img/gxt-sos.png' %>" height="40">-->
       <image src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="logo-pcm">
       </a>
-			
+
 	 <% if @current_user %>
 
 			<form class="control-area form-inline mr-sm-2 my-0 col-5  order-sm-3 order-lg-3 col-sm-1 col-lg-2 col-sm-3" style="" action="../Home/search" id="search-form">
@@ -76,88 +76,88 @@ border-bottom: 2px solid #3147FF;
 			    <input class="form-control mr-2  my-0 col-12 col-xs-6" name='query' id="search" type="text" placeholder="Search" aria-label="Search">
 				<!--	<button class="btn btn-outline-success my-0  col-3" type="submit">O</button>-->
  			</form>
-		
 
-	   
+
+
 	   <div class="order-12" style="">
-	   
-	   <%=link_to "#{@current_user.login} >>", "../User/logout", :class=>'btn btn-primary'  %>	
-	
+
+	   <%=link_to "#{@current_user.login} >>", "../User/logout", :class=>'btn btn-primary'  %>
+
   	  </div>
   	   <div class="order-12 text-right" style="width:80px">
-		   
-  	   <%#link_to "Logout","../User/logout" %>	
-	 
-    	
-		    </div>	
+
+  	   <%#link_to "Logout","../User/logout" %>
+
+
+		    </div>
     <% end %>
-			
+
       <button class="navbar-toggler col-2" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-	
+
       <div class="collapse  navbar-collapse order-sm-1 order-lg-1 col-6 col-sm-8" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
 			  <%
 			  	name = 'Home'
 				@current_zone = nil
-				
+
 				unless session[:current_zone]
-				
+
 					if Zone.size>0 and @current_user
 						session[:current_zone] = Zone.first.id
-					else 
+					else
 						name = 'PCM-LIFE'
-					end	
-				
+					end
+
 				end
-				
+
 				if session[:current_zone]
-				
+
 					zone = Zone.find session[:current_zone]
 					@current_zone = zone
 					name = zone.name if zone
-					
+
 				end
-				
+
 			  %>
             <a class="nav-link" href="../Home/index"> <%= name %> </a>
           </li>
 
-	 
-	 
-	 
+
+
+
 		  <% if @current_user %>
-        
+
 		  <% if  @current_zone and @current_zone.mode!='smart_health' or @current_role=='admin'%>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/cms" >CMS </a>
 		  </li> -->
 		  <% if @current_zone and  @current_zone.mode=='smart_or' and  @current_role=='admin'%>
-		  
+
           <li class="nav-item dropdown">
             <a class="nav-link" href="../Home/patient" >Patients</a>
 		  </li>
           <li class="nav-item dropdown">
             <a class="nav-link" href="../Admit/index" >Admission</a>
 		  </li>
-		  
+
 		   <% end %>
-	
+
 		  <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <a class="dropdown-item" href="../Zone/index">Zone</a>
   		      <a class="dropdown-item" href="../Room/index">Room</a>
   		       <a class="dropdown-item" href="../Bed/index">Bed</a>
-			
+
 			  <a class="dropdown-item" href="../Station/index">Station</a>
 			  <a class="dropdown-item" href="../Patient/index">Patient</a>
 			  <a class="dropdown-item" href="../Admit/index">Admit</a>
 			  <a class="dropdown-item" href="../AdmitLog/index">Admit Log</a>
-			  
-			  
+
+
 			  <a class="dropdown-item" href="../NurseRecord/index">NurseRecord</a>
               <a class="dropdown-item" href="../Medication/index">Medication</a>
               <a class="dropdown-item" href="../DataRecord/index">DataRecord</a>
@@ -168,19 +168,19 @@ border-bottom: 2px solid #3147FF;
 	         <a class="dropdown-item" href="../ScoreItem/index">Score-Item</a>
 	         <a class="dropdown-item" href="../ScoreCondition/index">Score-Condition</a>
 			<a class="dropdown-item" href="../AddressBook/index">AddressBook</a>
-		
+
 			  <a class="dropdown-item" href="../Sense/index">Data</a>
 	 		 </div>
           </li>
-		  
+
 		  <% if @current_zone and  (@current_zone.mode=='aoc' or @current_zone.mode=='ems')  and @current_role=='admin'%>
-         
+
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">AOC</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
 				  <a class="dropdown-item" href="../Ambulance/index">Ambulance</a>
 				  <a class="dropdown-item" href="../AmbulanceDriver/index">AmbulanceDriver</a>
-				  
+
 				  <a class="dropdown-item" href="../AocCaseReport/index">AocCaseReport</a>
 				  <a class="dropdown-item" href="../AocCaseRoute/index">AocCaseRoute</a>
 				    <a class="dropdown-item" href="../EMSChannel/index">Channel</a>
@@ -190,11 +190,11 @@ border-bottom: 2px solid #3147FF;
 	          </li>
 <% end %>
 			  <% end %>
-			  
-			  
-			  
+
+
+
 			   <% if  @current_zone and @current_zone.mode=='smart_health' and @current_role=='admin' %>
-			   
+
 			  <li class="nav-item dropdown">
 	            <a class="nav-link dropdown-toggle" href="../Sas/index" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">SH</a>
 	            <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -207,7 +207,7 @@ border-bottom: 2px solid #3147FF;
 		  	  	<a class="dropdown-item" href="../SHUserHospital/index">UserHospital</a>
 		  		<a class="dropdown-item" href="../SHUserNetwork/index">UserNetwork</a>
   				<a class="dropdown-item" href="../SHConference/index">Confernce</a>
-		 
+
 		 		 </div>
 	          </li>
 			  <% end %>
@@ -225,10 +225,10 @@ border-bottom: 2px solid #3147FF;
                    <a class="dropdown-item" href="../Home/switch_zone?id=<%=i.id%>"><%=i.name%></a>
   				 <% end %>
                </li>
-			   
-			   
+
+
 		  <% if  @current_role == 'admin' %>
-			   
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">System</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -240,7 +240,7 @@ border-bottom: 2px solid #3147FF;
           </li>
 		    <% end %>
 			   	  <% if  @current_role == 'smarthealth_admin' %>
-			   
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Master</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -251,10 +251,10 @@ border-bottom: 2px solid #3147FF;
           </li>
 		    <% end %>
 		  <% end %>
-		  
-		  
+
+
        	 <li class="nav-item" >
-			
+
 		</li>
 		 <!--
 		      <li class="nav-item dropdown">
@@ -263,18 +263,18 @@ border-bottom: 2px solid #3147FF;
 	              <a class="dropdown-item" href="../Home/admin">Admin</a>
 	              <a class="dropdown-item" href="../Home/rpd">Responsive Design</a>
 	              <a class="dropdown-item" href="../Home/rpd2">Responsive Design 2</a>
-	
+
 	            </div>
 	          </li>
 		-->
-		  
-         
+
+
         </ul>
-     
+
       </div>
 
     </nav>
-	
+
 	<% if  @current_zone and  @current_zone.mode == 'smart_health' %>
 	<script>
 
@@ -282,39 +282,39 @@ border-bottom: 2px solid #3147FF;
 		//$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(93,30,119,1) 0%, rgba(38,15,70,1) 100%)"})
 		<% elsif @current_role == 'hospital' or @current_role == 'smarthealth_admin' %>
 		//$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(50,122,186,1) 0%, rgba(31,81,124,1) 100%)"})
-		
+
 		<% end%>
 		$('.navbar-pcm').css({"background-image":"linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(20,21,24,1) 100%)"})
-		
-		
-		
+
+
+
 	</script>
 	<% end %>
     <main role="main" class="main" style="border:0px solid red;">
    <div id="main-container" class="containerx" style="padding-left:15px;padding-right:15px;">
-	   
+
   <div class="row">
    <div class="col-12">
-	
+
 	<%#session.inspect%>
-	 
+
    <%=yield :content%>
-   
+
    <%=session.inspect if params[:debug]%>
-   
+
    <br/>
     &nbsp;
    </div>
   </div>
-  
+
   	</div>
     </main><!-- /.container -->
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster 
+    <!-- Placed at the end of the document so the pages load faster
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	
+
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     -->
     <script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
@@ -323,4 +323,3 @@ border-bottom: 2px solid #3147FF;
 </script>
   </body>
 </html>
-

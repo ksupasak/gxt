@@ -96,6 +96,10 @@ dfdf
 
 	<form action="<%=get_path "nurse_note_create"%>" class="note-message" method="post" enctype="multipart/form-data" >
 
+		<div class="row">
+		<div class="status col-12" style="border:0px solid">
+			</div>
+		</div>
 
 	<div class="row" style="margin-top:10px;border:0px solid;">
 
@@ -111,7 +115,8 @@ dfdf
 
   </div>
 
-  <div class="row" style="margin-top:10px;border:0px solid;">
+
+  <div class="row" style="margin-top:0px;border:0px solid;">
 
 
 					<div class="btn-group col-4" role="group" aria-label="Basic example">
@@ -381,7 +386,7 @@ var message_admit_id = null;
 <%#
 
 	$(".note-message").submit(function(e) {
-   
+
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
     var form = $(this);
@@ -442,11 +447,11 @@ var message_admit_id = null;
 
   	$(".note-message").submit(function(e) {
       e.preventDefault();
-	  
+
       cmd = $('#note-value').val()
-      
+
 	  // alert('cmd = ' +cmd)
-      
+
 	  dispatch_command(cmd);
 
      // avoid to execute the actual submit of the form.

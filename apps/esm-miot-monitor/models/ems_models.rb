@@ -54,7 +54,7 @@ class EMSCase < GXTModel
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
 
-  
+
 
   key :dispatch_note, String
   key :team_id, String
@@ -645,56 +645,57 @@ class EMSAssessment < GXTModel
   key :sort_order, Integer
 
   key :zone_id, ObjectId
-
+  
+  key :position, String
 
 end
 
 
 class EMSCasePatientStatus < GXTModel
-  
+
   include Mongoid::Document
-  
+
   key :name, String
   key :title, String
-  key :description, String 
+  key :description, String
   key :patient_type, String
   key :case_id, ObjectId
   key :patient_status_id, ObjectId
-  
-  
+
+
   include Mongoid::Timestamps
-  
-  
+
+
 end
 
 
 class EMSPatientStatus < GXTModel
-  
+
   include Mongoid::Document
-  
+
   key :name, String
   key :title, String
-  key :description, String 
+  key :description, String
   key :patient_type, String
   key :color, String
-  
+
 end
 
 
 class EMSPatientStatusItem < GXTModel
-  
+
   include Mongoid::Document
-  
+
   key :name, String
-  key :description, String 
-  key :position, String 
+  key :description, String
+  key :position, String
   key :patient_status_id, ObjectId
   key :assessment_id, ObjectId
   key :sort_order, Integer
   key :data, String
-  
-  
-  
+
+
+
 end
 
 

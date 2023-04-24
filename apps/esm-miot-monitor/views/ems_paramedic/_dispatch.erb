@@ -1,43 +1,70 @@
 <%
 
 
-	ems_case = EMSCase.find params[:id] 
+	ems_case = EMSCase.find params[:id]
 
 	patient_status = ""
 	case_note = ""
 	patient_status_cls = ""
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	case_status = EMSCasePatientStatus.where(:case_id=>ems_case.id).last
 
-	if   case_status
-		patient_status = case_status.title 
+	if   case_status and cs = EMSPatientStatus.find(case_status.patient_status_id)
+		patient_status = case_status.title
 		patient_status_cls = 'btn btn-danger'
 
+		patient_status_cls = 'btn' if cs.color=='normal'
+
 		case_note = "#{format("%.1f min ago",(Time.now-case_status.created_at).to_i/60.0)}"
-		
+
 		status_protocol = EMSPatientStatus.find case_status.patient_status_id
-		
-		status_items = EMSPatientStatusItem.where(:patient_status_id=>status_protocol.id).all
-		
-	
-	    items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).all
-		
-		
+
+		status_items = EMSPatientStatusItem.where(:patient_status_id=>status_protocol.id).sort(:sort_order=>1).all
+
+
+
+	  items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
+
+
+		items = []
+
+		for i in status_items
+
+			item = EMSAssessment.find i.assessment_id
+
+			nitem = EMSAssessment.new item.attributes
+
+			data = {}
+			data = JSON.parse(nitem.data) if nitem.data and nitem.data!=""
+			data = data.merge(JSON.parse(i.data)).to_json  if i.data and i.data!=""
+
+			nitem.data = data.to_json
+			nitem.position = i.position
+			items << {:i=>nitem,:data=>data, :item=>i, :position=>nitem.position}
+
+		end
+
+
+
 
 	else
-		
-		
-	    items = EMSAssessment.all
-		
-		
+
+
+	    items = EMSAssessment.sort(:sort_order=>1).all.collect{|i|
+
+				{:i=>i, :data=>data, :item=>nil, :position=>i.position }
+
+			}
+
+
 	end
 
-	
+
 
 
   labels = ['Track', 'Assess', 'Proc', 'Med', 'EMR', 'Status']
@@ -46,7 +73,9 @@
   sub_groups = {}
 
 
-  for i in items
+  for it in items
+
+		i =it[:i]
 
     if i.type=='group'
         labels << i.name
@@ -58,19 +87,21 @@
 
   map = {}
 
-  for i in items
+  for it in items
+
+		i =it[:i]
 
     map[i.group] = [] unless map[i.group]
-    map[i.group] << i
+    map[i.group] << it
 
 
   end
-	
 
-	
+
+
 %>
 <br/>
-
+<%# items.inspect %>
 <div class="row">
 
 <% groups.each_with_index do |g,gi| %>
@@ -88,7 +119,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><%=labels[gi]%> : 
+        <h5 class="modal-title"><%=labels[gi]%> :
 		<span class="<%=patient_status_cls%>"><%=patient_status%></span> <span class="<%=patient_status_cls%>"><%=case_note%></span>
 		</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -97,9 +128,12 @@
 
       <div class="row">
         <% if map[g] and map[g] != nil
-          for i in map[g] %>
+          for it in map[g]
+
+						i = it[:i]
+					%>
         <div class="col-12 mt-3">
-          <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100"  code="<%=i.code%>" > <%=i.name%></a>
+          <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%> </a>
         </div>
         <% end %>
         <% end %>
@@ -119,13 +153,17 @@
 
 </div>
 
+<div class="hidden status-placement" style="display:none;">
+<span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span>
+</div>
+
 <script>
 
 
-  var commands = <%=items.to_json%>
+  var commands = <%=items.collect{|i| i[:i]}.to_json%>
 
 
-  function dispatch_command(cmd){
+  function dispatch_command(cmd,item){
 
 
     found = null;
@@ -154,7 +192,7 @@
     }
     else{
 
-      var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id;
+      var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item;
 
       $.ajax({
              type: "POST",
@@ -179,21 +217,19 @@
     $('.dispatch_item').click(function(e){
 
       cmd = $(this).attr('code')
-      dispatch_command(cmd)
+			item = $(this).attr('item')
+
+      dispatch_command(cmd, item)
       $('.modal').modal('hide');
 
       e.preventDefault();
 
     })
 
+		$(document).ready(function(){
 
+				$('.status').html($(".status-placement").html());
 
-
-  	
-
-
-
-
-
+		})
 
 </script>
