@@ -55,7 +55,7 @@
 	else
 
 
-	    items = EMSAssessment.sort(:sort_order=>1).all.collect{|i|
+	    items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
 
 				{:i=>i, :data=>data, :item=>nil, :position=>i.position }
 
