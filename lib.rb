@@ -70,12 +70,22 @@ before do
   # if solution_name!='promptpay' and solution_name!='barcode'
   app = nil
   app = settings.redis.get("GXT|#{solution_name}")
+  
+  
+  unless app
+    
+    redirect "/404.html"
+    
+  else 
+  
 
   switch solution_name, app
   # end
 
   # MongoMapper.setup({'production' => {'uri' => "mongodb://#{MONGO_HOST}/#{settings.mongo_prefix}-#{settings.name}"}}, 'production')
-
+  
+  
+  
 
   settings.set :current_user, nil
   settings.set :current_role, nil
@@ -98,6 +108,8 @@ before do
        end
 
      end
+
+   end
 
 
    end

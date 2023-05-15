@@ -1,0 +1,55 @@
+
+
+
+<div class="modal fade" id="dispatch_emr_panel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Patient EMR</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="emr-form">
+
+          Loading..
+
+
+      </div>
+  
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+
+$('#dispatch_emr_panel').modal("show")
+<%
+
+      item = EMSPatientStatusItem.find params[:item]
+      assess = EMSAssessment.find item.assessment_id
+      data = JSON.parse(assess.data)
+
+      document_name = data['name']
+
+%>
+
+var url = "<%=get_path "../EmsEMR/create_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>";
+
+$.ajax({
+       type: "GET",
+       url: url,
+       data: { }, // serializes the form's elements.
+       success: function(data)
+       {
+
+          $('.emr-form').html(data)
+        // $('#dispatch-panel').html(data)
+
+           // $('#nurse_note-partial').html(data)// show response from the php script.
+     // $('#admit-modal').modal('toggle');
+     // $('#form-autocomplete').val("");
+       }
+});
+
+</script>

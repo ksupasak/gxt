@@ -1,5 +1,4 @@
 
-<%= inline(this,:'../lib/_map')  %>
 <% if request.post?
 
 
@@ -82,6 +81,17 @@ send_msg = <<MSG
 MSG
 @context.settings.redis.publish(path, send_msg)
 
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}/IOT"
+msg = <<MSG
+#{'EMSUpdate'} #{path}
+#{{'alert'=>'0'}.to_json}
+MSG
+
+@context.settings.redis.publish(path, msg)	
+
+
+
 end
 
 
@@ -116,5 +126,3 @@ end
 	$('#record_contact_phone').focus()
 	refresh_remote()
 </script>
-
-<%=init_map%>

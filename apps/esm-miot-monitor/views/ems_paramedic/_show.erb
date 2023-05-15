@@ -381,7 +381,7 @@ end
 
 		<script>
 
-			reload_message("<%=ems_case.id%>","<%=admit.id%>")
+		reload_message("<%=ems_case.id%>","<%=admit.id%>")
 
 
 		</script>
@@ -758,28 +758,6 @@ end
 			end
 
 
-			# else
-
-				# for i in DataRecord.where(:admit_id=>params[:id]).all
-			#
-			# 		# o = ActiveSupport::JSON.decode(i.data)
-			#
-			# 	# list.push :time=>DateTime.parse(i.stamp),:temp=>0,:pr=>i.pr, :spo2=>i.spo2, :hr=>i.hr,:rr=>20, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :co2=> i.co2
-			#
-			# 	# list.push :time=>now-(n-t),:temp=>rand(4)+35,:pr=>(100+20*Math.sin(t*10*Math::PI/180)).to_i, :spo2=>100-rand(4), :hr=>100+rand(20),:rr=>20, :bp_sys=>120+rand(40), :bp_dia=>80+rand(40), :co2=> 35+rand(5)
-			#
-			# 		# if o['vs']
-			# 		# 	for j in o['vs']
-			# 		#
-			# 		# 		# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
-			# 		# 		bp = j['bp'].split("/")
-			# 		# 		list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
-			# 		# 	end
-			# 		#
-			# 		# end
-			#
-			# 	end
-
 			end
 
 			%>
@@ -894,20 +872,23 @@ update_message()
 	  var plot_pos = {};
 
 
-	//    ws.onopen    = function()  { show('websocket opened');
-	//
-	//   	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
-	// gfx.resize()
-	//   };
-	//    ws.onclose   = function()  { show('websocket closed');
-	//
-	//  	setTimeout(function () {
-	//  		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-	//  		    }, 2000); //will call the function after 2 secs.
-	//
-	//
-	//    }
-	//
+
+  function update_message_page(){
+
+
+  	$.ajax({
+  	  url: "<%=get_path "dispatch"%>?id=<%=params[:id]%>",
+  	  context: document.body
+  	}).done(function(data) {
+  	 	
+		$('#dispath-panel').html(data)
+
+  	});
+
+
+  }
+  
+	  
 
    function update_message(){
 
@@ -918,12 +899,7 @@ update_message()
    	}).done(function(data) {
    	 	data = JSON.parse(data)
 
-		// alert(data)
-		// for(var ii in records){
-//
-// 				records[ii]['time'] = Date.parse(records[ii]['time'] )
-//
-// 		}
+
 		while(events.length > 0) {
 		    events.pop();
 		}
@@ -1001,10 +977,11 @@ update_message()
 		if(lines[0].split(" ")[0]=='Zone.Message'){
 
 
-
-
-			reload_message("<%=ems_case.id%>","<%=admit.id%>")
-      update_message();
+		  reload_message("<%=ems_case.id%>","<%=admit.id%>")
+      	  update_message();
+		  update_message_page();
+		  
+		  // update_message_page();
 
 		}
 		else
@@ -1026,65 +1003,6 @@ update_message()
 			if($('#'+i).length > 0){
 			obj = data['data'][i]
 
-
-		  // if(obj['wave']){
-	  //
-	  // 			    // wave_data.push(obj['wave']);
-	  // 		   		// wave_data = wave_data.concat(obj['wave']);
-	  // 				for(var j=0;j<obj['wave'].length;j++){
-	  // 					wave_data.push(obj['wave'][j]);
-	  // 				}
-	  // 				// console.log(wave_data);
-	  // 				// wave_data = obj['wave'];
-	  // 		   }
-
-				// 		   if(obj['leads']){
-				//
-				// 			   for(var j=0;j<16;j++){
-				//
-				// jid = ''+j
-				// ji = lx[j];
-				// jii = jix[ji];
-				//
-				// if(obj['leads'][jii]){
-				// 			   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
-				// }
-				//
-				// 			   }
-				//
-				// 		   }
-
-
-			//  // console.log(obj)
-			// $('#'+i+' .hn').html(obj['ref'])
-			//
-			// if($('#'+i+' .bp').html()!=obj['bp']){
-			// 	$('#'+i).addClass('bp_alert');
-			// 	$('#'+i).removeClass('bp_alert_2');
-			// 	$('#'+i+' .msg').html("-");
-			// }else{
-			// 	$('#'+i).removeClass('bp_alert');
-			// 	// $('#'+i).removeClass('bp_alert_2');
-			// 	// $('#'+i+' .msg').html("-");
-			// }
-			//
-			// $('#'+i+' .bp .value').html(obj['bp'])
-			//
-			// $('#'+i+' .temp .value').html(obj['temp'])
-			//
-			// $('#'+i+' .pr .value').html(obj['pr'])
-			// $('#'+i+' .hr .value').html(obj['hr'])
-			//
-			//
-			//
-			// $('#'+i+' .rr .value').html(obj['rr'])
-			// $('#'+i+' .spo2 .value').html(obj['spo2'])
-			// $('#'+i+' .co2 .value').html(obj['co2'])
-			//
-			//
-			// $('#'+i+' .score .value').html(obj['score'])
-			//
-			// $('#'+i+' .alert-msg .value').html(obj['msg'])
 
 
 			 // console.log(obj)

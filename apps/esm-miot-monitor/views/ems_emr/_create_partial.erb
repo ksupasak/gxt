@@ -1,3 +1,4 @@
+
 <%
 
 
@@ -12,6 +13,19 @@
 
     record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
 
+    admit = Admit.find(ems_case.admit_id)
+
+    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
+
+
+      path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+      msg = 'NULL'
+  send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+    @context.settings.redis.publish(path, send_msg)
 
 
 %>
@@ -26,7 +40,7 @@
     values = {}
 
 %>
-<form action="<%=get_path 'create'%>" id="form" method="post">
+<form action="<%=get_path 'create_partial'%>" id="form" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
 <input type="hidden" name="schema" id="schema" value="">
@@ -35,13 +49,18 @@
 <%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case)  %>
 <% end %>
 <br/>
-<input type="submit" value="Create" class="btn btn-success">
+<div class="modal-footer">
+  <input type="submit" value="Create" class="btn btn-success">
+
+  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+
 </form>
 <% end %>
 
 <script>
 
-  $("#form").submit(function(){
+  $("#form").submit(function(e){
 
     fields = []
 
@@ -58,6 +77,29 @@
 
     $('#schema').val(JSON.stringify(fields))
 
+
+    var form = $(this);
+    var actionUrl = form.attr('action');
+
+    $.ajax({
+        type: "POST",
+        url: actionUrl,
+        data: form.serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+          // alert(data);
+          $('#dispatch_emr_panel').modal("hide")
+          // show response from the php script.
+        }
+    });
+
+    e.preventDefault();
+
   });
+
+
+
+
+
 
 </script>

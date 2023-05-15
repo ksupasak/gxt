@@ -368,7 +368,7 @@
 			<ul class="mm-collapse">
 				<%
 
-				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-84600}).limit(5).sort(:case_no=>1).all()
+				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-846000}).limit(5).sort(:case_no=>1).all()
 
 				%>
 				<% for i in cases %>

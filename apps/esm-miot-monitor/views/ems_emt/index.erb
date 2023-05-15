@@ -342,7 +342,7 @@ modal('#modal_notification')
   ws.onopen    = function()  { show('websocket opened');
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
 
 
   };
@@ -392,9 +392,16 @@ modal('#modal_notification')
 		}else
     if(lines[0].split(" ")[0]=='EMSUpdate'){
 
-
+    
 
        obj = JSON.parse(lines[1])
+		console.log(obj)
+		if(obj['alert']=="1"||obj['alert']=="0"){
+			
+		console.log(obj)
+			
+		}
+		else{
 
        jQuery.each(obj['ems_data'], function (key, val) {
 
@@ -471,6 +478,8 @@ modal('#modal_notification')
 
 
        });
+	   
+	   }
 
     }else
 

@@ -3,7 +3,7 @@
   ems_case = EMSCase.find params[:id]
   @ems_case = ems_case
   admit = Admit.find params[:admit_id]
-
+  @admit = admit
 
   notify_message = false;
   reload = false;
@@ -90,7 +90,9 @@
 
       else
 
-        if assessment and assessment.data!=""
+   #  custom services
+
+      if assessment and assessment.data!=""
 
           obj = JSON.parse(assessment.data)
 
@@ -104,10 +106,29 @@
 
 
 
-          end
+		      elsif  obj and assessment.type=='patient_status'
 
+              record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"DX : "+assessment.name, :start_time=>stamp
 
+		          patient_status = EMSPatientStatus.where(:name=>obj['name']).first
 
+		          if patient_status
+
+		  	        case_status = EMSCasePatientStatus.create :case_id=>ems_case.id, :patient_status_id=> patient_status.id, :name=>patient_status.name, :title=>patient_status.title
+
+	  	        end
+
+	       elsif obj and assessment.type=='emr'
+             notify_message = false
+	           # record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR "+assessment.name, :start_time=>stamp
+              %>
+                <%= inline(this,:'dispatch/_emr', :local=>{:ems_case=>ems_case, :emr_name=>obj['name'], :item=>params[:item]}) %>
+              <%
+         elsif obj
+
+             record = admit.nurse_records.create :name=>"Paramedic" ,:description=>""+assessment.name, :start_time=>stamp
+
+		     end
 
         else
 

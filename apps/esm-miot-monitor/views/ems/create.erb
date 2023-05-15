@@ -1,4 +1,6 @@
-
+<%= inline(this,:'_init')  %>
+<%= inline(this,:'_style')  %>
+<%= inline(this,:'../lib/_map')  %>
 <%
 
 		session.delete :case_id
@@ -9,8 +11,25 @@
 
 		message = eval("\"#{noti_new_case_text}\"")
 
-    result =  EMSConnect.line_noti :message=>message
+        result =  EMSConnect.line_noti :message=>message
 		end
+		
+		
+		
+		# path = "miot/#{name}/z/#{z.name}/EMT"
+		
+
+		path = "miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"
+msg = <<MSG
+#{'EMSUpdate'} #{path}
+#{{'alert'=>'1'}.to_json}
+MSG
+	  
+	  
+	
+	  @context.settings.redis.publish(path, msg)		
+		
+		
 
 %>
 
@@ -110,3 +129,7 @@
 	</div>
 </div>
 </div>
+
+
+<%=init_map%>
+
