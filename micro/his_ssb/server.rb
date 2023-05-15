@@ -1,4 +1,4 @@
-
+require 'eventmachine'
 require 'sinatra'
 require 'socket'
 require 'sinatra/base'
@@ -58,6 +58,10 @@ require_relative '../lib/miot'
   ws = MIOT::connect
 
 
+
+  puts ws.inspect 
+
+
 class CaseSensitiveGet < Net::HTTP::Get
   def initialize_http_header(headers)
     @header = {}
@@ -67,7 +71,7 @@ class CaseSensitiveGet < Net::HTTP::Get
   def [](name)
     if name=='Content-Type'
     return @header[name.to_s][0]
-	else
+	elserequire 'eventmachine'
     return @header[name.to_s]
    end
   end
@@ -312,6 +316,41 @@ CNX
 
 
       result = {:status=>'200 OK', :record=>robj}
+
+
+
+data = {}
+data['bp'] = "120/80"
+data['bp_sys'] = "120"
+data['bp_dia'] = "80"
+data['pr']  = "60"
+data['spo2'] = "99"
+name = 'B'
+stamp = Time.now.strftime("%d%m%Y")
+ref = '-'
+
+           msg = <<MSG
+Data.Spot device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+
+
+  lines = []
+
+  lines << "STATUS:S1|HEIGHT:#{180}|WEIGHT:#{80}"
+
+
+msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+
+        puts msg
+
+           puts 'Start Sent Data '+msg
+
+#           ws.send(msg)
+
 
 
 
@@ -576,6 +615,16 @@ puts result.inspect
 end
 
 
+
+#EventMachine.run {
+
+#  EM.next_tick do
+
+
+if false
+
+puts 'start HL7'
+
 server = TCPServer.new '0.0.0.0', 9998
 
 last = {}
@@ -694,10 +743,28 @@ rescue Exception=>e
 
 
 
+  lines = []
+
+  lines << "STATUS:M1|SYS:#{data['BPSystolic']}|DIA:#{data['BPDiastolic']}" if data['BPSystolic']
+  lines << "STATUS:T1|T1:#{data['Temperature'].to_s}" if data['Temperature']
+  lines << "STATUS:S1|HEIGHT:#{data['BodyHeight'].to_f/100}|WEIGHT:#{data['BodyWeight']}" if data['BodyWeight']
+
+msg = <<EOM
+Monitor.Update zone_id=*
+#{lines.join("\n")}
+EOM
+
+        puts msg
+
+           puts 'Start Sent Data '+msg
+
+           ws.send(msg)
+
+
 
   puts data.inspect
   
-   if  http = login[:http]
+   if false and http = login[:http]
      
    
      uri = URI("#{settings.endpoint}/IVitalSign/UpdateVitalSign")
@@ -744,15 +811,22 @@ sleep(1)
 
 end
 
-     
-  
-  
-  
+   
   
   
 
 
 
+end
+
+
+#end  
+  
+
+#}
+
+
+puts 'ready'
 
 #
 #
