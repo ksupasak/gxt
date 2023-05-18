@@ -19,7 +19,7 @@
         pes = d['physicalExams']
         for pe in pes
             rtime = pe['recordTime']
-            data2s[rtime] = {} unless rtime
+            data2s[rtime] = {} unless data2s[rtime]
             data2s[rtime][pe['physicalExamCode']] = pe['value']
         end
     end
@@ -43,7 +43,7 @@
 	col = cols[ci]
 
 %>
-<td><%=data2s[dk][col['physicalExamCode']]%> </td>
+<td><%=data2s[dk][col['physicalExamCode']] if data2s[dk]%> </td>
 <% end %>
 </tr>
 <% end %>
