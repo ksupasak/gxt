@@ -133,7 +133,7 @@ require 'nokogiri'
    device_id = get_device "10c4:ea60"
 
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
-    
+      last_weight = nil
     while true
     
     
@@ -190,7 +190,7 @@ end
         current_weight = t.text.strip if ti==10  
         trig_weight = t.text.strip if ti==13
 	      
-        last_weight = nil
+      
 
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
