@@ -3,7 +3,7 @@ require 'serialport'
 
 
 
-serial = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
+serial = SerialPort.new("/dev/ttyUSB1", 115200, 8, 1, SerialPort::NONE)
 
 
 while true
@@ -13,5 +13,7 @@ while true
    
    puts raw.inspect 
    
-   sleep(1000)
+   sleep(1)
+   
+   
  end
