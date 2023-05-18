@@ -262,6 +262,14 @@ end
   
   hn = params[:hn]  
   
+  unless hn
+    
+      result = {:status=>'404 ERROR', :msg=>msg}
+      
+      return result
+    
+  else
+  
   ##############################################################
   
   puts 'Call send'
@@ -483,6 +491,9 @@ rescue Exception =>exception
 end
   
 puts result.inspect 
+
+
+end
   
 end
 
