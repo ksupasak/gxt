@@ -13,5 +13,7 @@ while true
    
    puts raw.inspect 
    
-   sleep(1000)
+   sleep(1)
+   
+   
  end
