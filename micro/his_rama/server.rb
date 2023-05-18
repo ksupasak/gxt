@@ -745,7 +745,7 @@ return content
         startDate = params[:startDate] if params[:startDate] and params[:startDate]!=''
         endDate = params[:endDate] if params[:endDate] and params[:endDate]!=''
         
-        uri = URI("#{settings.endpoint}/api/VitalSign/searchVitalSignsByMRNAndDate?mrn=1000782&startDate=18/05/2023&endDate=20/05/2023")
+        uri = URI("#{settings.endpoint}/api/VitalSign/searchVitalSignsByMRNAndDate?mrn=#{mrn}&startDate=#{startDate}&endDate=#{endDate}")
     
         data = {}
 
