@@ -473,7 +473,7 @@ end
   device_id = get_device "403:6001" 
 #  device_id = "/dev/ttyACM0"
 # 
-  puts device_id
+  puts "V100 #{device_id}"
   serial = SerialPort.new(device_id, 9600, 8, 1, SerialPort::NONE)
     serial.read_timeout = 100
     
