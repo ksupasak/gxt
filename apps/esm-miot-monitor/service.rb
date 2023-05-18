@@ -1052,11 +1052,13 @@ MSG
 
 
          # inject last score
-         unless admit
+         # unless admit
          if ref and ref!="" and ref !="-"
 
            patient = Patient.where(:hn=>ref).first
-
+               
+               
+            puts "check patient #{patient.inspect}"   
 
 
             unless patient
@@ -1081,15 +1083,60 @@ MSG
             end
 
 
-         end
+         # end
         end
 
          if admit
 
            v = data
            puts 'insert'
-           DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'],:co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data
-
+           
+           
+           draft = {:admit_id=>admit.id, :station_id=>station.id, :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data.to_json}
+             
+           # draft = {:admit_id=>admit.id, :station_id=>station.id,
+  #            :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'],
+  #            :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'],:co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data.to_json}
+  #
+       
+       
+        l = ["bp",                                         
+ "bp_sys",                                     
+ "bp_dia",                                     
+ "bp_mean",                                    
+ "pr",                                         
+ "hr",                                         
+ "spo2",                                       
+ "rr",                                         
+ "co2",                                        
+ "temp","score"] 
+        
+  for li in l
+      
+     draft[li.to_sym] = v[li] if v[li] and v[li] != 0  and v[li] != '0'
+    
+  end
+            
+           # draft[:bp] = v['bp'] if v['bp']
+        #
+        #    draft[:bp_sys] = v['bp_sys']
+        #    draft[:bp_dia] = v['bp_dia']
+        #    draft[:bp_mean] = v['bp_mean']
+        #
+        #    draft[:pr] = v['pr']
+        #    draft[:hr] = v['hr']
+        #    draft[:spo2] = v['spo2']
+        #    draft[:rr] = v['rr']
+        #    draft[:co2] = v['co2']
+        #    draft[:temp] = v['temp']
+        #    draft[:score] = v['score']
+           
+          
+           
+           
+           
+           
+           DataRecord.create  draft
 
 
 
@@ -1460,7 +1507,7 @@ MSG
         EM.add_periodic_timer(1) do
 
 
-          eout = File.open("err_service.log","a")
+          # eout = File.open("err_service.log","a")
 
 
           begin
@@ -1998,8 +2045,8 @@ end
 
 
 
-        eout.puts e.inspect
-        eout.puts e.backtrace
+        # eout.puts e.inspect
+     #    eout.puts e.backtrace
 
 
       end
