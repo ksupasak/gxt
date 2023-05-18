@@ -1,6 +1,20 @@
-<textarea width="100%" rows="5">
+
+
+<form method="POST">
+<label>mrn : </label>
+<input type="text" name="mrn" value="<%=params[:mrn]%>">
+<label>startDate : </label>
+<input type="text" name="startDate" placeholder="18/05/2023"  value="<%=params[:startDate]%>">
+<label>endDate : </label>
+<input type="text" name="endDate" placeholder="18/05/2023"  value="<%=params[:endDatemrn]%>">
+<button type="submit">Submit</button>
+</form>
+
+<label>return data : </label>
+<textarea width="600" rows="5">
 <%=@dobj.to_json%>
 </textarea>
+
 <%
     datas = @dobj['data']
     d1 = datas.first

@@ -725,8 +725,15 @@ return content
     
 
     if ht = login
-  
-      
+        puts params.inspect 
+        mrn = '1000782'
+        startDate = '18/05/2023'
+        endDate = '18/05/2023'
+
+        mrn = params[:mrn] if params[:mrn] and params[:mrn]!=''
+        startDate = params[:startDate] if params[:startDate] and params[:startDate]!=''
+        endDate = params[:endDate] if params[:endDate] and params[:endDate]!=''
+        
         uri = URI("#{settings.endpoint}/api/VitalSign/searchVitalSignsByMRNAndDate?mrn=1000782&startDate=18/05/2023&endDate=20/05/2023")
     
         data = {}
