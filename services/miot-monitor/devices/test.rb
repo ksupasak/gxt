@@ -3,7 +3,7 @@ require 'serialport'
 
 
 
-serial = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
+serial = SerialPort.new("/dev/ttyUSB1", 115200, 8, 1, SerialPort::NONE)
 
 
 while true
