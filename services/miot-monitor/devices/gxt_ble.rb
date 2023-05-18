@@ -79,12 +79,12 @@ begin
               
               
 
-              d.on_signal do |intf,props|
-
-              puts "BLE : #{intf} #{props.inspect}"
-
-              
-              end
+              # d.on_signal do |intf,props|
+     #
+     #          puts "BLE : #{intf} #{props.inspect}"
+     #
+     #
+     #          end
             
             
 
