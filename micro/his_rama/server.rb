@@ -66,7 +66,7 @@ require_relative '../lib/miot'
       {
       "username": "test01",
       "password": "test01",
-      "appCode": "ITEM_TEST"
+      "appCode": "ITSM_TEST"
       }
     }
   
@@ -183,14 +183,14 @@ CNX
 
       response = http.request(request)
     
-      puts '============= FINISH ==================='
+      puts '============= FINISH Send ==================='
     
     
       
       dobj = JSON.parse(response.body)
   
       
-      puts dobj.inspect 
+     
       
       obj = dobj['data']
       
@@ -259,12 +259,15 @@ end
 # service to get patient data
 
   post '/send' do 
+    
+    puts 'XXXXXXXXXXXXXXXXXX '
+    puts params.inspect
   
   hn = params[:hn]  
   
-  unless hn
+  if hn ==nil or hn == ""
     
-      result = {:status=>'404 ERROR', :msg=>msg}
+      result = {:status=>'404 ERROR', :msg=> "Null HN"}
       
       return result
     
