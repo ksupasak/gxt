@@ -1,14 +1,17 @@
 require 'socket'
-s = UDPSocket.open
-s.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, true)
-
-s.bind('', 9610)
-20.times do 
+require 'serialport'
 
 
-  text, sender = s.recvfrom(10000)
-  puts sender.inspect 
-  puts text.inspect
-  puts 
+
+serial = SerialPort.new("/dev/ttyUSB0", 115200, 8, 1, SerialPort::NONE)
+
+
+while true
   
-end
+  
+   raw = serial.readline("\r")
+   
+   puts raw.inspect 
+   
+   sleep(1000)
+ end
