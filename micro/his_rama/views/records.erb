@@ -1,4 +1,4 @@
-<textarea>
+<textarea width="100%" rows="5">
 <%=@dobj.to_json%>
 </textarea>
 <%
@@ -7,15 +7,20 @@
     cols = {}
     if d1
         pe = d1['physicalExams']
-        if pe
-			
-			for c in pe 
-				
-				cols[c['physicalExamCode']] = c
-				
+        if pe		
+			for c in pe 			
+				cols[c['physicalExamCode']] = c	
 			end
-			
-			
+        end
+    end
+
+    data2s = {}
+    for d in datas
+        pes = d['physicalExams']
+        for pe in pes
+            rtime = pe['recordTime']
+            data2s[rtime] = {} unless rtime
+            data2s[rtime][pe['physicalExamCode']] = pe['value']
         end
     end
 %>
@@ -30,11 +35,15 @@
 <th><%=col['physicalExamCode']%> (<%=col['unit']%>)</th>
 <% end %>
 </tr>
-<% for d in datas %>
+<% for dk in data2s.keys %>
 <tr>
-<td><%=d['recordDate']%></td>
-<% for col in cols%>
-<td><%=d['value']%></td>
+<td><%=dk%></td>
+<% for ci in cols.keys  
+
+	col = cols[ci]
+
+%>
+<td><%=data2s[dk][col['physicalExamCode']]%> </td>
 <% end %>
 </tr>
 <% end %>
