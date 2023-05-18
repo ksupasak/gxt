@@ -17,8 +17,10 @@
     data2s = {}
     for d in datas
         pes = d['physicalExams']
+        rdate = d['recordDate']
+        rdate = rdate.split(' ')[0]
         for pe in pes
-            rtime = pe['recordTime']
+            rtime = rdate+' '+pe['recordTime']
             data2s[rtime] = {} unless data2s[rtime]
             data2s[rtime][pe['physicalExamCode']] = pe['value']
         end
