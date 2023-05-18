@@ -1,1 +1,30 @@
+<textarea>
 <%=@dobj.inspect%>
+</textarea>
+<%
+    datas = @dobj['data']
+    d1 = datas.first
+    cols = []
+    if d1
+        pe = d1['physicalExams'].first
+        if pe
+            cols = pe.collect{|i| i['physicalExamCode']}.compact
+        end
+    end
+%>
+<table class="table table-striped">
+<tr>
+<th>Date</th>
+<% for col in cols%>
+<th><%=col%></th>
+<% end %>
+</tr>
+<% for d in datas %>
+<tr>
+<td><%=d['recordDate']%></td>
+<% for col in cols%>
+<td></td>
+<% end %>
+</tr>
+<% end %>
+</table>
