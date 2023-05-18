@@ -1,30 +1,43 @@
 <textarea>
-<%=@dobj.inspect%>
+<%=@dobj.to_json%>
 </textarea>
 <%
     datas = @dobj['data']
     d1 = datas.first
-    cols = []
+    cols = {}
     if d1
         pe = d1['physicalExams']
         if pe
-            cols = pe.collect{|i| i['physicalExamCode']}.compact
+			
+			for c in pe 
+				
+				cols[c['physicalExamCode']] = c
+				
+			end
+			
+			
         end
     end
 %>
 <table class="table table-striped">
 <tr>
 <th>Date</th>
-<% for col in cols%>
-<th><%=col%></th>
+<% for ci in cols.keys  
+
+	col = cols[ci]
+
+%>
+<th><%=col['physicalExamCode']%> (<%=col['unit']%>)</th>
 <% end %>
 </tr>
 <% for d in datas %>
 <tr>
 <td><%=d['recordDate']%></td>
 <% for col in cols%>
-<td></td>
+<td><%=d['value']%></td>
 <% end %>
 </tr>
 <% end %>
 </table>
+
+<%=%>
