@@ -15,6 +15,7 @@ require_relative '../lib/miot'
  
  
   set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th'
+  # set :endpoint, 'http://d-frontserv1.rama.mahidol.ac.th:9293'
 
   puts settings.endpoint
 
@@ -65,7 +66,7 @@ require_relative '../lib/miot'
       {
       "username": "test01",
       "password": "test01",
-      "appCode": "smartopd"
+      "appCode": "ITEM_TEST"
       }
     }
   
@@ -146,7 +147,7 @@ CNX
       
       content = <<CNX
       {
-      "mrn": "4210003"
+      "mrn": "#{hn}"
       }
 CNX
       data = JSON.parse(content)
@@ -203,7 +204,7 @@ CNX
       birth_date = Date.parse obj['dateOfBirth']
       
   
-      robj[:hn] = obj['patientCode']
+      robj[:hn] = hn #obj['patientCode']
       # robj[:pid] = obj['pid']
       robj[:first_name] = obj['firstName']
       robj[:last_name] = obj['lastName']
@@ -241,7 +242,7 @@ rescue Net::OpenTimeout => exception
 rescue Exception =>exception        
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
-    
+     puts exception.backtrace
         result = {:status=>'404 ERROR', :msg=>msg}
 end
   
@@ -294,18 +295,25 @@ CNX
 # },{...},{...}]
    
    
-      senses = {'pr'=>['PR','bpm'],'rr'=>['RR','bpm'],'bp_sys'=>'SBP','bp_dia'=>'DBP','rr'=>'RR','temp'=>'BT', 'weight'=>'W', 'height'=>'H','bmi'=>'BMI', 'score'=>'SCORE'}
       
-      senses['pr']=['PR','bpm']
-      senses['rr']=['RR','bpm']
-      senses['spo2']=['SPO2','%']
-      senses['bp_sys']=['SBP','mmHg']
-      senses['bp_dia']=['DBP','mmHg']
-      senses['bp_mean']=['MBP','mmHg']
-      senses['temp']=['BT','C']
-      senses['score']=['SCORE','']
-      senses['weight']=['W','kg']
-      senses['height']=['H','cm']
+      senses = {}
+   
+      senses['bp_sys']=['1', 'SBP','mmHg']
+      senses['bp_dia']=['2', 'DBP','mmHg']
+      senses['bp_mean']=['3', 'MBP','mmHg']
+      senses['pr']=['4', 'PR','bpm']
+      senses['temp']=['5', 'BT','C']
+      senses['weight']=['6', 'W','kg']
+      senses['height']=['7', 'H','cm']
+      senses['bmi']=['8', 'BMI','kg/m2']
+      senses['spo2']=['9', 'SPO2','%']
+      senses['rr']=['10', 'RR','bpm']
+      senses['score']=['11','SCORE','']
+      senses['avpu']=['12','AVPU','']
+      senses['pain']=['13','PAIN','']
+      senses['crt']=['14','CRT','']
+      
+     
       puts
       puts params.inspect 
       puts
@@ -315,20 +323,21 @@ CNX
       mrn = params[:hn]
       location_id = ''
       exam_id = params[:record_id]
-      record_at = Date.parse(params[:record_at])
+      record_at = Time.parse(params[:record_at])
       staff_id = params[:staff_id]
       
       for s in senses.keys
         v = senses[s]
-        if params[s] and params[s].size>0 
+        if params[s] and params[s].size>0 and params[s] !="-"
             
           data = {}
           data['mrn'] = mrn
           data['locationId'] = location_id
-          data['phycialExamId'] = exam_id
-          data['phycialExamcode'] = v[0]
+          data['phycialExamId'] = v[0]
+          data['machineId'] = params['serial_number']
+          # data['phycialExamcode'] = v[0]
           data['value'] = params[s]
-          data['unit'] = v[1]
+          data['unit'] = v[2]
           data['recordBy'] = 'machine'
           data['recordDate'] = record_at.strftime("%d/%m/%Y %H:%M:%S")
           data['staffId'] = staff_id
@@ -354,7 +363,8 @@ CNX
       http.read_timeout = 10 # seconds
 
       request = Net::HTTP::Post.new(uri.request_uri)
-      request.body = data.to_json
+
+ 
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -363,6 +373,12 @@ CNX
       puts '============= DEBUG ==================='
     
       request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+
+
+      
+      # request.set_form_data(data)
+      
+      request.body = data.to_json
 
       response = http.request(request)
     
@@ -389,7 +405,9 @@ CNX
 
       begin
         
-          name = 'TEST'
+          name = 'NA'
+          
+          name = params[:serial_number] if params[:serial_number] and params[:serial_number].size>0 and params[:serial_number]!="-"
           
           stamp = record_at
           data = {}
@@ -413,6 +431,7 @@ CNX
             end
             
           end
+          
           
           
           
@@ -459,6 +478,7 @@ rescue Exception =>exception
         # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
         msg = exception.to_s
         puts msg
+         puts exception.backtrace
         result = {:status=>'404 ERROR', :msg=>msg}
 end
   
@@ -631,6 +651,7 @@ end
       
     rescue Exception => e
       puts e.inspect 
+       puts exception.backtrace
       error = true
       err_msg = "Server Timeout!"
     end
@@ -698,6 +719,66 @@ return content
      
      end
   end
+  
+  
+  get '/records' do
+    
+
+    if ht = login
+  
+      
+        uri = URI("#{settings.endpoint}/api/VitalSign/searchVitalSignsByMRNAndDate?mrn=1000782&startDate=18/05/2023&endDate=20/05/2023")
+    
+        data = {}
+
+        # Full control
+        # http = Net::HTTP.new(uri.host, uri.port)
+   #      http.use_ssl = true if uri.instance_of? URI::HTTPS
+   #      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+   #      http.read_timeout = 10 # seconds
+ 
+         http = ht[:http]
+       
+         data['accessToken'] = settings.token
+      
+        request = Net::HTTP::Post.new(uri.request_uri)
+    
+ 
+        # Tweak headers, removing this will default to application/x-www-form-urlencoded
+        request["Content-Type"] = "application/json"
+        request["Authorization"] = 'Bearer '+settings.token
+      
+
+        puts '============= DEBUG ==================='
+    
+        # request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+
+        response = http.request(request)
+    
+        puts '============= FINISH ==================='
+    
+    
+        puts response.body
+        
+        @dobj = JSON.parse(response.body)
+        
+        erb :records
+        
+      end
+  
+
+
+  end
+  
+  
+  post '/sendx' do
+    
+    puts params.inspect 
+    
+  end
+  
+  
+
 
   #class App < Sinatra::Base
     # This action responds to POST requests on the URI '/billcrux/register'

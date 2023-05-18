@@ -77,9 +77,9 @@ CNX
     
     request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
     
-
-    
-    puts params.inspect
+    # puts request.body.read
+  
+    puts JSON.parse(@request_payload.keys[0])
     
     content = <<CNX
     {
