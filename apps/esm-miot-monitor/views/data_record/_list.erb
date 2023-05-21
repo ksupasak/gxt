@@ -18,8 +18,28 @@ Count : <%=this.model.count%>
 %>
 <tr>
 	<% for j in keys %>
-		<td><%=i[j[0]] %></td>
+	<td>
+	<%# j[0]%>
+	<% if j[0]  == 'admit_id' %>
+		<%
+			
+		admit = Admit.find(i[j[0]])
+		patient = admit.patient	
+		%>
+		<%= patient.hn if patient%>
+	
+	<% elsif j[0]  == 'station_id' %>
+		<%
+			
+		station = Station.find(i[j[0]])
+		
+		%>
+		<%= station.name if station%>
+	<% else %>
+		<%=i[j[0]] %>
 	<% end %>
+	<% end %>
+	</td>
 	<td>
 	<%=link_to 'HL7',"hl7?id=#{i.id}",:class=>'btn btn-default' %>
 	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default' %>

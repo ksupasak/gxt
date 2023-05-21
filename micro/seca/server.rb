@@ -20,6 +20,86 @@ set :port, 3000
       erb :index, :locals => {:params=> params}
 		
   end
+  
+  get '/demo' do
+    
+    
+
+
+    content = <<SECA
+
+    <!doctype html>
+    <html lang="de">
+    <head>
+        <title>Alibaba WebInterface</title>
+        <table>
+            <tr>
+                <td>WebServer</td>
+                <td>Version 1.1</td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>scaler01</td>
+            </tr>
+            <tr>
+                <td>Scale Model</td>
+                <td>seca 797</td>
+                <td>05797254208950</td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>Current Weight</td>
+                <td>73.2</td>
+                <td>kg</td>
+            </tr>
+            <tr>
+                <td>Trig. Weight</td>
+                <td>100.0</td>
+                <td>kg</td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td>1.700</td>
+                <td>m</td>
+            </tr>
+            <tr>
+                <td>Scan Value</td>
+                <td></td>
+            </tr>
+        </table>
+    </head>
+    <body>
+        <h3>CONFIG</h3>
+        <form method="get">
+            <p>
+                Login-Pwd 
+                <input type="password" name="LoginPwd" size=32 maxlength=59>
+            <p>
+                <input type="submit" value="Submit">
+        </form>
+    </body>
+    <br>
+    <br>
+    Copyright © 2018 seca gmbh & co. kg. All rights reserved.
+    </html>
+
+  
+
+SECA
+
+return content
+    
+  end
+  
 
   get '/get' do 
 	
@@ -184,7 +264,7 @@ SECA
 
   post '/send' do 
 
-
+    puts "XXXXX #{params.inspect}"
     
     # req = Net::HTTP::Get.new(seca_uri.to_s)
     #
@@ -207,7 +287,11 @@ SECA
     
     # uri = URI('http://www.example.com/search.cgi')
     
-    
+    unless params['hn']
+      
+      puts 'no hn'
+      
+    else
     
    
     error = false
@@ -265,6 +349,8 @@ SECA
       redirect "entry?hn=#{params[:hn]}&weight=#{params[:weight]}&height=#{params[:height]}&err=1&err_msg=#{err_msg}#{'&debug=1' if params[:debug]=='1'}"
       
     end
+    
+  end
     
     
     

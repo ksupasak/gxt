@@ -1,6 +1,6 @@
 
 
-<form method="POST">
+<form method="GET">
 <label>mrn : </label>
 <input type="text" name="mrn" value="<%=params[:mrn]%>">
 <label>startDate : </label>
@@ -10,10 +10,12 @@
 <button type="submit">Submit</button>
 </form>
 
+
+<b>
+Patient :  <%=@pobj[:prefix_name]%> <%=@pobj[:first_name]%> <%=@pobj[:last_name]%> Gender :  <%=@pobj[:gender]%> BirthDate :  <%=@pobj[:birth_date]%> 
+</b>
 <label>return data : </label>
-<textarea width="600" rows="5">
-<%=@dobj.to_json%>
-</textarea>
+
 
 <%
     datas = @dobj['data']

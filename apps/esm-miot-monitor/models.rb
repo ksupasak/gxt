@@ -892,6 +892,11 @@ class DataRecord  < GXTModel
 
 	  px[:weight] = format("%.2f",i[:weight].to_f) if i[:weight] and i[:weight]!="" and i[:weight]!="-"
 	  px[:height] = format("%.2f",i[:height].to_f) if i[:height] and i[:height]!="" and i[:height]!="-"
+    
+    px[:score] = data['score'] if data['score']
+    px[:avpu] = data['avpu'] if data['avpu']
+    
+    
 
 
 	if i[:weight] and i[:weight]!="" and i[:weight]!="-"

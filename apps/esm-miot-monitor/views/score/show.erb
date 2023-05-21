@@ -33,7 +33,9 @@ Version : <%=record.version%>
 		
 		for i in items
 			
-			conds  = i.conditions.sort!{|a,b| a.sort_order<=>b.sort_order }
+			conds  = i.conditions.sort!{|a,b| a.sort_order = 0 unless a.sort_order 
+				b.sort_order=0 unless b.sort_order 
+				a.sort_order<=>b.sort_order }
 	%>	
 		
 	  <div class="card">

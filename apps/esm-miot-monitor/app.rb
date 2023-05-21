@@ -572,8 +572,8 @@ MSG
 
 
 
-               # puts "Monitor"
-               # puts msg_data
+               puts "Monitor"
+               puts msg_data
   #              puts @context.settings.cmd_map.inspect
   #
   #              # {"miot"=>{"Monitor.Update"=>{"zone_id=*"=>[-3100113279091852179]}, "ZoneUpdate"=>{"zone_id=*"=>[-3100113279091852179]}, "Alert"=>{"station_id=*"=>[-3100113279091852179]}, "Data.Image"=>{"station_id=*"=>[-3100113279091852179]}}}

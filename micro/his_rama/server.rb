@@ -279,18 +279,15 @@ end
 
   begin    
 
-  if login
+  if ht = login
+    
+    http = ht[:http]
   
       
       uri = URI("#{settings.endpoint}/api/VitalSign/SaveVitalSigns")
       
       data = {}
-      
-      content = <<CNX
-      {
-      "mrn": "4210003"
-      }
-CNX
+
    
    
    
@@ -344,7 +341,7 @@ CNX
           data = {}
           data['mrn'] = mrn
           data['locationId'] = location_id
-          data['phycialExamId'] = v[0]
+          data['physicalExamId'] = v[0].to_i
           data['machineId'] = params['serial_number']
           # data['phycialExamcode'] = v[0]
           data['value'] = params[s]
@@ -364,18 +361,18 @@ CNX
    
       data = list
       
-      puts data.inspect
     
 
       # Full control
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true if uri.instance_of? URI::HTTPS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      http.read_timeout = 10 # seconds
+      # http = Net::HTTP.new(uri.host, uri.port)
+      # http.use_ssl = true if uri.instance_of? URI::HTTPS
+    #   http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # http.read_timeout = 10 # seconds
 
       request = Net::HTTP::Post.new(uri.request_uri)
 
- 
+      # req.body = '{"title": "foo","body": "bar","userId": 1}'
+   #    req.content_type = 'application/json'
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json"
@@ -383,19 +380,22 @@ CNX
 
       puts '============= DEBUG ==================='
     
-      request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      # request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
 
-
+      puts data.to_json
       
       # request.set_form_data(data)
       
       request.body = data.to_json
+      
+      # req.body = '{"title": "foo","body": "bar","userId": 1}'
+      request.content_type = 'application/json'
 
       response = http.request(request)
     
-      puts '============= FINISH ==================='
+      puts '============= FINISH  ==================='
     
-    
+      puts response.body
       
       dobj = JSON.parse(response.body)
   
@@ -735,18 +735,22 @@ return content
   end
   
   
+  
   get '/records' do
     
 
     if ht = login
         puts params.inspect 
-        mrn = '1000782'
+        mrn = '3852003'
         startDate = '18/05/2023'
         endDate = '18/05/2023'
 
         mrn = params[:mrn] if params[:mrn] and params[:mrn]!=''
         startDate = params[:startDate] if params[:startDate] and params[:startDate]!=''
         endDate = params[:endDate] if params[:endDate] and params[:endDate]!=''
+        
+      
+        
         
         uri = URI("#{settings.endpoint}/api/VitalSign/searchVitalSignsByMRNAndDate?mrn=#{mrn}&startDate=#{startDate}&endDate=#{endDate}")
     
@@ -779,9 +783,92 @@ return content
         puts '============= FINISH ==================='
     
     
-        puts response.body
+        # puts response.body
         
         @dobj = JSON.parse(response.body)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      
+        uri = URI("#{settings.endpoint}/api/MR/Patients/GetPatientProfileByMrn")
+    
+        data = {}
+      
+        content = <<CNX
+        {
+        "mrn": "#{mrn}"
+        }
+CNX
+        data = JSON.parse(content)
+      
+      
+
+       
+         data['accessToken'] = settings.token
+      
+        request = Net::HTTP::Post.new(uri.request_uri)
+        request.set_form_data(data)
+        request.body = data.to_json
+      
+        puts request.body.inspect
+
+        puts 'tok '+ht.inspect 
+        # Tweak headers, removing this will default to application/x-www-form-urlencoded
+        request["Content-Type"] = "application/json"
+        request["Authorization"] = 'Bearer '+settings.token
+      
+
+        puts '============= DEBUG ==================='
+    
+        request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+
+        response = http.request(request)
+    
+        puts '============= FINISH Send ==================='
+    
+    
+      
+        dobj = JSON.parse(response.body)
+  
+      
+     
+      
+        obj = dobj['data']
+      
+        robj = {}
+  
+        # birth_date = Date.new obj['dateOfBirth'][4..7].to_i-543, obj['dateOfBirth'][2..3].to_i, obj['dateOfBirth'][0..1].to_i
+        # birth_date = Date.new obj['dateOfBirth'][0..3].to_i, obj['dateOfBirth'][4..5].to_i, obj['dateOfBirth'][6..7].to_i
+      
+      
+      
+        birth_date = Date.parse obj['dateOfBirth']
+      
+  
+        robj[:hn] = mrn #obj['patientCode']
+        # robj[:pid] = obj['pid']
+        robj[:first_name] = obj['firstName']
+        robj[:last_name] = obj['lastName']
+        robj[:prefix_name] = obj['titleName']
+        robj[:gender] = obj['gender']
+        robj[:birth_date] = birth_date
+        
+        
+        
+        
+        @pobj = robj
+        
+        
+        
+        
+        
+        
         
         erb :records
         
