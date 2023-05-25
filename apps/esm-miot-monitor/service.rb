@@ -782,11 +782,11 @@ response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http| # pa
 end
 
 text =  JSON.parse(response.body)['text']
+puts text
 
-
+                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
 
                               msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
-                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
 
 
 
