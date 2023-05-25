@@ -774,7 +774,7 @@ MSG
 uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
 request = Net::HTTP::Post.new(uri)
 
-form_data = [['file', content]] # or File.open() in case of local file
+form_data = [['file', StringIO.new(content)]] # or File.open() in case of local file
 
 request.set_form form_data, 'multipart/form-data'
 response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http| # pay attention to use_ssl if you need it
