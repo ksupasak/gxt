@@ -5,7 +5,3 @@ services/monitor/conf.rb
 Gemfile.lock
 log/access.log
 log/nginx.pid
-<<<<<<< HEAD
-
-=======
->>>>>>> 31cc5f86fd027f213649456a6ac3561a99bf666e
