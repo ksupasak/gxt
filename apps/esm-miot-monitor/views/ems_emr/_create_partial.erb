@@ -15,7 +15,18 @@
 
     admit = Admit.find(ems_case.admit_id)
 
-    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
+    values = record
+
+    text = "EMR: #{document.name}"
+
+    if File.file?(File.dirname(__FILE__) +'/documents/_'+document.name+"_text.erb")
+
+      text = inline(this,'documents/_'+document.name+"_text", :this=>this, :record=>values, :ems_case=> ems_case)
+
+    end
+
+    # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
+    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now
 
 
       path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"

@@ -769,7 +769,26 @@ MSG
 
                               if ems_channel
 
+
+
+uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
+request = Net::HTTP::Post.new(uri)
+
+form_data = [['file', content]] # or File.open() in case of local file
+
+request.set_form form_data, 'multipart/form-data'
+response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http| # pay attention to use_ssl if you need it
+  http.request(request)
+end
+
+text =  JSON.parse(response.body)['text']
+
+
+
                               msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
+                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
+
+
 
                               if zone
                               # puts result.to_json
@@ -1056,9 +1075,9 @@ MSG
          if ref and ref!="" and ref !="-"
 
            patient = Patient.where(:hn=>ref).first
-               
-               
-            puts "check patient #{patient.inspect}"   
+
+
+            puts "check patient #{patient.inspect}"
 
 
             unless patient
@@ -1090,33 +1109,33 @@ MSG
 
            v = data
            puts 'insert'
-           
-           
+
+
            draft = {:admit_id=>admit.id, :station_id=>station.id, :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data.to_json}
-             
+
            # draft = {:admit_id=>admit.id, :station_id=>station.id,
   #            :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'],
   #            :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'],:co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp'], :data=>data.to_json}
   #
-       
-       
-        l = ["bp",                                         
- "bp_sys",                                     
- "bp_dia",                                     
- "bp_mean",                                    
- "pr",                                         
- "hr",                                         
- "spo2",                                       
- "rr",                                         
- "co2",                                        
- "temp","score"] 
-        
+
+
+        l = ["bp",
+ "bp_sys",
+ "bp_dia",
+ "bp_mean",
+ "pr",
+ "hr",
+ "spo2",
+ "rr",
+ "co2",
+ "temp","score"]
+
   for li in l
-      
+
      draft[li.to_sym] = v[li] if v[li] and v[li] != 0  and v[li] != '0'
-    
+
   end
-            
+
            # draft[:bp] = v['bp'] if v['bp']
         #
         #    draft[:bp_sys] = v['bp_sys']
@@ -1130,12 +1149,12 @@ MSG
         #    draft[:co2] = v['co2']
         #    draft[:temp] = v['temp']
         #    draft[:score] = v['score']
-           
-          
-           
-           
-           
-           
+
+
+
+
+
+
            DataRecord.create  draft
 
 
@@ -1551,7 +1570,7 @@ MSG
 
                   # routin 10 sec
 
-                  if inow!=nil and randx[name]!=nil and (inow+randx[name])%10 == 0 
+                  if inow!=nil and randx[name]!=nil and (inow+randx[name])%10 == 0
 
 
 

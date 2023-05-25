@@ -16,16 +16,16 @@
 
 	%>
 	<% for i in cases
-
+	  cls = ""
 		code = i.init_code
-		cls = code.get_class
+		cls = code.get_class if code
 	%>
 
 
 
 	<div class="col">
 		<a href="show?id=<%=i.id%>">
-		<div class="card radius-10 border-start border-0 border-3 border-<%= code.get_class %>">
+		<div class="card radius-10 border-start border-0 border-3 border-<%= code.get_class if code  %>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>

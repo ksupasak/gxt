@@ -1,0 +1,61 @@
+<% require_relative 'lib'%><%
+  @record = record
+  r = @record.data
+%>
+
+<%
+    if r['response'] and r['response'] != ""
+%>
+GA : <%=r['response'].classify %><% end %>
+<%
+    if r['airway'] and r['airway'] != ""
+      compromise = ""
+    compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
+
+%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
+<%
+    if r['breath_status'] and  r['breath_status'] != ""
+      compromise = ""
+    compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
+
+    sounds = []
+
+    # Clear breath sound equal both lungs
+    soundx = %w{ breath_lung_clear  breath_wheezing  breath_rhonchi breath_crepitation  breath_descrease percussion_resonance percussion_dullness}
+
+    for i in soundx
+
+          if r[i]
+
+              t = "-"
+              t = i.split("_")[-1].classify if i.split("_")[-1]
+              sounds << "#{t} breath sound #{r[i].humanize.downcase}"
+
+          end
+
+    end
+
+%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%><% end %>
+<%
+
+    if r['circulation_skin'] and r['circulation_skin'] != ""
+      result = "No sign of shock"
+      result = "Skin #{r['circulation_skin']} " if r['circulation_skin']!="normal"
+      pulse = ""
+      pulse = "#{r['circulation_pulse'].humanize} peripheral pulse " if r['circulation_pulse']
+
+%>C : <%= result  %>, <%=pulse%><% end %>
+<%
+    # E4V5M6 pupil 3 mm RTLBE
+    if r['gcs_e'] and r['gcs_e'] != ""
+
+      evm = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
+      result = "#{evm}, lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
+
+%>D : <%= result  %> <%="DTX #{r['dtx']} mg%" if r['dtx'] and r['dtx']!="" %><% end %>
+<%
+    # E4V5M6 pupil 3 mm RTLBE
+    if r['exposure_list'] and r['exposure_list'] != ""
+
+
+%>E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>  <% end %>

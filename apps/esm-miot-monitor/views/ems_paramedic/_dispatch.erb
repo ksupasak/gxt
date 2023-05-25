@@ -37,6 +37,12 @@
 
 			item = EMSAssessment.find i.assessment_id
 
+			unless item
+
+			i.destroy
+
+		  else
+			
 			nitem = EMSAssessment.new item.attributes
 
 			data = {}
@@ -49,6 +55,8 @@
 
 		end
 
+		end
+
 
 
 
@@ -57,7 +65,7 @@
 
 	    items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
 
-				{:i=>i, :data=>data, :item=>nil, :position=>i.position }
+				{:i=>i, :data=>data, :item=>i, :position=>i.position }
 
 			}
 
@@ -67,7 +75,7 @@
 
 
 
-  labels = ['Track', 'Assess', 'Proc', 'Med', 'EMR', 'Status']
+  labels = ['Track', 'Assess', 'Treatment', 'Med', 'EMR', 'Status']
   groups = %w{track assessment proc med emr status}
 
   sub_groups = {}
@@ -133,7 +141,7 @@
 						i = it[:i]
 					%>
         <div class="col-12 mt-3">
-          <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%> </a>
+          <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%></a>
         </div>
         <% end %>
         <% end %>
@@ -168,6 +176,8 @@
 
     found = null;
     assessment_id = null;
+
+		// alert(""+cmd+" item "+item);
 
     for(var ci in commands){
       c = commands[ci]
@@ -218,7 +228,7 @@
 
       cmd = $(this).attr('code')
 			item = $(this).attr('item')
-
+			// alert("" + cmd + " item "+item)
       dispatch_command(cmd, item)
       $('.modal').modal('hide');
 

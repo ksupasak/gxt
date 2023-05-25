@@ -1,8 +1,8 @@
 
 
 
-<div class="modal fade" id="dispatch_emr_panel" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+<div class="modal  fade" id="dispatch_emr_panel" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Patient EMR</h5>
@@ -15,7 +15,7 @@
 
 
       </div>
-  
+
     </div>
   </div>
 </div>
@@ -27,7 +27,15 @@ $('#dispatch_emr_panel').modal("show")
 <%
 
       item = EMSPatientStatusItem.find params[:item]
+
+      if item
       assess = EMSAssessment.find item.assessment_id
+      else
+      assess = EMSAssessment.find params[:item]
+      end
+
+
+
       data = JSON.parse(assess.data)
 
       document_name = data['name']

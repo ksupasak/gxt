@@ -62,31 +62,10 @@
 
           end
 
-      when 'ambu'
 
-        %>
-          <%= inline(this,:'dispatch/_patient_ambu', :local=>{:ems_case=>ems_case}) %>
-        <%
+          #inline(this,:'dispatch/_patient_ambu', :local=>{:ems_case=>ems_case})
 
-      when 'vf'
-
-          %>
-            <%= inline(this,:'dispatch/_rhy_vf', :local=>{:ems_case=>ems_case}) %>
-          <%
-
-      when 'ett'
-
-              %>
-                <%= inline(this,:'dispatch/_ett', :local=>{:ems_case=>ems_case}) %>
-              <%
-
-
-      when 'str'
-
-
-        popup = true
-
-
+    
 
       else
 

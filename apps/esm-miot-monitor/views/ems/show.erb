@@ -9,8 +9,9 @@ code = EMSCode.find record.init_cbd_code
 
 session[:case_id] = record.id
 
+cls = "primary"
 
-cls = record.init_code.get_class
+cls = record.init_code.get_class if code
 
 %>
 <style>
@@ -141,7 +142,7 @@ cls = record.init_code.get_class
 
 					<div class="col-5">
 						<h4 class="my-1 text-<%=cls%>">
-							<%=record.init_code.name.split(" ")[0]%>
+							<%=record.init_code.name.split(" ")[0] if record.init_code %>
 
 						</h4>
 					</div>
@@ -183,7 +184,7 @@ cls = record.init_code.get_class
 
 			</div>
 				<!-- <div>
-					<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] %></h4>
+					<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] if record.init_code %></h4>
 					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
 					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
 

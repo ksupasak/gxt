@@ -164,7 +164,7 @@ lines = bin[it][:list]
 %> -เวลา <%=t.strftime("%H:%M") if t%> น. <%
 for i in lines
   type =i[0]
-  des = i[1]
+  des = i[1].strip
 %> -- <%=des%> <% end %>
 <% end %>
 

@@ -17,8 +17,8 @@
 		<%
 
 		if ems_case
-
-			cls = ems_case.init_code.get_class
+			cls = "primary"
+			cls = ems_case.init_code.get_class if ems_case.init_code
 
 		%>
 		<li class="mm-active">
@@ -27,7 +27,7 @@
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%><br/>
 
-				<span class="badge bg-<%=cls%>" ><%=ems_case.init_code.code%></span>
+				<span class="badge bg-<%=cls%>" ><%=ems_case.init_code.code if ems_case.init_code%></span>
 				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
@@ -312,15 +312,17 @@
 
 				%>
 				<% for i in cases
+
+					code_class  = "primary"
 					code = EMSCode.find i.init_cbd_code
-					code_class= code.get_class
+					code_class= code.get_class if code
 
 				%>
 				<li class="<%='mm-active' if i.id==params[:id]%>" > <a href="show?id=<%=i.id%>" class=" text-<%=%>"><i class="bx bx-taxi"></i><%=i.case_no%>&nbsp;
 
 
 
-					<span class="badge bg-<%=code_class%>" ><%=code.code%></span></a>
+					<span class="badge bg-<%=code_class%>" ><%=code.code if code%></span></a>
 				</li>
 				<% end %>
 
