@@ -9,7 +9,7 @@ gem 'sinatra-partial'
 
 gem 'sinatra-formhelpers-ng'
 
-#gem 'puma'
+gem 'puma'
 gem 'mqtt'
 gem 'thin'
 
