@@ -645,7 +645,7 @@ class EMSAssessment < GXTModel
   key :sort_order, Integer
 
   key :zone_id, ObjectId
-  
+
   key :position, String
 
 end
@@ -679,6 +679,13 @@ class EMSPatientStatus < GXTModel
   key :patient_type, String
   key :color, String
 
+  key :img_1, ObjectId
+  key :img_2, ObjectId
+  key :img_3, ObjectId
+
+
+
+
 end
 
 
@@ -706,7 +713,7 @@ class EMSController < GXT
 
   def acl
 
-    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*'}
+    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*'}
 
   end
 

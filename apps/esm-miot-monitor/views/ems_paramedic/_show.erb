@@ -1,6 +1,5 @@
 <script src="<%=url_for('hls/hls.js')%>"></script>
 
-
 <%
 
 ems_case = EMSCase.find params[:id]
@@ -31,9 +30,6 @@ end
 %>
 
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3" style="border:0px solid red">
-
-
-
 
 
 
@@ -880,15 +876,15 @@ update_message()
   	  url: "<%=get_path "dispatch"%>?id=<%=params[:id]%>",
   	  context: document.body
   	}).done(function(data) {
-  	 	
+
 		$('#dispath-panel').html(data)
 
   	});
 
 
   }
-  
-	  
+
+
 
    function update_message(){
 
@@ -980,7 +976,7 @@ update_message()
 		  reload_message("<%=ems_case.id%>","<%=admit.id%>")
       	  update_message();
 		  update_message_page();
-		  
+
 		  // update_message_page();
 
 		}

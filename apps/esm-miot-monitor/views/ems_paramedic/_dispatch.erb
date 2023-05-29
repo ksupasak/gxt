@@ -13,8 +13,13 @@
 
 
 	case_status = EMSCasePatientStatus.where(:case_id=>ems_case.id).last
-
+  cs = nil
+	cs_att = nil
 	if   case_status and cs = EMSPatientStatus.find(case_status.patient_status_id)
+
+
+		cs_att = Attachment.find(cs.img_2)
+
 		patient_status = case_status.title
 		patient_status_cls = 'btn btn-danger'
 
@@ -42,7 +47,7 @@
 			i.destroy
 
 		  else
-			
+
 			nitem = EMSAssessment.new item.attributes
 
 			data = {}
@@ -122,9 +127,11 @@
 <% end %>
 
 
+
+
 <!-- Modal -->
 <div class="modal fade" id="dispatch_<%=g%>" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog  modal-xl modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><%=labels[gi]%> :
@@ -133,7 +140,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
+      <div class="row">
+				<% if cs_att %>
+				<div class="col">
+						<img src="<%=cs_att.path %>" style="width:100%">
+				</div>
+				<% end %>
+				<div class="col">
       <div class="row">
         <% if map[g] and map[g] != nil
           for it in map[g]
@@ -145,9 +158,12 @@
         </div>
         <% end %>
         <% end %>
+
       </div>
+				<br/>
+	</div>
 
-
+</div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -162,8 +178,42 @@
 </div>
 
 <div class="hidden status-placement" style="display:none;">
-<span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span>
+<div class="row">
+<a href="#" class="status-img-btn col-6"> <span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span></a>
+<a href="#" class="status-img-btn col-6"> <span class="<%=patient_status_cls%> col-12"> <%=case_note%></span></a>
 </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="status-img-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">	<%=cs.title %> Guildline	</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+				<%
+					if cs_att
+				%>
+				<img src="<%=cs_att.path %>" style="width:100%">
+
+				<% end %>
+      </div>
+
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
 
 <script>
 
@@ -239,6 +289,10 @@
 		$(document).ready(function(){
 
 				$('.status').html($(".status-placement").html());
+				$('.status-img-btn').click(function(){
+
+					$('#status-img-modal').modal('show');
+				})
 
 		})
 
