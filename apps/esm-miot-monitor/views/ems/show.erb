@@ -67,7 +67,7 @@ cls = record.init_code.get_class if code
 						<div class="col-5">
 							<h4 class="my-1 text-info " >
 
-							 Tel:	<%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
+							 <%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
 
 							</h4>
 						</div>
@@ -722,7 +722,7 @@ cls = record.init_code.get_class if code
 		// console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Zone.Message'){
 
-			update_message()
+			update_message();
 
 		}
 
@@ -731,6 +731,6 @@ cls = record.init_code.get_class if code
 
   }
 
-
+	var interval = null;
 
 </script>

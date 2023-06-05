@@ -25,7 +25,7 @@
 
 		patient_status_cls = 'btn' if cs.color=='normal'
 
-		case_note = "#{format("%.1f min ago",(Time.now-case_status.created_at).to_i/60.0)}"
+		case_note = "<span id='status-at'>#{format("%.1fs",(Time.now-case_status.created_at).to_i/60.0)}</span>"
 
 		status_protocol = EMSPatientStatus.find case_status.patient_status_id
 
@@ -33,7 +33,7 @@
 
 
 
-	  items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
+	  # items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
 
 
 		items = []
@@ -48,6 +48,14 @@
 
 		  else
 
+			its = [item]
+
+			if item.type=='group'
+					iss = EMSAssessment.where(:group=>item.code).all
+					its += iss
+			end
+
+			for item in its
 			nitem = EMSAssessment.new item.attributes
 
 			data = {}
@@ -58,7 +66,9 @@
 			nitem.position = i.position
 			items << {:i=>nitem,:data=>data, :item=>i, :position=>nitem.position}
 
-		end
+			end
+
+		  end
 
 		end
 
@@ -179,8 +189,8 @@
 
 <div class="hidden status-placement" style="display:none;">
 <div class="row">
-<a href="#" class="status-img-btn col-6"> <span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span></a>
-<a href="#" class="status-img-btn col-6"> <span class="<%=patient_status_cls%> col-12"> <%=case_note%></span></a>
+<a href="#" class="status-img-btn col-8"> <span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span></a>
+<a href="#" class="status-img-btn col-4"> <span class="<%=patient_status_cls%> col-12"> <%=case_note%></span></a>
 </div>
 </div>
 
@@ -190,7 +200,7 @@
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">	<%=cs.title %> Guildline	</h5>
+        <h5 class="modal-title">	<%=cs.title if cs%> Guildline	</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -295,5 +305,42 @@
 				})
 
 		})
+
+		<% if case_status %>
+
+		function update_status_at(){
+
+
+			// Get today's date and time
+			var now = new Date().getTime();
+
+
+			// Find the distance between now and the count down date
+			var distance = now - Date.parse(<%=case_status.created_at.to_json %>);
+
+			// Time calculations for days, hours, minutes and seconds
+			var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+			// Display the result in the element with id="demo"
+			result = ""
+
+			if(days>0) result+=  days + "d "
+			if(hours>0) result+=  hours + "h "
+			if(minutes>0) result+=  minutes + "m "
+			if(hours==0)
+		  result += seconds + "s ";
+
+				$('#status-at').html(result)
+
+
+		}
+
+		if(interval!=null) clearInterval(interval);
+		interval = setInterval(update_status_at, 1000);
+
+		<% end %>
 
 </script>

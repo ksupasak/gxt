@@ -450,6 +450,7 @@ MSG
          rescue Exception=>e
 
            puts e.inspect
+           puts e.backtrace
 
            http = nil
 
@@ -769,7 +770,7 @@ MSG
 
                               if ems_channel
 
-
+                                if false
 
 uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
 request = Net::HTTP::Post.new(uri)
@@ -788,7 +789,9 @@ body = response.body
 text =  JSON.parse(body)['text']
 puts "size : #{content.size} AI: #{text} #{body}"
 
-                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
+msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
+
+end
 
                               msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
@@ -919,12 +922,17 @@ MSG
 
            if obj['device_type']=='mobile'
 
-
+           puts "r" + json["receiver"]
 
             ambu = Ambulance.where(:name=>json["receiver"]).first
+            
+              
             if ambu
-
+              
               ambu_status[ambu.id.to_s] = obj
+              
+              puts ambu_status.inspect 
+              
             end
 
            end
@@ -1457,6 +1465,7 @@ MSG
 
      rescue Exception=>e
         puts e.inspect
+       puts e.backtrace
 
      end
 

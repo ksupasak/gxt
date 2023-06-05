@@ -163,7 +163,7 @@ record = @current_case
 
         <% if record %>
     <div class="col-3">
-      <button type="button" class="btn btn-primary px-4  radius-5" style="width:100%;">
+      <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:100%;">
         INFO</button>
     </div>
     <div class="col-3">
@@ -171,8 +171,8 @@ record = @current_case
       <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
       <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
         NAV</a>-->
-
-        <a href="https://www.google.com/maps/dir/<%=current_route.stop_latlng.split().join()%>" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
+		         <!-- https://www.google.com/maps/dir//13.6086178,100.5946353/@13.6085003,100.5536058,13z?entry=ttu -->
+        <a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
           NAV</a>
 
 
@@ -193,9 +193,17 @@ record = @current_case
         <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
           NAV</a>-->
 
-          <a href="https://pcm-life.com:4443/#/<%=record.case_no %>" class="btn-nav btn btn-danger text-white px-4  radius-5" style="width:100%;">
+          <a href="#" class="btn-nav cap-btn btn btn-danger text-white px-4  radius-5" style="width:100%;">
             Video</a>
-
+			<script>
+				$('.cap-btn').click(function(){
+					
+					device_interface.startVideoCall("<%=record.case_no%>")
+					
+					
+				})
+				
+			</script>		
 
           <% end %>
       </div>
@@ -250,6 +258,201 @@ record = @current_case
 <div class="modal-x" style="display: none;" >
 <div class="modal-backdrop fade show"></div>
 </div>
+
+
+<% if @current_case 
+r = @current_case
+
+	
+cls = ""	
+if r.init_code
+case r.init_code.color
+when 'red'
+	cls = 'alert-danger'	
+when 'yellow'
+	cls = 'alert-warning'	
+when 'green'
+	cls = 'alert-success'	
+end
+end
+
+
+
+%>
+
+
+<div class="modal fade" id="modal_info" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header <%=cls%>">
+				<h5 class="modal-title noti_title" id="exampleModalLabel">Case : <%=@current_case.case_no %> </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+           
+		   	<div class="row">
+				<div class="col-6">
+				<b>Patient : </b> <%=r.patient_name%>
+				</div>
+				
+				
+			<div class="col-6">
+			Sex : <%= r.patient_gender %> Age : <%= r.patient_age%>yr
+			</div>
+			
+		
+		
+			
+				<div class="col-6">
+					T : <%=r.created_at.strftime("%H:%M:%S")%>
+					(<%=format("%.1f",(Time.now - r.created_at)/60.0)%>m)
+				</div>
+				
+				
+			<div class="col-6">
+			CID : <%= r.patient_cid %>
+			</div>
+				
+				
+				<div class="col-6">
+				Phone : <%= r.contact_name %>
+				
+				<div class="card">
+				<div class="card-body">
+				<%= r.contact_phone %>
+				</div>
+				</div>
+				
+				</div>
+				
+		
+				
+				
+				<div class="col-6">
+					
+					Location : <br/> 
+					<div class="card">
+					<div class="card-body">
+					<%= r.location %> &nbsp;
+					</div>
+					</div>
+					
+				</div>
+				
+				<div class="col-12">
+					
+					Chief Complain : <br/> 
+					<div class="card">
+					<div class="card-body">
+					<%= r.chief_complain %>
+					</div>
+					</div>
+					
+				</div>
+				
+				
+				<div class="col-12">
+					
+					Init CBD : <br/> 
+					
+					<% if r.init_code
+					
+					cls = ""	
+					case r.init_code.color
+					when 'red'
+						cls = 'alert-danger'	
+					when 'yellow'
+						cls = 'alert-warning'	
+					when 'green'
+						cls = 'alert-success'	
+					end
+					
+					
+					 %>
+					<div class="card">
+					<div class="card-body  <%= cls%>">
+					<%= r.init_code.name if r.init_code %>
+					</div>
+					</div>
+					<% else %>
+					<div class="card">
+					<div class="card-body alert alert-danger">
+						N/A
+					</div>
+					</div>
+					<% end %>
+					
+				</div>
+				
+				<div class="col-6">
+				<b>Dispatch : </b> <%=r.ambulance.name if r.ambulance%>
+				</div>
+			
+				<div class="col-6">
+				Type : <%= r.case_type %> 
+				</div>
+				
+			
+				<div class="col-6">
+				
+					<%
+						
+						commands = r.commands
+						if commands.size > 0 	
+							t = commands[0].created_at
+					%>
+				T : <%=t.strftime("%H:%M:%S")%>
+				(<%=format("%.1f",(Time.now - t)/60.0)%>m)
+						<% end %>
+				</div>
+				
+			<div class="col-6">
+			Channel : <%= r.channel.name if r.channel%> 
+			</div>
+			
+				
+				
+				<div class="col-6">
+					
+					Activation Time : <br/> 
+					<div class="card">
+					<div class="card-body alert-info">
+					<%=r.activation_time%> mins
+					</div>
+					</div>
+					
+				</div>
+				
+			
+				
+				<div class="col-6">
+					
+					Response Time : <br/> 
+					<div class="card">
+					<div class="card-body alert-info">
+					<%=r.response_time%> mins
+					</div>
+					</div>
+					
+				</div>
+			</div>
+		   
+			</div>
+			<div class="modal-footer">
+      <center>
+				<button type="button" class="btn " data-bs-dismiss="modal">Close</button>
+      </center>
+			</div>
+		</div>
+	</div>
+	
+<% end %>
+
+
+
+
+
+
 
 <script>
 
@@ -318,6 +521,13 @@ $('.btn-tracking').click(function(){
 modal('#modal_tracking')
 
 })
+
+$('.info-button').click(function(){
+	
+	modal('#modal_info')
+	
+})
+
 
 $('.noti-button').click(function(){
   // $('#modal_notification').modal('show');
@@ -393,6 +603,7 @@ modal('#modal_notification')
 			window.location.reload();
 
 		}else
+		
     if(lines[0].split(" ")[0]=='EMSUpdate'){
 
        obj = JSON.parse(lines[1])
@@ -547,6 +758,6 @@ $(document).ready(function(){
 function resize(height){
   alert(height);
 }
-
+	// modal('#modal_info')
 
 </script>

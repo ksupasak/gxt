@@ -11,11 +11,15 @@ patient = admit.patient
 
 %>
 <form>
-	<div style="float:right" class="print-btn">
+<div class="">
+
+
+	<div style="" class="print-btn">
     <!-- <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info"> -->
 
 		<a href="../EMS/print_summary?id=<%=record.id%>" target="_blank" class="btn btn-info">Print</a>
 </div>
+
   </form>
 <style>
 	.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
@@ -138,9 +142,9 @@ patient = admit.patient
 
     %>
 <div id="printout" style="border:0px solid gray;  ">
-  <h4>Text summary</h4>
 
-<textarea name="name" rows="30" cols="80">
+
+<textarea name="name" rows="30" cols="80" style="width:100%">
 
 
 CPR record :

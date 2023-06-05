@@ -70,23 +70,6 @@ dfdf
 </div> -->
 
 
-	<div class="" style="padding-top:10px">
-
-	<div class="element-tab msg-dashboard-tab "  style="overflow:auto;border:1px solid #ccc;padding:5px">
-	<div class="message-partial " class="">
-	</div>
-	</div>
-
-	<div class="element-tab msg-note-tab" id="msg-note" style="display:none">
-	<%= inline(this,:'_nurse_note_page') %>
-	</div>
-
-	<div class="element-tab msg-medication-tab" style="display:none" >
-	<%= inline(this,:'_medication_page') %>
-	</div>
-
-
-	</div>
 
 
 
@@ -169,11 +152,31 @@ dfdf
 	})
 
 	</script>
-		<%= inline(this,:'_cpr_partial') %>
+
+
+  <%= inline(this,:'_cpr_partial') %>
 
 	<div class="row">
 	<div class="col-12" id="dispath-panel">
 		<%= inline(this,:'_dispatch') %>
+
+		<div class="" style="padding-top:10px">
+
+		<div class="element-tab msg-dashboard-tab "  style="overflow:auto;border:1px solid #ccc;padding:5px">
+		<div class="message-partial " class="">
+		</div>
+		</div>
+
+		<div class="element-tab msg-note-tab" id="msg-note" style="display:none">
+		<%= inline(this,:'_nurse_note_page') %>
+		</div>
+
+		<div class="element-tab msg-medication-tab" style="display:none" >
+		<%= inline(this,:'_medication_page') %>
+		</div>
+
+
+		</div>
 	</div>
 	</div>
 
@@ -181,6 +184,7 @@ dfdf
 
 
 	</form>
+
 
 
 
@@ -361,22 +365,27 @@ $('.msg-btn').click(function(){
 
 	})
 
+
+	function update_text(){
+		$.ajax({
+			url: "<%="../EMS/summary_text"%>?id="+ems_case_id,
+			context: document.body
+		}).done(function(data) {
+
+			$( '.charting' ).html(data);
+			text_mode = true;
+
+		});
+
+	}
+
+
 $('.text-btn').click(function(e){
 
 
 	e.preventDefault()
 
-
-
-	$.ajax({
-	  url: "<%="../EMS/summary_text"%>?id="+ems_case_id,
-	  context: document.body
-	}).done(function(data) {
-	  $( '.charting' ).html(data);
-
-  $('.element-tab').scrollTop(100000000)
-
-	});
+	update_text();
 
 })
 
@@ -411,6 +420,8 @@ var message_admit_id = null;
 }); %>
 
 
+	var text_mode = false;
+
 
 	function reload_message(ems_id, admit_id){
 
@@ -427,15 +438,20 @@ var message_admit_id = null;
 
 
 	$.ajax({
-	  url: "<%=get_path "message_partial"%>?admit_id="+message_admit_id,
+	  url: "<%=get_path "message_partial"%>?admit_id="+message_admit_id+"&di=reverse",
 	  context: document.body
 	}).done(function(data) {
 	  $( '.message-partial' ).html(data);
 
-	   $('.element-tab').scrollTop(100000000)
+	   // $('.element-tab').scrollTop(100000000)
 
 
 		update_message();
+
+		if(text_mode==true){
+			update_text();
+		}
+
 
 	});
 
@@ -452,7 +468,7 @@ var message_admit_id = null;
 
 	  // alert('cmd = ' +cmd)
 
-	  dispatch_command(cmd);
+	     dispatch_command(cmd);
 
      // avoid to execute the actual submit of the form.
 

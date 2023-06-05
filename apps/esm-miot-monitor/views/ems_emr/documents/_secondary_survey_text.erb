@@ -1,0 +1,11 @@
+<% require_relative 'lib'%>[Secondary survey]<%
+  @record = record
+  r = @record.data
+
+  list = %w{ga heent chest cvs abdomen extremity neurological allergies medication history intake event}
+  for i in list
+%><%
+    if r["#{i}_note"] and r["#{i}_note"] != ""
+%>
+<%=i.upcase%> : <%=r["#{i}_note"] %><% end %>
+<% end %>

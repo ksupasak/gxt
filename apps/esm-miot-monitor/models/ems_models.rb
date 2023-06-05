@@ -53,6 +53,7 @@ class EMSCase < GXTModel
   belongs_to :channel, :class_name=>'EsmMiotMonitor::EMSChannel', foreign_key: 'channel_id'
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
+  belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance', foreign_key: 'ambulance_id'
 
 
 
