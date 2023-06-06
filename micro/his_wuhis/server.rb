@@ -55,8 +55,9 @@ EM.add_periodic_timer(1) do
     filename = "reporttelemedicine_#{job[:hn]}_#{Time.now.strftime("%Y%m%d%H%M%S")}.pdf"
 
     out_file = "#{File.join(path,filename)}"
-    cmd = "wkhtmltopdf \"#{pcm_path}/Admit/partial?id=#{admit_id}\" #{out_file}"
-
+ #   cmd = "wkhtmltopdf \"#{pcm_path}/Admit/partial?id=#{admit_id}\" #{out_file}"
+    cmd = "python3 gen.py \"#{pcm_path}/Admit/partial?id=#{admit_id}\" #{out_file}"
+    puts cmd
     `#{cmd}`
 
 
@@ -153,7 +154,7 @@ if true
   end
     
     admit_commit_uri = URI("#{pcm_path}/Admit/data_commit?id=#{admit_id}")
-    
+    puts admit_commit_uri    
     https = Net::HTTP.new(admit_commit_uri.host, admit_commit_uri.port)
     https.use_ssl = true
     https.verify_mode = OpenSSL::SSL::VERIFY_NONE

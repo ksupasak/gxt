@@ -23,6 +23,27 @@
 	<% end %>
 	</select>
   </div>
+  <%
+
+elsif name=='img_1' or name=='img_2' or name=='img_3'
+
+	%>
+
+
+  <div class="form-group">
+    <label for="record-<%=i[0]%>"><%=i[0].humanize%></label>
+    <input type="file" id="record-<%=i[0]%>" class="form-control" name="record[<%=i[0]%>]">
+    <% if @record[i[0]] and att = Attachment.find(@record[i[0]])
+    %>
+    <a href="<%=att.path%>"><img src="<%=att.path%>" width="100"><br/>
+    <%=@record[i[0]]%></a>
+    <% end %>
+
+  </div>
+
+
+
+
   <% else %>
     <div class="form-group">
       <label for="product-name"><%=i[0].humanize%></label>

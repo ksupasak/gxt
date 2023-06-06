@@ -53,6 +53,7 @@ class EMSCase < GXTModel
   belongs_to :channel, :class_name=>'EsmMiotMonitor::EMSChannel', foreign_key: 'channel_id'
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
+  belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance', foreign_key: 'ambulance_id'
 
 
 
@@ -645,7 +646,7 @@ class EMSAssessment < GXTModel
   key :sort_order, Integer
 
   key :zone_id, ObjectId
-  
+
   key :position, String
 
 end
@@ -679,6 +680,13 @@ class EMSPatientStatus < GXTModel
   key :patient_type, String
   key :color, String
 
+  key :img_1, ObjectId
+  key :img_2, ObjectId
+  key :img_3, ObjectId
+
+
+
+
 end
 
 
@@ -706,7 +714,7 @@ class EMSController < GXT
 
   def acl
 
-    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*'}
+    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*'}
 
   end
 

@@ -54,7 +54,7 @@ if record
 
 <%
 
-	assess_list = EMSAssessment.all
+	assess_list = EMSAssessment.where({}).sort(:group=>1).all
 
 	items = EMSPatientStatusItem.where(:patient_status_id=>record.id).all
 

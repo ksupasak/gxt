@@ -114,6 +114,56 @@ class Provider < GXTModel
 
 end
 
+
+
+
+class Attachment < GXTModel
+  include Mongoid::Document
+
+    key :path, String
+    key :filename, String
+    key :content_type, String
+    key :file_id, ObjectId
+    key :ref_id, ObjectId
+    key :type, String
+    key :note, String
+
+    def self.store solution_name, filename, file, content_type, type = nil
+
+
+
+          name = solution_name
+
+          content = file.read
+
+          connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+          grid = Mongo::Grid::FSBucket.new(connection.database)
+
+          fid = grid.upload_from_stream(filename,content)
+
+
+
+          type = content_type.split("/")[0] unless type
+
+
+          att = create :filename=>filename, :content_type=>content_type, :file_id=>fid, :type=>type
+
+          path = "/#{name}/Attachment/content?id=#{att.id}"
+
+          att.update_attributes :path => path
+
+
+          return att
+
+    end
+
+
+
+    include Mongoid::Timestamps
+end
+
+
 class Procedure < GXTModel
   include Mongoid::Document
 
@@ -892,11 +942,11 @@ class DataRecord  < GXTModel
 
 	  px[:weight] = format("%.2f",i[:weight].to_f) if i[:weight] and i[:weight]!="" and i[:weight]!="-"
 	  px[:height] = format("%.2f",i[:height].to_f) if i[:height] and i[:height]!="" and i[:height]!="-"
-    
+
     px[:score] = data['score'] if data['score']
     px[:avpu] = data['avpu'] if data['avpu']
-    
-    
+
+
 
 
 	if i[:weight] and i[:weight]!="" and i[:weight]!="-"
@@ -1089,6 +1139,56 @@ class RoleController < GXTDocument
 
 end
 
+class AttachmentController < GXTDocument
+
+  def acl
+
+    return {:content=>'*'}
+
+  end
+
+
+  #  /Attachment/content?id=
+  def content params
+
+    attachment = model.find params[:id]
+
+    # puts "ERR:#{Mongoid::Config.clients["default"]['hosts'].inspect}"
+
+    connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+
+    grid = Mongo::Grid::FSBucket.new(connection.database)
+
+    ofile = grid.open_download_stream(attachment.file_id)
+
+    info = ofile.file_info
+
+    if info
+
+    filename = info.filename
+
+    if attachment.type == 'image'
+
+    @context.content_type 'image/jpg'
+
+    elsif attachment.type == 'voice'
+
+    @context.content_type 'audio/3gpp'
+
+    end
+
+    data =  ofile.read.force_encoding('utf-8')
+
+    return data
+
+   else
+    return nil
+   end
+
+  end
+end
+
+
 class CaseReportController < GXTDocument
 
 end
@@ -1175,6 +1275,8 @@ class MessageController < GXTDocument
 
   end
 end
+
+
 
 
 class ScoreController < GXTDocument

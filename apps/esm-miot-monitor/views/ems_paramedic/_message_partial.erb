@@ -87,7 +87,11 @@
 
 				console.collect!{|i| i if i[0]}.compact!
 
+				unless params[:di]
 				console.sort!{|a,b| a[0]<=>b[0] }
+			else
+				console.sort!{|b,a| a[0]<=>b[0] }
+			end
 
 				# console.sort!{|a,b| b[0]<=>a[0] }
 			%>
@@ -320,5 +324,7 @@
 			<script>
 				// var objDiv = document.getElementById("panel-body");
 	// 			objDiv.scrollTop = objDiv.scrollHeight;
+	  <% if params[:di] == nil %>
 	  $('.element-tab').scrollTop(100000000)
+		<% end %>
 			</script>

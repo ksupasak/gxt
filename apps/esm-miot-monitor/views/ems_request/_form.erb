@@ -51,6 +51,14 @@
 
 
 							<div class="row">
+								<div class="col-6">
+
+									<p class="px-3 ">
+										<span class="t" t="record_contact_phone">Phone</span> *
+									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
+
+								</div>
+
 
 								<div class="col-6">
 
@@ -60,13 +68,7 @@
 
 								</div>
 
-								<div class="col-6">
 
-									<p class="px-3 ">
-										<span class="t" t="record_contact_phone">Phone</span> *
-									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 mx-3 w-auto" type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
-
-								</div>
 
 							</div>
 
@@ -263,7 +265,7 @@
 
 									<script>
 											$('.patient-search').click(function(e){
-												
+
 
 												e.preventDefault();
 											})

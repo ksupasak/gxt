@@ -7,7 +7,7 @@
 <div class="card-header bg-primary text-white">
 
 <center>
-<div class="text-white">Primary Survey</div>
+<div class="text-white">Secondary Survey</div>
 </center>
 </div>
 
@@ -16,317 +16,145 @@
 <div class="row">
 
 
-  <div class="col-12">
-<center>
-  <input type="radio" id="trauma_1" name="record[trauma_status]" <%='checked' if record['trauma_status']=='trauma' %> value="trauma" class="field"  field_type="radio_string" >
-  <label for="trauma_1">Trauma</label>
-  <input type="radio" id="trauma_2" name="record[trauma_status]" <%='checked' if record['trauma_status']=='non-trauma' %> value="non-trauma" class="field"  field_type="radio_string" >
-  <label for="trauma_2">Non-Trauma</label>
-</center>
-  </div>
-
-<br/><br/>
 <div class="clear"></div>
 
 <div class="card-title d-flex align-items-center">
 			<!-- <div>
         <i class="bx bxs-user me-1 font-22 text-primary"></i>
 			</div> -->
-			<h5 class="mb-0 text-primary">GA :</h5>
+			<h5 class="mb-0 text-primary">Physical Exam :</h5>
 </div>
 
 <div class="row">
-<div class="col-2"></div>
-<div class="col-10">
 
-  <div class="input-group input-group-sm">
-		<div class="input-group-text ">
-			<input class="form-check-input" type="radio" value="" aria-label="Radio button for following text input">
-      &nbsp;<label for="trauma_1">External active bleeding at </label>
 
-		</div>
-    <%= text_string this, 'bleeding_at', :field_only=>true %>
-
-    <div class="input-group-text">
-      &nbsp;<label for="trauma_1">Blood loss </label>
-    </div>
-    <%= text_string this, 'blood_loss', :field_only=>true %>
-    <div class="input-group-text">
-      &nbsp;<label for="trauma_1">CC </label>
-    </div>
-	</div>
-</div>
-<br/><br/>
 <div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">รายละเอียดที่เจอผู้ป่วยครั้งแรก </label>
-<textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['note']%>
+<label for="trauma_1">GA : </label>
+<textarea name="record[ga_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['ga_note']%>
 </textarea>
 </div>
 
 </div>
 
-<hr/>
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Response :</h5>
-</div>
+
 <div class="row">
 <div class="col-2"></div>
-<div class="col-10">
-
-<%= radio_string this, 'response',   :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
-
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">HEENT : </label>
+<textarea name="record[heent_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['heent_note']%>
+</textarea>
+</div>
 </div>
 
+<div class="row">
 <div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
-
-<%= radio_string this, 'response_pulse', :value=>%w{pulse no_pulse} %>
-
+<label for="trauma_1">Chest : </label>
+<textarea name="record[chest_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['chest_note']%>
+</textarea>
 </div>
-
-</div>
-
-</div>
-<hr/>
-
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Airway :</h5>
 </div>
 
 <div class="row">
-<div class="col-2">
-</div>
-<div class="col-10">
-<%= radio_string this, 'airway', :value=>%w{airway_patient airway_compromise}, :col=>12 %>
-</div>
-</div>
-</div>
-
-<div class="col-2">
-  </div>
-<div class="col-10">
-
-<%= radio_string this, 'airway_compromise', :value=>%w{stridor secretion fb bleeding other}, :col=>12 %>
-
-</div>
-
-<div class="col-2">
-  </div>
+<div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
-
-  <%= text_string this, 'airway_special_note', :col=>10, :label=>'Note'%>
-</div>
-
-<hr/>
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Breathing :</h5>
-</div>
-
-<div class="row">
-<div class="col-2">Diagnosis</div>
-<div class="col-10">
-<%= radio_string this, 'breath_status', :value=>%w{tachypnea bradypnea retraction other}, :col=>12 %>
-</div>
-</div>
-<div class="row">
-<div class="col-2">
-Sound
-</div>
-<div class="col-10">
-<%= radio_string this, 'breath_lung_clear',:value=>%w{rt lt equal_both_lung}, :label=>'Lung clear', :col=>12 %>
-<%= radio_string this, 'breath_wheezing',:value=>%w{rt lt equal_both_lung}, :label=>'Wheezing', :col=>12 %>
-<%= radio_string this, 'breath_rhonchi',:value=>%w{rt lt equal_both_lung}, :label=>'Rhonchi', :col=>12 %>
-<%= radio_string this, 'breath_crepitation',:value=>%w{rt lt equal_both_lung}, :label=>'Crepitation', :col=>12 %>
-<%= radio_string this, 'breath_descrease_breath_sound',:value=>%w{rt lt equal_both_lung}, :label=>'Decrease breath sound', :col=>12 %>
-<%= text_string this, 'breath_other', :col=>4, :label=>'Other'%>
-</div>
-</div>
-<div class="row">
-<div class="col-2">
-Percussion
-</div>
-<div class="col-10">
-<%= radio_string this, 'percussion_resonance',:value=>%w{rt lt equal_both_lung}, :label=>'Resonance', :col=>12 %>
-<%= radio_string this, 'percussion_dullness',:value=>%w{rt lt equal_both_lung}, :label=>'Dullness', :col=>12 %>
-</div>
-</div>
-<div class="row">
-<div class="col-2">
-Palpation
-</div>
-<div class="col-10">
-<%= radio_string this, 'palpation_subcutaneous',:value=>%w{rt lt equal_both_lung}, :label=>'Subcutaneous emphysema', :col=>12 %>
-<%= text_string this, 'palpation_deformity', :col=>4, :label=>'Deformity' %>
-</div>
+<label for="trauma_1">CVS : </label>
+<textarea name="record[cvs_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['cvs_note']%>
+</textarea>
 </div>
 </div>
 
 <div class="row">
-<div class="col-2">
-
-</div>
-
+<div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
-
-  <%= text_string this, 'breath_special_note', :col=>10, :label=>'Note'%>
-</div>
-</div>
-<hr/>
-
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Circulation :</h5>
-</div>
-<div class="row">
-<div class="col-12">
-</div>
-<div class="col-2">Skin</div>
-<div class="col-10">
-<%= radio_string this, 'circulation_skin',:value=>%w{normal pale sweet cold}, :col=>12 %>
-<%= radio_string this, 'circulation_pulse',:value=>%w{weak_pulse full regula irregular}, :label=>'Pulse', :col=>12 %>
-</div>
-
-
-<div class="row">
-  <div class="col-2">
-    Capillary
-  </div>
-  <div class="col-6">
-  <%= text_string this, 'circulation_capillary', :col=>3, :label=>'Capillary', :field_only=>true%>
-  </div>
-</div>
-
-<div class="row">
-<div class="col-2">
-Vital
-</div>
-<div class="col-9">
-<div class="row">
-<%= text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
-<%= text_string this, 'circulation_bp', :col=>3, :label=>'BP (_/_)'%>
-<%= text_string this, 'circulation_blood_loss', :col=>4, :label=>'Blood loss(ml)'%>
-</div>
-</div>
+<label for="trauma_1">Abdomen : </label>
+<textarea name="record[abdomen_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['abdomen_note']%>
+</textarea>
 </div>
 </div>
 
 <div class="row">
-<div class="col-2">
-</div>
-
+<div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
-  <%= text_string this, 'circulation_special_note', :col=>10, :label=>'Note'%>
-</div>
-
-</div>
-
-
-
-<hr/>
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Disability :</h5>
-</div>
-<div class="row">
-<div class="col-2">
-  GCS
-</div>
-<div class="col-10">
-<div class="row">
-<%= text_string this, 'gcs_e', :col=>3, :label=>'E'%>
-<%= text_string this, 'gcs_v', :col=>3, :label=>'V'%>
-<%= text_string this, 'gcs_m', :col=>3, :label=>'M'%>
-</div>
+<label for="trauma_1">Extremity : </label>
+<textarea name="record[extremity_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['extremity_note']%>
+</textarea>
 </div>
 </div>
 
 <div class="row">
-<div class="col-2">
-  Pupil
-</div>
-<div class="col-10">
-<div class="row">
-
-<%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt'%>
-<%= radio_string this, 'pupil_rt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
-<div class="clear"></div>
-<%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt'%>
-<%= radio_string this, 'pupil_lt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
-</div>
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Neurological : </label>
+<textarea name="record[neurological_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['neurological_note']%>
+</textarea>
 </div>
 </div>
 
 <div class="row">
-<div class="col-2">
-  DTX
-</div>
-<div class="col-10">
-<div class="row">
-  <%= text_string this, 'dtx', :col=>3, :label=>'DTX(mg%)'%>
-</div>
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Allergies : </label>
+<textarea name="record[allergies_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['allergies_note']%>
+</textarea>
 </div>
 </div>
 
-<hr/>
 
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Exposure :</h5>
-</div>
 
 <div class="row">
-<div class="col-2">
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Medication : </label>
+<textarea name="record[medication_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['medication_note']%>
+</textarea>
 </div>
-<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling}, :col=>10, :col_item=>"col-12" %>
 </div>
+
+
 <div class="row">
-<div class="col-2">
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Past History/Patient illness : </label>
+<textarea name="record[history_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['history_note']%>
+</textarea>
 </div>
-<div class="col-10">
-  <%= text_string this, 'exposure_special_note', :col=>10, :label=>'Note'%>
+</div>
 
-</div>
 
-</div>
-</div>
-
-<hr/>
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-<h5 class="mb-0 text-primary">ซักประวัติ :</h5>
-</div>
 <div class="row">
-<div class="col-2">
-</div>
-<div class="col-10">
-<%= text_string this, 'sign_and_symptom', :col=>12 %>
-<%= text_string this, 'allergies', :col=>12 %>
-<%= text_string this, 'medication', :col=>12 %>
-<%= text_string this, 'past_history', :col=>12 %>
-<%= text_string this, 'last_oral_intake', :col=>12 %>
-<%= text_string this, 'event', :col=>12 %>
-<div class="row">
-<%= text_string this, 'sbp', :col=>3 %>
-<%= text_string this, 'dbp', :col=>3 %>
-<%= text_string this, 'pr', :col=>3 %>
-<%= text_string this, 'rr', :col=>3 %>
-<%= text_string this, 'spo2', :col=>3 %>
-<%= text_string this, 'gcs', :col=>3 %>
-<%= text_string this, 'bt', :col=>3 %>
-<%= text_string this, 'dtx', :col=>3 %>
-</div>
-</div>
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Last Oral Intake : </label>
+<textarea name="record[intake_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['intake_note']%>
+</textarea>
 </div>
 </div>
 
+<div class="row">
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Event : </label>
+<textarea name="record[event_note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['event_note']%>
+</textarea>
 </div>
 </div>
-</div>
+
+
+
 
 </div>
 

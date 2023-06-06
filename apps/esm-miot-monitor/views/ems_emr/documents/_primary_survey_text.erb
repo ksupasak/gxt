@@ -12,8 +12,7 @@ GA : <%=r['response'].classify %><% end %>
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
 
-%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
-<%
+%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %><%
     if r['breath_status'] and  r['breath_status'] != ""
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
@@ -35,8 +34,7 @@ GA : <%=r['response'].classify %><% end %>
 
     end
 
-%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%><% end %>
-<%
+%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%><% end %><%
 
     if r['circulation_skin'] and r['circulation_skin'] != ""
       result = "No sign of shock"
@@ -44,16 +42,14 @@ GA : <%=r['response'].classify %><% end %>
       pulse = ""
       pulse = "#{r['circulation_pulse'].humanize} peripheral pulse " if r['circulation_pulse']
 
-%>C : <%= result  %>, <%=pulse%><% end %>
-<%
+%>C : <%= result  %>, <%=pulse%><% end %><%
     # E4V5M6 pupil 3 mm RTLBE
     if r['gcs_e'] and r['gcs_e'] != ""
 
       evm = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
       result = "#{evm}, lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
 
-%>D : <%= result  %> <%="DTX #{r['dtx']} mg%" if r['dtx'] and r['dtx']!="" %><% end %>
-<%
+%>D : <%= result  %> <%="DTX #{r['dtx']} mg%" if r['dtx'] and r['dtx']!="" %><% end %><%
     # E4V5M6 pupil 3 mm RTLBE
     if r['exposure_list'] and r['exposure_list'] != ""
 

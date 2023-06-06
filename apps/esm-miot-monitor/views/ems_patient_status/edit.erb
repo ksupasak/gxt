@@ -11,21 +11,26 @@
 	if request.post?
 
 	if params[:record]
-		if params[:record][:image_1]
-			img = params[:record][:image_1]
-			grid = Mongo::Grid.new(MongoMapper.database)
+
+    %w{ img_1 img_2 img_3 }.each do |i|
+
+      ix = i.to_sym
+
+		if params[:record][ix]
+
+			img = params[:record][ix]
+
 			filename = img[:filename]
 			tmp = img[:tempfile]
-			file_id = grid.put(tmp.read,:filename=>filename)
-			path = ""
-			att = Attachment.create :filename=>filename, :file_id =>file_id, :path=>path
-			# path = "/a/#{@context.name}/Attachment/content?id=#{att.id}"
-			# 		att.update_attributes :path=>path
+      type = img[:type]
 
+      att = Attachment.store @context.settings.name, filename, tmp, type
 
-			params[:record][:image_1] = att.id
+			params[:record][ix] = att.id
 
 		end
+
+    end
 
 	 @record.update_attributes params[:record]
 
