@@ -770,31 +770,7 @@ MSG
 
                               if ems_channel
 
-if true
 
-# uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
-uri = URI('http://pcm-life.com:8000/')
-
-request = Net::HTTP::Post.new(uri)
-
-fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
-fout.write content
-fout.close
-
-form_data = [['file',  File.open("tmp/voice_#{Time.now.to_i}.ogg")]] # or File.open() in case of local file
-
-request.set_form form_data, 'multipart/form-data'
-response = Net::HTTP.start(uri.hostname, uri.port) do |http| # pay attention to use_ssl if you need it
-  http.request(request)
-end
-body = response.body
-# text =  JSON.parse(body)['text']
-text = body
-puts "size : #{content.size} AI: #{text}"
-
-msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
-
-end
 
                               msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
@@ -812,6 +788,34 @@ MSG
 
                               # puts msg
                               redis.publish(path, send_msg)
+
+
+
+                              if true
+
+                              # uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
+                              uri = URI('http://pcm-life.com:8000/')
+
+                              request = Net::HTTP::Post.new(uri)
+
+                              fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
+                              fout.write content
+                              fout.close
+
+                              form_data = [['file',  File.open("tmp/voice_#{Time.now.to_i}.ogg")]] # or File.open() in case of local file
+
+                              request.set_form form_data, 'multipart/form-data'
+                              response = Net::HTTP.start(uri.hostname, uri.port) do |http| # pay attention to use_ssl if you need it
+                                http.request(request)
+                              end
+                              body = response.body
+                              # text =  JSON.parse(body)['text']
+                              text = body
+                              puts "size : #{content.size} AI: #{text}"
+
+                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
+
+                              end
 
 
                             end
