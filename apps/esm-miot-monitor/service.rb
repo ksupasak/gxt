@@ -793,7 +793,7 @@ MSG
                                 end
                                 body = response.body
                                 # text =  JSON.parse(body)['text']
-                                text = body.force_encoding('UTF-8').encode('UTF-8')
+                                text = body.force_encoding('UTF-8').encode('UTF-8').split(" ").join
                                 
                                 puts "size : #{content.size} AI: #{text}"
 
