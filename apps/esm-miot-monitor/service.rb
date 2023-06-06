@@ -784,7 +784,7 @@ fout.close
 form_data = [['file',  File.open("tmp/voice_#{Time.now.to_i}.ogg")]] # or File.open() in case of local file
 
 request.set_form form_data, 'multipart/form-data'
-response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http| # pay attention to use_ssl if you need it
+response = Net::HTTP.start(uri.hostname, uri.port) do |http| # pay attention to use_ssl if you need it
   http.request(request)
 end
 body = response.body
