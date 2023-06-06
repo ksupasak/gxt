@@ -801,7 +801,7 @@ MSG
                                 
                               rescue Exception =>e
                                 puts e.inspect 
-                                puts e.backtrace
+                      #          puts e.backtrace
                               end
                                 
                                 end
