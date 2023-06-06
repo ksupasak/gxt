@@ -816,11 +816,14 @@ MSG
                               puts "size : #{content.size} AI: #{text}"
 
                               msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
-
-                              end
+                                
+                                
                             rescue Exception =>e
                               puts e.inspect 
                             end
+                                
+                              end
+                         
 
                             end
 
