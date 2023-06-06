@@ -770,9 +770,11 @@ MSG
 
                               if ems_channel
 
-                                if false
+if true
 
-uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
+# uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
+uri = URI('http://pcm-life.com:8000/')
+
 request = Net::HTTP::Post.new(uri)
 
 fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
@@ -786,8 +788,9 @@ response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http| # pa
   http.request(request)
 end
 body = response.body
-text =  JSON.parse(body)['text']
-puts "size : #{content.size} AI: #{text} #{body}"
+# text =  JSON.parse(body)['text']
+text = body
+puts "size : #{content.size} AI: #{text}"
 
 msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
 
