@@ -326,7 +326,7 @@ MSG
        EM.add_periodic_timer(1) do
 
 
-
+         puts ""
 
 
          if app.settings.apps_rv
@@ -379,7 +379,7 @@ MSG
 
 
            # start Zello
-           puts "Station GPS update #{name}"
+           puts "Station GPS update #{name} #{device_map[name][:url]}"
 
           # zello_connect = Setting.where(:name=>'zello_connect').first
 
@@ -433,12 +433,13 @@ MSG
 
 
             path = "miot/#{name}/in"
-            puts "path #{path}"
+          
 
 send_msg = <<MSG
 #{'Ambu.Update'} #{path}
 #{results.to_json}
 MSG
+            puts "\t #{path} #{send_msg.to_json}"
             redis.publish(path, send_msg)
 
 
