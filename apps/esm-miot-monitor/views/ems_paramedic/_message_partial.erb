@@ -69,7 +69,7 @@
 
 				end
 
-				msgs = admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+				msgs = admit.messages.where({}).sort(:created_at=>-1).all
 				# msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
 
 				# Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
