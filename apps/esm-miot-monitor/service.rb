@@ -750,7 +750,9 @@ MSG
                             # puts obj.inspect
                             redis.publish("ptt/#{name}/z/#{ptt_channel}", message)
 
-
+                              
+                             EM.next_tick do  
+                              
                             if true # record
 
                               filename = obj['filename']
@@ -843,6 +845,10 @@ MSG
                          
 
                             end
+                            
+                            
+                          end
+                            
 
                               end
 
