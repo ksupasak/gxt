@@ -790,7 +790,7 @@ MSG
                                   begin
 
                                 # uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
-                                uri = URI('http://pcm-life.com:8000/')
+                                uri = URI(Setting.get("asr_url",'http://pcm-life.com:8000/'))
 
                                 request = Net::HTTP::Post.new(uri)
 
