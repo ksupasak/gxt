@@ -393,8 +393,8 @@ MSG
             connection_map[name] = http
 
           end
-
-
+            
+          puts device_map[name].inspect 
 
           http.start do |http|
 
