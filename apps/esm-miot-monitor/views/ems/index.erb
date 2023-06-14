@@ -397,7 +397,7 @@
 
 
 		$.ajax({
-		  url: "<%= "../EmsParamedic/message_partial?zone_id=#{@current_zone.id}"&di=reverse%>",
+		  url: "<%= "../EmsParamedic/message_partial?zone_id=#{@current_zone.id}"%>&di=reverse",
 		  context: document.body
 		}).done(function(data) {
 		  $( '.message-partial' ).html(data);
