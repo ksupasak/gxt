@@ -379,7 +379,7 @@ MSG
 
 
            # start Zello
-           puts "Station GPS update #{name} #{device_map[name][:url]}"
+           puts "Station GPS update #{name} #{device_map[name][:url]} #{jsessionid}"
 
           # zello_connect = Setting.where(:name=>'zello_connect').first
 
