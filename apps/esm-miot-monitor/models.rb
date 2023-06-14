@@ -790,8 +790,9 @@ class Ambulance  < GXTModel
   key :last_speed, Float
   key :last_mile, Integer
 
-  key :device_no, String
-  key :msg_channel, String
+  key :location_policy, String # any, app, dvr 
+  key :device_no, String # for dvr 
+  key :msg_channel, String 
 
 
   include Mongoid::Timestamps
