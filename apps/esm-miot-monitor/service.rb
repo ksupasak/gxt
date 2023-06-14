@@ -326,7 +326,7 @@ MSG
        EM.add_periodic_timer(1) do
 
 
-
+         puts ""
 
 
          if app.settings.apps_rv
@@ -379,7 +379,7 @@ MSG
 
 
            # start Zello
-           puts "Station GPS update #{name}"
+           puts "Station GPS update #{name} #{device_map[name][:url]}"
 
           # zello_connect = Setting.where(:name=>'zello_connect').first
 
@@ -407,7 +407,8 @@ MSG
 
             ambu = map[:ambu]
             admit = map[:admit]
-
+            
+            if ambu and ambu.device_no and ambu.device_no !="" and ambu.locaiton_policy != "APP"
 
             req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
 
@@ -426,21 +427,28 @@ MSG
             puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
 
             results[ambu.id] = result if json['mlat'].to_i!=0
-
+            
+            end
 
           end
 
-
+            
+          puts results.inspect
+          
+          if results.keys.size > 0 
 
             path = "miot/#{name}/in"
-            puts "path #{path}"
+          
 
 send_msg = <<MSG
 #{'Ambu.Update'} #{path}
 #{results.to_json}
 MSG
-            redis.publish(path, send_msg)
 
+  
+            puts "\t #{path} #{send_msg.to_json}"
+            redis.publish(path, send_msg)
+          end
 
 
          end
