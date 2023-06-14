@@ -48,6 +48,22 @@
 	</select>
   </div>
 	<%
+	elsif name=='location_policy'
+
+	list = Station.all
+
+	%>
+  <div class="form-group">
+    <label for="product-name"><%=i[0].humanize %></label>
+
+	<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+	<% for j in [['','']] + %w{APP DVR}.collect{|k| [k,"#{k}"]} %>
+	  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+	<% end %>
+	</select>
+  </div>
+	<%
 elsif name=='msg_channel'
 
 	list = EMSChannel.all

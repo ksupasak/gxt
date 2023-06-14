@@ -267,20 +267,7 @@ cls = record.init_code.get_class if code
 
 
 					</div>
-				<!-- <div>
-					<p class="mb-0 text-secondary">Contact info</p>
-					<h4 class="my-1 text-info"><%= record.contact_phone%></h4>
-					<p class="mb-0 font-13">ผู้แจ้งเหตุ : <%= record.contact_name%>  ระบบ Tracking :
-
-						<%=link_to "[Demo]", "request_ems?id=#{record.id}", :target=>"_blank"%>
-
-						SMS : <%=record.tracking_status%>
-					</p>
-
-					<p class="mb-0 font-13"></p>
-
-				</div>
-				 -->
+	
 				<div class="col-6 d-flex justify-content-end " style="">
 
 
@@ -300,7 +287,7 @@ cls = record.init_code.get_class if code
 
 
 				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">
-					<a href="video?id=<%=record.case_no%>" >
+					<a href="video?id=<%=record.case_no%>" target="_blank" >
 						<i class='bx bx-webcam text-white '></i>
 					</a>
 				</div>

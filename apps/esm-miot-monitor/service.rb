@@ -140,6 +140,7 @@ def self.registered(app)
          #update list
 
          if cache_stamp==nil or cache_stamp!=Time.now.strftime("%Y-%m-%d")
+           
            cache_directions = {}
            cache_stamp = Time.now.strftime("%Y-%m-%d")
 
@@ -156,12 +157,11 @@ def self.registered(app)
 
               key =  Setting.get :google_map_key
 
-              ambus = Ambulance.where(:device_no=>{'$ne'=>''}).all
+              
               list = []
 
-
-
-
+              # all running case in [Solution]
+              
               ems_cases = EMSCase.where(:status=>{'$ne'=>'Completed'}).all
 
 
@@ -170,7 +170,6 @@ def self.registered(app)
               ems_commands = EMSCommand.where(:case_id=>c.id).all
 
               admit = c.admit
-
 
 
               for cmd in ems_commands
@@ -184,6 +183,8 @@ def self.registered(app)
                   route = AocCaseRoute.where(:admit_id=>admit.id,:status=>'STARTED').sort(:sort_order=>-1).first
 
                   if route
+                    
+                    # update start loc when no start loc
 
                     unless route.start_latlng
 
@@ -193,10 +194,8 @@ def self.registered(app)
 
 
                     unless route.est_distance
-                      # fill estimate distance
-                      # puts "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            
                       direction = google_direction(route.start_latlng, route.stop_latlng, key)
-
 
                       if direction[:status]=='200 OK'
                         route.update_attributes :est_distance=>direction[:total_distance][:value], :est_duration=>direction[:total_duration][:value]
@@ -1739,7 +1738,7 @@ MSG
                 active_zone[app.settings.name].values.each  do |z|
 
 
-                  puts "Active Zone :#{app.settings.name} #{z.name}"
+                  puts "Active Zone :#{app.settings.name} #{z.name if z }"
 
                   active_list[app.settings.name] = [] unless active_list[app.settings.name]
 
