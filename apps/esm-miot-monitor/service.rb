@@ -415,6 +415,9 @@ MSG
             # puts  ambu.name
 
             response = http.request(req)
+            
+            puts response
+            
             json = JSON.parse(response.body)
 
             json = json['status'][0]
