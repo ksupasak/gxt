@@ -1735,8 +1735,11 @@ MSG
                #  puts  active_list[app.settings.name].inspect
 
                if  active_zone[app.settings.name]
+                 
+                 puts active_zone[app.settings.name].inspect 
+                 
                 active_zone[app.settings.name].values.each  do |z|
-
+                  
 
                   puts "Active Zone :#{app.settings.name} #{z.name if z }"
 
