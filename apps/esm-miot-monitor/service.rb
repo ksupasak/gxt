@@ -407,7 +407,8 @@ MSG
 
             ambu = map[:ambu]
             admit = map[:admit]
-
+            
+            if ambu and ambu.device_no and ambu.device_no !="" and ambu.locaiton_policy != "APP"
 
             req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
 
@@ -426,11 +427,15 @@ MSG
             puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
 
             results[ambu.id] = result if json['mlat'].to_i!=0
-
+            
+            end
 
           end
 
-
+            
+          puts results.inspect
+          
+          if results.keys.size > 0 
 
             path = "miot/#{name}/in"
           
@@ -439,9 +444,11 @@ send_msg = <<MSG
 #{'Ambu.Update'} #{path}
 #{results.to_json}
 MSG
+
+  
             puts "\t #{path} #{send_msg.to_json}"
             redis.publish(path, send_msg)
-
+          end
 
 
          end
