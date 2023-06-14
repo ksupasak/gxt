@@ -1736,7 +1736,7 @@ MSG
 
                if  active_zone[app.settings.name]
                  
-                 puts active_zone[app.settings.name].inspect 
+           
                  
                 active_zone[app.settings.name].values.each  do |z|
                   
