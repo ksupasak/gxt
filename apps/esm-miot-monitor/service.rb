@@ -407,12 +407,13 @@ MSG
 
             ambu = map[:ambu]
             admit = map[:admit]
+            puts  ambu.name
             
             if ambu and ambu.device_no and ambu.device_no !="" and ambu.locaiton_policy != "APP"
 
             req = Net::HTTP::Get.new("/StandardApiAction_getDeviceStatus.action?jsession=#{jsessionid}&devIdno=#{ambu.device_no}&toMap=1&driver=0&language=th")
 
-            # puts  ambu.name
+            # 
 
             response = http.request(req)
             
