@@ -323,7 +323,7 @@ MSG
 
        end
 
-       EM.add_periodic_timer(1) do
+       EM.add_periodic_timer(2) do
 
 
          puts ""
@@ -334,7 +334,7 @@ MSG
          for name in app.settings.apps_rv['esm-miot-monitor'].uniq
            switch name, 'esm-miot-monitor'
 
-          puts "#{name} XXXX"
+          # puts "#{name} XXXX"
 
           if device_map[name] and device_map[name][:url] #cms_url = Setting.where(:name=>'cms_url').first and cms_url
 
@@ -348,7 +348,7 @@ MSG
 
              # uri = URI("https://103.76.181.125:8080")
 
-             puts device_map[name][:url]
+             # puts device_map[name][:url]
              uri = URI(device_map[name][:url])
 
              use_ssl = false
@@ -379,7 +379,7 @@ MSG
 
 
            # start Zello
-           puts "Station GPS update #{name} #{device_map[name][:url]} #{jsessionid}"
+           puts "DVR GPS update #{name} #{device_map[name][:url]} #{jsessionid}"
 
           # zello_connect = Setting.where(:name=>'zello_connect').first
 
@@ -407,7 +407,8 @@ MSG
 
             ambu = map[:ambu]
             admit = map[:admit]
-            puts  ambu.name
+            
+            puts  "#{name} : #{ambu.name}"
             
             if ambu and ambu.device_no and ambu.device_no !="" and ambu.location_policy != "APP"
 
@@ -782,7 +783,8 @@ MSG
                               if ems_channel
 
 
-
+                                text =""
+                                 
                                 if true
                               
                                   begin
@@ -808,7 +810,7 @@ MSG
                                 
                                 puts "size : #{content.size} AI: #{text}"
 
-                                msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
+                                # msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "text", :content=> text, :ts=> Time.now.to_i, :type=>"text", :media_type=>"text2speech", :station_id=>station_id, :admit_id=>admit_id
                                 
                                 
                               rescue Exception =>e
@@ -818,7 +820,7 @@ MSG
                                 
                                 end
 
-                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> "", :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
+                              msg = Message.create :channel_id=> ems_channel.id, :sender=> obj['sender'], :recipient=> obj['channel'], :recipient_type=> "voice", :content=> text, :ts=> Time.now.to_i, :type=>"voice", :media_type=>"voice", :file_id=>fid, :station_id=>station_id, :admit_id=>admit_id
 
 
 
