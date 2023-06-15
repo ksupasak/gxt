@@ -478,6 +478,34 @@ end
 
   });
 
+  var m_hos = {}
+	 
+	 
+	map1.ready(function(){
+		// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+		// const image = "<%=url_for('ems/h0.png')%>";
+
+	<% 
+		hospitals = EMSHospital.all()
+		
+		for i in hospitals %>
+
+	var posx = new google.maps.LatLng(<%=i.latlng%> )
+	var image = "<%=url_for("ems/h#{i.level}.png")%>";
+	 markerx = new google.maps.Marker({position: posx, map: map1.map,
+		 icon:image
+	 })
+	 markerx.addListener("click", () => {
+		 select_hospital('<%=i.id%>')
+	 });
+
+	 m_hos['<%=i.id%>'] = markerx;
+
+	<% end %>
+
+
+});
+
   // map1.init()
 
 })
