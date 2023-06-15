@@ -932,7 +932,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
             <% elsif i.type == 'voice'
             url = "../Message/content?id=#{i.id}"
           %>
-		  <%=i.content if i.content %>
+		  <%=i.content+"<br/>" if i.content %>
           <audio controls>
             <source src="<%=url%>"  type='video/3gpp; codecs="mp4v.20.8, samr"'>
           Your browser does not support the audio element.
