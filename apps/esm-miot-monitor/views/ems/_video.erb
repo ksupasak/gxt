@@ -1,6 +1,23 @@
 <%
 
-
+if params[:case_id]
+	
+	ems_case = EMSCase.find params[:case_id]
+	
+		mask = ems_case.video_status
+	
+		mask = "" if ems_case.video_status==nil
+		
+		mask = mask.split("|")
+		
+		mask << params[:side] unless mask.index(params[:side])
+		
+		ems_case.update_attributes :video_status=>mask.join("|")
+	
+	    ems_case.update_message @context, "video call"
+	
+		
+end
 
 
 %>
@@ -8,6 +25,7 @@
 <html>
     <head>
         <script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <style>
@@ -53,6 +71,12 @@
     <%
         session_id = 'SessionA'
         session_id = params[:id] if params[:id]
+		
+		
+		
+		
+		
+		
     %>
 
 

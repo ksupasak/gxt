@@ -56,6 +56,12 @@ class EMSCase < GXTModel
   belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance', foreign_key: 'ambulance_id'
 
 
+  key :user_id, ObjectId
+  key :dispatch_unit_id, ObjectId
+  key :dispatch_unit_at, DateTime
+  
+  key :request_at, DateTime
+ 
 
   key :dispatch_note, String
   key :team_id, String
@@ -69,9 +75,15 @@ class EMSCase < GXTModel
   key :zone_id, ObjectId
 
   key :status, String
-
+  
+  key :date, DateTime
+  
+  
+  # SENT for when send sms to patient
+  # ACCESSED when active 
+  # CALLING when  video calling actived by case code 
   key :tracking_status, String
-
+  key :video_status, String 
 
 
 
@@ -278,6 +290,24 @@ class EMSCase < GXTModel
 
   end
 
+
+  def  update_message context, msg, notify='Zone.Refresh'
+  
+  
+    puts "UpdateMessage"
+
+path = "miot/#{context.settings.name}/z/#{self.zone.name}"
+
+msg = "{\"msg\":\"#{msg}\"}"
+
+send_msg = <<MSG
+#{notify} #{path}
+#{msg}
+MSG
+
+    context.settings.redis.publish(path, send_msg)
+      
+  end
 
 
 
@@ -817,6 +847,11 @@ MSG
     response = http.request(request)
     ems_case.update_attributes :tracking_status=>'SENT'
     url = "show?id=#{ems_case.id}"
+    
+    
+  	ems_case.update_message @context, "request send sms"
+    
+    
     return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="0;URL='+url+'">'
 
   end

@@ -23,6 +23,8 @@ class User < GXTModel
   key :last_accessed, DateTime
   key :picture_id, ObjectId
   key :role_id, ObjectId
+  key :status, String
+  
   key :email, String
    include Mongoid::Timestamps
   timestamps!

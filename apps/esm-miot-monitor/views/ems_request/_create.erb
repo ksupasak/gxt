@@ -8,6 +8,7 @@ if params[:record]
 	p = params[:record]
 
 	patient_id = nil
+	
 	patient = Patient.find p[:patient_id] if p[:patient_id]
 
 	if p[:patient_hn] and p[:patient_hn].size>0
@@ -61,6 +62,10 @@ if params[:record]
 	case_no = "EMS-#{counter_key}-#{format('%04d',counter.count+1)}"
 
 	p[:case_no] = case_no
+
+    p[:user_id] = @current_user.id if @current_user
+
+	p[:request_at] = Time.now 
 
 	record = EMSCase.create p
 

@@ -503,6 +503,11 @@ end
 	 m_hos['<%=i.id%>'] = markerx;
 
 	<% end %>
+	 
+	 
+	 
+	 
+	 
 
 
 });
@@ -583,7 +588,7 @@ modal('#modal_notification')
   ws.onopen    = function()  { show('websocket opened');
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "ZoneUpdate zone_id=*", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
 
 
   };
@@ -616,7 +621,7 @@ modal('#modal_notification')
 
   ws.onmessage = function(m) {
 
-
+	  console.log(m.data)
 
 
 	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
@@ -644,7 +649,17 @@ modal('#modal_notification')
 		   }
 
 
-    else{
+    else
+	
+	if(lines[0].split(" ")[0]=='ZoneUpdate'){
+			alert('dijf')
+			update(lines)
+
+
+	}
+	else
+	
+	{
 
        jQuery.each(obj['ems_data'], function (key, val) {
 
@@ -730,15 +745,9 @@ modal('#modal_notification')
 
 			// reload_message()
 
-		}else
-
-		if(lines[0].split(" ")[0]=='ZoneUpdate'){
-
-			update(lines)
-
-
-		}
-
+	}else{}
+	
+	
 
 
 
@@ -761,6 +770,89 @@ modal('#modal_notification')
   })
 
 
+
+		var ambu_map = {}
+
+
+		function update(lines){
+
+			// console.log(lines)
+
+			obj = JSON.parse(lines[1])
+
+			// console.log(obj['ambu_data'])
+
+			var keys = Object.keys(obj['ambu_data']);
+
+			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+
+
+
+			for(ai in values){
+
+				a = values[ai]
+
+				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
+
+
+
+				map_icon = {
+				  path: car,
+				  scale: 0.9,
+				  strokeColor: 'white',
+				  strokeWeight: .10,
+				  fillOpacity: 1,
+				  fillColor: '#303bef',
+				  offset: '5%',
+				// size: new google.maps.Size(sizeX, sizeY),
+//         				origin: new google.maps.Point(0, 0),
+//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+				  // rotation: parseInt(heading[i]),
+				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+				};
+
+
+
+				var t = a['last_location'].split(",")
+				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+        marker = ambu_map[a['_id']]
+
+				var image = "<%=url_for("ems/ambu.png")%>";
+
+
+
+				if(marker==null){
+
+
+						marker_map = new google.maps.Marker({position: pos,icon: image,  map: map1});
+						ambu_map[a['_id']] = marker_map
+							console.log('new')
+
+
+				}else{
+						marker_map = 	ambu_map[a['_id']]
+						marker_map.setPosition(pos)
+						console.log('set')
+
+				}
+
+				}
+
+
+
+				// latlngbounds.extend(pos);
+
+			}
+
+
+
+			// map.fitBounds(latlngbounds);
+
+		}
+
+
+
 function noti_msg(msg) {
 	Lobibox.notify('warning', {
 		pauseDelayOnHover: true,
@@ -775,10 +867,10 @@ function noti_msg(msg) {
 }
 
 
-function update(lines){
-    console.log(lines)
-    show(lines[0])
-  }
+// function update(lines){
+//     console.log(lines)
+//     show(lines[0])
+//   }
 $(document).ready(function(){
   connect()
 

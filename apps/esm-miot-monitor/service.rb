@@ -21,6 +21,7 @@ def self.registered(app)
      settings.set :last_map, {}
      settings.set :zello_map, {}
      settings.set :ambu_status, {}
+     settings.set :emd_map, {}
 
 
 
@@ -1022,7 +1023,34 @@ MSG
 
 
 # register message receiver
-
+       when 'EMD.Update'
+         
+          pdata =  ActiveSupport::JSON.decode(body)
+          
+          settings.emd_map[name] = {} unless settings.emd_map[name]
+          zone_name = pdata['zone_name']
+          user_id = pdata['user_id']
+          status = pdata['status']
+          
+          settings.emd_map[name][zone_name] = {} unless settings.emd_map[name][zone_name]
+          last_update = Time.now 
+          pdata['last'] = last_update
+          pdata['work_load'] = EMSCase.where(:user_id=>user_id, :status=>'New').count
+          user = User.find user_id
+          puts pdata
+          if user.status!=status
+            puts 'setdata'
+            user.update_attributes :status=>status
+            
+            
+      
+          end
+          
+          settings.emd_map[name][zone_name][user_id] = pdata # unless settings.emd_map[name][zone_name][user_id]
+          
+          puts  settings.emd_map.inspect 
+         
+         
        when 'WS.Select'
 
 # store remote sensing
@@ -1771,9 +1799,17 @@ MSG
                   ss = app.settings.senses[name].select{|k,v| snames.index(k) } if app.settings.senses[name]
 
                   result = {:time=>Time.now, :list=>snames,:data=>ss}
+                  
+                  
+                  
+                  result[:emd] = app.settings.emd_map[app.settings.name][z.name]  if  app.settings.emd_map[app.settings.name]
+                
 
                   emt_result = nil
                   emt_result = {:time=>Time.now, :ems_data=>{}} if z.mode=='ems'
+                  
+                  
+                  
 
                   admits = admit_map[name][z.id]
 
@@ -1884,13 +1920,13 @@ MSG
 redis.publish(path, msg)
 
 if z.mode=='ems'
-puts 'ems'
-path = "miot/#{name}/z/#{z.name}/EMT"
+  puts 'ems'
+  path = "miot/#{name}/z/#{z.name}/EMT"
 msg = <<MSG
 #{'EMSUpdate'} #{path}
 #{emt_result.to_json}
 MSG
-redis.publish(path, msg)
+  redis.publish(path, msg)
 end
 
                 end

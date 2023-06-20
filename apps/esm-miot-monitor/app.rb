@@ -373,16 +373,20 @@ class HomeController < GXT
 
 
              # fast check header
+             
+             cmd = msg_data[0..2]
 
-             if msg_data[0..2] == 'PTT'
+             if cmd == 'PTT'
                puts 'Forward to PTT'
 
                # redis.publish("PTT/miot/z/0", msg_data)
 
 
                redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
-
-       elsif msg_data[0..2] == 'PAT'
+               
+               
+               
+            elsif cmd == 'PAT'
 
                puts msg_data
 
@@ -450,7 +454,7 @@ MSG
                   end
 
                end
-             elsif msg_data[0..2] == 'IMG'
+             elsif cmd == 'IMG'
 
                               puts msg_data
 
@@ -514,7 +518,7 @@ MSG
 
                               end
 
-             elsif msg_data[0..2] == 'GPS'
+             elsif cmd == 'GPS'
 
                # puts msg_data
 
@@ -522,6 +526,21 @@ MSG
 
 
              else
+               
+               if cmd == 'EMD'
+               
+                  lines = msg_data.split("\n")
+                  eobj = JSON.parse(lines[1])
+                  path = "miot/#{@context.settings.name}/z/#{eobj['zone_name']}"
+
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+update
+MSG
+
+                                      redisx.publish(path, send_msg)
+               end
 
              # forward to redis
                redis.publish("miot/#{@context.settings.name}/in", msg_data)
@@ -567,7 +586,9 @@ MSG
 
 
                end
-
+          
+       
+               
              when 'Monitor.Update'
 
 
