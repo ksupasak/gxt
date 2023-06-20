@@ -24,11 +24,12 @@ if request.post?
 			counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
 
 			case_no = "EMS-#{counter_key}-#{format('%04d',counter.count+1)}"
-
-	
 			
+			patient = Patient.create {}
 			
-			ems_case = EMSCase.create :case_no=> case_no, :user_id=>params[:user_id], :contact_phone=>params[:phone], :request_at=>Time.now, :status=>'New', :zone_id=> @current_zone.id, :chief_complain=>""
+			admit = Admit.create :zone_id=>@current_zone.id, :patient_id=> patient.id, :status=>'Admitted', :admit_stamp=>Time.now
+			
+			ems_case = EMSCase.create :admit_id=> admit.id, :case_no=> case_no, :user_id=>params[:user_id], :contact_phone=>params[:phone], :request_at=>Time.now, :status=>'New', :zone_id=> @current_zone.id, :chief_complain=>""
 			ems_case.update_message @context, "notify_callback #{ems_case.id}"	
 			
 		else
@@ -324,7 +325,7 @@ if request.post?
 			<div class="ms-auto col" >
 
 			<div class="widgets-icons-2    <%= cls %>  text-white ms-auto" style="margin:5px">
-				<a href="video?id=<%=i.case_no%>" target="_blank" >
+				<a href="video?id=<%=i.case_no%>&case_id=<%=i.id%>&side=emd" target="_blank" >
 					<i class='bx bx-webcam text-white '></i>
 				</a>
 			</div>

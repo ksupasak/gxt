@@ -8,6 +8,7 @@ if params[:record]
 	p = params[:record]
 
 	patient_id = nil
+	
 	patient = Patient.find p[:patient_id] if p[:patient_id]
 
 	if p[:patient_hn] and p[:patient_hn].size>0
