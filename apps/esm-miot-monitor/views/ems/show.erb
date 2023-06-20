@@ -199,11 +199,11 @@ cls = record.init_code.get_class if code
 
 	<%
 
-	station = record.admit.station
-
-
-	station_id = "StationID"
-	station_id = station.name if station
+	# station = record.admit.station
+	#
+	#
+	# station_id = "StationID"
+	# station_id = station.name if station
 
 	%>
 	<div class="col-12 col-xl-4">
@@ -216,6 +216,49 @@ cls = record.init_code.get_class if code
 				<div class="row">
 
 					<div class="col-6" style="">
+						
+						<%
+							
+								command = EMSCommand.where(:case_id=>record.id).first
+								ambu = nil
+								ambu = record.ambulance if  record.ambulance_id
+								ambu = command.ambulance if command
+							
+						%>
+						
+						<div class="row">
+						<div class="col-12">
+
+							<h5 class="my-1 ">
+								<% if ambu%>
+								<%=ambu.name%> (<%=ambu.plate_license%>)
+								<% end %>
+							</h5>
+
+						</div>
+						</div>
+
+
+						
+
+						<div class="row">
+						<div class="col-12">
+							    <%
+							    	
+								user = User.find record.user_id
+									
+							    %>
+								EMD : <%=  user.login if user%>
+								Channel : <%=record.channel.name if record.channel%>
+
+
+
+						</div>
+						</div>
+					
+						<div class="row">
+						<div class="col-12">
+
 						<%
 
 
@@ -223,46 +266,16 @@ cls = record.init_code.get_class if code
 
 							if command
 
-								ambu = command.ambulance
+								# ambu = command.ambulance
 								route = AocCaseRoute.where(:ems_command_id=>command.id, :status=>'STARTED').first
 
 						%>
-						<div class="row">
-						<div class="col-12">
-
-							<h5 class="my-1 ">
-
-								<%=ambu.name%> (<%=ambu.plate_license%>)
-
-							</h5>
-
-						</div>
-						</div>
-
-
-						<div class="row">
-						<div class="col-12">
-
-
 								Route : <%=route%>
 
-
-
-						</div>
-						</div>
-
-						<div class="row">
-						<div class="col-12">
-
-
-								Channel : <%=record.channel.name if record.channel%>
-
-
-
-						</div>
-						</div>
 						<% end %>
 
+						</div>
+						</div>
 
 
 
@@ -276,18 +289,34 @@ cls = record.init_code.get_class if code
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
+				
+				
+				<% if true
+				
+					cls = 'bg-gradient-bloody'
+					cls = '' if record.tracking_status=='SENT'
+					cls = 'bg-gradient-blooker' if record.tracking_status=='ACCESSED'
+					cls = 'bg-gradient-ohhappiness' if record.tracking_status=='TRACKING'
+					
+				
+				%>
+				
 
-				<div class="widgets-icons-2  <%=' bg-gradient-bloody ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
+				<div class="widgets-icons-2  <%= cls %> text-white ms-auto" style="margin:5px">
 					<a href="send_sms?id=<%=record.id%>" >
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
 
-
+				<% end %>
+				
+				
+				
+				
 
 
 				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">
-					<a href="video?id=<%=record.case_no%>" target="_blank" >
+					<a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd" target="_blank" >
 						<i class='bx bx-webcam text-white '></i>
 					</a>
 				</div>

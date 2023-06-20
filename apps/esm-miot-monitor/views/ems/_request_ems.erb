@@ -5,25 +5,34 @@ ems_case = EMSCase.new
 
 ems_case = EMSCase.find params[:id] if params[:id]
 
+if ems_case.tracking_status=='SENT'
+	ems_case.update_attributes :tracking_status=>'ACCESSED'	
+	ems_case.update_message @context, "request access tracking"
+	
+end
+
+
 if request.post?
 
 	ems_case = ESMCase.create unless ems_case
 
-	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location]
+	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location], :tracking_status=>'TRACKING'
 
 
-    admit = Admit.find ems_case.admit_id
+	ems_case.update_message @context, "request send location"
 
-path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
-
-msg = 'NULL'
-send_msg = <<MSG
-#{'Zone.Message'} #{path}
-#{msg.to_json}
-MSG
-
-
-    @context.settings.redis.publish(path, send_msg)
+#     admit = Admit.find ems_case.admit_id
+#
+# path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+#
+# msg = 'NULL'
+# send_msg = <<MSG
+# #{'Zone.Message'} #{path}
+# #{msg.to_json}
+# MSG
+#
+#
+#     @context.settings.redis.publish(path, send_msg)
 
 
 %>
@@ -48,6 +57,10 @@ else
 <body style="padding:10px">
 
 <div class="wrapper">
+	
+	
+	
+	
 <%
 
 
@@ -58,20 +71,17 @@ locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 
 conf_url = "https://pcm-life.com:4443/\#/#{ems_case.case_no}"
 
-conf_url = "video?id=#{ems_case.case_no}"
+conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 
 
 %>
-	<!-- <input type="file" accept="image/*;capture=camera"> -->
-
 
 <%= inline(this,:'../lib/_map')  %>
-
 
 		<div class="page-wrapper">
 			<div class="page-content">
 				<div class="row">
-					<div class="col align-center alert alert-warning">
+					<div class="col align-center alert alert-info">
 						<h4><center><%=Setting.get(:default_center_name)%></center></h4>
 					</div>
 				</div>
@@ -80,7 +90,7 @@ conf_url = "video?id=#{ems_case.case_no}"
 
     <div class='row'>
 		<div class="col">
-			<div class="card radius-10 border-start border-0 border-3 border-warning">
+			<div class="card radius-10 border-start border-0 border-3 border-info">
 			<div class="card-body">
 				<div class="d-flex justify-content-between">
 					<div class="col-9">
@@ -159,13 +169,19 @@ conf_url = "video?id=#{ems_case.case_no}"
 			</div>
 
 	</div> -->
-
+		
+		<%
+			cls = "border-warning"
+			
+			cls = "border-success" if ems_case.tracking_status=='TRACKING'
+			
+		%>
 
 				<div class="row">
 
 					<div class="col">
-
-						<div class="card radius-10 border-start border-0 border-3 border-warning">
+						
+						<div class="card radius-10 border-start border-0 border-3 <%=cls%>">
 
 
 							<div class="card-body" style="">
@@ -228,9 +244,19 @@ conf_url = "video?id=#{ems_case.case_no}"
 				</div>
 				</div>
 
+				<%
+				
+				imgs = Message.where(:admit_id=>ems_case.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
+				
+					
+				cls = 'border-warning'
+				cls = 'border-success' if imgs.size>0
+					
+				%>
+
 				<div class="row">
 				<div class="col">
-				<div class="card radius-10 border-start border-0 border-3 border-warning">
+				<div class="card radius-10 border-start border-0 border-3 <%=cls%>">
 				<div class="card-body">
 				<div class="row">
 					<div class="col">
@@ -270,8 +296,7 @@ conf_url = "video?id=#{ems_case.case_no}"
 
 					<%
 
-					imgs = Message.where(:admit_id=>ems_case.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
-
+					
 					%>
 
 

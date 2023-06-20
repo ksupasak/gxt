@@ -308,7 +308,7 @@
 			<ul class="mm-show mm-collapse">
 				<%
 
-				cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
+				cases = EMSCase.where(:status=>"New", '$or'=>[{:user_id=>nil},{user_id:@current_user.id}]).sort(:case_no=>-1).all()
 
 				%>
 				<% for i in cases
@@ -318,11 +318,18 @@
 					code_class= code.get_class if code
 
 				%>
-				<li class="<%='mm-active' if i.id==params[:id]%>" > <a href="show?id=<%=i.id%>" class=" text-<%=%>"><i class="bx bx-taxi"></i><%=i.case_no%>&nbsp;
+				<li class="" >
+				
+				<a  id="tab-dashboard" href="show?id=<%=i.id%>" class="tab-dashboard has-arrow tab-dashboard border-<%=cls%>">
+					<div class="parent-icon"><i class="bx bx-taxi"></i>
+					</div>
+					<div class="menu-title"><%=i.case_no%><br/>
 
-
-
-					<span class="badge bg-<%=code_class%>" ><%=code.code if code%></span></a>
+					<span class="badge bg-<%=code_class%>" ><%=code.code if code %></span>
+					</div>
+				</a>
+				
+				
 				</li>
 				<% end %>
 
