@@ -8,6 +8,7 @@
   notify_message = false;
   reload = false;
   popup = false;
+  med = false;
 
 
 
@@ -65,7 +66,7 @@
 
           #inline(this,:'dispatch/_patient_ambu', :local=>{:ems_case=>ems_case})
 
-    
+
 
       else
 
@@ -81,8 +82,210 @@
               medication = Medication.create(:name=>obj['med']) unless medication
               now = Time.now
               title = "#{medication.name} #{obj['volume']} #{obj['unit']}"
-              med_record = MedicationRecord.create :admit_id=>admit.id, :name=>title, :volume=>obj['volume'], :unit_type=>obj['unit'], :start_time=>now
+              # med_record = MedicationRecord.create :admit_id=>admit.id, :name=>title, :volume=>obj['volume'], :unit_type=>obj['unit'], :start_time=>now
+              med = true
 
+
+              med_name = medication.name
+              volume = obj['volume']
+              unit = obj['unit']
+              doses = obj['dose']
+              weight = @ems_case.patient_weight
+
+              w = ""
+
+              begin
+
+              if doses and doses.size>0 and weight and obj['volume_formula'] and obj['volume_formula'].index("weight")
+
+              dose = doses[0]
+
+              w = format("%0.2f",dose * weight)
+              volume = format("%0.2f", eval(obj['volume_formula']))
+
+              title = "#{medication.name} (#{dose}) : #{volume} #{obj['unit']}"
+              end
+            rescue Exception=>e
+
+            end
+  %>
+
+  <div class="modal fade" id="med-panel" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+      <div class="modal-content">
+
+        <form class="med-form">
+
+        <div class="modal-header">
+          <h5 class="modal-title"> Med : <%=medication.name%></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+
+          <div class="col-4">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Medication</span>
+            </p><input name='record[name]' value="<%=med_name%>" id="med-name"  class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+
+          <div class="col-6">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Note</span>
+            </p><input name='record[title]' value="<%=title%>" id="med-note" class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+
+          <% if doses and doses.size>0 %>
+          <div class="col-4">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Dose (mg/kg)</span>
+            </p>
+            <select name="record[dose]" class="form-control vfor" id="med-dose">
+            <% for i in doses %>
+            <option value="<%=i%>"><%=i%></option>
+            <% end %>
+            </select>
+          </div>
+
+          <div class="col-4">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Dose (mg)</span>
+            </p>
+            <input name='record[weight]' value="<%=w%>"  id="med-weight"  class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+
+          <div class="col-4">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Pat Weight (kg)</span>
+            </p>
+
+            <input name='patient[weight]'  value="<%=weight%>" id="med-pweight" class="vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+          <script>
+
+            function update_formula(){
+
+              dose = $('#med-dose').val()
+              weight = $('#med-pweight').val()
+
+
+              dose = parseFloat(dose)
+              weight = parseFloat(weight)
+              mg = dose*weight
+              vol = eval("<%=obj['volume_formula']%>")
+
+              $('#med-weight').val(mg.toFixed(2))
+
+              $('#med-volume').val(vol.toFixed(2))
+
+              note = "<%=medication.name%> ("+dose+") : "+vol+" <%=unit%>"
+              $('#med-note').val(note)
+            }
+
+            $('.vfor').change(update_formula);
+
+          </script>
+          <% end %>
+
+          <div class="col-6">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Volume</span>
+            </p><input name='record[volume]' id="med-volume" value="<%=volume%>" class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+
+          <div class="col-6">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Unit</span>
+            </p><input name='record[unit]' value="<%=unit%>"  id="med-unit"  class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-primary" value="Submit"/>
+
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+
+        </form>
+
+        <script>
+
+          $('.med-form').submit(function(e){
+
+
+            e.preventDefault();
+
+            var url = "<%=get_path "med_submit" %>?id=<%=ems_case.id%>";
+
+            name = $("#med-name").val()
+            volume = $("#med-volume").val()
+            unit = $("#med-unit").val()
+            note = $("#med-note").val()
+
+            p = {'name':name, 'volume':volume, 'unit':unit, 'note':note }
+
+
+            <% if doses %>
+
+            dose = $("#med-dose").val()
+            weight = $("#med-weight").val()
+            pweight = $("#med-pweight").val()
+
+            p["dose"] = dose
+            p["weight"] = weight
+            p["pweight"] = pweight
+
+            <% end %>
+
+
+            $.ajax({
+              type: "POST",
+              url: url,
+              data: p, // serializes the form's elements.
+              success: function(data)
+              {
+
+
+                  $('#med-panel').modal('hide')
+
+                return false;
+
+
+
+              }
+       });
+
+
+            return false;
+
+          })
+
+
+
+
+        </script>
+
+      </div>
+    </div>
+  </div>
+
+  <%
 
 
 		      elsif  obj and assessment.type=='patient_status'
@@ -139,6 +342,11 @@ MSG
 end
 
 %>
+<% if med %>
+<script>
+    $('#med-panel').modal('show')
+</script>
+<% end %>
 <% if reload %>
 <script>
     window.location="show?id=<%=ems_case.id%>&page=paramedic"

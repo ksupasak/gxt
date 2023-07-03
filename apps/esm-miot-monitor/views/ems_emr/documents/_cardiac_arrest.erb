@@ -16,43 +16,200 @@
   <div class="card-body">
     <div class="row">
 
-<div class="col-12">
-  <%= radio_string this, 'witnessed_cardiac_arrest',   :value=>%w{yes no}, :label=>'Witnessed cardiac arrest <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'bystander_cpr',   :value=>["ALS/BLS/อาสา", "พลเมืองดี", "No"], :label=>'Bystander CPR <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'aed_use',   :value=>["Shockable", "Non-Shockable", "Not use"], :label=>'AED <span class="mandatory">*</span>' %>
+<div class="col-12 col-lg-6">
 
-  <%= date_string this, 'last_seen_normal_time', :col=>4 , :label=>'Last seen normal(OHCA) <span class="mandatory">*</span>'%>
-  <%= date_string this, 'first_seen_abnormal_time', :col=>4 , :label=>'First seen abnormal(OHCA) <span class="mandatory">*</span>'%>
-  <%= date_string this, 'bystander_start_cpr_time', :col=>4 , :label=>'Bystander start CPR time'%>
-  <%= date_string this, 'ems_start_cpr_time', :col=>4 , :label=>'EMS start CPR time'%>
-  
-  <%= radio_string this, 'initial_rhythm',   :value=>["VF/VT", "PEA", "Asystole"], :label=>'Initial rhythm <span class="mandatory">*</span>' %>
+  <style>
+    .field-item{
+        margin-bottom:20px
+        ;border:0px solid
+     }
+    </style>
 
 
-  <%= date_string this, 'first_shock_time', :col=>4 %>
-  <%= date_string this, 'first_amiodarone_time', :col=>4 , :label=>'First Amiodarone 300 mg time'%>
-  <%= date_string this, 'third_shock_time', :col=>4 , :label=>'3rd shock time'%>
+  <label class="form-label">Witnessed cardiac arrest <span class="mandatory">*</span></label>
+  <%= radio_string this, 'witnessed_cardiac_arrest',   :value=>%w{yes no} %>
 
-  <%= text_string this, 'shock_time', :col=>4, :label=>'Shock times(ครั้ง)'%>
+  <label class="form-label">Bystander CPR (ภายใน 10 นาททีหลัง onset)<span class="mandatory">*</span></label>
+  <%= radio_string this, 'bystander_cpr',   :value=>["ALS/BLS/อาสา", "พลเมืองดี", "No"] %>
 
-  <%= date_string this, 'first_adrenaline_time', :col=>4 %>
-  <%= date_string this, 'on_ett_time', :col=>4 , :label=>'On ETT time'%>
-  <%= date_string this, 'autopulse_time', :col=>4 %>
+  <label class="form-label">AED <span class="mandatory">*</span></label>
+  <%= radio_string this, 'aed',   :value=>["Shockable", "Non-Shockable", "Not use"] %>
 
-  <%= radio_string this, 'rapid_bystander_cpr',   :value=>["Yes", "No"], :label=>'Rapid bystander CPR <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'initial_shockable',   :value=>["Yes", "No"], :label=>'Initial shockable <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'age_70',   :value=>["Yes", "No"], :label=>'Age<70 yr <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'status_good_functional',   :value=>["Yes", "No"], :label=>'Status เดิม good functional <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'no_sign',   :value=>["Yes", "No"], :label=>'No sign of end stage disease <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'on_scene_to_ed',   :value=>["Yes", "No"], :label=>'On scene to ED within 30 min. <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'on_autopulse',   :value=>["Yes", "No"], :label=>'On autopulse <span class="mandatory">*</span>' %>
-  <%= radio_string this, 'etco2',   :value=>["Yes", "No"], :label=>'EtCO2>10mmHg. <span class="mandatory">*</span>' %>
-  <%= date_string this, 'consult_ecmo_time', :col=>4 , :label=>'Consult EP for ECMO time'%>
+<div class="row">
+<div class="col-6">
+  <label class="form-label">Last seen normal (OHCA) <span class="mandatory">*</span></label>
+  <%= date_string this, 'last_seen_normal_time', :col=>12   , :label=>''%>
+</div>
+<div class="col-6">
+  <label class="form-label">First seen abnormal (OHCA) <span class="mandatory">*</span></label>
+  <%= date_string this, 'first_seen_abnormal_time', :col=>12  , :label=>''%>
+</div>
+</div>
 
-  <%= radio_string this, 'ecmo_at_ed',   :value=>["Yes", "No"], :label=>'ECMO at ED <span class="mandatory">*</span>' %>
-  <%= date_string this, 'ecmo_time', :col=>4 , :label=>'ECMO time'%>
-  
-  <%= radio_string this, 'rosc',   :value=>["Yes", "No", "Unknown"], :label=>'ROSC <span class="mandatory">*</span>' %>
+<div class="row">
+<div class="col-6">
+  <label class="form-label">Bystander start CPR time</label>
+  <%= date_string this, 'bystander_start_cpr_time' , :label=>'' %>
+</div>
+<div class="col-6">
+  <label class="form-label">EMS start CPR time</label>
+  <%= date_string this, 'ems_start_cpr_time', :label=>''%>
+</div>
+</div>
+
+
+  <label class="form-label">Initial rhythm <span class="mandatory">*</span></label>
+  <%= radio_string this, 'initial_rhythm',   :value=>["VF/VT", "PEA", "Asystole"] %>
+
+<div class="row">
+<div class="col-6">
+  <%= date_string this, 'first_shock_time' %>
+</div>
+<div class="col-6">
+  <%= date_string this, 'first_amiodarone_time' , :label=>'First Amiodarone 300 mg time'%>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <%= date_string this, 'third_shock_time', :label=>'3rd shock time'%>
+</div>
+<div class="col-6">
+  <%= text_string this, 'shock_time', :label=>'Shock times(ครั้ง)'%>
+</div>
+</div>
+<div class="row">
+<div class="col-6">
+  <label class="form-label">First arenaline time</label>
+  <%= date_string this, 'first_adrenaline_time', :label=>''%>
+</div>
+<div class="col-6">
+  <label class="form-label">On ETT time</label>
+  <%= date_string this, 'on_ett_time' , :label=>''  %>
+</div>
+</div>
+  <label class="form-label">Autopulse time</label>
+  <%= date_string this, 'autopulse_time',:col=>6, :label=>''%>
+
+</div>
+
+<div class="col-6">
+
+<div class="row">
+<div class="col-6">
+<label class="form-label">Rapid bystander CPR <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'rapid_bystander_cpr',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">Initial shockable <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+    <%= radio_string this, 'initial_shockable',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">Age<70 yr <span class="mandatory">*</span></label>
+
+  </div>
+  <div class="col-6">
+    <%= radio_string this, 'age_70',   :value=>["Yes", "No"] %>
+  </div>
+  </div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">Status เดิม good functional <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'status_good_functional',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">No sign of end stage disease <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'no_sign',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">On scene to ED within 30 min. <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'on_scene_to_ed',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">On autopulse <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'on_autopulse',   :value=>["Yes", "No"] %>
+</div>
+</div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">EtCO2 > 10mmHg. <span class="mandatory">*</span>/label>
+  </div>
+  <div class="col-6">
+    <%= radio_string this, 'etco2',   :value=>["Yes", "No"] %>
+  </div>
+  </div>
+
+
+  <div class="row">
+  <div class="col-6">
+  <label class="form-label">Consult EP for ECMO time</label>
+</div>
+<div class="col-6">
+  <%= date_string this, 'consult_ecmo_time', :label=>"" %>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">  ECMO at ED <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'ecmo_at_ed',   :value=>["Yes", "No"]%>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">  ECMO time</label>
+</div>
+<div class="col-6">
+  <%= date_string this, 'ecmo_time' , :label=>""%>
+</div>
+</div>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">ROSC <span class="mandatory">*</span></label>
+</div>
+<div class="col-6">
+  <%= radio_string this, 'rosc',   :value=>["Yes", "No", "Unknown"] %>
+</div>
+</div>
+
  <%
   list = <<LIST
 1|Unknown
@@ -70,7 +227,16 @@
 13|อื่นๆ
 LIST
 %>
-<%= check_string this, 'cause_of_arrest', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Cause of Arrest <span class="mandatory">*</span>'%>
+
+<div class="row">
+<div class="col-6">
+  <label class="form-label">Cause of Arrest <span class="mandatory">*</span></label>
+</div>
+<div class="col-12">
+  <%= check_string this, 'cause_of_arrest', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>''%>
+</div>
+</div>
+
 <%= text_string this, 'cause_of_arrest_other', :col=>8, :label=>''%>
 
 
