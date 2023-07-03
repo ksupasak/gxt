@@ -212,8 +212,6 @@
 				<% end %>
       </div>
 
-
-
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -222,7 +220,25 @@
 </div>
 </div>
 
+<div class="modal fade" id="free-text" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"> Free Text	</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
 
+				free text
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -259,7 +275,10 @@
 
         $('#dispatch_'+found['code']).modal('show')
 
-    }
+    }else
+		if(found!=null&&found['type']=='text'){
+			  $('#free-text').modal('show')
+		}
     else{
 
       var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item;

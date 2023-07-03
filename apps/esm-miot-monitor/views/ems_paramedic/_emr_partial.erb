@@ -1,0 +1,65 @@
+<%
+
+	ems_case = EMSCase.find params[:id]
+
+    # record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
+
+	records = EMRRecord.where(:case_id=>ems_case.id).sort(:created_at=>1).all
+
+%>
+
+
+
+			<% records.each_with_index do |i, ix|
+
+			document = EMRDocument.find i.document_id
+
+			%>
+			<li class="nav-item emr-tab"  id="tab<%=i.id%>"  role="presentation">
+
+				<a class="nav-link <%='active' if false and  ix==0 %>" data-bs-toggle="tab" href="#emr<%=i.id%>" role="tab" aria-selected="true">
+					<div class="d-flex align-items-center">
+						<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+						</div>
+						<div class="tab-title"><%=document.title%></div>
+					</div>
+				</a>
+			</li>
+
+			<% end %>
+
+
+			<% records.each_with_index do |i, ix|
+
+			document = EMRDocument.find i.document_id
+
+			%>
+			<div class="emr-tab tab-pane fade  <%='show active' if false and ix==0 %>" id="emr<%=i.id%>"  role="tabpanel">
+
+
+
+			</div>
+
+
+			<script>
+
+			  	$.ajax({
+			  	  url: "<%=get_path "../EmsEMR/update_partial"%>?id=<%=i.id%>&case_id=<%=ems_case.id%>&document=<%=document.name%>",
+			  	  context: document.body
+			  	}).done(function(data) {
+
+					$('#emr<%=i.id%>').html(data)
+
+
+				$('#emr<%=i.id%>').appendTo("#tab-content")
+				$('#tab<%=i.id%>').appendTo("#nav-tabs")
+
+			  	});
+
+
+
+			</script>
+
+
+
+			<% end %>

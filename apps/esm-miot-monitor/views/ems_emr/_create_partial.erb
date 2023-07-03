@@ -21,7 +21,7 @@
 
     if File.file?(File.dirname(__FILE__) +'/documents/_'+document.name+"_text.erb")
 
-      text = inline(this,'documents/_'+document.name+"_text", :this=>this, :record=>values, :ems_case=> ems_case)
+      text = inline(this,'documents/_'+document.name+"_text", :this=>this, :record=>values, :ems_case=> ems_case, :mode=>'line')
 
     end
 
@@ -30,7 +30,7 @@
 
 
       path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
-      msg = 'NULL'
+      msg = {:type=>'emr', :document_id=>document.id, :record_id=>record.id, :case_id=>ems_case.id}
   send_msg = <<MSG
 #{'Zone.Message'} #{path}
 #{msg.to_json}

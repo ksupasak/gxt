@@ -134,7 +134,7 @@ col = options[:col] if options[:col]
 %>
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
-<label for="<%=name%>"><%=label%> Date</label>
+<label for="<%=name%>"><%=label%></label>
 <% end %>
 <input type="text" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
 <% unless options[:field_only]%>

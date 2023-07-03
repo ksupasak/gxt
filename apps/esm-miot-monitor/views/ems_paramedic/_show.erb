@@ -278,10 +278,10 @@ end
 		<div class="row">
 
 		<div class="col-9"  >
-			
 
-		<div class="row charting" style="my-2">
-			
+
+		<div class="row " style="my-2">
+
 			<div class="col-12 video_call-panel "  style="display:none;border:0px solid;height:400px">
 					<%= inline(this,:'_openvidu') %>
 			</div>
@@ -291,7 +291,7 @@ end
 				$('.video_call').click(function(){
 					// alert("<%=ems_case.case_no%>")
 					if(video_start == false){
-						
+
 						$('.video_call-panel').css("display", "block")
 						video_start = true
 						videoCall("<%=ems_case.case_no%>")
@@ -304,7 +304,7 @@ end
 				})
 			</script>
 
-			<div  class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
+			<div  id="<%=station_id%>" class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 
 				<div class="row d-flex justify-content-center" style="padding:0px" >
               <div class="vs-val col-2  col-lg-2 col-sm-2 bp">
@@ -353,16 +353,91 @@ end
 					</div>
 
 			</div>
-			
-		
-			
+
+
+
 			<% if ems_case.paramedic_status=='STARTED' or ems_case.paramedic_status=='FINISHED'  %>
+
+
+			<div class="card">
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-primary" id="nav-tabs" role="tablist">
+												<li class="nav-item" role="presentation">
+													<a class="nav-link active" data-bs-toggle="tab" href="#primaryhome" role="tab" aria-selected="false">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Flowsheet</div>
+														</div>
+													</a>
+												</li>
+												<!-- <li class="nav-item" role="presentation">
+													<a class="nav-link " data-bs-toggle="tab" href="#primaryprofile" role="tab" aria-selected="true">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Assessment</div>
+														</div>
+													</a>
+												</li> -->
+												<li class="nav-item" role="presentation">
+													<a class="nav-link" data-bs-toggle="tab" href="#primarycontact" role="tab" aria-selected="false">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Summary</div>
+														</div>
+													</a>
+												</li>
+											</ul>
+											<div class="tab-content py-3 " id="tab-content">
+												<div class="tab-pane fade active show" id="primaryhome" role="tabpanel">
 
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%> ;border:0px solid ">
 			<%= inline(this,:'_flowsheet')  %>
 			</div>
+
+
+
+												</div>
+
+
+<!--												<div class="tab-pane fade  emr-panel " id="primaryprofile" role="tabpanel">
+
+
+
+												</div>
+											 -->
+
+
+
+												<div class="tab-pane fade text-panel" id="primarycontact" role="tabpanel">
+
+
+												</div>
+
+
+												<script>
+													$(document).ready(function(){
+														update_text();
+													})
+
+												</script>
+											</div>
+										</div>
+									</div>
+
+
+
+
+
+
+
+
 			<% end %>
-			<hr/>
+
+
+
 			<h4>Device Connect</h4>
 			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
@@ -373,7 +448,7 @@ end
 			<label>Select Status :</label>
 
 			<% fieldset(:admit) do |f| %>
-			<%= f.select(:status, [['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
+			<%= f.select(:status, [['',''],['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
 			<% end %>
 			</div>
 
@@ -387,9 +462,14 @@ end
 		    </div>
 			</div>
 
-			<input type="submit" name="update" value="Submit">
+			<input type="submit" name="update" class="btn btn-warning" value="Submit">
 
 			</form>
+
+
+
+
+
 	    </div>
 
 
@@ -683,6 +763,28 @@ update_message()
 
 
 
+   	function update_emr(){
+
+
+
+
+	  	$.ajax({
+	  	  url: "<%=get_path "emr_partial"%>?id=<%=params[:id]%>",
+	  	  context: document.body
+
+	  	}).done(function(data) {
+
+			$('.emr-tab').remove()
+
+			$('body').append(data)
+
+	  	});
+
+
+
+	}
+
+	update_emr();
 
 
    	function paramedic_process(lines){
@@ -723,6 +825,14 @@ update_message()
       	  update_message();
 		  update_message_page();
 
+		  if(data!="NULL"){
+			   console.log("EMR test")
+			  data = JSON.parse(lines[1])
+			  if(data['type']=='emr')
+				  update_emr();
+		  }
+
+
 		  // update_message_page();
 
 		}
@@ -741,8 +851,8 @@ update_message()
 
 		for(var id in data['list']){
 			i = data['list'][id]
-			console.log("update " + i)
-			if($('#'+i).length > 0){
+			console.log("update : " + i)
+			if(true){
 			obj = data['data'][i]
 
 
@@ -759,7 +869,7 @@ update_message()
 				// $('#'+i).removeClass('bp_alert_2');
 				// $('#'+i+' .msg').html("-");
 			}
-
+			console.log(obj['pr'])
 			$('.'+i+' .bp .value').html(obj['bp'])
 
 			$('.'+i+' .temp .value').html(obj['temp'])

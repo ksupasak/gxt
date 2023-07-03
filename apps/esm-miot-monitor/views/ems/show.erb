@@ -1,13 +1,18 @@
+<%
+
+	record = EMSCase.find params[:id]
+	session[:case_id] = record.id
+
+%>
 <%= inline(this,:'_init')  %>
 <%= inline(this,:'_style')  %>
 <%= inline(this,:'../lib/_map')  %>
 <%
 
-record = EMSCase.find params[:id]
+
 code = EMSCode.find record.init_cbd_code
 
 
-session[:case_id] = record.id
 
 cls = "primary"
 
@@ -216,16 +221,16 @@ cls = record.init_code.get_class if code
 				<div class="row">
 
 					<div class="col-6" style="">
-						
+
 						<%
-							
+
 								command = EMSCommand.where(:case_id=>record.id).first
 								ambu = nil
 								ambu = record.ambulance if  record.ambulance_id
 								ambu = command.ambulance if command
-							
+
 						%>
-						
+
 						<div class="row">
 						<div class="col-12">
 
@@ -239,14 +244,14 @@ cls = record.init_code.get_class if code
 						</div>
 
 
-						
+
 
 						<div class="row">
 						<div class="col-12">
 							    <%
-							    	
+
 								user = User.find record.user_id
-									
+
 							    %>
 								EMD : <%=  user.login if user%>
 								Channel : <%=record.channel.name if record.channel%>
@@ -255,7 +260,7 @@ cls = record.init_code.get_class if code
 
 						</div>
 						</div>
-					
+
 						<div class="row">
 						<div class="col-12">
 
@@ -280,7 +285,7 @@ cls = record.init_code.get_class if code
 
 
 					</div>
-	
+
 				<div class="col-6 d-flex justify-content-end " style="">
 
 
@@ -289,18 +294,18 @@ cls = record.init_code.get_class if code
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
-				
-				
+
+
 				<% if true
-				
+
 					cls = 'bg-gradient-bloody'
 					cls = '' if record.tracking_status=='SENT'
 					cls = 'bg-gradient-blooker' if record.tracking_status=='ACCESSED'
 					cls = 'bg-gradient-ohhappiness' if record.tracking_status=='TRACKING'
-					
-				
+
+
 				%>
-				
+
 
 				<div class="widgets-icons-2  <%= cls %> text-white ms-auto" style="margin:5px">
 					<a href="send_sms?id=<%=record.id%>" >
@@ -309,10 +314,10 @@ cls = record.init_code.get_class if code
 				</div>
 
 				<% end %>
-				
-				
-				
-				
+
+
+
+
 
 
 				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">

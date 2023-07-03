@@ -1,0 +1,24 @@
+<%
+
+	  ems_case = EMSCase.find params[:id]
+
+    admit = ems_case.admit
+    if admit
+      med_record = MedicationRecord.create :admit_id=>admit.id, :name=>params[:note], :volume=>params[:volume], :unit_type=>params[:unit], :start_time=>Time.now
+    end
+
+    if params[:pweight]
+      ems_case.update_attributes :patient_weight=>params[:pweight]
+    end
+
+      path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+      msg = 'NULL'
+      send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+    @context.settings.redis.publish(path, send_msg)
+
+
+%>{}

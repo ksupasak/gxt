@@ -120,7 +120,7 @@ return content
 
   his_get_patient_uri = URI("https://cnmi-his.rama.mahidol.ac.th/apis/IME/get_demographic/hn/#{hn}/")
   
-  his_get_patient_uri = URI("https://10.58.249.94/apis/IME/get_demographic/hn/#{hn}/")
+  his_get_patient_uri = URI("http://10.58.249.94/apis/IME/get_demographic/hn/#{hn}/")
   
     
   ##############################################################  
@@ -138,7 +138,7 @@ return content
   
   unless params[:debug]    
   
-    puts 'xxxxx'
+    puts 'xxxxx send get his'
   req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
   #
   # # setting both OpenTimeout and ReadTimeout
@@ -150,8 +150,8 @@ return content
 
 
   http = Net::HTTP.new(his_get_patient_uri.host, his_get_patient_uri.port)
-  http.use_ssl = true #if uri.instance_of? URI::HTTPS
-  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+  # http.use_ssl = true #if uri.instance_of? URI::HTTPS
+  # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   http.read_timeout = 10 # secon
   
   res =  http.request(req)
@@ -260,7 +260,7 @@ CNX
     
     his_post_opd_url = URI("https://10.58.249.83/apis/PTM/set_smart_vital_sign/")
     
-    his_post_opd_url = URI("https://10.58.249.94/apis/PTM/set_smart_vital_sign/")
+    his_post_opd_url = URI("http://10.58.249.94/apis/PTM/set_smart_vital_sign/")
     
    
 
@@ -292,8 +292,8 @@ CNX
       
 
       http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true #if uri.instance_of? URI::HTTPS
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      # http.use_ssl = true #if uri.instance_of? URI::HTTPS
+     #  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       http.read_timeout = 10 # seconds
       
       # --header 'Content-Type:application/json' --header 'Accept:application/json'
@@ -336,6 +336,8 @@ CNX
       
       
       px['rr'] = "" unless px['rr']
+      px['date'] = Time.now.strftime("%Y-%m-%d")
+      px['time'] = Time.now.strftime("%H:%M:%S")
       
       
       # {"hn"=>"280", "weight"=>"90.0", "bp"=>"120/80", "bp_sys"=>"120", "bp_dia"=>"80", "bp_mean"=>nil, "height"=>"180.0", "bmi"=>nil, "pr"=>"80",

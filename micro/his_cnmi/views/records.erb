@@ -1,0 +1,68 @@
+
+
+<form method="GET">
+<label>mrn : </label>
+<input type="text" name="mrn" value="<%=params[:mrn]%>">
+<label>startDate : </label>
+<input type="text" name="startDate" placeholder="18/05/2023"  value="<%=params[:startDate]%>">
+<label>endDate : </label>
+<input type="text" name="endDate" placeholder="18/05/2023"  value="<%=params[:endDate]%>">
+<button type="submit">Submit</button>
+</form>
+
+
+<b>
+Patient :  <%=@pobj[:prefix_name]%> <%=@pobj[:first_name]%> <%=@pobj[:last_name]%> Gender :  <%=@pobj[:gender]%> BirthDate :  <%=@pobj[:birth_date]%> 
+</b>
+<label>return data : </label>
+
+
+<%
+    datas = @dobj['data']
+    d1 = datas.first
+    cols = {}
+    if d1
+        pe = d1['physicalExams']
+        if pe		
+			for c in pe 			
+				cols[c['physicalExamCode']] = c	
+			end
+        end
+    end
+
+    data2s = {}
+    for d in datas
+        pes = d['physicalExams']
+        rdate = d['recordDate']
+        rdate = rdate.split(' ')[0]
+        for pe in pes
+            rtime = rdate+' '+pe['recordTime']
+            data2s[rtime] = {} unless data2s[rtime]
+            data2s[rtime][pe['physicalExamCode']] = pe['value']
+        end
+    end
+%>
+<table class="table table-striped">
+<tr>
+<th>Date</th>
+<% for ci in cols.keys  
+
+	col = cols[ci]
+
+%>
+<th><%=col['physicalExamCode']%> (<%=col['unit']%>)</th>
+<% end %>
+</tr>
+<% for dk in data2s.keys %>
+<tr>
+<td><%=dk%></td>
+<% for ci in cols.keys  
+	col = cols[ci]
+%>
+<td><%=data2s[dk][col['physicalExamCode']] if data2s[dk]%> </td>
+<% end %>
+</tr>
+<% end %>
+</table>
+
+<%=%>

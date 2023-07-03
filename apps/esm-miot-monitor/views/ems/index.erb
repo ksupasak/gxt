@@ -2,7 +2,7 @@
 <%= inline(this,:'_style')  %>
 <%= inline(this,:'../lib/_map')  %>
 	<link rel="stylesheet" href="/rocker/assets/plugins/notifications/css/lobibox.min.css" />
-  
+
     <script src="/rocker/assets/plugins/notifications/js/lobibox.min.js"></script>
     	<script src="/rocker/assets/plugins/notifications/js/notifications.min.js"></script>
 
@@ -10,16 +10,23 @@
 
 	cases = EMSCase.where(:status=>{'$in'=>["New","Pending"]}, :user_id=>@current_user.id).sort(:case_no=>-1).all()
 	cases_count = EMSCase.where( :user_id=>@current_user.id).count()
-	
+
 
 	session.delete :case_id
 	a = Time.now.beginning_of_month
-	
+
 	monthly_cases = EMSCase.where(:created_at=>{'$gte'=>a}).count
 
 
 	%>
-	
+
+<style>
+	.card-x{
+
+		height:9vh
+			 }
+</style>
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <div class="row">
 <div class="col-12">
@@ -27,7 +34,7 @@
 <div class="row row-cols-1 row-cols-md-4 row-cols-xl-4">
 
 	<div class="col-6 col-xl-2 hidden-lg-down" >
-		<div class="card radius-10 border-start border-0 border-3 ">
+		<div class="card radius-10 border-start border-0 border-3 card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -41,7 +48,7 @@
 		</div>
     </div>
 	<div class="col-6 col-xl-2 hidden-lg-down">
-		<div class="card radius-10 border-start border-0 border-3 ">
+		<div class="card radius-10 border-start border-0 border-3  card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -55,16 +62,16 @@
 		</div>
     </div>
 	<div class="col-12 col-xl-4">
-		<div class="card radius-10 border-start border-0 border-3 ">
+		<div class="card radius-10 border-start border-0 border-3  card-x ">
 		<div class="card-body">
-			<div class="d-flex align-items-center">
-				<input name='record[location]' id="record_location" style="height:5vh" value=""  class="form-control  " type="text" placeholder="Search.." >
+			<div class="d-flex align-items-center align-middle ">
+				<input name='record[location]' id="record_location" style="margin-top:10px" value=""  class="form-control  " type="text" placeholder="Search.." >
 			</div>
 		</div>
 		</div>
     </div>
 	<div class="col-6 col-lg-2">
-		<div class="card radius-10 border-start border-0 border-3 ">
+		<div class="card radius-10 border-start border-0 border-3  card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -78,7 +85,7 @@
 		</div>
     </div>
 	<div class="col-6 col-lg-2">
-		<div class="card radius-10 border-start border-0 border-3 ">
+		<div class="card radius-10 border-start border-0 border-3  card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-between justify-content-between">
 				<div style="">
@@ -90,13 +97,13 @@
 					<label class="form-check-label" for="flexSwitchCheckChecked"></label>
 				</div>
 				<%= @current_user.status%>
-		
+
 		</div>
 		</div>
 		</div>
     </div>
-	
-					
+
+
 </div>
 
 
@@ -191,9 +198,9 @@
 
 
 	<script>
-		
+
 		var local_map;
-		
+
 		var latlngbounds;
 
 		$(document).ready(function(){
@@ -382,7 +389,7 @@
 
 				}
 
-				
+
 
 				// latlngbounds.extend(pos);
 
@@ -391,9 +398,9 @@
 
 
 			if(obj['emd']!=null){
-				
+
 				console.log(obj['emd'])
-				
+
 			}
 
 
@@ -403,7 +410,7 @@
 
 		function address_search(e){
 
-			
+
 				var address = $('#record_location').val()
 
 				map1.geocode({'address':address},function(result){
@@ -411,14 +418,14 @@
 					// $('#record_address').val(result.formatted_address)
 
 					var pos = result.geometry.location;
-				    
+
 					map1.setPosition(pos.lat(), pos.lng())
-				
+
 					if(map1.getMap().getZoom()<15)
 					map1.getMap().setZoom(15);
 					// map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-				
-				
+
+
 				})
 
 				e.preventDefault();
@@ -479,34 +486,34 @@ airport_shuttle
 
   var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
-  
-  
+
+
   var active_dispatch = 'Active' ;
-  
-	
+
+
   function check_dispatch(){
-  
-	  
-	  
-	status = 'Active'  
+
+
+
+	status = 'Active'
 
 	if(active_dispatch==false)status= "InActive"
-	  
+
   	ws.send("EMD.Update name=<%=@current_user.id %>\n{\"user_id\":\"<%=@current_user.id%>\",\"zone_name\":\"<%=@current_zone.name%>\", \"zone_id\":\"<%=@current_zone.id%>\",\"status\":\""+status+"\"}")
-	  
-	  
+
+
   }
-  
+
    $('#flexSwitchCheckChecked').change(function() {
         if(this.checked) {
             var returnVal = true;
             $(this).prop("checked", returnVal);
         }
-       active_dispatch = this.checked   
-		 check_dispatch() 
+       active_dispatch = this.checked
+		 check_dispatch()
     });
-	
-	
+
+
   ws.onopen    = function()  { show('websocket opened');
 
 
@@ -545,7 +552,7 @@ airport_shuttle
 		if(lines[0].split(" ")[0]=='Zone.Refresh'){
 			// alert(lines[1])
 			header = JSON.parse(lines[1])['msg'].split(" ")
-			if(header[0]=='notify_callback'){			
+			if(header[0]=='notify_callback'){
 				window.location="show?id="+header[1]
 			}
 			// window.location.reload();
@@ -560,7 +567,7 @@ airport_shuttle
 		if(lines[0].split(" ")[0]=='ZoneUpdate'){
 			if(local_map!=null)
 			update(lines)
-				
+
 
 		}
 
@@ -575,4 +582,3 @@ airport_shuttle
 
 
 </script>
-  
