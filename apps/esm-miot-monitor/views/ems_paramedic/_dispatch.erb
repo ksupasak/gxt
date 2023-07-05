@@ -90,7 +90,7 @@
 
 
 
-  labels = ['Track', 'Assess', 'Treatment', 'Med', 'EMR', 'Status']
+  labels = ['Event', 'Assess', 'Treatment', 'Med', 'EMR', 'Status']
   groups = %w{track assessment proc med emr status}
 
   sub_groups = {}
@@ -220,25 +220,36 @@
 </div>
 </div>
 
+
+
 <div class="modal fade" id="free-text" tabindex="-1" aria-hidden="true">
+	<form id="form-free" action="#" method="post">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> Free Text	</h5>
+        <h5 class="modal-title"> Free Text</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
-				free text
+				<input type="text" name="name" id="dispatch-free_text" rows="8" cols="80">
+
 
       </div>
 
       <div class="modal-footer">
+				<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+ </form>
 </div>
+
+<script>
+
+</script>
+
 
 
 <script>
@@ -278,6 +289,7 @@
     }else
 		if(found!=null&&found['type']=='text'){
 			  $('#free-text').modal('show')
+				$('#dispatch-free_text').focus();
 		}
     else{
 
@@ -362,4 +374,17 @@
 
 		<% end %>
 
+
+
+
+	$("#form-free").submit(function(e) {
+
+		e.preventDefault();
+		text  = $('#dispatch-free_text').val()
+		$('#dispatch-free_text').val("")
+		$('#free-text').modal('hide');
+		dispatch_command(text);
+
+		return false;
+	});
 </script>

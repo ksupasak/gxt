@@ -193,7 +193,7 @@
 					  						<% elsif i.type == 'voice'
 												url = "../Message/content?id=#{i.id}"
 											%>
-											<%=i.content+"<br/>" if i.content != "" %>
+											<%="<span class='chat-right-msg'>"+i.content+"</span><br/>" if i.content != "" %>
 											<audio controls preload="none">
 											  <source src="<%=url%>"  type='video/3gpp; codecs="mp4v.20.8, samr"' >
 											Your browser does not support the audio element.

@@ -8,12 +8,15 @@ patient = admit.patient
 
 if request.post?
 
-	record.update_attributes :summary=>params[:summary]
+	record.update_attributes :summary=>params[:record][:summary]
 
 end
 
 %>
+<% unless params[:mode] %>
 <form action="summary_text?id=<%=record.id%>" id="summary" method="post">
+<% end %>
+
 <div class="">
 
 <br/>
@@ -107,7 +110,7 @@ Progress note :
 Treatment :
 @transfer
 Diagnosis :
-
+@diagnosis
 
 )
 
@@ -143,11 +146,19 @@ Diagnosis :
 
 	map["progress_note"] = list.join("\n")
 
-	####################### progress # NOTE:
+	####################### transfer # NOTE:
 
 
 
 	map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
+
+  ###################### diagnosis # NOTE:
+
+
+	records = EMSCasePatientStatus.where(:case_id=>record.id).all
+
+	map["diagnosis"] = records.collect{|i| " - เวลา #{i.created_at.strftime("%H:%M") } น. : #{i.title}" }.join("\n")
+
 
 	#######################
 
@@ -190,19 +201,25 @@ Diagnosis :
 	end
 
 
+	summary = lines.join("\n")
+
+  summary = record.summary if record.summary and record.summary!=""
+	
   %>
 
 
 <div id="printout" style="border:0px solid gray;  ">
 <h4>Summary</h4>
 
-<textarea name="summary" rows="30" cols="80" style="width:100%;font-size:1.2em;padding:10px"><%=lines.join("\n")%>
+<textarea name="record[summary]" rows="30" cols="80"  style="width:100%;font-size:1.2em;padding:10px"><%=summary%>
 </textarea>
 
 
 </div>
 
 <br/>
+
+<% unless params[:mode] %>
 
 <input type="submit" name="submit" value="Update" class="btn btn-summary">
 
@@ -211,8 +228,8 @@ Diagnosis :
     <!-- <input type="button" value="Print" onclick="javascript:codespeedy()" class="btn btn-info"> -->
 
 <!-- </div> -->
-</form>
 
+</form>
 
 
 <script type="text/javascript">
@@ -254,3 +271,6 @@ print_area.print();
 
 
   </script>
+
+
+	<% end %>

@@ -26,7 +26,7 @@
     end
 
     # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
-    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now
+    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now, :data_record_id=>record.id, :tag=>'emr'
 
 
       path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"

@@ -5,18 +5,18 @@
   document = EMRDocument.where(:name=>params[:document]).first
   ems_case = EMSCase.find params[:case_id]
   record = EMRRecord.find params[:id]
-  
-  
+
+
   if request.post?
 
 
  	 # document.update_attributes :schema=>params[:schema]
 
 
-	
+
      record.update_attributes :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
-	
-	
+
+
 #
 #     admit = Admit.find(ems_case.admit_id)
 #
@@ -55,7 +55,7 @@
 
 %>
 <form action="<%=get_path 'update_partial'%>" id="form-<%=record.id%>" method="post">
-	
+
 <input type="hidden" name="id" value="<%=record.id%>">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
@@ -67,6 +67,7 @@
 <br/>
 <div class="">
   <input type="submit" value="Update" class="btn btn-success">
+  <a href="#" id="delete-<%=record.id%>" class="delete-btn btn btn-danger" >Delete</a>
   <span id="result-<%=record.id%>"></span>
 </div>
 
@@ -74,6 +75,22 @@
 <% end %>
 
 <script>
+
+
+  $("#delete-<%=record.id%>").click(function(){
+
+        $.ajax({
+            type: "POST",
+            url: "<%=get_path 'destroy_partial'%>?id=<%=record.id%>",
+            success: function(data)
+            {
+              // alert(data);
+              $('#result-<%=record.id%>').html("deleted")
+              location.reload();
+              // show response from the php script.
+            }
+        });
+  })
 
   $("#form-<%=record.id%>").submit(function(e){
 

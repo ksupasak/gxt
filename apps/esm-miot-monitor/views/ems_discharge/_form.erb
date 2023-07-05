@@ -341,4 +341,29 @@
 <input class="form-control" type="text" name="record[over_time_managment]" id="" value="<%=record.over_time_managment%>">
 </div>
 
+<div class="col-12 text-panel">
+
+dfdff
 </div>
+
+</div>
+
+
+
+<script>
+
+  function update_text(){
+
+    $.ajax({
+      url: "<%="../EMS/summary_text"%>?id=<%=record.id%>&mode=inner",
+      context: document.body
+    }).done(function(data) {
+
+      $( '.text-panel' ).html(data);
+
+
+    });
+
+  }
+  update_text();
+</script>

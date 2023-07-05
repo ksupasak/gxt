@@ -64,8 +64,11 @@
 	<div class="col-12 col-xl-4">
 		<div class="card radius-10 border-start border-0 border-3  card-x ">
 		<div class="card-body">
-			<div class="d-flex align-items-center align-middle ">
-				<input name='record[location]' id="record_location" style="margin-top:10px" value=""  class="form-control  " type="text" placeholder="Search.." >
+			<div class=" d-flex align-items-center">
+
+				<input name='record[location]' id="record_location" value=""  class="form-control  " type="text" placeholder="Address.." >
+				<input name='record[latlng]' id="record_latlng"  value=""  class="form-control  " type="text" placeholder="Location." >
+
 			</div>
 		</div>
 		</div>
@@ -96,7 +99,7 @@
 					<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" <%= ' checked=""' if @current_user.status=='Active' %> style="font-size:4vh">
 					<label class="form-check-label" for="flexSwitchCheckChecked"></label>
 				</div>
-				<%= @current_user.status%>
+				
 
 		</div>
 		</div>
@@ -204,14 +207,17 @@
 		var latlngbounds;
 
 		$(document).ready(function(){
-
-			latlng = [13.69313508354787, 100.69198345629769]
+			<%
+				latlng = Setting.get('aoc_center').split(",")
+			%>
+			latlng = <%=latlng.to_json%>
 
 
 
 			map1 = new EMSMap('dashboard-map',{movable:true});
 			map1.setPosition(latlng[0], latlng[1])
-			// map1.setMarkerPosition(latlng[0], latlng[1])
+
+			map1.setMarkerPosition(latlng[0], latlng[1])
 
 
 
@@ -221,16 +227,15 @@
 
 
 
-											// var pos = marker.position
-			// 								$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+											var pos = marker.position
 			//
 			//
 			//
-			// 								// map1.geocode({'location':pos},function(result){
-			// 	//
-			// 	// 								$('#record_address').val(result.formatted_address)
-			// 	//
-			// 	// 							})
+											map1.geocode({'location':pos},function(result){
+
+												$('#record_latlng').val(result.formatted_address)
+
+											})
 			//
 			// 								map2.setPosition(pos.lat(), pos.lng())
 			// 								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -269,7 +274,18 @@
 		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
 
 			var pos = new google.maps.LatLng(<%=i.latlng%> )
-			marker = new google.maps.Marker({position: pos, map: local_map})
+			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>'})
+
+			infowindow = new google.maps.InfoWindow({
+			content: "<%=i.case_no%>",
+			});
+
+			marker.addListener("click", () => {
+
+
+    	infowindow.open(marker.get("map"), marker);
+
+			});
 		    <% end %>
 
 

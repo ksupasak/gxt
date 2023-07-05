@@ -199,8 +199,8 @@
 
 
 						</div>
-						
-						
+
+
 						<div class="col-12 col-sm-6">
 
 							  <%
@@ -233,16 +233,16 @@
 									<p class="px-3">
 										Sex
 									</p>
-									
+
 									<select class="form-select mb-3  " name='record[patient_gender]' aria-label="Default select example">
-										
+
 										<% for s in ['', 'M','F' ] %>
 										<option  <%='selected=""' if s==record.patient_gender %> value="<%=s%>"><%=s%></option>
 										<% end %>
-										
+
 									</select>
-									
-									
+
+
 								</div>
 
 								<div class="col-4 no-gutters">
@@ -260,8 +260,8 @@
 									</p><input name='record[patient_birth_date]' value="<%=record.patient_birth_date.strftime("%d/%m/%Y") if patient and record.patient_birth_date %>" class="form-control " type="text" placeholder="" aria-label="default input example">
 
 								</div>
-								
-								
+
+
 								<div class="col-4">
 
 									<p class="px-3">
@@ -269,7 +269,7 @@
 									</p><input name='record[patient_weight]' value="<%=record.patient_weight if patient and record.patient_weight %>" class="form-control mb-3 " type="text" placeholder="" aria-label="default input example">
 
 								</div>
-								
+
 								<div class="col-4">
 
 									<p class="px-3">
@@ -277,24 +277,24 @@
 									</p><input name='record[patient_height]' value="<%=record.patient_height if patient and record.patient_height %>" class="form-control mb-3 " type="text" placeholder="" aria-label="default input example">
 
 								</div>
-								
+
 								<div class="col-4">
 
 									<p class="px-3">
-										BMI 
+										BMI
 									</p><input name='record[patient_bmi]' value="<%=record.patient_bmi if patient and record.patient_bmi %>" class="form-control mb-3 " type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
 							</div>
-							
+
 
 									<p class="px-3">
 										Patient Identification <span style="float:right"><input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
 									</p>
 									<input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden">
 									<input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 " type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
-									<input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example"> 
+									<input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example">
 									<input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
 
 									<script>
