@@ -203,7 +203,8 @@ Diagnosis :
 
 	summary = lines.join("\n")
 
-  summary = record.summary
+  summary = record.summary if record.summary and record.summary!=""
+	
   %>
 
 
