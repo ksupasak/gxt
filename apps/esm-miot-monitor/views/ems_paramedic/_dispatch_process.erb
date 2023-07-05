@@ -81,7 +81,7 @@
               medication = Medication.where(:name=>obj['med']).first
               medication = Medication.create(:name=>obj['med']) unless medication
               now = Time.now
-              title = "#{medication.name} #{obj['volume']} #{obj['unit']}"
+              title = "#{medication.name} : #{obj['volume']} #{obj['unit']}"
               # med_record = MedicationRecord.create :admit_id=>admit.id, :name=>title, :volume=>obj['volume'], :unit_type=>obj['unit'], :start_time=>now
               med = true
 
@@ -171,37 +171,14 @@
             <input name='patient[weight]'  value="<%=weight%>" id="med-pweight" class="vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
           </div>
-          <script>
 
-            function update_formula(){
-
-              dose = $('#med-dose').val()
-              weight = $('#med-pweight').val()
-
-
-              dose = parseFloat(dose)
-              weight = parseFloat(weight)
-              mg = dose*weight
-              vol = eval("<%=obj['volume_formula']%>")
-
-              $('#med-weight').val(mg.toFixed(2))
-
-              $('#med-volume').val(vol.toFixed(2))
-
-              note = "<%=medication.name%> ("+dose+") : "+vol+" <%=unit%>"
-              $('#med-note').val(note)
-            }
-
-            $('.vfor').change(update_formula);
-
-          </script>
           <% end %>
 
           <div class="col-6">
 
             <p class="px-3">
               <span class="t" t="record_contact_name">Volume</span>
-            </p><input name='record[volume]' id="med-volume" value="<%=volume%>" class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+            </p><input name='record[volume]' id="med-volume" value="<%=volume%>" class="vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
           </div>
 
@@ -209,7 +186,7 @@
 
             <p class="px-3">
               <span class="t" t="record_contact_name">Unit</span>
-            </p><input name='record[unit]' value="<%=unit%>"  id="med-unit"  class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+            </p><input name='record[unit]' value="<%=unit%>"  id="med-unit"  class="  vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
           </div>
           </div>
@@ -221,6 +198,43 @@
 
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
+
+        <script>
+
+          function update_formula(){
+
+
+            <% if doses and doses.size>0 %>
+            dose = $('#med-dose').val()
+            weight = $('#med-pweight').val()
+
+
+            dose = parseFloat(dose)
+            weight = parseFloat(weight)
+            mg = dose*weight
+            vol = eval("<%=obj['volume_formula']%>")
+
+            $('#med-weight').val(mg.toFixed(2))
+
+            $('#med-volume').val(vol.toFixed(2))
+
+            note = "<%=medication.name%> ("+dose+") : "+vol+" <%=unit%>"
+
+            <% else %>
+            vol  =  $('#med-volume').val()
+            note = "<%=medication.name%> : "+vol+" <%=unit%>"
+
+            <% end %>
+
+
+
+            $('#med-note').val(note)
+          }
+
+          $('.vfor').change(update_formula);
+
+        </script>
+
 
         </form>
 

@@ -24,7 +24,7 @@ class User < GXTModel
   key :picture_id, ObjectId
   key :role_id, ObjectId
   key :status, String
-  
+
   key :email, String
    include Mongoid::Timestamps
   timestamps!
@@ -503,8 +503,9 @@ class NurseRecord  < GXTModel
 
   key :data_record_id, ObjectId
 
-
   key :sh_visit_id, ObjectId
+
+
 
   include Mongoid::Timestamps
 
@@ -792,9 +793,9 @@ class Ambulance  < GXTModel
   key :last_speed, Float
   key :last_mile, Integer
 
-  key :location_policy, String # any, app, dvr 
-  key :device_no, String # for dvr 
-  key :msg_channel, String 
+  key :location_policy, String # any, app, dvr
+  key :device_no, String # for dvr
+  key :msg_channel, String
 
 
   include Mongoid::Timestamps

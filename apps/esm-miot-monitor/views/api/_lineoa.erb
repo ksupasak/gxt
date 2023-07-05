@@ -1,5 +1,5 @@
 <%
-	
+
 
 data = request.body.read
 
@@ -11,9 +11,9 @@ data = request.body.read
 obj = JSON.parse data
 
 
-puts data.inspect 
-puts obj.inspect 
-puts 
+puts data.inspect
+puts obj.inspect
+puts
 
 
 
@@ -27,57 +27,53 @@ user_id = source['userId']
 line_account = nil
 
 if user_id
-  
+
   line_account = LineAccount.where(:user_id=>user_id).first
   line_account = LineAccount.create(:user_id=>user_id) unless line_account
 
 end
 
-case type 
+case type
 
 when 'message'
-    
+
     message = obj['message']
-    
+
     if message['type'] == 'text'
-    
+
         line_message = LineMessage.create :type=>type, :account_id=>line_account.id, :text=>message['text'], :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
-        
+
         if message['text'].index('#reg:')
-            
+
             phone = message['text'].split(":")[-1].split("|")[0].strip
 			# require zone
             provider = Provider.where(:phone=>phone).first
-            if provider 
-                
+            if provider
+
                 provider.update_attributes :line_account_id=>line_account.id
                 line_account.update_attributes :name=>provider.name, :type=>'provider'
                 line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
-                
-			else
-				
-				p = message['text'].split(":")[-1].split("|")
-				
-				provider = Provider.create :name=>p[1], :phone=>p[0], :line_account_id=>line_account.id
-				line_account.update_attributes :name=>provider.name, :type=>'provider'
-				line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
-				
-				
-				
-				
-			end
-            
-          
-            
-            
+
+					  else
+
+								p = message['text'].split(":")[-1].split("|")
+
+								provider = Provider.create :name=>p[1], :phone=>p[0], :line_account_id=>line_account.id
+								line_account.update_attributes :name=>provider.name, :type=>'provider'
+								line_account.send_message "#{provider.name} ลงทะเบียนสำเร็จ"
+						end
+
         else
-        
-            
-            
+
+
+
         end
-        
-        
-    end
+
+
+    else message['type'] == 'image'
+
+
+		end
 
 when 'follow'
 
@@ -85,8 +81,8 @@ when 'follow'
 
 else
 end
-	
+
 end
-	
+
 %>
 <%=params.inspect%>
