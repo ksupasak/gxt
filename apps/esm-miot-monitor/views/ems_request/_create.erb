@@ -110,8 +110,17 @@ end
 <%
 
 	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'',:contact_phone=>'',:patient_name=>''
+	
+	
+	@ems_case.location = params[:location]
+	@ems_case.latlng = params[:latlng]
+	
+	
 
 %>
+
+
+
 
 <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
 <% fieldset(:record) do |f| %>

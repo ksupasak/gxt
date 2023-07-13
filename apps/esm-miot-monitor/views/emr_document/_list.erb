@@ -3,7 +3,9 @@
 <%
 
 	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	keys.collect!{|i| i if i[0]!="schema" }.compact!
 %>
+
 <thead>
 	<tr>
 	<% for j in keys %>

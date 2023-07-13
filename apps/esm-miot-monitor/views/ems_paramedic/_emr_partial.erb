@@ -5,6 +5,19 @@
     # record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
 
 	records = EMRRecord.where(:case_id=>ems_case.id).sort(:created_at=>1).all
+	
+	docs = EMRDocument.where("_id"=>{'$in'=>records.collect{|i| i.document_id}.uniq}).sort(:sort_order=>1).all
+	mdocs = {}
+	
+	docs.each_with_index do |i,ix| 
+		mdocs[i.id] = ix
+	end
+	
+	records.sort!{|a,b|
+		
+		mdocs[a.document_id] <=> mdocs[b.document_id]
+	
+	}
 
 %>
 
