@@ -567,7 +567,7 @@
 								map1 = new EMSMap('dashboard-map',{movable:true});
 								map1.setPosition(latlng[0], latlng[1])
 								map1.setMarkerPosition(latlng[0], latlng[1])
-
+							
 								var cpos = new google.maps.LatLng(clatlng[0],clatlng[1] )
 								cmap = map1.getMap()
 								markerx = new google.maps.Marker({position: cpos, map: cmap, icon: station_image})
@@ -577,7 +577,9 @@
 								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 								map2.setPosition(latlng[0], latlng[1])
 								map2.setMarkerPosition(latlng[0], latlng[1])
-
+								
+								
+							
 
 								map1.changeMarkerPosition(function(marker){
 

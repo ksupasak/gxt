@@ -98,6 +98,37 @@
 </textarea>
 </div>
 </div>
+
+<hr/>
+
+	<div class="col-12">
+	
+		<div class="card-title d-flex align-items-center">
+		<h5 class="mb-0 text-primary">ซักประวัติ :</h5>
+		</div>
+
+		<div class="row">
+		<div class="col-2">
+		</div>
+			<div class="col-10">
+			<%= text_string this, 'sign_and_symptom', :col=>12 %>
+			<%= text_string this, 'allergies', :col=>12 %>
+			<%= text_string this, 'medication', :col=>12 %>
+				<!-- <div class="row">
+				<%= text_string this, 'sbp', :col=>3 %>
+				<%= text_string this, 'dbp', :col=>3 %>
+				<%= text_string this, 'pr', :col=>3 %>
+				<%= text_string this, 'rr', :col=>3 %>
+				<%= text_string this, 'spo2', :col=>3 %>
+				<%= text_string this, 'gcs', :col=>3 %>
+				<%= text_string this, 'bt', :col=>3 %>
+				<%= text_string this, 'dtx', :col=>3 %>
+				</div> -->
+			</div>
+		</div>
+		</div>
+
+	</div>
 <!--
 <div class="row">
 <div class="col-2"></div>
@@ -139,6 +170,16 @@
 <label for="trauma_1">Last Oral Intake : </label>
 <textarea name="record[intake_note]" type="text"  class="field form-control" field_type="text_area" >
 <%=record['intake_note']%>
+</textarea>
+</div>
+</div>
+
+<div class="row">
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">Event : </label>
+<textarea name="record[event]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['event']%>
 </textarea>
 </div>
 </div>

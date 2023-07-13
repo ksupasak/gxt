@@ -23,7 +23,7 @@
 <style>
 	.card-x{
 
-		height:9vh
+		height:8vh
 			 }
 </style>
 
@@ -65,21 +65,31 @@
 		<div class="card radius-10 border-start border-0 border-3  card-x ">
 		<div class="card-body">
 			<div class=" d-flex align-items-center">
-
-				<input name='record[location]' id="record_location" value=""  class="form-control  " type="text" placeholder="Address.." >
-				<input name='record[latlng]' id="record_latlng"  value=""  class="form-control  " type="text" placeholder="Location." >
-
+				
+				<div style="border:0px solid" class="col-9">
+					
+					<input name='record[location]' id="record_location" value=""  class="form-control  " type="text" placeholder="Address.." >
+					
+					<input name='record[latlng]' id="record_latlng"  value=""  class="form-control  " type="text" placeholder="Location.." style="display:none" >
+			    </div>
+				
+				<div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness  text-white ms-auto">
+					<i id="create-btn" class="bx bxs-cart"></i>
+			<script>
+		
+			</script>
+				</div>
 			</div>
 		</div>
 		</div>
     </div>
-	<div class="col-6 col-lg-2">
+	<div class="col-6 col-xl-2">
 		<div class="card radius-10 border-start border-0 border-3  card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
 					<h4 class="my-1 text-info"> <%=cases.size %> / <%=cases_count%></h4>
-					<p class="mb-0 font-13">+2.5% from last week</p>
+					<p class="mb-0 font-13">--% from last week</p>
 				</div>
 				<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
 				</div>
@@ -87,7 +97,7 @@
 		</div>
 		</div>
     </div>
-	<div class="col-6 col-lg-2">
+	<div class="col-6 col-xl-2">
 		<div class="card radius-10 border-start border-0 border-3  card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-between justify-content-between">
@@ -205,6 +215,8 @@
 		var local_map;
 
 		var latlngbounds;
+		
+		var pos ;
 
 		$(document).ready(function(){
 			<%
@@ -220,6 +232,15 @@
 			map1.setMarkerPosition(latlng[0], latlng[1])
 
 
+			$('#create-btn').click(function(){
+				loc = $('#record_location').val()
+				zoom = map1.getMap().getZoom()
+				latlng = ""+pos.lat()+","+pos.lng()
+				
+				window.location = "create?location="+loc+"&latlng="+latlng+"&zoom="+zoom
+				
+			})
+
 
 
 			map1.changeMarkerPosition(function(marker){
@@ -227,15 +248,21 @@
 
 
 
-											var pos = marker.position
+					pos = marker.position
 			//
 			//
 			//
-											map1.geocode({'location':pos},function(result){
+					map1.geocode({'location':pos},function(result){
 
-												$('#record_latlng').val(result.formatted_address)
+						$('#record_latlng').val(result.formatted_address)
 
-											})
+					})
+					
+					
+
+					if(map1.getMap().getZoom()<18)
+					map1.getMap().setZoom(18);
+					
 			//
 			// 								map2.setPosition(pos.lat(), pos.lng())
 			// 								map2.setMarkerPosition(pos.lat(), pos.lng(), false)

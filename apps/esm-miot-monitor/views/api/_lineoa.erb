@@ -72,6 +72,7 @@ when 'message'
 
     else message['type'] == 'image'
 
+        line_message = LineMessage.create :type=>type, :account_id=>line_account.id, :text=>'img', :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
 
 		end
 

@@ -50,9 +50,12 @@ MSG
 
 				<div class="request"></div>
 				<script>
-
+					<%
+					p = ""
+					p = "?location=#{params[:location]}&latlng=#{params[:latlng]}&zoom=#{params[:zoom]}" if params[:location]
+					%>
 					$.ajax({
-					  url: "../EmsRequest/create",
+					  url: "../EmsRequest/create<%=p%>",
 					  context: document.body
 					}).done(function(html) {
 
