@@ -690,6 +690,11 @@ class Score  < GXTModel
   key :name, String
   key :version, String
   key :description, String
+  key :sort_order, Integer
+  key :active, Boolean
+  key :default, Boolean
+  
+  
   include Mongoid::Timestamps
 
   def to_s
