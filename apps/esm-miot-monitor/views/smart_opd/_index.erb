@@ -193,7 +193,7 @@
 	}
 	
 	.display-hn{
-	    border-radius: 20px;
+	    border-radius: 10px;
 	    height:1em;
 	    text-align: center;
 	    vertical-align: middle;
@@ -243,7 +243,7 @@
  	<%=Setting.get(:default_center_name)%>
  </div>
  <div class="col-4 d-flex justify-content-end" >
- 	<div class="timer"style="">00:00</div>
+ 	<div class="timer"  style="font-family:monospace">00:00</div>
  </div>
  
 </div>
@@ -660,20 +660,26 @@
 	</div>
 </div>
 
-
-<div class="row footer">
+<br/>
+<div class="row footer" >
 	<div class="col">
 	<%=link_to "...", "admin" , :class=>' btn ' %>
-	
-
 	</div>
 		
 	<div class="col">
 	<div id="msgs" style="font-size:0.5em"></div>
 	</div> 
-	<div class="col" style="text-align:right">
-	<%=link_to "ยกเลิก", "index" , :class=>'btn' %>
-	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success btn-primary' %>
+	
+	<div class="col" style="text-align:right;">
+	<div class="row">
+
+	<%=link_to "ยกเลิก", "index" , :class=>'btn col-6' %>
+	
+	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success btn-primary col-6', :style=>"" %>
+	
+	
+	</div>
+	
 	</div>
 	
 </div>
@@ -731,7 +737,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="opdModal2" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog   modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title opdModalTitle">Modal title</h5>
@@ -780,6 +786,73 @@
 			
 		</div>
 		
+		
+		
+ 		<div class="col opdModal2-ob_survey opdModal2-x">
+			
+         <div class="row">
+             <div class="btn-hn-x col-10 wx" val="30">รถ 30xx</div>
+             <div class="btn-hn-x col-10 wx" val="50">รถ 50xx</div>
+        		<div class="btn-hn-x col-10 wx" val="60">รถ 60</div>
+        	 <script>
+ 			 $('.wx').click(function(){
+			 	
+ 				v = parseFloat($('.display-hn').html())
+				
+ 				w = parseFloat($(this).attr("val"))
+				 
+ 				$('.display-hn').html(v-w)
+				 
+				
+ 			 })
+ 		 </script>
+	   
+ 	   </div>
+			
+ 		</div>
+		
+		
+		
+		
+		
+		
+		 <div class="col opdModal2-pain opdModal2-x">
+			<br/>
+				<img src="<%=url_for("smart-opd/pain.png") %>" usemap="#image-map" />
+				
+	
+			<map name="image-map">
+			    <area class="pains" target="" alt="0" title="0" href="0" coords="48,116,104,172" shape="rect">
+			    <area class="pains" target="" alt="1" title="1" href="1" coords="113,118,146,172" shape="rect">
+			    <area class="pains" target="" alt="2" title="2" href="2" coords="151,118,187,174" shape="rect">
+			    <area class="pains" target="" alt="3" title="3" href="3" coords="193,118,228,172" shape="rect">
+			    <area class="pains" target="" alt="4" title="4" href="4" coords="235,119,282,172" shape="rect">
+			    <area class="pains" target="" alt="5" title="5" href="5" coords="287,115,343,173" shape="rect">
+			    <area class="pains" target="" alt="6" title="6" href="6" coords="351,117,404,175" shape="rect">
+			    <area class="pains" target="" alt="7" title="7" href="7" coords="411,119,447,175" shape="rect">
+			    <area class="pains" target="" alt="8" title="8" href="8" coords="452,118,491,171" shape="rect">
+			    <area class="pains" target="" alt="9" title="9" href="9" coords="494,117,532,175" shape="rect">
+			    <area class="pains" target="" alt="10" title="10" href="10" coords="535,118,587,173" shape="rect">
+			</map>
+			
+			
+          	 <script>
+   			 $('.pains').click(function(e){
+				
+   				 v = parseInt($(this).attr('alt'))
+				 
+				 	$('.display-hn').html(v)
+				 
+				 $('#opdModal2 .save-modal').click();
+				 e.preventDefault();
+				
+   			 })
+   		 </script>
+		
+			
+		</div>
+				
+				
 		<div class="col opdModal2-scale opdModal2-x">
 		
 	        <table width="200px">
@@ -1002,7 +1075,7 @@
 			function setup_sense(sn){
 				
 				
-				
+				$('#opdModal2 .modal-dialog').removeClass('modal-lg');
 				s = score_map[sn]
 				
 				console.log(s)
@@ -1020,7 +1093,7 @@
 					
 				
 					
-					if(s['source']==null){
+					if(s['source']==null||s['source']==""){
 					
 						if(s['options']!=null&&s['options'].length>0){
 							$('.opdModal2-options').empty()
@@ -1054,8 +1127,10 @@
 						}
 					
 					}else{
-							$('.opdModal2-'+s['source']).show();
-							// alert(s['source'])
+						
+						
+						$('.opdModal2-'+s['source']).show();
+							
 						if(s['source']=='weight'){
 							
 							if($('.type .v-entry').html().trim()!='wheelchair')
@@ -1064,6 +1139,13 @@
 							$('.opdModal2-scale').show();
 							
 						}
+						
+						if(s['source']=='pain'){
+						
+							$('#opdModal2 .modal-dialog').addClass('modal-lg');
+							
+						}
+						
 							
 							
 					}
@@ -2346,4 +2428,25 @@
 	 
 	 
 	</script>
+		 
+	<div id="emr">
+	</div>
+	
+	<script>
+		
+   	
+	   $.ajax({
+	       url: "<%="create_partial?document=ob_survey" %>",
+	       error: function(){
+	           //do something
+	       },
+	       success: function(data){
+			   $('#emr').html(data)
+			   
+	       }
+	   });
+		
+	</script>	 
+		 
+		 
 	

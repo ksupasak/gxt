@@ -1,7 +1,7 @@
 
 module EsmMiotMonitor
   
-class SmartOPDController < GXT
+class SmartOPDController < GXTDocument
  
   def acl
     
