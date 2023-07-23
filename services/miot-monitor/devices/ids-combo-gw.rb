@@ -171,7 +171,7 @@ require 'nokogiri'
    
     threads <<  Thread.new{
    
-    Thread.current.thread_variable_set(:devicee_id, device_id)
+    Thread.current.thread_variable_set(:device_id, device_id)
     
    
    
@@ -179,11 +179,14 @@ require 'nokogiri'
      
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
       last_weight = nil
+      Thread.current.thread_variable_set(:serial, serial)
+      
+      
     while true
     
     
-       
-      device_id = Thread.current.thread_variable_get(:devicee_id)
+      serial = Thread.current.thread_variable_get(:serial)
+      device_id = Thread.current.thread_variable_get(:device_id)
    
            #
       # req = Net::HTTP::Get.new(seca_uri.to_s)
