@@ -373,13 +373,15 @@ end
   
   
 }
-sleep(3)
-threads.each { |thr| thr.join }
+
 
 # st.join
   
 
         end
+        
+        sleep(3)
+        threads.each { |thr| thr.join }
         
        
       # end
