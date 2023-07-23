@@ -159,7 +159,7 @@ require 'nokogiri'
    
    
    # seca_uri = URI('http://192.168.4.1/')
-   
+  threads = []
        
    device_ids = get_devices "10c4:ea60"
    
@@ -169,7 +169,7 @@ require 'nokogiri'
      puts 'seca '+device_id.inspect
      
    
-     st = Thread.new{
+    threads <<  Thread.new{
    
    
     begin
@@ -373,6 +373,8 @@ end
   
   
 }
+
+threads.each { |thr| thr.join }
 
 # st.join
   
