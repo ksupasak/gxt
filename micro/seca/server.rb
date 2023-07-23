@@ -4,7 +4,7 @@ require 'sinatra/base'
 require 'net/http'
 require 'nokogiri'
 set :bind, '0.0.0.0'
-set :port, 3000
+set :port, 80
 
 
 #class App < Sinatra::Base
@@ -15,13 +15,13 @@ set :port, 3000
  
 
 
-  get '/' do 
+  get '/home' do 
 	puts params.inspect      
       erb :index, :locals => {:params=> params}
 		
   end
   
-  get '/demo' do
+  get '/' do
     
     
 
@@ -94,6 +94,89 @@ set :port, 3000
 
   
 
+SECA
+
+    content = <<SECA
+
+    <!doctype html>
+    <html lang="de">
+    <head>
+        <title>seca device web server</title>
+        <style>
+        body {
+            font-family: Arial;
+        }
+        </style>
+    </head>
+    <body>
+        <form action="/" method="post">
+            <input type="hidden" name="Page" value="Value">
+            <table>
+                <tr>
+                    <td>seca web server</td>
+                    <td></td>
+                    <td>Version 2.1</td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>connected device</b>
+                <tr>
+                    <td>Name</td>
+                    <td></td>
+                    <td>01333159229946</td>
+                </tr>
+                <tr>
+                    <td>Model / Product ID</td>
+                    <td></td>
+                    <td>seca 333 / 01333159229946</td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>current display values</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Current Weight</td>
+                    <td>3.000</td>
+                    <td>
+                        kg</td</tr>
+                <tr>
+                    <td>Trig. Weight</td>
+                    <td>3.000</td>
+                    <td>
+                        kg</td</tr>
+                <tr>
+                    <td>Height</td>
+                    <td>0.3.000</td>
+                    <td>
+                        m</td</tr>
+                <tr>
+                    <td>Scan Value</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Device Error</td>
+                    <td>101</td>
+                </tr>
+            </table>
+            <br>
+            <button type="submit" formmethod="post" formaction="/main">back to main page</button>
+        </form>
+    </body>
+    <br>
+    <br>
+    Copyright © 2020 seca gmbh & co. kg. All rights reserved
+    </html>
 SECA
 
 return content

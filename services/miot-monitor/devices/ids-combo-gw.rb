@@ -35,6 +35,36 @@ def self.get_device device_select
 end
 
 
+def self.get_devices device_select
+
+    list = `ls /dev/ttyUSB*`.split
+    puts list
+    map = {}
+
+    	for i in list
+	
+	device_id = i.split("/")[2]	
+	
+	cmd = `grep PRODUCT= /sys/bus/usb-serial/devices/#{device_id}/../uevent`
+
+	device_vendor =  cmd.split("=")[-1].split("/")[0..1].join(":")
+
+	map[device_vendor] = [] unless map[device_vendor] 
+	map[device_vendor] << i
+  
+
+	end	
+
+   puts map.inspect 
+
+   results = map[device_select]
+
+    return results if results
+
+    return []
+
+end
+
   
 def self.monitor_ids_combo ws
 
@@ -130,8 +160,11 @@ require 'nokogiri'
    # seca_uri = URI('http://192.168.4.1/')
    
        
-   device_id = get_device "10c4:ea60"
-
+   device_ids = get_devices "10c4:ea60"
+   
+   for device_id in device_ids
+   
+     
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
       last_weight = nil
     while true
@@ -160,7 +193,7 @@ require 'nokogiri'
       
       lines = raw.unpack("C*").pack("U*")
 
-      puts '====================================='
+      puts '================================= '+device_id
       puts lines
       puts '================================='
       
@@ -252,7 +285,7 @@ EOM
         
       end
       
-      puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight}"
+      puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight} #{device_id}"
      
    
 if current_weight  and current_weight.to_f > 0
@@ -314,7 +347,7 @@ end
             sleep 10 
     end
         
-        
+  end    
 
 
    end
