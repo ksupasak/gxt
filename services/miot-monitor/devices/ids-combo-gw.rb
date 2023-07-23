@@ -207,7 +207,7 @@ require 'nokogiri'
       puts '================================='
       
 
-      content = lines.split("\n")[-1]    
+      content = lines#.split("\n")[-1]    
     
 
      # puts content
