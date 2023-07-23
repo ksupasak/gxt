@@ -177,7 +177,7 @@ require 'nokogiri'
     while true
     
     
-    
+       
       
    
            #
@@ -192,7 +192,7 @@ require 'nokogiri'
       #
       # content = res.body
        
-   
+      sleep(0.05)
 
       raw = serial.readline("\r")
       
