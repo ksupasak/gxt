@@ -353,13 +353,17 @@ end
           STDERR.puts exception.message
           sleep 10 
   end
+  
+  
+  
 }
 
+ st.join
   
 
         end
         
-        st.join
+       
       # end
       
   
