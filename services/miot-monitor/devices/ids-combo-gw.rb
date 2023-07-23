@@ -163,14 +163,14 @@ require 'nokogiri'
    device_ids = get_devices "10c4:ea60"
    
    for device_id in device_ids
-   
+     puts 'seca '+device_id.inspect
      
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
       last_weight = nil
     while true
     
     
-      puts 'seca'
+    
       
    
            #
