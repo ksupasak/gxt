@@ -242,6 +242,7 @@ DEPENDENCIES
   mongoid
   mongoid-grid_fs
   mqtt
+  nio4r
   parallel
   pdfkit
   prawn
