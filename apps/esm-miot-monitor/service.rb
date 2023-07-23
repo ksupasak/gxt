@@ -1059,7 +1059,8 @@ MSG
 
 # store local sensing
         when 'Data.Spot' , 'SPOT.Send'
-
+          puts "SPOT"
+          puts body
          pdata =  ActiveSupport::JSON.decode(body)
 
          station_name = "Untitled"
@@ -1144,7 +1145,7 @@ MSG
           data['ref'] = ref
          # end
 
-         data['score'] = 0
+         # data['score'] = 0
 
 
          # inject last score
@@ -1205,7 +1206,7 @@ MSG
  "spo2",
  "rr",
  "co2",
- "temp","score"]
+ "temp","score", "score_name", "weight", "height", "bmi", "patient_type", "staff_id"]
 
   for li in l
 
@@ -1213,6 +1214,12 @@ MSG
 
   end
 
+
+  draft['station_name'] = v['serial_number']
+  draft['send_status'] = true
+  
+  draft['remote_id'] = "#{ draft['station_name'] }_#{v['record_id']}"
+  
            # draft[:bp] = v['bp'] if v['bp']
         #
         #    draft[:bp_sys] = v['bp_sys']
@@ -1228,11 +1235,12 @@ MSG
         #    draft[:score] = v['score']
 
 
+      
+          exist_record = DataRecord.where(:remote_id=>draft['remote_id']).first
+          
 
 
-
-
-           DataRecord.create  draft
+           DataRecord.create  draft unless exist_record
 
 
 

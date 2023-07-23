@@ -1,5 +1,5 @@
 <% 
-records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b| b.created_at<=>a.created_at}
+records = DataRecord.where({:remote_id=>nil}).order(:created_at=>-1).limit(10).all #.sort{|a,b| b.created_at<=>a.created_at}
 %>
 <br/>
 <br/>
@@ -31,13 +31,18 @@ records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b|
 		    <th>HN</th>
             <th>Patient Name</th>
 			
+			<th>Type</th>
+			
             <th>Weight</th>
             <th>Height</th>
             <th>BMI</th>
 			
+			
             <th>BP</th>
             <th>PR</th>
             <th>Spo2</th>
+			
+            <th>RR</th>
 			
             <th>Scoring type</th>
             <th>Scoring</th>
@@ -75,7 +80,11 @@ records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b|
 			 <td><%=data['device_id'] if data and data['device_id']%></td>
              <td><%=link_to patient.hn, "result?hn=#{patient.hn}" %></td>
 	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>
-			
+			<td><%=i.patient_type%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
 			<td><%=weight%>
             <!--<svg class="symbol">
                 <use xlink:href="#t-down" />
@@ -90,8 +99,10 @@ records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b|
 			<td><%= i.bp %></td>
             <td><%= i.pr %></td>
             <td><%= i.spo2 %></td>
+            <td><%= i.rr %></td>
+			
           
-			<td><%= 'OPD' %></td>
+			<td><%= i.score_name %></td>
 			  
             <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
             <td><%=i.send_status%></td>   

@@ -8,7 +8,7 @@ patient = Patient.where(:hn=>params[:hn]).first
 
 admits = Admit.where(:patient_id=>patient.id).all
 
-records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}).order(:stamp.desc).all
+records = DataRecord.where(:admit_id=>{'$in'=>admits.collect{|i| i.id}}, :remote_id=>nil).order(:stamp.desc).all
 w = {}
 ws = records.sort{|a,b| a.stamp<=>b.stamp}
 weight_int = 0

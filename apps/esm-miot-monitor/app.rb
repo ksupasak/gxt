@@ -358,7 +358,7 @@ class HomeController < GXT
 
            ws.onmessage do |msg_data|
 
-             # puts msg_data
+             puts msg_data.inspect
 
              # begin
 
@@ -370,7 +370,7 @@ class HomeController < GXT
              redis = @context.settings.redis
 
              # @context.settings.redis = redis
-
+               
 
              # fast check header
              
