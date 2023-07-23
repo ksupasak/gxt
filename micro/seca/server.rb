@@ -157,7 +157,7 @@ SECA
                         kg</td</tr>
                 <tr>
                     <td>Height</td>
-                    <td>0.3.000</td>
+                    <td>0.3000</td>
                     <td>
                         m</td</tr>
                 <tr>

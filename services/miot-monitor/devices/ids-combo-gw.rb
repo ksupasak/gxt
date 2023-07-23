@@ -215,10 +215,16 @@ require 'nokogiri'
       
       document = Nokogiri::HTML(content)
       tags = document.xpath("//td")
-      
+      mtags = {}
 tags.each_with_index do |t,ti|
 	puts "#{ti} #{t.text.strip}"
+  mtags[ti] = t.text.strip
 end
+      
+
+      version = mtags[1].split(" ")[-1] if mtags[1].index("Version")  
+      version = mtags[2].split(" ")[-1] if mtags[2].index("Version")
+  
 
       tags.each_with_index do |t,ti|
 
@@ -227,12 +233,21 @@ end
         #current_height = t.text.strip if ti==20
         #current_weight = t.text.strip if ti==14  
         #trig_weight = t.text.strip if ti==17
+        
+        
+        if version=='2.1'
+          
+  	      current_height = t.text.strip if ti==20
+          current_weight = t.text.strip if ti==14  
+          trig_weight = t.text.strip if ti==17
+          
+        else
 
 	      current_height = t.text.strip if ti==16
         current_weight = t.text.strip if ti==10  
         trig_weight = t.text.strip if ti==13
 	      
-      
+       end
 
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
