@@ -152,7 +152,7 @@ SECA
                         kg</td</tr>
                 <tr>
                     <td>Trig. Weight</td>
-                    <td>3.000</td>
+                    <td>#{format("%.2f",rand()+3.0)}</td>
                     <td>
                         kg</td</tr>
                 <tr>
