@@ -167,6 +167,8 @@ require 'nokogiri'
      puts 'seca '+device_id.inspect
      
    
+     st = Thread.new{
+   
    
     begin
      
@@ -349,7 +351,7 @@ end
           STDERR.puts exception.message
           sleep 10 
   end
-    
+}
 
         end
       # end
