@@ -380,7 +380,7 @@ end
 
         end
         
-        sleep(3)
+        sleep(5)
         threads.each { |thr| thr.join }
         
        
