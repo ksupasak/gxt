@@ -221,9 +221,10 @@ tags.each_with_index do |t,ti|
   mtags[ti] = t.text.strip
 end
       
-
-      version = mtags[1].split(" ")[-1] if mtags[1].index("Version")  
-      version = mtags[2].split(" ")[-1] if mtags[2].index("Version")
+      version = ""
+      
+      version = mtags[1].split(" ")[-1] if mtags[1] and mtags[1].index("Version")  
+      version = mtags[2].split(" ")[-1] if mtags[2] and  mtags[2].index("Version")
   
 
       tags.each_with_index do |t,ti|
