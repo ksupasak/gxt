@@ -163,6 +163,8 @@ require 'nokogiri'
        
    device_ids = get_devices "10c4:ea60"
    
+   st =nil
+   
    for device_id in device_ids
      puts 'seca '+device_id.inspect
      
@@ -353,7 +355,11 @@ end
   end
 }
 
+  
+
         end
+        
+        st.join
       # end
       
   
