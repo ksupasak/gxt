@@ -171,6 +171,9 @@ require 'nokogiri'
    
     threads <<  Thread.new{
    
+    Thread.current.thread_variable_set(:devicee_id, device_id)
+    
+   
    
     begin
      
@@ -180,7 +183,7 @@ require 'nokogiri'
     
     
        
-      
+      device_id = Thread.current.thread_variable_get(:devicee_id)
    
            #
       # req = Net::HTTP::Get.new(seca_uri.to_s)
