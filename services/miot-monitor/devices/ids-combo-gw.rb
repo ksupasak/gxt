@@ -149,12 +149,13 @@ require 'nokogiri'
 
   seca = Thread.new {
     
-
+    
+    
   loop do 
    
    puts 'starting ... seca'
 
-   begin
+
    
    
    # seca_uri = URI('http://192.168.4.1/')
@@ -164,6 +165,10 @@ require 'nokogiri'
    
    for device_id in device_ids
      puts 'seca '+device_id.inspect
+     
+   
+   
+    begin
      
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
       last_weight = nil
@@ -332,20 +337,24 @@ EOM
 end
 
     end
+    
+    
+  rescue Net::ReadTimeout => exception
+          STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+          sleep 10 
+  rescue Net::OpenTimeout => exception
+          STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+          sleep 10
+  rescue Exception =>exception        
+          STDERR.puts exception.message
+          sleep 10 
+  end
+    
 
         end
       # end
       
-    rescue Net::ReadTimeout => exception
-            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
-            sleep 10 
-    rescue Net::OpenTimeout => exception
-            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
-            sleep 10
-    rescue Exception =>exception        
-            STDERR.puts exception.message
-            sleep 10 
-    end
+  
         
   end    
 
