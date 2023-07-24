@@ -326,7 +326,7 @@ if current_weight  and current_weight.to_f > 0
     
   lines = []
   puts 'ok'
-  lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
+  # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
 
 
 
