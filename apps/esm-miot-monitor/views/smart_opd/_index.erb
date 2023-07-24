@@ -2218,7 +2218,7 @@
 			
 				
 			
-				if(map['HEIGHT']!=null){
+				if(true){
 				
 					$('.height .v-entry').html((h*100).toFixed(1));
 				
@@ -2262,8 +2262,8 @@
 		$('.p-name').click(function(){
 		
 			deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
-			// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
-			deviceSend('STATUS:S1|WEIGHT:90')
+			deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			// deviceSend('STATUS:S1|WEIGHT:90')
 			
 			deviceSend('STATUS:T1|T1:35.4')
 		
