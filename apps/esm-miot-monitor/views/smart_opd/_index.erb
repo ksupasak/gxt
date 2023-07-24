@@ -2212,9 +2212,12 @@
 			if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
 			
 				var w = parseFloat(map['WEIGHT'])
+				
+				
 				var h = parseFloat(map['HEIGHT'])
 			
-			
+				if(!isNaN(h)){
+			    
 				var bmi = (w/(h*h)).toFixed(2);
 				// if(map['STATUS']=='S0'&&wait_scaler){
 	// 				w = parseFloat(map['CWEIGHT'])
@@ -2226,16 +2229,19 @@
 				if(map['STATUS']=='S1'){
 					$('.height .v-entry').html((h*100).toFixed(1));
 					if($('.type .v-entry').html().trim()=='wheelchair'){
-						w-=50;
+						w-=30;
 					}
 					$('.weight .v-entry').html(w);
-	                $('.bmi .v-entry').html(bmi);
-				
-	                checkInput('height')
-	                checkInput('weight')
-	                checkInput('bmi')
+	               
 					wait_scaler=false;
 				}
+				
+				}
+				
+                $('.bmi .v-entry').html(bmi);
+			    checkInput('weight')
+                checkInput('bmi')
+				checkInput('height')
 			
 			
 			}
