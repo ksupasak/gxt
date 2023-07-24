@@ -331,7 +331,7 @@ if current_weight  and current_weight.to_f > 0
   # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
 
 
-    if current_height and current_height > 0 
+    if current_height and current_height.to_f > 0 
   
      lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}" 
    else
