@@ -56,7 +56,7 @@ records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b|
 <%
 all_records = DataRecord.where({}).all
 num_all=all_records.size
-num_1=num_all
+num_1=0
 num_2=num_all
 num_3=0
 for i in records 
@@ -72,9 +72,11 @@ for i in records
         num_3+=1 if patient_type=='wheelchair'
     rescue Exception=>e
     end
+    num_1 += 1 if i.send_status==true
 end
-num_2 = num_all - num_3
 
+num_2 = num_all - num_3
+num_2 = 0 if num_2<0
 %>
 <div class="row" style="font-size:2em">
     <div class="col-lg-3">
@@ -85,7 +87,7 @@ num_2 = num_all - num_3
 						<p class="mb-0 text-secondary">All</p>
 						<h4 class="my-1"><%=num_all%></h4>
 					</div>
-					<div class="text-primary ms-auto font-35"><i class="bx bx-pulse"></i>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-pulse"></i><img src='<%= url_for('smart-opd/pulse.png')%>'  height='50'>
 					</div>
 				</div>
             </div>
@@ -99,7 +101,7 @@ num_2 = num_all - num_3
 						<p class="mb-0 text-secondary">Sync</p>
 						<h4 class="my-1"><%=num_1%></h4>
 					</div>
-					<div class="text-primary ms-auto font-35"><i class="bx bx-error-circle"></i>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-error-circle"></i><img src='<%= url_for('smart-opd/sync.png')%>'  height='50'>
 					</div>
 				</div>
             </div>
@@ -113,7 +115,7 @@ num_2 = num_all - num_3
 						<p class="mb-0 text-secondary">Station</p>
 						<h4 class="my-1"><%=num_2%></h4>
 					</div>
-					<div class="text-primary ms-auto font-35"><i class="bx bx-walk"></i>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-walk"></i><img src='<%= url_for('smart-opd/walking.png')%>'  height='50'>
 					</div>
 				</div>
             </div>
@@ -127,7 +129,7 @@ num_2 = num_all - num_3
 						<p class="mb-0 text-secondary">Wheel Chair</p>
 						<h4 class="my-1"><%=num_3%></h4>
 					</div>
-					<div class="text-primary ms-auto font-35"><i class="bx bx-handicap"></i>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-handicap"></i><img src='<%= url_for('smart-opd/wheelchair.png')%>'  height='50'>
 					</div>
 				</div>
             </div>
