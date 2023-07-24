@@ -2213,11 +2213,15 @@
 			
 				var w = parseFloat(map['WEIGHT'])
 				
-				
+			
 				var h = parseFloat(map['HEIGHT'])
 			
-				if(!isNaN(h)){
-			    
+				
+			
+				if(map['HEIGHT']!=undefined){
+				
+					$('.height .v-entry').html((h*100).toFixed(1));
+				
 				var bmi = (w/(h*h)).toFixed(2);
 				// if(map['STATUS']=='S0'&&wait_scaler){
 	// 				w = parseFloat(map['CWEIGHT'])
@@ -2225,9 +2229,12 @@
 	// 			}else{
 	//
 	// 			}
+				}
 			
 				if(map['STATUS']=='S1'){
-					$('.height .v-entry').html((h*100).toFixed(1));
+					// if(map['HEIGHT']!=null)
+				
+					
 					if($('.type .v-entry').html().trim()=='wheelchair'){
 						w-=30;
 					}
@@ -2236,14 +2243,15 @@
 					wait_scaler=false;
 				}
 				
-				}
+				
 				
                 $('.bmi .v-entry').html(bmi);
 			    checkInput('weight')
                 checkInput('bmi')
 				checkInput('height')
 			
-			
+				// alert(map['WEIGHT'])
+				
 			}
 		
 		
@@ -2254,7 +2262,9 @@
 		$('.p-name').click(function(){
 		
 			deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
-			deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			deviceSend('STATUS:S1|WEIGHT:90')
+			
 			deviceSend('STATUS:T1|T1:35.4')
 		
 		
