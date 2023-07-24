@@ -199,7 +199,7 @@ require 'nokogiri'
       # }
       #
       # content = res.body
-      sleep(1)
+      sleep(0.5)
  
 
       raw = serial.readline("\r")
