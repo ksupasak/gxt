@@ -51,6 +51,87 @@ records = DataRecord.where({:remote_id=>nil}).order(:created_at=>-1).limit(10).a
     </style>
 </svg>
 <h1 class="btn-result-cancle"><img src='<%= url_for('img/OPD_logo.png')%>'  height='50'>&nbsp;&nbsp;&nbsp;Data Logs</h1>
+<%
+all_records = DataRecord.where({:remote_id=>nil}).all
+num_all=all_records.size
+num_1=num_all
+num_2=num_all
+num_3=0
+for i in records 
+    weight = '-'
+    height = '-'
+    bmi = '-'	
+    begin	
+        data = JSON.parse(i.data)
+        weight = data['weight'].strip
+        height = data['height'].strip
+        bmi = data['bmi'].strip		
+        patient_type = data['patient_type'].strip	
+        num_3+=1 if patient_type=='wheelchair'
+    rescue Exception=>e
+    end
+end
+num_2 = num_all - num_3
+
+%>
+<div class="row-fluid">
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div>
+						<p class="mb-0 text-secondary">All</p>
+						<h4 class="my-1"><%=num_all%></h4>
+					</div>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-pulse"></i>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div>
+						<p class="mb-0 text-secondary">Sync</p>
+						<h4 class="my-1"><%=num1%></h4>
+					</div>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-error-circle"></i>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div>
+						<p class="mb-0 text-secondary">Station</p>
+						<h4 class="my-1"><%=num2%></h4>
+					</div>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-walk"></i>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div>
+						<p class="mb-0 text-secondary">Wheel Chair</p>
+						<h4 class="my-1"><%=num3%></h4>
+					</div>
+					<div class="text-primary ms-auto font-35"><i class="bx bx-handicap"></i>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->       
+</div>
 
 <div class="row-fluid">
     <div class="d-log">
