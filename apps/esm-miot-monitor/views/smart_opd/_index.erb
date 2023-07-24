@@ -766,7 +766,7 @@
 		<div class="col opdModal2-weight opdModal2-x">
 			
         <div class="row">
-            <div class="btn-hn-x col-10 wx" val="30">รถ 30</div>
+            <div class="btn-hn-x col-10 wx" val="20.25">รถ 20.25</div>
             <div class="btn-hn-x col-10 wx" val="50">รถ 50</div>
        		<div class="btn-hn-x col-10 wx" val="60">รถ 60</div>
        	 <script>
@@ -2236,7 +2236,7 @@
 				
 					
 					if($('.type .v-entry').html().trim()=='wheelchair'){
-						w-=30;
+						w-=20.25;
 					}
 					$('.weight .v-entry').html(w);
 	               
@@ -2247,9 +2247,10 @@
 				
                 $('.bmi .v-entry').html(bmi);
 			    checkInput('weight')
-                checkInput('bmi')
+          
 				checkInput('height')
-			
+				
+			      checkInput('bmi')
 				// alert(map['WEIGHT'])
 				
 			}
@@ -2262,8 +2263,8 @@
 		$('.p-name').click(function(){
 		
 			deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
-			deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
-			// deviceSend('STATUS:S1|WEIGHT:90')
+			// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			deviceSend('STATUS:S1|WEIGHT:90')
 			
 			deviceSend('STATUS:T1|T1:35.4')
 		
