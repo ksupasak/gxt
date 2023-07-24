@@ -316,13 +316,17 @@ EOM
         
       end
       
-      puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight} #{device_id}"
-     
+      
+      puts "- weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight} #{device_id}"
+   
+   
    
 if true || current_weight  and current_weight.to_f > 0
    
-      lines = []
-
+    
+  lines = []
+  puts 'ok'
+  lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
 
 
 
