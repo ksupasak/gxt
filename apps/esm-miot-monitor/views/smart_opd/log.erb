@@ -1,5 +1,5 @@
 <% 
-records = DataRecord.where({:remote_id=>nil}).order(:created_at=>-1).limit(10).all #.sort{|a,b| b.created_at<=>a.created_at}
+records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b| b.created_at<=>a.created_at}
 %>
 
 <style>
@@ -48,11 +48,13 @@ records = DataRecord.where({:remote_id=>nil}).order(:created_at=>-1).limit(10).a
     <style>
     .triangle{fill:#51A451;}
     .symbol{height:20px;width:20px;}
+	.my-1{
+		font-size:2em}
     </style>
 </svg>
 <h1 class="btn-result-cancle"><img src='<%= url_for('img/OPD_logo.png')%>'  height='50'>&nbsp;&nbsp;&nbsp;Data Logs</h1>
 <%
-all_records = DataRecord.where({:remote_id=>nil}).all
+all_records = DataRecord.where({}).all
 num_all=all_records.size
 num_1=num_all
 num_2=num_all
@@ -74,7 +76,7 @@ end
 num_2 = num_all - num_3
 
 %>
-<div class="row-fluid">
+<div class="row" style="font-size:2em">
     <div class="col-lg-3">
         <div class="card">
             <div class="card-body">
@@ -95,7 +97,7 @@ num_2 = num_all - num_3
                 <div class="d-flex align-items-center">
 					<div>
 						<p class="mb-0 text-secondary">Sync</p>
-						<h4 class="my-1"><%=num1%></h4>
+						<h4 class="my-1"><%=num_1%></h4>
 					</div>
 					<div class="text-primary ms-auto font-35"><i class="bx bx-error-circle"></i>
 					</div>
@@ -109,7 +111,7 @@ num_2 = num_all - num_3
                 <div class="d-flex align-items-center">
 					<div>
 						<p class="mb-0 text-secondary">Station</p>
-						<h4 class="my-1"><%=num2%></h4>
+						<h4 class="my-1"><%=num_2%></h4>
 					</div>
 					<div class="text-primary ms-auto font-35"><i class="bx bx-walk"></i>
 					</div>
@@ -123,7 +125,7 @@ num_2 = num_all - num_3
                 <div class="d-flex align-items-center">
 					<div>
 						<p class="mb-0 text-secondary">Wheel Chair</p>
-						<h4 class="my-1"><%=num3%></h4>
+						<h4 class="my-1"><%=num_3%></h4>
 					</div>
 					<div class="text-primary ms-auto font-35"><i class="bx bx-handicap"></i>
 					</div>
@@ -132,6 +134,7 @@ num_2 = num_all - num_3
         </div>
     </div><!--col-lg-3-->       
 </div>
+<br/>
 
 <div class="row-fluid">
     <div class="d-log">

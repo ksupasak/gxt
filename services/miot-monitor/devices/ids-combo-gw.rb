@@ -199,7 +199,7 @@ require 'nokogiri'
       # }
       #
       # content = res.body
-      sleep(1)
+      sleep(0.5)
  
 
       raw = serial.readline("\r")
@@ -328,11 +328,11 @@ if current_weight  and current_weight.to_f > 0
 
      # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
       
-        if trig_weight and trig_weight.to_f !=0 and trig_weight != last_weight
+        if true || trig_weight and trig_weight.to_f !=0 and trig_weight != last_weight
           
           last_weight = trig_weight
 		
-          if current_height and current_height.to_f > 0 
+          if true || current_height and current_height.to_f > 0 
     
       	lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
         
