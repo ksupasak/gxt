@@ -321,7 +321,7 @@ EOM
    
    
    
-if true || current_weight  and current_weight.to_f > 0
+if current_weight  and current_weight.to_f > 0
    
     
   lines = []
