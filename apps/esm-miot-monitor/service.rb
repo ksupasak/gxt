@@ -788,12 +788,12 @@ MSG
 
                                 text =""
                                  
-                                if true
+                                if url = Setting.get("asr_url") and url != "" 
                               
                                   begin
 
                                 # uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
-                                uri = URI(Setting.get("asr_url",'http://pcm-life.com:8000/'))
+                                uri = URI(url)
 
                                 request = Net::HTTP::Post.new(uri)
 
