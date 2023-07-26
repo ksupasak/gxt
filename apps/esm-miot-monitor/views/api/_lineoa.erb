@@ -121,10 +121,9 @@ send_msg = <<MSG
 #{msg.to_json}
 MSG
 
-       # puts msg
-                   redis.publish(path, send_msg)		
+       # put
 		
-		
+				   @context.settings.redis.publish(path, send_msg)	
 		
 		
 		
