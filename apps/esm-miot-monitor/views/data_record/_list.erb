@@ -24,7 +24,8 @@ Count : <%=this.model.count%>
 		<%
 			
 		admit = Admit.find(i[j[0]])
-		patient = admit.patient	
+		
+		patient = admit.patient	if admit
 		%>
 		<%= patient.hn if patient%>
 	

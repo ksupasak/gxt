@@ -690,6 +690,11 @@ class Score  < GXTModel
   key :name, String
   key :version, String
   key :description, String
+  key :sort_order, Integer
+  key :active, Boolean
+  key :default, Boolean
+  
+  
   include Mongoid::Timestamps
 
   def to_s
@@ -880,6 +885,10 @@ class DataRecord  < GXTModel
   key :admit_id, ObjectId
   key :station_id, ObjectId
 
+  key :staff_id, String
+  
+  key :station_name, String 
+
   key :data, String
   key :bp, String
   key :bp_sys, Integer
@@ -911,7 +920,10 @@ class DataRecord  < GXTModel
 
   key :status, String
 
+  key :score_name, String
   key :score, Integer
+  
+  key :patient_type, String
 
   key :note, String
   key :score_id, ObjectId
@@ -920,6 +932,8 @@ class DataRecord  < GXTModel
   key :send_msg, String
 
   key :sh_visit_id, ObjectId
+  
+  key :remote_id, String
 
 
   include Mongoid::Timestamps
@@ -941,13 +955,19 @@ class DataRecord  < GXTModel
 
 
     data = JSON.parse i.data if i.data
+    
+    
 
     px = {:hn=>data['hn'], :weight=>'', :height=>'', :bmi=>'', :pr=>'', :rr=>'', :spo2=>'',:bp=>i.bp, :bp_sys=>i.bp_sys, :bp_dia=>i.bp_dia, :bp_mean=>i.bp_mean}
 
 	  px[:weight] = format("%.2f",i[:weight].to_f) if i[:weight] and i[:weight]!="" and i[:weight]!="-"
 	  px[:height] = format("%.2f",i[:height].to_f) if i[:height] and i[:height]!="" and i[:height]!="-"
 
-    px[:score] = data['score'] if data['score']
+    px[:patient_type] = i[:patient_type] if i[:patient_type] 
+    px[:score_name] = data['score_name'] if data['score_name']
+    # px[:score] = data['score'] if data['score']
+    px[:score] = i.score
+     
     px[:avpu] = data['avpu'] if data['avpu']
 
 
@@ -970,17 +990,19 @@ class DataRecord  < GXTModel
 	px[:time] = Time.now.strftime("%H:%M:%S")
 	px[:date] = Time.now.strftime("%Y-%m-%d")
 
-	px[:serial_number] = Setting.get(:serial_number,'00000')
+	px[:serial_number] = i.station_name
 
 
   px[:serial_number] = i[:device_id] if i[:device_id]
+  
+  # px[:patient_type] = i[:patient_type]
 
 
 	px[:record_id] = i.id
 	px[:record_at] = i.created_at
 	px[:staff_id] = data['staff_id']
 
-
+ 
 
 
 

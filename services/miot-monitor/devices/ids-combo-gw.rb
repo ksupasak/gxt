@@ -35,6 +35,36 @@ def self.get_device device_select
 end
 
 
+def self.get_devices device_select
+
+    list = `ls /dev/ttyUSB*`.split
+    puts list
+    map = {}
+
+    	for i in list
+	
+	device_id = i.split("/")[2]	
+	
+	cmd = `grep PRODUCT= /sys/bus/usb-serial/devices/#{device_id}/../uevent`
+
+	device_vendor =  cmd.split("=")[-1].split("/")[0..1].join(":")
+
+	map[device_vendor] = [] unless map[device_vendor] 
+	map[device_vendor] << i
+  
+
+	end	
+
+   puts map.inspect 
+
+   results = map[device_select]
+
+    return results if results
+
+    return []
+
+end
+
   
 def self.monitor_ids_combo ws
 
@@ -119,26 +149,44 @@ require 'nokogiri'
 
   seca = Thread.new {
     
-
+    
+    
   loop do 
    
    puts 'starting ... seca'
 
-   begin
+
    
    
    # seca_uri = URI('http://192.168.4.1/')
-   
+  threads = []
        
-   device_id = get_device "10c4:ea60"
-
+   device_ids = get_devices "10c4:ea60"
+   
+   st =nil
+   
+   for device_id in device_ids
+     puts 'seca '+device_id.inspect
+     
+   
+    threads <<  Thread.new{
+   
+    Thread.current.thread_variable_set(:device_id, device_id)
+    
+   
+   
+    begin
+     
    serial = SerialPort.new(device_id, 115200, 8, 1, SerialPort::NONE)
       last_weight = nil
+      Thread.current.thread_variable_set(:serial, serial)
+      
+      
     while true
     
     
-      puts 'seca'
-      
+      serial = Thread.current.thread_variable_get(:serial)
+      device_id = Thread.current.thread_variable_get(:device_id)
    
            #
       # req = Net::HTTP::Get.new(seca_uri.to_s)
@@ -151,8 +199,8 @@ require 'nokogiri'
       # }
       #
       # content = res.body
-       
-   
+      sleep(0.1)
+ 
 
       raw = serial.readline("\r")
       
@@ -160,12 +208,12 @@ require 'nokogiri'
       
       lines = raw.unpack("C*").pack("U*")
 
-      puts '====================================='
+      puts '================================= '+device_id
       puts lines
       puts '================================='
       
 
-      content = lines.split("\n")[-1]    
+      content = lines#.split("\n")[-1]    
     
 
      # puts content
@@ -173,10 +221,17 @@ require 'nokogiri'
       
       document = Nokogiri::HTML(content)
       tags = document.xpath("//td")
-      
+      mtags = {}
 tags.each_with_index do |t,ti|
 	puts "#{ti} #{t.text.strip}"
+  mtags[ti] = t.text.strip
 end
+      
+      version = ""
+      
+      version = mtags[1].split(" ")[-1] if mtags[1] and mtags[1].index("Version")  
+      version = mtags[2].split(" ")[-1] if mtags[2] and  mtags[2].index("Version")
+  
 
       tags.each_with_index do |t,ti|
 
@@ -185,12 +240,21 @@ end
         #current_height = t.text.strip if ti==20
         #current_weight = t.text.strip if ti==14  
         #trig_weight = t.text.strip if ti==17
+        
+        
+        if version=='2.1'
+          
+  	      current_height = t.text.strip if ti==20
+          current_weight = t.text.strip if ti==14  
+          trig_weight = t.text.strip if ti==17
+          
+        else
 
 	      current_height = t.text.strip if ti==16
         current_weight = t.text.strip if ti==10  
         trig_weight = t.text.strip if ti==13
 	      
-      
+       end
 
         
        # puts "weight = #{current_weight}, height = #{current_height} tweight = #{trig_weight}"
@@ -252,23 +316,41 @@ EOM
         
       end
       
-      puts "weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight}"
-     
+      
+      puts "- weight = #{current_weight}, height = #{current_height} tweigth = #{trig_weight} #{device_id}"
+   
+   
    
 if current_weight  and current_weight.to_f > 0
    
-      lines = []
+    
+  lines = []
+  puts 'ok'
+  
+  
+  # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
 
 
+    if current_height and current_height.to_f > 0
 
+     lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
+   else
 
-     # lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{current_weight}"
+     lines << "STATUS:S1|WEIGHT:#{current_weight}"
+
+    end
+   #
+     
+    puts lines.inspect 
       
-        if trig_weight and trig_weight.to_f !=0 and trig_weight != last_weight
+      
+      
+      
+        if true || trig_weight and trig_weight.to_f !=0 and trig_weight != last_weight
           
           last_weight = trig_weight
 		
-          if current_height and current_height.to_f > 0 
+          if true || current_height and current_height.to_f > 0 
     
       	lines << "STATUS:S1|HEIGHT:#{current_height}|WEIGHT:#{trig_weight}"
         
@@ -299,25 +381,41 @@ EOM
 end
 
     end
+    
+    
+  rescue Net::ReadTimeout => exception
+          STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+          sleep 10 
+  rescue Net::OpenTimeout => exception
+          STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+          sleep 10
+  rescue Exception =>exception        
+          STDERR.puts exception.message
+          sleep 10 
+  end
+  
+  
+  
+}
 
-     
+
+# st.join
+  
+
+        end
+        
+        sleep(5)
+        threads.each { |thr| thr.join }
+        
+       
       # end
       
-    rescue Net::ReadTimeout => exception
-            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
-            sleep 10 
-    rescue Net::OpenTimeout => exception
-            STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
-            sleep 10
-    rescue Exception =>exception        
-            STDERR.puts exception.message
-            sleep 10 
-    end
+  
         
-        
+  end    
 
 
-   end
+
 
 
   }

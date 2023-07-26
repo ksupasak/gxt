@@ -154,6 +154,19 @@
 	    padding-top:0px;
 	    margin:5px;
 	}
+	
+	.btn-hn-x{
+	    background-color: #6B98C1;
+	    color:#ffffff;
+	    border-radius: 15px;
+	    height:50px;
+	    width:80px;
+
+	    text-align: center;
+	    font-size: 2.4em;
+	    padding-top:0px;
+	    margin:5px;
+	}
 	.btn-hn-option{
 	    background-color: #6B98C1;
 	    color:#ffffff;
@@ -180,7 +193,7 @@
 	}
 	
 	.display-hn{
-	    border-radius: 20px;
+	    border-radius: 10px;
 	    height:1em;
 	    text-align: center;
 	    vertical-align: middle;
@@ -226,11 +239,11 @@
  	Smart OPD
  </div>
 
- <div class="col-5 d-flex justify-content-center p-name">
+ <div class="col-4 d-flex justify-content-center p-name">
  	<%=Setting.get(:default_center_name)%>
  </div>
- <div class="col-4 d-flex justify-content-end" >
- 	<div class="timer"style="">00:00</div>
+ <div class="col-5 d-flex justify-content-end" >
+ 	<div class="timer"  style="font-family:monospace">00:00</div>
  </div>
  
 </div>
@@ -254,7 +267,7 @@
 			 เพศ <div class="d-inline-flex patient_gender">-</div>,  อายุ : <div class="d-inline-flex patient_age"> - </div> ปี </div>
 	     
 		 
-		 Staff:<div class="d-inline-flex staff_id"> 
+		 Staff : <div class="d-inline-flex staff_id"> 
 			 <%
 			 staff_id = '-'
 			 staff_id = session[:staff_id] if session[:staff_id] and session[:staff_id].size>0 
@@ -495,7 +508,7 @@
 						</div>
 				
 						<div class="row">
-							<div class="col sense-val v-score " label="<%= %>" name="<%=%>" style="overflow:hidden;font-size:5vh">
+							<div class="col sense-val v-score v-extra" label="<%= %>" name="score_name" style="overflow:hidden;font-size:5vh">
 							-
 							</div>
 						</div>
@@ -515,14 +528,20 @@
 			</div>
 			
 			
-			
+		
 			
 			<div class="col-12 sense-container ">
 			
 			<div class="row  no-gutters">
 			
 			<%
-			if true 	
+			if false 	
+				
+				
+			# {"senses":[{"name":"gcs","label":"GCS","unit":"","source":null,"scales":[{"min":13.0,"max":15.0,"s":4,"t":""},
+			# {"min":9.0,"max":12.0,"s":3,"t":""},{"min":6.0,"max":8.0,"s":2,"t":""},{"min":4.0,"max":5.0,"s":1,"t":""},
+			# {"min":-99999,"max":3.0,"s":0,"t":""}]},{"name":"bp_sys","label":"Sys BP","unit":"","source":null
+			# ,"scales":[{"min":90.0,"max":999999,"s":4,"t":""},{"min":76.0,"max":89.0,"s":3,"t":""},{"min":50.0,"max":7
 
 			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
 			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
@@ -530,19 +549,32 @@
 			
 			sense_unit = %w{kg cm &nbsp;  &nbsp;  &nbsp;   &nbsp;   &nbsp; }	
 			# sense_list = %w{w bp-sys pr rr h bp-dia spo2 sselect bmi bp-mean bt sresult}.collect{|i| i.to_sym}
-			sense_list = %w{weight height bmi  }.collect{|i| i.to_sym}	
+			sense_list = %w{ weight height bmi  }.collect{|i| i.to_sym}	
+			
+			sense_label = %w{ Weight Height BMI  }
+			
+			sense_source = %w{}
+			
+			%>
+	
+			<%
+			
 			# glucose mg/dL
 			sense_list.each_with_index do |x,xi| 	
 				
 				ii = xi
+				label = sense_label[xi]
+				source = ""
+				source = sense_source[xi] if sense_source[xi]  
 				
 			%>
 			
+			
 			<div class="col-2 " >
-				<div class="sense-panel s-empty <%=x%> sense" style="height:18vh;">
+				<div class="sense-panel s-empty <%=x%> sense"  style="height:18vh;">
 				<div class="row ">
 					<div class="col-6 sense-name" >
-					<%= x %>
+					<%= label %>
 					</div>
 					<div class="col-6 sense-name" style="text-align:right">
 					<%= sense_unit[ii] %>
@@ -550,7 +582,7 @@
 				</div>
 				
 				<div class="row">
-					<div class="col sense-val-mini v-entry " label="<%= x %>" name="<%=x%>">
+					<div class="col sense-val-mini v-entry " source="<%=source%>" label="<%= x %>" name="<%=x%>">
 					-
 					</div>
 				</div>
@@ -580,6 +612,7 @@
 			# glucose mg/dL
 			sense_list.each_with_index do |x,xi| 	
 				
+				label = sense_label[xi]
 				ii = xi
 				
 			%>
@@ -588,7 +621,7 @@
 				<div class="sense-panel s-empty <%=x%> sense" style="height:18vh;">
 				<div class="row ">
 					<div class="col-6 sense-name" >
-					<%= x %>
+					<%= label %>
 					</div>
 					<div class="col-6 sense-name" style="text-align:right">
 					<%= sense_unit[ii] %>
@@ -627,20 +660,26 @@
 	</div>
 </div>
 
-
-<div class="row footer">
+<br/>
+<div class="row footer" >
 	<div class="col">
-	<%=link_to "...", "admin" , :class=>' btn ' %>
-	
-
+	<%=link_to "Log", "log" , :class=>' btn  btn-result-cancle ', :style=>"font-size:1em" %>
 	</div>
 		
 	<div class="col">
 	<div id="msgs" style="font-size:0.5em"></div>
 	</div> 
-	<div class="col" style="text-align:right">
-	<%=link_to "ยกเลิก", "index" , :class=>'btn' %>
-	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success btn-primary' %>
+	
+	<div class="col" style="text-align:right;">
+	<div class="row">
+
+	<%=link_to "ยกเลิก", "index" , :class=>'btn col-6' , :style=>"font-size:1em"%>
+	
+	<%=link_to "ส่งข้อมูล", "#" , :class=>' btn btn-entry btn-success btn-primary col-6', :style=>"font-size:1em" %>
+	
+	
+	</div>
+	
 	</div>
 	
 </div>
@@ -698,7 +737,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="opdModal2" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog   modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title opdModalTitle">Modal title</h5>
@@ -717,38 +756,131 @@
 		</div>
 		<div class="row no-gutters">
 			
-		<div class="col opdModal2-op">
+		<div class="col opdModal2-op opdModal2-x">
 	        <table class="opdModal2-options">
 	    
 	    	</table>
 			
 		</div>
 		
-		<div class="col opdModal2-scale">
-		
-        <table width="200px">
-        <tr>
-            <td><div class="btn-hn">1</div></td>
-            <td><div class="btn-hn">2</div></td>
-            <td><div class="btn-hn">3</div></td>
-        </tr>
-        <tr>
-            <td><div class="btn-hn">4</div></td>
-            <td><div class="btn-hn">5</div></td>
-            <td><div class="btn-hn">6</div></td>
-        </tr>
-        <tr>
-            <td><div class="btn-hn">7</div></td>
-            <td><div class="btn-hn">8</div></td>
-            <td><div class="btn-hn">9</div></td>
-        </tr>
-        <tr>
-            <td><div class="btn-hn">.</div></td>
-            <td><div class="btn-hn">0</div></td>
-            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
-        </tr>
-        </table>
+		<div class="col opdModal2-weight opdModal2-x">
+			
+        <div class="row">
+            <div class="btn-hn-x col-10 wx" val="20.25">รถ 20.25</div>
+            <div class="btn-hn-x col-10 wx" val="50">รถ 50</div>
+       		<div class="btn-hn-x col-10 wx" val="60">รถ 60</div>
+       	 <script>
+			 $('.wx').click(function(){
+			 	
+				v = parseFloat($('.display-hn').html())
+				
+				w = parseFloat($(this).attr("val"))
+				 
+				$('.display-hn').html((v-w).toFixed(2))
+				 
+				
+			 })
+		 </script>
+	   
+	   </div>
+			
 		</div>
+		
+		
+		
+ 		<div class="col opdModal2-ob_survey opdModal2-x">
+			
+         <div class="row">
+             <div class="btn-hn-x col-10 wx" val="30">รถ 30xx</div>
+             <div class="btn-hn-x col-10 wx" val="50">รถ 50xx</div>
+        		<div class="btn-hn-x col-10 wx" val="60">รถ 60</div>
+        	 <script>
+ 			 $('.wx').click(function(){
+			 	
+ 				v = parseFloat($('.display-hn').html())
+				
+ 				w = parseFloat($(this).attr("val"))
+				 
+ 				$('.display-hn').html(v-w)
+				 
+				
+ 			 })
+ 		 </script>
+	   
+ 	   </div>
+			
+ 		</div>
+		
+		
+		
+		
+		
+		
+		 <div class="col opdModal2-pain opdModal2-x">
+			<br/>
+				<img src="<%=url_for("smart-opd/pain.png") %>" usemap="#image-map" />
+				
+	
+			<map name="image-map">
+			    <area class="pains" target="" alt="0" title="0" href="0" coords="48,116,104,172" shape="rect">
+			    <area class="pains" target="" alt="1" title="1" href="1" coords="113,118,146,172" shape="rect">
+			    <area class="pains" target="" alt="2" title="2" href="2" coords="151,118,187,174" shape="rect">
+			    <area class="pains" target="" alt="3" title="3" href="3" coords="193,118,228,172" shape="rect">
+			    <area class="pains" target="" alt="4" title="4" href="4" coords="235,119,282,172" shape="rect">
+			    <area class="pains" target="" alt="5" title="5" href="5" coords="287,115,343,173" shape="rect">
+			    <area class="pains" target="" alt="6" title="6" href="6" coords="351,117,404,175" shape="rect">
+			    <area class="pains" target="" alt="7" title="7" href="7" coords="411,119,447,175" shape="rect">
+			    <area class="pains" target="" alt="8" title="8" href="8" coords="452,118,491,171" shape="rect">
+			    <area class="pains" target="" alt="9" title="9" href="9" coords="494,117,532,175" shape="rect">
+			    <area class="pains" target="" alt="10" title="10" href="10" coords="535,118,587,173" shape="rect">
+			</map>
+			
+			
+          	 <script>
+   			 $('.pains').click(function(e){
+				
+   				 v = parseInt($(this).attr('alt'))
+				 
+				 	$('.display-hn').html(v)
+				 
+				 $('#opdModal2 .save-modal').click();
+				 e.preventDefault();
+				
+   			 })
+   		 </script>
+		
+			
+		</div>
+				
+				
+		<div class="col opdModal2-scale opdModal2-x">
+		
+	        <table width="200px">
+	        <tr>
+	            <td><div class="btn-hn">1</div></td>
+	            <td><div class="btn-hn">2</div></td>
+	            <td><div class="btn-hn">3</div></td>
+	        </tr>
+	        <tr>
+	            <td><div class="btn-hn">4</div></td>
+	            <td><div class="btn-hn">5</div></td>
+	            <td><div class="btn-hn">6</div></td>
+	        </tr>
+	        <tr>
+	            <td><div class="btn-hn">7</div></td>
+	            <td><div class="btn-hn">8</div></td>
+	            <td><div class="btn-hn">9</div></td>
+	        </tr>
+	        <tr>
+	            <td><div class="btn-hn">.</div></td>
+	            <td><div class="btn-hn">0</div></td>
+	            <td><div class="btn-hn"><img src="<%=url_for 'img/svg/delete.svg'%>"></div></td>
+	        </tr>
+	        </table>
+		</div>
+		
+		
+		
 		</div>
 		
 		</center>
@@ -794,7 +926,7 @@
        
 	   <%
 	   	
-	   scores = Score.all
+	   scores = Score.where(:active=>true).sort(:sort_order=>1).all
 		
 	   for s in scores
 	   %>
@@ -837,7 +969,7 @@
 		</div>
 		
 		<div class="row">
-			<div class="col sense-val-mini v-entry " label="" name="">
+			<div class="col sense-val-mini v-entry v-extra " label="" name="">
 			-
 			</div>
 		</div>
@@ -854,25 +986,6 @@
 
 
 
-<!--	<form id="form" action="post" method="post">
-
-	<input class="hn_val" name="hn" value="" type="hidden"/>
-	<input class="datetime_val" name="datetime" value="" type="hidden"/>
-	<input class="bp_val" name="bp" value="" type="hidden"/>
-	<input class="bp_sys_val" name="bp_sys" value="" type="hidden"/>
-	<input class="bp_dia_val" name="bp_dia" value="" type="hidden"/>
-	<input class="pr_val" name="pr" value="" type="hidden"/>
-	<input class="spo2_val" name="spo2" value="" type="hidden"/>
-	<input class="weight_val" name="weight" value="" type="hidden"/>
-	<input class="height_val" name="height" value="" type="hidden"/>
-	<input class="bmi_val" name="bmi" value="" type="hidden"/>
-	<input class="temp_val" name="temp" value="" type="hidden"/>
-	<input class="score_val" name="score" value="" type="hidden"/>
-
-
-
-	</form>
-  -->
 	
 	<script>
 
@@ -962,15 +1075,13 @@
 			function setup_sense(sn){
 				
 				
-				// alert('setup ' +sn)
-				
+				$('#opdModal2 .modal-dialog').removeClass('modal-lg');
 				s = score_map[sn]
 				
-			
+				console.log(s)
+				$('.opdModal2-x').hide();
 				
-				
-				
-				if(s!=null){
+				if(s!=null&&s['scales']==null){
 					
 					$("#opdModal2 .opdModalTitle ").html(s['label'])
 			     
@@ -980,35 +1091,63 @@
 					$('.opdModal2-scale').hide();
 					$('.opdModal2-op').hide();
 					
+				
 					
-					if(s['options']!=null&&s['options'].length>0){
-						$('.opdModal2-options').empty()
+					if(s['source']==null||s['source']==""){
+					
+						if(s['options']!=null&&s['options'].length>0){
+							$('.opdModal2-options').empty()
 						
-						$('.opdModal2-op').show();	
+							$('.opdModal2-op').show();	
 						
-						for(var id in s['options'] ){
-							v = s['options'][id]
+							for(var id in s['options'] ){
+								v = s['options'][id]
 							
-							$('.opdModal2-options').append('<tr><td><div class="btn-hn-option col" score="'+v['s']+'" map="'+v['k']+'" style="">'+v['v']+'</div></td></tr>');
+								$('.opdModal2-options').append('<tr><td><div class="btn-hn-option col" score="'+v['s']+'" map="'+v['k']+'" style="">'+v['v']+'</div></td></tr>');
+							
+							}
+						
+					        $(".btn-hn-option").on('click',function(){
+					            var myAudio = document.getElementById('audio-'+cur_buffer)
+					            myAudio.play();
+								k = $(this).attr('map')
+								$('.display-hn').html(k)
+								$('#opdModal2 .save-modal').click();
+							
+					            return false;
+					        })
+	     				
+						}
+					
+						if(s['scales']!=null&&s['scales'].length>0){
+					
+							$('.opdModal2-scale').show();
+					
+						
+						}
+					
+					}else{
+						
+						
+						$('.opdModal2-'+s['source']).show();
+							
+						if(s['source']=='weight'){
+							
+							if($('.type .v-entry').html().trim()!='wheelchair')
+								$('.opdModal2-'+s['source']).hide();
+							
+							$('.opdModal2-scale').show();
 							
 						}
 						
-				        $(".btn-hn-option").on('click',function(){
-				            var myAudio = document.getElementById('audio-'+cur_buffer)
-				            myAudio.play();
-							k = $(this).attr('map')
-							$('.display-hn').html(k)
-							$('#opdModal2 .save-modal').click();
-							
-				            return false;
-				        })
-	     				
-					}
-					
-					if(s['scales']!=null&&s['scales'].length>0){
-					// alert('scal')
-						$('.opdModal2-scale').show();	
+						if(s['source']=='pain'){
 						
+							$('#opdModal2 .modal-dialog').addClass('modal-lg');
+							
+						}
+						
+							
+							
 					}
 					
 					
@@ -1024,7 +1163,91 @@
 				}
 				
 			}
+		 function extract_score(data){
+		   	
+	 		 for(var si in data['senses']){
+		   	
+		
+			
+	 				s = data['senses'][si]
+				 
+				 
+				 
+	 				score_map[s['name']] = s;
+			
+	 			   d = $('.'+s['name']+" .v-entry")
+	 				   // alert(d.html())
+	 				   if(d!=null&&d.html()!=undefined){
+			   	
+				
+	 					console.log("Exist "+s['name'])
+				   
+				  
+	 					$('.'+s['name']).addClass('act-score')   
+				   
+				   
+				   
+	 				   }else{
+			   
+			   	
+			
+			   	
+			
+	 		 	   x = s['name']
+	 			   x_label = s['label']
+		   
+   
+   
+	 		 	   template = $('.sense-template').clone();
+   
+	 		 	   template.removeClass('sense-template');
+   
+	 		 	   template.find('.sense-title').html(x_label)
+	 		 	   template.find('.sense').addClass(x)
+	 		 	   template.find('.v-entry').attr('name',x)
+	 	           template.find('.v-entry').attr('label',x_label)
+   
+	 		 	   template.show();
+   					
+				   if(s['default']!=null){
+					
+	 		 	   	template.removeClass('sense-x')
+				   	template.find('.v-entry').html(s['default'])
+				   }
+				
+					
+	 		 	   	 template.appendTo('.sense-container .no-gutters')
+   					
 
+	 
+		   		     template.find(".v-entry").click(function(){
+		   		         v = $(this).html().trim()
+		   		 		console.log(v)
+		   		         if(v=='-')v = '' 
+		   		 		$(".display-hn").html(v)
+
+		   		 		 current_modal = $(this).attr('name')
+		   		 		 target_key = current_modal
+         				  
+		   		         setup_sense(current_modal)
+						
+		   				 $("#opdModal2").modal('toggle')
+			 
+			 
+			 
+		   		     })
+		    
+	 				template.find('.sense').addClass("act-score");
+		 
+		 
+	 			    }
+		 
+		 
+	
+	 	   			}
+		 
+		 }
+		   
 
 		    function call_score(div_class, score_id, mode,data){
 	   
@@ -1140,7 +1363,8 @@
 			   // score_map[s['name']] = s;
 			   //
 			   //
-			   
+			
+			
 			   
 			   
 	    	$.ajax({
@@ -1158,78 +1382,9 @@
 				
 				
 				
+			   extract_score(score_model)
 			   
-			   
-		 		 for(var si in score_model['senses']){
-			   	
-				
-				
-		 				s = score_model['senses'][si]
-		 				score_map[s['name']] = s;
-				
-		 			   d = $('.'+s['name']+" .v-entry")
-		 				   // alert(d.html())
-		 				   if(d!=null&&d.html()!=undefined){
-				   	
-					
-		 					console.log("Exist "+s['name'])
-					   
-					   
-		 					$('.'+s['name']).addClass('act-score')   
-					   
-					   
-					   
-		 				   }else{
-				   
-				   	
-				
-				   	
-				
-		 		 	   x = s['name']
-		 			   x_label = s['label']
-			   
-	   
-	   
-		 		 	   template = $('.sense-template').clone();
-	   
-		 		 	   template.removeClass('sense-template');
-	   
-		 		 	   template.find('.sense-title').html(x_label)
-		 		 	   template.find('.sense').addClass(x)
-		 		 	   template.find('.v-entry').attr('name',x)
-		 	           template.find('.v-entry').attr('label',x_label)
-	   
-		 		 	   template.show();
-	   
-		 		 	   template.appendTo('.sense-container .no-gutters')
-	   
-	
-		 
-		   		     template.find(".v-entry").click(function(){
-		   		         v = $(this).html().trim()
-		   		 		console.log(v)
-		   		         if(v=='-')v = '' 
-		   		 		$(".display-hn").html(v)
-
-		   		 		 current_modal = $(this).attr('name')
-		   		 		 target_key = current_modal
-	         
-			 
-		   		         setup_sense(current_modal)
-		   				 $("#opdModal2").modal('toggle')
-				 
-				 
-				 
-		   		     })
-			    
-		 				template.find('.sense').addClass("act-score");
-			 
-			 
-		 			    }
-			 
-			 
-		
-		 	   			}
+		 	
 			 
    		   
 			 
@@ -1238,16 +1393,19 @@
 	   	   	});
 			   
 			   
-			   
-			   
-			   
-			 
-		
-	
 	
 		    }
 	
 
+	
+			custom_sense = {"senses":[{"name":"type","default":"walk","label":"Type","unit":"","options":[{"k":"walk","v":"Walk","s":0,"t":""},{"k":"wheelchair","v":"Wheelchair","s":0,"t":""},{"k":"bed","v":"Bed","s":0,"t":""}]},
+				{"name":"weight","label":"Weight","unit":"kg","default":"-","source":"weight"},
+				{"name":"height","label":"Height","unit":"cm","default":"-","scales":[]},
+				{"name":"bmi","label":"BMI","unit":"","default":"-","scales":[]}
+			
+			]}
+
+			extract_score(custom_sense)
 		
 	
 			function getPatient(){
@@ -1321,13 +1479,17 @@
 	    		 $('#buffer').append(myAudio);
 		  
 	    	}
-	    	$(".btn-clear").click(function(){
-		
-	    		$('.display-hn').html("");
-		
-	    	})  
 	
-	    //
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	        $(".v-score").on('click',function(){
 				
 	   			$('#scoring-panel').modal('hide')
@@ -1335,7 +1497,7 @@
 				$('.act-score').removeClass("act-score")
 		        return false;
 	        })
-	
+			
 	        $(".btn-score-select").on('click',function(){
 				
 	            var myAudio = document.getElementById('audio-'+cur_buffer)
@@ -1357,6 +1519,37 @@
 		 
 	            return false;
 	        })	
+			
+		  	
+			
+			
+	 
+	 
+   	 <%
+		 
+   		 default_score = Score.where(:active=>true, :default=>true).sort(:sort_order=>1).first
+		 
+   		 if default_score
+
+		 
+        %>
+		$('.display-score').html('<%=default_score.name%>')
+	   	$('.select-score .v-score').html('<%=default_score.name%>')
+   	 	data = prepare()
+   	 	call_score('.score .v-entry','<%=default_score.id%>', 'ajax', data)
+	 
+   	 <%
+    			end
+   	 %>
+	 
+			
+			
+			
+	    	$(".btn-clear").click(function(){
+		
+	    		$('.display-hn').html("");
+		
+	    	})  
 		  
 	        $(".btn-hn").on('click',function(){
 	            var myAudio = document.getElementById('audio-'+cur_buffer)
@@ -1372,12 +1565,11 @@
 	            var myAudio = document.getElementById('audio-'+cur_buffer)
 	            myAudio.play();
 				
-	            // cur_buffer+=1;
-   // 	            if(cur_buffer==10)cur_buffer=0;
-   // 	            hnPush($(this))
-   // 				checkRange(); 
+
 	            return false;
 	        })
+		
+		
 		
 			
 			function checkRange(){
@@ -1441,7 +1633,7 @@
 			
 			$(document).keypress(function(e){
 		 
-		 	   console.log('key')
+		 	   console.log('key '+e.which)
 		        // if($('.display-hn').html()=='-')$('.display-hn').html("")
 			
 				if(target_key=='hn'){
@@ -1452,12 +1644,15 @@
 			     if( event.which == 13 ) {
 			     	getPatient();   
 				 	will_reset_hn = true;
+					 $('#'+the_modal+' .save-modal').click();
 				 }
 				 if( event.which == 8){
 					 $('.patient_name').html('...')			 
 		        	 v = $("."+target_key+"  .v-entry").html().trim()
 					 v = v.substring(0,v.length-1);
+					  $('.display-hn').html(v.trim())
 					 $("."+target_key+" .v-entry").html(v.trim())   
+					 
 				 }
 				 else{
 					 if(will_reset_hn){
@@ -1485,9 +1680,12 @@
    				 }
 				 else
 				 if( event.which == 8){
+				
    					 v = $('.display-hn').html().trim()
+					 
    					 v = v.substring(0,v.length-1);
-   					 $("."+target_key+" .v-entry").html(v.trim())   
+					 $('.display-hn').html(v.trim())
+   					 // $("."+target_key+" .v-entry").html(v.trim())  
    				 }
    				 else{
    					 v = $(".display-hn").html().trim()
@@ -1539,19 +1737,7 @@
 					
 	        })
 			
-	  				//       $(".v-score").click(function(){
-				//
-				// // v = $(this).html().trim()
-				//   			  	//	console.log(v)
-				// 	   				//          if(v=='-')v = ''
-				// // $(".score-hn").html(v)
-				// //
-				// // current_modal = $(this).attr('name')
-				// // 	            mname = $(this).parent("div").find(".l-entry").html()
-				// // 	            // $("#opdModalTitle").html($(this).attr('label'))
-				// 	            $("#scoreModal").modal('toggle')
-				// 	        })
-			
+	  	
 			
 		
 			$(".save-modal").click(function(){
@@ -1718,6 +1904,15 @@
 		
 			 	data = { staff_id:staff_id,  hn: hn, vn:vn,  datetime: datetime,score:score,bp:bp, bp_sys:bp_sys, bp_dia:bp_dia, bp_mean:bp_mean, pr:pr,rr:rr, spo2:spo2, temp:temp, weight:weight, height:height, bmi:bmi, device_id:device_id }
 				
+				
+				$('.v-extra').each(function(){
+					name = $(this).attr("name")
+					val = $(this).html().trim();
+					data[name] = val
+					
+				})
+				
+				
 				console.log(data)
 
 				return data
@@ -1725,6 +1920,11 @@
 
 
 
+	
+			
+	
+	
+			
 
 	
 			// S0. S1
@@ -1733,7 +1933,7 @@
 	
 			function sos(){
 		
-			
+				
 				err = [];
 		
 				score = 0
@@ -1768,7 +1968,7 @@
 							 
 							 if(min==null) min = -999999;
 							 if(max==null) max = -999999;
-							 console.log("min "+i['min']+" max "+i['max']+" "+dv +" s "+i['s']) 
+							 // console.log("min "+i['min']+" max "+i['max']+" "+dv +" s "+i['s']) 
 							 
 							 if(dv>=min&&dv<=max){
 								 
@@ -2012,29 +2212,47 @@
 			if(map['STATUS']=='S0'||map['STATUS']=='S1'){	
 			
 				var w = parseFloat(map['WEIGHT'])
+				
+			
 				var h = parseFloat(map['HEIGHT'])
 			
+				
 			
-				var bmi = (w/(h*h)).toFixed(2);
+				if(map['HEIGHT']!=null){
+				
+					$('.height .v-entry').html((h*100).toFixed(1));
+				
+			    	var bmi = (w/(h*h)).toFixed(2);
 				// if(map['STATUS']=='S0'&&wait_scaler){
 	// 				w = parseFloat(map['CWEIGHT'])
 	// 				bmi = 'Processing'
 	// 			}else{
 	//
 	// 			}
-			
-				if(map['STATUS']=='S1'){
-					$('.height .v-entry').html((h*100).toFixed(1));
-					$('.weight .v-entry').html(w);
-	                $('.bmi .v-entry').html(bmi);
-				
-	                checkInput('height')
-	                checkInput('weight')
-	                checkInput('bmi')
-					wait_scaler=false;
 				}
 			
-			
+				if(map['STATUS']=='S1'){
+					// if(map['HEIGHT']!=null)
+				
+					
+					if($('.type .v-entry').html().trim()=='wheelchair'){
+						w-=20.25;
+					}
+					$('.weight .v-entry').html(w);
+	               
+					wait_scaler=false;
+				}
+				
+				
+				
+                $('.bmi .v-entry').html(bmi);
+			    checkInput('weight')
+          
+				checkInput('height')
+				
+			      checkInput('bmi')
+				// alert(map['WEIGHT'])
+				
 			}
 		
 		
@@ -2045,7 +2263,9 @@
 		$('.p-name').click(function(){
 		
 			deviceSend('STATUS:M1|PR:80|SPO2:99|SYS:120|DIA:80|MEAN:100')
-			deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			// deviceSend('STATUS:S1|WEIGHT:90|HEIGHT:1.80')
+			deviceSend('STATUS:S1|WEIGHT:90')
+			
 			deviceSend('STATUS:T1|T1:35.4')
 		
 		
@@ -2219,5 +2439,32 @@
 	 
 	     });  // end ready
 	 
+
+	 
+	 
+	 
+	 
+	 
 	</script>
+		 
+	<div id="emr">
+	</div>
+	
+	<script>
+		
+   	
+	   $.ajax({
+	       url: "<%="create_partial?document=ob_survey" %>",
+	       error: function(){
+	           //do something
+	       },
+	       success: function(data){
+			   $('#emr').html(data)
+			   
+	       }
+	   });
+		
+	</script>	 
+		 
+		 
 	

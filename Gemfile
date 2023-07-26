@@ -21,6 +21,9 @@ gem 'activesupport', require: 'active_support/all'
 
 gem 'rerun'
 
+gem 'nio4r'
+
+
 gem 'mongo'
 # gem 'mongo_mapper'
 gem 'mongoid'
