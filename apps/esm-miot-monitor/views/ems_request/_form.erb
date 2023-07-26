@@ -304,7 +304,7 @@
 								<p class="px-3">
 									<span class="t" t="record_patient_name">Patient Name</span>
 
-								</p><input name='record[patient_name]' value="<%=record.patient_name%>" class="form-control mb-3" type="text" placeholder="" aria-label="default input example">
+								</p><input name='record[patient_name]' id="patient-name" value="<%=record.patient_name%>" class="form-control mb-3" type="text" placeholder="" aria-label="default input example">
 
 
 
@@ -316,7 +316,7 @@
 										Sex
 									</p>
 
-									<select class="form-select mb-3  " name='record[patient_gender]' aria-label="Default select example">
+									<select class="form-select mb-3  " name='record[patient_gender]' id="patient-gender" aria-label="Default select example">
 
 										<% for s in ['', 'M','F' ] %>
 										<option  <%='selected=""' if s==record.patient_gender %> value="<%=s%>"><%=s%></option>
@@ -331,7 +331,7 @@
 
 									<p class="px-3 ">
 										Age
-									</p><input name='record[patient_age]' value="<%=record.patient_age if patient %>" class="form-control" type="text" placeholder="" aria-label="default input example">
+									</p><input name='record[patient_age]' id="patient-age" value="<%=record.patient_age if patient %>" class="form-control" type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
@@ -376,6 +376,8 @@
 											
 											$('#bmi').val(bmi.toFixed(2))
 											
+											
+											
 										}
 										
 										$('.bmi').change(update_bmi);
@@ -387,17 +389,42 @@
 
 
 									<p class="px-3">
-										Patient Identification <span style="float:right"><input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
+										Patient Identification <span style="float:right">
+											<input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
 									</p>
 									<input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden">
-									<input name='record[patient_cid]' value="<%=record.patient_cid%>" class="form-control mb-3 " type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
-									<input name='record[patient_hn]' value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example">
-									<input name='record[patient_phone]' value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
+									<input name='record[patient_cid]' id="record_patient_cid"  value="<%=record.patient_cid%>" class="form-control mb-3 " type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
+									<input name='record[patient_hn]' id="record_hn"  value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example">
+									<input name='record[patient_phone]' id="record_patient_phone" value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
 
 									<script>
 											$('.patient-search').click(function(e){
 
-
+												hn = $('#record_hn').val()
+												
+												
+													
+												$.ajax({
+													type:'GET',
+													url:'../EmsRequest/find_patient?hn='+hn,
+												}).done(function(data){
+													
+													obj = JSON.parse(data)
+													
+													name = ""+obj['prefix_name']+" "+obj['first_name']+" "+obj['last_name']
+													contact = "-"
+													// if(obj['contact_phone']!=null)
+													contact = obj['contact_name']+" "+obj['contact_phone'] 
+													
+													$('#patient-name').val(name)
+													$('#patient-gender').val(obj['gender'])
+													$('#patient-age').val(obj['age'])
+													$('#record_patient_cid').val(obj['public_id'])
+													$('#record_patient_phone').val(contact)
+													
+													
+												})
+													
 												e.preventDefault();
 											})
 									</script>
