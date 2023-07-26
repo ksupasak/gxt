@@ -111,6 +111,23 @@ when 'message'
 				
 			
 				msg = Message.create :admit_id=>admit.id, :ts=>Time.now.to_i, :type=>'image', :media_type=>'image', :content=>"line_#{msg_id}.jpg", :file_id=>fid
+		
+		
+                   path = "miot/#{@context.settings.name}/z/#{zone.name}"
+                   puts "path #{path}"
+                 # EM.next_tick do
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+       # puts msg
+                   redis.publish(path, send_msg)		
+		
+		
+		
+		
+		
 					
 			end
 			
