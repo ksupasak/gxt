@@ -106,7 +106,7 @@ when 'message'
                 connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
                 grid = Mongo::Grid::FSBucket.new(connection.database)
-
+				filename = "line_#{msg_id}.jpg"
                 fid = grid.upload_from_stream(filename,content)
 				
 			
