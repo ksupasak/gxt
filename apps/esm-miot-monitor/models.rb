@@ -1201,7 +1201,14 @@ class AttachmentController < GXTDocument
 
     @context.content_type 'audio/3gpp'
 
-    end
+  elsif attachment.type == 'application' and attachment.content_type == 'application/pdf'
+    
+     @context.content_type 'application/pdf'
+    
+  end 
+    
+    
+    
 
     data =  ofile.read.force_encoding('utf-8')
 

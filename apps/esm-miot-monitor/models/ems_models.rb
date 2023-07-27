@@ -747,6 +747,21 @@ class EMSPatientStatusItem < GXTModel
 end
 
 
+class EMSProtocol < GXTModel
+  
+  include Mongoid::Document
+
+  key :name, String
+  key :description, String
+  key :group, String
+  
+  key :sort_order, Integer
+  key :file_id, ObjectId
+  
+  
+end
+
+
 
 class EMSController < GXT
 
@@ -936,6 +951,10 @@ class EMSCaseProcessController < GXTDocument
 end
 
 class EMSCaseActionController < GXTDocument
+
+end
+
+class EMSProtocolController < GXTDocument
 
 end
 
