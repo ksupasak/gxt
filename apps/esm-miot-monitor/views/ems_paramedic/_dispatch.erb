@@ -125,13 +125,13 @@
 %>
 <br/>
 <%# items.inspect %>
-<div class="row">
+<div class="row g-2">
 
 <% groups.each_with_index do |g,gi| %>
 <%
   unless sub_groups[g]
 %>
-<div class="col-4  mb-3">
+<div class="col-6 col-xl-4  mb-3">
 <a href="#" class="dispatch_group btn  btn-sm bg-gradient btn-primary w-100"  data-bs-toggle="modal"  data-bs-target="#dispatch_<%=g%>" name="<%=g%>" > <%=labels[gi]%></a>
 </div>
 <% end %>

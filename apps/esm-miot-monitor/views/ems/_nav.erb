@@ -309,7 +309,10 @@
 				<%
 
 				cases = EMSCase.where(:status=>"New", '$or'=>[{:user_id=>nil},{user_id:@current_user.id}]).sort(:case_no=>-1).all()
-
+					
+				cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
+					
+					
 				%>
 				<% for i in cases
 

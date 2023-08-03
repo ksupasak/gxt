@@ -23,17 +23,17 @@
 <style>
 	.card-x{
 
-		height:8vh
+/*		height:8vh*/
 			 }
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <div class="row">
-<div class="col-12">
+<div class="col-12 ">
 
-<div class="row row-cols-1 row-cols-md-4 row-cols-xl-4">
+<div class="row row-cols-1 row-cols-md-4 row-cols-xl-4 ">
 
-	<div class="col-6 col-xl-2 hidden-lg-down" >
+	<div class="col-6 col-xl-2 hidden-lg-down  " >
 		<div class="card radius-10 border-start border-0 border-3 card-x">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
@@ -41,7 +41,7 @@
 					<h4 class="my-1 text-danger"><%= monthly_cases %> Cases</h4>
 					<p class="mb-0 font-13">Monthly cases</p>
 				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="bx bxs-cart"></i>
+				<div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="bx bx-unite"></i>
 				</div>
 			</div>
 		</div>
@@ -55,7 +55,7 @@
 					<h4 class="my-1 text-warning">- mins</h4>
 					<p class="mb-0 font-13">Avg response time </p>
 				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-cart"></i>
+				<div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bx-alarm-snooze"></i>
 				</div>
 			</div>
 		</div>
@@ -74,7 +74,7 @@
 			    </div>
 				
 				<div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness  text-white ms-auto">
-					<i id="create-btn" class="bx bxs-cart"></i>
+					<i id="create-btn" class="bx bx-map"></i>
 			<script>
 		
 			</script>
@@ -91,7 +91,7 @@
 					<h4 class="my-1 text-info"> <%=cases.size %> / <%=cases_count%></h4>
 					<p class="mb-0 font-13">--% from last week</p>
 				</div>
-				<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+				<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bx-table"></i>
 				</div>
 			</div>
 		</div>
@@ -249,9 +249,10 @@
 
 
 					pos = marker.position
-			//
-			//
-			//
+		
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+					
+		
 					map1.geocode({'location':pos},function(result){
 
 						$('#record_latlng').val(result.formatted_address)

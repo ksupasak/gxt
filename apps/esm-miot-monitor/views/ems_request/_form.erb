@@ -54,7 +54,7 @@
 								<div class="col-6">
 
 									<p class="px-3 ">
-										<span class="t" t="record_contact_phone">Phone</span> *
+										<span class="t" t="record_contact_phone">Phone*</span>
 									</p><input name='record[contact_phone]' value="<%=record.contact_phone%>" required id="record_contact_phone" class="form-control mb-3 " type="text" placeholder="xxx-xxx-xxxxx" aria-label="default input example">
 
 								</div>
@@ -310,7 +310,7 @@
 
 								<div class="row ">
 
-								<div class="col-4  no-gutters">
+								<div class="col-6  col-lg-12  col-xl-4 no-gutters">
 
 									<p class="px-3">
 										Sex
@@ -327,7 +327,7 @@
 
 								</div>
 
-								<div class="col-4 no-gutters">
+								<div class="col-6 col-lg-12 col-xl-4 no-gutters">
 
 									<p class="px-3 ">
 										Age
@@ -335,16 +335,16 @@
 
 								</div>
 
-								<div class="col-4 no-gutters">
+								<div class="col-6  col-lg-12  col-xl-4 no-gutters">
 
 									<p class="px-3">
-										BOB
+										DOB
 									</p><input name='record[patient_birth_date]' value="<%=record.patient_birth_date.strftime("%d/%m/%Y") if patient and record.patient_birth_date %>" class="form-control " type="text" placeholder="" aria-label="default input example">
 
 								</div>
 
 
-								<div class="col-4">
+								<div class="col-6  col-lg-12  col-xl-4">
 
 									<p class="px-3">
 										Weight (kg)
@@ -352,7 +352,7 @@
 
 								</div>
 
-								<div class="col-4">
+								<div class="col-6  col-lg-12  col-xl-4">
 
 									<p class="px-3">
 										Height (cm)
@@ -360,7 +360,7 @@
 
 								</div>
 
-								<div class="col-4">
+								<div class="col-6 col-lg-12  col-xl-4">
 
 									<p class="px-3">
 										BMI
@@ -494,7 +494,7 @@
 
 
 
-							<div class="col-3">
+							<div class="col-6 col-xl-3">
 								<p class="px-3">
 									Case type :
 								</p>
@@ -503,7 +503,7 @@
 									<option value="Refer">Refer</option>
 								</select>
 							</div>
-							<div class="col-3">
+							<div class="col-6 col-xl-3">
 								<p class="px-3">
 									Ambulance :
 								</p>
@@ -525,7 +525,7 @@
 									})
 								</script>
 							</div>
-							<div class="col-3">
+							<div class="col-6 col-xl-3">
 								<p class="px-3">
 									Channel :
 								</p>
@@ -542,7 +542,7 @@
 							</div>
 
 
-							<div class="col-3">
+							<div class="col-6 col-xl-3">
 								<p class="px-3">
 								 Note :
 								</p>
