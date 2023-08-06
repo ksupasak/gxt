@@ -1,0 +1,201 @@
+<%
+
+if params[:admit_id]
+	
+	    admit = Admit.find params[:admit_id]
+	
+		
+end
+
+
+%>
+
+<html>
+    <head>
+        <script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<style>
+	:root {
+	  --ov-primary-color: #303030;
+	  --ov-secondary-color: #3e3f3f;
+	  --ov-tertiary-color: #598eff;
+	  --ov-warn-color: #EB5144;
+	  --ov-accent-color: #ffae35;
+	  --ov-light-color: #e6e6e6;
+
+	  --ov-logo-background-color: #3e3f3f;
+
+	  --ov-text-color: #ffffff;
+
+	  --ov-panel-text-color: #1d1d1d;
+	  --ov-panel-background: #ffffff;
+
+	  --ov-buttons-radius: 50%;
+	  --ov-leave-button-radius: 10px;
+	  --ov-video-radius: 5px;
+	  --ov-panel-radius: 5px;
+	}
+	</style>
+
+    </head>
+    <body>
+        <openvidu-webcomponent style=""></openvidu-webcomponent>
+		<ov-videoconference [tokens]="tokens">
+		  <div *ovToolbar style="text-align: center;">
+		    <!-- <button (click)="toggleVideo()">Toggle Video</button>
+		    <button (click)="toggleAudio()">Toggle Audio</button> -->
+		  </div>
+		</ov-videoconference>
+    <script>
+
+
+
+    publishVideo = true;
+    publishAudio = true;
+
+
+    <%
+        session_id = 'SessionA'
+        session_id = params[:admit_id] if params[:admit_id]
+		
+		
+		
+		
+		
+		
+    %>
+
+
+		window.onload = () => {
+
+
+      getToken("<%=session_id%>").then(token => {
+
+
+
+          var webComponent = document.querySelector('openvidu-webcomponent');
+          webComponent.tokens = token ; //'wss://pcm-life.com:4443?sessionId=SessionA&token=tok_O4GO4gBKe2cX7M7K' ;
+
+
+      });
+
+
+		}
+
+
+    function toggleVideo() {
+      this.publishVideo = !this.publishVideo;
+      webComponent.publishVideo(this.publishVideo);
+    }
+
+    function toggleAudio() {
+      this.publishAudio = !this.publishAudio;
+      webComponent.publishAudio(this.publishAudio);
+    }
+
+
+
+    		/**
+    		 * --------------------------------------------
+    		 * GETTING A TOKEN FROM YOUR APPLICATION SERVER
+    		 * --------------------------------------------
+    		 * The methods below request the creation of a Session and a Token to
+    		 * your application server. This keeps your OpenVidu deployment secure.
+    		 *
+    		 * In this sample code, there is no user control at all. Anybody could
+    		 * access your application server endpoints! In a real production
+    		 * environment, your application server must identify the user to allow
+    		 * access to the endpoints.
+    		 *
+    		 * Visit https://docs.openvidu.io/en/stable/application-server to learn
+    		 * more about the integration of OpenVidu in your application server.
+    		 */
+
+    		var APPLICATION_SERVER_URL = "https://openvidu.pcm-life.com";
+
+    		function getToken(mySessionId) {
+
+    			return new Promise((resolve, reject) => {
+    			getSession(mySessionId).then(function(re){
+    				console.log(re)
+    				if(re=="404"){
+    					resolve(createSession(mySessionId).then(sessionId => createToken(sessionId)));
+    				}else{
+
+    					resolve(createToken(mySessionId));
+    				}
+
+    			})
+
+    			});
+
+
+
+    		}
+
+
+
+    		function getSession(sessionId) {
+
+
+    		return new Promise((resolve, reject) => {
+
+    			$.ajax({
+    				type: "GET",
+    				url: APPLICATION_SERVER_URL + "/openvidu/api/sessions/"+sessionId,
+    				beforeSend: function (xhr) {
+    				    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    				},
+    				headers: { "Content-Type": "application/json" },
+    				success:  response => resolve(response),
+
+    				error: function(error){
+    					resolve(error.status)
+    				}
+
+    			});
+
+    			});
+
+    		}
+
+
+
+    		function createSession(sessionId) {
+    			return new Promise((resolve, reject) => {
+    				$.ajax({
+    					type: "POST",
+    					url: APPLICATION_SERVER_URL + "/openvidu/api/sessions",
+    					data: JSON.stringify({ customSessionId: sessionId }),
+    					beforeSend: function (xhr) {
+    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    					},
+    					headers: { "Content-Type": "application/json" },
+    					success: response => resolve(response.sessionId), // The sessionId
+    					error: (error) => reject(error)
+    				});
+    			});
+    		}
+
+    		function createToken(sessionId) {
+    			return new Promise((resolve, reject) => {
+    				$.ajax({
+    					type: 'POST',
+    					url: APPLICATION_SERVER_URL + '/openvidu/api/sessions/' + sessionId + '/connection',
+    					data: JSON.stringify({}),
+    					beforeSend: function (xhr) {
+    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    					},
+    					headers: { "Content-Type": "application/json" },
+    					success: (response) => resolve(response.token), // The token
+    					error: (error) => reject(error)
+    				});
+    			});
+    		}
+    	</script>
+
+	</body>
+
+</html>

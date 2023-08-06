@@ -408,7 +408,7 @@ class Admit < GXTModel
   key :export_status, String
   key :export_log, String
 
-
+  key :video_status, String
 
 
    include Mongoid::Timestamps
