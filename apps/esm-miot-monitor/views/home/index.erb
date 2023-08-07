@@ -177,6 +177,10 @@ body{
 			
 		<% unless admit %>
 		<%= link_to "+","../Admit/create?station_id=#{station.id}", :class=>'btn btn-success'%>
+		<% else %>
+		
+		<%= link_to "Video","../Admit/video?admit_id=#{admit.id}", :class=>'btn btn-warning' if admit.video_status=='CALLING'%>
+		
 		<% end %>
 		</div>
 		
@@ -631,6 +635,16 @@ $('#main-container').removeClass('container')
 			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
 			
 			
+		}else
+		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+		
+			lines.shift()
+			img = lines.join("")
+			// alert('image '+m.data.length)
+			
+			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			window.location.reload();
+			 
 		}
 		else
 		if(lines[0].split(" ")[0]=='ZoneUpdate'){

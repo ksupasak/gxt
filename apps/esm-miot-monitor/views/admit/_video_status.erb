@@ -1,0 +1,22 @@
+<%
+	
+	admit = Admit.find params[:admit_id]
+	
+	if params[:status] and params[:status] == 'start'
+		
+		admit.update_attributes :video_status=>'CALLING'
+
+	elsif params[:status] == 'stop'
+		
+		admit.update_attributes :video_status=>'STOP'
+		
+	end
+	
+	path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+	msg = 'NULL'
+	send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+	@context.settings.redis.publish(path, send_msg)	
+%>

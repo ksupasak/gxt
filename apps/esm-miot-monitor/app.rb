@@ -235,7 +235,7 @@ class HomeController < GXT
         patient = Patient.where(:hn=>params[:hn]).first
       end
 
-      puts 'ok'
+      # puts 'ok'
 
 
     elsif params[:name] or params[:id]
@@ -358,7 +358,7 @@ class HomeController < GXT
 
            ws.onmessage do |msg_data|
 
-             puts msg_data.inspect
+             # puts msg_data.inspect
 
              # begin
 

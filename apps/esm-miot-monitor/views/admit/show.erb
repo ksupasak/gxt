@@ -1,3 +1,5 @@
+<script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
+<link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
 <%
 
 	flowsheet = true
@@ -194,6 +196,7 @@ a.link-info:hover{
 		<%# link_to "Call CC","discharge?id=#{admit.id}",:class=>'btn hn btn-warning'  %>
 		<a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn btn-warning">Video Call</a>
 		<% end %>
+			<a href="#" class="video_call btn hn  btn-warning " >Video</a>
 			&nbsp;
 		<%= link_to "Summary","summary?id=#{admit.id}",:class=>'btn hn  btn-info'  %>
 		&nbsp;
@@ -270,6 +273,53 @@ a.link-info:hover{
 
 		<div class="row">
 
+		<div class="col-12">
+		<div class="col-12 video_call-panel "  style="display:none;border:0px solid;height:400px">
+				<%= inline(this,:'_openvidu') %>
+		</div>
+	
+		<script>
+			var video_start = false;
+			$('.video_call').click(function(){
+				
+				
+				
+				if(video_start == false){
+
+					$('.video_call-panel').css("display", "block")
+					video_start = true
+					videoCall("<%=admit.id%>")
+					$('.video_call').html("Close")
+					
+					$.ajax({
+					  url: "video_status?admit_id=<%=admit.id %>&status=start",
+					  context: document.body
+					}).done(function(content) {
+
+					  $( '#ecg-history' ).html( content);
+
+					  	$('#ecg-history').slideToggle();
+					});
+					
+				}else{
+					$('.video_call').html("Video")
+					$('.video_call-panel').css("display", "none")
+					video_start = false
+					$.ajax({
+					  url: "video_status?admit_id=<%=admit.id %>&status=stop",
+					  context: document.body
+					}).done(function(content) {
+
+					  $( '#ecg-history' ).html( content);
+
+					  	$('#ecg-history').slideToggle();
+					});
+					
+				}
+			})
+		</script>
+		</div>
+
 		<div class="col-12 "  >
 		<div class="row" style="my-2">
 			<div class="col-12 viewport" style="background:#fff; <%='display:none' unless flowsheet%>">
@@ -279,6 +329,8 @@ a.link-info:hover{
 			</div>
 	    </div>
 		</div>
+
+		
 
 		<div class="col-12 col-sm-12  col-md-12 col-xl-4 col-lg-6 gxt-box my-2">
 
@@ -465,7 +517,7 @@ a.link-info:hover{
 			</div>
 		</div>
 
-
+	
 
 
 
