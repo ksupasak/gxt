@@ -152,8 +152,11 @@
 			req = Net::HTTP::Post.new(uri) 
 			p = {}
 			p[:provider] = params[:provider]
-			req.set_form_data p
-			req.body = p.to_json
+			req.set_form_data p, ';'
+			
+			puts req.inspect 
+			
+
 	
 			req.content_type = 'application/json'
 	
