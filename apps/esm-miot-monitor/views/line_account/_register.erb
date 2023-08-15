@@ -141,37 +141,59 @@
     
     if request.post?
         
-        
-        
-        models = get_model
-        
-        p = params[:patient]
-            
-        patient = models[:patient].where(:cid=>p[:cid]).first 
-        
-        unless patient
-            
-        patient = models[:patient].create p 
-        
-        else
-        
-        patient.update_attributes p
-        
-        end
-    
-        line_account = models[:line_account].where(:user_id=>params[:user_id]).first
-            
-            unless line_account
-            
-                line_account = models[:line_account].create :user_id=>params[:user_id], :name=>"#{patient.first_name} #{patient.last_name}", :patient_id=> patient.id
-            
-            else 
-                
-                line_account.update_attributes :name=>"#{patient.first_name} #{patient.last_name}", :patient_id=> patient.id, :utou_id=>params[:utou_id]
-            
-            end
-            
-           line_account.send_message "Thank you for your registered."    
+      
+	  if params[:solution]
+	  
+	  		
+			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/register")
+			hostname = uri.hostname
+			puts 'repost to '+line_account.solution
+			req = Net::HTTP::Post.new(uri) 
+			req.body = request.body
+	
+			req.content_type = 'application/json'
+	
+			res = Net::HTTP.start(
+			        uri.host, uri.port, 
+			        :use_ssl => uri.scheme == 'https', 
+			        :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
+			  https.request(req)
+			end
+	
+		    puts res.inspect
+
+			puts 'repost to '+ params[:solution] +" Completed"
+			
+	    
+	  else
+	  
+	  	
+		  if params[:provider]
+
+
+		  provider = Provider.where(:code=>params[:provider][:code])
+	  
+	  
+		  if provider
+	  
+		 	provider = provider.update_attributes(:name=>p[:name], :phone=>p[:phone], :email=>p[:email])
+	  
+	  
+		  else 
+	  	
+			 p = params[:provider]
+	  	
+			 provider = Provider.create(:code=>p[:code], :name=>p[:name], :phone=>p[:phone], :email=>p[:email])
+		 
+		
+		  end
+
+	
+	
+		  end
+		  
+     end
+	
 %>
 <center>Processing...</center>
 
@@ -190,45 +212,41 @@ else
 									<h5 class="mb-0 text-primary">
 									    <!--<a href="../../clinic/Mobile/index">-->
 									    <a href="javascript:checkSession()">
-									    Patient Registration
+									    Registration
 									    </a> 
 									    
 									</h5>
 								</div>
 								<hr>
-								<form class="row g-3" action="login" method="POST">
+								<form class="row g-3" action="register" method="POST">
 									<div class="col-md-6">
-										<label for="inputFirstName" class="form-label">First Name</label>
-										<input type="text" class="form-control" id="inputFirstName" name="patient[first_name]">
+										<label for="inputFirstName" class="form-label">Provider Name</label>
+										<input type="text" class="form-control" id="inputFirstName" name="provider[name]">
 									</div>
 									<div class="col-md-6">
-										<label for="inputLastName" class="form-label">Last Name</label>
-										<input type="text" class="form-control" id="inputLastName" name="patient[last_name]">
+										<label for="inputLastName" class="form-label">Department </label>
+										<input type="text" class="form-control" id="inputLastName" name="provider[department]">
 									</div>
 									<div class="col-md-6">
 										<label for="inputEmail" class="form-label">Email</label>
-										<input type="email" class="form-control" id="inputEmail" name="patient[email]" value="ksupasak@gmail.com">
+										<input type="email" class="form-control" id="inputEmail" name="provider[email]" >
 									</div>
 									<div class="col-md-6">
 										<label for="inputPassword" class="form-label">Phone</label>
-										<input type="text" class="form-control" id="inputPhone" name="patient[phone]">
+										<input type="text" class="form-control" id="inputPhone" name="provider[phone]">
 									</div>
-									<div class="col-md-3">
-										<label for="inputAddress" class="form-label">Gender</label>
-										<select id="inputState" class="form-select" name="patient[gender]">
-											<option selected="">Choose...</option>
-											<option value="M">ชาย / Male</option>
-											<option value="F">หญิง / Female</option>
-										</select>
-									</div>
-									<div class="col-md-3">
-										<label for="inputAddress" class="form-label">BirthDate</label>
-										<input type="date" class="form-control" name="patient[birth_date]">
-									</div>
+								
+								
 									
 									<div class="col-md-6">
-										<label for="inputAddress" class="form-label">ID Card / Passport</label>
-										<input type="text" class="form-control" id="inputIDCard" name="patient[cid]">
+										<label for="inputAddress" class="form-label">Code</label>
+										<input type="text" class="form-control" id="inputIDCard" name="provider[code]">
+									</div>
+									
+									
+									<div class="col-md-6">
+										<label for="inputAddress" class="form-label">Solution</label>
+										<input type="text" class="form-control" id="inputIDCard" name="solution"  value="<%=params[:solution]%>">
 									</div>
 									
 									<div class="col-md-6">
@@ -238,7 +256,7 @@ else
 									</div>
 									
 <div class="row">
-<%=text_field_tag :user_id , "", :class=>'form-control col-12'%>
+<input id="user_id" type="text" class="form-control col-12"> 
 </div>
 
 								</form>
@@ -255,12 +273,10 @@ else
 
     
       function ready(obj){
-          alert(obj['userId'])
+   
         $('#user_id').val(obj['userId'])
-		  
-		
-        
-        document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
+		 
+        // document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
     
             
      <%
