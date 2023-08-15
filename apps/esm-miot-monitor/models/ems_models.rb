@@ -609,6 +609,8 @@ class LineAccount < GXTModel
   key :user_id, String
 
   key :type, String
+  
+  key :solution, String
 
 
   def send_message text, option={:type=>'text'}
