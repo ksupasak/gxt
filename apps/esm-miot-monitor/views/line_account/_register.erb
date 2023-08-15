@@ -175,9 +175,14 @@
 		  if params[:provider]
 		  
 		  p = JSON.parse(params[:provider])
-
+		
+		
+	  	
+		 puts p.inspect
+		
+		  	
 		  provider = Provider.where(:code=>p['code']).first
-	  
+	  	
 	  
 		  if provider
 	  
@@ -185,8 +190,6 @@
 	  
 	  
 		  else 
-	  	
-			 p = params[:provider]
 	  	
 			 provider = Provider.create(:code=>p['code'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'])
 		 
