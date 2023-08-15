@@ -150,13 +150,10 @@
 			hostname = uri.hostname
 			puts 'repost to '+ params[:solution]
 			req = Net::HTTP::Post.new(uri) 
+			req.set_form_data({"q" => "My query", "per_page" => "50"})
+			
+			
 		
-			
-			req.body = {"provider[name]"=>params[:provider][:name], "provider[code]"=>params[:provider][:code]}.to_json
-			puts req.body.inspect 
-			
-
-
 			req.content_type = 'application/json'
 	
 			res = Net::HTTP.start(
