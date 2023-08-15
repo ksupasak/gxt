@@ -255,8 +255,10 @@ else
 
     
       function ready(obj){
-        
+          alert(obj['userId'])
         $('#user_id').val(obj['userId'])
+		  
+		
         
         document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
     
