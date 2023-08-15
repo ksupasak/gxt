@@ -37,7 +37,7 @@ if line_account.solution and line_account.solution!=""
 	
 	uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
 	hostname = uri.hostname # => "example.com"
-
+	puts 'repost to '+line_account.solution
 	req = Net::HTTP::Post.new(uri) # => #<Net::HTTP::Post POST>
 	req.body = data
 	req.content_type = 'application/json'
