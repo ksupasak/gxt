@@ -186,8 +186,15 @@
 			
 		  line_account = LineAccount.where(:user_id=>params[:user_id]).first
 		  
-		  line_account = LineAccount.create(:user_id=>params[:user_id], :name=>provider.name)  unless line_account
-		
+		  unless line_account
+		   
+		  line_account = LineAccount.create(:user_id=>params[:user_id], :name=>provider.name) 
+		  
+		  else
+		 	
+			line_account.update_attributes(:name=>provider.name)
+		 
+		  end
 	  
 		  if provider
 	  
