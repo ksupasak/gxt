@@ -33,6 +33,20 @@ if user_id
 
 end
 
+if line_account.solution and line_account.solution!=""
+	
+	uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
+	hostname = uri.hostname # => "example.com"
+
+	req = Net::HTTP::Post.new(uri) # => #<Net::HTTP::Post POST>
+	req.body = data
+	req.content_type = 'application/json'
+	res = Net::HTTP.start(hostname) do |http|
+	  http.request(req)
+	end
+	
+else
+
 case type
 
 when 'message'
@@ -146,6 +160,7 @@ when 'follow'
 else
 end
 
+end
 end
 
 %>
