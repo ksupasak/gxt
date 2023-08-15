@@ -150,7 +150,9 @@
 			hostname = uri.hostname
 			puts 'repost to '+ params[:solution]
 			req = Net::HTTP::Post.new(uri,'Content-Type' => 'application/json') 
-			req.body = {name: 'John Doe', role: 'agent'}.to_json
+			p = {}
+			p['provider'] = params[:provider]
+			req.form_data = p
 			
 		
 			#req.content_type = 'application/json'
