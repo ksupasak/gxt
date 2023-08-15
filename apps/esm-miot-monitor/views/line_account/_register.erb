@@ -188,7 +188,7 @@
 		  
 		  unless line_account
 		   
-		  line_account = LineAccount.create(:user_id=>params[:user_id], :name=>provider.name) 
+		  line_account = LineAccount.create(:user_id=>params[:user_id], :name=>p['name']) 
 		  
 		  else
 		 	
