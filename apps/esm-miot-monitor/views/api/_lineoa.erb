@@ -42,12 +42,17 @@ if line_account.solution and line_account.solution!=""
 	req.body = data
 	
 	req.content_type = 'application/json'
-	res = Net::HTTP.start(hostname) do |http|
-	  http.use_ssl = true if uri.instance_of? URI::HTTPS
-	  resp = http.request(req)
-	  puts resp.inspect
-	end
 	
+	http = Net::HTTP.new(uri.host, uri.port)
+	http.use_ssl = true if uri.instance_of? URI::HTTPS
+	 
+	resp = http.request(req) 
+	# res = Net::HTTP.start(hostname) do |http|
+#
+# 	  resp = http.request(req)
+	  puts resp.inspect
+# 	end
+#
 	puts 'repost to '+line_account.solution+" Completed"
 	
 else
