@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--favicon-->
+	<link rel="icon" href="/rocker/assets/images/favicon-32x32.png" type="image/png" />
+	<!--plugins-->
+	<link href="/rocker/assets/plugins/fullcalendar/css/main.min.css" rel="stylesheet" />
+
+	<link href="/rocker/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
+	<link href="/rocker/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+	<!-- loader-->
+	<link href="/rocker/assets/css/pace.min.css" rel="stylesheet" />
+	<script src="/rocker/assets/js/pace.min.js"></script>
+	<!-- Bootstrap CSS -->
+	<link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+	<link href="/rocker/assets/css/app.css" rel="stylesheet">
+	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
+	<!-- Theme Style CSS -->
+	<link rel="stylesheet" href="/rocker/assets/css/dark-theme.css" />
+	<link rel="stylesheet" href="/rocker/assets/css/semi-dark.css" />
+	<link rel="stylesheet" href="/rocker/assets/css/header-colors.css" />
+	
+	
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.time.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/rocker/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css">
+	
+	
+	<script src="/rocker/assets/js/jquery.min.js"></script>
+	    <script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+	<title>iTelemed</title>
+</head>
+
+<body>
+	
+	<script>
+    
+    
+
+	   function close(){
+        
+	           liff.closeWindow() 
+	    }
+    
+    
+
+    
+
+	function getLiff(liff_id, callback){
+
+	try {
+   
+
+	    liff.init({
+	    liffId: liff_id, // Use own liffId
+	    withLoginOnExternalBrowser: true, // Enable automatic login process
+	}).then(() => {
+	    // Start to use liff's api
+    
+    
+ 
+    
+    
+	    obj = liff.getContext()
+    
+	    const json = JSON.stringify(obj);
+	    // alert(json)
+	    callback(obj)
+    
+    
+    
+	});
+    
+  
+  
+
+	}
+	catch(err) {
+	    window.alert(err);
+	} 
+
+	}      
+    
+
+	function getUserId(liff_id, callback){
+
+	try {
+   
+
+	    liff.init({
+	    liffId: liff_id, // Use own liffId
+	    withLoginOnExternalBrowser: true, // Enable automatic login process
+	}).then(() => {
+	    // Start to use liff's api
+    
+    
+ 
+    
+    
+	    obj = liff.getContext()
+    
+	    const json = JSON.stringify(obj);
+  
+	    callback(obj['userId'])
+    
+    
+    
+	});
+    
+  
+  
+
+	}
+	catch(err) {
+	    window.alert(err);
+	} 
+
+	}  
+    
+	</script>
+	
+	
+<%
+    
+    
+    if request.post?
+        
+        
+        
+        models = get_model
+        
+        p = params[:patient]
+            
+        patient = models[:patient].where(:cid=>p[:cid]).first 
+        
+        unless patient
+            
+        patient = models[:patient].create p 
+        
+        else
+        
+        patient.update_attributes p
+        
+        end
+    
+        line_account = models[:line_account].where(:user_id=>params[:user_id]).first
+            
+            unless line_account
+            
+                line_account = models[:line_account].create :user_id=>params[:user_id], :name=>"#{patient.first_name} #{patient.last_name}", :patient_id=> patient.id
+            
+            else 
+                
+                line_account.update_attributes :name=>"#{patient.first_name} #{patient.last_name}", :patient_id=> patient.id, :utou_id=>params[:utou_id]
+            
+            end
+            
+           line_account.send_message "Thank you for your registered."    
+%>
+<center>Processing...</center>
+
+
+
+<%
+else 
+%>
+
+
+	<div class="card border-top border-0 border-4 border-primary">
+							<div class="card-body p-5">
+								<div class="card-title d-flex align-items-center">
+									<div><i class="bx bxs-user me-1 font-22 text-primary"></i>
+									</div>
+									<h5 class="mb-0 text-primary">
+									    <!--<a href="../../clinic/Mobile/index">-->
+									    <a href="javascript:checkSession()">
+									    Patient Registration
+									    </a> 
+									    
+									</h5>
+								</div>
+								<hr>
+								<form class="row g-3" action="login" method="POST">
+									<div class="col-md-6">
+										<label for="inputFirstName" class="form-label">First Name</label>
+										<input type="text" class="form-control" id="inputFirstName" name="patient[first_name]">
+									</div>
+									<div class="col-md-6">
+										<label for="inputLastName" class="form-label">Last Name</label>
+										<input type="text" class="form-control" id="inputLastName" name="patient[last_name]">
+									</div>
+									<div class="col-md-6">
+										<label for="inputEmail" class="form-label">Email</label>
+										<input type="email" class="form-control" id="inputEmail" name="patient[email]" value="ksupasak@gmail.com">
+									</div>
+									<div class="col-md-6">
+										<label for="inputPassword" class="form-label">Phone</label>
+										<input type="text" class="form-control" id="inputPhone" name="patient[phone]">
+									</div>
+									<div class="col-md-3">
+										<label for="inputAddress" class="form-label">Gender</label>
+										<select id="inputState" class="form-select" name="patient[gender]">
+											<option selected="">Choose...</option>
+											<option value="M">ชาย / Male</option>
+											<option value="F">หญิง / Female</option>
+										</select>
+									</div>
+									<div class="col-md-3">
+										<label for="inputAddress" class="form-label">BirthDate</label>
+										<input type="date" class="form-control" name="patient[birth_date]">
+									</div>
+									
+									<div class="col-md-6">
+										<label for="inputAddress" class="form-label">ID Card / Passport</label>
+										<input type="text" class="form-control" id="inputIDCard" name="patient[cid]">
+									</div>
+									
+									<div class="col-md-6">
+									    
+									    <input type="submit" value="Register" class="btn btn-info">
+									
+									</div>
+									
+<div class="row">
+<%=text_field_tag :user_id , "", :class=>'form-control col-12'%>
+</div>
+
+								</form>
+					        </div>
+        </div>
+
+
+
+<% end %>
+<script>
+    function checkSession(){
+        document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
+    }
+
+    
+      function ready(obj){
+        
+        $('#user_id').val(obj['userId'])
+        
+        document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
+    
+            
+     <%
+    
+    
+    if request.post?
+        
+   
+    %>
+        close()
+    <%
+    
+    end
+    %>
+        
+        
+    }
+    
+    getLiff('2000421234-3EY9N7ev', ready)
+    
+    
+    
+    
+</script>
+	
+		<script src="/rocker/assets/plugins/fullcalendar/js/main.min.js"></script>
+
+</body>
+</html>

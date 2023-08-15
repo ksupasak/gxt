@@ -916,6 +916,12 @@ end
 
 class LineAccountController < GXTDocument
 
+  def acl
+
+    return {:register=>'*',:image_upload=>'*'}
+
+  end
+
 end
 
 class LineMessageController < GXTDocument
