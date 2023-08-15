@@ -149,12 +149,11 @@
 			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/register")
 			hostname = uri.hostname
 			puts 'repost to '+ params[:solution]
-			req = Net::HTTP::Post.new(uri) 
-			req.set_form_data({"q" => "My query", "per_page" => "50"})
-			
+			req = Net::HTTP::Post.new(uri,'Content-Type' => 'application/json') 
+			req.body = {name: 'John Doe', role: 'agent'}.to_json
 			
 		
-			req.content_type = 'application/json'
+			#req.content_type = 'application/json'
 	
 			res = Net::HTTP.start(
 			        uri.host, uri.port, 
