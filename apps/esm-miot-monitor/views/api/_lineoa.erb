@@ -43,16 +43,15 @@ if line_account.solution and line_account.solution!=""
 	
 	req.content_type = 'application/json'
 	
-	http = Net::HTTP.new(uri.host, uri.port)
-	http.use_ssl = true if uri.instance_of? URI::HTTPS
-	 
-	resp = http.request(req) 
-	# res = Net::HTTP.start(hostname) do |http|
-#
-# 	  resp = http.request(req)
-	  puts resp.inspect
-# 	end
-#
+	res = Net::HTTP.start(
+	        uri.host, uri.port, 
+	        :use_ssl => uri.scheme == 'https', 
+	        :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
+	  https.request(req)
+	end
+	
+    puts res.inspect
+
 	puts 'repost to '+line_account.solution+" Completed"
 	
 else
