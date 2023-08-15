@@ -152,7 +152,7 @@
 			req = Net::HTTP::Post.new(uri) 
 			p = {}
 			p[:provider] = params[:provider]
-			req.set_form_data p, ';'
+			req.body = p
 			
 			puts req.inspect 
 			
