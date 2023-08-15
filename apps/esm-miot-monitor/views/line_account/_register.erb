@@ -147,7 +147,7 @@
 	  		
 			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/register")
 			hostname = uri.hostname
-			puts 'repost to '+line_account.solution
+			puts 'repost to '+ params[:solution]
 			req = Net::HTTP::Post.new(uri) 
 			req.body = request.body
 	
