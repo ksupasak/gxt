@@ -176,7 +176,7 @@
 		  
 		  p = JSON.parse(params[:provider])
 
-		  provider = Provider.where(:code=>p['code'])
+		  provider = Provider.where(:code=>p['code']).first
 	  
 	  
 		  if provider
