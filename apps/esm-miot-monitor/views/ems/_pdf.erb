@@ -908,14 +908,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 %>
 
 
-    <table class='table table-striped ' style="font-size:0.8em">
-    	<caption></caption>
-    	<thead>
-    		<tr>
-    			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
-    		</tr>
-    	</thead>
-    	<tbody>
+
     		<%
     console = []
 
@@ -945,16 +938,11 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           i = l[2]
         %>
 
-    		<tr>
-    			<td class="time">
-            <%=l[0].strftime("%H:%M:%S")%>
-          </td>
 
-          <td><%=type%></td>
-
-          <td>
+            <%#l[0].strftime("%H:%M:%S")%>
+  
             <% if type == :log %>
-            <%= i.name %>
+            <%# i.name %>
 
 						เลขไมล์ : <%= i.mile_meter %>
 
@@ -966,19 +954,14 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 
               # url  = "/miot/img/svg/aoc-icon.svg"
               url = "../Message/content?id=#{i.id}"
-            %>Image..
-         </td>
-		</tr>
-		</table>
+            %>
 		
 		<div class="new-page break-before">
 		<div style="width:100%">
      	<center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="870px"></a></center>
 		</div>
         </div>
-		
-		<table class='table table-striped ' style="font-size:0.8em">
-		<tr><td colspan="3">
+	
 		  <%
             while  console.first != nil and console.first[1]==:msg and console.first[2].type=='image'
               item = console.shift
@@ -1003,12 +986,8 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
             <p class="chat-left-msg"><%=i.content%></p>
             <% end %>
   <% end %>
-          </td>
-    		</tr>
-    		<% end %>
-    	</tbody>
-    </table>
-
+         	<% end %>
+    	
 
 
   </div>
