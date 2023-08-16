@@ -151,7 +151,7 @@ class EMSCase < GXTModel
 
 
   key :patient_location, String
-  key :patient_images, Array
+  # key :patient_images, Array
 
 
   key :route_type, String
