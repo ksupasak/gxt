@@ -4,7 +4,6 @@
 
 
 %>
-<%= inline(this,:'../lib/_map')  %>
 
 		<div class="row">
 
@@ -367,6 +366,9 @@
 
 
 							<script>
+								
+								function beforeInit(){
+								
 								latlng = [13.69313508354787, 100.69198345629769]
 
 
@@ -386,7 +388,12 @@
 
 								}.bind(this))
 
-						mapc.init()
+				      
+					  		  }
+
+								
+								
+								setMapInitCallback(beforeInit,null);
 
 							</script>
 
@@ -403,4 +410,3 @@
     return e.which !== 13;
 });
 </script>
-<%= init_map%>
