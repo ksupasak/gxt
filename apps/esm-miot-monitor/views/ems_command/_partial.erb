@@ -8,7 +8,7 @@
 	hospitals = EMSHospital.all()
 
 %>
-
+<%= inline(this,:'../lib/_map')  %>
 	<div class="row" >
 
 
@@ -707,4 +707,8 @@
 
 
 		refresh_remote()
+		
+		
 	</script>
+
+<%= init_map %>

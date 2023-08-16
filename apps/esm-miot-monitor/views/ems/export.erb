@@ -1,0 +1,25 @@
+<% 
+
+ems_case = EMSCase.find params[:id]
+
+
+if request.post?
+	
+	ems_case.update_attributes :export=>'AwaitExport'
+	
+%>
+	<meta http-equiv="Refresh" content="0; url='show?id=<%=ems_case.id%>'" />
+<%
+else
+%>
+<%=ems_case.case_no%>
+<form action="export" method="post" >
+<input type="hidden" name="id" value="<%=ems_case.id%>">
+
+
+
+<input type="submit" value="Export">
+
+
+</form>
+<% end %>
