@@ -330,10 +330,13 @@
 			ambus = Ambulance.where(:zone_id=>@current_zone.id).all
 			
 			%>
-			<% for i in ambus %>
+			<% for i in ambus 
+			
+			if i.last_location and i.last_location!="" and i.last_location.index(",")
+			%>
 		
 		    latlng.push(new google.maps.LatLng(<%=i.last_location%>))
-			
+			 <% end %>
 			 <% end %>
 
 
