@@ -116,6 +116,7 @@ class Provider < GXTModel
    key :code, String
    key :role, String
    key :zone_id, String
+   key :short, String
    
    def to_s
      
