@@ -103,6 +103,10 @@ class Provider < GXTModel
   include Mongoid::Document
   include Mongoid::Timestamps
    key :name, String
+   key :first_name, String
+   key :last_name, String
+   key :prefix_name, String
+   key :shot, String
    key :department, String
    key :phone, String
    key :email, String
@@ -112,6 +116,14 @@ class Provider < GXTModel
    key :code, String
    key :role, String
    key :zone_id, String
+   
+   def to_s
+     
+     return self.name if self.name and self.name  !=""
+     return "#{first_name} #{last_name}" 
+     
+     
+   end
 
 
 end
