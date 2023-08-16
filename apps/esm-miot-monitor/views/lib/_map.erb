@@ -1,7 +1,6 @@
 <%
 
 def self.init_map options={}
-
 	return inline(self,:'../lib/_map_init', :options=>options)
 end
 
@@ -24,7 +23,16 @@ end
 <script>
 
 	var maps = [];
+	var map_before_init = null;
+	var map_after_init = null;
+	
 	// alert(typeof EMSMap)
+	
+	function setMapInitCallback(before, after){
+		map_before_init = before;
+		map_after_init = after;
+		
+	}
 
 	class EMSMap{
 
@@ -32,7 +40,9 @@ end
 		constructor(div_id, options = {}){
 
 			this.div_id = div_id
+		
 			maps.push(this);
+				
 			this.map = null
 			this.center = null
 			this.center_latlng = null
@@ -52,7 +62,7 @@ end
 
 		init(){
 
-
+			
 
 		  // The location of Uluru
 		  var uluru = {lat: 15.8700, lng: 100.9925};
@@ -246,16 +256,25 @@ end
 
 
 	function initMapMain(){
+		
 		setTimeout(function (){
+			
+			if(map_before_init!=null){
+				map_before_init.call();
+			}
 
 			for(var id in maps){
 				mx = maps[id]
+		
 			  console.log(mx)
 				mx.init();
 
 			}
+			if(map_after_init!=null){
+				map_after_init.call();
+			}
 
-		}, 300); // How long you want the delay to be, measured in milliseconds.
+		}, 50); // How long you want the delay to be, measured in milliseconds.
 
 	}
 

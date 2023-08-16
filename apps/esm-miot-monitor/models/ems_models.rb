@@ -263,6 +263,10 @@ class EMSCase < GXTModel
   key :sync_status, String
   key :sync_at, DateTime
   key :sync_ref, String
+  
+  
+  key :export, String # AwaitExport, Exported
+  key :export_log, String
 
 
 
@@ -771,7 +775,7 @@ class EMSController < GXT
 
   def acl
 
-    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*'}
+    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*', :pdf=>'*'}
 
   end
 

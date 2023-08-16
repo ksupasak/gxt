@@ -1,4 +1,4 @@
-
+<%= inline(this,:'../lib/_map')  %>
 <style>
 
 	.w-auto{
@@ -93,7 +93,7 @@
 					</p>
 
 					<div class="input-group pb-3">
-					<%= f.select(:init_cbd_code, [['','']]+EMSCode.where({}).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
+					<%= f.select(:init_cbd_code, [['','']]+EMSCode.where({}).sort(:group_id=>1,:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
 					</div>
 
 
@@ -666,29 +666,34 @@
 							</div>
 
 							<script>
-								$(document).ready(function(){
+								
+								
+								
+						function beforeInit(){
 
 
-									var latlng = [];
-									var station_image = "<%=url_for("ems/station.png")%>";
-
-
-									clatlng = [13.68313508354787, 100.69198345629769]
-
-									<% if Setting.get("aoc_center") %>
-									clatlng = [<%=Setting.get("aoc_center")%>]
-
-									<% end %>
-
-								latlng = clatlng
-
-								<% if record.latlng and record.latlng.index(',') %>
-								latlng = [<%=record.latlng%>]
-								<% end %>
+							
 
 
 
 								map1 = new EMSMap('dashboard-map',{movable:true});
+								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
+								var latlng = [];
+								var station_image = "<%=url_for("ems/station.png")%>";
+
+
+								clatlng = [13.68313508354787, 100.69198345629769]
+
+								<% if Setting.get("aoc_center") %>
+								clatlng = [<%=Setting.get("aoc_center")%>]
+
+								<% end %>
+
+							latlng = clatlng
+
+							<% if record.latlng and record.latlng.index(',') %>
+							latlng = [<%=record.latlng%>]
+							<% end %>
 								map1.setPosition(latlng[0], latlng[1])
 								map1.setMarkerPosition(latlng[0], latlng[1])
 							
@@ -698,10 +703,43 @@
 
 
 
-								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 								map2.setPosition(latlng[0], latlng[1])
 								map2.setMarkerPosition(latlng[0], latlng[1])
 								
+					
+								
+								
+							}
+							
+
+							function address_search(e){
+
+
+									var address = $('#record_location').val()
+
+									map1.geocode({'address':address},function(result){
+
+										// $('#record_address').val(result.formatted_address)
+
+										var pos = result.geometry.location;
+
+										map1.setPosition(pos.lat(), pos.lng())
+										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map2.setPosition(pos.lat(), pos.lng())
+										map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+									})
+
+									e.preventDefault();
+									return false;
+
+							}
+							
+							
+							function afterInit(){
+								
+							
+					
 								
 							
 
@@ -738,30 +776,7 @@
 									map1.setPosition(pos.lat(), pos.lng())
 									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
 								})
-
-
-								function address_search(e){
-
-
-										var address = $('#record_location').val()
-
-										map1.geocode({'address':address},function(result){
-
-											// $('#record_address').val(result.formatted_address)
-
-											var pos = result.geometry.location;
-
-											map1.setPosition(pos.lat(), pos.lng())
-											map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-											map2.setPosition(pos.lat(), pos.lng())
-											map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-
-										})
-
-										e.preventDefault();
-										return false;
-
-								}
+								
 
 
 								$('#record_location').keydown(function(e){
@@ -808,8 +823,14 @@
 
 														map1.init()
 														map2.init()
+								
+							
 
-							})
+							}
+
+							
+
+							setMapInitCallback(beforeInit,afterInit);
 
 
 							</script>
@@ -884,3 +905,6 @@
 
 
 			</div>
+			
+			
+			<%= init_map %>
