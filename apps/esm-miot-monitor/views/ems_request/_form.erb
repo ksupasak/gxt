@@ -1,4 +1,4 @@
-<%= inline(this,:'../lib/_map')  %>
+
 <style>
 
 	.w-auto{
@@ -667,12 +667,14 @@
 
 							<script>
 								
+								var map1;
+								var map2;
+								
+								
 								
 								
 						function beforeInit(){
 
-
-							
 
 
 
@@ -748,8 +750,8 @@
 									var pos = marker.position
 									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
-
-
+									
+									
 									map1.geocode({'location':pos},function(result){
 
 											$('#record_address').val(result.formatted_address)
@@ -820,9 +822,9 @@
 									}
 
 								})
-
-														map1.init()
-														map2.init()
+																						//
+														// map1.init()
+														// map2.init()
 								
 							
 
@@ -905,6 +907,24 @@
 
 
 			</div>
-			
-			
-			<%= init_map %>
+<script>
+	
+	function process_message(lines){
+		
+		
+
+		// console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+	
+			location.reload()
+
+		}
+		
+	}
+
+	
+
+	
+	
+	
+</script>			

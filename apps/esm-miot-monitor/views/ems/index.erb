@@ -279,6 +279,8 @@
 		
 		
 		function afterInit(){
+		
+		
 
 
 			clatlng = [13.68313508354787, 100.69198345629769]
@@ -287,7 +289,7 @@
 			<% end %>
 
 			local_map = map1.getMap()
-
+	
 
 
 
@@ -298,6 +300,7 @@
 			%>
 
 			var latlng = [];
+			
 			var station_image = "<%=url_for("ems/station.png")%>";
 
 			var pos = new google.maps.LatLng(clatlng[0],clatlng[1] )
@@ -322,6 +325,16 @@
 			});
 			
 		    <% end %>
+			
+			<%
+			ambus = Ambulance.where(:zone_id=>@current_zone.id).all
+			
+			%>
+			<% for i in ambus %>
+		
+		    latlng.push(new google.maps.LatLng(<%=i.last_location%>))
+			
+			 <% end %>
 
 
 			latlngbounds = new google.maps.LatLngBounds();
@@ -329,12 +342,15 @@
 			    latlngbounds.extend(latlng[i]);
 			}
 			
-			local_map.fitBounds(latlngbounds);
-
-
-
-			if(local_map.getZoom()>15)
-				local_map.setZoom(15);
+		
+			
+			local_map.fitBounds(latlngbounds);   
+			
+			//
+			if(local_map.getZoom()<15)
+			local_map.setZoom(15);
+			
+		
 
 
 				<%
@@ -618,8 +634,8 @@ airport_shuttle
 			header = JSON.parse(lines[1])['msg'].split(" ")
 			if(header[0]=='notify_callback'){
 				window.location="show?id="+header[1]
-			}
-			// window.location.reload();
+			}else
+			window.location.reload();
 
 		}else
 		if(lines[0].split(" ")[0]=='Zone.Message'){

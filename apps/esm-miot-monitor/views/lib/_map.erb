@@ -21,16 +21,36 @@ end
 
 %>
 <script>
-
+	var map_inited = false;
 	var maps = [];
 	var map_before_init = null;
 	var map_after_init = null;
 	
 	// alert(typeof EMSMap)
-	
+
 	function setMapInitCallback(before, after){
+		maps = [];
 		map_before_init = before;
 		map_after_init = after;
+		
+		
+		if(map_inited){
+	
+		if(map_before_init!=null){
+			map_before_init.call();
+		}
+			 console.log(maps.length)
+		for(var id in maps){
+			mx = maps[id]
+	
+		  console.log("xx"+mx)
+			mx.init();
+
+		}
+		if(map_after_init!=null){
+			map_after_init.call();
+		}
+		}
 		
 	}
 
@@ -75,7 +95,6 @@ end
 
 		  this.map = new google.maps.Map(document.getElementById(this.div_id), {zoom: 16, center: uluru, mapTypeId: map_type });
 		  // The marker, positioned at Uluru
-
 
 
 	      this.geocoder = new google.maps.Geocoder;
@@ -213,7 +232,7 @@ end
 				this.setPosition(latlng)
 
 
-				if(cb)
+				if(cb&&this.change_callback!=null)
 				this.change_callback(this.marker)
 
 
@@ -230,8 +249,9 @@ end
 
 
    	 geocode(query, callback  ){
-
+		 	
    		 		this.geocoder.geocode(query, function(results, status) {
+					
    				      if (status === 'OK') {
    				        if (results[0]) {
 
@@ -273,6 +293,8 @@ end
 			if(map_after_init!=null){
 				map_after_init.call();
 			}
+			
+			map_inited = true;
 
 		}, 50); // How long you want the delay to be, measured in milliseconds.
 

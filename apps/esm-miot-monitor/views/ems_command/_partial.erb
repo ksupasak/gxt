@@ -8,7 +8,7 @@
 	hospitals = EMSHospital.all()
 
 %>
-<%= inline(this,:'../lib/_map')  %>
+
 	<div class="row" >
 
 
@@ -480,7 +480,9 @@
 							function deg2rad(deg) {
 							  return deg * (Math.PI/180)
 							}
-
+								
+								
+								
 							<% for h in hospitals
 								latlng = h.latlng.split(",")
 							%>
@@ -526,6 +528,16 @@
 
 
 						<script>
+						
+						
+						var target
+							
+   						 var hospitals = <%=hospitals.to_json%>
+
+   						 var m_hos = {}
+							
+
+						function beforeInit(){
 
 							latlng = [13.69313508354787, 100.69198345629769]
 							<% if Setting.get('aoc_center') %>
@@ -537,10 +549,7 @@
 
 
 
-						 var hospitals = <%=hospitals.to_json%>
-
-						 var m_hos = {}
-
+					
 
 
 							mapc = new EMSMap('dashboard-map-c');
@@ -609,7 +618,7 @@
 
 							})
 
-							var target
+							
 							<% for cm in commands %>
 
 							mapc.ready(function(){
@@ -621,13 +630,14 @@
 								%>
 							 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
 							 target = new google.maps.LatLng(latlng[0], latlng[1] )
-							 var target2 = new google.maps.LatLng(latlng[0]-0.01, latlng[1]-0.01 )
+					
 
-								directionsService = new google.maps.DirectionsService;
-					  	  directionsDisplay = new google.maps.DirectionsRenderer;
-					  		directionsDisplay.setMap(mapc.map);
+							directionsService = new google.maps.DirectionsService;
+					  	    directionsDisplay = new google.maps.DirectionsRenderer;
+					  		
+							directionsDisplay.setMap(mapc.map);
 
-								mapc.drawPath(directionsService,directionsDisplay, start,target,[target2],function(rs){
+								mapc.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
 
 
 									a = $('#send-msg-<%=cm.id%>')
@@ -648,7 +658,14 @@
 							<% end %>
 
 
-							mapc.init()
+						
+							
+						   }
+							
+							
+							setMapInitCallback(beforeInit,null);
+							
+							
 						</script>
 
 	<script>
@@ -710,5 +727,3 @@
 		
 		
 	</script>
-
-<%= init_map %>
