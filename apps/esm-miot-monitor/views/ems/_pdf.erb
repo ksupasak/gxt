@@ -344,9 +344,9 @@ EMD Summary
 
 <!---------------------------------------------------->
 <!---------------------------------------------------->
-
-
-
+<pre>
+<%= record.summary%>
+</pre>
 <div class="row">
 
 			<div class="col-4 d-flex" >
@@ -919,10 +919,8 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 
         end
 
-        msgs = admit.messages.where({}).limit(30).sort(:created_at=>-1).all
-        # msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
+        msgs = admit.messages.where({}).limit(100).sort(:created_at=>-1).all
 
-        # Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
 
         for m in msgs
 
@@ -947,7 +945,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 						เลขไมล์ : <%= i.mile_meter %>
 
             <% elsif type == :msg %>
-            <% if i.type == 'image'
+            <% if i.type == 'image'  and i.export=='true'
 
 
 
