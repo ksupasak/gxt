@@ -190,10 +190,11 @@ Palpation
 <div class="col-2">Skin</div>
 <div class="col-10">
 <%= radio_string this, 'circulation_skin',:value=>%w{normal pale sweet cold}, :col=>12 %>
-<%= radio_string this, 'circulation_pulse',:value=>%w{weak_pulse full regula irregular}, :label=>'Pulse', :col=>12 %>
 </div>
-
-
+<div class="col-2">Pulse</div>
+<div class="col-10">
+<%= radio_string this, 'circulation_pulse',:value=>%w{weak full regular irregular}, :col=>12 %>
+</div>
 <div class="row">
   <div class="col-2">
     Capillary
@@ -210,8 +211,9 @@ Vital
 <div class="col-9">
 <div class="row">
 <%= text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
-<%= text_string this, 'circulation_bp', :col=>3, :label=>'BP (_/_)'%>
-<%= text_string this, 'circulation_blood_loss', :col=>4, :label=>'Blood loss(ml)'%>
+<%= text_string this, 'circulation_sbp', :col=>3, :label=>'SBP'%>
+<%= text_string this, 'circulation_dbp', :col=>3, :label=>'DBP'%>
+<%= text_string this, 'circulation_blood_loss', :col=>3, :label=>'Blood loss(ml)'%>
 </div>
 </div>
 </div>
@@ -284,13 +286,15 @@ Vital
 <div class="row">
 <div class="col-2">
 </div>
-<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling}, :col=>10, :col_item=>"col-12" %>
+<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling pitting_edema_at }, :col=>10, :col_item=>"col-12" %>
 </div>
 <div class="row">
 <div class="col-2">
 </div>
 <div class="col-10">
-  <%= text_string this, 'exposure_special_note', :col=>10, :label=>'Note'%>
+    <%= text_string this, 'exposure_special_note', :col=>10, :label=>'Note'%>
+	
+  <%= text_string this, 'exposure_pitting_edema_at', :col=>3, :label=>'pitting_edema_at'%>
 
 </div>
 
