@@ -291,6 +291,7 @@ class Message < GXTModel
   key :sender_user_id, ObjectId
 
   key :channel_id, ObjectId
+  key :export, String 
 
   include Mongoid::Timestamps
 end

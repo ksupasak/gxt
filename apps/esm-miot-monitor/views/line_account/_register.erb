@@ -195,6 +195,9 @@
 			line_account.update_attributes(:name=>p['name'])
 		 
 		  end
+		  
+		 
+		
 	  
 		  if provider
 	  
@@ -207,6 +210,7 @@
 		
 		  end
 
+   	   	line_account.send_message "ลงทะเบียนสำเร็จ : #{provider.get_name} - #{provider.code}" 
 	
 	
 		  end
