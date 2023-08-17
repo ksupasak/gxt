@@ -855,7 +855,7 @@ MSG
 
     ems_case = EMSCase.find params[:id]
 
-    body = {"message"=>Setting.get("tracking_sms","EMS Tracking Service กรุณากด : <TRACKING-URL>"), "sender"=>Setting.get("sms_sender","Demo-SMS"), "phone" => ems_case.contact_phone , "url"=> "#{Setting.get("host_url","https://pcm-life.com:1792")}/#{@context.settings.name}/EMS/request_ems?id=#{ems_case.id}" }
+    body = {"message"=>Setting.get("tracking_sms","EMS Tracking Service กรุณากด : <TRACKING-URL>"), "sender"=>Setting.get("sms_sender","Demo-SMS"), "phone" => ems_case.contact_phone , "url"=> "#{Setting.get("host_url","https://pcm-life.com:1792")}/EMS/request_ems?id=#{ems_case.id}" }
 
     require 'uri'
     require 'net/http'
