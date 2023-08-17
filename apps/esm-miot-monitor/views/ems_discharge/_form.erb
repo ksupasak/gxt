@@ -28,22 +28,22 @@
 <div class="clear"></div>
 
 <div class="col-3">
-<label class="form-label" for="init_cbd_color">รหัส รับแจ้ง</label>
+<label class="form-label" for="init_cbd_color">CBD by 1669</label>
 <%= f.select(:init_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.init_cbd_color, :class=>' form-select') %>
 </div>
 
 <div class="col-3">
-<label class="form-label" for="dispatch_cbd_color">รหัสสี EMD</label>
+<label class="form-label" for="dispatch_cbd_color">CBD by EMD</label>
 <%= f.select(:dispatch_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.dispatch_cbd_color, :class=>' form-select') %>
 </div>
 
 <div class="col-3">
-<label class="form-label" for="scene_cbd_color">รหัสสี ที่เกิดเหตุ</label>
+<label class="form-label" for="scene_cbd_color">Scene Triage</label>
 <%= f.select(:scene_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.scene_cbd_color, :class=>' form-select') %>
 </div>
 
 <div class="col-3">
-<label class="form-label" for="screen_cbd_color">รหัสสี นำส่ง</label>
+<label class="form-label" for="screen_cbd_color">ER Triage</label>
 <%= f.select(:screen_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เชียว'],['white','ขาว'],['black','ดำ']], :value=>record.screen_cbd_color, :class=>' form-select') %>
 </div>
 
@@ -78,6 +78,19 @@
 </div>
 
 
+
+<div class="col-12">
+  <input class="form-check-input" type="checkbox" name="record[bls_onscene]" id="bls_onscene">
+  <label class="form-check-label" for="bls_onscene">BLS ถึงที่เกิดเหตุก่อน</label>
+</div>
+
+
+<!-- <div class="col-4">
+  <input class="form-check-input" type="checkbox" name="record[bls_cpr]" id="bls_cpr">
+  <label class="form-check-label" for="bls_cpr">CPR</label>
+</div> -->
+
+
 <div class="col-4">
 	<div class="form-check">
 		<input class="form-check-input" type="checkbox" name="record[bls_request]" id="bls_request">
@@ -85,20 +98,11 @@
 	</div>
 </div>
 
-<div class="col-4">
-  <input class="form-check-input" type="checkbox" name="record[bls_onscene]" id="bls_onscene">
-  <label class="form-check-label" for="bls_onscene">BLS ถึงที่เกิดเหตุก่อน</label>
-</div>
+<div class="col-8">
+<!-- <label class="form-label " for="bls_operation">ทีมสนับสนุนผู้ปฏิบัติงานแบบใด</label> -->
+<%= f.select(:bls_operation, ['','BLS', 'จว.โครงการ','ตำรวจ','พลเมืองดี', 'อื่นๆ'], :value=>record.bls_operation, :class=>' form-select') %>
 
 
-<div class="col-4">
-  <input class="form-check-input" type="checkbox" name="record[bls_cpr]" id="bls_cpr">
-  <label class="form-check-label" for="bls_cpr">CPR</label>
-</div>
-
-<div class="col-12">
-<label class="form-label " for="bls_operation">ทีมสนับสนุนผู้ปฏิบัติงานแบบใด</label>
-<input class="form-control" type="text" name="record[bls_operation]" id="" value="<%=record.bls_operation%>">
 </div>
 
 <div class="col-4">
