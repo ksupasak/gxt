@@ -118,7 +118,7 @@ class Provider < GXTModel
    key :zone_id, String
    key :short, String
    
-   def to_s
+   def get_name
      
      return self.name if self.name and self.name  !=""
      return "#{first_name} #{last_name}" 
