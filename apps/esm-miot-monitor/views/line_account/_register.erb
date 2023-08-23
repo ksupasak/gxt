@@ -186,7 +186,7 @@
 			puts 'repost to '+ params[:solution] +" Completed"
 			
 	    
-	  else
+	  end
 	  
 	  	
 		  if params[:provider]
@@ -295,9 +295,9 @@ else
 									</div>
 									
 <div class="row">
-<input id="user_id" name="user_id" type="text" class="form-control col-12"> 
+<input id="user_id" name="user_id" type="hidden" class="form-control col-12"> 
 </div>
-<%=params.inspect %>
+
 
 								</form>
 					        </div>
