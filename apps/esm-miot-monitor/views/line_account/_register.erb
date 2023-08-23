@@ -185,6 +185,7 @@
 
 			puts 'repost to '+ params[:solution] +" Completed"
 			
+			p = params[:provider]
 			
 			provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :department=>p['department'], :email=>p['email']) if provider
 	    
