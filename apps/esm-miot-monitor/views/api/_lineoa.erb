@@ -134,20 +134,27 @@ when 'message'
 				
 			
 				msg = Message.create :admit_id=>admit.id, :ts=>Time.now.to_i, :type=>'image', :media_type=>'image', :content=>"line_#{msg_id}.jpg", :file_id=>fid
-		
-		
-                   path = "miot/#{@context.settings.name}/z/#{zone.name}"
-                   puts "path #{path}"
-                 # EM.next_tick do
-send_msg = <<MSG
-#{'Zone.Message'} #{path}
-#{msg.to_json}
-MSG
+				
+				
+				ems_case = EMSCase.where(:admit_id=>admit.id).first
+				
+				if ems_case
 
-       # put
-		
-				   @context.settings.redis.publish(path, send_msg)	
-		
+				ems_case.update_message @context, "request send location"
+				
+				end
+#                    path = "miot/#{@context.settings.name}/z/#{zone.name}"
+#                    puts "path #{path}"
+#                  # EM.next_tick do
+# send_msg = <<MSG
+# #{'Zone.Message'} #{path}
+# #{msg.to_json}
+# MSG
+#
+#        # put
+#
+# 				   @context.settings.redis.publish(path, send_msg)
+#
 		
 		
 					
