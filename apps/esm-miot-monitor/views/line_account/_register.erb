@@ -185,6 +185,8 @@
 
 			puts 'repost to '+ params[:solution] +" Completed"
 			
+			
+			provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :department=>p['department'], :email=>p['email']) if provider
 	    
 	  else
 	  
@@ -217,7 +219,7 @@
 	  
 		  if provider
 	  
-		 	provider = provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
+		 	provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
 	  
 		  else 
 	  	
