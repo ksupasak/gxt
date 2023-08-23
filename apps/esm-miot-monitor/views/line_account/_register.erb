@@ -44,7 +44,7 @@
 	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-	<title>iTelemed</title>
+	<title>SmartEMS</title>
 </head>
 
 <body>
@@ -281,6 +281,7 @@ else
 <div class="row">
 <input id="user_id" name="user_id" type="hidden" class="form-control col-12"> 
 </div>
+<%=params.inspect %>
 
 								</form>
 					        </div>
@@ -297,10 +298,17 @@ else
     
       function ready(obj){
    
+		<% unless params[:user_id] %>
+   	    
         $('#user_id').val(obj['userId'])
-		 
-        // document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
-    
+			 
+        document.location.href="register?user_id="+$('#user_id').val()+"&solution="+params[:solution]
+    	
+		<% else %>
+		
+		
+		
+		<% end %>
             
      <%
     
