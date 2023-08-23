@@ -138,6 +138,22 @@
 	
 <%
     
+	privder = nil
+	
+	if params[:user_id]
+		
+		line_account = LineAccount.where(:user_id=>params[:user_id]).first
+		
+		if line_account
+			
+			provider = Provider.where(:line_account_id=>line_account.id).first
+			
+			
+		end
+		
+	
+	end
+	
     
     if request.post?
         
@@ -244,26 +260,26 @@ else
 								<form class="row g-3" action="register" method="POST">
 									<div class="col-md-6">
 										<label for="inputFirstName" class="form-label">Provider Name</label>
-										<input type="text" class="form-control" id="inputFirstName" name="provider[name]">
+										<input type="text" class="form-control" id="inputFirstName" name="provider[name]" value="<%= provider.name if provider%>">
 									</div>
 									<div class="col-md-6">
 										<label for="inputLastName" class="form-label">Department </label>
-										<input type="text" class="form-control" id="inputLastName" name="provider[department]">
+										<input type="text" class="form-control" id="inputLastName" name="provider[department]" value="<%= provider.department if provider%>">
 									</div>
 									<div class="col-md-6">
 										<label for="inputEmail" class="form-label">Email</label>
-										<input type="email" class="form-control" id="inputEmail" name="provider[email]" >
+										<input type="email" class="form-control" id="inputEmail" name="provider[email]" value="<%= provider.email if provider%>">
 									</div>
 									<div class="col-md-6">
 										<label for="inputPassword" class="form-label">Phone</label>
-										<input type="text" class="form-control" id="inputPhone" name="provider[phone]">
+										<input type="text" class="form-control" id="inputPhone" name="provider[phone]" value="<%= provider.phone if provider%>">
 									</div>
 								
 								
 									
 									<div class="col-md-6">
 										<label for="inputAddress" class="form-label">Code</label>
-										<input type="text" class="form-control" id="inputIDCard" name="provider[code]">
+										<input type="text" class="form-control" id="inputIDCard" name="provider[code]" value="<%= provider.code if provider%>">
 									</div>
 									
 									
