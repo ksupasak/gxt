@@ -292,9 +292,12 @@ else
 									</div>
 									
 									<div class="col-md-6">
-									    
-									    <input type="submit" value="Register" class="btn btn-info">
+									    <% if provider %>
+									    <input type="submit" value="Register" class="btn btn-success">
+										<% else %>
+									    <input type="submit" value="Update" class="btn btn-info">
 									
+										<% end %>
 									</div>
 									
 <div class="row">
