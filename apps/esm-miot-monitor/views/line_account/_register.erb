@@ -302,7 +302,7 @@ else
    	    
         $('#user_id').val(obj['userId'])
 			 
-        document.location.href="register?user_id="+$('#user_id').val()+"&solution="+params[:solution]
+		  document.location.href="register?user_id="+$('#user_id').val()+"&solution=<%=params[:solution]%>"
     	
 		<% else %>
 		
