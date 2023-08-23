@@ -227,12 +227,12 @@
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"> Free Text</h5>
+        <h5 class="modal-title" id="dispatch-free_text-title" >Free Text</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
 
-				<input type="text" name="name" id="dispatch-free_text" rows="8" cols="80">
+				<input type="text" name="name" id="dispatch-free_text" value="" rows="8" cols="80">
 
 
       </div>
@@ -289,7 +289,22 @@
     }else
 		if(found!=null&&found['type']=='text'){
 			  $('#free-text').modal('show')
-				$('#dispatch-free_text').focus();
+			   text = $('#dispatch-free_text')
+			
+			   
+			   text.focus();
+			   
+			   if(found['data']!=null&found['data'].length>0){
+			   	
+				   data = JSON.parse(found['data'])
+				   if(data['default']){
+				   	 $('#dispatch-free_text-title').html(data['name'])
+					 text.val(data['default'])
+					
+				   }
+				
+			   }
+			   
 		}
     else{
 

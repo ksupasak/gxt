@@ -2038,9 +2038,12 @@ end
 
                                            bp_sys,bp_dia = v['bp'].split('/')
 
-                                           DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :co2=>v['co2'], :rr=>v['rr'], :temp=>v['temp'], :stamp=> now
 
+                                           if admit.record_status!='Stop'
+                                             
+                                             DataRecord.create :admit_id=>admit.id, :bp=>v['bp'], :bp_sys=>bp_sys, :bp_dia=>bp_dia, :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :co2=>v['co2'], :rr=>v['rr'], :temp=>v['temp'], :stamp=> now
 
+                                           end
 
                                            app.settings.last_map[v['station_id']] = lt
 
@@ -2081,8 +2084,12 @@ end
                                      v.delete 'vs'
 
                                      px[:data] = v.to_json
-
+                                     
+                                     if admit.record_status!='Stop'
+                                     
                                      senses_queue[name] << Sense.new(px)
+
+                                     end
 
                                      end
 

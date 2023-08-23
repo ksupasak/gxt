@@ -26,7 +26,53 @@ if params[:record]
 
 	end
 
+	if p[:patient_hn] != ""
+	
+		
+		admit = record.admit
+		
+		patient = admit.patient
+		
+		
+		new_patient = Patient.where(:hn=>p[:patient_hn]).first
+		
+		unless new_patient
+			
+		 	patient = Patient.create :hn=>p[:patient_hn], :name=>p[:patient_name], :public_id=>p[:patient_cid], :age=>p[:patient_age], :gender=>p[:patient_gender], :dob=>p[:patient_birth_date], :zone_id=>record.zone_id
+			admit.update_attributes :patient_id=>patient.id
+			
+			
+		end
+		
+	
+	
+	end
+	
+	puts
+	puts patient.inspect 
+	puts 
+	
+	
+	if patient
+		
+	   patient.update_attributes :hn=>p[:patient_hn], :name=>p[:patient_name], :public_id=>p[:patient_cid], :age=>p[:patient_age], :gender=>p[:patient_gender], :dob=>p[:patient_birth_date], :zone_id=>record.zone_id
+		
+		
+	end
+	
+	
+	init_cbd_code = EMSCode.find p[:init_cbd_code]
+	if init_cbd_code
+		p[:init_cbd_color] = init_cbd_code.color
+	end
+	
+	
+	
 	record.update_attributes p
+	
+	
+	
+	
 
 path = "miot/#{@context.settings.name}/z/#{record.zone.name}"
 msg = 'NULL'

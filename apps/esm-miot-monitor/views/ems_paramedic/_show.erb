@@ -33,14 +33,14 @@ end
 
 
 
-	<% if false %>
-					<div class="breadcrumb-title pe-3">Paramedic </div>
+	<% if true %>
+					<div class="breadcrumb-title pe-3">Assessment & Management </div>
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
-								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i><strong></strong></a>
+								<!-- <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i><strong></strong></a>
 								</li>
-								<li class="breadcrumb-item active" aria-current="page"></li>
+								<li class="breadcrumb-item active" aria-current="page"></li> -->
 							</ol>
 						</nav>
 					</div>
@@ -52,13 +52,15 @@ end
 					</div> -->
 					<div class="ms-auto">
 						<div class="btn-group">
-							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary">Actions</button>
 							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
 							</button>
-							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-								<a class="dropdown-item" href="javascript:;">Another action</a>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+								<a class="dropdown-item video_call" href="javascript:;">Video call</a>
+								
+								<!-- <a class="dropdown-item" href="javascript:;">Another action</a>
 								<a class="dropdown-item" href="javascript:;">Something else here</a>
-								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a> -->
 							</div>
 						</div>
 					</div>
@@ -239,7 +241,7 @@ end
 			<div class="col-12 video_call-panel "  style="display:none;border:0px solid;height:400px">
 					<%= inline(this,:'_openvidu') %>
 			</div>
-			<a href="#" class="video_call " >Video</a>
+		
 			<script>
 				var video_start = false;
 				$('.video_call').click(function(){
@@ -260,44 +262,45 @@ end
 
 			<div  id="<%=station_id%>" class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 
-				<div class="row d-flex justify-content-center" style="padding:0px" >
-              <div class="vs-val col-2  col-lg-2 col-sm-2 bp">
-            <span class="label">BP</span>
-            <div class="value">-</div>
-              </div>
+				<div class="row d-flex justify-content-begin" style="padding:0px" >
+					
+				           <div class="vs-val col-4  col-lg-2 col-sm-2 bp">
+				           <span class="label">BP</span>
+				           <div class="value">-</div>
+				           </div>
 
-        	   <div class="vs-val col-1  col-lg-1 col-sm-1 pr">
+        	   			   <div class="vs-val col-2  col-lg-1 col-sm-1 pr">
 								<span class="label">PR</span>
 								<div class="value">-</div>
 							</div>
-							<div class="vs-val col-1  col-lg-1 col-sm-1 spo2">
+							<div class="vs-val col-2  col-lg-1 col-sm-1 spo2">
 								<span class="label">SpO2</span>
 								<div class="value">-</div>
 							</div>
-							<div class="vs-val col-1  col-lg-1 col-sm-1 hr">
+							<div class="vs-val col-2  col-lg-1 col-sm-1 hr">
 								<span class="label">HR</span>
 								<div class="value">-</div>
 							</div>
-								<div class="vs-val col-1  col-lg-1 col-sm-1 temp">
+								<div class="vs-val col-2  col-lg-1 col-sm-1 temp">
 									<span class="label">Temp</span>
 									<div class="value">-</div>
 							</div>
-							<div class="vs-val col-1  col-lg-1  col-sm-1 rr">
+							<div class="vs-val col-2  col-lg-1  col-sm-1 rr">
 									<span class="label">RR</span>
 									<div class="value">-</div>
 							</div>
 
-							<div class="vs-val col-1 col-lg-1 col-sm-1 co2">
+							<div class="vs-val col-2 col-lg-1 col-sm-1 co2">
 				    			<span class="label">CO<sub>2</sub></span>
 								<div class="value">-</div>
 							</div>
 
-							<div class="vs-val col-1 col-lg-1  col-sm-1 score">
+							<div class="vs-val col-2 col-lg-1  col-sm-1 score">
 								<span class="label">Score</span>
 								<div class="value">&nbsp;</div>
 							</div>
 
-							<div class="vs-val col-1 col-lg-1  col-sm-1 alert-msg" >
+							<div class="vs-val col-2 col-lg-2  col-sm-1 alert-msg" >
 								<span class="label">MSG</span>
 								<div class="value" style="overflow:hidden;height:30px;font-size:0.8em">
 									&nbsp;
@@ -310,7 +313,7 @@ end
 
 
 
-			<% if ems_case.paramedic_status=='STARTED' or ems_case.paramedic_status=='FINISHED'  %>
+			<% if true %>
 
 
 			<div class="card">
@@ -347,11 +350,50 @@ end
 											<div class="tab-content py-3 " id="tab-content">
 												<div class="tab-pane fade active show" id="primaryhome" role="tabpanel">
 
+			<% if ems_case.paramedic_status=='STARTED'  %>											
+													
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%> ;border:0px solid ">
 			<%= inline(this,:'_flowsheet')  %>
 			</div>
 
+			<% else %>
+			
+			
+			<% end %>
+			<div class="alert alert-warning">
+			
+			<h4>Station Connect</h4>
+			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
+			<div class="input-group mb-3">
+			<input type="hidden" name="id" value="<%=ems_case.id%>">
+			<input type="hidden" name="admit_id" value="<%=admit.id%>">
+			<div >
+			<label>Select Status :</label>
+
+			<% fieldset(:admit) do |f| %>
+			<%= f.select(:status, [['',''],['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
+			<% end %>
+			</div>
+			&nbsp;
+			<div>
+				
+				
+				
+			<label>Select Device :</label>
+
+			<% fieldset(:admit) do |f| %>
+			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
+			<% end %>
+
+		    </div>
+			</div>
+
+			<input type="submit" name="update" class="btn btn-warning" value="Submit">
+
+			</form>
+			
+		</div>
 
 												</div>
 
@@ -384,33 +426,7 @@ end
 
 
 
-			<h4>Device Connect</h4>
-			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
-
-			<div class="input-group mb-3">
-			<input type="hidden" name="id" value="<%=ems_case.id%>">
-			<input type="hidden" name="admit_id" value="<%=admit.id%>">
-			<div >
-			<label>Select Status :</label>
-
-			<% fieldset(:admit) do |f| %>
-			<%= f.select(:status, [['',''],['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
-			<% end %>
-			</div>
-
-			<div>
-			<label>Select Device :</label>
-
-			<% fieldset(:admit) do |f| %>
-			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
-			<% end %>
-
-		    </div>
-			</div>
-
-			<input type="submit" name="update" class="btn btn-warning" value="Submit">
-
-			</form>
+			
 
 
 

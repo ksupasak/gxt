@@ -47,7 +47,7 @@ if params[:record]
 	patient_id = patient.id if patient
 
 
-	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id, :status=>'Admitted', :admit_stamp=>Time.now
+	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id, :status=>'Admitted', :admit_stamp=>Time.now, :record_status=>'Stop'
 
 	p[:admit_id] = admit.id
 	p[:zone_id] = session[:current_zone]
@@ -66,6 +66,12 @@ if params[:record]
     p[:user_id] = @current_user.id if @current_user
 
 	p[:request_at] = Time.now 
+	
+	init_cbd_code = EMSCode.find p[:init_cbd_code]
+	if init_cbd_code
+		p[:init_cbd_color] = init_cbd_code.color
+	end
+	
 
 	record = EMSCase.create p
 
@@ -108,12 +114,14 @@ end
 <% else %>
 
 <%
+	
+	default_latlng = Setting.get("aoc_center")
 
-	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'',:contact_phone=>'',:patient_name=>''
+	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng
 	
 	
-	@ems_case.location = params[:location]
-	@ems_case.latlng = params[:latlng]
+	@ems_case.location = params[:location] if params[:location]
+	@ems_case.latlng = params[:latlng] if params[:latlng]
 	
 	
 

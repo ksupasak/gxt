@@ -103,12 +103,15 @@ end
 
 @primary_survey
 @secondary_survey.1
+
 Progress note :
 @progress_note
 
 @secondary_survey.2
+
 Treatment :
 @transfer
+
 Diagnosis :
 @diagnosis
 
@@ -120,14 +123,49 @@ Diagnosis :
   ####################### progress # NOTE:
 
 	bin = {}
-	for t in tmap.keys.sort
-	lines = tmap[t]
-	for i in lines
-	bt = t.to_i/60
-	bin[bt] = {:t=>t,:list=>[]} unless bin[bt]
-	bin[bt][:list] << i
+	# for t in tmap.keys.sort
+	# 	lines = tmap[t]
+	# 	for i in lines
+	# 		bt = t.to_i/60
+	# 		bin[bt] = {:t=>t,:list=>[]} unless bin[bt]
+	# 		bin[bt][:list] << i
+	# 	end
+	# end
+
+	cur = nil
+
+    for t in tmap.keys.sort
+		
+		lines = tmap[t]
+		
+		for i in lines
+			
+				
+			cur = t unless cur
+			
+			
+			if (t - cur) < 60000
+			
+				cur = t
+				
+				bt = t.to_i/60
+				
+				bin[bt] = {:t=>t,:list=>[]} unless bin[bt]
+				bin[bt][:list] << i
+				
+			end	
+			
+		
+		
+		end	
+			
+		
+		
 	end
-	end
+
+    
+	
+	
 
 	list = []
 

@@ -288,7 +288,7 @@
 
 <div class="col-4">
 <label class="form-label" for="patient_type">ประเภทผู้ป่วย</label>
-<%= f.select(:patient_type, [['trauma','Trauma'],['non-trauma','Non-Trauma']], :value=>record.patient_type, :class=>' form-select') %>
+<%= f.select(:patient_type, [['non-trauma','Non-Trauma'],['trauma','Trauma']], :value=>record.patient_type, :class=>' form-select') %>
 </div>
 						</div>
 						
@@ -737,8 +737,10 @@
 
 										map1.setPosition(pos.lat(), pos.lng())
 										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-										map2.setPosition(pos.lat(), pos.lng())
-										map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+										// map2.setPosition(pos.lat(), pos.lng())
+	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+										$('#record_address').val(result.formatted_address)
+										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
 									})
 
@@ -773,22 +775,22 @@
 
 								}.bind(this))
 
-								map2.changeMarkerPosition(function(marker){
-
-									var pos = marker.position
-									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-
-
-									// map2.geocode({'location':pos},function(result){
+				// 				map2.changeMarkerPosition(function(marker){
 			//
-			// 								$('#record_address').val(result.formatted_address)
+			// 						var pos = marker.position
+			// 						$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 			//
-			// 							})
-
-									map1.setPosition(pos.lat(), pos.lng())
-									map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-								})
-								
+			//
+			// 						// map2.geocode({'location':pos},function(result){
+			// //
+			// // 								$('#record_address').val(result.formatted_address)
+			// //
+			// // 							})
+			//
+			// 						map1.setPosition(pos.lat(), pos.lng())
+			// 						map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+			// 					})
+			//
 
 
 								$('#record_location').keydown(function(e){
@@ -808,7 +810,7 @@
 
 								$('#record_latlng').keydown(function(e){
 
-
+								
 								if(event.keyCode == 13) {
 									var address = $(this).val()
 									latlng = address.split(",")
@@ -822,8 +824,11 @@
 
 										map1.setPosition(pos.lat(), pos.lng())
 										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-										map2.setPosition(pos.lat(), pos.lng())
-										map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+										// map2.setPosition(pos.lat(), pos.lng())
+	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+										
+										$('#record_address').val(result.formatted_address)
+										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
 									})
 

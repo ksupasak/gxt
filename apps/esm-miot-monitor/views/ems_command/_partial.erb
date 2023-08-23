@@ -202,7 +202,7 @@
 				</div>
 				<div class="col-lg-12" style="overflow:scroll">
 
-							<form action="<%=get_path "update_tracking" %>" method="POST">
+							<form action="<%=get_path "update_tracking" %>" id='tracking' method="POST">
 
 
 								<%
@@ -300,7 +300,29 @@
 							</form>
 
 
+<script>
 
+	// this is the id of the form
+	$("#tracking").submit(function(e) {
+
+	    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var actionUrl = form.attr('action');
+    
+	    $.ajax({
+	        type: "POST",
+	        url: actionUrl,
+	        data: form.serialize(), // serializes the form's elements.
+	        success: function(data)
+	        {
+	          refresh_partial()
+	        }
+	    });
+    
+	});
+
+</script>
 
 
 

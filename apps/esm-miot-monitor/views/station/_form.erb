@@ -29,7 +29,7 @@
   <label for="product-name"><%=i[0].humanize%></label>
 
 <select id="record-<%=i[0]%>" name="record[<%=i[0]%>]" class="form-control" value="<%=@record[i[0]]%>">
-<% for j in [['vista120','Vista120'],['b450','B450']] %>
+<% for j in [['vista120','Vista120'],['b450','B450'],['zollxseries','Zoll X-Series']] %>
   <option value="<%=j[0]%>" <%="selected" if @record[i[0]]==j[0] %>><%=j[1]%></option>
 <% end %>
 </select>
