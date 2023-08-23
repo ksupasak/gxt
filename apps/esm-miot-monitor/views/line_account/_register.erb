@@ -220,11 +220,11 @@
 	  
 		  if provider
 	  
-		 	provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
+		 	 provider.update_attributes(:name=>p['name'],:depatment=>p['department'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
 	  
 		  else 
 	  	
-			 provider = Provider.create(:code=>p['code'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
+			 provider = Provider.create(:code=>p['code'],:depatment=>p['department'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
 		 
 		
 		  end
