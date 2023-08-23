@@ -124,22 +124,31 @@
           <div class="row">
 
 
-          <div class="col-4">
-
-            <p class="px-3">
-              <span class="t" t="record_contact_name">Medication</span>
-            </p><input name='record[name]' value="<%=med_name%>" id="med-name"  class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
-
-          </div>
-
           <div class="col-6">
 
             <p class="px-3">
-              <span class="t" t="record_contact_name">Note</span>
-            </p><input name='record[title]' value="<%=title%>" id="med-note" class="form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+              <span class="t" t="record_contact_name">Medication</span>
+            </p><input name='record[name]' value="<%=med_name%>" id="med-name"  class=" vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+		  
+          <div class="col-3">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Volume</span>
+            </p><input name='record[volume]' id="med-volume" value="<%=volume%>" class="vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
           </div>
 
+          <div class="col-3">
+
+            <p class="px-3">
+              <span class="t" t="record_contact_name">Unit</span>
+            </p><input name='record[unit]' value="<%=unit%>"  id="med-unit"  class="  vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+
+          </div>
+
+          
           <% if doses and doses.size>0 %>
           <div class="col-4">
 
@@ -172,23 +181,19 @@
 
           </div>
 
+
+      
+
+
           <% end %>
-
-          <div class="col-6">
-
-            <p class="px-3">
-              <span class="t" t="record_contact_name">Volume</span>
-            </p><input name='record[volume]' id="med-volume" value="<%=volume%>" class="vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
-
-          </div>
-
-          <div class="col-6">
+          <div class="col-12">
 
             <p class="px-3">
-              <span class="t" t="record_contact_name">Unit</span>
-            </p><input name='record[unit]' value="<%=unit%>"  id="med-unit"  class="  vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
+              <span class="t" t="record_contact_name">Note</span>
+            </p><input name='record[title]' value="<%=title%>" id="med-note" class="form-control mb-3 t-ph alert-warning"  type="text" placeholder="Name" aria-label="default input example">
 
           </div>
+         
           </div>
 
         </div>
@@ -203,10 +208,14 @@
 
           function update_formula(){
 
-
+			med =   $('#med-name').val()
+          
+          
+            unit =  $('#med-unit').val()
+			  
             <% if doses and doses.size>0 %>
-            dose = $('#med-dose').val()
-            weight = $('#med-pweight').val()
+			weight = $('#med-pweight').val()
+		    dose = $('#med-dose').val()
 
 
             dose = parseFloat(dose)
@@ -218,11 +227,11 @@
 
             $('#med-volume').val(vol.toFixed(2))
 
-            note = "<%=medication.name%> ("+dose+") : "+vol+" <%=unit%>"
+            note = ""+med+" ("+dose+") : "+vol+" "+unit
 
             <% else %>
             vol  =  $('#med-volume').val()
-            note = "<%=medication.name%> : "+vol+" <%=unit%>"
+            note = ""+med+" : "+vol+" "+unit
 
             <% end %>
 

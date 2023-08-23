@@ -1,0 +1,22 @@
+<% require_relative 'lib'
+  @record = record
+  r = @record.data
+
+  list = %w{ bp pr o2sat temp rr dtx }
+  rs = []
+   for i in list
+%><%
+    if r["#{i}"] 
+	
+	v = r[i]
+	
+	if i=='bp'
+	
+		v = "#{r[sbp]}/#{r[dbp]}"
+			
+	end	
+	
+	rs << "#{i.upcase} : #{v}"
+		
+		
+%><% end %><% end %><%=rs.join(", ")%>
