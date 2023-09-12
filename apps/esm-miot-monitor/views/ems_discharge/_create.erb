@@ -102,8 +102,8 @@ if true
 			if records[-1]
 					r = records[-1]
 					ems_case.screen_vs_stamp = r.stamp if r.stamp > 0
-					ems_case.screen_sbp = r.bp_sys if r.bp_sys > 0
-					ems_case.screen_dbp = r.bp_dia if r.bp_dia > 0
+					ems_case.screen_sbp = r.bp_sys if r.bp_sys and r.bp_sys > 0
+					ems_case.screen_dbp = r.bp_dia if r.bp_dia and r.bp_dia > 0
 					ems_case.screen_hr = r.hr if r.hr and r.hr > 0
 					ems_case.screen_rr = r.rr if r.rr and r.rr > 0
 					ems_case.screen_spo2 = r.spo2 if r.spo2 and r.spo2 > 0
