@@ -261,7 +261,7 @@ end
 			</script>
 
 			<div  id="<%=station_id%>" class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
-
+			
 				<div class="row d-flex justify-content-begin" style="padding:0px" >
 					
 				           <div class="vs-val col-4  col-lg-2 col-sm-2 bp">
@@ -360,36 +360,99 @@ end
 			
 			
 			<% end %>
-			<div class="alert alert-warning">
 			
-			<h4>Station Connect</h4>
-			<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
+			<h4>Station</h4>
+				
+			<div class="alert alert-warning">
+		
 
-			<div class="input-group mb-3">
-			<input type="hidden" name="id" value="<%=ems_case.id%>">
-			<input type="hidden" name="admit_id" value="<%=admit.id%>">
-			<div >
-			<label>Select Status :</label>
+			<form action="<%= get_path 'create'%>" id="connect-form" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
-			<% fieldset(:admit) do |f| %>
-			<%= f.select(:status, [['',''],['STARTED','STARTED'],['FINISHED','FINISHED']], :value=>ems_case.paramedic_status,:class=>'form-select') %>
-			<% end %>
-			</div>
-			&nbsp;
-			<div>
+				
+					
+				<input type="hidden" name="id" value="<%=ems_case.id%>">
+				<input type="hidden" name="admit_id" value="<%=admit.id%>">
+				<input type="hidden" name="admit[station_id]" id="station_id" value="">
+				
+			
+				
+				<% if ems_case.paramedic_status==nil or ems_case.paramedic_status=='FINISHED' %>
+				<input type="hidden" name="admit[status]" value="STARTED">
+				
+			
+				<div>
+					<label>Select Device :</label>
+					
+					<% for station in Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all() %>
+						
+					<div class="card">
+						<div class="card-body">
+							<div class="row d-flex justify-content-between">
+							
+							<div class="col-4"><%=station.name%></div> 
+							
+							<div class="col-4 <%=station.name%>">
+								<span class="hr"><span class="value">-</span></span>
+								
+							</div> 
+							
+							
+							<div class="col-4 d-flex justify-content-end">
+								<a href="#"  class="btn btn-success connect-btn" sid="<%=station.id%>" >Connect</a>
+							</div>
+								
+							</div>
+						</div>
+					
+					</div>
+					
+					
+					
+					<% end %>
+					
+				
+					
+				</div>
+				
+				<% elsif ems_case.paramedic_status=='STARTED'
+				
+				station = Station.find admit.station_id
+				%>
+				<input type="hidden" name="admit[status]" value="FINISHED">
+				
+				
+				<div class="card">
+					<div class="card-body">
+						<div class="row d-flex justify-content-between">
+						
+						<div class="col-4"><%=station.name%></div> 
+						
+						<div class="col-4 d-flex justify-content-end">
+							<a href="#"  class="btn btn-danger connect-btn" sid="<%=station.id%>" >Disconnect</a>
+							
+							</div>
+						</div>
+					</div>
+				
+				</div>
 				
 				
 				
-			<label>Select Device :</label>
+				
+				<% end %>
 
-			<% fieldset(:admit) do |f| %>
-			<%= f.select(:station_id, Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all().collect{|i| [i.id,i.name]}, :value=>admit.station_id,:class=>'form-select') %>
-			<% end %>
 
-		    </div>
-			</div>
 
-			<input type="submit" name="update" class="btn btn-warning" value="Submit">
+				<script>
+					$('.connect-btn').click(function(e){
+						sid = $(this).attr('sid')
+						$('#station_id').val(sid)
+						// e.preventDefault()
+						$('#connect-form').submit()
+						e.preventDefault()
+					})
+				</script>
+			
 
 			</form>
 			
@@ -508,8 +571,8 @@ end
 			if admit
 
 
-      now =  Time.now()
-      min10 = now-600
+           now =  Time.now()
+           min10 = now-600
 
 
 			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
@@ -627,6 +690,8 @@ end
 	     var g = viewport.append("g")
 		 .attr("transform", "translate(0,0)");
 
+		 <% if ems_case.paramedic_status=='STARTED' %>
+		 
 		 gfx = GFX()
 		 .svg(g)
 		 .startTime(Date.now())
@@ -637,9 +702,12 @@ end
 
 		 window.addEventListener("resize", gfx.resize);
 
-    gfx.resize()
+		 gfx.resize()
+		 
+		 <% end %>
+		 
 
-update_message()
+         update_message()
 	// var show = function(el){
 	//      	return function(msg){ el.innerHTML = msg  }
 	//     }
@@ -676,13 +744,16 @@ update_message()
 
    function update_message(){
 
-
+  
+   
+  
    	$.ajax({
    	  url: "<%=get_path "message_data"%>?id=<%=admit.id%>",
    	  context: document.body
    	}).done(function(data) {
    	 	data = JSON.parse(data)
 
+ <% if ems_case.paramedic_status=='STARTED' %>
 
 		while(events.length > 0) {
 		    events.pop();
@@ -696,6 +767,7 @@ update_message()
 
 		gfx.tick2({update:[{name:'events',list:events}]});
 
+<% end %>
 
    	});
 
@@ -813,7 +885,7 @@ update_message()
 
 		for(var id in data['list']){
 			i = data['list'][id]
-			console.log("update : " + i)
+			// console.log("update : " + i)
 			if(true){
 			obj = data['data'][i]
 
@@ -885,8 +957,9 @@ update_message()
 
 		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,co2:co2,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
 
+ <% if ems_case.paramedic_status=='STARTED' %>
 			gfx.tick({update:[{name:'vitalsign',append:vs}]});
-
+<% end %>
 
 
 
@@ -966,7 +1039,9 @@ update_message()
   <% else %>
   $('#menu1-link').click();
   <% end %>
-
+   
+    <% if ems_case.paramedic_status=='STARTED' %>
+   
   $('#menu3-link').click(function(){
   	gfx.active(true);
     width = document.body.clientWidth;
@@ -980,7 +1055,7 @@ update_message()
     // $('.viewport').css('width',width);
 	gfx.render(true);
 
-
+<% end %>
 
 	});
 
