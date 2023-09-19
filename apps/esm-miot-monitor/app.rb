@@ -456,16 +456,18 @@ MSG
                end
              elsif cmd == 'IMG'
 
-                              puts msg_data
+                            
 
                               lines = msg_data.split("\n")
                               tags = lines[0].split(" ")
+                              
+                            
                               ambu_name = tags[-1].split('=')[-1]
 
                                json = JSON.parse(lines[1])
 
 
-
+                               puts "#{tags.to_json} #{json['receiver']}"
 
                               ambu = Ambulance.where(:name=>json['receiver']).first
                               
