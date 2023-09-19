@@ -468,6 +468,26 @@ MSG
 
 
                               ambu = Ambulance.where(:name=>json['receiver']).first
+                              
+                              unless ambu
+                                
+                                station = Station.where(:name=>json['receiver']).first
+                                
+                                if station
+                                  
+                                  ems_case = EMSCase.where(:station_id=>station.id, :status=>'New').first
+                                  
+                                  if ems_case
+                                    
+                                    ambu = ems_case.ambulance
+                                    
+                                  end
+                                    
+                                    
+                                end
+                                
+                              end
+                              
 
                               if ambu
 
