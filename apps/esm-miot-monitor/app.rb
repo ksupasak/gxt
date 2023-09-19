@@ -475,11 +475,13 @@ MSG
                                 
                                 station = Station.where(:name=>json['receiver']).first
                                 
+                             
                                 if station
-                                  
+                                     puts "#{station.name}"
                                   ems_case = EMSCase.where(:station_id=>station.id, :status=>'New').first
                                   
                                   if ems_case
+                                    puts "#{ems_case.case_no}"
                                     
                                     ambu = ems_case.ambulance
                                     
