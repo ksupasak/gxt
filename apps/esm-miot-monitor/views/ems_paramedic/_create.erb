@@ -9,7 +9,7 @@
 
 		if params[:admit][:status]=='STARTED'
 
-		ems_case.update_attributes :paramedic_status=>'STARTED', :paramedic_start_at=>Time.now
+		ems_case.update_attributes :paramedic_status=>'STARTED', :paramedic_start_at=>Time.now,:station_id=>params[:admit][:station_id]
 
 		admit.update_attributes :station_id=>params[:admit][:station_id], :record_status=>'Start'
 
