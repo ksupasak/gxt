@@ -345,7 +345,7 @@ require_relative '../lib/miot'
       
       data = {}
       
-      data['Secretkey'] = "Secretkey"
+      data['Secretkey'] = "10664PPKvitalsignbroker"
       data['Patient_id'] = params[:hn]
       data['Device_id'] = params['serial_number']
       
@@ -362,12 +362,7 @@ require_relative '../lib/miot'
             
           
           data[v[1]] = params[s]
-                #
-          # data['recordBy'] = 'machine'
-          # data['recordDate'] = record_at.strftime("%d/%m/%Y %H:%M:%S")
-          # data['staffId'] = staff_id
-          # data['remark'] = ""
-          #    
+  
      
         end
       end
@@ -392,7 +387,7 @@ require_relative '../lib/miot'
 
       # Tweak headers, removing this will default to application/x-www-form-urlencoded
       request["Content-Type"] = "application/json; charset=utf-8"
-      request["PPK_key"] = 'PPK_key'
+      request["PPK_key"] = ''
       
       
       # request["Authorization"] = 'Bearer '+settings.token
