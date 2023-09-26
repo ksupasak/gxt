@@ -65,3 +65,53 @@
 
 </div>
 </div>
+										<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModal" aria-hidden="true">
+											<div class="modal-dialog">
+												<form id='form-upload' action="../EMS/image_upload?id=<%=record.id%>" method="post" enctype="multipart/form-data">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel">Upload</h5>
+														<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">
+														
+														<input type="hidden" name="mode" value="file">
+							
+														<input type="file" name="capture" >
+													
+														
+													
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+														<input type="submit" value="Submit" class="btn btn-success">
+														
+													</div>
+												</div>
+												</form>	
+												<script>
+													$('#form-upload').submit(function(e){
+														
+														e.preventDefault();
+														
+														  var formData = new FormData(this);
+														
+													    $.ajax({
+													   	           url: 'image_upload?id=<%=params[:id]%>',
+													   	           type: "POST",
+													   	           data: formData,
+													   	           processData: false,
+													   	           contentType: false,
+													   	           success: function (result) {
+													   	               console.log("Upload complete!");
+																	   $("#uploadModal").modal('hide');
+													   	           },
+													   	           error: function (error) {
+													   	               console.log("Something went wrong!");
+													   	           }
+													   	       });
+														 
+													})
+												</script>
+											</div>
+										</div>
