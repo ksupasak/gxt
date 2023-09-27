@@ -794,10 +794,23 @@ class EMSController < GXT
 #
 #     filename = params[:capture]['filename']
 #
+    if params[:mode] == nil
+
 
     filename= "img.jpg"
     index = params[:capture].index(',')+1
     content = Base64.decode64(params[:capture][index..-1])
+
+    elsif params[:mode] == 'file'
+    
+      puts params[:capture].inspect 
+      
+    content = params[:capture]['tempfile'].read
+
+    filename = params[:capture]['filename']
+    
+    end
+
 
     connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
