@@ -86,7 +86,7 @@ module Tempus
       @token = result['Access_token']
       @refresh_token = result['Refresh_token']
       @expired_in = Time.at(Time.now.to_i + result['Expires_in']) if result['Expires_in']
-      set_decription(result['K'], result['V'])
+      set_decription(result['K'], result['V']) if result['K'] and result['V']
       
     end
     
@@ -110,7 +110,7 @@ module Tempus
           http.request(req)
         }
 
-        # puts res.body
+        puts res.body
 
         result = JSON.parse(res.body)['Data']
         
@@ -122,10 +122,81 @@ module Tempus
       
     end
     
+    def refresh_token
+      
+      token = get_token
+      
+      
+      uri = URI("#{@url}/Account/APIRefreshToken")
+      
+      req = Net::HTTP::Post.new(uri, {'Accept'=>'application/json','Content-Type' =>'application/json','Authorization'=>"bearer #{token}"})
+      p = {}
+      p['refreshToken'] = @refresh_token 
+      
+      req.body = p.to_json
+ 
+      res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl=>true) {|http|
+        http.request(req)
+      }
+
+      puts res.body
+
+      result = JSON.parse(res.body)['Data']
+      
+      data = JSON.parse(decode(result))
+        
+      puts data
+        
+      set_token data
+      
+      
+      
+      
+      # access_token = result['Access_token'].split(".")[0]
+      # access_token = result['Access_token']
+      #
+      #
+      # uri = URI("#{host}/Account/APIRefreshToken")
+      #
+      # req = Net::HTTP::Post.new(uri, {'Accept'=>'application/json','Content-Type' =>'application/json','Authorization'=>"bearer #{access_token}"})
+      #
+      # req.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      #
+      #
+      # puts "Bearer #{access_token}"
+      #
+      # puts "Refresh_token #{result['Refresh_token']}"
+      #
+      # p = {}
+      # p['refreshToken'] = result['Refresh_token']
+      #
+      #
+      # req.body = p.to_json
+      #
+      # puts p.to_json
+      #
+      # res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl=>true) {|http|
+      #   http.request(req)
+      # }
+      #
+      #
+      
+      
+    end
+    
+    
+    
     def get_live_incidents
       
       
       data = get_data "/Api/Clinical/LiveIncidents?organizationId=#{@organization_id}", nil
+      
+      unless data
+        
+          
+        data = get_data "/Api/Clinical/LiveIncidents?organizationId=#{@organization_id}", nil
+        
+      end
       
       return data
       

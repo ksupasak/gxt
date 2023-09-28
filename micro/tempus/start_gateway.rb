@@ -83,7 +83,7 @@ def run(opts)
       end
         
         
-      puts "Current #{lives.keys.size }"
+      puts "Current #{lives.keys.size } #{Time.now}"
        
       
     }
