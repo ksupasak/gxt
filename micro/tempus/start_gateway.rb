@@ -63,6 +63,9 @@ def run(opts)
       
       current = {}
       # puts online_lives.size
+    begin 
+      
+      
       for i in online_lives
       
          id = i['IncidentId']
@@ -85,6 +88,15 @@ def run(opts)
         
       puts "Current #{lives.keys.size } #{Time.now}"
        
+    rescue Exception=>e
+      
+      puts e
+      
+      gw.refresh_token
+      
+    end
+    
+    
       
     }
     
