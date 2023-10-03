@@ -126,9 +126,11 @@ when 'message'
 			if admit
 				
 
-                connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
-
-                grid = Mongo::Grid::FSBucket.new(connection.database)
+                #connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
+				
+				database = Mongo::Database.new Mongoid.default_client,  Mongoid::Threaded.database_override
+				
+                grid = Mongo::Grid::FSBucket.new(database)
 				filename = "line_#{msg_id}.jpg"
                 fid = grid.upload_from_stream(filename,content)
 				
