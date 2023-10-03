@@ -58,17 +58,22 @@
 						<div class="command-provider-<%=record.id%> row">
 
 						<% for i in ems_providers
-
+						
 							provider = i.provider
+							
+							if provider
 
 						%>
 
 
 						<div class="chip chip-md col-3">
-							<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person"><%=provider.name%>
+							<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person"><%=provider.name if provider%>
 						</div>
-
-						<% end %>
+						<% else
+						
+						i.destroy
+						
+						  end %>
 
 						</div>
 
