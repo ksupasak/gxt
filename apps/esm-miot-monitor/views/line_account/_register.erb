@@ -75,9 +75,19 @@
 			
 			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/provider?user_id=#{params[:user_id]}")
 			
-			content =  Net::HTTP.get(uri)
+			req = Net::HTTP::Get.new(uri,'Content-Type' => 'application/json') 
+				
+			res = Net::HTTP.start(
+			        uri.host, uri.port, 
+			        :use_ssl => uri.scheme == 'https', 
+			        :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
+			  https.request(req)
+			  
+			end
 			
-			provider = JSON.parse(content)
+			
+			
+			provider = JSON.parse(res.body)
 			
 		
 		end
