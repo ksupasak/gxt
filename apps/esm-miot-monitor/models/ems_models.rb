@@ -935,7 +935,7 @@ class LineAccountController < GXTDocument
 
   def acl
 
-    return {:register=>'*',:image_upload=>'*'}
+    return {:register=>'*',:image_upload=>'*', :register_remote=>'*', :provider=>'*'}
 
   end
 

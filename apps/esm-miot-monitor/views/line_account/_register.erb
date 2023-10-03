@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="en">
 <head>
 
@@ -49,6 +48,184 @@
 
 <body>
 	
+
+	
+	
+<%
+    
+	provider = nil
+	
+	line_account = nil
+	
+	if params[:user_id]
+		
+		line_account = LineAccount.where(:user_id=>params[:user_id]).first
+	
+	end
+	
+	if line_account
+		
+		if line_account.solution=='' 
+		
+			provider = Provider.where(:line_account_id=>line_account.id).first
+			
+			provider = JSON.parse(provider.to_json)
+		
+		else
+			
+			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/provider?user_id=#{params[:user_id]}")
+			
+			content =  Net::HTTP.get(uri)
+			
+			provider = JSON.parse(content)
+			
+		
+		end
+	
+	end
+	
+    
+    if request.post?
+        
+	  if line_account == nil
+	  	
+		line_account = LineAccount.create(:user_id=>params[:user_id], :solution=>params[:solution]) 
+	  	
+	  else
+	  
+		  if params[:provider]	
+		
+      				solution = 'miot'
+					solution = params[:solution] if params[:solution] 
+	  		
+					uri = URI("https://pcm-life.com/#{solution}/LineAccount/register_remote")
+					hostname = uri.hostname
+					puts 'repost to '+ solution
+					
+					req = Net::HTTP::Post.new(uri,'Content-Type' => 'application/json') 
+					p = {}
+					p['provider'] = params[:provider].to_json
+					p['user_id'] = params[:user_id]
+					req.form_data = p
+			
+	
+					res = Net::HTTP.start(
+					        uri.host, uri.port, 
+					        :use_ssl => uri.scheme == 'https', 
+					        :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
+					  https.request(req)
+					end
+	
+				    puts res.inspect
+
+					puts 'repost to '+ solution +" Completed"
+			
+		end
+		
+	end
+	
+	
+
+	  	
+	
+%>
+<center>Processing...</center>
+<meta http-equiv="Refresh" content="0; url='register?user_id=<%=params[:user_id]%>&solution=<%=params[:solution]%>'" />
+
+<%
+else 
+%>
+
+
+	<div class="card border-top border-0 border-4 border-primary">
+							<div class="card-body p-5">
+								<div class="card-title d-flex align-items-center">
+									<div><i class="bx bxs-user me-1 font-22 text-primary"></i>
+									</div>
+									<h5 class="mb-0 text-primary">
+									    <!--<a href="../../clinic/Mobile/index">-->
+									    <a href="javascript:checkSession()">
+									    Registration
+									    </a> 
+									    
+									</h5>
+								</div>
+								<hr>
+								
+								
+								<!-- <form class="row g-3" action="register" method="POST">
+									<div class="col-md-6">
+										<label for="inputFirstName" class="form-label">Solution</label>
+										<input type="text" class="form-control" id="inputFirstName" name="solution" value="<%= provider.name if provider%>">
+									</div>
+
+									<div class="row">
+									<input id="user_id" name="user_id" type="hidden" class="form-control col-12">
+									</div>
+
+									<div class="col-md-6">
+
+									    <input type="submit" value="Search" class="btn btn-success">
+
+									</div>
+								</form> -->
+								
+								<form class="row g-3" action="register" method="POST">
+									
+									<div class="col-md-6">
+										<label for="inputAddress" class="form-label">Solution</label>
+										<input type="text" class="form-control" id="inputIDCard" name="solution"  value="<%=params[:solution]%>">
+									</div>
+									
+									<% if provider %>
+									
+									<div class="col-md-6">
+										<label for="inputFirstName" class="form-label">Provider Name</label>
+										<input type="text" class="form-control" id="inputFirstName" name="provider[name]" value="<%= provider['name'] if provider%>">
+									</div>
+									<div class="col-md-6">
+										<label for="inputLastName" class="form-label">Department </label>
+										<input type="text" class="form-control" id="inputLastName" name="provider[department]" value="<%= provider['department'] if provider%>">
+									</div>
+									<div class="col-md-6">
+										<label for="inputEmail" class="form-label">Email</label>
+										<input type="email" class="form-control" id="inputEmail" name="provider[email]" value="<%= provider['email'] if provider%>">
+									</div>
+									<div class="col-md-6">
+										<label for="inputPassword" class="form-label">Phone</label>
+										<input type="text" class="form-control" id="inputPhone" name="provider[phone]" value="<%= provider['phone'] if provider%>">
+									</div>
+									<div class="col-md-6">
+										<label for="inputAddress" class="form-label">Code</label>
+										<input type="text" class="form-control" id="inputIDCard" name="provider[code]" value="<%= provider['code'] if provider%>">
+									</div>
+									
+									<% end %>
+								
+									
+									<div class="col-md-6">
+									    <% if provider %>
+									    	<input type="submit" value="Update" class="btn btn-success">
+										<% elsif line_account==nil %>
+									    	<input type="submit" value="Select" class="btn btn-warning">
+										<% else %>
+									    	<input type="submit" value="Register" class="btn btn-info">
+										<% end %>
+									</div>
+									
+<div class="row">
+<input id="user_id" name="user_id" type="hidden" class=" form-control col-12"> 
+</div>
+
+
+								</form>
+					        </div>
+        </div>
+
+
+
+<% end %>
+
 	<script>
     
     
@@ -71,11 +248,7 @@
 	    liffId: liff_id, // Use own liffId
 	    withLoginOnExternalBrowser: true, // Enable automatic login process
 	}).then(() => {
-	    // Start to use liff's api
-    
-    
- 
-    
+	
     
 	    obj = liff.getContext()
     
@@ -109,10 +282,6 @@
 	}).then(() => {
 	    // Start to use liff's api
     
-    
- 
-    
-    
 	    obj = liff.getContext()
     
 	    const json = JSON.stringify(obj);
@@ -134,187 +303,12 @@
 	}  
     
 	</script>
-	
-	
-<%
-    
-	privder = nil
-	
-	if params[:user_id]
-		
-		line_account = LineAccount.where(:user_id=>params[:user_id]).first
-		
-		if line_account
-			
-			provider = Provider.where(:line_account_id=>line_account.id).first
-			
-			
-		end
-		
-	
-	end
-	
-    
-    if request.post?
-        
-		puts params.inspect 
-      
-	  if params[:solution]
-	  
-	  		
-			uri = URI("https://pcm-life.com/#{params[:solution]}/LineAccount/register")
-			hostname = uri.hostname
-			puts 'repost to '+ params[:solution]
-			req = Net::HTTP::Post.new(uri,'Content-Type' => 'application/json') 
-			p = {}
-			p['provider'] = params[:provider].to_json
-			p['user_id'] = params[:user_id]
-			req.form_data = p
-			
-		
-			#req.content_type = 'application/json'
-	
-			res = Net::HTTP.start(
-			        uri.host, uri.port, 
-			        :use_ssl => uri.scheme == 'https', 
-			        :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |https|
-			  https.request(req)
-			end
-	
-		    puts res.inspect
 
-			puts 'repost to '+ params[:solution] +" Completed"
-			
-			p = params[:provider]
-			
-			provider.update_attributes(:name=>p['name'], :phone=>p['phone'], :department=>p['department'], :email=>p['email']) if provider
-	    
-	  else
-	  
-	  	
-		  if params[:provider]
-		  
-		  p = JSON.parse(params[:provider])
-		
-		
-		 puts p.inspect
-		
-		  	
-		  provider = Provider.where(:code=>p['code']).first
-	  	
-			
-		  line_account = LineAccount.where(:user_id=>params[:user_id]).first
-		  
-		  unless line_account
-		   
-		  line_account = LineAccount.create(:user_id=>params[:user_id], :name=>p['name']) 
-		  
-		  else
-		 	
-			line_account.update_attributes(:name=>p['name'])
-		 
-		  end
-		  
-		 
-		
-	  
-		  if provider
-	  
-		 	 provider.update_attributes(:name=>p['name'],:depatment=>p['department'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
-	  
-		  else 
-	  	
-			 provider = Provider.create(:code=>p['code'],:depatment=>p['department'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
-		 
-		
-		  end
-
-   	   	line_account.send_message "ลงทะเบียนสำเร็จ : #{provider.get_name} - #{provider.code}" 
-	
-	
-		  end
-		  
-    end
-	
-%>
-<center>Processing...</center>
-
-
-
-<%
-else 
-%>
-
-
-	<div class="card border-top border-0 border-4 border-primary">
-							<div class="card-body p-5">
-								<div class="card-title d-flex align-items-center">
-									<div><i class="bx bxs-user me-1 font-22 text-primary"></i>
-									</div>
-									<h5 class="mb-0 text-primary">
-									    <!--<a href="../../clinic/Mobile/index">-->
-									    <a href="javascript:checkSession()">
-									    Registration
-									    </a> 
-									    
-									</h5>
-								</div>
-								<hr>
-								<form class="row g-3" action="register" method="POST">
-									<div class="col-md-6">
-										<label for="inputFirstName" class="form-label">Provider Name</label>
-										<input type="text" class="form-control" id="inputFirstName" name="provider[name]" value="<%= provider.name if provider%>">
-									</div>
-									<div class="col-md-6">
-										<label for="inputLastName" class="form-label">Department </label>
-										<input type="text" class="form-control" id="inputLastName" name="provider[department]" value="<%= provider.department if provider%>">
-									</div>
-									<div class="col-md-6">
-										<label for="inputEmail" class="form-label">Email</label>
-										<input type="email" class="form-control" id="inputEmail" name="provider[email]" value="<%= provider.email if provider%>">
-									</div>
-									<div class="col-md-6">
-										<label for="inputPassword" class="form-label">Phone</label>
-										<input type="text" class="form-control" id="inputPhone" name="provider[phone]" value="<%= provider.phone if provider%>">
-									</div>
-								
-								
-						
-									<div class="col-md-6">
-										<label for="inputAddress" class="form-label">Code</label>
-										<input type="text" class="form-control" id="inputIDCard" name="provider[code]" value="<%= provider.code if provider%>">
-									</div>
-									
-									
-									<div class="col-md-6">
-										<label for="inputAddress" class="form-label">Solution</label>
-										<input type="text" class="form-control" id="inputIDCard" name="solution"  value="<%=params[:solution]%>">
-									</div>
-									
-									<div class="col-md-6">
-									    <% unless provider %>
-									    <input type="submit" value="Register" class="btn btn-success">
-										<% else %>
-									    <input type="submit" value="Update" class="btn btn-info">
-										<% end %>
-									</div>
-									
-<div class="row">
-<input id="user_id" name="user_id" type="hidden" class="form-control col-12"> 
-</div>
-
-
-								</form>
-					        </div>
-        </div>
-
-
-
-<% end %>
 <script>
-    function checkSession(){
-        document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
-    }
+	
+    // function checkSession(){
+//         document.location.href="../../clinic/Mobile/check_session?id="+$('#user_id').val()
+//     }
 
     
       function ready(obj){
@@ -334,7 +328,7 @@ else
      <%
     
     
-    if request.post?
+    if request.post? and params[:provider]
         
    
     %>
@@ -342,6 +336,7 @@ else
     <%
     
     end
+		
     %>
         
         
