@@ -135,7 +135,7 @@ def run(opts)
          
          web_app.settings.twelvelead = false
          
-          GXTWS.send_image ws, v, "B07E81C6-0F1F-4DC7-A6F8-9544F553138F.jpg"
+          GXTWS.send_image ws, v, "data/B07E81C6-0F1F-4DC7-A6F8-9544F553138F.jpg"
          
        end
           
@@ -207,7 +207,7 @@ class HelloApp < Sinatra::Base
     opts = {}
     
     ws_host = opts[:ws_host] || 'pcm-life.com'
-    ws_solution = opts[:ws_solution] || 'miot'
+    ws_solution = opts[:ws_solution] || 'cu'
 
     ws = GXTWS::connect ws_solution, ws_host
     
