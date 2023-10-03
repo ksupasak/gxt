@@ -127,7 +127,7 @@ when 'message'
 				
 
                 #connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
-				
+				puts "DB : #{Mongoid::Threaded.database_override}"
 				database = Mongo::Database.new Mongoid.default_client,  Mongoid::Threaded.database_override
 				
                 grid = Mongo::Grid::FSBucket.new(database)
