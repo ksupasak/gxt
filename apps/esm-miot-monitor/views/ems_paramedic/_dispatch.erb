@@ -17,6 +17,14 @@
 	
 	cs = nil
 	cs_att = nil
+	
+    global_items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
+
+		{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
+
+	}
+	
+	
 	if   case_status and cs = EMSPatientStatus.find(case_status.patient_status_id)
 
 
@@ -37,12 +45,7 @@
 
 	  # items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
 
-        global_items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
-
-			{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
-
-		}
-
+   
 
 
 		items = []
