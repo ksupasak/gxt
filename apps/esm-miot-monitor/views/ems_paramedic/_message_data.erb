@@ -3,7 +3,8 @@
 admit = Admit.find params[:id]
 	
 station = admit.station
-zone = station.zone
+
+zone = admit.zone
 # admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
 
 

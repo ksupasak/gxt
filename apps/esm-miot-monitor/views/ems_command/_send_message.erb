@@ -60,7 +60,7 @@ time_text = "-"
 time_text = ems_case.created_at.strftime('%H:%M') if ems_case.created_at 
 
 
-link = "#{Setting.get("host_url")}/#{@context.settings.name}/EMS/show?id=#{ems_case.id}"
+link = "#{Setting.get("host_url")}/EMS/show?id=#{ems_case.id}"
 
 map_link = "https://www.google.com/maps/dir//#{ems_case.latlng}"
 

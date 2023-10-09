@@ -3,7 +3,10 @@
 if params[:case_id]
 	
 	ems_case = EMSCase.find params[:case_id]
+	mask = ""
 	
+	if ems_case
+		
 		mask = ems_case.video_status
 	
 		mask = "" if ems_case.video_status==nil
@@ -15,7 +18,7 @@ if params[:case_id]
 		ems_case.update_attributes :video_status=>mask.join("|")
 	
 	    ems_case.update_message @context, "video call"
-	
+	end
 		
 end
 

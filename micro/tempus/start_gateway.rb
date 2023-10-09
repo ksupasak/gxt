@@ -125,7 +125,7 @@ def run(opts)
           events = gw.get_events k , datetime
           
           
-          puts events['EventsInfo'].size.to_s + " #{Time.now.to_f-ts.to_f}"
+          puts events['EventsInfo'].size.to_s + " #{Time.now.to_f}"
   
           twelve_leads_id = nil
   
