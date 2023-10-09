@@ -364,7 +364,18 @@ end
 			<h4>Station</h4>
 				
 			<div class="alert alert-warning">
-		
+			<style>
+			.vs{
+				
+				padding:20px;
+				height:40px;
+				width:90px;
+				float:left;
+				text-align:center;
+				padding:0px;
+				padding-top:10px;
+			}	
+			</style>
 
 			<form action="<%= get_path 'create'%>" id="connect-form" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
 
@@ -387,18 +398,37 @@ end
 						
 					<div class="card">
 						<div class="card-body">
-							<div class="row d-flex justify-content-between">
+							<div class="row d-flex justify-content-between ">
 							
-							<div class="col-4"><%=station.name%></div> 
-							
-							<div class="col-4 <%=station.name%>">
-								<span class="hr"><span class="value">-</span></span>
-								
+							<div class="col-2">
+								<center>
+								<% if station.type and station.type!="" %>
+								<img src="/esm-miot-monitor/ems/monitors/<%=station.type%>.png" height="80"><br/>
+								<% end %>
+								<%=station.name%>
+							</center>
 							</div> 
+							<div class="col-2">
+							
+							
+							
+							</div>
+							
+							<div class="col-4 <%=station.name%> station " style="border:0px solid;font-size:0.25em;">
+								<div class="vs vs-val  pr "><span class="value">-</span></div>
+								<div class="vs vs-val spo2"><span class="value">-</span></div>
+								<div class="vs vs-val bp"><span class="value">-</span></div>
+								<div class="vs vs-val temp"><span class="value">-</span></div>
+								<div class="vs vs-val co2"><span class="value">-</span></div>
+								
+								<div class="vs vs-val rr"><span class="value">-</span></div>
+							</div> 
+							
+						
 							
 							
 							<div class="col-4 d-flex justify-content-end">
-								<a href="#"  class="btn btn-success connect-btn" sid="<%=station.id%>" >Connect</a>
+								<a href="#"  class="btn btn-success connect-btn " sid="<%=station.id%>" style=" vertical-align: middle;" >Connect</a>
 							</div>
 								
 							</div>

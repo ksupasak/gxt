@@ -13,7 +13,9 @@
 
 
 	case_status = EMSCasePatientStatus.where(:case_id=>ems_case.id).last
-  cs = nil
+    
+	
+	cs = nil
 	cs_att = nil
 	if   case_status and cs = EMSPatientStatus.find(case_status.patient_status_id)
 
@@ -35,6 +37,13 @@
 
 	  # items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
 
+        global_items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
+
+			{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
+
+		}
+
+
 
 		items = []
 
@@ -46,27 +55,28 @@
 
 			i.destroy
 
-		  else
+		    else
 
-			its = [item]
+				its = [item]
 
-			if item.type=='group'
-					iss = EMSAssessment.where(:group=>item.code).all
-					its += iss
-			end
+				if item.type=='group'
+						iss = EMSAssessment.where(:group=>item.code).all
+						its += iss
+				end
 
-			for item in its
-			nitem = EMSAssessment.new item.attributes
+				for item in its
+			
+					nitem = EMSAssessment.new item.attributes
 
-			data = {}
-			data = JSON.parse(nitem.data) if nitem.data and nitem.data!=""
-			data = data.merge(JSON.parse(i.data)).to_json  if i.data and i.data!=""
+					data = {}
+					data = JSON.parse(nitem.data) if nitem.data and nitem.data!=""
+					data = data.merge(JSON.parse(i.data)).to_json  if i.data and i.data!=""
 
-			nitem.data = data.to_json
-			nitem.position = i.position
-			items << {:i=>nitem,:data=>data, :item=>i, :position=>nitem.position}
+					nitem.data = data.to_json
+					nitem.position = i.position
+					items << {:i=>nitem,:data=>data, :item=>i, :position=>nitem.position}
 
-			end
+				end
 
 		  end
 
@@ -80,7 +90,7 @@
 
 	    items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
 
-				{:i=>i, :data=>data, :item=>i, :position=>i.position }
+				{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
 
 			}
 
@@ -94,7 +104,8 @@
   groups = %w{track assessment proc med emr status}
 
   sub_groups = {}
-
+  map = {}
+  gmap = {}
 
   for it in items
 
@@ -105,26 +116,37 @@
         groups << i.code
         sub_groups[i.code]=true
     end
-
-  end
-
-  map = {}
-
-  for it in items
-
-		i =it[:i]
-
+	
     map[i.group] = [] unless map[i.group]
     map[i.group] << it
 
+	
 
   end
 
 
+  
+
+  for it in global_items
+
+	i = it[:i]
+
+    if i.type=='group'
+        labels << i.name
+        groups << i.code
+        sub_groups[i.code]=true
+    end
+	
+    gmap[i.group] = [] unless gmap[i.group]
+    gmap[i.group] << it
+
+	
+
+  end
 
 %>
 <br/>
-<%# items.inspect %>
+
 <div class="row g-2">
 
 <% groups.each_with_index do |g,gi| %>
@@ -158,16 +180,24 @@
 				<% end %>
 				<div class="col">
       <div class="row">
-        <% if map[g] and map[g] != nil
-          for it in map[g]
+        <% 
+		list = []
+		list = map[g] if map[g]
+		list = gmap[g] unless map[g]
+		
+			
+	    
+		
+          for it in list
 
-						i = it[:i]
-					%>
+			i = it[:i]
+		%>
         <div class="col-12 mt-3">
-          <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%></a>
+    
+		  <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%></a>
         </div>
         <% end %>
-        <% end %>
+       
 
       </div>
 				<br/>
@@ -207,6 +237,7 @@
 				<%
 					if cs_att
 				%>
+				
 				<img src="<%=cs_att.path %>" style="width:100%">
 
 				<% end %>
@@ -255,12 +286,12 @@
 <script>
 
 
-  var commands = <%=items.collect{|i| i[:i]}.to_json%>
+  var commands = <%=global_items.collect{|i| i[:i]}.to_json%>
 
 
   function dispatch_command(cmd,item){
 
-
+	 
     found = null;
     assessment_id = null;
 
@@ -278,12 +309,12 @@
       console.log(found)
       assessment_id = found['_id']
 
-
+		
 
     }
-
+	
     if(found!=null&&found['type']=='group'){
-
+		
         $('#dispatch_'+found['code']).modal('show')
 
     }else
@@ -333,8 +364,8 @@
     $('.dispatch_item').click(function(e){
 
       cmd = $(this).attr('code')
-			item = $(this).attr('item')
-			// alert("" + cmd + " item "+item)
+	  item = $(this).attr('item')
+		
       dispatch_command(cmd, item)
       $('.modal').modal('hide');
 

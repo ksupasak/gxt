@@ -13,7 +13,7 @@
 </thead>
 <tbody>
 <%	
-	for i in this.model.all
+	for i in this.model.where({}).sort(:zone_id=>1).all
 %>
 <tr>
 	<% for j in keys %>
