@@ -198,6 +198,51 @@ MSG
   sp = rand()*360
 
 
+
+  # timer method
+  EM.add_periodic_timer(10) do
+    
+
+     now = Time.now
+     stamp = now.to_json
+
+
+     data = {}
+
+
+     data[:bp] = bp if bp
+
+     # count -= 1
+
+
+
+     # if count < 0
+
+
+       if true #count%60==0
+         bp = "#{100+rand(22)}/#{70+rand(20)}"
+         bp_stamp = Time.now
+       end
+
+       data[:spot] = true
+       puts "Data sent #{count} times + BP : #{bp}"
+
+     #      # if count < 0
+     # end
+
+     data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+
+msg = <<MSG
+Data.Sensing device_id=#{name}
+#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+MSG
+    # puts msg
+     ws.send(msg)
+
+    
+    
+  end
+
   # timer method
   EM.add_periodic_timer(1) do
 
@@ -209,8 +254,7 @@ MSG
      data = {}
 
 
-     data[:bp] = bp if bp
-     data[:pr] = 60 + rand(60)
+     data[:pr] = 80 + (20 * Math.sin(Time.now.to_i*5*Math::PI/180)).to_i
      data[:hr] = data[:pr]
      data[:rr] = 18 + rand(4)
      data[:temp] = 36 + rand(4)
@@ -236,32 +280,6 @@ MSG
 
 
 
-
-     count -= 1
-
-
-
-     if count < 0
-
-
-       if true #count%60==0
-         bp = "#{100+rand(22)}/#{70+rand(20)}"
-         bp_stamp = Time.now
-       else
-         puts 'spot without bp'
-         bp = nil
-       end
-
-       count = 60+rand(30)
-
-       data[:spot] = true
-       puts "Data sent #{count} times + BP : #{bp}"
-
-     end
-
-
-
-     data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
 msg = <<MSG
 Data.Sensing device_id=#{name}
 #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
@@ -273,6 +291,80 @@ MSG
 
   end
 
+
+ #  EM.add_periodic_timer(1) do
+#
+#
+#      now = Time.now
+#      stamp = now.to_json
+#
+#
+#      data = {}
+#
+#
+#      data[:bp] = bp if bp
+#      data[:pr] = 60 + rand(60)
+#      data[:hr] = data[:pr]
+#      data[:rr] = 18 + rand(4)
+#      data[:temp] = 36 + rand(4)
+#
+#      data[:co2] = 30 + rand(20)
+#
+#      data[:spo2] = 90+rand(10)
+#
+#      if gps
+#
+#      data[:lat] = 13.6908282+0.005*Math.cos((Time.now.to_i*2+sp)*Math::PI/180)+sx
+#      data[:lng] = 100.6987491+0.005*Math.sin((Time.now.to_i*2+sp)*Math::PI/180)+sy
+#      # puts Time.now.to_i%360+90
+#      data[:dvr_sp] = 3
+#      data[:dvr_hx] = Time.now.to_i*2%360
+#      data[:dvr_ol] = 1
+#
+#      end
+#
+#      data[:msg] = "ALERT:#{Time.now.strftime("%H:%M:%S")}"
+#
+#      # puts data.inspect
+#
+#
+#
+#
+#      count -= 1
+#
+#
+#
+#      if count < 0
+#
+#
+#        if true #count%60==0
+#          bp = "#{100+rand(22)}/#{70+rand(20)}"
+#          bp_stamp = Time.now
+#        else
+#          puts 'spot without bp'
+#          bp = nil
+#        end
+#
+#        count = 60+rand(30)
+#
+#        data[:spot] = true
+#        puts "Data sent #{count} times + BP : #{bp}"
+#
+#      end
+#
+#
+#
+#      data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
+# msg = <<MSG
+# Data.Sensing device_id=#{name}
+# #{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+# MSG
+#     # puts msg
+#      ws.send(msg)
+#
+#
+#
+#   end
 
 
 }

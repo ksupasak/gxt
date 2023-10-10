@@ -103,6 +103,8 @@ def self.send ws, v, data
                
                end
                
+               # %w{pr:HR hr:HR spo2:SpO2 rr:Resp temp:T1 temp2:T2 pi:PI pvi:PVI co2:ETCO2 bp_sys:Sys bp_dia:Dia bp_mean:Mean bp_sys:SysNIBP bp_dia:DiaNIBP bp_mean:MeanNIBP  }
+               
                for x in   %w{pr:HR hr:HR spo2:SpO2 rr:Resp temp:T1 temp2:T2 pi:PI pvi:PVI co2:ETCO2 bp_sys:Sys bp_dia:Dia bp_mean:Mean bp_sys:SysNIBP bp_dia:DiaNIBP bp_mean:MeanNIBP  }
            
                  t = x.split(":")
@@ -110,7 +112,7 @@ def self.send ws, v, data
                  sk = t[0].to_sym
                  mk = t[1]
                 
-                 if y = mdata[mk]
+                 if y = mdata[mk] and !(y['Value'].index('Out'))
                   
                    sdata[sk] = y['Value']
                   
@@ -121,7 +123,7 @@ def self.send ws, v, data
                if sdata[:bp_sys]
               
                    sdata[:bp] = "#{sdata[:bp_sys]}/#{sdata[:bp_dia]}" 
-                   data[:bp_stamp] = stamp.strftime("%H%M%S")
+                   data[:bp_stamp] = Time.now.strftime("%H%M%S")
               
                 end
             
@@ -135,7 +137,7 @@ MSG
                    # puts "send #{Time.now} #{msg}"
                 ws.send(msg)
   
-               
+                puts msg
                
      
              end

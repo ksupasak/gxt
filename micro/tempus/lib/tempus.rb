@@ -211,6 +211,8 @@ module Tempus
       device_id = nil 
       device_id = params[:device_id]
       
+      puts "Device Id : #{device_id}"
+      
       fromDate=params[:from_date] if params[:from_date]
       toDate=params[:to_date] if params[:to_date]
       
@@ -246,6 +248,7 @@ module Tempus
       unless datetime
         return get_data "/Api/Clinical/Incidents/#{incident_id}/TrendedVitals", nil
       else
+        puts 'LiveTrendedVitals '+ datetime.to_s
         return get_data "/Api/Clinical/Incidents/#{incident_id}/LiveTrendedVitals?toDate=#{datetime}", nil
       end
         # return data
