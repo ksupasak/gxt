@@ -19,7 +19,7 @@
 
 		ems_case.update_attributes :paramedic_status=>'FINISHED', :paramedic_stop_at=>Time.now
 		
-		admit.update_attributes :record_status=>'Stop'
+		admit.update_attributes  :station_id=>nil, :record_status=>'Stop'
 		
 
 		# record = admit.nurse_records.create :name=>"EMD", :description=>"Stop Paramedic", :start_time=>Time.now, :stop_time=>Time.now

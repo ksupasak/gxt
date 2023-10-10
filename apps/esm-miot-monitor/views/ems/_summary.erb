@@ -857,14 +857,17 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 %>
 
 
-    <table class='table table-striped ' style="font-size:0.8em">
+    <!-- <table class='table table-striped ' style="font-size:0.8em">
     	<caption></caption>
     	<thead>
     		<tr>
     			<th scope="col">Time</th><th scope="col">Type</th><th scope="col">Description</th>
     		</tr>
     	</thead>
-    	<tbody>
+    	<tbody> -->
+		
+		
+		
     		<%
     console = []
 
@@ -894,20 +897,26 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           i = l[2]
         %>
 
-    		<tr>
-    			<td class="time">
-            <%=l[0].strftime("%H:%M:%S")%>
-          </td>
+		<div class="card col-3" style="float:left">
+    	  <div class="card-header">
+		  <span class="time">
+            <%=l[0].strftime("%H:%M:%S")%> :  <%=type%>
+          </span>
+	  </div>
+    	  <div class="body">
+			
+    	  
 
-          <td><%=type%></td>
+         
 
-          <td>
+          
             <% if type == :log %>
             <%= i.name %>
 
 						เลขไมล์ : <%= i.mile_meter %>
 
             <% elsif type == :msg %>
+			
             <% if i.type == 'image'
 
 
@@ -917,17 +926,16 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
               url = "../Message/content?id=#{i.id}"
             %>
 
-          <center><a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
+          <center>
 
           <%
-            while  console.first != nil and console.first[1]==:msg and console.first[2].type=='image'
+            
               item = console.shift
               i = item[2]
               url = "../Message/content?id=#{i.id}"
           %>
-          <a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="200"></a>
-          <% end %>
-          </center>
+          <a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="250"></a>
+          <% end %>          </center>
 
             <% elsif i.type == 'voice'
             url = "../Message/content?id=#{i.id}"
@@ -942,12 +950,13 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           <% else %>
             <p class="chat-left-msg"><%=i.content%></p>
             <% end %>
-  <% end %>
-          </td>
-    		</tr>
+			
+            </div>
+      		</div>
+
+       
     		<% end %>
-    	</tbody>
-    </table>
+
 
 
 

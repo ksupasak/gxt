@@ -1253,11 +1253,6 @@ MSG
 
        when 'Data.Sensing', 'VTS.Send'
 
-         # puts 'sense'
-     #
-     #     puts body
-     #
-     #     puts puts
 
              pdata =  ActiveSupport::JSON.decode(body)
 
@@ -1290,12 +1285,14 @@ MSG
 
              settings.stations[name] = {} unless settings.stations[name]
 
-
-             # register or retrieve station
+             
+             ##################################
+             ##  find or create new station
 
              station = Station.where(:name=>station_name).first
 
              unless station
+               
                zone = nil
                if station_name.index("_")
                  zone = Zone.where(:name=>station_name.split("_")[0]).first
@@ -1309,8 +1306,7 @@ MSG
 
 
              settings.stations[name][station.name] = station
-
-
+             
              data['station_id'] = station.id
 
              # insert title data
@@ -1321,7 +1317,7 @@ MSG
              end
 
              # if data['pr']
-              data['ref'] = ref
+             data['ref'] = ref
              # end
 
              data['score'] = 0
@@ -1361,11 +1357,23 @@ MSG
             else
 
                 admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
-
+                
 
             end
-
-
+            
+           #  unless admit
+           #
+           #   puts "XXX not found admit : #{station.name} #{body.size} #{}"
+           #
+           # else
+           #
+           #   puts "XXX found admit : #{station.name} #{body.size} #{admit.id}"
+           #
+           #
+           # end
+           #
+          
+           
              if admit
                data['score'] = admit.current_score
              end
@@ -1383,19 +1391,29 @@ MSG
 
               # mark history
 
-              if admit!=nil and (data['pr'] or data['spo2'] or data['hr'])
+              if admit!=nil and (data['pr'] or data['spo2'] or data['hr'] or data['bp'])
 
                 odata['admit_id'] = admit.id
 
                 now = Time.now
+                
 
                 unless data['bp']
                   # puts data.inspect
                   data['bp'] = odata['bp']
                   data['bp_stamp'] = odata['bp_stamp']
                 end
-
                 data['bp_sys'], data['bp_dia'] = data['bp'].split("/") if data['bp'] and data['bp_sys'] == nil
+                
+                
+                
+                data['pr'] = odata['pr'] unless data['pr']
+                data['hr'] = odata['hr'] unless data['hr']
+                data['rr'] = odata['rr'] unless data['rr']
+                data['spo2'] = odata['spo2'] unless data['spo2']
+                data['temp'] = odata['temp'] unless data['temp']
+                data['co2'] = odata['co2'] unless data['co2']
+                
 
                 # core":0,"bp":"113/87","pr":114,"hr":114,"rr":18,"temp":37,"spo2":90,"bp_stamp":"133737","ref":"1234"}}}
                 record = {:stamp=>now,:bp=>data['bp'],:bp_stamp=>data['bp_stamp'], :pr=>data['pr'],:hr=>data['hr'], :rr=>data['rr'],:spo2=>data['spo2'],:temp=>data['temp'],:co2=>data['co2']}
@@ -1406,11 +1424,13 @@ MSG
 
                 if data['spot']
                   # puts 'spot'
-                  puts data
+                 
 
                   v = data
-                  DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
+                  d = DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
 
+                   puts d.inspect
+                   
                 end
 
 
@@ -1755,18 +1775,6 @@ MSG
                                               ambu_map[name][z.id] = list
 
 
-
-                                              # result[:ambu_data] = {}
-                                             #
-                                             #  for i in list
-                                             #        am = i
-                                             #        admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
-                                             #        am[:admit_id] = admit.id if admit
-                                             #
-                                             #        result[:ambu_data][i.id] = am
-                                             #
-                                             #  end
-
                                             end
                                     end
 
@@ -1830,11 +1838,7 @@ MSG
 
                             ambu_status = app.settings.ambu_status[name]
 
-                            #puts ambu_status.inspect
-
-                            #puts list.inspect
-                            #puts
-                            #puts admits.inspect
+                        
 
                             for i in list
                                   am = i
@@ -1950,7 +1954,7 @@ end
 
                     settings.live[name][s.name]-=1 if  settings.live[name][s.name] and settings.live[name][s.name]>0
 
-                    if  settings.live[name][s.name]==0
+                    if  settings.live[name] and  settings.live[name][s.name]<=0
 
                       # settings.senses[name].delete s.name
                       settings.live[name].delete s.name
@@ -2085,7 +2089,7 @@ end
 
                                      px[:data] = v.to_json
                                      
-                                     if admit.record_status!='Stop'
+                                     if admit.record_status!='Stop' #and v['vs']
                                      
                                      senses_queue[name] << Sense.new(px)
 
