@@ -1954,7 +1954,7 @@ end
 
                     settings.live[name][s.name]-=1 if  settings.live[name][s.name] and settings.live[name][s.name]>0
 
-                    if  settings.live[name] and  settings.live[name][s.name]<=0
+                    if  settings.live[name][s.name] and  settings.live[name][s.name]<=0
 
                       # settings.senses[name].delete s.name
                       settings.live[name].delete s.name

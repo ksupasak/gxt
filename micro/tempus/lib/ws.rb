@@ -75,7 +75,7 @@ end
 
 
 
-def self.send ws, v, data
+def self.send ws, v, data, mark_dup
   
        
   puts data.to_json
@@ -95,6 +95,15 @@ def self.send ws, v, data
              for line in data['VitalDetailsInfo']
                
                now =  line['DataCaptureTimeUtc']
+               
+               rid = "#{name}_#{now.to_s}"
+               
+               mark_dup[name] = {} unless mark_dup[name]
+               
+               unless mark_dup[name][rid]
+                 
+               mark_dup[name][rid] = now   
+               
                stamp = now#.to_json
                
                for l in line['Vitals']
@@ -138,6 +147,9 @@ MSG
                 ws.send(msg)
   
                 puts msg
+               
+               
+              end
                
      
              end
