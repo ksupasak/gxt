@@ -118,6 +118,7 @@ def run(opts)
       
     end
     
+    mark_dup = {}
     
     EventMachine.add_periodic_timer(3) {
     
@@ -160,7 +161,7 @@ def run(opts)
           
           # puts data.to_json
           
-          GXTWS.send ws, v, data
+          GXTWS.send ws, v, data, mark_dup
           
           
             

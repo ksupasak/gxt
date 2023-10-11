@@ -101,6 +101,7 @@ def run(opts)
     }
     
     
+    mark_dup = {}
     
     
     EventMachine.add_periodic_timer(10) {
@@ -119,7 +120,7 @@ def run(opts)
           
           puts v.inspect 
           
-          GXTWS.send ws, v, vitals
+          GXTWS.send ws, v, vitals, mark_dup
           
           
           
