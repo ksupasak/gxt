@@ -207,6 +207,8 @@ class HelloApp < Sinatra::Base
     
     opts = {}
     
+    # opts[:ws_host] = 'localhost:1792'
+    
     ws_host = opts[:ws_host] || 'pcm-life.com'
     ws_solution = opts[:ws_solution] || 'miot'
 

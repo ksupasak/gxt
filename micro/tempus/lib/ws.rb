@@ -128,6 +128,10 @@ def self.send ws, v, data, mark_dup
                  end
                 
                end  
+               
+               puts
+               puts sdata.inspect 
+               puts
 
                if sdata[:bp_sys]
               

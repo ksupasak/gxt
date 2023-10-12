@@ -964,9 +964,16 @@ end
 			setPosition(lat,lng)
 
 			}
-				<% end %>
+			<% end %>
+			
+			
+<% if ems_case.paramedic_status=='STARTED' and ems_case.admit.station_id  %>
+			
+			if('<%=ems_case.admit.station_id%>'==obj['station_id']){
+				
+			
+			
 			bp = obj['bp'].split('/')
-
 			hr = parseInt(obj['hr'])
 			pr = parseInt(obj['pr'])
 			spo2 = parseInt(obj['spo2'])
@@ -987,8 +994,9 @@ end
 
 		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,co2:co2,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
 
- <% if ems_case.paramedic_status=='STARTED' %>
 			gfx.tick({update:[{name:'vitalsign',append:vs}]});
+			
+			}
 <% end %>
 
 
