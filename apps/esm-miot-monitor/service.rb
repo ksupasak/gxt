@@ -1361,17 +1361,17 @@ MSG
 
             end
             
-           #  unless admit
-           #
-           #   puts "XXX not found admit : #{station.name} #{body.size} #{}"
-           #
-           # else
-           #
-           #   puts "XXX found admit : #{station.name} #{body.size} #{admit.id}"
-           #
-           #
-           # end
-           #
+            # unless admit
+         #
+         #     puts "XXX not found admit : #{station.name} #{body.size} #{}"
+         #
+         #   else
+         #
+         #     puts "XXX found admit : #{station.name} #{body.size} #{admit.id}"
+         #
+         #
+         #   end
+
           
            
              if admit
@@ -1706,6 +1706,7 @@ MSG
                     if admit = Admit.where(:status=>'Admitted', :zone_id=>{'$ne'=>nil}).first
 
                       zone = admit.zone
+                      
                     if zone
                       active_zone[app.settings.name][zone.id] = zone
                       app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
@@ -1745,7 +1746,16 @@ MSG
                                     admit_map[name] = {} unless admit_map[name]
 
                                     admit_map[name][z.id] = admits
-
+                                    
+                                    stations = Station.where(:zone_id=>z.id).all
+                                    
+                                    for a in admits
+                                      for s in stations
+                                        si =  app.settings.senses[app.settings.name][s.name]
+                                        si.delete 'admit_id' if si and si['admit_id'] == a.id and a.station_id!= si['station_id']
+                                      end
+                                      
+                                    end
 
 
                                     if z.mode == 'aoc' || z.mode == 'ems'
@@ -1980,7 +1990,9 @@ end
 
                     v = app.settings.senses[name][s.name]
 
-                    # puts v.inspect
+                    puts "YYY #{v['admit_id']}"
+                    
+                    
 
                                                #
                             #       # store to sense
