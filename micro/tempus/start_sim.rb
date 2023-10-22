@@ -210,7 +210,7 @@ class HelloApp < Sinatra::Base
     # opts[:ws_host] = 'localhost:1792'
     
     ws_host = opts[:ws_host] || 'pcm-life.com'
-    ws_solution = opts[:ws_solution] || 'miot'
+    ws_solution = opts[:ws_solution] || 'cu'
 
     ws = GXTWS::connect ws_solution, ws_host
     
