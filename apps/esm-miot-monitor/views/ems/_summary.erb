@@ -847,7 +847,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 
   <div class="col-12">
     <h5>
-    Communiction Summary
+    Communication Summary
     </h5>
 
 <%
@@ -869,12 +869,12 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 		
 		
     		<%
-    console = []
+        console = []
 
         records = admit.logs.where(:status=>'COMPLETED').all
         for m in records
 
-          console << [m.stamp, :log, m]
+          # console << [m.stamp, :log, m]
 
         end
 
@@ -891,24 +891,21 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 
 
         %>
-
+	<div class="row">
         <% for l in console.sort{|a,b| a[0]<=>b[0]}
           type = l[1]
           i = l[2]
         %>
-
-		<div class="card col-3" style="float:left">
+		<div class="col">
+		<div class="card col" >
     	  <div class="card-header">
 		  <span class="time">
             <%=l[0].strftime("%H:%M:%S")%> :  <%=type%>
           </span>
-	  </div>
-    	  <div class="body">
+	  	</div>
+    	  <div class="card-body">
 			
     	  
-
-         
-
           
             <% if type == :log %>
             <%= i.name %>
@@ -930,8 +927,8 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 
           <%
             
-              item = console.shift
-              i = item[2]
+              # item = console.shift
+              # i = item[2]
               url = "../Message/content?id=#{i.id}"
           %>
           <a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="250"></a>
@@ -950,14 +947,14 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           <% else %>
             <p class="chat-left-msg"><%=i.content%></p>
             <% end %>
-			
+		
             </div>
       		</div>
 
-       
+      </div>
     		<% end %>
 
-
+</div>
 
 
   </div>
