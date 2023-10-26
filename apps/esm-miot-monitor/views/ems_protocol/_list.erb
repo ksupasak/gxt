@@ -37,7 +37,7 @@ keys = %w{name group sort_order}.collect{|i| [i,i]}#this.model.keys.collect{|i| 
 </thead>
 <tbody>
 <%
-	for i in this.model.where({}).sort(:sort_order=>1).all
+	for i in this.model.where({}).sort(:sort_order=>1, :name=>1).all
 %>
 <tr>
 	<% for j in keys %>
