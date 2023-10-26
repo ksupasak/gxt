@@ -2,7 +2,7 @@
   @record = record
   r = @record.data
 
-  list = %w{ bp pr o2sat temp rr dtx }
+  list = %w{ sbp pr o2sat temp rr dtx }
   rs = []
    for i in list
 %><%
@@ -10,10 +10,10 @@
 	
 	v = r[i]
 	
-	if i=='bp'
+	if i=='sbp'
 	
-		v = "#{r[sbp]}/#{r[dbp]}"
-			
+		v = "#{r['sbp']}/#{r['dbp']}"
+		i = 'bp'	
 	end	
 	
 	rs << "#{i.upcase} : #{v}"

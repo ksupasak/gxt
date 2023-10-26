@@ -523,7 +523,7 @@ if record
         return function(msg){ el.innerHTML = msg  }
       }(document.getElementById('msgs'));
 	
-	  var ws       = new WebSocket('wss://' + window.location.host + "<%="/#{params[:gxt]}/Home/index"%>");
+	  var ws       = new WebSocket('wss://' + window.location.host + "<%="/ws/#{params[:gxt]}/Home/index"%>");
 	
 	  var plot_pos = {};
 	

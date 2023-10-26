@@ -55,9 +55,13 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 
   <br/>
   <input type="submit" name="Discharge" value="Update" class="btn btn-info">
-  
-  <a href="../EMS/export?id=<%=record.id%>" class="btn btn-warning">Export</a>
-
+  <%
+  	export_status = "btn-warning"
+	export_status = 'btn-light' if ems_case.export=='AwaitExport'
+	
+  %>
+  <a href="../EMS/export?id=<%=record.id%>" class="export_btn btn <%=export_status%>">Export HIS</a>
+<%=ems_case.export%>
 </div>
 
 </div>
@@ -91,12 +95,38 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 
       });
 
+
     </script>
 
   </div>
 </div>
 </div>
 
+<script>
+	
+	$('.export_btn').click(function(e){
+
+		e.preventDefault();
+	
+        $.ajax({
+          url: "<%="export"%>?id=<%=record.id%>",
+          context: document.body
+        }).done(function(data) {
+			
+          $( '.ems_case' ).html(data);
+
+
+        });
+	
+		
+	});
+		
+		
+		
+	
+	
+	
+</script>
 
 
 
