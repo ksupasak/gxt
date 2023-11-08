@@ -6,6 +6,10 @@
 if request.post? and params[:log]
 
 	admit_log = nil
+	
+	
+	
+	
 
 	params[:log].keys.each do |k|
 
@@ -19,12 +23,23 @@ if request.post? and params[:log]
 	end
 
 	url = nil
-
+	
+	
+	
 	if admit_log
 
 		ems_command = EMSCommand.find admit_log.ems_command_id
-
+		
+		ems_command.update_attributes params[:command]
+		
 		ems_case = EMSCase.find ems_command.case_id
+		
+		if params[:gps_distance] and ems_case.gps_distance == nil
+		
+			ems_case.update_attributes :gps_distance=>params[:gps_distance], :gps_duration=>params[:gps_duration]
+		
+		end
+		
 
 	end
 

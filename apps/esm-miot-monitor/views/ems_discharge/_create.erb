@@ -6,12 +6,17 @@
 
   if request.post?
 
-
+	  if params['Discharge']
+		  
 			admit.discharge
 
-      record.update_attributes params[:record]
-
-			record.update_attributes :status=>'Completed', :completed_at=>Time.now
+			params[:record].merge!(:status=>'Completed', :completed_at=>Time.now)
+			
+			
+	 end
+		
+		
+			record.update_attributes params[:record]
 
 
 	# update_attributies
@@ -27,6 +32,7 @@ MSG
 
 %>
 Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
+	<%#params.inspect %>
 <% else %>
 <%
 
@@ -157,7 +163,11 @@ end
 <% end %>
 
   <br/>
+  
   <input type="submit" name="Discharge" value="Discharge" class="btn btn-danger">
+  
+  <input type="submit" name="Update" value="Update" class="btn btn-info">
+  
 
 
 

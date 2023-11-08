@@ -16,6 +16,8 @@ require 'active_support/all'
 
 require 'rack/ssl-enforcer'
 
+require "hiredis-client"
+
 # Mongo config
 
 require 'mongo'
@@ -31,8 +33,9 @@ end
 set :allow_origin, :any
 # use Rack::SslEnforcer
 
-# set :session_secret, 'asdfa2342923422f1adc05c837fa234230e3594b93824b00e930ab0fb94b'
+# set :session_secret, SecureRandom.hex(64)
 
+set :session_secret, "4fdd9f5514e196ed36cf07e0f8e168929320516c881946687382a1fc34b76cca"
 #Enable sinatra sessions
 # use Rack::Session::Cookie, :key => '_rack_session',
 #                            :path => '/',
@@ -132,7 +135,7 @@ set :layout, 'layout'
 
 configure do
   enable :sessions
-  set :session_secret, "secret"
+  set :session_secret, "4fdd9f5514e196ed36cf07e0f8e168929320516c881946687382a1fc34b76cca"
 end
 
 

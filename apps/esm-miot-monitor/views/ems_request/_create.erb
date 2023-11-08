@@ -117,7 +117,7 @@ end
 	
 	default_latlng = Setting.get("aoc_center")
 
-	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng
+	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>Time.now, :request_at=>Time.now
 	
 	
 	@ems_case.location = params[:location] if params[:location]

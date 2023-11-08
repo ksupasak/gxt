@@ -286,11 +286,26 @@
 						</div>
 					</div>
 
-<div class="col-4">
-<label class="form-label" for="patient_type">ประเภทผู้ป่วย</label>
+<div class="col-5">
+<p class="px-3">ประเภทผู้ป่วย</p>
+<div class="input-group pb-3">
 <%= f.select(:patient_type, [['non-trauma','Non-Trauma'],['trauma','Trauma']], :value=>record.patient_type, :class=>' form-select') %>
 </div>
-						</div>
+</div>
+
+
+<div class="row">
+<div class="col-6">
+<p class="px-3">Date</p>
+<input name='record[date]' id="date" value="<%=record.date.strftime('%d/%m/%Y') if record.date %>" class="form-control mb-3" type="text" placeholder="วัน" aria-label="default input example">
+</div>
+<div class="col-6">
+<p class="px-3">Time</p>
+<input name='record[request_at]' id="request_at" value="<%=record.request_at.strftime('%H:%M') if record.request_at%>" class="form-control mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+</div>
+</div>
+
+</div>
 						
 
 						<div class="col-12 col-sm-6">
@@ -399,13 +414,43 @@
 
 
 									<p class="px-3">
-										Patient Identification <span style="float:right">
-											<input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
+										<span style="float:right">
+									<input class="btn btn-info btn-sm patient-search" type="submit" value="Search"></span>
 									</p>
-									<input name='record[patient_id]' id="record_patient_id" value="<%=record.patient_cid%>" type="hidden">
-									<input name='record[patient_cid]' id="record_patient_cid"  value="<%=record.patient_cid%>" class="form-control mb-3 " type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
-									<input name='record[patient_hn]' id="record_hn"  value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example">
-									<input name='record[patient_phone]' id="record_patient_phone" value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
+								
+								<input name='record[patient_id]' id="record_patient_id"  class="form-control" value="<%=record.patient_cid%>" type="hidden">
+									<div class="row">
+									<div class='col-12 col-lg-6'>
+									<p class="px-3">บัตรประชาชน</p>
+									<div class="">
+									<input name='record[patient_cid]' id="record_patient_cid"  value="<%=record.patient_cid%>" class="form-control mb-3" type="text" placeholder="หมายเลขบัตรประชาชน" aria-label="default input example">
+									</div>
+									</div>
+									
+									<div class='col-12 col-lg-6'>
+									<p class="px-3">สัญชาติ</p>
+									<div class="">
+									<input name='record[patient_nationality]' id="record_patient_nationality"  value="<%=record.patient_nationality%>" class="form-control mb-3  " type="text" placeholder="nationality" aria-label="default input example">
+									</div>
+									</div>
+									</div>
+									
+									<div class="row">
+									<div class='ccol-12 col-lg-6'>
+									<p class="px-3">Patient HN</p>
+									<div class="">
+										<input name='record[patient_hn]' id="record_hn"  value="<%=record.patient_hn%>" class="form-control mb-3 " type="text" placeholder="หมายเลขผู้ป่วย HN" aria-label="default input example">
+									</div>
+									</div>
+									
+									<div class='col-12 col-lg-6'>
+									<p class="px-3">Patient Number</p>
+									<div class="">
+										<input name='record[patient_phone]' id="record_patient_phone" value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
+									</div>
+									</div>
+								</div>
+									
 
 									<script>
 											$('.patient-search').click(function(e){
