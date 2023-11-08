@@ -1,0 +1,167 @@
+<% 
+
+ems_case = EMSCase.find params[:id]
+
+require 'bundler'
+
+require 'google_drive'	
+	
+	
+google_drive_secret_path = Setting.get("google_drive_secret_path")
+google_drive_sheet_name = Setting.get("google_drive_sheet_name")
+	
+	
+session = GoogleDrive::Session.from_service_account_key(google_drive_secret_path) 
+
+sheet = session.spreadsheet_by_title(google_drive_sheet_name)
+
+worksheet = sheet.worksheets.first
+
+headers = []
+
+worksheet.rows.first(1).each do |r|
+	
+	for i in r
+		headers << i
+	end
+	
+end
+
+if request.post?
+	
+	# ems_case.update_attributes :export=>'AwaitExport', :summary=>params[:record][:summary]
+	#
+	# if params[:select]
+	#
+	# 	for i in params[:images]
+	#
+	# 		msg = Message.find i
+	#
+	# 		if msg and params[:select].index i
+	#
+	# 			msg.update_attributes :export=>'true'
+	#
+	# 		else
+	#
+	# 			msg.update_attributes :export=>nil
+	# 		end
+	#
+	# 	end
+	#
+	# end
+	
+	map = {}
+		
+		
+	init_code = ems_case.init_code	
+	
+	map['cbd_code']	= init_code.group.code if init_code
+	
+	names = ems_case.patient_name.split(" ")
+	map['patient_first_name'] = names[0]
+	map['patient_last_name'] = names[1] if names.size>1
+	
+	command = EMSCommand.where(:case_id=>ems_case).first
+	
+	if command
+		
+		providers = []
+		cps = EMSCommandProvider.where(:command_id=>command.id).all
+		
+	
+		for cp in cps
+			provider = Provider.find cp.provider_id
+			
+			providers<< provider.code if provider
+			
+		end
+	
+		map['paramedic'] = providers.join(",")	
+		
+		map['ems_emd'] = command.emd_code if command.emd_code 
+		map['emt_driver'] = command.emt_driver_code if command.emt_driver_code 
+		map['emt_partner'] = command.emt_partner_code if command.emt_partner_code 
+		
+		
+			
+		logs = AdmitLog.where(:ems_command_id=>command.id).all
+		mlog = {}
+		for i in logs 
+			mlog[i.sort_order] = i
+		end
+		
+		if mlog[2]
+			map['activation_at'] = mlog[2].stamp.strftime("%H:%M") if mlog[2].stamp
+			map['start_mile'] = mlog[2].mile_meter if mlog[2].mile_meter
+		end
+		
+		if mlog[3]
+			map['response_at'] = mlog[3].stamp.strftime("%H:%M") if mlog[3].stamp
+			map['response_mile'] = mlog[3].mile_meter if mlog[3].mile_meter
+		end
+		
+		if mlog[4]
+			map['transfer_start_at'] = mlog[4].stamp.strftime("%H:%M") if mlog[4].stamp
+	
+		end
+		
+		if mlog[5]
+			map['transfer_at'] = mlog[5].stamp.strftime("%H:%M") if mlog[5].stamp
+			map['transfer_mile'] = mlog[5].mile_meter if mlog[5].mile_meter
+		end
+		
+		
+		
+	end
+	
+	
+	
+	
+	
+	
+	
+	data = []
+	
+	headers.each_with_index do |i,ix|
+		
+		if ems_case[i]
+			data << ems_case[i]
+		elsif map[i]
+			data << map[i]
+		else
+			data << ""
+		end
+		
+	end
+	
+	
+	worksheet.insert_rows(worksheet.num_rows+1,[data])
+	worksheet.save
+%>
+<%= params.inspect%>
+	<meta http-equiv="Refresh" content="1; url='show?id=<%=ems_case.id%>'" />
+<%
+else
+%>
+<h1> Export GoogleSheet : <%=ems_case.case_no%></h1>
+
+
+<%
+     admit = ems_case.admit
+	  messages = Message.where(:admit_id=>admit.id).all
+	  
+	  
+	  
+	
+%>
+
+<form action="export_googlesheet" method="post" >
+	
+	<input type="hidden" name="id" value="<%=ems_case.id%>">
+<%=headers.inspect %>
+<br/>
+<input type="submit" value="Export" class="btn btn-success"> <a href="show?id=<%=ems_case.id%>" class="btn btn-primary " >Cancel</a>
+
+
+</form>
+<% end %>

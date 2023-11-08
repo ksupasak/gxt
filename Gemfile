@@ -9,7 +9,7 @@ gem 'sinatra-partial'
 
 gem 'sinatra-formhelpers-ng'
 
-gem 'puma'
+gem 'puma' , "6.3.0"
 gem 'mqtt'
 gem 'thin'
 
@@ -34,6 +34,7 @@ gem 'rack-gridfs'
 
 gem 'redis'
 gem 'hiredis'
+gem 'hiredis-client'
 gem 'em-hiredis'
 # gem 'redis-rails'
 gem 'resque', :require => "resque/server"
@@ -61,3 +62,4 @@ gem 'rack-ssl-enforcer'
 
 gem 'google-cloud-translate-v2'
 gem 'wkhtmltopdf-binary'
+gem 'google_drive' , "3.0.7"

@@ -61,6 +61,8 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 	
   %>
   <a href="../EMS/export?id=<%=record.id%>" class="export_btn btn <%=export_status%>">Export HIS</a>
+  <a href="../EMS/export_googlesheet?id=<%=record.id%>" class="export_googlesheet_btn btn <%=export_status%>">Export GoogleSheet</a>
+  
 <%=ems_case.export%>
 </div>
 
@@ -121,7 +123,23 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 		
 	});
 		
+	$('.export_googlesheet_btn').click(function(e){
+
+		e.preventDefault();
+	
+        $.ajax({
+          url: "<%="export_googlesheet"%>?id=<%=record.id%>",
+          context: document.body
+        }).done(function(data) {
+			
+          $( '.ems_case' ).html(data);
+
+
+        });
+	
 		
+	});
+			
 		
 	
 	

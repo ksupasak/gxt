@@ -354,12 +354,12 @@ class Admit < GXTModel
   belongs_to :score, :class_name=>'EsmMiotMonitor::Score'
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
 
-  has_many :records, :class_name=>'EsmMiotMonitor::DataRecord', order: "start_time ASC"
-  has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time ASC"
-  has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time ASC"
+  has_many :records, :class_name=>'EsmMiotMonitor::DataRecord', order: "start_time"
+  has_many :nurse_records, :class_name=>'EsmMiotMonitor::NurseRecord', order: "start_time"
+  has_many :medication_records, :class_name=>'EsmMiotMonitor::MedicationRecord', order: "start_time"
 
-  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "sort_order ASC"
-  has_many :messages, :class_name=>'EsmMiotMonitor::Message', order: "ts ASC"
+  has_many :logs, :class_name=>'EsmMiotMonitor::AdmitLog', order: "sort_order"
+  has_many :messages, :class_name=>'EsmMiotMonitor::Message', order: "ts"
 
 
   belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'

@@ -49,7 +49,7 @@ class EMSCase < GXTModel
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
 
   belongs_to :init_code, :class_name=>'EsmMiotMonitor::EMSCode', foreign_key: 'init_cbd_code'
-  has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at ASC", foreign_key: 'case_id'
+  has_many :commands, :class_name=>'EsmMiotMonitor::EMSCommand', order: "created_at", foreign_key: 'case_id'
   belongs_to :channel, :class_name=>'EsmMiotMonitor::EMSChannel', foreign_key: 'channel_id'
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
@@ -148,6 +148,9 @@ class EMSCase < GXTModel
   key :latlng, String
   key :note, String
   key :dispatch_at, DateTime
+  
+  key :gps_duration, Float
+  key :gps_distance, Float
 
 
   key :patient_location, String
@@ -524,9 +527,10 @@ class EMSCommand < GXTModel
 
   key :transfer_hospital, String
   key :transfer_hospital_id, ObjectId
-  key :dispatch_emd_id, ObjectId
-  key :driver_emt_id, ObjectId
-
+  key :emd_code, String
+  key :emt_driver_code, String
+  key :emt_partner_code, String
+   
   key :note, String
   key :channel_id, String
 
