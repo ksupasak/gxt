@@ -286,13 +286,21 @@
 						</div>
 					</div>
 
-<div class="col-5">
+<div class="row">
+<div class="col-6">
 <p class="px-3">ประเภทผู้ป่วย</p>
 <div class="input-group pb-3">
 <%= f.select(:patient_type, [['non-trauma','Non-Trauma'],['trauma','Trauma']], :value=>record.patient_type, :class=>' form-select') %>
 </div>
-</div>
 
+</div>
+<div class="col-6">
+<p class="px-3">เวร Shift</p>
+<div class="input-group pb-3">
+<%= f.select(:shift, [['เช้า','เช้า'],['บ่าย','บ่าย'],['ดึก','ดึก']], :value=>record.shift, :class=>' form-select') %>
+</div>
+</div>
+</div>
 
 <div class="row">
 <div class="col-6">

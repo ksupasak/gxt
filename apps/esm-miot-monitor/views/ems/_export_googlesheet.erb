@@ -76,13 +76,17 @@ if request.post?
 			
 		end
 	
-		map['paramedic'] = providers.join(",")	
+		map['paramedic'] = "'#{providers.join(",")}"
 		
 		map['ems_emd'] = command.emd_code if command.emd_code 
 		map['emt_driver'] = command.emt_driver_code if command.emt_driver_code 
 		map['emt_partner'] = command.emt_partner_code if command.emt_partner_code 
 		
-		
+		if ambulance = command.ambulance
+				
+			map['vehicle_no'] = ambulance.name
+				
+		end
 			
 		logs = AdmitLog.where(:ems_command_id=>command.id).all
 		mlog = {}
@@ -91,22 +95,22 @@ if request.post?
 		end
 		
 		if mlog[2]
-			map['activation_at'] = mlog[2].stamp.strftime("%H:%M") if mlog[2].stamp
+			map['activation_at'] = mlog[2].stamp.to_s if mlog[2].stamp
 			map['start_mile'] = mlog[2].mile_meter if mlog[2].mile_meter
 		end
 		
 		if mlog[3]
-			map['response_at'] = mlog[3].stamp.strftime("%H:%M") if mlog[3].stamp
+			map['response_at'] = mlog[3].stamp.to_s if mlog[3].stamp
 			map['response_mile'] = mlog[3].mile_meter if mlog[3].mile_meter
 		end
 		
 		if mlog[4]
-			map['transfer_start_at'] = mlog[4].stamp.strftime("%H:%M") if mlog[4].stamp
+			map['transfer_start_at'] = mlog[4].stamp.to_s if mlog[4].stamp
 	
 		end
 		
 		if mlog[5]
-			map['transfer_at'] = mlog[5].stamp.strftime("%H:%M") if mlog[5].stamp
+			map['transfer_at'] = mlog[5].stamp.to_s if mlog[5].stamp
 			map['transfer_mile'] = mlog[5].mile_meter if mlog[5].mile_meter
 		end
 		
@@ -137,6 +141,9 @@ if request.post?
 	
 	worksheet.insert_rows(worksheet.num_rows+1,[data])
 	worksheet.save
+	
+	ems_case.update_attributes :export_data=>'true', :export_data_log=>Time.now.to_s
+	
 %>
 <%= params.inspect%>
 	<meta http-equiv="Refresh" content="1; url='show?id=<%=ems_case.id%>'" />
@@ -148,8 +155,7 @@ else
 
 <%
      admit = ems_case.admit
-	  messages = Message.where(:admit_id=>admit.id).all
-	  
+	
 	  
 	  
 	
