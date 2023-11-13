@@ -77,6 +77,8 @@ class EMSCase < GXTModel
   key :status, String
 
   key :date, DateTime
+  
+  key :shift, String
 
 
   # SENT for when send sms to patient
@@ -270,6 +272,9 @@ class EMSCase < GXTModel
   
   key :export, String # AwaitExport, Exported
   key :export_log, String
+  
+  key :export_data, String
+  key :export_data_log, String
 
 
 

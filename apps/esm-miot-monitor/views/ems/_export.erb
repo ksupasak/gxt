@@ -38,7 +38,8 @@ else
 
 
 <%
-     admit = ems_case.admit
+      admit = ems_case.admit
+
 	  messages = Message.where(:admit_id=>admit.id).all
 	
 %>

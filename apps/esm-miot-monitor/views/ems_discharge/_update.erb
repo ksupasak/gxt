@@ -59,9 +59,13 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
   	export_status = "btn-warning"
 	export_status = 'btn-light' if ems_case.export=='AwaitExport'
 	
+  	export_data_status = "btn-warning"
+	export_data_status = 'btn-light' if ems_case.export_data=='true'
+	
+	
   %>
   <a href="../EMS/export?id=<%=record.id%>" class="export_btn btn <%=export_status%>">Export HIS</a>
-  <a href="../EMS/export_googlesheet?id=<%=record.id%>" class="export_googlesheet_btn btn <%=export_status%>">Export GoogleSheet</a>
+  <a href="../EMS/export_googlesheet?id=<%=record.id%>" class="export_googlesheet_btn btn <%=export_data_status%>">Export GoogleSheet</a>
   
 <%=ems_case.export%>
 </div>
