@@ -608,9 +608,12 @@ geoFindMe()
   const context = canvas.getContext('2d');
   const captureButton = document.getElementById('capture');
 
+  const videoConstraints = {
+      facingMode: 'environment'
+    };
+	
   const constraints = {
-    video: true,
-	facingMode: 'environment'
+    video: videoConstraints
   };
 
   captureButton.addEventListener('click', () => {
