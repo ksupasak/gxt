@@ -27,6 +27,7 @@ end
 
 <html>
     <head>
+		
         <script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
@@ -55,8 +56,10 @@ end
 	</style>
 
     </head>
-    <body>
+    <body class="mat-typography" id="body">
+		<app-root>
         <openvidu-webcomponent style=""></openvidu-webcomponent>
+		</app-root>
 		<ov-videoconference [tokens]="tokens">
 		  <div *ovToolbar style="text-align: center;">
 		    <!-- <button (click)="toggleVideo()">Toggle Video</button>
@@ -92,7 +95,21 @@ end
 
           var webComponent = document.querySelector('openvidu-webcomponent');
           webComponent.tokens = token ; //'wss://pcm-life.com:4443?sessionId=SessionA&token=tok_O4GO4gBKe2cX7M7K' ;
-
+		  
+		
+		  
+		  webComponent.addEventListener('onSessionCreated', (event) => {
+		          var session = event.detail;
+				  
+				  function autoJoin() {
+				    $('#join-button').click()
+				  }
+			
+		
+				  setTimeout(autoJoin, 2000);
+				  
+		   });
+		
 
       });
 
