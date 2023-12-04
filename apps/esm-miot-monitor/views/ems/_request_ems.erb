@@ -535,6 +535,15 @@ geoFindMe()
 	 if(picture_status==false){
 			// init camera
 		capture_spinner.style.display='inline'
+		 
+	     const videoConstraints = {
+	         facingMode: 'environment'
+	       };
+	
+	     const constraints = {
+	       video: videoConstraints
+	     };
+		 
 	 	navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
 
 
