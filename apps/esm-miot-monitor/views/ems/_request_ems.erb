@@ -622,7 +622,8 @@ geoFindMe()
   });
 
   // Attach the video stream to the video element and autoplay.
-  navigator.mediaDevices.getUserMedia(constraints)
+  // navigator.mediaDevices.getUserMedia(constraints)
+  navigator.getUserMedia(constraints)
     .then((stream) => {
       player.srcObject = stream;
     });
