@@ -35,6 +35,43 @@
 			<h5 class="mb-0 text-primary">GA :</h5>
 </div>
 
+
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+<label for="trauma_1">รายละเอียดที่เจอผู้ป่วยครั้งแรก </label>
+<textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" >
+<%=record['note']%>
+</textarea>
+</div>
+
+</div>
+
+<div class="col-12">
+
+<div class="card-title d-flex align-items-center">
+			<h5 class="mb-0 text-primary">Response :</h5>
+</div>
+
+<div class="row">
+<div class="col-2"></div>
+<div class="col-10">
+
+<%= radio_string this, 'response',   :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
+
+</div>
+
+    
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:20px">
+
+<%= radio_string this, 'response_pulse', :value=>%w{pulse no_pulse} %>
+
+</div>
+
+
+
+</div>
+
 <div class="row">
 <div class="col-2"></div>
 <div class="col-10">
@@ -56,38 +93,8 @@
     </div>
 	</div>
 </div>
-<br/><br/>
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">รายละเอียดที่เจอผู้ป่วยครั้งแรก </label>
-<textarea name="record[note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['note']%>
-</textarea>
-</div>
 
-</div>
 
-<hr/>
-<div class="col-12">
-<div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Response :</h5>
-</div>
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10">
-
-<%= radio_string this, 'response',   :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
-
-</div>
-
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-
-<%= radio_string this, 'response_pulse', :value=>%w{pulse no_pulse} %>
-
-</div>
-
-</div>
 
 </div>
 <hr/>
@@ -101,16 +108,16 @@
 <div class="col-2">
 </div>
 <div class="col-10">
-<%= radio_string this, 'airway', :value=>%w{airway_patient airway_compromise}, :col=>12 %>
+<%= radio_string this, 'airway', :value=>%w{airway_patient}, :col=>12 %>
 </div>
-</div>
-</div>
+
+
 
 <div class="col-2">
   </div>
 <div class="col-10">
 
-<%= check_string this, 'airway_compromise', :value=>%w{stridor secretion fb bleeding other}, :label=>"", :col=>12 %>
+<%= check_string this, 'airway_compromise', :value=>%w{stridor secretion foreign_body bleeding other}, :label=>"", :col=>12 %>
 
 </div>
 
@@ -242,9 +249,9 @@ Vital
 </div>
 <div class="col-10">
 <div class="row">
-<%= text_string this, 'gcs_e', :col=>3, :label=>'E'%>
-<%= text_string this, 'gcs_v', :col=>3, :label=>'V'%>
-<%= text_string this, 'gcs_m', :col=>3, :label=>'M'%>
+<%= select_string this, 'gcs_e', :col=>3, :label=>'E', :value=>%w{1 2 3 4 5}%>
+<%= select_string this, 'gcs_v', :col=>3, :label=>'V' , :value=>%w{1 2 3 4 5}%>
+<%= select_string this, 'gcs_m', :col=>3, :label=>'M' , :value=>%w{1 2 3 4 5}%>
 </div>
 </div>
 </div>
@@ -286,7 +293,7 @@ Vital
 <div class="row">
 <div class="col-2">
 </div>
-<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling pitting_edema_at }, :col=>10, :col_item=>"col-12" %>
+<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling pitting_edema }, :col=>10, :col_item=>"col-12" %>
 </div>
 <div class="row">
 <div class="col-2">
@@ -294,7 +301,6 @@ Vital
 <div class="col-10">
     <%= text_string this, 'exposure_special_note', :col=>10, :label=>'Note'%>
 	
-  <%= text_string this, 'exposure_pitting_edema_at', :col=>3, :label=>'pitting_edema_at'%>
 
 </div>
 

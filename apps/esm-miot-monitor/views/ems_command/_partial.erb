@@ -278,10 +278,22 @@
 			</div>
 			</div>
 <br/>
+<%
+	
+att = Attachment.find cm.ambulance.image
 
+content = ""
+
+if att
+ 
+  content = "<center><img src='#{att.path}' width='200'><br/><br/>#{cm.ambulance.name} : #{cm.ambulance.plate_license} </center>"
+  
+end
+	
+%>
 
  
- 
+ <%= content %>
 		</div>
 
 				<br/>

@@ -817,6 +817,8 @@ class Ambulance  < GXTModel
   key :location_policy, String # any, app, dvr
   key :device_no, String # for dvr
   key :msg_channel, String
+  
+  key :image, ObjectId
 
 
   include Mongoid::Timestamps
