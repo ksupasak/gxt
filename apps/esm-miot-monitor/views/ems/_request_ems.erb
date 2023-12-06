@@ -12,6 +12,8 @@ if ems_case.tracking_status=='SENT'
 end
 
 
+@current_zone = ems_case.zone
+
 if request.post?
 
 	ems_case = ESMCase.create unless ems_case
@@ -51,6 +53,10 @@ else
 <link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+
+
+	<link href="/miot/css/ems.css" rel="stylesheet">
+
 
 	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
 </head>
@@ -111,8 +117,46 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 			</div>
 		</div>
 	</div>
-
-
+	
+	
+    <div class='row'>
+		<div class="col d-flex justify-content-center">
+				
+				<a href="#" id="func-1" class="func btn btn-success col">ส่งตำแหน่ง</a>
+		</div>
+		
+		<div class="col d-flex justify-content-center">
+				<a href="#" id="func-2" class="func take-picture-open func-2 btn btn-success col"> 
+				ถ่ายรูป
+				</a>
+				
+		</div>
+		
+		<div class="col d-flex justify-content-center">
+				<a href="#" id="func-3"  class="func func-3 btn btn-success col">
+					VideoCall
+				</a>
+				
+		</div>
+		
+	</div>
+	<br/>
+	
+	<script>
+		
+		$('.func').click(function(){
+			
+			id = $(this).attr('id')
+			
+			$('.func-panel').hide()
+			
+			$('.'+id).show()
+			
+			
+		})
+		
+	</script>
+		
 
 	<!-- <div class="row">
 
@@ -177,7 +221,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 			
 		%>
 
-				<div class="row">
+				<div class="row func-panel func-1">
 
 					<div class="col">
 						
@@ -216,34 +260,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 
 				</div>
 
-				<div class="row">
-				<div class="col">
-				<div class="card radius-10 border-start border-0 border-3 border-warning">
-				<div class="card-body">
-				<div class="row">
-					<div class="col">
-					<p>
-				  สนทนา
-					<center>
-
-					<span  style="col-3"><a  href="<%=conf_url%>" class="btn text-white btn-warning">VideoCall</a></span>
-
-					</center>
-
-					</p>
-					</div>
-				</div>
-				<div class="row g-3">
-
-
-
-
-				</div>
-				</div>
-				</div>
-				</div>
-				</div>
-
+			
 				<%
 				
 				imgs = Message.where(:admit_id=>ems_case.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
@@ -254,7 +271,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 					
 				%>
 
-				<div class="row">
+				<div class="row  func-panel func-2">
 				<div class="col">
 				<div class="card radius-10 border-start border-0 border-3 <%=cls%>">
 				<div class="card-body">
@@ -262,7 +279,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 					<div class="col">
 					<p>
 					รูปถ่าย
-					<span style=""><center><a   class="take-picture  text-white btn btn-info">ถ่ายภาพ</a><center></span>
+					<!-- <span style=""><center><a   class="take-picture  text-white btn btn-info">ถ่ายภาพ</a><center></span> -->
 					</p>
 					</div>
 				</div>
@@ -279,7 +296,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 
 					</div>
 				</div>
-
+<br/>
 				<div class="row">
 					<div class="col-12 col-sm-4 text-center">
 					</div>
@@ -334,6 +351,38 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 				</div>
 				</div>
 				</div>
+				
+				
+				
+				<div class="row  func-panel func-3">
+				<div class="col">
+				<div class="card radius-10 border-start border-0 border-3 border-warning">
+				<div class="card-body">
+				<div class="row">
+					<div class="col">
+					<p>
+				  สนทนา
+					<center>
+
+					<span  style="col-3"><a  href="<%=conf_url%>" class="btn text-white btn-warning">เริ่ม VideoCall</a></span>
+
+					</center>
+
+					</p>
+					</div>
+				</div>
+				<div class="row g-3">
+
+
+
+
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				
+				
 				<div class="row">
 				<!-- <div class="col-12 col-sm-4 text-center">
 					<div class="row">
@@ -468,7 +517,7 @@ geoFindMe()
 	video.style.display  = 'none';
 	canvas.style.display = 'none';
 
-	const button = document.querySelector('.take-picture');
+	const button = document.querySelector('.take-picture-open');
 
 	function snap(){
  		// then capture
@@ -548,7 +597,7 @@ geoFindMe()
 
 
 	 }else{
-	 	snap()
+	 	// snap()
 	 }
 
 
@@ -641,6 +690,202 @@ geoFindMe()
 <% end %>
 
 <%=init_map%>
+
+
+<script>
+
+
+
+    function show(msg){
+      $('.msg2').html(msg)
+    }
+
+    var ws = null
+
+    function connect(){
+
+
+
+    ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+    ws.onopen    = function()  { show('websocket opened');
+
+      ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "ZoneUpdate zone_id=*", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+
+
+    };
+
+
+    ws.onerror = function(){
+
+      noti_msg('Reconnect in 5 seconds')
+      ws.close()
+      // alert('Reconnect in 5 sec')
+      setTimeout(function () {
+          // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+          connect()
+
+       }, 10000); //will call the function after 2 secs.
+
+
+    }
+
+    ws.onclose   = function()  { show('websocket closed');
+
+   	// setTimeout(function () {
+    //      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    //      connect()
+    //
+    //   }, 10000); //will call the function after 2 secs.
+
+
+    }
+
+    ws.onmessage = function(m) {
+
+  	  console.log(m.data)
+
+
+  	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
+
+
+  		lines = m.data.split("\n")
+
+
+      // when new case
+
+  		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+
+  			window.location.reload();
+
+  		}else
+		
+      if(lines[0].split(" ")[0]=='EMSUpdate'){
+
+         obj = JSON.parse(lines[1])
+         console.log(obj)
+
+         if(obj['alert']=="1"||obj['alert']=="0"){
+           console.log(obj)
+
+  		   }
+
+
+      else
+	
+  	if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+  			update(lines)
+
+
+  	}
+  	else
+	
+  	{
+
+         jQuery.each(obj['ems_data'], function (key, val) {
+
+         // Object.values().forEach(val => {
+
+           // console.log(val)
+           jQuery.each(val['commands'], function (key, cmd) {
+           // Object.values(val['commands']).forEach(cmd => {
+
+             // console.log('EMT noti')
+
+
+             // if(cmd['driver_emt_id']==null){
+  //              if(noti_status==false){
+  //
+  //             // console.log(cmd)
+  //              $('.noti_title').html("Accept Case");
+  //
+  //              $('.noti_msg').html("Case No : "+val['case_record']['case_no']+"<br/>Location : "+val['case_record']['location']+"<br/>Tel : "+val['case_record']['contact_phone']);
+  //
+  //
+  //
+  //              $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_accept"+"&command_id="+cmd['_id'])
+  //              $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_denied"+"&command_id="+cmd['_id'])
+  //              // $('#modal_notification').modal('show');
+  //              modal('#modal_notification')
+  //
+  //              noti_status = true;
+  //             }
+  //
+  //
+  //            }
+
+
+           });
+
+           // jQuery.each(val['routes'], function (key, route) {
+ //           // Object.values(val['routes']).forEach(route => {
+ //
+ //
+ //
+ //             if(route['response']==null){
+ //
+ //
+ //               console.log('EMT route')
+ //
+ //
+ //
+ //                 if(noti_status==false){
+ //                console.log('EMT case noti')
+ //                // console.log(cmd)
+ //
+ //                 $('.noti_title').html("Route Update / Transfer");
+ //
+ //                 $('.noti_msg').html("Change Route");
+ //
+ //                 $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])
+ //                 $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_denied"+"&route_id="+route['_id'])
+ //                 // $('#modal_notification').modal('show');
+ //                 modal('#modal_notification')
+ //
+ //                 noti_status = true;
+ //
+ //
+ //
+ //               }
+           //
+           //   }
+           //
+           //
+           // });
+
+
+
+
+         });
+
+  	   }
+
+      }else
+
+      if(lines[0].split(" ")[0]=='Zone.Message'){
+
+  			// reload_message()
+
+  	}else{}
+	
+	
+
+
+
+    }
+
+  }
+
+
+  $(document).ready(function(){
+    connect()
+
+  })
+
+</script>
+
 </body>
 </html>
 <% end %>
