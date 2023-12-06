@@ -30,7 +30,16 @@
       content = i.zone.name
     when 'station_id'
       content = i.station.name if i.station
-    else
+  	  
+	  att = Attachment.find i.image
+	  if att
+		 
+		  content = "<img src='#{att.path}' width='200'><br/><center>#{content}</center>"
+		  
+	  end
+	  
+	  
+	else
       content = i[j[0]]
     end
 

@@ -40,7 +40,7 @@ col = options[:col] if options[:col]
 <% if options[:label] %>
 <label  style="min-width:150px"><%= label%></label>
 <% end %>
-<select class="field"  name="record[<%=name%>]" field_type="select_string">
+<select class="field form-select"  name="record[<%=name%>]" field_type="select_string">
 <option></option>
 <%
     options[:value].each_with_index do |i,j|

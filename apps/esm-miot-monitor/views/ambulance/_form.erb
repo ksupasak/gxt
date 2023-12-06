@@ -79,6 +79,26 @@ elsif name=='msg_channel'
 	<% end %>
 	</select>
   </div>
+<%
+	
+elsif name=='image'
+
+	
+%>
+
+  <div class="form-group">
+    <label for="image"><%=i[0].humanize %></label>
+	<%
+	att = Attachment.find @record.image
+	if att
+	%>
+	<img src="<%=att.path%>" width="200">
+	<%
+	end
+	%>
+    <input type="file" name="file" class="form-control" >	
+ </div>
+
 
 <% else %>
   <div class="form-group">

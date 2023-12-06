@@ -6,7 +6,7 @@
 <%
     if r['response'] and r['response'] != ""
 %>
-GA : <%=r['response'].classify %><% end %><%
+GA : <%=r['note'] %> <%=r['response'].classify %><% end %><%
     if r['airway'] and r['airway'] != ""
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']

@@ -1990,7 +1990,7 @@ end
 
                     v = app.settings.senses[name][s.name]
 
-                    puts "YYY #{v['admit_id']}"
+            
                     
                     
 
@@ -1998,7 +1998,7 @@ end
                             #       # store to sense
                             #
                                    if v and v['station_id'] and v['admit_id']
-
+                                       puts "YYY #{v['admit_id']}"
                                      # puts 'enter 1 '
 
                                      # admit = Admit.find v['admit_id']
