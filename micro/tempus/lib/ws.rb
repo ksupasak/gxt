@@ -77,7 +77,7 @@ end
 
 def self.send ws, v, data, mark_dup
   
-       
+  puts 'in send'
   puts data.to_json
   
           if data['VitalDetailsInfo'].size > 0 
@@ -100,7 +100,7 @@ def self.send ws, v, data, mark_dup
                
                mark_dup[name] = {} unless mark_dup[name]
                
-               unless mark_dup[name][rid]
+               if true # unless mark_dup[name][rid]
                  
                mark_dup[name][rid] = now   
                
