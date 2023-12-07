@@ -103,8 +103,10 @@ def run(opts)
     
     mark_dup = {}
     
+    fout = File.open("out.txt", "a")
     
-    EventMachine.add_periodic_timer(10) {
+    
+    EventMachine.add_periodic_timer(4) {
     
       if lives.keys.size>0 
         
@@ -116,9 +118,12 @@ def run(opts)
           # vitals = gw.get_trended_vitals k, datetime
           vitals = gw.get_trended_vitals k , datetime
           
+          
+          puts "vitals from corium"
           puts vitals 
           
-          puts v.inspect 
+      
+          fout.puts vitals.to_json
           
           GXTWS.send ws, v, vitals, mark_dup
           

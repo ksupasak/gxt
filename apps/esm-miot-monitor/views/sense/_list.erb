@@ -13,7 +13,7 @@
 </thead>
 <tbody>
 <%	
-	for i in this.model.limit(100).sort('start_time desc').all
+	for i in this.model.limit(100).sort(:start_time=>1).all
 %>
 <tr>
 	<% for j in keys %>
