@@ -142,7 +142,9 @@ when 'message'
 				
 				if ems_case
 
-				ems_case.update_message @context, "request send location"
+					ems_case.update_message @context, "request send location"
+					
+					line_account.send_message "Imagettached to #{ems_case.case_no}..Done"
 				
 				end
 #                    path = "miot/#{@context.settings.name}/z/#{zone.name}"

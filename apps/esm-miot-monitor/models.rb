@@ -1160,6 +1160,17 @@ end
 
 
 class HomeController < GXT
+  
+  def acl
+    # return {:login=>'*',:auto=>'*'}
+    return {:index_unattend=>'*'}
+
+  end
+  
+  def xxx params
+    return 'xxx'
+  end
+  
 
 end
 

@@ -75,7 +75,7 @@
       if assessment and assessment.data!=""
 
           obj = JSON.parse(assessment.data)
-
+		  routes = []
           if obj and obj['med']
 
               medication = Medication.where(:name=>obj['med']).first
@@ -90,6 +90,7 @@
               volume = obj['volume']
               unit = obj['unit']
               doses = obj['dose']
+			  routes = obj['routes'].split(",") if obj['routes'] and obj['routes'] !=""
               weight = @ems_case.patient_weight
 
               w = ""
@@ -124,12 +125,27 @@
           <div class="row">
 
 
-          <div class="col-6">
+          <div class="col-9">
 
             <p class="px-3">
               <span class="t" t="record_contact_name">Medication</span>
             </p><input name='record[name]' value="<%=med_name%>" id="med-name"  class=" vfor form-control mb-3 t-ph"  type="text" placeholder="Name" aria-label="default input example">
 
+          </div>
+		  
+          <div class="col-3">
+
+            <p class="px-3">
+              <span class="t" t="record_route">Route</span>
+            </p>
+			
+            <select name="record[route]" class="form-control vfor" id="med-route">
+            <% for i in routes %>
+            <option value="<%=i%>"><%=i%></option>
+            <% end %>
+            </select>
+			
+		
           </div>
 		  
           <div class="col-3">
@@ -148,6 +164,8 @@
 
           </div>
 
+
+        
           
           <% if doses and doses.size>0 %>
           <div class="col-4">
@@ -207,17 +225,26 @@
         <script>
 
           function update_formula(){
+			  
+			  
 
 			med =   $('#med-name').val()
           
-          
+            route = $('#med-route').val()
+			
+			route_text = ""
+			  
+			  if(route!=""){
+			  	route_text = "on "+route+" "
+			  }  
+		   
             unit =  $('#med-unit').val()
 			  
             <% if doses and doses.size>0 %>
 			weight = $('#med-pweight').val()
 		    dose = $('#med-dose').val()
-
-
+            
+			  
             dose = parseFloat(dose)
             weight = parseFloat(weight)
             mg = dose*weight
@@ -227,11 +254,11 @@
 
             $('#med-volume').val(vol.toFixed(2))
 
-            note = ""+med+" ("+dose+") : "+vol+" "+unit
+            note = ""+med+" ("+dose+") "+route_text+": "+vol+" "+unit
 
             <% else %>
             vol  =  $('#med-volume').val()
-            note = ""+med+" : "+vol+" "+unit
+            note = ""+med+" "+route_text+": "+vol+" "+unit
 
             <% end %>
 
