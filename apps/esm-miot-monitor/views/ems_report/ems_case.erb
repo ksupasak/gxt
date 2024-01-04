@@ -820,7 +820,7 @@ end
    ems_command.providers.each do |cp|
 
       p = cp.provider
-      if p.role
+      if p and p.role
         m_providers[p.role] = [] unless m_providers[p.role]
         m_providers[p.role] << p
       end

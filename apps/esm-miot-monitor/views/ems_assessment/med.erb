@@ -12,6 +12,8 @@
       data[:consume] = params[:consume][j]
       data[:volume] = params[:volume][j]
       data[:volume_formula] = params[:volume_formula][j] if params[:volume_formula][j]!=""
+      data[:routes] = params[:routes][j]
+      
       begin
       data[:dose] = JSON.parse(params[:dose][j]) if params[:dose][j]!=""
      rescue Exception=>e
@@ -48,7 +50,7 @@
 
 	# keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
 
-  keys = %w{group sort_order code name consume volume unit volume_formula dose }
+  keys = %w{group sort_order code name consume volume unit volume_formula routes dose }
   styles = {}
   styles['group'] = "width:80px"
   styles['sort_order'] = "width:50px"
@@ -57,8 +59,9 @@
   styles['name'] = "width:200px"
   styles['volume'] = "width:50px"
   styles['unit'] = "width:50px"
+  styles['routes'] = "width:120px"
   styles['dose'] = "width:80px"
-
+  styles['volume_formula'] = "width:250px"
 
 %>
 <thead>
@@ -97,6 +100,9 @@
   <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
 
   <% elsif j =='volume_formula' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+  
+  <% elsif j =='routes' %>
   <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
 
   <% elsif j =='dose' %>
