@@ -560,8 +560,28 @@ class EMSCommandProvider < GXTModel
 
 end
 
+class EMSTrackingDevice < GXTModel
+  
+  include Mongoid::Document
+
+  key :name, String
+  key :title, String
+  key :device_no, String
+  
+  
+end
 
 
+class EMSTrackingRecord < GXTModel
+  
+  include Mongoid::Document
+
+  key :device_id, ObjectId
+  key :data, String
+  key :stamp, Integer
+  
+  
+end
 
 class EMSDVR < GXTModel
 

@@ -174,10 +174,27 @@ record = @current_case
       <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
         NAV</a>-->
 		         <!-- https://www.google.com/maps/dir//13.6086178,100.5946353/@13.6085003,100.5536058,13z?entry=ttu -->
-        <a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
-          NAV</a>
-
-
+        <!--<a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
+          NAV</a>-->
+		 <a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="nav-btn btn btn-warning text-white px-4  radius-5" style="width:100%;">NAV</a>
+		 <script>
+			 
+			$('.nav-btn').click(function(e){
+				try{
+					
+					device_interface.startNavigation("<%=current_route.stop_latlng.split().join()%>")
+				
+					e.preventDefault();
+					
+					
+				}catch(err){
+					return true;
+				}
+				
+				
+			})
+			 
+		</script> 
    
     </div>
 
