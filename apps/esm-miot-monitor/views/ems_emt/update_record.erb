@@ -12,7 +12,7 @@
 		providers = EMSCommandProvider.where(:command_id=>command.id).all
         provider = nil
 		
-		if command.emt_driver_code==nil and command.emt_driver_code==""
+		if command.emt_driver_code==nil or command.emt_driver_code==""
 		for i in providers
 			
 			provider = Provider.find providers[0].provider_id		
