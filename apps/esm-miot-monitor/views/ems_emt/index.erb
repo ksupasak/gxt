@@ -101,11 +101,16 @@ record = @current_case
                 var jqxhr = $.post( "check?id=<%=com.id%>&admit_log_id=<%=last_log.id%>&mile_meter="+v, function() {
                   console.log("sueccess")
                   // alert( "success" );
-                  	window.location.reload();
+                  	// window.location.reload();
                 })
                   .done(function() {
                        console.log( "second success" );
-                  	window.location.reload();
+                  	 
+					 
+					 // window.location.reload();
+					
+					 window.location='index';
+					
                   })
                   .fail(function() {
                        console.log( "error" );
