@@ -22,6 +22,9 @@
 			end
 			
 		end
+		
+		command.update_attributes :emt_driver_code=>'NA' if command.emt_driver_code == nil or command.emt_driver_code = ""
+		
 		end
 		
     end
