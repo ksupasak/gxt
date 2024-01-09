@@ -661,7 +661,7 @@ end
 		console.log('new ')
 		
 		
-		<% if a.id == @current_ambulance.id and @current_case%>
+		<% if  @current_ambulance and @current_case and a.id == @current_ambulance.id %>
 		
 		 var start = pos
 		 target = new google.maps.LatLng(<%=@current_case.latlng%>)
