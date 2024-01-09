@@ -60,6 +60,7 @@ record = @current_case
 <% if last_log %>
 <!-- Button trigger modal -->
 <!-- Modal -->
+
 <div class="modal fade" id="modal_tracking" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-sm " style="max-width:300px">
     <div class="modal-content">
@@ -156,6 +157,7 @@ record = @current_case
 
 <div class="row no-gutters g-0 vh-100" style="border:0px solid;margin-top:40px">
 <div class="col-12">
+	<%= @current_case.id if @current_case %>
 <div id="dashboard-map" class="h-100" style="border:0px solid" >
   map
 </div>
@@ -669,7 +671,7 @@ end
 		map1.setPosition(pos);
 		
 		
-		
+	
 		<% if @current_case  %>
 		
 		
@@ -690,6 +692,9 @@ end
 
 
 			}.bind(this));
+			
+			
+			
 			<% end %>
 		
 		<% end %>
