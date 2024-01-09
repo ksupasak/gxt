@@ -617,6 +617,8 @@ end
 	clatlng = [<%=Setting.get("aoc_center")%>]
 	<% end %>
  	
+		
+		map1.setPosition(clatlng[0], clatlng[1])
 		var pos = new google.maps.LatLng(clatlng[0],clatlng[1] )
 		latlng.push(new google.maps.LatLng(pos))
 		marker = new google.maps.Marker({position: pos, map: map1.map, icon: station_image})
@@ -661,7 +663,15 @@ end
 		console.log('new ')
 		
 		
-		<% if  @current_ambulance and @current_case and a.id == @current_ambulance.id %>
+		
+		<% if  @current_ambulance and a.id == @current_ambulance.id %>
+		
+		map1.setPosition(pos);
+		
+		
+		
+		<% if @current_case  %>
+		
 		
 		 var start = pos
 		 target = new google.maps.LatLng(<%=@current_case.latlng%>)
@@ -680,7 +690,7 @@ end
 
 
 			}.bind(this));
-		
+			<% end %>
 		
 		<% end %>
 		
@@ -835,19 +845,6 @@ modal('#modal_notification')
 		   
 		   <% end %>
 
-
-    else
-	
-	if(lines[0].split(" ")[0]=='ZoneUpdate'){
-		
-			update(lines)
-
-
-	}
-	else
-	
-	{
-
        jQuery.each(obj['ems_data'], function (key, val) {
 
        // Object.values().forEach(val => {
@@ -924,7 +921,7 @@ modal('#modal_notification')
 
        });
 
-	   }
+	 
 
     }else
 
