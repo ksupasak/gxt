@@ -477,76 +477,230 @@ end
 
 
 
-<script>
-
-
-
-  $(document).ready(function(){
-
-
-
-  latlng = [13.69313508354787, 100.69198345629769]
-
-
-  <% if record and  record.latlng and record.latlng.index(',') %>
-  latlng = [<%=record.latlng%>]
-  <% end %>
-
-
-
-  map1 = new EMSMap('dashboard-map',{movable:true});
-  map1.setPosition(latlng[0], latlng[1])
-  map1.setMarkerPosition(latlng[0], latlng[1])
-	map1.changeMarkerPosition(function(marker){
-
-  });
-
-  var m_hos = {}
-	 
-	 
-	map1.ready(function(){
-		// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
-		// const image = "<%=url_for('ems/h0.png')%>";
-
-	<% 
-		hospitals = EMSHospital.all()
-		
-		for i in hospitals %>
-
-	var posx = new google.maps.LatLng(<%=i.latlng%> )
-	var image = "<%=url_for("ems/h#{i.level}.png")%>";
-	 markerx = new google.maps.Marker({position: posx, map: map1.map,
-		 icon:image
-	 })
-	 markerx.addListener("click", () => {
-		 select_hospital('<%=i.id%>')
-	 });
-
-	 m_hos['<%=i.id%>'] = markerx;
-
-	<% end %>
-	 
-	 
-	 
-	 
-	 
-
-
-});
-
-  // map1.init()
-
-})
-
-</script>
-<%= init_map %>
-
 
 <div class="msg" style="color:gray;font-size:0.8em"></div>
 
 <div class="msg2" style="color:gray;font-size:0.8em"></div>
 
 <script>
+
+
+
+
+
+    $(document).ready(function(){
+		
+		
+  		var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+
+
+  		var ambu_map = {}
+		
+		var map_ready = false;
+
+
+
+    latlng = [13.69313508354787, 100.69198345629769]
+
+
+    <% if record and  record.latlng and record.latlng.index(',') %>
+    latlng = [<%=record.latlng%>]
+    <% end %>
+
+
+    var map1 = new EMSMap('dashboard-map',{movable:true});
+ 	
+	
+	
+     // map1.setMarkerPosition(latlng[0], latlng[1])
+  	map1.changeMarkerPosition(function(marker){
+
+    });
+
+    var m_hos = {}
+  
+  
+  		function update(lines){
+				
+			if(map_ready){	
+				
+				
+				
+				
+				
+  			obj = JSON.parse(lines[1])
+
+  			// console.log(obj['ambu_data'])
+
+  			var keys = Object.keys(obj['ambu_data']);
+
+  			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+
+
+
+  			for(ai in values){
+
+  				a = values[ai]
+				
+			
+
+  				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
+
+
+
+  				map_icon = {
+  				  path: car,
+  				  scale: 0.9,
+  				  strokeColor: 'white',
+  				  strokeWeight: .10,
+  				  fillOpacity: 1,
+  				  fillColor: '#303bef',
+  				  offset: '5%',
+  				// size: new google.maps.Size(sizeX, sizeY),
+  //         				origin: new google.maps.Point(0, 0),
+  //         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+  				  // rotation: parseInt(heading[i]),
+  				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+  				};
+
+
+
+  				var t = a['last_location'].split(",")
+  				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+                marker = ambu_map[a['_id']]
+
+  				var image = "<%=url_for("ems/ambu.png")%>";
+
+					
+
+  				if(marker==null){
+
+					
+  						marker_map = new google.maps.Marker({position: pos,icon: image,  map: map1});
+  						ambu_map[a['_id']] = marker_map
+  						console.log('new')
+
+
+  				}else{
+  						marker_map =  ambu_map[a['_id']]
+  						marker_map.setPosition(pos)
+  						console.log('set')
+
+  				}
+
+  				}
+
+			}
+
+  				// latlngbounds.extend(pos);
+
+  			}
+
+
+
+  			// map.fitBounds(latlngbounds);
+
+  		}
+  
+	 
+	 
+  	map1.ready(function(){
+  		// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+  		// const image = "<%=url_for('ems/h0.png')%>";
+
+
+	 	var station_image = "<%=url_for("ems/station.png")%>";
+
+	clatlng = [13.68313508354787, 100.69198345629769]
+	<% if Setting.get("aoc_center") %>
+	clatlng = [<%=Setting.get("aoc_center")%>]
+	<% end %>
+ 	
+		var pos = new google.maps.LatLng(clatlng[0],clatlng[1] )
+		latlng.push(new google.maps.LatLng(pos))
+		marker = new google.maps.Marker({position: pos, map: map1.map, icon: station_image})
+
+  	<% 
+  		hospitals = EMSHospital.all()
+		
+  		for i in hospitals %>
+
+  	var posx = new google.maps.LatLng(<%=i.latlng%> )
+  	var image = "<%=url_for("ems/h#{i.level}.png")%>";
+  	 markerx = new google.maps.Marker({position: posx, map: map1.map,
+  		 icon:image
+  	 })
+  	 markerx.addListener("click", () => {
+  		 select_hospital('<%=i.id%>')
+  	 });
+
+  	 m_hos['<%=i.id%>'] = markerx;
+
+  	<% end %>
+	 
+	 
+	 map_ready = true;
+  	
+		
+
+<% 
+	 ambus = Ambulance.where(:zone_id=>@current_zone.id).all()
+	
+	
+	for a in ambus %>
+		var image = "<%=url_for("ems/ambu.png")%>";
+
+		
+  		t = <%=a.last_location.split(',').to_json%>
+  		var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+ 	 	
+	
+		marker_map = new google.maps.Marker({position: pos,icon: image,  map: map1.map});
+		ambu_map['<%=a.id%>'] = marker_map
+		console.log('new ')
+		
+		
+		<% if a.id == @current_ambulance.id and @current_case%>
+		
+		 var start = pos
+		 target = new google.maps.LatLng(<%=@current_case.latlng%>)
+
+		console.log("<%=@current_case.latlng%>")
+
+		directionsService = new google.maps.DirectionsService;
+  	    directionsDisplay = new google.maps.DirectionsRenderer;
+  		
+		directionsDisplay.setMap(map1.map);
+
+			map1.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
+
+
+		
+
+
+			}.bind(this));
+		
+		
+		<% end %>
+		
+		
+		
+		
+	<% end %>
+		
+	 
+
+
+
+		
+
+
+
+
+  });
+
+    // map1.init()
 
 
 
@@ -610,8 +764,9 @@ modal('#modal_notification')
   ws.onopen    = function()  { show('websocket opened');
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
 // "ZoneUpdate zone_id=*",
+  // "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", 
 
   };
 
@@ -668,7 +823,17 @@ modal('#modal_notification')
        if(obj['alert']=="1"||obj['alert']=="0"){
          console.log(obj)
 
-		   }
+	   }
+	   
+	   update(lines)
+	   
+	   <% if record %>
+		   
+	   if(obj['ems_data']['<%=record.id%>']==null){
+	   		window.location="index";
+	   }	   
+		   
+		   <% end %>
 
 
     else
@@ -791,88 +956,7 @@ modal('#modal_notification')
 
   })
 
-
-
-		var ambu_map = {}
-
-
-		function update(lines){
-
-			// console.log(lines)
-
-			obj = JSON.parse(lines[1])
-
-			// console.log(obj['ambu_data'])
-
-			var keys = Object.keys(obj['ambu_data']);
-
-			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
-
-
-
-			for(ai in values){
-
-				a = values[ai]
-
-				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
-
-
-
-				map_icon = {
-				  path: car,
-				  scale: 0.9,
-				  strokeColor: 'white',
-				  strokeWeight: .10,
-				  fillOpacity: 1,
-				  fillColor: '#303bef',
-				  offset: '5%',
-				// size: new google.maps.Size(sizeX, sizeY),
-//         				origin: new google.maps.Point(0, 0),
-//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
-				  // rotation: parseInt(heading[i]),
-				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
-				};
-
-
-
-				var t = a['last_location'].split(",")
-				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
-
-        marker = ambu_map[a['_id']]
-
-				var image = "<%=url_for("ems/ambu.png")%>";
-
-
-
-				if(marker==null){
-
-
-						marker_map = new google.maps.Marker({position: pos,icon: image,  map: map1});
-						ambu_map[a['_id']] = marker_map
-							console.log('new')
-
-
-				}else{
-						marker_map = 	ambu_map[a['_id']]
-						marker_map.setPosition(pos)
-						console.log('set')
-
-				}
-
-				}
-
-
-
-				// latlngbounds.extend(pos);
-
-			}
-
-
-
-			// map.fitBounds(latlngbounds);
-
-		}
-
+	
 
 
 function noti_msg(msg) {
@@ -902,5 +986,8 @@ function resize(height){
   alert(height);
 }
 	// modal('#modal_info')
+  })
+
 
 </script>
+<%= init_map %>
