@@ -1918,7 +1918,7 @@ MSG
 
                                       end
 
-
+                                      emt_result[:ambu_data] = result[:ambu_data]
 
                                   end
                                   result[:admit_data][i.id] = ad
