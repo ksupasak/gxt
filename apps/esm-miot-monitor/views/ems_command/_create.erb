@@ -76,10 +76,13 @@ if params[:record]
 		admit.update_attributes :station_id=>ambu.station_id unless admit.station_id
 
 		ems_case.update_attributes :station_id=>ambu.station_id unless ems_case.station_id
+		
+	
+		
 
 	end
 
-
+	ems_case.update_attributes :ambulance_id=>ambu.id
 
 
 	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
