@@ -44,6 +44,8 @@ def google_direction origin, distination, key
     	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{origin}&destination=#{distination}&key=#{key}"
 
       uri = URI(url)
+      
+      puts url
 
       data = nil
 
