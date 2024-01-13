@@ -154,9 +154,9 @@ def self.registered(app)
 
             switch name, 'esm-miot-monitor'
 
-            if cms_url = Setting.where(:name=>'cms_url').first and cms_url
+            if key =  Setting.get(:google_map_key)#cms_url = Setting.where(:name=>'cms_url').first and cms_url
 
-              key =  Setting.get :google_map_key
+              
 
               
               list = []
@@ -205,7 +205,9 @@ def self.registered(app)
                     end
 
 
-                    if i.last_speed > 10 or route.act_distance ==nil #  and i.last_speed and
+
+
+                    if route.last_location != i.last_location #  and i.last_speed and
 
                      # puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
 
@@ -215,6 +217,10 @@ def self.registered(app)
                     unless direction
                       direction = google_direction(i.last_location, route.stop_latlng, key)
                       cache_directions[kcache] = direction
+                    end
+                    
+                    if direction[:status]=='200 OK'
+                        route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value], :last_location=>i.last_location, :last_cal=>Time.now
                     end
 
 path = "miot/#{name}/z/#{admit.zone.name}"
@@ -230,16 +236,47 @@ MSG
                     # puts cache_directions.keys
                     # unless route.act_distance
                       # fill estimate distance
-                    if direction[:status]=='200 OK'
-                        route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
-                    end
+                 
 
 
                   end
 
 
+  #                   if i.last_speed > 10 or route.act_distance ==nil #  and i.last_speed and
+#
+#                      # puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
+#
+#                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
+#                     direction = cache_directions[kcache]
+#
+#                     unless direction
+#                       direction = google_direction(i.last_location, route.stop_latlng, key)
+#                       cache_directions[kcache] = direction
+#                     end
+#
+# path = "miot/#{name}/z/#{admit.zone.name}"
+# msg = 'NULL'
+# send_msg = <<MSG
+# #{'Zone.Message'} #{path}
+# #{msg.to_json}
+# MSG
+#
+#                     settings.redis.publish(path, send_msg)
+#
+#
+#                     # puts cache_directions.keys
+#                     # unless route.act_distance
+#                       # fill estimate distance
+#                     if direction[:status]=='200 OK'
+#                         route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
+#                     end
+#
+#
+#                   end
+
+
                     # end
-                    if  route.est_distance and route.act_distance and route.est_distance - route.act_distance > 30
+                    if  route.est_distance and route.act_distance and route.est_distance - route.act_distance > 10
 
                       departure_log = AdmitLog.find route.departure_log_id
 
@@ -264,7 +301,7 @@ MSG
 
                     # route.act_distance = 10
 
-                    if route.act_distance and route.act_distance < 30 # arrive
+                    if route.act_distance and route.act_distance < 10 # arrive
 
                       arrival_log = AdmitLog.find route.arrival_log_id
 
@@ -301,7 +338,7 @@ MSG
 
 
 
-                    puts route.inspect
+                    # puts route.inspect
 
                   end
 
@@ -316,8 +353,10 @@ MSG
 
               end
 
-              device_map[name] = {:url=>cms_url.value, :key=>key, :list=> list}
-
+              if cms_url = Setting.where(:name=>'cms_url').first and cms_url
+                device_map[name] = {:url=>cms_url.value, :key=>key, :list=> list} 
+              end
+              
             end
 
         end
@@ -327,7 +366,7 @@ MSG
        EM.add_periodic_timer(2) do
 
 
-         puts ""
+         # puts ""
 
 
          if app.settings.apps_rv
@@ -380,7 +419,7 @@ MSG
 
 
            # start Zello
-           puts "DVR GPS update #{name} #{device_map[name][:url]} #{jsessionid}"
+           # puts "DVR GPS update #{name} #{device_map[name][:url]} #{jsessionid}"
 
           # zello_connect = Setting.where(:name=>'zello_connect').first
 
@@ -395,7 +434,7 @@ MSG
 
           end
             
-          puts device_map[name].inspect 
+          # puts device_map[name].inspect 
 
           http.start do |http|
 
@@ -409,7 +448,7 @@ MSG
             ambu = map[:ambu]
             admit = map[:admit]
             
-            puts  "#{name} : #{ambu.name}"
+            # puts  "#{name} : #{ambu.name}"
             
             if ambu and ambu.device_no and ambu.device_no !="" and ambu.location_policy != "APP"
 
@@ -419,7 +458,7 @@ MSG
 
             response = http.request(req)
             
-            puts response
+            # puts response
             
             json = JSON.parse(response.body)
 
@@ -430,7 +469,7 @@ MSG
 
             result = {:station_id=> ambu.station_id , :device_id=>ambu.device_no,:lat=>json['mlat'], :lng=>json['mlng'], :sp=>sp, :ol=>json['ol'], :hx=>json['hx']}
 
-            puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
+            # puts "#{ambu.name} #{result.inspect} #{admit.id if admit}"
 
             results[ambu.id] = result if json['mlat'].to_i!=0
             
@@ -452,7 +491,7 @@ send_msg = <<MSG
 MSG
 
   
-            puts "\t #{path} #{send_msg.to_json}"
+            # puts "\t #{path} #{send_msg.to_json}"
             redis.publish(path, send_msg)
           end
 
@@ -1912,9 +1951,12 @@ MSG
                                           commands = EMSCommand.where(:case_id=>case_record.id).all
 
                                           routes = AocCaseRoute.where(:admit_id=>i.id, :response=>nil).all
-
-
-                                          emt_result[:ems_data][case_record.id] = {:case_record=>case_record, :commands=>commands, :routes=>routes}
+                                          
+                                          if target_route = AocCaseRoute.where(:admit_id=>i.id, :status=>'STARTED' ).first and target_route.last_cal
+                                            emt_result[:est_time] = "#{target_route.act_duration-(Time.now - target_route.last_cal)}"
+                                          end
+                                          
+                                          emt_result[:ems_data][case_record.id] = {:case_record=>case_record, :commands=>commands, :routes=>routes, :current_time=>Time.now}
 
                                       end
 
@@ -1945,7 +1987,7 @@ if z.mode=='ems'
   puts 'ems'
   path = "miot/#{name}/z/#{z.name}/EMT"
 msg = <<MSG
-#{'EMSUpdate'} #{path}
+#{'EMS.Update'} #{path}
 #{emt_result.to_json}
 MSG
   redis.publish(path, msg)

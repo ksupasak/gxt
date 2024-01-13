@@ -157,7 +157,7 @@ record = @current_case
 
 <div class="row no-gutters g-0 vh-100" style="border:0px solid;margin-top:40px">
 <div class="col-12">
-	<%= @current_case.id if @current_case %>
+
 <div id="dashboard-map" class="h-100" style="border:0px solid" >
   map
 </div>
@@ -779,7 +779,7 @@ modal('#modal_notification')
   ws.onopen    = function()  { show('websocket opened');
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
 // "ZoneUpdate zone_id=*",
   // "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", 
 
@@ -830,7 +830,7 @@ modal('#modal_notification')
 
 		}else
 		
-    if(lines[0].split(" ")[0]=='EMSUpdate'){
+    if(lines[0].split(" ")[0]=='EMS.Update'){
 
        obj = JSON.parse(lines[1])
        console.log(obj)

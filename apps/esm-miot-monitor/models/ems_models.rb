@@ -290,7 +290,7 @@ class EMSCase < GXTModel
               aoc_case_routes = AocCaseRoute.where(:arrival_log_id=>i.id).all
               for aoc_case_route in aoc_case_routes
               if aoc_case_route
-                  aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation'
+                  aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation', :last_location=>nil, :last_cal=>nil
               end
             end
           end

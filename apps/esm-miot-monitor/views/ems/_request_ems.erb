@@ -100,13 +100,14 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 			<div class="card-body">
 				<div class="d-flex justify-content-between">
 					<div class="col-9">
+						
 						<p class="mb-0 text-secondary">Contact info</p>
 						<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
 						<p class="mb-0 font-13"></p>
-
-
-
+						
 					</div>
+					
+					
 					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> -->
 
 					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
@@ -118,6 +119,69 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 		</div>
 	</div>
 	
+	
+	<% 
+	command = EMSCommand.where(:case_id=>ems_case.id).first
+	
+	
+	if command 
+		
+		amb = command.ambulance
+		
+	
+		att = Attachment.find amb.image
+
+		content = ""
+
+		if att
+ 
+		  content = "<center><img src='#{att.path}' width='200'><br/><br/>#{amb.plate_license} </center>"
+  
+		end
+	
+		%>
+
+ 
+		
+    <div class='row'>
+		<div class="col">
+			<div class="card radius-10 border-start border-0 border-3 border-warning">
+			<div class="card-body">
+				<div class="d-flex justify-content-between">
+					<div class="col-6">
+						
+						<p class="mb-0 text-secondary">สั่งการ</p>
+						<%
+							
+							
+							
+						%>
+						<h4 class="my-1 text-info">
+							 <%= content %></h4>
+						<p class="mb-0 font-13"></p>
+						
+					</div>
+					
+					<div class="col-6">
+						
+						<p class="mb-0 text-secondary">Estimate Time</p>
+						<h4 class="my-1 text-warning">
+						<center style="font-size:4em" class="est">00:00</center>
+						</h4>
+						<p class="mb-0 font-13"></p>
+						
+					</div>
+					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> -->
+
+					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+
+					</div> -->
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	<% end %>
 	
     <div class='row'>
 		<div class="col d-flex justify-content-center">
@@ -133,7 +197,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 		</div>
 		
 		<div class="col d-flex justify-content-center">
-				<a href="#" id="func-3"  class="func func-3 btn btn-success col">
+				<a href="#" id="func-3"  class="func func-3 btn btn-warning col">
 					VideoCall
 				</a>
 				
@@ -711,7 +775,7 @@ geoFindMe()
 
     ws.onopen    = function()  { show('websocket opened');
 
-      ws.send('WS.Select name=<%=session.id%>\n["EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "ZoneUpdate zone_id=*", "EMSUpdate <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+      ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>"]')
 
 
     };
@@ -719,7 +783,7 @@ geoFindMe()
 
     ws.onerror = function(){
 
-      noti_msg('Reconnect in 5 seconds')
+      // noti_msg('Reconnect in 5 seconds')
       ws.close()
       // alert('Reconnect in 5 sec')
       setTimeout(function () {
@@ -761,7 +825,7 @@ geoFindMe()
 
   		}else
 		
-      if(lines[0].split(" ")[0]=='EMSUpdate'){
+      if(lines[0].split(" ")[0]=='EMS.Update'){
 
          obj = JSON.parse(lines[1])
          console.log(obj)
@@ -770,6 +834,18 @@ geoFindMe()
            console.log(obj)
 
   		   }
+		   if(obj['est_time']){
+		   	   
+			   t = parseInt(obj['est_time'])
+			   if(t>0){
+			   min = parseInt(t/60);
+			   sec = t%60;
+			   $('.est').html(""+min+":"+sec)
+			  }else{
+			  	 $('.est').html("00:00")
+			  }
+		   }  
+		   
 
 
       else

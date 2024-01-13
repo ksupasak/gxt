@@ -28,6 +28,11 @@ module EsmMiotMonitor
     key :est_duration, Integer # min
     key :act_distance, Integer
     key :act_duration, Integer
+    
+    key :last_location, String
+    key :last_cal, Time
+    
+    
 
     key :start_time, Time
     key :stop_time, Time

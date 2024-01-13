@@ -666,7 +666,7 @@ MSG
                   icmd = t[0]
                   ipath = t[1]
 
-                  if icmd=='Zone' or icmd=='PTT' or icmd=='EMSUpdate'
+                  if icmd=='Zone' or icmd=='PTT' or icmd=='EMS'
 
                     ch = ipath
 
