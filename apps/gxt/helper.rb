@@ -108,7 +108,7 @@ def google_direction origin, distination, key
 
     else
       
-      return {:status=>'404 NOTFOUND', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location']}
+      return {:status=>'404 NOTFOUND', :start_location=>origin,:end_location=>distination}
       
       
     end
