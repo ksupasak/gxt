@@ -57,6 +57,8 @@ def google_direction origin, distination, key
 
       end
 
+
+      puts data
       if data
 
     	obj = JSON.parse data

@@ -221,8 +221,7 @@ def self.registered(app)
                     
                     if direction[:status]=='200 OK'
                         route.update_attributes :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value], :last_location=>i.last_location, :last_cal=>Time.now
-                    end
-
+                   
 path = "miot/#{name}/z/#{admit.zone.name}"
 msg = 'NULL'
 send_msg = <<MSG
@@ -232,6 +231,7 @@ MSG
 
                 		settings.redis.publish(path, send_msg)
 
+                  end
 
                     # puts cache_directions.keys
                     # unless route.act_distance
