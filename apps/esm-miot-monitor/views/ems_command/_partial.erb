@@ -669,8 +669,23 @@ end
 							latlng = [<%=ems_case.latlng%>]
 							<% end %>
 
-
-
+							<% 
+							
+								if comd = EMSCommand.where(:case_id=>ems_case.id).first
+								
+									if route = AocCaseRoute.where(:ems_command_id=>comd.id, :status=>{'$in'=>['SCHEDULED','STARTED']}).sort(:sort_order=>1).first
+									
+										%>
+										latlng = [<%=route.stop_latlng%>]
+										<%
+										
+									end
+									
+								end
+							
+							
+							 %>
+								
 					
 
 
