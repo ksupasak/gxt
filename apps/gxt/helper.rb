@@ -112,7 +112,6 @@ def google_direction origin, distination, key
       
 
       end
-      end
 
       return {:status=>'505 ERROR'}
 
