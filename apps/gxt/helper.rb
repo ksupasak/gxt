@@ -106,11 +106,15 @@ def google_direction origin, distination, key
 
       return {:status=>'200 OK', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location'], :end_address=>best_leg['end_address'],:end_location=>best_leg['end_location'],:total_distance=>{:text=>total_distance_text,:value=>total_distance},:total_duration=>{:text=>total_duration_text,:value=>total_duration},:distance=>distance, :duration=>duration}
 
-      else
-        
-      return {:status=>'404 NOTFOUND', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location']
+    else
       
-
+      return {:status=>'404 NOTFOUND', :start_address=>best_leg_0['start_address'],:start_location=>best_leg_0['start_location']}
+      
+      
+    end
+      
+      
+      
       end
 
       return {:status=>'505 ERROR'}
