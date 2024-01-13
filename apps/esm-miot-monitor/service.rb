@@ -195,7 +195,7 @@ def self.registered(app)
 
 
                     unless route.est_distance
-            
+                      puts "#{route.start_latlng} - #{route.stop_latlng}"
                       direction = google_direction(route.start_latlng, route.stop_latlng, key)
 
                       if direction[:status]=='200 OK'
