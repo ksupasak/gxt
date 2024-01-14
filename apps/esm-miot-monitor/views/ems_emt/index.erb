@@ -588,6 +588,12 @@ end
   						marker_map =  ambu_map[a['_id']]
   						marker_map.setPosition(pos)
   						console.log('set')
+					<% if @current_ambulance %>
+					if('<%=@current_ambulance.id%>'==a['_id']){
+						map1.setPosition(pos)
+					}
+					<% end %>	
+						
 
   				}
 
