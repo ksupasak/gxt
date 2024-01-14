@@ -7,6 +7,31 @@ def self.settings
       @@settings
 end
 
+
+def self.deg2rad(deg)
+		return deg * (3.1414/180)
+end
+
+def self.getDistanceFromLatLonInKm(lo1, lo2)
+  
+  lat1, lon1 = lo1.split(",").collect{|i| i.to_f}
+  
+  lat2, lon2 = lo2.split(",").collect{|i| i.to_f}
+  
+  # lat1, lon1, lat2, lon2
+	r = 6371; # Radius of the earth in km
+	dLat = deg2rad(lat2-lat1);  # deg2rad below
+	dLon = deg2rad(lon2-lon1);
+	a =
+		Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+		Math.sin(dLon/2) * Math.sin(dLon/2)
+		;
+	c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	d = r * c; # Distance in km
+	return d;
+end
+
 def self.registered(app)
 
      mode = app.settings.mode
@@ -204,11 +229,13 @@ def self.registered(app)
 
                     end
 
+                    dis =  getDistanceFromLatLonInKm(i.last_location, route.last_location)
 
-
-
-                    if route.last_location != i.last_location #  and i.last_speed and
-
+                    puts "Dis = #{dis}"
+                    
+                    if route.last_location == nil or dis > 0.05 #  and i.last_speed and
+                      
+                      
                      # puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
 
                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
@@ -1954,6 +1981,8 @@ MSG
                                           
                                           if target_route = AocCaseRoute.where(:admit_id=>i.id, :status=>'STARTED' ).first and target_route.last_cal
                                             emt_result[:est_time] = "#{target_route.act_duration-(Time.now - target_route.last_cal)}"
+                                            emt_result[:arrival_at] = " #{(target_route.last_cal+target_route.act_duration).strftime('%H:%M:%S')}"
+                                            
                                           end
                                           
                                           emt_result[:ems_data][case_record.id] = {:case_record=>case_record, :commands=>commands, :routes=>routes, :current_time=>Time.now}

@@ -105,7 +105,13 @@ if params[:record]
 
 	AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
 
-
+	path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+	msg = 'NULL'
+	send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+	@context.settings.redis.publish(path, send_msg)
 
 
 end
