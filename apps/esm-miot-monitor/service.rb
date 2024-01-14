@@ -228,8 +228,9 @@ def self.registered(app)
                       end
 
                     end
-
-                    dis =  getDistanceFromLatLonInKm(i.last_location, route.last_location)
+                    
+                    dis = 999
+                    dis = getDistanceFromLatLonInKm(i.last_location, route.last_location) if route.last_location and i.last_location
 
                     puts "Dis = #{dis}"
                     
