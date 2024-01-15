@@ -1027,9 +1027,11 @@ MSG
 
            if obj['device_type']=='mobile'
 
-           puts "r" + json["receiver"]
+            puts "GPS #{obj.inspect}"
 
-            ambu = Ambulance.where(:name=>json["receiver"]).first
+            ambu = Ambulance.where(:device_no=>obj["device_no"]).first if obj["device_no"]
+            ambu = Ambulance.where(:name=>json["receiver"]).first unless ambu
+            
             
               
             if ambu
