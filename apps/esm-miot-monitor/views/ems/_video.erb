@@ -17,7 +17,7 @@ if params[:case_id]
 		
 		ems_case.update_attributes :video_status=>mask.join("|")
 	
-	    ems_case.update_message @context, "video call"
+	    ems_case.update_message @context, "video call", 'Zone.Message'
 	end
 		
 end
