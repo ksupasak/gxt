@@ -78,7 +78,7 @@ location = "#{Setting.get(:aoc_center)}"
 locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 
 
-conf_url = "https://openvidu.pcm-life.com/\#/#{ems_case.case_no}"
+conf_url = "#{Setting.get('videocall_server')}/\#/#{Setting.get('aoc_code','0000')}-#{ems_case.case_no}"
 
 conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 

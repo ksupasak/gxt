@@ -76,7 +76,7 @@ end
 
     <%
         session_id = 'SessionA'
-        session_id = params[:id] if params[:id]
+        session_id = "#{Setting.get("aoc_code")}-"+params[:id] if params[:id]
 		
 		
 		
@@ -145,7 +145,7 @@ end
     		 * more about the integration of OpenVidu in your application server.
     		 */
 
-    		var APPLICATION_SERVER_URL = "https://openvidu.pcm-life.com";
+    		var APPLICATION_SERVER_URL = '<%=Setting.get('videocall_server','https://openvidu.pcm-life.com')%>';
 
     		function getToken(mySessionId) {
 
@@ -178,7 +178,7 @@ end
     				type: "GET",
     				url: APPLICATION_SERVER_URL + "/openvidu/api/sessions/"+sessionId,
     				beforeSend: function (xhr) {
-    				    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    				    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
     				},
     				headers: { "Content-Type": "application/json" },
     				success:  response => resolve(response),
@@ -202,7 +202,7 @@ end
     					url: APPLICATION_SERVER_URL + "/openvidu/api/sessions",
     					data: JSON.stringify({ customSessionId: sessionId }),
     					beforeSend: function (xhr) {
-    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
     					},
     					headers: { "Content-Type": "application/json" },
     					success: response => resolve(response.sessionId), // The sessionId
@@ -218,7 +218,7 @@ end
     					url: APPLICATION_SERVER_URL + '/openvidu/api/sessions/' + sessionId + '/connection',
     					data: JSON.stringify({}),
     					beforeSend: function (xhr) {
-    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("OPENVIDUAPP" + ":" + "minadadmin"));
+    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
     					},
     					headers: { "Content-Type": "application/json" },
     					success: (response) => resolve(response.token), // The token

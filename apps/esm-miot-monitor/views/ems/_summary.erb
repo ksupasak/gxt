@@ -900,7 +900,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
 		<div class="card col" >
     	  <div class="card-header">
 		  <span class="time">
-            <%=l[0].strftime("%H:%M:%S")%> :  <%=type%>
+            <%=l[0].strftime("%H:%M:%S")%> :  <%=i.type%>
           </span>
 	  	</div>
     	  <div class="card-body">
@@ -909,8 +909,7 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           
             <% if type == :log %>
             <%= i.name %>
-
-						เลขไมล์ : <%= i.mile_meter %>
+			เลขไมล์ : <%= i.mile_meter %>
 
             <% elsif type == :msg %>
 			
@@ -932,7 +931,8 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
               url = "../Message/content?id=#{i.id}"
           %>
           <a href="<%=url%>" target="_blank" ><img src="<%=url%>" height="250"></a>
-          <% end %>          </center>
+		   </center>
+                
 
             <% elsif i.type == 'voice'
             url = "../Message/content?id=#{i.id}"
@@ -947,6 +947,8 @@ Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> t
           <% else %>
             <p class="chat-left-msg"><%=i.content%></p>
             <% end %>
+			
+			 <% end %>  
 		
             </div>
       		</div>

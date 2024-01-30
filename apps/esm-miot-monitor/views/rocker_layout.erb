@@ -1,4 +1,9 @@
-<html lang="en"><head>
+<%
+   sidebarcolor = Setting.get('ui_nav_color','sidebarcolor2')
+   style = 'color-sidebar ' + sidebarcolor 
+
+%>
+<html lang="en" class="<%=style%>"><head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,7 +37,7 @@
 	<link href="<%=url_for 'css/ems.css'%>" rel="stylesheet">
 
 
-	<title>Smart EMS - Innovation EMS </title>
+	<title>Smart EMS - EMS Innovation </title>
 <style type="text/css">/* Chart.js */
 @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
 
@@ -93,7 +98,7 @@
 
 					<div class=" flex-grow-1">
 						<div class="position-relative search-bar-box"  style="font-size:1.2em">
-							<b><%=Setting.get('default_center_name')%></b>
+							<b><%=Setting.get('aoc_title')%></b>
 						</div>
 					</div>
 
@@ -309,9 +314,9 @@
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
-							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-user"></i><span>Profile</span></a>
+							<li><a class="dropdown-item" href="../EMSUser/profile"><i class="bx bx-user"></i><span>Profile</span></a>
 							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-cog"></i><span>Settings</span></a>
+							<li><a class="dropdown-item" href="../EMSAdmin/setting"><i class="bx bx-cog"></i><span>Settings</span></a>
 							</li>
 
 							<li>
@@ -355,6 +360,7 @@
 	</div>
 	<!--end wrapper-->
 	<!--start switcher-->
+	<% if false %>
 	<div class="switcher-wrapper">
 		<div class="switcher-btn"> <i class="bx bx-cog bx-spin"></i>
 		</div>
@@ -449,6 +455,7 @@
 			</div>
 		</div>
 	</div>
+	<% end %>
 	<!--end switcher-->
 	<!-- Bootstrap JS -->
 	<script src="/rocker/assets/js/bootstrap.bundle.min.js"></script>
@@ -466,7 +473,7 @@
 	<script src="/rocker/assets/js/app.js"></script>
 
 	<script>
-		 $('html').attr('class', 'color-sidebar sidebarcolor2');
+		 $('html').attr('class', '<%=style%>');
 	</script>
 <div class="jvectormap-tip"></div>
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
