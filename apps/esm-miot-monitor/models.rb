@@ -850,7 +850,7 @@ class Setting  < GXTModel
   def self.set name, value
     record = self.where(:name=>name).first
     unless record
-      record = self.create :name=>name, :value=>default
+      record = self.create :name=>name, :value=>value
     else
       record.update_attributes :value=>value
     end

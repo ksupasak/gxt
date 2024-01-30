@@ -60,6 +60,10 @@ gem 'eventmachine'
 gem 'roo'
 gem 'rack-ssl-enforcer'
 
-gem 'google-cloud-translate-v2'
+
+
 gem 'wkhtmltopdf-binary'
+
 gem 'google_drive' , "3.0.7"
+gem 'google-cloud-translate-v2'
+gem 'google-cloud-speech'

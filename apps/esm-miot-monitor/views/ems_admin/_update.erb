@@ -1,0 +1,17 @@
+<% 
+	
+if request.post?
+	
+	params[:setting].each_pair do |k,v|
+		
+		
+		s = Setting.set(k,v)
+		
+		
+	end
+	
+	
+	
+end
+
+%><META HTTP-EQUIV="Refresh" CONTENT="0;URL=setting">

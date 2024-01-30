@@ -896,8 +896,8 @@ MSG
   def send_sms params
 
     ems_case = EMSCase.find params[:id]
-
-    body = {"message"=>Setting.get("tracking_sms","EMS Tracking Service กรุณากด : <TRACKING-URL>"), "sender"=>Setting.get("sms_sender","Demo-SMS"), "phone" => ems_case.contact_phone , "url"=> "#{Setting.get("host_url","https://pcm-life.com:1792")}/EMS/request_ems?id=#{ems_case.id}" }
+      
+    body = {"message"=>Setting.get("sms_msg","EMS Tracking Service กรุณากด : <TRACKING-URL>"), "sender"=>Setting.get("sms_sender","Demo-SMS"), "phone" => ems_case.contact_phone , "url"=> "#{Setting.get("host_url","https://pcm-life.com:1792")}/EMS/request_ems?id=#{ems_case.id}" }
 
     require 'uri'
     require 'net/http'
@@ -925,7 +925,7 @@ MSG
   	ems_case.update_message @context, "request send sms"
 
 
-    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="0;URL='+url+'">'
+    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="3;URL='+url+'">'
 
   end
 
@@ -1067,8 +1067,10 @@ end
 
 class EMSConnect
 
-
-  def self.line_noti params
+ def self.line_noti params
+   return 'NA'
+ end
+  def self.line_noti2 params
 
 
     url = URI("https://notify-api.line.me/api/notify")
@@ -1101,6 +1103,18 @@ class EMSConnect
 
 end
 
+
+class EMSAdminController < GXT
+  def default_layout
+    return :rocker_layout
+  end
+end
+
+class EMSUserController < GXT
+  def default_layout
+    return :rocker_layout
+  end
+end
 
 
 end

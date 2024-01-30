@@ -65,6 +65,13 @@ GEM
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.16.3)
+    gapic-common (0.9.0)
+      faraday (~> 1.3)
+      google-protobuf (~> 3.14)
+      googleapis-common-protos (>= 1.3.11, < 2.a)
+      googleapis-common-protos-types (>= 1.0.6, < 2.a)
+      googleauth (>= 0.17.0, < 2.a)
+      grpc (~> 1.36)
     google-apis-core (0.11.2)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.16.2, < 2.a)
@@ -84,6 +91,16 @@ GEM
     google-cloud-env (1.6.0)
       faraday (>= 0.17.3, < 3.0)
     google-cloud-errors (1.3.1)
+    google-cloud-speech (1.4.0)
+      google-cloud-core (~> 1.6)
+      google-cloud-speech-v1 (>= 0.8, < 2.a)
+      google-cloud-speech-v1p1beta1 (>= 0.0, < 2.a)
+    google-cloud-speech-v1 (0.8.0)
+      gapic-common (>= 0.7, < 2.a)
+      google-cloud-errors (~> 1.0)
+    google-cloud-speech-v1p1beta1 (0.12.4)
+      gapic-common (>= 0.7, < 2.a)
+      google-cloud-errors (~> 1.0)
     google-cloud-translate-v2 (0.4.1)
       faraday (>= 0.17.3, < 2.a)
       google-cloud-core (~> 1.6)
@@ -277,6 +294,7 @@ DEPENDENCIES
   em-hiredis
   eventmachine
   faye-websocket
+  google-cloud-speech
   google-cloud-translate-v2
   google_drive (= 3.0.7)
   hiredis
