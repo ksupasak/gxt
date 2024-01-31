@@ -8,12 +8,14 @@ record = User.find params[:id]
 	
 if request.post?
 	
+	puts params.inspect 
+	
 	if params[:login] and params[:password]
 		user_login = User.authenticate(params[:login], params[:password])
 		session[:identity] = user_login.id if user_login	
 	end
 	
-	if @login_mode == 'pattern' and params[:pattern_password]
+	if  params[:pattern_password] #and @login_mode == 'pattern' and
 		user_login = User.where(:pattern=>params[:pattern_password]).first
 		if user_login
 			user_login.login_perform
@@ -64,7 +66,7 @@ if request.post?
 
    default_zone = Zone.where(:default=>true).first
    
-   if default_zone and  File.exist?(File.join(__dir__,"..",default_zone.mode,"_login.erb"))
+   if false and  default_zone and  File.exist?(File.join(__dir__,"..",default_zone.mode,"_login.erb"))
 %>
 <%=inline(this,:"#{File.join("..",default_zone.mode,"_login")}")%>
 <% else %>
