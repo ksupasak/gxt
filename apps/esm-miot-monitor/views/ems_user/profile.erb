@@ -1,5 +1,237 @@
+
 <%
 	
+groups = []
+
+
+g = {:name=>'User Info', :key=>'user'}
+items = %w{
+	login
+	role
+	status
+	last_accessed
+	email
+}
+g[:items] = items
+groups << g
+
+
+g = {:name=>'Provider', :key=>'provider'}
+items = %w{
+	user_id
+	name
+	prefix_name
+	first_name
+	last_name
+	code
+	role
+	shot
+	department
+	phone
+	email
+	license
+	line_account_id
+}
+g[:items] = items
+groups << g
+
+g = {:name=>'Authentication', :key=>'auth'}
+items = %w{
+	
+	new_password
+	password_confirmation
+	pattern
+}
+g[:items] = items
+groups << g
+
+glist = {}
+
+list = {}
+
+list['login'] = @current_user.login
+list['name'] = @current_user.name
+list['role'] = @current_role
+list['status'] = @current_user.status
+list['last_accessed'] = @current_user.last_accessed
+list['email'] = @current_user.email
+
+
+glist['user'] = list
+
+provider = Provider.where(:user_id=>@current_user.id).first
+
+provider_id = nil
+if provider 
+		
+	glist['provider'] = provider
+	provider_id = provider.id
+end
+
+list = {}
+list['pattern'] = @current_user.pattern
+glist['auth'] = list
+
+
+if request.post?
+	
+	user = nil
+	
+	if params[:user]
+		
+		user = User.where(:login=>@current_user.login).first
+		if user
+			user.update_attributes params[:user]
+		end
+		
+			
+		
+		
+	end
+	
+	if params[:provider] and params[:provider][:provider_id] and params[:provider][:provider_id] !=""
+		
+		provider = Provider.find params[:provider][:provider_id]
+		
+		if provider.user_id=='' or  provider.user_id ==nil
+			
+			provider.update_attributes :user_id=>@current_user.id
+			
+		else
+			params[:provider].delete :provider_id
+			
+			provider.update_attributes params[:provider]
+			
+		end
+		
+		
+	end
+	
+	if auth = params[:auth]
+		
+		
+		if  auth[:new_password].size > 0 and auth[:new_password] == auth[:password_confirmation]
+			user.password = auth[:new_password]
+			user.save
+		end
+		
+		if auth[:pattern]
+		
+			user.update_attributes :pattern=> auth[:pattern]
+				
+		end
+		
+		
+	end	
 	
 	
-%><%=@current_user.to_json%>
+	
+	
+	
+	
+	
+	
+%>
+
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=profile">
+
+<%	
+else
+%>
+
+<%#glist.inspect %>
+
+<form action="<%= get_path 'profile'%>" method="post" >
+
+<h1>Profile</h1>
+<hr/>
+	<div class="col-6">
+	<div class="row">
+		
+			<% for g in groups %>
+			
+			
+			<% fieldset(g[:key]) do |f| %>
+			
+			
+			<div class="col-12 ">
+				
+				
+					
+					<div class="card  ">
+					
+					
+						<div class="card-header bg-primary bbg-gradient text-white">
+
+							<div class="">
+								<h6 class="mb-0 text-white">
+
+									<span class="t" t="case_info"><%=g[:name]%></span>  :
+
+								</h6>
+							</div>
+					
+
+						</div>
+
+						<div class="card-body">
+						<div class="row">
+						<% for i in g[:items] 
+						
+							key = g[:key]	
+							gl = glist[key]
+							
+							s = gl[i] if gl
+							value = ''
+							value = s if s 	
+							
+						%>
+						<% if i == 'login' or i=='role' %>
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t=""><%= 'Provider' %></span>
+						</p><span class="form-control mb-3"> <%=value%></span>
+						</div>
+						<% elsif i == 'user_id' %>
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t=""><%= 'Provider' %></span>
+						</p><%= f.select(:provider_id, [['','']]+Provider.where({}).sort(:code=>1).all().collect{|i| [i.id,"#{i.code} #{i.name}"]}, :value=>provider_id,:class=>'form-select') %>
+						</div>
+						
+						<% elsif i.index('password') %>
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t=""><%= i.humanize %></span>
+						</p><input name='<%=key%>[<%=i%>]' value="<%= value %>"  id="record_contact_phone" class="form-control mb-3 " type="password" placeholder="" aria-label="default input example">
+						</div>
+						
+						
+						<%
+						else
+						%>
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t=""><%= i.humanize %></span>
+						</p><input name='<%=key%>[<%=i%>]' value="<%= value %>"  id="record_contact_phone" class="form-control mb-3 " type="text" placeholder="" aria-label="default input example">
+						</div>
+						
+							<% end %>
+						<% end %>
+						</div>
+						
+						</div>
+					
+					</div>
+					
+				
+					
+			</div>
+				<% end %>
+					<% end %>
+	</div>
+		</div>
+	<input type='submit' value="Update" class="btn btn-info" >
+</form>
+
+	<% end %>
