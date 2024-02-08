@@ -179,7 +179,7 @@ def self.registered(app)
 
             switch name, 'esm-miot-monitor'
 
-            if key =  Setting.get(:google_map_key)#cms_url = Setting.where(:name=>'cms_url').first and cms_url
+            if key = Setting.get(:google_api_key)#cms_url = Setting.where(:name=>'cms_url').first and cms_url
 
               
 
