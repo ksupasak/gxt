@@ -1,6 +1,6 @@
 <%
 	
-	key = Setting.get :google_map_key
+	key = Setting.get :google_api_key
 	
 	ambu = Ambulance.find params[:ambu]
 	
@@ -10,7 +10,7 @@
 
 	last_location = ambu.last_location
 	
-	
+	puts key
 	if ambu and last_location and last_location!="" and last_location.index(',') and last_location.split(",")[0].to_i!=0
 		
 	url = "https://maps.googleapis.com/maps/api/directions/json?origin=#{ambu.last_location}&destination=#{params[:l]}&key=#{key}"

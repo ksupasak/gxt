@@ -6,8 +6,17 @@ gem 'sinatra'
 gem 'sinatra-websocket'
 gem 'sinatra-reloader'
 gem 'sinatra-partial'
+gem 'sinatra-asset-pipeline'
+
 
 gem 'sinatra-formhelpers-ng'
+
+gem 'sprockets'
+gem "yui-compressor"
+
+# I find it well worth to include CoffeeScript and SASS as well
+gem "coffee-script"
+gem "sass"
 
 gem 'puma' , "6.3.0"
 gem 'mqtt'
@@ -67,3 +76,5 @@ gem 'wkhtmltopdf-binary'
 gem 'google_drive' , "3.0.7"
 gem 'google-cloud-translate-v2'
 gem 'google-cloud-speech'
+
+

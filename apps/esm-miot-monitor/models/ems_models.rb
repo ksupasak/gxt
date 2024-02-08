@@ -796,6 +796,17 @@ class EMSProtocol < GXTModel
   
 end
 
+class EMSGXT < GXT
+  def default_layout
+    return :rocker_layout
+  end
+end
+
+class EMSGXTDocument < GXTDocument
+  def default_layout
+    return :rocker_layout
+  end
+end
 
 
 class EMSController < GXT
@@ -939,24 +950,26 @@ MSG
 
 end
 
-class EMSAssessmentController < GXTDocument
-
-end
-
-class EmsReportController < GXT
+class EMSAssessmentController < EMSGXTDocument
 
 end
 
 
-class EMSDVRController < GXTDocument
+
+class EmsReportController < EMSGXT
 
 end
 
-class EMSHospitalController < GXTDocument
+
+class EMSDVRController < EMSGXTDocument
 
 end
 
-class EMSUnitController < GXTDocument
+class EMSHospitalController < EMSGXTDocument
+
+end
+
+class EMSUnitController < EMSGXTDocument
 
 end
 
@@ -974,73 +987,73 @@ class LineMessageController < GXTDocument
 
 end
 
-class EMSChannelController < GXTDocument
+class EMSChannelController < EMSGXTDocument
 
 end
 
-class EMSCaseController < GXTDocument
+class EMSCaseController < EMSGXTDocument
 
 end
 
-class EMSCodeController < GXTDocument
-
-end
-
-
-class EMSCodeGroupController < GXTDocument
-
-end
-
-class EMSParamedicController < GXTDocument
+class EMSCodeController < EMSGXTDocument
 
 end
 
 
-class EMSCaseWorkflowController < GXTDocument
+class EMSCodeGroupController < EMSGXTDocument
 
 end
 
-class EMSCaseProcessController < GXTDocument
+class EMSParamedicController < EMSGXTDocument
 
 end
 
-class EMSCaseActionController < GXTDocument
+
+class EMSCaseWorkflowController < EMSGXTDocument
 
 end
 
-class EMSProtocolController < GXTDocument
+class EMSCaseProcessController < EMSGXTDocument
 
 end
 
-class EMSKWorkflowController < GXTDocument
+class EMSCaseActionController < EMSGXTDocument
 
 end
 
-class EMSKProcessController < GXTDocument
+class EMSProtocolController < EMSGXTDocument
 
 end
 
-class EMSKActionController < GXTDocument
+class EMSKWorkflowController < EMSGXTDocument
 
 end
 
-class EMSKBackupController < GXTDocument
+class EMSKProcessController < EMSGXTDocument
 
 end
 
-class EMSCommandController < GXTDocument
+class EMSKActionController < EMSGXTDocument
+
 end
 
-class EMSCommandProviderController < GXTDocument
+class EMSKBackupController < EMSGXTDocument
+
 end
 
-class EMSCasePatientStatusController < GXTDocument
+class EMSCommandController < EMSGXTDocument
 end
 
-class EMSPatientStatusController < GXTDocument
+class EMSCommandProviderController < EMSGXTDocument
 end
 
-class EMSPatientStatusItemController < GXTDocument
+class EMSCasePatientStatusController < EMSGXTDocument
+end
+
+class EMSPatientStatusController < EMSGXTDocument
+end
+
+class EMSPatientStatusItemController < EMSGXTDocument
 end
 
 
@@ -1104,16 +1117,12 @@ class EMSConnect
 end
 
 
-class EMSAdminController < GXT
-  def default_layout
-    return :rocker_layout
-  end
+class EMSAdminController < EMSGXT
+
 end
 
-class EMSUserController < GXT
-  def default_layout
-    return :rocker_layout
-  end
+class EMSUserController < EMSGXT
+
 end
 
 

@@ -23,13 +23,90 @@ require "hiredis-client"
 require 'mongo'
 # require 'mongo_mapper'
 require 'mongoid'
-
+require 'sprockets'
+require "yui/compressor"
 
 require 'sinatra/cross_origin'
+require 'sinatra/asset_pipeline'
+# require 'sinatra/sprockets-helpers'
+# require 'sprockets/environment'
+# class App < Sinatra::Base
 
-configure do
-  enable :cross_origin
-end
+  # register Sinatra::Sprockets::Helpers
+
+
+
+  
+  register Sinatra::AssetPipeline
+
+
+  # Include these files when precompiling assets
+   set :assets_precompile, %w(app.js app.css *.png *.jpg *.svg *.eot *.ttf *.woff *.woff2)
+
+   # The path to your assets
+   set :assets_paths, %w(public/assets)
+
+   # Use another host for serving assets
+   # set :assets_host, '<id>.cloudfront.net'
+
+   # Which prefix to serve the assets under
+   set :assets_prefix, ['/assets']
+
+   # Serve assets using this protocol (http, :https, :relative)
+   set :assets_protocol, :http
+
+   # CSS minification
+   set :assets_css_compressor, :sass
+
+   # JavaScript minification
+   set :assets_js_compressor, :uglifier
+
+   # set :sprockets, Sprockets::Environment.new('app')
+
+   set :digest_assets, true
+   
+   configure do
+     
+     enable :cross_origin
+  
+    
+   end
+  
+  
+   class Assets < Sinatra::Base
+     configure do
+       set :assets, (Sprockets::Environment.new { |env|
+         env.append_path(settings.root + "/public/assets/images")
+         env.append_path(settings.root + "/public/assets/javascripts")
+         env.append_path(settings.root + "/public/assets/stylesheets")
+
+         # compress everything in production
+         if ENV["RACK_ENV"] == "production"
+           env.js_compressor  = YUI::JavaScriptCompressor.new
+           env.css_compressor = YUI::CssCompressor.new
+         end
+       })
+     end
+
+     get "/assets/app.js" do
+       content_type("application/javascript")
+       settings.assets["app.js"]
+     end
+
+     get "/assets/app.css" do
+       content_type("text/css")
+       settings.assets["app.css"]
+     end
+
+     %w{jpg png}.each do |format|
+       get "/assets/:image.#{format}" do |image|
+         content_type("image/#{format}")
+         settings.assets["#{image}.#{format}"]
+       end
+     end
+   end
+  
+  
 set :allow_origin, :any
 # use Rack::SslEnforcer
 
@@ -139,7 +216,10 @@ configure do
 end
 
 
-
+use Assets
 
 # =========================================
 require_relative 'lib'
+
+
+# end
