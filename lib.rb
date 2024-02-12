@@ -233,11 +233,12 @@ def process_request
     acl = @this.acl if @this.respond_to? :acl
 
 
-      # puts "Op #{ params[:operation]} #{acl} #{@current_role} #{session[:identity]}  zone = #{session[:current_zone]} #{session[:return_to]}"
-      #
-      # puts  "A : #{params[:operation] == "login" }"
-      # puts  "B : #{acl == '*'  }"
-      # puts  "C : #{  session[:identity]!=nil   }"
+      puts "Op #{ params[:operation]} #{acl} #{@current_role} #{session[:identity]}  zone = #{session[:current_zone]} #{session[:return_to]}"
+
+      puts  "A : #{params[:operation] == "login" }"
+      puts  "B : #{acl == '*'  }"
+      puts  "C : #{  session[:identity]!=nil   }"
+      puts "D : #{ acl[params[:operation].to_sym]}"
 
       
 
@@ -253,14 +254,14 @@ def process_request
       # puts  "C : #{(@current_user and ( acl['*'] == @current_role or (acl[params[:operation].to_sym] and (acl[params[:operation].to_sym].index('*') or acl[params[:operation].to_sym].index(@current_role))) )}"
   
       
-      if  session[:return_to] and params[:operation] != 'login'
-        
+      if  session[:return_to] and params[:operation] != 'login' and acl[params[:operation].to_sym] != '*'
+
         return_to = session[:return_to]
         session.delete :return_to
         redirect return_to
-      
-      else 
-      
+
+      else
+        session.delete :return_to
         content = @this.send params[:operation], params
         return content
         
@@ -269,7 +270,7 @@ def process_request
     
     else
     
-    puts 'redirect '+request.fullpath
+    # puts 'redirect '+request.fullpath
       
     session.delete :identity
     session.delete :current_solution
