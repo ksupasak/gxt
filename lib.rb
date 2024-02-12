@@ -238,7 +238,7 @@ def process_request
       puts  "A : #{params[:operation] == "login" }"
       puts  "B : #{acl == '*'  }"
       puts  "C : #{  session[:identity]!=nil   }"
-      puts "D : #{ acl[params[:operation].to_sym]}"
+      # puts "D : #{ acl[params[:operation].to_sym]}"
 
       
 
