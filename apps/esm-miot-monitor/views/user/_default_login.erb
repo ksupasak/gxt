@@ -4,6 +4,21 @@
 </head>
 <body>
 <style>
+	@media (min-width: 992px){
+		.lgfs{
+			font-size:18px;
+		}
+	}
+	@media (min-width: 100px) and (max-width: 992px){
+		.lgfs{
+			font-size:4vw;
+			padding:50px;
+		}
+		.lgbt{
+			font-size:4vw;
+			padding:30px;
+		}
+	}
 	.center {
 	  margin: auto;
 	  width: 30%;
@@ -14,56 +29,60 @@
 	</style>
 	<link rel="stylesheet" type="text/css" href="<%=url_for "PatternLock/_style/patternlock.css"%>"/>
 	
-<div class="center">
-<center><h3 class="header"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>
+<!--<div class="center">-->
+<div class="container d-flex align-items-center justify-content-center mt-5" >
+<div class="col-12 col-md-12 col-lg-6 mt-5 lgfs">
+<center><h3 class="header display-4"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>
 
-<form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
+	<form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
 
-    <input type="hidden" class="form-control" id="record_id" name="id" value="<%=params[:id]%>" placeholder="Password">
+		<input type="hidden" class="form-control" id="record_id" name="id" value="<%=params[:id]%>" placeholder="Password">
 
-<div class="login-panel">	
-<div class="form-group">
-  <label for="product-name">Login</label>
+		<div class="login-panel">	
+			<div class="form-group">
+			<label for="product-name">Login</label>
 
-    <input type="text" class="form-control" id="login" name="login" value="" placeholder="User ID or email">
-	
+				<input type="text" class="form-control lgfs" id="login" name="login" value="" placeholder="User ID or email">
+				
+
+			</div>
+
+			<div class="form-group">
+				<label for="product-name">Password Confirmation</label>
+				<div class="input-group mb-3">
+					<input type="password" class="form-control lgfs" id="password" name="password" value="" placeholder="Password">
+					<button class="btn btn-outline-secondary" type="button" id="btn-pass"><i class="fas fa-eye" id="i-pass"></i></button>
+				</div>
+
+			</div>
+
+			<button type="submit" class="btn btn-primary lgbt">Submit</button> 
+		<%#link_to 'Back', "index" %>
+			<a href="#" class="patternlock-toggle"> Login with Pattern </a>
+
+		</div>
+
+
+		<div class="patternlock-panel">
+		<center>
+			<div class="col-12" >
+			<input type="password" name="pattern_password" class="patternlock">
+			<!-- <input type="reset" value="reset" > -->
+
+			</div>
+		</center>
+		<br/>
+		<input type="submit" value="login" style="display: none;">
+
+		<%#link_to 'Back', "index" %> 
+		<a href="#" class="patternlock-toggle"> Login with User </a>
+		</div>
+
+	</form>
 
 </div>
-
-<div class="form-group">
-  <label for="product-name">Password Confirmation</label>
-<div class="input-group mb-3">
-    <input type="password" class="form-control" id="password" name="password" value="" placeholder="Password">
-	<button class="btn btn-outline-secondary" type="button" id="btn-pass"><i class="fas fa-eye" id="i-pass"></i></button>
-	</div>
-
 </div>
 
-<button type="submit" class="btn btn-primary">Submit</button> 
-<%#link_to 'Back', "index" %>
-<a href="#" class="patternlock-toggle"> Login with Pattern </a>
-
-</div>
-
-
-<div class="patternlock-panel">
-<center>
-<div>
-<input type="password" name="pattern_password" class="patternlock">
-<!-- <input type="reset" value="reset" > -->
-
-</div>
-</center>
-<br/>
-<input type="submit" value="login" style="display: none;">
-
-<%#link_to 'Back', "index" %> 
-<a href="#" class="patternlock-toggle"> Login with User </a>
-</div>
-
-</form>
-
-</div>
 <script>
 	$('.patternlock-toggle').click(function(){
 		$('.patternlock-panel').toggle();

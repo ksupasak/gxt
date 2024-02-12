@@ -185,12 +185,31 @@ else
 							value = s if s 	
 							
 						%>
-						<% if i == 'login' or i=='role' %>
+						<% if false # and  i == 'login' or i=='role' %>
 						<div class="col-6">
 						<p class="px-3 ">
 							<span class="t" t=""><%= 'Provider' %></span>
 						</p><span class="form-control mb-3"> <%=value%></span>
 						</div>
+						
+						<% elsif i == 'role' 
+						
+						role = Role.where(:name=>@current_role).first
+						
+						role_id = nil
+						role_id = role.id if role
+						
+						current_zone_id = session[:current_zone]
+						
+						%>
+						
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t=""><%= 'Role' %></span>
+						</p><%= f.select(:role_id, [['','']]+Role.where({:zone_id=>current_zone_id}).sort(:code=>1).all().collect{|i| [i.id,"#{i.name}"]}, :value=>role_id,:class=>'form-select') %>
+						</div>
+						
+						
 						<% elsif i == 'user_id' %>
 						<div class="col-6">
 						<p class="px-3 ">

@@ -228,34 +228,84 @@ def process_request
    # normal web http request
    if !request.websocket?
 
+
     acl = {}
     acl = @this.acl if @this.respond_to? :acl
 
 
-    if params[:operation] != "login" and acl['*'] == nil and (acl[params[:operation].to_sym]==nil or (acl[params[:operation].to_sym] and acl[params[:operation].to_sym].index('*')==nil)) #"#{params[:service]}/#{params[:operation]}" != "Home/index"
+      # puts "Op #{ params[:operation]} #{acl} #{@current_role} #{session[:identity]}  zone = #{session[:current_zone]} #{session[:return_to]}"
+      #
+      # puts  "A : #{params[:operation] == "login" }"
+      # puts  "B : #{acl == '*'  }"
+      # puts  "C : #{  session[:identity]!=nil   }"
 
-      # puts "xxx " +session[:identity].inspect
+      
 
-      # puts  "Session #{session[:current_solution]} #{settings.name} #{params[:gxt]}"
-
-    if session[:identity] == nil or settings.name != session[:current_solution]
-
-      return_to = true
-
-    if  settings.name != session[:current_solution]
-      return_to = false
-    end
-
+    if params[:operation] == "login" or acl == '*' or  acl[params[:operation].to_sym] == '*'  or (session[:identity]!=nil and ( acl[params[:operation].to_sym] == nil or (acl[params[:operation].to_sym].index(@current_role)) or acl['*'] = '*' ) ) 
+      
+        
+      
+      # ( session[:identity]!=nil and  (@current_role!=nil and acl['*'] == @current_role) or (acl[params[:operation].to_sym] and (acl[params[:operation].to_sym].index('*') or acl[params[:operation].to_sym].index(@current_role))) ))
+      
+    
+      
+    
+      # puts  "C : #{(@current_user and ( acl['*'] == @current_role or (acl[params[:operation].to_sym] and (acl[params[:operation].to_sym].index('*') or acl[params[:operation].to_sym].index(@current_role))) )}"
+  
+      
+      if  session[:return_to] and params[:operation] != 'login'
+        
+        return_to = session[:return_to]
+        session.delete :return_to
+        redirect return_to
+      
+      else 
+      
+        content = @this.send params[:operation], params
+        return content
+        
+      end
+    
+    
+    else
+    
+    puts 'redirect '+request.fullpath
+      
     session.delete :identity
     session.delete :current_solution
-    session.delete :current_zone
+    # session.delete :current_zone
 
-    session[:return_to] = request.fullpath if return_to
+    session[:return_to] = request.fullpath
 
     redirect  "#{params[:gxt]}/User/login"
-    end
-
-    end
+    
+  end
+    
+    #
+    # if params[:operation] != "login" and acl['*'] == nil and (acl[params[:operation].to_sym]==nil or (acl[params[:operation].to_sym] and acl[params[:operation].to_sym].index('*')==nil)) #"#{params[:service]}/#{params[:operation]}" != "Home/index"
+    #
+    #   # puts "xxx " +session[:identity].inspect
+    #
+    #   # puts  "Session #{session[:current_solution]} #{settings.name} #{params[:gxt]}"
+    #
+    # if session[:identity] == nil or settings.name != session[:current_solution]
+    #
+    #   return_to = true
+    #
+    # if  settings.name != session[:current_solution]
+    #   return_to = false
+    # end
+    #
+    # session.delete :identity
+    # session.delete :current_solution
+    # session.delete :current_zone
+    #
+    # session[:return_to] = request.fullpath if return_to
+    #
+    # redirect  "#{params[:gxt]}/User/login"
+    # end
+    #
+    # end
 
     # redirect  "#{params[:gxt]}/User/login"
 
@@ -264,10 +314,46 @@ def process_request
    # get content of service
    # content = eval "@this.#{params[:operation]} params"
 
-   content = @this.send params[:operation], params
+   
 
-
-   return content
+   #
+   #
+   #  if params[:operation] != "login" and acl['*'] == nil and (acl[params[:operation].to_sym]==nil or (acl[params[:operation].to_sym] and acl[params[:operation].to_sym].index('*')==nil)) #"#{params[:service]}/#{params[:operation]}" != "Home/index"
+   #
+   #    # puts "xxx " +session[:identity].inspect
+   #
+   #    # puts  "Session #{session[:current_solution]} #{settings.name} #{params[:gxt]}"
+   #
+   #  if session[:identity] == nil or settings.name != session[:current_solution]
+   #
+   #    return_to = true
+   #
+   #  if  settings.name != session[:current_solution]
+   #    return_to = false
+   #  end
+   #
+   #  session.delete :identity
+   #  session.delete :current_solution
+   #  session.delete :current_zone
+   #
+   #  session[:return_to] = request.fullpath if return_to
+   #
+   #  redirect  "#{params[:gxt]}/User/login"
+   #  end
+   #
+   #  end
+   #
+   #  # redirect  "#{params[:gxt]}/User/login"
+   #
+   #
+   #
+   # # get content of service
+   # # content = eval "@this.#{params[:operation]} params"
+   #
+   # content = @this.send params[:operation], params
+   #
+   #
+   # return content
 
    else
 

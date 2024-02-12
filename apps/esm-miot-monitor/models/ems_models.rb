@@ -797,12 +797,20 @@ class EMSProtocol < GXTModel
 end
 
 class EMSGXT < GXT
+  
+  def acl
+       return {'*'=>'admin'}
+  end
+  
   def default_layout
     return :rocker_layout
   end
 end
 
 class EMSGXTDocument < GXTDocument
+  
+
+  
   def default_layout
     return :rocker_layout
   end
@@ -1124,6 +1132,75 @@ end
 class EMSUserController < EMSGXT
 
 end
+
+
+
+
+class EmsRequestController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
+class EmsPrearrivalController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
+
+class EmsCommandController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
+class EmsOperationController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
+
+class EmsParamedicController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
+
+class EmsDischargeController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+class EmsKMController < GXT
+
+  def default_layout
+    return :rocker_layout
+  end
+
+end
+
+
 
 
 end
