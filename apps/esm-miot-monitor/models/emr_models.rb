@@ -31,11 +31,11 @@ class EmsEMRController < GXTDocument
 end
 
 
-class EMRDocumentController < GXTDocument
+class EMRDocumentController < EMSGXTDocument
 
 end
 
-class EMRRecordController < GXTDocument
+class EMRRecordController < EMSGXTDocument
 
 end
 
