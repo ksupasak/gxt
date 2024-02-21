@@ -39,6 +39,8 @@ require 'sinatra/asset_pipeline'
   
   register Sinatra::AssetPipeline
 
+   # set :environment, :production
+
 
   # Include these files when precompiling assets
    set :assets_precompile, %w(app.js app.css *.png *.jpg *.svg *.eot *.ttf *.woff *.woff2)

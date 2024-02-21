@@ -18,8 +18,18 @@
 
 		if ems_case
 			cls = "primary"
-			cls = ems_case.init_code.get_class if ems_case.init_code
-
+			
+			if ems_case.init_code
+			cls = ems_case.init_code.get_class 			
+			txt = ems_case.init_code.code 
+			end
+			
+			if ems_case.case_type == 'Refer'
+			cls = 'warning'			
+			txt = ems_case.location
+			end
+			
+			
 		%>
 		<li class="mm-active">
 			<a  id="tab-dashboard" href="show?id=<%=ems_case.id%>" class="tab-dashboard has-arrow tab-dashboard border-<%=cls%>">
@@ -27,7 +37,10 @@
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%><br/>
 
-				<span class="badge bg-<%=cls%>" ><%=ems_case.init_code.code if ems_case.init_code%></span>
+				<span class="badge bg-<%=cls%>" >
+					<%=txt%> 
+				</span>
+				
 				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
@@ -44,17 +57,20 @@
 			<li >
 				<a id="tab-command" class="tab-command"><i class="bx bx-right-arrow-alt"></i>Commander</a>
 			</li>
-			
+			<% if ems_case.case_type == 'EMS' %>
 			<li >
 				<a id="tab-prearrival"  class="tab-prearrival"><i class="bx bx-right-arrow-alt"></i>Pre Arrival</a>
 			</li>
+			<% end %>
 		
 			<li >
 				<a id="tab-paramedic" class="tab-paramedic"><i class="bx bx-right-arrow-alt"></i>Management</a>
 			</li>
+			<% if ems_case.case_type == 'EMS' %>
 			<li >
 				<a id="tab-emr" class="tab-emr"><i class="bx bx-right-arrow-alt"></i>EMR</a>
 			</li>
+			<% end %>
 			<li >
 				<a id="tab-discharge" class="tab-discharge"><i class="bx bx-right-arrow-alt"></i>Discharge</a>
 			</li>
@@ -310,7 +326,7 @@
 			<ul class="mm-show mm-collapse">
 				<%
 
-				cases = EMSCase.where(:status=>"New", '$or'=>[{:user_id=>nil},{user_id:@current_user.id}]).sort(:case_no=>-1).all()
+				# cases = EMSCase.where(:status=>"New", '$or'=>[{:user_id=>nil},{user_id:@current_user.id}]).sort(:case_no=>-1).all()
 					
 				cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
 					
@@ -318,9 +334,24 @@
 				%>
 				<% for i in cases
 
+				if i != ems_case
+
 					code_class  = "primary"
-					code = EMSCode.find i.init_cbd_code
-					code_class= code.get_class if code
+				
+				
+				
+					txt = '-'
+					if i.init_code
+					cls = i.init_code.get_class 			
+					txt = i.init_code.code 
+					end
+			
+					if i.case_type == 'Refer'
+					cls = 'warning'			
+					txt = i.location
+					end
+			
+					
 
 				%>
 				<li class="" >
@@ -330,12 +361,13 @@
 					</div>
 					<div class="menu-title"><%=i.case_no%><br/>
 
-					<span class="badge bg-<%=code_class%>" ><%=code.code if code %></span>
+					<span class="badge bg-<%=cls%>" ><%= txt %></span>
 					</div>
 				</a>
 				
 				
 				</li>
+				<% end %>
 				<% end %>
 
 			</ul>
@@ -364,7 +396,8 @@
 				%>
 				<% for i in cases
 					code = EMSCode.find i.init_cbd_code
-					code_class= code.get_class
+					code_class=""
+					code_class= code.get_class if code
 
 				%>
 				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-taxi"></i><%=i.case_no%> &nbsp;&nbsp;<span class="badge bg-<%=code_class%>" ><%#code.code%></span></a>

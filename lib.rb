@@ -232,24 +232,23 @@ def process_request
     acl = {}
     acl = @this.acl if @this.respond_to? :acl
 
+    # puts request.fullpath
+      # puts "Op #{ params[:operation]} #{acl} #{@current_role} #{session[:identity]}  zone = #{session[:current_zone]} #{session[:return_to]}"
+  #
+  #     puts  "A : #{params[:operation] == "login" }"
+  #     puts  "B : #{acl == '*'  }"
+  #     puts  "C : #{  session[:identity]!=nil   }"
+  #     puts  "D : #{ acl[params[:operation].to_sym]}"
+  #     puts "E : #{session[:current_solution]} != #{settings.name}"
 
-      puts "Op #{ params[:operation]} #{acl} #{@current_role} #{session[:identity]}  zone = #{session[:current_zone]} #{session[:return_to]}"
-
-      puts  "A : #{params[:operation] == "login" }"
-      puts  "B : #{acl == '*'  }"
-      puts  "C : #{  session[:identity]!=nil   }"
-      # puts "D : #{ acl[params[:operation].to_sym]}"
-
-      
-
-    if params[:operation] == "login" or acl == '*' or  acl[params[:operation].to_sym] == '*'  or (session[:identity]!=nil and ( acl[params[:operation].to_sym] == nil or (acl[params[:operation].to_sym].index(@current_role)) or acl['*'] = '*' ) ) 
+    if   (params[:operation] == "login" or acl == '*' or  acl[params[:operation].to_sym] == '*'  or (  settings.name == session[:current_solution]  and session[:identity]!=nil and ( acl[params[:operation].to_sym] == nil or (acl[params[:operation].to_sym].index(@current_role)) or acl['*'] = '*' ) ) )
       
         
-      
+      # puts 'enter'
       # ( session[:identity]!=nil and  (@current_role!=nil and acl['*'] == @current_role) or (acl[params[:operation].to_sym] and (acl[params[:operation].to_sym].index('*') or acl[params[:operation].to_sym].index(@current_role))) ))
       
     
-      
+      # (session[:current_solution]==nil or settings.name != session[:current_solution]) and
     
       # puts  "C : #{(@current_user and ( acl['*'] == @current_role or (acl[params[:operation].to_sym] and (acl[params[:operation].to_sym].index('*') or acl[params[:operation].to_sym].index(@current_role))) )}"
   
