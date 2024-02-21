@@ -53,6 +53,7 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 #c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
 #r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED'
 begin
+	
 command = EMSCommand.where(:case_id=>record.id).first
 if command
 
@@ -69,7 +70,8 @@ if command
 
     ems_case.response_time = format('%.01f',(log3.stamp-ems_case.created_at)/60.0)
 
-
+	if ems_case.case_type == 'EMS'
+	
     log4 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>4).first
 
     ems_case.onscene_time = format('%.01f',(log4.stamp-log3.stamp)/60.0)
@@ -77,6 +79,11 @@ if command
     log5 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>5).first
 
     ems_case.transfer_time = format('%.01f',(log5.stamp-log4.stamp)/60.0)
+	
+	end
+	
+    ems_case.total_time = format('%.01f',(Time.now-ems_case.created_at)/60.0) unless  ems_case.total_time 
+	
 
 end
 

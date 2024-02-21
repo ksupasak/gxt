@@ -117,6 +117,24 @@ Diagnosis :
 
 )
 
+if record.case_type == 'Refer'
+
+	template_text = %(ข้อมูลการ Refer
+
+Progress note :
+@progress_note
+
+Diagnosis :
+@diagnosis
+
+)
+
+
+end
+
+
+
+
 	map = {}
 
 

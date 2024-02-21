@@ -172,7 +172,7 @@ patient = admit.patient
 
     <div class="col-4">
 
-    <t>Init Code</t> : <v><%=record.init_code.name%></v> <br/>
+    <t>Init Code</t> : <v><%=record.init_code.name if record.init_code %></v> <br/>
     <t>Admit at</t> : <v><%=admit.admit_stamp.strftime("%d/%m/%y-%H:%M")%></v> <br/>
     <t>Discharge at</t> : <v><%=admit.discharge_stamp.strftime("%d/%m/%y-%H:%M") if admit.discharge_stamp%></v> <br/>
     <%

@@ -54,12 +54,22 @@ if params[:record]
 	p[:patient_id] = patient_id
 	p[:status] = "New"
 
-	counter_key = Time.now.strftime("%y%m")
+	
+
+	type = 'EMS'
+	type = 'REF' if p[:case_type] == 'Refer'
+	
+	counter_key = Time.now.strftime("#{type}-%y%m")
 
 	counter = EMSCaseCounter.where(:key=>counter_key).first
 	counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
 
-	case_no = "EMS-#{counter_key}-#{format('%04d',counter.count+1)}"
+	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
+	
+	
+	
+	
+	
 
 	p[:case_no] = case_no
 

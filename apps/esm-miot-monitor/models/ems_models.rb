@@ -252,6 +252,7 @@ class EMSCase < GXTModel
   key :response_time, Integer
   key :onscene_time, Integer
   key :transfer_time, Integer
+  key :total_time, Integer
 
   key :distance_from_dispatch, Integer
   key :distance_from_hospital, Integer
@@ -306,10 +307,13 @@ class EMSCase < GXTModel
     ems_case = self
     channel = EMSChannel.find ems_case.channel_id
     ambulance = Ambulance.find ems_case.ambulance_id
-    message = "#{ems_case.case_no} รหัส: #{ems_case.init_code.code} ผู้ป่วย: #{ems_case.patient_gender} #{ems_case.patient_age}ปี อาการ: #{ems_case.chief_complain}\nติดต่อ: #{ems_case.contact_phone} สถานที่: #{ems_case.location}\nคำสั่ง: #{ems_case.dispatch_note} ทีม: #{channel.name if channel} รถ: #{ambulance.name if ambulance}"
-
+    if ems_case.init_code
+      message = "#{ems_case.case_no} รหัส: #{ems_case.init_code.code} ผู้ป่วย: #{ems_case.patient_gender} #{ems_case.patient_age}ปี อาการ: #{ems_case.chief_complain}\nติดต่อ: #{ems_case.contact_phone} สถานที่: #{ems_case.location}\nคำสั่ง: #{ems_case.dispatch_note} ทีม: #{channel.name if channel} รถ: #{ambulance.name if ambulance}"
       return message
-
+    else
+      return nil
+    end
+      
   end
 
 
@@ -800,6 +804,10 @@ class EMSGXT < GXT
   
   def acl
        return {'*'=>'admin'}
+  end
+  
+  def nav params
+    return '.'
   end
   
   def default_layout

@@ -294,23 +294,10 @@
 </div>
 
 </div>
-<div class="col-6">
-<p class="px-3">เวร Shift</p>
-<div class="input-group pb-3">
-<%= f.select(:shift, [['เช้า','เช้า'],['บ่าย','บ่าย'],['ดึก','ดึก']], :value=>record.shift, :class=>' form-select') %>
-</div>
-</div>
 </div>
 
 <div class="row">
-<div class="col-6">
-<p class="px-3">Date</p>
-<input name='record[date]' id="date" value="<%=record.date.strftime('%d/%m/%Y') if record.date %>" class="form-control mb-3" type="text" placeholder="วัน" aria-label="default input example">
-</div>
-<div class="col-6">
-<p class="px-3">Time</p>
-<input name='record[request_at]' id="request_at" value="<%=record.request_at.strftime('%H:%M') if record.request_at%>" class="form-control mb-3" type="text" placeholder="เวลา" aria-label="default input example">
-</div>
+
 </div>
 
 </div>
@@ -452,7 +439,7 @@
 									</div>
 									
 									<div class='col-12 col-lg-6'>
-									<p class="px-3">Patient Number</p>
+									<p class="px-3">PT Phone</p>
 									<div class="">
 										<input name='record[patient_phone]' id="record_patient_phone" value="<%=record.patient_phone%>" class="form-control mb-3" type="text" placeholder="เบอร์ติดต่อประจำตัวผู้ป่วย" aria-label="default input example">
 									</div>
@@ -562,8 +549,8 @@
 									Case type :
 								</p>
 								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
-									<option selected="" value="EMS">EMS</option>
-									<option value="Refer">Refer</option>
+									<option <%='selected=""' if record.case_type=='EMS' %> value="EMS">EMS</option>
+									<option <%='selected=""' if record.case_type=='Refer' %>value="Refer">Refer</option>
 								</select>
 							</div>
 							<div class="col-6 col-xl-3">
@@ -612,7 +599,23 @@
 									<input name='record[dispatch_note]' value="<%=record.dispatch_note%>" class="form-control mb-3" type="text" placeholder="Note" aria-label="default input">
 
 							</div>
-
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">เวร Shift</p>
+							<div class="input-group pb-3">
+							<%= f.select(:shift, [['เช้า','เช้า'],['บ่าย','บ่าย'],['ดึก','ดึก']], :value=>record.shift, :class=>' form-select') %>
+							</div>
+							</div>
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Date</p>
+							<input name='record[date]' id="date" value="<%=record.date.strftime('%d/%m/%Y') if record.date %>" class="form-control mb-3" type="text" placeholder="วัน" aria-label="default input example">
+							</div>
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Time</p>
+							<input name='record[request_at]' id="request_at" value="<%=record.request_at.strftime('%H:%M') if record.request_at%>" class="form-control mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+							</div>
+							
 						</div>
 
 
