@@ -200,7 +200,7 @@ MSG
 
 
   # timer method
-  EM.add_periodic_timer(10) do
+  EM.add_periodic_timer(60) do
     
 
      now = Time.now

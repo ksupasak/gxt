@@ -27,6 +27,13 @@
 
 /*		height:8vh*/
 			 }
+			 
+			 
+		 	.marker-position {
+		 	    bottom: -40px;
+		 	    left: 0;
+		 	    position: relative;
+		 	}
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -313,7 +320,13 @@
 		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
 
 			var pos = new google.maps.LatLng(<%=i.latlng%> )
-			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>'})
+			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>',label:{
+							fontSize: '20px',
+							color: 'red',
+							text: "<%=i.init_code.code%>",
+							className: 'marker-position',
+							
+						}})
 
 			infowindow = new google.maps.InfoWindow({
 			content: "<%=i.case_no%>",
@@ -471,7 +484,12 @@
 				if(marker==null){
 
 
-						marker_map = new google.maps.Marker({position: pos,icon: image,  map: local_map});
+						marker_map = new google.maps.Marker({position: pos,icon: image,  map: local_map,label:{
+							fontSize: '20px',
+							text: a['name'],
+							className: 'marker-position',
+							
+						}});
 						ambu_map[a['_id']] = marker_map
 							console.log('new')
 
