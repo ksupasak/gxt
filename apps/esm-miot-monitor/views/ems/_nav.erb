@@ -21,7 +21,7 @@
 			
 			if ems_case.init_code
 			cls = ems_case.init_code.get_class 			
-			txt = ems_case.init_code.code 
+			txt = "#{ems_case.location } #{ems_case.init_code.code if ems_case.init_code }"
 			end
 			
 			if ems_case.case_type == 'Refer'

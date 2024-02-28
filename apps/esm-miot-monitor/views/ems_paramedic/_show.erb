@@ -355,11 +355,75 @@ end
 			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%> ;border:0px solid ">
 			<%= inline(this,:'_flowsheet')  %>
 			</div>
-
+			
+			
+			
+			
 			<% else %>
 			
 			
 			<% end %>
+			
+			<div class="row">
+
+			<div class="col-12">
+			<%
+				
+		    records = admit.records
+				last_bp = "-"
+				new_list =[]
+				for m in records
+
+					if last_bp!=m.bp
+						new_list << m
+						last_bp = m.bp
+					end
+				end
+				records = new_list
+				
+				
+				
+			%>	
+				
+				
+			<strong>
+			Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> to <%=records[-1].stamp.strftime("%H:%M") if records[-1]%> : <%=records.size %> records)
+			</strong>
+			<%
+			  n = 10
+
+			  (records.size/n.to_f).ceil.times do |t|
+
+			  list = records[t*n..(t+1)*n].compact
+			  plist = {:hr=>"HR (bpm)",:bp=>"NIBP (mmHg)",:rr=>"Resp (rpm)",:co2=>"ETCO2 (mmHg)",:spo2=>"SpO2 (%)",:temp=>"T1 (C)"}
+
+			%>
+
+			<table class="table table-striped " style="font-size:0.8em">
+			<thead>
+			  <tr>
+			    <th>Date Time</th>
+			      <% for ti in list %>
+			        <td><%=ti.stamp.strftime("%H:%M")%>
+			        </td>
+			      <% end %>
+			  </tr>
+			</thead>
+			<tbody>
+			<% for p in plist.keys %>
+			  <tr>
+			    <th><%=plist[p]%></th>
+			    <% for ti in list %>
+			    <td><%=ti[p]%></td>
+			    <% end %>
+			  </tr>
+			<% end %>
+			</tbody>
+			</table>
+			<% end %>
+			</div>
+			</div>
+			
 			
 			<h4>Station</h4>
 				
