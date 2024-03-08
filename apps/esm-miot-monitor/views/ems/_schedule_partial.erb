@@ -14,7 +14,7 @@
 		
 		ems_cases = EMSCase.where(:request_at=>{'$gte'=>start_date.beginning_of_day, '$lte'=>end_date.end_of_day})
 			
-		ref_cases = EMSCase.where(:schedule_from=>{'$gte'=>start_date.beginning_of_day,'$lte'=>end_date.end_of_day })
+		ref_cases = EMSCase.where(:_id=>{'$nin'=>ems_cases.collect{|i| i.id }},:schedule_from=>{'$gte'=>start_date.beginning_of_day,'$lte'=>end_date.end_of_day })
 		
 			
 			
