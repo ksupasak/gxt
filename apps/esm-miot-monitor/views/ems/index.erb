@@ -323,7 +323,7 @@
 			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>',label:{
 							fontSize: '20px',
 							color: 'red',
-							text: "<%=i.init_code.code%>",
+							text: "<%=i.init_code.code if i.init_code %>",
 							className: 'marker-position',
 							
 						}})
