@@ -1,0 +1,65 @@
+		<%
+			
+		
+		
+		start_date = Time.parse(params[:start])
+		
+		end_date = start_date.end_of_day
+		
+		if params[:end]
+			end_date = Time.parse(params[:end])-1
+		end
+		
+		
+		
+		ems_cases = EMSCase.where(:request_at=>{'$gte'=>start_date.beginning_of_day, '$lte'=>end_date.end_of_day})
+			
+		ref_cases = EMSCase.where(:schedule_from=>{'$gte'=>start_date.beginning_of_day,'$lte'=>end_date.end_of_day })
+		
+			
+			
+		%>
+	
+		<h6 class="mb-0 text-uppercase">Date : <%=start_date%> - <%= end_date %>
+		
+		
+		<%= link_to "+ Request", "create?start=#{start_date.strftime("%Y-%m-%dT%H:%M")}&end=#{end_date.strftime("%Y-%m-%dT%H:%M")}", :class=>'btn btn-success'%>
+		
+		</h6>
+		
+		
+		
+		<hr/>
+		<div class="card">
+	
+			<div class="card-body" >
+				<table class="table">
+					<% for i in ems_cases+ref_cases%>
+					<tr>
+				
+					
+					<td>
+					<a href="show?id=<%=i.id%>">
+						<%= i.case_type   %>
+					</a>
+					</td>
+					
+					<td>
+					<a href="show?id=<%=i.id%>">
+						<%= i.case_no   %>
+					</a>
+					</td>
+					
+					<td>
+						<%= i.location   %>
+					</td>
+						
+					<td>
+						<%= i.status   %>
+					</td>
+				
+					</tr>
+					<% end %>
+		
+			</div>
+		</div>

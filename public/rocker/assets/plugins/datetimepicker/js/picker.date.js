@@ -1,5 +1,5 @@
 /*!
- * Date picker for pickadate.js v3.6.4
+ * Date picker for pickadate.js v3.6.2
  * http://amsul.github.io/pickadate.js/date.htm
  */
 
@@ -648,7 +648,7 @@ DatePicker.prototype.formats = (function() {
 
         // Grab the first word from the string.
         // Regex pattern from http://stackoverflow.com/q/150033
-        var word = string.match( /[^\x00-\x7F]+|[a-zA-Z0-9_\u0080-\u00FF]+/ )[ 0 ]
+        var word = string.match( /[^\x00-\x7F]+|\w+/ )[ 0 ]
 
         // If there's no month index, add it to the date object
         if ( !dateObject.mm && !dateObject.m ) {
@@ -661,7 +661,7 @@ DatePicker.prototype.formats = (function() {
 
     // Get the length of the first word in a string.
     function getFirstWordLength( string ) {
-        return string.match( /[a-zA-Z0-9_\u0080-\u00FF]+/ )[ 0 ].length
+        return string.match( /\w+/ )[ 0 ].length
     }
 
     return {
@@ -1031,7 +1031,7 @@ DatePicker.prototype.nodes = function( isOpen ) {
                     ( !next && viewsetObject.year <= minLimitObject.year && viewsetObject.month <= minLimitObject.month ) ?
                     ' ' + settings.klass.navDisabled : ''
                 ),
-                'data-nav=' + ( next || -1 ) + ' ' + 'tabindex="0" ' +
+                'data-nav=' + ( next || -1 ) + ' ' +
                 _.ariaAttr({
                     role: 'button',
                     controls: calendar.$node[0].id + '_table'
@@ -1189,8 +1189,7 @@ DatePicker.prototype.nodes = function( isOpen ) {
                                 var isSelected = selectedObject && selectedObject.pick == targetDate.pick,
                                     isHighlighted = highlightedObject && highlightedObject.pick == targetDate.pick,
                                     isDisabled = disabledCollection && calendar.disabled( targetDate ) || targetDate.pick < minLimitObject.pick || targetDate.pick > maxLimitObject.pick,
-                                    formattedDate = _.trigger( calendar.formats.toString, calendar, [ settings.format, targetDate ] ),
-                                    calendarNodeUniqueId = settings.id + '_' + targetDate.pick
+                                    formattedDate = _.trigger( calendar.formats.toString, calendar, [ settings.format, targetDate ] )
 
                                 return [
                                     _.node(
@@ -1223,15 +1222,16 @@ DatePicker.prototype.nodes = function( isOpen ) {
 
                                             return klasses.join( ' ' )
                                         })([ settings.klass.day ]),
-                                        'data-pick=' + targetDate.pick + ' id=' + calendarNodeUniqueId + ' tabindex="0" ' + _.ariaAttr({
+                                        'data-pick=' + targetDate.pick + ' ' + _.ariaAttr({
                                             role: 'gridcell',
                                             label: formattedDate,
                                             selected: isSelected && calendar.$node.val() === formattedDate ? true : null,
-                                            activedescendant: isHighlighted ? targetDate.pick : null,
+                                            activedescendant: isHighlighted ? true : null,
                                             disabled: isDisabled ? true : null
                                         })
                                     ),
-                                    ''
+                                    '',
+                                    _.ariaAttr({ role: 'presentation' })
                                 ] //endreturn
                             }
                         })

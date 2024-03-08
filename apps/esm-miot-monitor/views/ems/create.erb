@@ -51,8 +51,10 @@ MSG
 				<div class="request"></div>
 				<script>
 					<%
-					p = ""
-					p = "?location=#{params[:location]}&latlng=#{params[:latlng]}&zoom=#{params[:zoom]}" if params[:location]
+					p = "?"
+					p += "location=#{params[:location]}&latlng=#{params[:latlng]}&zoom=#{params[:zoom]}" if params[:location]
+					p += "start=#{params[:start]}&end=#{params[:end]}}" if params[:start]
+					
 					%>
 					$.ajax({
 					  url: "../EmsRequest/create<%=p%>",

@@ -52,7 +52,7 @@ if params[:record]
 	p[:admit_id] = admit.id
 	p[:zone_id] = session[:current_zone]
 	p[:patient_id] = patient_id
-	p[:status] = "New"
+	p[:status] = "New" if p[:status]=='' or p[:status] == nil
 
 	
 
@@ -80,6 +80,16 @@ if params[:record]
 	init_cbd_code = EMSCode.find p[:init_cbd_code]
 	if init_cbd_code
 		p[:init_cbd_color] = init_cbd_code.color
+	end
+	
+	if p[:schedule_from_time]
+	
+	 	p[:schedule_from] = Time.parse("#{p[:schedule_from]} #{p[:schedule_from_time]}").to_json
+	 	p[:schedule_to] = Time.parse("#{p[:schedule_to]} #{p[:schedule_to_time]}").to_json
+	    p.delete :schedule_from_time
+		p.delete :schedule_to_time 
+		
+		
 	end
 	
 
@@ -126,8 +136,25 @@ end
 <%
 	
 	default_latlng = Setting.get("aoc_center")
+	
+	schedule_from = nil
+	schedule_to = nil
+	case_type = 'EMS'
+	status = 'New'
+	date = Time.now
+	
+	if params[:start] 
+		case_type = 'Refer'
+		schedule_from = DateTime.parse(params[:start]+"+07:00")
+		schedule_to =DateTime.parse(params[:end]+"+07:00")
+		status = 'Schedule'
+		date = nil
+			
+	end
+	
 
-	@ems_case = EMSCase.new  :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>Time.now, :request_at=>Time.now
+	
+	@ems_case = EMSCase.new :status=>status, :case_type=>case_type, :schedule_from=>schedule_from, :schedule_to=>schedule_to, :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>date, :request_at=>date
 	
 	
 	@ems_case.location = params[:location] if params[:location]
@@ -135,7 +162,7 @@ end
 	
 	now = Time.now
 	
-	
+
 	
 
 %>

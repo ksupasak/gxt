@@ -609,12 +609,63 @@
 							
 							<div class="col-6 col-xl-3">
 							<p class="px-3">Date</p>
-							<input name='record[date]' id="date" value="<%=record.date.strftime('%d/%m/%Y') if record.date %>" class="form-control mb-3" type="text" placeholder="วัน" aria-label="default input example">
+							<input name='record[date]' id="date" data-value="<%=record.date.strftime('%Y-%m-%d') if record.date %>" class="form-control datepicker mb-3" type="text" placeholder="วัน" aria-label="default input example">
 							</div>
+							
 							<div class="col-6 col-xl-3">
 							<p class="px-3">Time</p>
-							<input name='record[request_at]' id="request_at" value="<%=record.request_at.strftime('%H:%M') if record.request_at%>" class="form-control mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+							<input name='record[request_at]' id="request_at" data-value="<%=record.request_at.strftime('%H:%M') if record.request_at%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
 							</div>
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Status</p>
+							<input name='record[status]' id="status" value="<%=record.status  if record.status%>" class="form-control mb-3" type="text" placeholder="" aria-label="default input example">
+							</div>
+							
+							
+							<link href="/rocker/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet" />
+							<link href="/rocker/assets/plugins/datetimepicker/css/classic.time.css" rel="stylesheet" />
+							<link href="/rocker/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet" />
+							<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+							<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
+							<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
+							<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
+							<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
+							<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
+							
+				
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Date</p>
+							<input name='record[schedule_from]'  id="schedule_from" data-value="<%=record.schedule_from.strftime('%Y-%m-%d') if record.schedule_from %>"  class="form-control datepicker mb-3" type="text" placeholder="วัน" aria-label="default input example">
+							</div>
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Time</p>
+							<input name='record[schedule_from_time]' id="schedule_from_time"  data-value="<%=record.schedule_from.strftime('%H:%M') if record.schedule_from%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+							</div>
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Date</p>
+							<input name='record[schedule_to]' id="schedule_to"  data-value="<%=record.schedule_to.strftime('%Y-%m-%d') if record.schedule_to %>" class="form-control datepicker mb-3" type="text" placeholder="วัน" aria-label="default input example">
+							</div>
+							
+							<div class="col-6 col-xl-3">
+							<p class="px-3">Time</p>
+							<input name='record[schedule_to_time]' id="schedule_to_time"  data-value="<%=record.schedule_to.strftime('%H:%M') if record.schedule_to%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+							</div>
+							
+							<script>
+								
+						    $('.datepicker').pickadate({
+								format: 'yyyy-mm-dd'
+							})
+							
+							
+							$('.timepicker').pickatime({
+								format: 'HH:i'
+							})
+										
+							</script>
 							
 						</div>
 

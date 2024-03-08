@@ -343,7 +343,7 @@
 					txt = '-'
 					if i.init_code
 					cls = i.init_code.get_class 			
-					txt = i.init_code.code 
+					txt = "#{i.init_code.code} #{i.location}"
 					end
 			
 					if i.case_type == 'Refer'
@@ -356,7 +356,7 @@
 				%>
 				<li class="" >
 				
-				<a  id="tab-dashboard" href="show?id=<%=i.id%>" class="tab-dashboard has-arrow tab-dashboard border-<%=cls%>">
+				<a  id="tab-dashboard" href="show?id=<%=i.id%>" class="tab-dashboard  tab-dashboard border-<%=cls%>">
 					<div class="parent-icon"><i class="bx bx-taxi"></i>
 					</div>
 					<div class="menu-title"><%=i.case_no%><br/>
@@ -376,6 +376,14 @@
 					<div class=""><i class="bx bx-plus"></i> </div>
 
 					<div class="menu-title">New Request</div>
+				</a>
+			</li>
+			
+			<li  class="">
+				<a href="./schedule">
+					<div class=""><i class="bx bx-calendar"></i> </div>
+
+					<div class="menu-title">Schedule</div>
 				</a>
 			</li>
 
