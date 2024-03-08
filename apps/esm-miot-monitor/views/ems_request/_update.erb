@@ -66,8 +66,21 @@ if params[:record]
 		p[:init_cbd_color] = init_cbd_code.color
 	end
 	
-	
+	# puts
+	# puts "#{p[:date]}T#{p[:request_at]}"
+	# puts
+	# puts
+	p[:request_at] = "#{p[:date]}T#{p[:request_at]}"
 
+	if p[:schedule_from_time]
+	
+	 	p[:schedule_from] = Time.parse("#{p[:schedule_from]} #{p[:schedule_from_time]}").to_json
+	 	p[:schedule_to] = Time.parse("#{p[:schedule_to]} #{p[:schedule_to_time]}").to_json
+	    p.delete :schedule_from_time
+		p.delete :schedule_to_time 
+		
+		
+	end
 	
 	
 	record.update_attributes p

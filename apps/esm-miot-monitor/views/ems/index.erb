@@ -316,14 +316,20 @@
 			latlng.push(new google.maps.LatLng(pos))
 			marker = new google.maps.Marker({position: pos, map: local_map, icon: station_image})
 
-			<% for i in cases %>
+			<% for i in cases 
+				
+				text = i.case_no
+			
+				text = "#{i.init_code.code if i.init_code} #{i.location}" if i.location
+			
+			%>
 		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
 
 			var pos = new google.maps.LatLng(<%=i.latlng%> )
 			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>',label:{
 							fontSize: '20px',
 							color: 'red',
-							text: "<%=i.init_code.code if i.init_code %>",
+							text: "<%= text %>",
 							className: 'marker-position',
 							
 						}})

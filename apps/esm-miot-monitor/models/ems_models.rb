@@ -61,6 +61,11 @@ class EMSCase < GXTModel
   key :dispatch_unit_at, DateTime
 
   key :request_at, DateTime
+  
+  
+  key :schedule_from, DateTime
+  key :schedule_to, DateTime
+  
 
 
   key :dispatch_note, String
