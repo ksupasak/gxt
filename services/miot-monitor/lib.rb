@@ -17,7 +17,7 @@ CMS_PORT = path[1]
 CMS_SOLUTION = path1[1]
 end
 
-CMS_PATH = "/ws/#{CMS_SOLUTION}/Home/index"
+CMS_PATH = "ws/#{CMS_SOLUTION}/Home/index"
 CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
 
 module MIOT

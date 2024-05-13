@@ -59,7 +59,7 @@
 
 
   <label class="form-label">Initial rhythm <span class="mandatory">*</span></label>
-  <%= radio_string this, 'initial_rhythm',   :value=>["VF/VT", "PEA", "Asystole"] %>
+  <%= radio_string this, 'initial_rhythm',   :value=>["VF/pVT", "PEA", "Asystole"] %>
 
 <div class="row">
 <div class="col-6">
@@ -75,12 +75,12 @@
   <%= date_string this, 'third_shock_time', :label=>'3rd shock time'%>
 </div>
 <div class="col-6">
-  <%= text_string this, 'shock_time', :label=>'Shock times(ครั้ง)'%>
+  <%= text_string this, 'shock_time', :label=>'Total Shock times(ครั้ง)'%>
 </div>
 </div>
 <div class="row">
 <div class="col-6">
-  <label class="form-label">First arenaline time</label>
+  <label class="form-label">First adrenaline time</label>
   <%= date_string this, 'first_adrenaline_time', :label=>''%>
 </div>
 <div class="col-6">
@@ -88,7 +88,7 @@
   <%= date_string this, 'on_ett_time' , :label=>''  %>
 </div>
 </div>
-  <label class="form-label">Autopulse time</label>
+  <label class="form-label">Time start autopulse</label>
   <%= date_string this, 'autopulse_time',:col=>6, :label=>''%>
 
 </div>
