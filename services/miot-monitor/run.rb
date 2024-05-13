@@ -23,11 +23,12 @@ require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
 require_relative 'devices/comen-nc3a-gw'
-require_relative 'devices/ids-combo-gw'
+# require_relative 'devices/ids-combo-gw'
 require_relative 'devices/gps/gps'
 
 require_relative 'devices/nihon_defib_gw'
 require_relative 'devices/xovic_hl7_gw'
+require_relative 'devices/nihon_hl7_gw'
 
 require_relative 'devices/unity'
 
@@ -134,6 +135,14 @@ if select_monitor=='xovic_hl7'
  Device::monitor_xovic_hl7_live(ws)
  }
 end
+
+if select_monitor=='nihon_hl7'
+  puts 'monitor select = nihon_hl7'
+ threads << Thread.new {
+ Device::monitor_nihon_hl7_live(ws)
+ }
+end
+
 
 
 if select_monitor=='unity'

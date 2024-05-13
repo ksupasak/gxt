@@ -1,4 +1,4 @@
-FROM ruby:2.7.1-buster
+FROM ruby:3.1.3-buster
 RUN apt-get update -qq && apt-get install -y imagemagick
 RUN apt-get install -y build-essential
 RUN mkdir /docker_gxt

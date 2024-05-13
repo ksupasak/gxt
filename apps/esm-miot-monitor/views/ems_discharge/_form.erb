@@ -125,12 +125,12 @@
 <div class="row d-flex justify-content-between">
 <div class="col-6">
 <strong>
-  <label class="form-label " for="screening_vital">Vital Sign : Init </label>
+  <label class="form-label " for="screening_vital">Vital Sign : Initial </label>
 </strong>
 </div>
 
 <div class="col-3">
-
+Time
   <input class="form-control" type="text" name="record[init_vs_stamp]" id="" value="<%=record.init_vs_stamp%>">
 
 </div>
@@ -192,7 +192,7 @@
   </div>
 
   <div class="col-3">
-
+	  Time
     <input class="form-control" type="text" name="record[repeat_vs_stamp]" id="" value="<%=record.repeat_vs_stamp%>">
 
   </div>
@@ -248,7 +248,7 @@
   </div>
 
   <div class="col-3">
-
+Time
     <input class="form-control" type="text" name="record[screen_vs_stamp]" id="" value="<%=record.screen_vs_stamp%>">
 
   </div>
@@ -313,7 +313,7 @@
 <input class="form-control" type="text" name="record[dispatch_time]" id="" value="<%=record.dispatch_time%>">
 </div>
 <div class="col-4">
-<label class="form-label " for="activation_time">Activate Time (minutes)</label>
+<label class="form-label " for="activation_time">Activation Time (minutes)</label>
 <input class="form-control" type="text" name="record[activation_time]" id="" value="<%=record.activation_time%>">
 </div>
 <div class="col-4">
@@ -334,17 +334,17 @@
 </div>
 
 <div class="col-6">
-<label class="form-label " for="over_activate_time_reason">ทำไม  Activate Time มากกว่า 2 นาที ? </label>
+<label class="form-label " for="over_activate_time_reason">สาเหตุ Activate Time มากกว่า 2 นาที ? </label>
 <input class="form-control" type="text" name="record[over_activate_time_reason]" id="" value="<%=record.over_activate_time_reason%>">
 </div>
 
 <div class="col-6">
-<label class="form-label " for="over_response_time_reason">ทำไม  Response Time มากกว่า 8 นาที</label>
+<label class="form-label " for="over_response_time_reason">สาเหตุ   Response Time มากกว่า 8 นาที</label>
 <input class="form-control" type="text" name="record[over_response_time_reason]" id="" value="<%=record.over_response_time_reason%>">
 </div>
 
 <div class="col-6">
-<label class="form-label " for="over_time_managment">ท่านมีวิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</label>
+<label class="form-label " for="over_time_managment">วิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</label>
 <input class="form-control" type="text" name="record[over_time_managment]" id="" value="<%=record.over_time_managment%>">
 </div>
 
