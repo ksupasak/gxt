@@ -18,7 +18,7 @@ services:
     ports:
       - "27017:27017"
     restart: always
-  gxt:
+  gxt_server:
     restart: always
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec thin start --ssl --port 1792 --ssl-key-file private.key  --ssl-cert-file  server.crt  "
@@ -50,9 +50,9 @@ services:
     environment:
       MONGO_HOST: mongo
       REDIS_HOST: redis
-      # REDIS_PASS: minadadmin
+      REDIS_PASS: minadadmin
       DEFAULT_APP: miot
-   gxt_gps:
+  gxt_gps:
      restart: always
      build: .
      command: bash -c "rm -f tmp/pids/gps.pid && bundle exec ruby server.rb gps"

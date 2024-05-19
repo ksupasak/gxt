@@ -21,17 +21,11 @@
 
 <!-- map -->
 			<div class="card radius-10">
-				<div class="card-header bg-transparent">
+				<div class="card-header bg-transparent bg-primary bbg-gradient text-white">
 					<div class="">
 
-							<h6 class="row">
-							<div class="col">
-							</div>
-							<div class="col-4 d-flex justify-content-end">
-								<input id="search_hospital" name="" class="form-control" type="text" placeholder="Search name, mri, ct, rt"/>
-							</div>
-							</h6>
-
+							เส้นทาง
+							
 						<div class="dropdown ms-auto">
 							<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
 							<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
@@ -64,7 +58,8 @@
 					       }
 					    </style>
 
-
+								<input id="search_hospital" name="" class="form-control" type="text" placeholder="Search name, mri, ct, rt"/>
+						<br/>
 					<div id="dashboard-map-c" style="height: 600px">
 					</div>
 
@@ -86,15 +81,9 @@
 
 
 		<div class="card">
-			<div class="card-header">
-				<h6 class="row">
-				<div class="col">
+			<div class="card-header bg-primary bbg-gradient text-white">
 				ชุดปฏิบัติการ
-				</div>
-				<div class="col d-flex justify-content-end">
-
-				</div>
-				</h6>
+			
 			</div>
 			<div class="card-body">
 
@@ -259,7 +248,7 @@
 			
 			<div class=" col-4">
 			<p class="">
-			EMT Driver :
+			EMT 1 :
 			</p>
 			<div class="input-group">
 			<input type="text" name="command[emt_driver_code]" id="" value="<%=cm.emt_driver_code%>" class="form-control" />
@@ -268,7 +257,7 @@
 			
 			<div class=" col-4">
 			<p class="">
-			EMT Partner :
+			EMT 2 :
 			</p>
 			<div class="input-group">
 			<input type="text" name="command[emt_partner_code]" id="" value="<%=cm.emt_partner_code%>" class="form-control" />

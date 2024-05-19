@@ -61,11 +61,22 @@ module Tempus
     end
     
     def decode encrypt64
-       encrypt = Tempus::decode64(encrypt64)       
-       plain = @decode_cipher.update(encrypt)
-       plain << @decode_cipher.final
-       @decode_cipher.reset
-       return plain.split("\u0000").join    
+        
+       
+       if  encrypt64 
+        
+         encrypt = Tempus::decode64(encrypt64)       
+         plain = @decode_cipher.update(encrypt)
+         plain << @decode_cipher.final
+         @decode_cipher.reset
+         return plain.split("\u0000").join    
+       
+       else 
+       
+         return nil
+       
+       end
+       
     end
     
     def set_decription key, iv
