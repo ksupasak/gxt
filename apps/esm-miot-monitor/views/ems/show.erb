@@ -32,7 +32,8 @@ cls = record.init_code.get_class if code
 	</style>
 
 <div class="row row-cols-1 row-cols-md-3 row-cols-xl-3">
-	<div class="col-12 col-md-6 col-lg-4">
+	<div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+	
 		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
@@ -269,13 +270,17 @@ cls = record.init_code.get_class if code
 
 				<div class="col-6 d-flex justify-content-end " style="">
 				
-				<div class="row">
-
-				<div class="col-6 widgets-icons-2  <%=' bg-gradient-blooker ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
+				<div class="row  ">
+				
+				
+				<%  if false %>
+				<div class=" widgets-icons-2  <%=' bg-gradient-blooker ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
 					<a href="request_ems?id=<%="#{record.id}"%>" target="_blank">
 						<i class='bx bx-message-detail text-white '></i>
 					</a>
 				</div>
+				
+				<% end %>
 
 
 				<% if true

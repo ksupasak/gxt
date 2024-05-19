@@ -55,7 +55,7 @@
   styles['group'] = "width:80px"
   styles['sort_order'] = "width:50px"
   styles['code'] = "width:120px"
-  styles['consume'] = "width:80px"
+  styles['consume'] = "width:180px"
   styles['name'] = "width:200px"
   styles['volume'] = "width:50px"
   styles['unit'] = "width:50px"
@@ -89,10 +89,8 @@
   %>
 <td style='<%=styles[j]%>'>
   <% if j =='consume' %>
-  <select name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
-    <option value="oral" <%='selected' if m[j] == 'oral' %>>ยากิน</option>
-    <option value="iv" <%='selected' if m[j] == 'iv' %>>ยาฉีด</option>
-  </select>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+  
   <% elsif j =='volume' %>
   <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
 
@@ -128,5 +126,8 @@
 
 <a href="create" class="btn btn-success">Create</a>
 
-<a href="migration" class="">Migration</a>
+<hr/>
+
+
+<a href="med_migration" class="">Migration</a>
 <% end %>
