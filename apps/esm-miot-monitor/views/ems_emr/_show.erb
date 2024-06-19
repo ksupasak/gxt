@@ -10,7 +10,7 @@
 		admit = record.admit
 
 		 # tranexamic  interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus
-		list = %w{primary_survey secondary_survey  trauma non_trauma cardiac_arrest stroke stemi sepsis  intubation patient_assessment }
+		list = %w{primary_survey secondary_survey  cpr_record  trauma non_trauma cardiac_arrest stroke stemi sepsis  intubation patient_assessment }
 
 		list.each_with_index do |i,ix|
 
@@ -153,14 +153,7 @@ Offline protocol
 
 	})
 </script>
-	<link rel="stylesheet" href="/rocker/assets/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.min.css">
 
-<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
-<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
-<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
-<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
-<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
-<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
 <script>
 	$('.datepicker').pickadate({
 		selectMonths: true,

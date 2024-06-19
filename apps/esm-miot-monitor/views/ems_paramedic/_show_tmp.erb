@@ -216,25 +216,7 @@ end
 
 
 
-				
-			<style>
-				.parent {
-				    height: 1000px;       /* Set the height of the parent div */
-				    overflow-y: scroll;  /* Enable vertical scrolling */
-				    border: 1px solid #ccc;  /* Optional: add a border to the parent div */
-				    padding: 10px;       /* Optional: add padding to the parent div */
-				    position: relative;  /* Make sure the parent has a position context */
-				}
-			    .fixedDiv  {
-				    position: -webkit-sticky; /* For Safari */
-				    position: sticky;    /* Makes the element sticky */
-				    top: 0;              /* The point at which the element becomes sticky */
-				  
-				    padding: 10px;       /* Optional: add padding */
-	
-					height:500px;
-}					
-				</style>
+
 
 <!-- Patient Identity End -->
 
@@ -254,7 +236,7 @@ end
 		<div class="col-9"  >
 
 
-		<div class="row parent" style="my-2">
+		<div class="row " style="my-2">
 
 			<div class="col-12 video_call-panel "  style="display:none;border:0px solid;height:400px">
 					<%= inline(this,:'_openvidu') %>
@@ -278,47 +260,47 @@ end
 				})
 			</script>
 
-			<div  id="<%=station_id%>" class="fixedDiv <%=station_id%> col-2 station station-top " style="border:0px solid #f00;display:block;">
+			<div  id="<%=station_id%>" class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
 			
 				<div class="row d-flex justify-content-begin" style="padding:0px" >
 					
-				           <div class="vs-val col-12 bp">
+				           <div class="vs-val col-4  col-lg-2 col-sm-2 bp">
 				           <span class="label">BP</span>
 				           <div class="value">-</div>
 				           </div>
 
-        	   			   <div class="vs-val col-12 pr">
+        	   			   <div class="vs-val col-2  col-lg-1 col-sm-1 pr">
 								<span class="label">PR</span>
 								<div class="value">-</div>
 							</div>
-							<div class="vs-val col-12 spo2">
+							<div class="vs-val col-2  col-lg-1 col-sm-1 spo2">
 								<span class="label">SpO2</span>
 								<div class="value">-</div>
 							</div>
-							<div class="vs-val col-12 hr">
+							<div class="vs-val col-2  col-lg-1 col-sm-1 hr">
 								<span class="label">HR</span>
 								<div class="value">-</div>
 							</div>
-								<div class="vs-val col-12  temp">
+								<div class="vs-val col-2  col-lg-1 col-sm-1 temp">
 									<span class="label">Temp</span>
 									<div class="value">-</div>
 							</div>
-							<div class="vs-val col-12   rr">
+							<div class="vs-val col-2  col-lg-1  col-sm-1 rr">
 									<span class="label">RR</span>
 									<div class="value">-</div>
 							</div>
 
-							<div class="vs-val col-12 co2">
+							<div class="vs-val col-2 col-lg-1 col-sm-1 co2">
 				    			<span class="label">CO<sub>2</sub></span>
 								<div class="value">-</div>
 							</div>
 
-							<div class="vs-val col-12  score " style="min-height:1em">
+							<div class="vs-val col-2 col-lg-1  col-sm-1 score">
 								<span class="label">Score</span>
 								<div class="value">&nbsp;</div>
 							</div>
 
-							<div class="vs-val col-12  alert-msg" >
+							<div class="vs-val col-2 col-lg-2  col-sm-1 alert-msg" >
 								<span class="label">MSG</span>
 								<div class="value" style="overflow:hidden;height:30px;font-size:0.8em">
 									&nbsp;
@@ -332,36 +314,13 @@ end
 
 
 			<% if true %>
-		
-			
 
-			<div class="col-10" style="border:0px solid red">
+
+			<div class="card">
 										<div class="card-body">
 											<ul class="nav nav-tabs nav-primary" id="nav-tabs" role="tablist">
-												
-												
 												<li class="nav-item" role="presentation">
-														<a class="nav-link active" data-bs-toggle="tab" href="#progress-tab" role="tab" aria-selected="false">
-															<div class="d-flex align-items-center">
-																<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
-																</div>
-																<div class="tab-title">Progress Note</div>
-															</div>
-														</a>
-												</li>
-												
-												<li class="nav-item" role="presentation">
-													<a class="nav-link " data-bs-toggle="tab" href="#summary-tab" role="tab" aria-selected="false">
-														<div class="d-flex align-items-center">
-															<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
-															</div>
-															<div class="tab-title">Summary</div>
-														</div>
-													</a>
-												</li>
-												
-												<li class="nav-item" role="presentation">
-													<a class="nav-link " data-bs-toggle="tab" href="#primaryhome" role="tab" aria-selected="false">
+													<a class="nav-link active" data-bs-toggle="tab" href="#primaryhome" role="tab" aria-selected="false">
 														<div class="d-flex align-items-center">
 															<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
 															</div>
@@ -378,12 +337,18 @@ end
 														</div>
 													</a>
 												</li> -->
-													
-													
-											
+												<li class="nav-item" role="presentation">
+													<a class="nav-link" data-bs-toggle="tab" href="#primarycontact" role="tab" aria-selected="false">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Summary</div>
+														</div>
+													</a>
+												</li>
 											</ul>
 											<div class="tab-content py-3 " id="tab-content">
-												<div class="tab-pane fade  show" id="primaryhome" role="tabpanel">
+												<div class="tab-pane fade active show" id="primaryhome" role="tabpanel">
 
 			<% if ems_case.paramedic_status=='STARTED'  %>											
 													
@@ -591,7 +556,7 @@ end
 
 
 
-												<div class="tab-pane  fade text-panel" id="summary-tab" role="tabpanel">
+												<div class="tab-pane fade text-panel" id="primarycontact" role="tabpanel">
 
 
 												</div>
@@ -603,50 +568,6 @@ end
 													})
 
 												</script>
-													
-													
-													
-													
-												<div class="tab-pane active show fade progress-panel " id="progress-tab" role="tabpanel">
-													
-													Loading..	
-
-												</div>
-												
-
-												<script>
-													
-													function update_progress(){
-														
-														$.ajax({
-															url: "<%="../EMSParamedic/progress_note"%>?id="+ems_case_id,
-															context: document.body
-														}).done(function(data) {
-
-															$( '.progress-panel' ).html(data);
-													
-
-														});
-
-													}
-													
-													$(document).ready(function(){
-														update_progress();
-													})
-
-												</script>
-													
-											
-													
-													
-													
-													
-													
-													
-													
-													
-													
-													
 											</div>
 										</div>
 									</div>
@@ -1031,8 +952,7 @@ end
 		  reload_message("<%=ems_case.id%>","<%=admit.id%>")
       	  update_message();
 		  update_message_page();
-		  update_progress_list();
-		  
+
 		  if(data!="NULL"){
 			   console.log("EMR test")
 			  data = JSON.parse(lines[1])

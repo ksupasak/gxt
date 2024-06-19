@@ -347,6 +347,18 @@ MSG
 
 end
 
+class EMSProgressNote < GXTModel
+    include Mongoid::Document
+    key :case_id, ObjectId
+    key :name, String
+    key :type, String
+    key :time, DateTime
+    key :ref_id, ObjectId
+    key :text, String
+    key :hidden, String
+end
+
+
 class EMSCode < GXTModel
 
   include Mongoid::Document
@@ -975,6 +987,8 @@ class EMSAssessmentController < EMSGXTDocument
 
 end
 
+class EMSProgressNoteController  < EMSGXTDocument
+end
 
 
 class EmsReportController < EMSGXT

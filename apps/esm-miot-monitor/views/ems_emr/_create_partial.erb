@@ -25,8 +25,12 @@
 
     end
 
-    # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
-    nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now, :data_record_id=>record.id, :tag=>'emr'
+     # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
+     # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now, :data_record_id=>record.id, :tag=>'emr'
+
+    
+     note = EMSProgressNote.create :name=>"EMR", :type=>"emr" ,:text =>text.strip, :time=>Time.now, :ref_id=>record.id,:case_id=>ems_case.id
+
 
 
       path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
@@ -51,13 +55,13 @@ MSG
     values = {}
 
 %>
-<form action="<%=get_path 'create_partial'%>" id="form" method="post">
+<form action="<%=get_path 'create_partial'%>" id="form-<%=record.id%>" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
 <input type="hidden" name="schema" id="schema" value="">
 
 <% fieldset(:record) do |f| %>
-<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case)  %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form-#{record.id}")  %>
 <% end %>
 <br/>
 <div class="modal-footer">

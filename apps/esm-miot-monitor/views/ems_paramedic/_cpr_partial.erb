@@ -4,7 +4,7 @@
 %>
 <div class="row">
 <div class="col-12 mt-3">
-<a href="#" class="btn btn-warning cpr-btn text-white">-</a>
+<a href="#" class="btn btn-warning cpr-btn text-white">-</a> <a href="#" class="btn btn-warning text-white cpr-reset-btn">Reset</a>
 </div>
 
 </div>
@@ -24,13 +24,20 @@
           $('.cpr-btn').addClass("btn-danger")
 
 
+          $('.cpr-cmd').removeClass("btn-warning")
+          $('.cpr-cmd').addClass("btn-danger")
+		
+		  // $('.cpr-cmd').show()
+		
     }else{
 
       $('.cpr-btn').removeClass("btn-danger")
       $('.cpr-btn').addClass("btn-warning")
-
+		
+      $('.cpr-cmd').removeClass("btn-danger")
+      $('.cpr-cmd').addClass("btn-warning")
+ // $('.cpr-cmd').hide()
     }
-
 
   }
 
