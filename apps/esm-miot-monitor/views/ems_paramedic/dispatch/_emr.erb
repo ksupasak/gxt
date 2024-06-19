@@ -25,7 +25,9 @@
 
 $('#dispatch_emr_panel').modal("show")
 <%
-
+	
+	
+  
       item = EMSPatientStatusItem.find params[:item]
 
       if item
@@ -34,9 +36,10 @@ $('#dispatch_emr_panel').modal("show")
       assess = EMSAssessment.find params[:item]
       end
 
-
-
       data = JSON.parse(assess.data)
+
+
+
 
       document_name = data['name']
 

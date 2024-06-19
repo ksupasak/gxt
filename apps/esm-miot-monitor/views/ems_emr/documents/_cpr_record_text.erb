@@ -1,0 +1,48 @@
+<% require_relative 'lib'%><%
+  @record = record
+  r = @record.data
+  if mode=='line'
+%>
+<%
+	
+	med = []
+	if r['adernaline']=='yes'
+		route = ''
+	    route = r['adernaline_route'] if r['adernaline_route']
+		med.push("Adernaline : "+r['adernaline_vol']+" mg " + route)
+	end
+	
+	if r['amiodarone']=='yes'
+		route = ''
+	    route = r['amiodarone_route'] if r['amiodarone_route']
+		med.push("Amiodarone : "+r['amiodarone_vol']+" mg " + route)
+	end
+	
+	if r['calcium_gluconate']=='yes'
+
+		med.push("10% Calcium gluconate : "+r['calcium_gluconate_vol']+" mg " )
+	end
+	
+	if r['naho3']=='yes' and r['naho3_vol']
+
+		med.push("7.5% NaHO3 : "+r['naho3_vol']+" ml")
+	end
+	
+	if r['lidocaine']=='yes' and r['alidocaine_vol']
+		
+		med.push("2% Lidocaine : "+r['alidocaine_vol']+" ml " )
+	end
+	
+	if r['dw']=='yes' and r['dw_vol']
+		route = ''
+	    route = r['dw_route'] if r['dw_route']
+		med.push("10% DW  : "+r['dw_vol']+" mg "+route)
+	end
+	
+	if r['other']=='yes' and r['other_vol']
+		med.push(r['other_vol'])
+	end
+%>
+EKG : <%=r['ekg']%>, ETCO2 : <%=r['co2']%>, <%=med.join(", ")%>
+<%#r.inspect %>
+<% end %>

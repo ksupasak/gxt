@@ -1,0 +1,21 @@
+<%	
+if params[:cmd] == "DEL"
+	
+	note = EMSProgressNote.find params[:pid]
+	if note.type=='emr'
+		record = EMRRecord.find note.ref_id
+		record.destroy if record
+	end
+	note.destroy
+	
+else
+	
+	note = EMSProgressNote.find params[:pid]
+	note.update_attributes :time=>params[:time]
+	
+end
+
+%>
+<script>
+	update_progress_list();
+</script>

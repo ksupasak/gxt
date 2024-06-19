@@ -1,0 +1,23 @@
+<% if request.post? 
+
+		
+# include Mongoid::Document
+# key :case_id, ObjectId
+# key :type, String
+# key :time, DateTime
+# key :ref_id, ObjectId
+# key :text, String
+# key :hidden, String
+
+	note = EMSProgressNote.create :text=>params[:progress_note], :type=>'text', :time=>Time.now, :case_id=>params[:id]
+
+
+	end
+%>
+
+<script>
+
+	update_progress_list();
+	
+</script>
+	<%=params[:progress_note]%>

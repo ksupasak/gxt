@@ -5,6 +5,10 @@
     admit = ems_case.admit
     if admit
       med_record = MedicationRecord.create :admit_id=>admit.id, :name=>params[:note], :volume=>params[:volume], :unit_type=>params[:unit], :start_time=>Time.now
+   
+	  note = EMSProgressNote.create :text=>params[:note], :type=>'med', :time=>Time.now, :case_id=>ems_case.id
+	
+   
     end
 
     if params[:pweight]

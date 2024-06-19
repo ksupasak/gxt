@@ -15,8 +15,21 @@
 
 
      record.update_attributes :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
+     values = record
 
+	 
+	 
+     if File.file?(File.dirname(__FILE__) +'/documents/_'+document.name+"_text.erb")
 
+       text = inline(this,'documents/_'+document.name+"_text", :this=>this, :record=>values, :ems_case=> ems_case, :mode=>'line')
+	   	
+       note = EMSProgressNote.where(:ref_id=>record.id,:case_id=>ems_case.id).first
+	   
+	   note.update_attributes :text=>text if note
+		
+		
+     end
+	 
 #
 #     admit = Admit.find(ems_case.admit_id)
 #
@@ -62,7 +75,7 @@
 
 
 <% fieldset(:record) do |f| %>
-<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case)  %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form-#{record.id}")  %>
 <% end %>
 <br/>
 <div class="">

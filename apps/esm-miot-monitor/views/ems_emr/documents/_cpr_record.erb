@@ -1,0 +1,195 @@
+<% require_relative "lib" %>
+<%
+  @record = record
+  @record_id = record_id
+%>
+<div class="card">
+
+<div class="card-header bg-primary text-white">
+
+<center>
+<div class="text-white">CPR Record</div>
+</center>
+</div>
+
+<div class="card-body">
+
+<div class="row">
+	<div class="col-4">
+		<div class="row">
+
+			<div class="col-5">EKG Confirm</div>
+				<div class="col-7">
+				<%= radio_string this, "ekg", :value=>%w{Asystole PEA VF Pulseless_VT}, :col=>12, :display=>'block' %>
+				</div>
+			</div>
+
+		
+		<br/>
+		<div class="row">
+			<div class="col-5">ETCO2</div>
+			<div class="col-7">
+			<%= text_string this, 'co2', :col=>8, :label=>false%>
+			</div>
+		</div>
+		
+		<br/>
+	
+
+		</div>
+		
+		
+		<div class="col-8">
+		
+			<div class="row">
+				<div class="col-5">Patient weight (kg) </div>
+				<div class="col-2">
+				<%= text_string this, 'weight', :label=>false,:placeholder=>'kg'%>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'adernaline', :value=>%w{yes|Adernaline}, :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%>
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'adernaline_vol', :label=>nil, :placeholder=>'mg'%> 
+				</div>
+				<div class="col-5">
+					<%= radio_string this, "adernaline_route", :value=>%w{IV IO ETT} %>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'amiodarone', :value=>%w{yes|Amiodarone}, :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%>
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'amiodarone_vol', :label=>nil, :placeholder=>'mg'%> 
+				</div>
+				<div class="col-5">
+					<%= radio_string this, "amiodarone_route", :value=>%w{IV IO} %>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'calcium_gluconate',:value=>['yes|10% Calcium gluconate'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'calcium_gluconate_vol', :label=>nil, :placeholder=>'mg'%> 
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'naho3',:value=>['yes|7.5% NaHO3'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'naho3_vol', :label=>nil, :placeholder=>'ml'%> 
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'lidocaine',:value=>['yes|2% Lidocaine'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'lidocaine_vol', :label=>nil, :placeholder=>'ml'%> 
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'dw',:value=>['yes|10% DW'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'dw_vol', :label=>nil, :placeholder=>'ml'%> 
+				</div>
+				<div class="col-5">
+					<%= radio_string this, "dw_route", :value=>%w{IV IO} %>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'other',:value=>['yes|Other'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-7">
+					<%= text_string this, 'other_vol', :label=>nil, :placeholder=>'ระบุ'%> 
+				</div>
+			</div>
+			<script>
+				 
+				 
+				function update_vol(id){
+					
+					w = $('#'+id+" .weight_cls").val()
+					weight = parseFloat(w)
+					
+					if($('#'+id+" .check_adernaline").is(':checked')){
+						$('#'+id+" .adernaline_vol_cls").val(weight*0.1)
+					}
+					
+					if($('#'+id+" .check_amiodarone").is(':checked')){
+						$('#'+id+" .amiodarone_vol_cls").val(weight*5)
+					}	
+					
+					if($('#'+id+" .check_lidocaine").is(':checked')){
+						$('#'+id+" .lidocaine_vol_cls").val(weight*1)
+					}	
+					
+					if($('#'+id+" .check_naho3").is(':checked')){
+						$('#'+id+" .naho3_vol_cls").val(weight*1)
+					}	
+					
+			
+			// <!-- Adenaline IV 0.1 ml/kg ( body weight*0.1 ml )
+	// 		Amiodarone IV/IO 5 mg/kg ( body weight *5 mg )
+	// 		Lidocaine IV/IO 1 mg/kg (body weight* 1 mg )
+	// 		7.5%NaHCO3 IV 1 ml/kg (body weight*1 ml) -->
+			
+									
+					
+				}	
+				 
+				 $('#<%=record_id%> .weight_cls').on('change', function() {
+					
+				 	update_vol('<%=record_id%>')
+				 });
+				 
+				 $('#<%=record_id%> .med_cls').on('change', function() {
+				                if ($(this).is(':checked')) {
+									update_vol('<%=record_id%>')
+				                } else {
+									ids = $(this).attr('id').split("_")
+									id = ids[0]
+									if(ids.length==3)id=ids[0]+"_"+ids[1]
+									$('#<%=record_id%> .'+id+'_vol_cls').val("")
+				                }
+				 });
+				 
+			
+				 
+				 
+			</script>
+			
+			<!-- Adenaline IV 0.1 ml/kg ( body weight*0.1 ml )
+			Amiodarone IV/IO 5 mg/kg ( body weight *5 mg )
+			Lidocaine IV/IO 1 mg/kg (body weight* 1 mg )
+			7.5%NaHCO3 IV 1 ml/kg (body weight*1 ml) -->
+			
+		</div>
+		
+	</div>
+	
+	
+</div>
+
+
+
+</div>
+
+<script>
+	
+	$('.station .co2 .value').each(function(){$('.modal-body .co2_cls').val($(this).html())})
+	
+	
+</script>	

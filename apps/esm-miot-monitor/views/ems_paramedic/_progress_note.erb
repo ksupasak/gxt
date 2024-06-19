@@ -1,0 +1,77 @@
+
+<div id="progress-list">
+list..
+</div>
+
+<form id="progress-form" action="../EMSParamedic/progress_create">
+	
+	<input name="progress_note" type="text" id="progress-note" class="secondary-blue" placeholder="Note, Command, Msg" style="padding:5px; border:1px solid #bbb;border-radius: 4px;"/>
+	<input type="hidden" name="id" value="<%=params[:id]%>"><br><br>
+	<div id="progress-x">
+
+	</div>
+</form>
+
+<div class="cpr-cmd-x" style="">
+	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="emr_cpr" item="66711f2718c4498da0dcc40b">+ CPR Record</a>
+</div>
+
+<script>
+    $('.dispatch_item_x').click(function(e){
+
+      cmd = $(this).attr('code')
+	  item = $(this).attr('item')
+		
+      dispatch_command(cmd, item)
+      $('.modal').modal('hide');
+
+      e.preventDefault();
+
+    })
+	function evalHTML(htmlString) {
+	    // Create a new div element
+	    const tempDiv = document.createElement('div');
+	    // Set the HTML content of the div
+	    tempDiv.innerHTML = htmlString;
+
+	    // Now you can manipulate the HTML as needed
+	    // For example, append it to a specific part of your document
+	    document.getElementById('progress-list').appendChild(tempDiv);
+	}
+	function update_progress_list(){
+	
+		$.ajax({
+			url: "<%="../EMSParamedic/progress_partial"%>?id="+ems_case_id,
+			context: document.body
+		}).done(function(data) {
+
+			$( '#progress-list' ).html(data);
+
+
+		});
+	}
+	
+	$('#progress-form').submit(function(e){
+		
+		
+	    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	       var form = $(this);
+	       var actionUrl = form.attr('action');
+    	   
+	       $.ajax({
+	           type: "POST",
+	           url: actionUrl,
+	           data: form.serialize(), // serializes the form's elements.
+	           success: function(data)
+	           {
+	             	  $( '#progress-x' ).html(data+"");
+					  $('#progress-note').val("")
+					  $('#progress-note').focus()
+	           }
+	       });
+		
+	})
+
+	update_progress_list();
+</script>
