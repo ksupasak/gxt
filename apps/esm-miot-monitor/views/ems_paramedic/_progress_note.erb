@@ -11,9 +11,15 @@ list..
 
 	</div>
 </form>
+<%
+	
+item = EMSAssessment.where(:code=>'emr_cpr').first
+item_id = item.id if item
+	
+%>
 
 <div class="cpr-cmd-x" style="">
-	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="emr_cpr" item="66711f2718c4498da0dcc40b">+ CPR Record</a>
+	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="emr_cpr" item="<%=item_id%>">+ CPR Record</a>
 </div>
 
 <script>
