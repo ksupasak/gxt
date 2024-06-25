@@ -292,13 +292,15 @@
   var commands = <%=global_items.collect{|i| i[:i]}.to_json%>
 
 
-  function dispatch_command(cmd,item){
+  
+
+  function dispatch_command(cmd,item,ref_id){
 
 	 
     found = null;
     assessment_id = null;
 
-		// alert(""+cmd+" item "+item);
+		console.log(""+cmd+" item "+item+" ref="+ref_id);
 
     for(var ci in commands){
       c = commands[ci]
@@ -342,7 +344,7 @@
 		}
     else{
 
-      var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item;
+      var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item+"&ref_id="+ref_id;
 
       $.ajax({
              type: "POST",
@@ -369,7 +371,7 @@
       cmd = $(this).attr('code')
 	  item = $(this).attr('item')
 		
-      dispatch_command(cmd, item)
+      dispatch_command(cmd, item, null)
       $('.modal').modal('hide');
 
       e.preventDefault();

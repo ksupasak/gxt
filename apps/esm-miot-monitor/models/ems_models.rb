@@ -354,6 +354,7 @@ class EMSProgressNote < GXTModel
     key :type, String
     key :time, DateTime
     key :ref_id, ObjectId
+    key :item_id, ObjectId
     key :text, String
     key :hidden, String
 end

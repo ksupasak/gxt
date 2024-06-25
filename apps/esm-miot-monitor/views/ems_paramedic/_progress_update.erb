@@ -10,8 +10,24 @@ if params[:cmd] == "DEL"
 	
 else
 	
+	first_time = DateTime.parse params[:first_time].split(" ").join(" +")
+	last_time = DateTime.parse params[:last_time].split(" ").join(" +")
+
+
+	puts params[:first_time].split(" ").join(" +")
+	puts params[:last_time].split(" ").join(" +")
+
+	puts first_time.inspect
+	puts last_time.inspect
+	
+	
+	new_time = first_time + (last_time-first_time)/2
+
+	puts new_time.inspect
+	
+
 	note = EMSProgressNote.find params[:pid]
-	note.update_attributes :time=>params[:time]
+	note.update_attributes :time=>new_time
 	
 end
 

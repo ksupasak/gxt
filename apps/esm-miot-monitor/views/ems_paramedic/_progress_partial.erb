@@ -1,6 +1,3 @@
-Time : <%=Time.now%>
-<br/><br/>
-
 
 <%
    
@@ -11,36 +8,80 @@ Time : <%=Time.now%>
 	
 	
 %>
+<div class="row">
+<div class="col-12 d-flex justify-content-between">
+<div class="col-12 d-flex justify-content-end">Time : <%=Time.now%></div>
+</div>
+</div>
 <div id="sortable-container" class="d-flex flex-column">
 		
-<% for i in notes %>
+<% for i in notes 
+
+	item_id = ""
+	code = ""
+	ref_id = ""
+	if i.item_id
+		item_id = i.item_id 
+		assess = EMSAssessment.find item_id
+		code = assess.code
+		ref_id = i.ref_id
+	end
+%>
 <div class="card sortable-item " id="<%=i.id%>" time="<%=i.time%>">
 	<div class="card-body">
+
+		
 		<div class="row d-flex justify-content-between ">
-		<div class="col-1">
+		<div class="col-2">
 		<a href="#" class="" ><b><%=i.time.strftime("%H:%M") if i.time %></b></a><br/>
-		<%="EMR" if i.type=='emr'%>
+		<%=i.name if i.type=='emr'%>
 		
 		<%="MED" if i.type=='med'%>
 		
 		</div>
-		<div class="col-9">
+		<div class="col-8">
+		
+		<a href="#" class="progress_item  w-100 " code="<%=code%>" item="<%=item_id%>" ref_id="<%=ref_id%>">
 		<%=i.text %>
+
+		</a>
+		
 		</div>
-		<div class="col-1">
+		<div class="col-1 col-sm-2 d-flex justify-content-end" style="">
 		<a href="#" class="btn-del btn btn-sm btn-outline-danger" pid="<%=i.id%>" >Del</a>
 		</div>
 		</div>
+
+
 	</div>
 </div>
 <% end %>
 </div>
 
+
       <%# inline(this,:'dispatch/_emr', :local=>{:ems_case=>ems_case, :emr_name=>'cpr_record', :item=>'cpr_record'}) %>
       
 
 <script>
+
+
+
     $(function() {
+
+	$('.progress_item').click(function(e){
+	 
+      cmd = $(this).attr('code')
+	  item = $(this).attr('item')
+	  ref_id = $(this).attr('ref_id')
+		
+
+      dispatch_command(cmd, item, ref_id)
+
+    //   $('.modal').modal('hide');
+
+      e.preventDefault();
+
+    })
 		
 		$('.btn-del').click(function(e){
 			
@@ -59,7 +100,8 @@ Time : <%=Time.now%>
 		})
 		
          $("#sortable-container").sortable({
-             placeholder: "sortable-placeholder",
+            //  placeholder: "sortable-placeholder",
+			  placeholder: "<li>Drop Here!</li>",
              update: function(event, ui) {
                  console.log("Item moved:", ui.item.index());
 				 // alert(ui.item.attr('id'))
@@ -92,15 +134,16 @@ Time : <%=Time.now%>
 				 })
 				 if(first_time&&last_time){
 						// alert(""+first_time+" "+last_time)
-				 		first = Date.parse(first_time)
-					 	last = Date.parse(last_time)
-					 		// alert(""+first+" "+last)
-					 	new_time = new Date(first+(last-first)/2)
-					 	alert((new_time))
-					 	new_time = first_time
-					 
+				 		// first = Date.parse(first_time)
+					 	// last = Date.parse(last_time)
+					 	//  alert(""+first+" "+last)
+					 	// new_time = new Date(first+(last-first)/2)
+					 	// alert((new_time))
+					 	// new_time = first_time
+					  url =  "<%="../EMSParamedic/progress_update"%>?id="+ems_case_id+"&first_time="+escape(first_time)+"&last_time="+escape(last_time)+"&pid="+ui.item.attr("id")
+					//   alert(url)
 			 		$.ajax({
-			 			url: "<%="../EMSParamedic/progress_update"%>?id="+ems_case_id+"&time="+new_time+"&pid="+ui.item.attr("id"),
+			 			url: url,
 			 			context: document.body
 			 		}).done(function(data) {
 

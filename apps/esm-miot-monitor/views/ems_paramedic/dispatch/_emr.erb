@@ -45,8 +45,13 @@ $('#dispatch_emr_panel').modal("show")
 
 %>
 
-var url = "<%=get_path "../EmsEMR/create_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>";
+<% if params[:ref_id]!='undefined'&&params[:ref_id]!='null' %>
 
+var url = "<%=get_path "../EmsEMR/update_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>&item_id=<%=assess.id%>&id=<%=params[:ref_id]%>";
+
+<% else %>
+var url = "<%=get_path "../EmsEMR/create_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>&item_id=<%=assess.id%>";
+<% end %>
 $.ajax({
        type: "GET",
        url: url,
