@@ -1,4 +1,4 @@
-
+Update
 <%
 
 
@@ -58,7 +58,7 @@
 
 
 %>
- <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+<!--<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">-->
 <% else %>
 <%
 
@@ -67,7 +67,7 @@
 
 
 %>
-<form action="<%=get_path 'update_partial'%>" id="form-<%=record.id%>" method="post">
+<form action="<%=get_path 'update_partial'%>" class="form-<%=record.id%>" method="post">
 
 <input type="hidden" name="id" value="<%=record.id%>">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
@@ -105,22 +105,9 @@
         });
   })
 
-  $("#form-<%=record.id%>").submit(function(e){
-
-    // fields = []
-    //
-    // $('.field').each(function(){
-    //
-    //     cname =  $(this).attr("name")
-    //     start =  cname.indexOf('[')
-    //     column = cname.substring(start+1, cname.length-1)
-    //
-    //     f = {'name':column,'type':$(this).attr('field_type')}
-    //     fields.push(f)
-    //
-    // })
-    //
-    // $('#schema-<%=record.id%>').val(JSON.stringify(fields))
+  $(".form-<%=record.id%>").submit(function(e){
+ 
+  e.preventDefault();
 
 
     var form = $(this);
@@ -134,12 +121,13 @@
         success: function(data)
         {
           // alert(data);
+            $('#dispatch_emr_panel').modal("hide")
           $('#result-<%=record.id%>').html("update")
+          update_progress_list();
           // show response from the php script.
         }
     });
 
-    e.preventDefault();
 
   });
 

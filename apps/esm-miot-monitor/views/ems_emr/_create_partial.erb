@@ -1,4 +1,4 @@
-
+Create
 <%
 
 
@@ -8,7 +8,7 @@
   if request.post?
 
 
-  document.update_attributes :schema=>params[:schema]
+    document.update_attributes :schema=>params[:schema]
 
 
     record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
@@ -27,9 +27,11 @@
 
      # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>"EMR: #{document.name}", :start_time=>Time.now
      # nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now, :data_record_id=>record.id, :tag=>'emr'
+     name = 'EMR'
 
+     name = document.title.split(" ")[0] if document and document.name
     
-     note = EMSProgressNote.create :name=>"EMR", :type=>"emr" ,:text =>text.strip, :time=>Time.now, :ref_id=>record.id,:case_id=>ems_case.id
+     note = EMSProgressNote.create :name=>name, :type=>"emr" ,:text =>text.strip, :time=>Time.now, :ref_id=>record.id,:case_id=>ems_case.id, :item_id=>params[:item_id]
 
 
 
@@ -44,7 +46,9 @@ MSG
 
 
 %>
- <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+
+<!--<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">-->
+
 <% else %>
 <%
 
@@ -57,6 +61,7 @@ MSG
 %>
 <form action="<%=get_path 'create_partial'%>" id="form-<%=record.id%>" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
+<input type="hidden" name="item_id" value="<%=params[:item_id]%>">
 <input type="hidden" name="document" value="<%=document.name%>">
 <input type="hidden" name="schema" id="schema" value="">
 
@@ -75,10 +80,12 @@ MSG
 
 <script>
 
-  $("#form").submit(function(e){
+  $("#form-<%=record.id%>").submit(function(e){
 
     fields = []
 
+    e.preventDefault();
+    
     $('.field').each(function(){
 
         cname =  $(this).attr("name")
@@ -108,7 +115,6 @@ MSG
         }
     });
 
-    e.preventDefault();
 
   });
 

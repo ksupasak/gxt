@@ -24,7 +24,7 @@ display = 'block' if options[:display]
     options[:value].each_with_index do |i,j|
 %>
 <div style="display:<%=display%>">
-<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i %> value="<%=i%>" class="field" field_type="radio_string" >
+<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i %> value="<%=i%>" class="<%=options[:class]%>  field" field_type="radio_string" >
 <label for="<%=name%>_<%=j%>"><%=i%></label>
 </div>
 &nbsp;

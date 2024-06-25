@@ -2,23 +2,55 @@
 <%
   @record = record
   @record_id = record_id
+
+  records = {}
+
+  if record.empty?
+	record['lap'] = '1'
+  	records = EMRRecord.where(:case_id=>ems_case.id).all
+
+	if records.size > 0 
+		records.collect!{|i| i['data']}.sort!{|a,b| a['lap'].to_i<=>b['lap'].to_i}
+		record['patient_type'] = records[-1]['patient_type']
+		record['weight'] = records[-1]['weight']
+		record['lap'] = records[-1]['lap'].to_i+1
+	end
+
+  else
+	
+  end
+  
 %>
+<%# records.to_json%>
 <div class="card">
 
 <div class="card-header bg-primary text-white">
 
 <center>
-<div class="text-white">CPR Record</div>
+<div class="text-white">CPR Record : for <span class="patient_type"></span></div>
 </center>
 </div>
 
 <div class="card-body">
 
-<div class="row">
-	<div class="col-4">
-		<div class="row">
 
-			<div class="col-5">EKG Confirm</div>
+
+<div class="row">
+
+	<div class="col-4">
+
+	<div class="row">
+		<div class="col-5">Lap</div>
+		<div class="col-7">
+				<%= text_string this, 'lap', :col=>8, :label=>false,:placeholder=>''%>
+		</div>
+	</div>
+
+	<br/>
+
+	<div class="row">
+
+			<div class="col-5">EKG</div>
 				<div class="col-7">
 				<%= radio_string this, "ekg", :value=>%w{Asystole PEA VF Pulseless_VT}, :col=>12, :display=>'block' %>
 				</div>
@@ -26,6 +58,22 @@
 
 		
 		<br/>
+
+	<div class="row">
+		<div class="col-5">Patient Type</div>
+		<div class="col-7">
+				<%= radio_string this, "patient_type", :value=>%w{Adult Child}, :col=>12, :display=>'block', :class=>'patient-type' %>
+		</div>
+	</div>
+
+		<div class="row">
+				<div class="col-5">Patient Weight</div>
+				<div class="col-7">
+				<%= text_string this, 'weight', :col=>8, :label=>false,:placeholder=>'kg'%>
+				</div>
+		</div>
+
+<br/>
 		<div class="row">
 			<div class="col-5">ETCO2</div>
 			<div class="col-7">
@@ -41,13 +89,7 @@
 		
 		<div class="col-8">
 		
-			<div class="row">
-				<div class="col-5">Patient weight (kg) </div>
-				<div class="col-2">
-				<%= text_string this, 'weight', :label=>false,:placeholder=>'kg'%>
-				</div>
-			</div>
-			<br/>
+			
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'adernaline', :value=>%w{yes|Adernaline}, :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%>
@@ -56,9 +98,10 @@
 					<%= text_string this, 'adernaline_vol', :label=>nil, :placeholder=>'mg'%> 
 				</div>
 				<div class="col-5">
-					<%= radio_string this, "adernaline_route", :value=>%w{IV IO ETT} %>
+					<%= radio_string this, "adernaline_route", :value=>%w{IV IO ETT} ,:class=>'adernaline_route'%>
 				</div>
 			</div>
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'amiodarone', :value=>%w{yes|Amiodarone}, :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%>
@@ -70,6 +113,7 @@
 					<%= radio_string this, "amiodarone_route", :value=>%w{IV IO} %>
 				</div>
 			</div>
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'calcium_gluconate',:value=>['yes|10% Calcium gluconate'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
@@ -78,6 +122,7 @@
 					<%= text_string this, 'calcium_gluconate_vol', :label=>nil, :placeholder=>'mg'%> 
 				</div>
 			</div>
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'naho3',:value=>['yes|7.5% NaHO3'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
@@ -86,7 +131,7 @@
 					<%= text_string this, 'naho3_vol', :label=>nil, :placeholder=>'ml'%> 
 				</div>
 			</div>
-			
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'lidocaine',:value=>['yes|2% Lidocaine'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
@@ -95,7 +140,7 @@
 					<%= text_string this, 'lidocaine_vol', :label=>nil, :placeholder=>'ml'%> 
 				</div>
 			</div>
-			
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'dw',:value=>['yes|10% DW'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
@@ -107,7 +152,17 @@
 					<%= radio_string this, "dw_route", :value=>%w{IV IO} %>
 				</div>
 			</div>
-			
+			<br/>
+			<div class="row">
+				<div class="col-5">
+					<%= check_string this, 'glucose',:value=>['yes|50% Glucose'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
+				</div>
+				<div class="col-2">
+					<%= text_string this, 'glucose_vol', :label=>nil, :placeholder=>'ml', :value=>'50'%> 
+				</div>
+		
+			</div>
+			<br/>
 			<div class="row">
 				<div class="col-5">
 					<%= check_string this, 'other',:value=>['yes|Other'], :col=>12, :col_item=>"col-12",:label=>nil, :pair=>true, :class=>'med_cls'%> 
@@ -121,8 +176,18 @@
 				 
 				function update_vol(id){
 					
+					
+					
+
 					w = $('#'+id+" .weight_cls").val()
 					weight = parseFloat(w)
+					
+
+				
+				if($('#'+id+" #patient_type_1").is(':checked')){
+						
+					$('#'+id+" .patient_type").html('Child');
+
 					
 					if($('#'+id+" .check_adernaline").is(':checked')){
 						$('#'+id+" .adernaline_vol_cls").val(weight*0.1)
@@ -132,27 +197,46 @@
 						$('#'+id+" .amiodarone_vol_cls").val(weight*5)
 					}	
 					
-					if($('#'+id+" .check_lidocaine").is(':checked')){
-						$('#'+id+" .lidocaine_vol_cls").val(weight*1)
-					}	
-					
 					if($('#'+id+" .check_naho3").is(':checked')){
 						$('#'+id+" .naho3_vol_cls").val(weight*1)
 					}	
 					
-			
-			// <!-- Adenaline IV 0.1 ml/kg ( body weight*0.1 ml )
-	// 		Amiodarone IV/IO 5 mg/kg ( body weight *5 mg )
-	// 		Lidocaine IV/IO 1 mg/kg (body weight* 1 mg )
-	// 		7.5%NaHCO3 IV 1 ml/kg (body weight*1 ml) -->
-			
-									
+				}else{
+
+					$('#'+id+" .patient_type").html('Adult');
+
 					
-				}	
+
+					if($('#'+id+" #adernaline_vol_").val()==''){
+						if($('#'+id+" #adernaline_route_0").is(':checked')||$('#'+id+" #adernaline_route_1").is(':checked')){
+							$('#'+id+" #adernaline_vol_").val('1')
+							$('#'+id+" .check_adernaline").prop('checked', true);
+							
+						}
+						if($('#'+id+" #adernaline_route_2").is(':checked')){
+							$('#'+id+" #adernaline_vol_").val('2')
+							$('#'+id+" .check_adernaline").prop('checked', true);
+
+						}
+					}
+					
+				
+
+
+
+				}
+
+					if($('#'+id+" .check_lidocaine").is(':checked')){
+						$('#'+id+" .lidocaine_vol_cls").val(weight*1)
+					}	
+									
+			}	
+				
 				 
 				 $('#<%=record_id%> .weight_cls').on('change', function() {
 					
 				 	update_vol('<%=record_id%>')
+
 				 });
 				 
 				 $('#<%=record_id%> .med_cls').on('change', function() {
@@ -166,8 +250,16 @@
 				                }
 				 });
 				 
-			
-				 
+				 $('#<%=record_id%> .patient-type').on('change', function() {
+				 	update_vol('<%=record_id%>')
+				 });
+
+				$('#<%=record_id%> .adernaline_route').on('change', function() {
+				 	update_vol('<%=record_id%>')
+				 });
+
+
+					update_vol('<%=record_id%>')
 				 
 			</script>
 			
@@ -180,7 +272,13 @@
 		
 	</div>
 	
-	
+	<div class="row">
+		<div class="col-2">Note</div>
+		<div class="col-10">
+		<%= text_string this, 'note', :label=>false,:placeholder=>'Note'%>
+		</div>
+		
+	</div>
 </div>
 
 

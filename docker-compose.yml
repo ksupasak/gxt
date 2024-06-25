@@ -11,12 +11,12 @@ services:
     image: redis
     command: redis-server --requirepass minadadmin
     restart: always
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
   mongo:
     image: mongo:4.2
     ports:
-      - "27017:27017"
+      - "27217:27017"
     restart: always
   gxt_server:
     restart: always
