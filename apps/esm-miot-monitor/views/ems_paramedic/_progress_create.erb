@@ -11,6 +11,16 @@
 
 	note = EMSProgressNote.create :text=>params[:progress_note], :type=>'text', :time=>Time.now, :case_id=>params[:id]
 
+record = EMSCase.find params[:id]
+admit = record.admit
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
 
 	end
 %>

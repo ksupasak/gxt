@@ -8,10 +8,11 @@ admit = Admit.find(params[:admit_id])
 
 if request.post?
 	
-<!-- case_record = EMSCaseRecord.where(:admit_id=>admit.id).first
-note = EMSProgressNote.create :text=>params[:record][:note], :type=>'med', :time=>Time.now, :case_id=>case_record.id
-	 -->
+case_record = EMSCase.where(:admit_id=>admit.id).first
+
 record = admit.medication_records.create params[:record] 
+note = EMSProgressNote.create :text=>params[:record][:note], :type=>'med', :time=>Time.now, :case_id=>case_record.id, :ref_id=>record.id
+
 path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
 msg = 'NULL'
 

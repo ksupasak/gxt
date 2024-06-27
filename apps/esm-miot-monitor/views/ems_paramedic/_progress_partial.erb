@@ -41,11 +41,13 @@
 		</div>
 		<div class="col-8">
 		
-		<a href="#" class="progress_item  w-100 " code="<%=code%>" item="<%=item_id%>" ref_id="<%=ref_id%>">
+		<a href="#" class="progress_item  w-100 " code="<%=code%>" item="<%=item_id%>" id="l<%=i.id%>" ref_id="<%=ref_id%>">
 		<%=i.text %>
-
 		</a>
-		
+		<span class="" id="l<%=i.id%>_txt" style="display:none">
+			<input type="text" class="progress_item_txt" name="" value="<%=i.text%>" rid="<%=i.id%>" >
+		</span>
+
 		</div>
 		<div class="col-1 col-sm-2 d-flex justify-content-end" style="">
 		<a href="#" class="btn-del btn btn-sm btn-outline-danger" pid="<%=i.id%>" >Del</a>
@@ -69,19 +71,46 @@
     $(function() {
 
 	$('.progress_item').click(function(e){
-	 
+		
       cmd = $(this).attr('code')
 	  item = $(this).attr('item')
 	  ref_id = $(this).attr('ref_id')
+	  rid = $(this).attr('id')
+	 	
+		console.log(item)
+      if(item==''){
 		
+		$('#'+rid+'_txt').show()
+		$('#'+rid+'_txt .progress_item_txt').focus()
 
-      dispatch_command(cmd, item, ref_id)
+	  }else{
 
-    //   $('.modal').modal('hide');
+      	dispatch_command(cmd, item, ref_id)
+
+	  }
 
       e.preventDefault();
 
     })
+
+	$('.progress_item_txt').change(function(e){
+		
+		 rid = $(this).attr('rid')
+		 txt = $(this).val()
+		 $('#l'+rid).html(txt)
+		 $('#l'+rid+"_txt").hide()
+
+		 $.ajax({
+	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&txt='+txt,
+	 			context: document.body
+	 		}).done(function(data) {
+
+	 			$( '#progress-x' ).html(data);
+
+
+	 		});
+		
+	});
 		
 		$('.btn-del').click(function(e){
 			
