@@ -6,6 +6,7 @@ ems_case = record
 admit = record.admit
 patient = admit.patient
 
+	
 if request.post?
 
 	record.update_attributes :summary=>params[:record][:summary]
@@ -66,7 +67,7 @@ end
 
     	k = i.start_time.localtime
     	tmap[k] = [] unless tmap[k]
-    	tmap[k] << ['Note',i.description]
+    	#tmap[k] << ['Note',i.description]
 
 
     end
@@ -77,7 +78,8 @@ end
     		tmap[k] = [] unless tmap[k]
         mmap[k] = [] unless mmap[k]
 
-    		tmap[k] << ['Med',"#{i.name if i} "]
+    	
+		#	tmap[k] << ['Med',"#{i.name if i} "]
         mmap[k] << ['Med',"#{i.name if i} "]
 
       end
@@ -86,13 +88,21 @@ end
     		tmap[k] = [] unless tmap[k]
         mmap[k] = [] unless mmap[k]
 
-    		tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
+    	#tmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
         mmap[k] << ['Med',"#{i.name if i} OFF Con(#{i.concentration}) Rate(#{i.rate} ml/min) Vol Est(#{i.est_intake} ml)"]
 
 
     	end
     end
 
+
+notes = EMSProgressNote.where(:case_id=>record.id).sort(:time=>1).all
+for i in notes
+	k = i.time.localtime
+	tmap[k] = [] unless tmap[k]
+	tmap[k] << ['Note', i.text, i.type]
+
+end
 
 
 
@@ -193,7 +203,8 @@ end
 	for i in bin[it][:list]
 	  type =i[0]
 	  des = i[1].strip
-		line << "-- #{des} "
+		line << "-- #{des}"
+		line << "\n\t\t\t    " if i[2] and i[2]=='emr'
 	end
 
 	list << " - เวลา #{t.strftime("%H:%M") } น. #{line.join(" ")}"

@@ -1,13 +1,33 @@
 <%	
+record = nil
+update = true;
+
+note = EMSProgressNote.find params[:pid]
+record = EMSCase.find note.case_id
+
 if params[:cmd] == "DEL"
 	
-	note = EMSProgressNote.find params[:pid]
+
 	if note.type=='emr'
-		record = EMRRecord.find note.ref_id
-		record.destroy if record
+
+		emr = EMRRecord.find note.ref_id
+		emr.destroy if emr
+
 	end
+
+	if note.type=='med'
+
+		med = MedicationRecord.find note.ref_id
+		med.destroy if med
+
+	end
+
+
 	note.destroy
 	
+elsif params[:cmd] == "TXT"
+	note.update_attributes :text=>params[:txt]
+	update = false;
 else
 	
 	first_time = DateTime.parse params[:first_time].split(" ").join(" +")
@@ -24,14 +44,28 @@ else
 	new_time = first_time + (last_time-first_time)/2
 
 	puts new_time.inspect
-	
 
-	note = EMSProgressNote.find params[:pid]
 	note.update_attributes :time=>new_time
 	
 end
 
+if record
+
+admit = record.admit
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+end
+
+	if update
 %>
 <script>
 	update_progress_list();
 </script>
+<% end %>

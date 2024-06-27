@@ -17,7 +17,8 @@
   cmd = params[:cmd]
 
   if params[:assessment_id]==""
-      record = admit.nurse_records.create :name=>"Paramedic" , :description=>params[:cmd], :start_time=>stamp
+
+       record = admit.nurse_records.create :name=>"Paramedic" , :description=>params[:cmd], :start_time=>stamp
    	   note = EMSProgressNote.create :text=>params[:cmd], :type=>'note', :time=>stamp, :case_id=>ems_case.id, :ref_id=>record.id
 	  
       notify_message = true;
@@ -74,6 +75,8 @@
       else
 
    #  custom services
+
+
 
       if assessment and assessment.data!=""
 
@@ -368,6 +371,7 @@
         else
 
           record = admit.nurse_records.create :name=>"Paramedic" ,:description=>""+assessment.name, :start_time=>stamp
+        	note = EMSProgressNote.create :text=>assessment.name, :type=>'note', :time=>stamp, :case_id=>ems_case.id, :ref_id=>record.id
 
         end
 

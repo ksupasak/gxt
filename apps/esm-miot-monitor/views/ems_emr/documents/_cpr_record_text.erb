@@ -42,8 +42,4 @@
 	if r['other']=='yes' and r['other_vol']
 		med.push(r['other_vol'])
 	end
-%><%=r['lap']%>.  
-EKG : <%=r['ekg']%>, <%=med.join(", ")%>, 
-ETCO2 : <%=r['co2']%>
-<%#r.inspect %>
-<% end %>
+%><%=r['lap']%>. EKG : <%=r['ekg']%>, <%=med.join(", ")%>, ETCO2 : <%=r['co2']%> <%=r['note']%><% end %>
