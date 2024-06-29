@@ -34,7 +34,7 @@ ws.on :close do |e|
   exit 1
 end
 
-ws.on :error do |e|d
+ws.on :error do |e|
   p "ERROR #{e}"
    puts 'will retry connect ..'
    sleep 1
