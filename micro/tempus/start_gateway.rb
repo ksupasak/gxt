@@ -118,31 +118,34 @@ def run(opts)
           # vitals = gw.get_trended_vitals k, datetime
           vitals = gw.get_trended_vitals k , datetime
           
-          
-          puts "vitals from corium"
-          puts vitals 
-          
-      
-          fout.puts vitals.to_json
-          
-          GXTWS.send ws, v, vitals, mark_dup
-          
-          
-          
-          
-          events = gw.get_events k , datetime
-          
-          
-          puts events['EventsInfo'].size.to_s + " #{Time.now.to_f}"
-  
-          twelve_leads_id = nil
-  
-          for i in events['EventsInfo']
-            puts "#{i['EventId']} #{i['EventType']}"
-            if i['EventType'] == 'TWELVE_LEADS'
-              twelve_leads_id = i['EventId']  
-              # puts i['Vitals'].inspect
+          if vitals
+
+            puts "vitals from corium"
+            puts vitals 
+            
+        
+            fout.puts vitals.to_json
+            
+            GXTWS.send ws, v, vitals, mark_dup
+            
+            
+            
+            
+            events = gw.get_events k , datetime
+            
+            
+            puts events['EventsInfo'].size.to_s + " #{Time.now.to_f}"
+    
+            twelve_leads_id = nil
+    
+            for i in events['EventsInfo']
+              puts "#{i['EventId']} #{i['EventType']}"
+              if i['EventType'] == 'TWELVE_LEADS'
+                twelve_leads_id = i['EventId']  
+                # puts i['Vitals'].inspect
+              end
             end
+
           end
   
           if twelve_leads_id and File.exists?(File.join("sent","#{twelve_leads_id}.jpg"))==false
