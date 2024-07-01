@@ -27,7 +27,7 @@ worksheet.rows.first(1).each do |r|
 	
 end
 
-if request.post?
+
 	
 	# ems_case.update_attributes :export=>'AwaitExport', :summary=>params[:record][:summary]
 	#
@@ -119,11 +119,7 @@ if request.post?
 	end
 	
 	
-	
-	
-	
-	
-	
+		
 	data = []
 	
 	headers.each_with_index do |i,ix|
@@ -137,6 +133,10 @@ if request.post?
 		end
 		
 	end
+	
+if request.post?	
+	
+
 	
 	
 	worksheet.insert_rows(worksheet.num_rows+1,[data])
@@ -163,8 +163,41 @@ else
 
 <form action="export_googlesheet" method="post" >
 	
-	<input type="hidden" name="id" value="<%=ems_case.id%>">
-<%=headers.inspect %>
+<input type="hidden" name="id" value="<%=ems_case.id%>">
+
+
+<%#headers.inspect %>
+
+<div class="card">
+
+
+<div class="card-body">
+
+	<div class="row">
+	<% headers.each_with_index do |i,ix|  
+
+		v = "-"
+		v = data[ix] if data[ix] and data[ix]!=""
+	
+	%>
+	
+	<div class="col-4 " >
+	<div class="row d-flex justify-content-between">
+	<label><%=i.humanize%></label>
+	<div class="col-8 text-primary"><%=v%></div>
+	</div>
+	</div>
+
+	<% end %>
+	</div>
+
+</div>
+
+
+
+</div>
+
+
 <br/>
 <input type="submit" value="Export" class="btn btn-success"> <a href="show?id=<%=ems_case.id%>" class="btn btn-primary " >Cancel</a>
 

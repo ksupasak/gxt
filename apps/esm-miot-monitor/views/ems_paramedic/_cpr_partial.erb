@@ -1,5 +1,12 @@
 <%
   ems_case = EMSCase.find params[:id]
+
+  if params[:reset]
+
+    ems_case.update_attributes :cpr_start_at=>Time.now
+ 
+  end
+
   if ems_case.cpr_status=="STARTED"
 %>
 <div class="row">
@@ -42,6 +49,21 @@
   }
 
   setInterval(updateCPR, 1000);
+
+  $('.cpr-reset-btn').click(function (){
+
+      $.ajax({
+        url: "../EmsParamedic/cpr_partial?id=<%=params[:id]%>&reset=true",
+        context: document.body
+}).done(function() {
+   alert('Reset CPR Timer')
+   window.location.reload();
+});
+
+  });
+
+
+
 </script>
 
 <% end %>

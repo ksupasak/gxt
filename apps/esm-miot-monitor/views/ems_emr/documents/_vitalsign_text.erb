@@ -2,11 +2,11 @@
   @record = record
   r = @record.data
 
-  list = %w{ sbp pr o2sat temp rr dtx }
+  list = %w{ sbp pr o2sat temp rr gcs dtx }
   rs = []
    for i in list
 %><%
-    if r["#{i}"] 
+    if r["#{i}"] || i=='gcs'
 	
 	v = r[i]
 	
@@ -14,8 +14,14 @@
 	
 		v = "#{r['sbp']}/#{r['dbp']}"
 		i = 'bp'	
-	end	
+	elsif i=='gcs'
+
+    v = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
+
+  end	
 	
+
+
 	rs << "#{i.upcase} : #{v}"
 		
 		
