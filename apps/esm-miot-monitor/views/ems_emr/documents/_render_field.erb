@@ -92,9 +92,11 @@ col = options[:col] if options[:col]
 <% end %>
 </div>
 <script>
-
+    $(document).ready(function(){
+   
+   
     $('#<%=record_id%> .check_<%=name%>').change(function(){
-
+ 
         ls = []
         $('#<%=record_id%> .check_<%=name%>').each(function(){
           v = $(this).val()
@@ -102,12 +104,16 @@ col = options[:col] if options[:col]
           ls.push(v)
 
         })
+        console.log(ls)
 		
         $('#<%=record_id%> .data-<%=name%>').val(ls.join("|"))
         // alert('')
 
 
     })
+
+
+     });
 </script>
 
 <% else %>
