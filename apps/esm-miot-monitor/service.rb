@@ -860,10 +860,11 @@ MSG
                                   begin
 
                                 # uri = URI('https://9e81-161-200-93-45.ngrok-free.app/transcribe/')
+                              
                                 uri = URI(url)
-
+                              
                                 request = Net::HTTP::Post.new(uri)
-
+                                puts uri
                                 fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
                                 fout.write content
                                 fout.close
