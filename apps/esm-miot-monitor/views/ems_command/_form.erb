@@ -24,7 +24,7 @@
 						<a class="btn btn-info btn-sm" id="select-ambulance" data-bs-toggle="modal" data-bs-target="#selectAmbulanceModal" type="submit" value="เลือก">เลือก</a>
 					</span>
 
-					</p><%= f.select(:ambulance_id, Ambulance.where({:zone_id=>ems_case.zone_id}).sort(:created_at=>1).all().collect{|i| [i.id,"#{i.name} : #{i.plate_license}"] }, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					</p><%= f.select(:ambulance_id, Ambulance.where({:zone_id=>ems_case.zone_id}).sort(:name=>1).all().collect{|i| [i.id,"#{i.name} : #{i.plate_license}"] }, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
 
 
 
