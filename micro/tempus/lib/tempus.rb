@@ -153,14 +153,14 @@ module Tempus
       puts res.body
 
       result = JSON.parse(res.body)['Data']
-      
+      if result
       data = JSON.parse(decode(result))
         
       puts data
         
       set_token data
       
-      
+      end
       
       
       # access_token = result['Access_token'].split(".")[0]
