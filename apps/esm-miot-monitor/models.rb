@@ -1155,9 +1155,23 @@ end
 
 
 
+class Post < GXTModel
+  include Mongoid::Document
+
+  key :title, String
+
+  key :content, String
+
+  include Mongoid::Timestamps
+
+  timestamps!
+
+end
+
+class PostController < GXTDocument
 
 
-
+end
 
 class HomeController < GXT
   
