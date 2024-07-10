@@ -6,7 +6,23 @@ ems_case = record
 admit = record.admit
 patient = admit.patient
 
-	
+age = ''
+sex = ''
+
+if ems_case.patient_age == ''
+      age = 'ไม่ระบุ'
+else
+	age = ems_case.patient_age
+end	
+
+if ems_case.patient_gender == ''
+	sex = 'ไม่ระบุ'
+elsif ems_case.patient_gender == 'M'
+	sex = 'ชาย'
+elsif ems_case.patient_gender == 'F'
+	sex = 'หญิง'
+end
+
 if request.post?
 
 	record.update_attributes :summary=>params[:record][:summary]
@@ -107,14 +123,18 @@ end
 
 
 
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ
 
-แรกรับ at scene
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- ขอรถออกรับผู้บาทเจ็บ  
+
+แรกรับ at scene #{ems_case.chief_complain}  เพศ #{sex} อายุ #{age}
+
+ 
 
 @primary_survey
 @secondary_survey.1
 
 Progress note :
+
 @progress_note
 
 @secondary_survey.2
@@ -130,7 +150,7 @@ Diagnosis :
 if record.case_type == 'Refer'
 
 	template_text = %(ข้อมูลการ Refer
-
+ 
 Progress note :
 @progress_note
 

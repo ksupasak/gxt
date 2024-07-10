@@ -1,6 +1,10 @@
 <% require_relative 'lib'%>
 <%
   @record = record
+
+  if record['trauma_status'] == nil 
+    record['trauma_status'] = 'non-trauma'
+  end
 %>
 <div class="card">
 
@@ -72,24 +76,24 @@
 
 </div>
 
+<hr/>
+<div class="card-title d-flex align-items-center">
+			<h5 class="mb-0 text-primary">eXsanuinate Hemorrhage :</h5>
+</div>
 <div class="row">
 <div class="col-2"></div>
 <div class="col-10">
 
-  <div class="input-group input-group-sm">
-		<div class="input-group-text ">
-			<input class="form-check-input" type="radio" value="" aria-label="Radio button for following text input">
-      &nbsp;<label for="trauma_1">External active bleeding at </label>
-
-		</div>
-    <%= text_string this, 'bleeding_at', :field_only=>true %>
-
+<div class="input-group input-group-sm">
     <div class="input-group-text">
-      &nbsp;<label for="trauma_1">Blood loss </label>
+    <%= radio_string this, 'bleeding_at', :value=>%w{active_bleeding} %>
     </div>
     <%= text_string this, 'blood_loss', :field_only=>true %>
     <div class="input-group-text">
-      &nbsp;<label for="trauma_1">CC </label>
+    &nbsp;<label for="trauma_1">CC </label>
+    </div>
+    <div class="input-group-text">
+    <%= radio_string this, 'bleeding_at', :value=>%w{no_active_bleeding} %>
     </div>
 	</div>
 </div>
@@ -108,7 +112,7 @@
 <div class="col-2">
 </div>
 <div class="col-10">
-<%= radio_string this, 'airway', :value=>%w{airway_patent}, :col=>12 %>
+<%= radio_string this, 'airway', :value=>%w{patent}, :col=>12 %>
 </div>
 
 
@@ -169,7 +173,7 @@ Percussion
 Palpation
 </div>
 <div class="col-10">
-<%= radio_string this, 'palpation_subcutaneous',:value=>%w{rt lt equal_both_lung}, :label=>'Subcutaneous emphysema', :col=>12 %>
+<%= radio_string this, 'palpation_subcutaneous',:value=>%w{rt lt equal_both_lung no}, :label=>'Subcutaneous emphysema', :col=>12 %>
 <%= text_string this, 'palpation_deformity', :col=>4, :label=>'Deformity' %>
 </div>
 </div>
@@ -196,7 +200,7 @@ Palpation
 </div>
 <div class="col-2">Skin</div>
 <div class="col-10">
-<%= radio_string this, 'circulation_skin',:value=>%w{normal pale sweet cold}, :col=>12 %>
+<%= radio_string this, 'circulation_skin',:value=>%w{normal pale sweat cold}, :col=>12 %>
 </div>
 <div class="col-2">Pulse</div>
 <div class="col-10">
@@ -207,7 +211,7 @@ Palpation
     Capillary
   </div>
   <div class="col-6">
-  <%= text_string this, 'circulation_capillary', :col=>3, :label=>'Capillary', :field_only=>true%>
+  <%= radio_string this, 'circulation_capillary',:value=>%w{fastly <2 >2 Prolong}, :col=>12 %>
   </div>
 </div>
 
@@ -263,10 +267,10 @@ Vital
 <div class="col-10">
 <div class="row">
 
-<%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt'%>
+<%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt(mm)'%>
 <%= radio_string this, 'pupil_rt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
 <div class="clear"></div>
-<%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt'%>
+<%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt(mm)'%>
 <%= radio_string this, 'pupil_lt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
 </div>
 </div>
