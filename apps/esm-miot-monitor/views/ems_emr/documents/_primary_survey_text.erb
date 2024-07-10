@@ -11,7 +11,7 @@ GA : <%=r['note'] %> <%=r['response'].classify %><% end %><%
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
 
-%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %><%
+%> A : <%='Patent' if r['airway'] == 'patent' %>, <%=compromise%> <%=r['airway_special_note']%><% end %><%
     if r['breath_status'] and  r['breath_status'] != ""
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
@@ -59,14 +59,14 @@ GA : <%=r['note'] %> <%=r['response'].classify %><% end %><%
 <%
     if r['response'] and r['response'] != ""
 %>
-GA : <%=r['response'].classify %>
+GA :   <%=r['note'] %> <%=r['response'].classify %>
 <% end %>
 <%
     if r['airway'] and r['airway'] != ""
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
 
-%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
+%>A : <%='Patent' if r['airway'] == 'patent' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
 <%
     if r['breath_status'] and  r['breath_status'] != ""
       compromise = ""

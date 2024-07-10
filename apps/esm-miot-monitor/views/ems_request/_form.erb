@@ -649,8 +649,9 @@
 							</div>
 							
 							<script>
-								
-						    $('.datepicker').pickadate({
+							$(document).ready(function(){
+
+    						$('.datepicker').pickadate({
 								format: 'yyyy-mm-dd'
 							})
 							
@@ -658,6 +659,9 @@
 							$('.timepicker').pickatime({
 								format: 'HH:i'
 							})
+
+							})
+						
 										
 							</script>
 							
@@ -1028,24 +1032,9 @@
 
 
 			</div>
-<!-- <script>
-
-	function process_message(lines){
 
 
 
-		// console.log(lines[0].split(" ")[0])
-		if(lines[0].split(" ")[0]=='Zone.Refresh'){
-
-			location.reload()
-
-		}
-
-	}
-
-
-
-
-
-
-</script>		 -->	
+<script>
+retranslate();
+</script>

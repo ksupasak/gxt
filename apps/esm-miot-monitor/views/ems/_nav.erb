@@ -3,7 +3,7 @@
 			<a href="./index">
 				<div class="parent-icon"><i class="bx bx-home-circle"></i>
 				</div>
-				<div class="menu-title">Dashboard</div>
+				<div class="menu-title t " t="dashboard">Dashboard</div>
 			</a>
 		</li>
 
@@ -321,8 +321,13 @@
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
-				<div class="menu-title">Open</div>
+				<div class="menu-title t " t="case_open">Open</div>
 			</a>
+
+		
+
+
+
 			<ul class="mm-show mm-collapse">
 				<%
 
@@ -446,6 +451,10 @@
 
 			</ul>
 		</li>
+		<li>
+	<a href="#" class="btn-t" t="th" >TH</a> |
+	<a href="#" class="btn-t" t="en" >EN</a>
+		</li>
 	</ul>
 
 	<script>
@@ -460,6 +469,76 @@
 			 $('.nav-tabs a[href="#requestcontent"]').tab('show');
 		}
 
+
+
+	</script>
+
+
+
+    <script>
+
+
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
+		var current_t = getCookie('t')
+	
+		
+		var tmap_th = {case_open:'เปิด', dashboard:'ภาพรวม', record_contact_phone:'เบอร์โทร', record_contact_name:'ผู้แจ้งเหตุ'};
+		var tmap_en = {case_open:'Open ', dashboard:'Dashboard',record_contact_phone:'Phone', record_contact_name:'Caller'};
+		var tmap_all = {th:tmap_th, en:tmap_en};
+
+
+
+
+        function translate(lang, tmap){
+
+			current_t = lang
+
+
+			document.cookie = "t="+lang;
+
+		$('.t').each(function(){
+			
+			
+			e = $(this)
+			tk = e.attr('t')
+			e.html(tmap[tk])
+
+
+		}).bind(this)
+
+		}
+
+		function retranslate(){
+			 translate(current_t, tmap_all[current_t])
+		}
+
+
+
+		$('.btn-t').click(function(){
+
+			t = $(this).attr('t')
+			translate(t, tmap_all[t])
+
+		})
+
+	    translate(current_t, tmap_all[current_t])
 
 
 	</script>
