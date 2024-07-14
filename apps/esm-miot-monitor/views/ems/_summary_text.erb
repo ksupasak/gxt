@@ -1,4 +1,4 @@
-
+ 
 <%
 
 record = EMSCase.find params[:id]
@@ -6,7 +6,31 @@ ems_case = record
 admit = record.admit
 patient = admit.patient
 
-	
+age = ''
+sex = ''
+traumaStatus = ''
+diagnosis = ''
+
+if ems_case.patient_age == ''
+      age = 'ไม่ระบุ'
+else
+	age = ems_case.patient_age
+end	
+
+if ems_case.patient_gender == ''
+	sex = 'ไม่ระบุ'
+elsif ems_case.patient_gender == 'M'
+	sex = 'ชาย'
+elsif ems_case.patient_gender == 'F'
+	sex = 'หญิง'
+end
+
+if ems_case.patient_underlying == ''
+	diagnosis = 'Do not have'
+else
+	diagnosis = ems_case.patient_underlying
+end
+
 if request.post?
 
 	record.update_attributes :summary=>params[:record][:summary]
@@ -104,38 +128,39 @@ for i in notes
 
 end
 
-
-
-
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ
-
-แรกรับ at scene
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{ems_case.location}
+แรกรับ at scene #{ems_case.chief_complain}    
 
 @primary_survey
 @secondary_survey.1
-
-Progress note :
-@progress_note
-
 @secondary_survey.2
+Event : #{ems_case.emd_event_note} / 
+@secondary_survey.3
 
 Treatment :
+@progress_note
+
+
 @transfer
 
-Diagnosis :
-@diagnosis
+Diagnosis : #{diagnosis}
+@diagnosis 
 
+ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
 )
 
 if record.case_type == 'Refer'
 
 	template_text = %(ข้อมูลการ Refer
-
+ 
 Progress note :
 @progress_note
 
-Diagnosis :
+Diagnosis : 
 @diagnosis
+
+
+
 
 )
 
@@ -203,11 +228,11 @@ end
 	for i in bin[it][:list]
 	  type =i[0]
 	  des = i[1].strip
-		line << "-- #{des}"
+		line << ": #{des}"
 		line << "\n\t\t\t    " if i[2] and i[2]=='emr'
 	end
 
-	list << " - เวลา #{t.strftime("%H:%M") } น. #{line.join(" ")}"
+	list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
 
 	end
 
@@ -215,9 +240,12 @@ end
 
 	####################### transfer # NOTE:
 
+if ems_case.transfer_hospital == nil
+		map["transfer"] = "รพ.ปลายทาง : Do not have"
+else
+		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
+end
 
-
-	map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
 
   ###################### diagnosis # NOTE:
 
@@ -240,14 +268,14 @@ end
 			res = ''
 			 key = i[1..-1]
 			if map[key]
-			 		res = map[key]
+			 	res = map[key]
 		 	else
 
 		 		ns = key.split(".")
 				n = ns[0]
 				query = "1"
 				query= ns[1] if ns.size>1
-        document = EMRDocument.where(:name=>n).first
+        		document = EMRDocument.where(:name=>n).first
 				if document and emr_record = EMRRecord.where(:document_id=>document.id, :case_id=>ems_case.id).first
 
 				if File.file?(File.dirname(__FILE__) +'/../ems_emr/documents/_'+document.name+"_text.erb")

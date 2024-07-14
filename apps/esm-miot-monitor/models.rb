@@ -472,6 +472,7 @@ class AdmitLog  < GXTModel
   key :admit_id, ObjectId
   key :addressbook_id, ObjectId
   key :ems_command_id, ObjectId
+  key :type, String
   key :name, String
   key :address, String
   key :status, String
@@ -479,7 +480,7 @@ class AdmitLog  < GXTModel
   key :note, String
   key :stamp, Time
   key :mile_meter, Integer
-  key :sort_order, Integer
+  key :sort_order, Float
   key :parent, Integer
   include Mongoid::Timestamps
   timestamps!
@@ -1155,9 +1156,23 @@ end
 
 
 
+class Post < GXTModel
+  include Mongoid::Document
+
+  key :title, String
+
+  key :content, String
+
+  include Mongoid::Timestamps
+
+  timestamps!
+
+end
+
+class PostController < GXTDocument
 
 
-
+end
 
 class HomeController < GXT
   

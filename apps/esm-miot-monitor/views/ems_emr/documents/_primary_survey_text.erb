@@ -3,70 +3,20 @@
   r = @record.data
   if mode=='line'
 %>
-<%
-    if r['response'] and r['response'] != ""
-%>
-GA : <%=r['note'] %> <%=r['response'].classify %><% end %><%
-    if r['airway'] and r['airway'] != ""
-      compromise = ""
-    compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
-
-%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %><%
-    if r['breath_status'] and  r['breath_status'] != ""
-      compromise = ""
-    compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
-
-    sounds = []
-
-    # Clear breath sound equal both lungs
-    soundx = %w{ breath_lung_clear  breath_wheezing  breath_rhonchi breath_crepitation  breath_descrease percussion_resonance percussion_dullness}
-
-    for i in soundx
-
-          if r[i]
-
-              t = "-"
-              t = i.split("_")[-1].classify if i.split("_")[-1]
-              sounds << "#{t} breath sound #{r[i].humanize.downcase}"
-
-          end
-
-    end
-
-%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%><% end %><%
-
-    if r['circulation_skin'] and r['circulation_skin'] != ""
-      result = "No sign of shock"
-      result = "Skin #{r['circulation_skin']} " if r['circulation_skin']!="normal"
-      pulse = ""
-      pulse = "#{r['circulation_pulse'].humanize} peripheral pulse " if r['circulation_pulse']
-
-%>C : <%= result  %>, <%=pulse%><% end %><%
-    # E4V5M6 pupil 3 mm RTLBE
-    if r['gcs_e'] and r['gcs_e'] != ""
-
-      evm = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
-      result = "#{evm}, lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
-
-%>D : <%= result  %> <%="DTX #{r['dtx']} mg%" if r['dtx'] and r['dtx']!="" %><% end %><%
-    # E4V5M6 pupil 3 mm RTLBE
-    if r['exposure_list'] and r['exposure_list'] != ""
-
-
-%>E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>  <% end %>
+[Primary Survey]
 <% elsif mode == 'text'%>
 <% if query=='1' %>
 <%
     if r['response'] and r['response'] != ""
 %>
-GA : <%=r['response'].classify %>
+GA :   <%=r['note'] %> <%=r['response'].classify %>
 <% end %>
 <%
     if r['airway'] and r['airway'] != ""
       compromise = ""
     compromise = r['airway_compromise'].split("|").collect{|i| i.classify}.join(", ") if r['airway_compromise']
 
-%>A : <%='Patient' if r['airway'] == 'airway_patient' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
+%>A : <%='Patent' if r['airway'] == 'Patent' %>, <%=compromise%> <%=r['airway_special_note']%><% end %>
 <%
     if r['breath_status'] and  r['breath_status'] != ""
       compromise = ""
@@ -89,7 +39,21 @@ GA : <%=r['response'].classify %>
 
     end
 
-%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%><% end %>
+    amu_list = %w{breath_amu_s1 breath_amu_s2 breath_amu_s3 breath_amu_s4 breath_amu_s5 breath_amu_s6}
+    amu_label = %w{sternocleidomastoids scalenes external_intercostals internal_intercostals diaphragm abdominal_muscles}
+    
+    has_amu = false
+    amu_res = []
+    amu_list.each_with_index do |i,ix|
+      if r[i]=='Yes'
+        has_amu = true
+        amu_res << "#{amu_label[ix].humanize}"
+      end
+    end
+    amu_text = "no accessory muscle use"
+    amu_text = "accessory muscle use at #{ amu_res.join(", ")}"
+
+%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%>, <%=amu_text%><% end %>
 <%
 
     if r['circulation_skin'] and r['circulation_skin'] != ""
@@ -106,7 +70,7 @@ GA : <%=r['response'].classify %>
       evm = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
       result = "#{evm}, lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
 
-%>D : <%= result  %> <%="DTX #{r['dtx']} mg%" if r['dtx'] and r['dtx']!="" %><% end %>
+%>D : <%= result  %> <% end %>
 <%
     # E4V5M6 pupil 3 mm RTLBE
     if r['exposure_list'] and r['exposure_list'] != ""
@@ -114,6 +78,26 @@ GA : <%=r['response'].classify %>
 
 %>E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>
 <% end %>
+<%
+list = %w{ sbp pr o2sat temp rr dtx }
+  rs = []
+   for j in list
+   
+   i = "vs_"+j
+
+%><%
+  if r["#{i}"] 
+	
+	v = r[i]
+	
+	if j=='sbp'
+		v = "#{r['sbp']}/#{r['dbp']}"
+		j = "bp"
+  end	
+	
+	rs << "#{j.upcase} : #{v}"
+		
+%><% end %><% end %>VS first : <%=rs.join(", ")%>
 <% elsif query=='2' %>
 <%
   list = %w{sign_and_symptom allergies  medication  past_history last_oral_intake event }
@@ -123,3 +107,4 @@ GA : <%=r['response'].classify %>
 %><%=i.humanize%> : <%=r["#{i}"] %>
 <% end %>
 <% end %><% end %><% end %>
+<%#r.to_json%>

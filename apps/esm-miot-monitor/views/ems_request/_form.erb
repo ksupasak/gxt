@@ -82,6 +82,13 @@
 								<textarea name="record[chief_complain]" id="record_chief_complain" required rows="2" class="form-control"><%=record.chief_complain%></textarea>
 							</div>
 
+							<p class="px-3">
+								<span class="t" t="record_emd_event_note">Event Note</span>
+							</p>
+							<div class="input-group   mb-3">
+								<textarea name="record[emd_event_note]" id="record_emd_event_note" required rows="2" class="form-control"><%=record.emd_event_note%></textarea>
+							</div>
+
 
 					<p class="px-3">
 
@@ -649,8 +656,9 @@
 							</div>
 							
 							<script>
-								
-						    $('.datepicker').pickadate({
+							// $(document).ready(function(){
+
+    						$('.datepicker').pickadate({
 								format: 'yyyy-mm-dd'
 							})
 							
@@ -658,6 +666,9 @@
 							$('.timepicker').pickatime({
 								format: 'HH:i'
 							})
+
+							// })
+						
 										
 							</script>
 							
@@ -1028,24 +1039,9 @@
 
 
 			</div>
-<!-- <script>
-
-	function process_message(lines){
 
 
 
-		// console.log(lines[0].split(" ")[0])
-		if(lines[0].split(" ")[0]=='Zone.Refresh'){
-
-			location.reload()
-
-		}
-
-	}
-
-
-
-
-
-
-</script>		 -->	
+<script>
+retranslate();
+</script>

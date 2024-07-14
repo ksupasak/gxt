@@ -26,8 +26,15 @@ if params[:cmd] == "DEL"
 	note.destroy
 	
 elsif params[:cmd] == "TXT"
-	note.update_attributes :text=>params[:txt]
-	update = false;
+	if params[:txt]
+		note.update_attributes :text=>params[:txt]
+		update = false;
+	elsif params[:time]
+		note.update_attributes :time=>params[:time]
+		update = true;
+	end
+
+
 else
 	
 	first_time = DateTime.parse params[:first_time].split(" ").join(" +")

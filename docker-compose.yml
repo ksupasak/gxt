@@ -16,7 +16,7 @@ services:
   mongo:
     image: mongo:4.2
     ports:
-      - "27217:27017"
+      - "27017:27017"
     restart: always
   gxt_server:
     restart: always
@@ -53,17 +53,17 @@ services:
       REDIS_PASS: minadadmin
       DEFAULT_APP: miot
   gxt_gps:
-     restart: always
-     build: .
-     command: bash -c "rm -f tmp/pids/gps.pid && bundle exec ruby server.rb gps"
-     volumes:
-       - .:/docker_gxt
-     ports:
-       - "1794:1794"
-     depends_on:
-       - mongo
-       - redis
-     environment:
-       MONGO_HOST: mongo
-       REDIS_HOST: redis
-       DEFAULT_APP: miot
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/gps.pid && bundle exec ruby server.rb gps"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1794:1794"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      DEFAULT_APP: miot

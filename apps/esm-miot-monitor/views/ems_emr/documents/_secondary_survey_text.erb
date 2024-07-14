@@ -16,11 +16,20 @@
 
 <% elsif  mode=='text'  and query=='2' %>
 <%
-  list = %w{sign_and_symptom allergies  medication  past_history last_oral_intake event }
+  list = %w{sign_and_symptom allergies  medication  past_history last_oral_intake}
   for i in list
 %><%
     if r["#{i}"] and r["#{i}"] != ""
 %><%=i.humanize%> : <%=r["#{i}"] %>
 <% end %>
 <% end %>
-<% else %>[Secondary survey]<% end %>
+<% elsif  mode=='text'  and query=='3' %>
+<%
+  list = %w{event }
+  for i in list
+%><%
+    if r["#{i}"] and r["#{i}"] != ""
+%><%=r["#{i}"] %>
+<% end %>
+<% end %>
+<% else %>[Secondary Survey]<% end %>
