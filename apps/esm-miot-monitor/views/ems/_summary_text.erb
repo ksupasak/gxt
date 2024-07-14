@@ -134,6 +134,8 @@ end
 @primary_survey
 @secondary_survey.1
 @secondary_survey.2
+Event : #{ems_case.emd_event_note} / 
+@secondary_survey.3
 
 Treatment :
 @progress_note
@@ -266,14 +268,14 @@ end
 			res = ''
 			 key = i[1..-1]
 			if map[key]
-			 		res = map[key]
+			 	res = map[key]
 		 	else
 
 		 		ns = key.split(".")
 				n = ns[0]
 				query = "1"
 				query= ns[1] if ns.size>1
-        document = EMRDocument.where(:name=>n).first
+        		document = EMRDocument.where(:name=>n).first
 				if document and emr_record = EMRRecord.where(:document_id=>document.id, :case_id=>ems_case.id).first
 
 				if File.file?(File.dirname(__FILE__) +'/../ems_emr/documents/_'+document.name+"_text.erb")

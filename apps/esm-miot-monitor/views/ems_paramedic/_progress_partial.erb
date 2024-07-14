@@ -33,7 +33,12 @@
 		
 		<div class="row d-flex justify-content-between ">
 		<div class="col-2">
-		<a href="#" class="" ><b><%=i.time.strftime("%H:%M") if i.time %></b></a><br/>
+		<a href="#" class="progress_time"  id="l<%=i.id%>"><b><%=i.time.strftime("%H:%M") if i.time %></b></a>
+		<span class="l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
+		<input type="text" class="progress_time_txt" name="" value="<%=i.time.strftime("%H:%M:%S")%>" rid="<%=i.id%>" >
+		</span>
+
+		<br/>
 		<%=i.name if i.type=='emr'%>
 		
 		<%="MED" if i.type=='med'%>
@@ -42,9 +47,9 @@
 		<div class="col-8">
 		
 		<a href="#" class="progress_item  w-100 " code="<%=code%>" item="<%=item_id%>" id="l<%=i.id%>" ref_id="<%=ref_id%>">
-		<%=i.text %>
+		<%=i.text %><%='empty!' if i.text=='' or i.text==nil%>
 		</a>
-		<span class="" id="l<%=i.id%>_txt" style="display:none">
+		<span class="l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
 			<input type="text" class="progress_item_txt" name="" value="<%=i.text%>" rid="<%=i.id%>" >
 		</span>
 
@@ -80,7 +85,8 @@
 		console.log(item)
       if(item==''){
 		
-		$('#'+rid+'_txt').show()
+		$('.'+rid+'_ctl').show()
+		// $('#'+rid+'_txt').show()
 		$('#'+rid+'_txt .progress_item_txt').focus()
 
 	  }else{
@@ -92,6 +98,39 @@
       e.preventDefault();
 
     })
+
+    $('.progress_time').click(function(e){
+		
+	  rid = $(this).attr('id')
+	 	
+      
+	  	$('.'+rid+'_ctl').show()
+		// $('#'+rid+'_txt').show()
+		$('#'+rid+'_txt .progress_item_txt').focus()
+
+      e.preventDefault();
+
+    })
+
+
+   $('.progress_time_txt').change(function(e){
+		
+		 rid = $(this).attr('rid')
+		 txt = $(this).val()
+
+		 $('.'+rid+'_ctl').hide()
+
+		 $.ajax({
+	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&time='+txt,
+	 			context: document.body
+	 		}).done(function(data) {
+
+	 			$( '#progress-x' ).html(data);
+
+
+	 		});
+		
+	});
 
 	$('.progress_item_txt').change(function(e){
 		

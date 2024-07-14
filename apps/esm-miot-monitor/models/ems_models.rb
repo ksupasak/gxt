@@ -100,6 +100,8 @@ class EMSCase < GXTModel
 
   key :chief_complain, String
 
+  key :emd_event_note, String
+
 
   # key :request_cbd_code, ObjectId
 

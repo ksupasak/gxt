@@ -347,8 +347,11 @@ end
 									</td>
 
 									<td>	<%=i.note%>
-										<% if i.status=='PENDING'%>
-									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>'btn btn-sm btn-success check-log' %>
+										<% if i.status=='PENDING'
+											type = 'btn-success'
+											type = 'btn-warning' if i.type=='ems'
+										%>
+									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>"btn btn-sm #{type} check-log" %>
 										<% end%>
 									</td>
 

@@ -18,6 +18,9 @@
     record['airway'] = 'Patent' 
   end
 %>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
 <div class="card">
 
 <div class="card-header bg-primary text-white">
@@ -153,7 +156,7 @@
 </div>
 
 <div class="row">
-<div class="col-2">Breathing_Characteristics</div>
+<div class="col-2">Characteristics</div>
 <div class="col-10"> 
 <%= radio_string this, 'breath_status', :value=>%w{No_breath Tachypnea Bradypnea Apnea Air_Hunger Other}, :col=>12 %>
 </div>
@@ -172,6 +175,22 @@ Sound
 <%= text_string this, 'breath_other', :col=>4, :label=>'Other'%>
 </div>
 </div>
+<div class="row">
+<div class="col-2">
+Accessory muscles used
+</div>
+<div class="col-10">
+<%= radio_string this, 'breath_amu_s1',:value=>%w{Yes No}, :label=>'Sternocleidomastoids', :col=>12 %>
+<%= radio_string this, 'breath_amu_s2',:value=>%w{Yes No}, :label=>'Scalenes', :col=>12 %>
+<%= radio_string this, 'breath_amu_s3',:value=>%w{Yes No}, :label=>'External Intercostals', :col=>12 %>
+<%= radio_string this, 'breath_amu_s4',:value=>%w{Yes No}, :label=>'Internal Intercostals', :col=>12 %>
+<%= radio_string this, 'breath_amu_s5',:value=>%w{Yes No}, :label=>'Diaphragm', :col=>12 %>
+<%= radio_string this, 'breath_amu_s6',:value=>%w{Yes No}, :label=>'Abdominal muscles', :col=>12 %>
+
+<%= text_string this, 'breath_amu_other', :col=>4, :label=>'Other'%>
+</div>
+</div>
+
 <div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
@@ -232,17 +251,7 @@ Palpation
   </div>
 </div>
 <div style="height: 10px"></div>
-<div class="row">
-<div class="col-2">
-Vital
-</div>
-<div class="col-9">
-<div class="row">
-<%= text_string this, 'circulation_blood_loss', :col=>3, :label=>'Blood loss(ml)'%>
-</div>
-</div>
-</div>
-</div>
+
 
 <div class="row">
 <div class="col-2">
@@ -291,16 +300,7 @@ Vital
 </div>
 </div>
 <div style="height: 10px"></div>
-<div class="row">
-<div class="col-2">
-  DTX
-</div>
-<div class="col-10">
-<div class="row">
-  <%= text_string this, 'dtx', :col=>3, :label=>'DTX(mg%)'%>
-</div>
-</div>
-</div>
+
 
 <hr/>
 
@@ -336,9 +336,18 @@ Vital
 </div>
 <div class="col-9">
 <div class="row">
-<%= text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
-<%= text_string this, 'circulation_sbp', :col=>3, :label=>'SBP'%>
-<%= text_string this, 'circulation_dbp', :col=>3, :label=>'DBP'%>
+<%# text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
+<%# text_string this, 'circulation_sbp', :col=>3, :label=>'SBP'%>
+<%# text_string this, 'circulation_dbp', :col=>3, :label=>'DBP'%>
+<%= text_string this, 'vs_sbp', :col=>3, :label=>'SBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'vs_dbp', :col=>3, :label=>'DBP <span class="mandatory">*</span>'%>
+<%= text_string this, 'vs_pr', :col=>3, :label=>'Heart Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'vs_o2sat', :col=>3, :label=>'O2Sat <span class="mandatory">*</span>'%>
+</div>
+<div class="row">
+<%= text_string this, 'vs_rr', :col=>3, :label=>'Resp Rate <span class="mandatory">*</span>'%>
+<%= text_string this, 'vs_temp', :col=>3, :label=>'Body Temp (C) <span class="mandatory">*</span>'%>
+<%= text_string this, 'vs_dtx', :col=>3, :label=>'DTX (mg%) <span class="mandatory">*</span>'%>
 </div>
 </div>
 </div>
@@ -350,5 +359,6 @@ Vital
 
 </div>
 
+</div>
 </div>
 </div>
