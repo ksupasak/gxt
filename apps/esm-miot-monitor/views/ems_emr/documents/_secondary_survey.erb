@@ -1,6 +1,30 @@
 <% require_relative 'lib'%>
 <%
   @record = record
+
+  if record['heent_note'] == nil
+	record['heent_note'] = 'not pale conjunctiva'
+  end
+
+  if record['chest_note'] == nil
+	record['chest_note'] = 'Equal chest movement'
+  end
+
+  if record['cvs_note'] == nil
+	record['cvs_note'] = 'Normal S1S2, no murmur'
+  end
+
+  if record['abdomen_note'] == nil
+	record['abdomen_note'] = 'Soft, no tenderness, no guarding'
+  end
+
+  if record['extremity_note'] == nil
+	record['extremity_note'] = 'no pitting edema, no skin lesion'
+  end
+
+  if record['neurological_note'] == nil
+	record['neurological_note'] = 'Motor power gr. all extremity'
+  end
 %>
 <div class="card">
 

@@ -1,4 +1,4 @@
-
+ 
 <%
 
 record = EMSCase.find params[:id]
@@ -8,6 +8,8 @@ patient = admit.patient
 
 age = ''
 sex = ''
+traumaStatus = ''
+diagnosis = ''
 
 if ems_case.patient_age == ''
       age = 'ไม่ระบุ'
@@ -21,6 +23,12 @@ elsif ems_case.patient_gender == 'M'
 	sex = 'ชาย'
 elsif ems_case.patient_gender == 'F'
 	sex = 'หญิง'
+end
+
+if ems_case.patient_underlying == ''
+	diagnosis = 'Do not have'
+else
+	diagnosis = ems_case.patient_underlying
 end
 
 if request.post?
@@ -120,31 +128,23 @@ for i in notes
 
 end
 
-
-
-
-
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- ขอรถออกรับผู้บาทเจ็บ  
-
-แรกรับ at scene #{ems_case.chief_complain}  เพศ #{sex} อายุ #{age}
-
- 
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{ems_case.location}
+แรกรับ at scene #{ems_case.chief_complain}    
 
 @primary_survey
 @secondary_survey.1
-
-Progress note :
-
-@progress_note
-
 @secondary_survey.2
 
 Treatment :
+@progress_note
+
+
 @transfer
 
-Diagnosis :
-@diagnosis
+Diagnosis : #{diagnosis}
+@diagnosis 
 
+ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
 )
 
 if record.case_type == 'Refer'
@@ -154,8 +154,11 @@ if record.case_type == 'Refer'
 Progress note :
 @progress_note
 
-Diagnosis :
+Diagnosis : 
 @diagnosis
+
+
+
 
 )
 
@@ -223,11 +226,11 @@ end
 	for i in bin[it][:list]
 	  type =i[0]
 	  des = i[1].strip
-		line << "-- #{des}"
+		line << ": #{des}"
 		line << "\n\t\t\t    " if i[2] and i[2]=='emr'
 	end
 
-	list << " - เวลา #{t.strftime("%H:%M") } น. #{line.join(" ")}"
+	list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
 
 	end
 
@@ -235,9 +238,12 @@ end
 
 	####################### transfer # NOTE:
 
+if ems_case.transfer_hospital == nil
+		map["transfer"] = "รพ.ปลายทาง : Do not have"
+else
+		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
+end
 
-
-	map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
 
   ###################### diagnosis # NOTE:
 

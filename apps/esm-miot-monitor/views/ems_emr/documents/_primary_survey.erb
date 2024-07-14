@@ -5,6 +5,18 @@
   if record['trauma_status'] == nil 
     record['trauma_status'] = 'non-trauma'
   end
+
+  if record['response'] == nil
+    record['response'] = 'Alert'
+  end
+
+  if record['bleeding_at'] == nil
+    record['bleeding_at'] = 'No_Active_Bleeding'
+  end  
+
+  if record['airway'] == nil
+    record['airway'] = 'Patent' 
+  end
 %>
 <div class="card">
 
@@ -60,7 +72,7 @@
 <div class="col-2"></div>
 <div class="col-10">
 
-<%= radio_string this, 'response',   :value=>%w{alert response_to_voice response_to_pain unresponsive} %>
+<%= radio_string this, 'response',   :value=>%w{Alert Response_to_voice Response_to_pain Unresponsive} %>
 
 </div>
 
@@ -68,7 +80,7 @@
 <div class="col-2"></div>
 <div class="col-10" style="margin-bottom:20px">
 
-<%= radio_string this, 'response_pulse', :value=>%w{pulse no_pulse} %>
+<%= radio_string this, 'response_pulse', :value=>%w{Pulse No_Pulse} %>
 
 </div>
 
@@ -86,14 +98,14 @@
 
 <div class="input-group input-group-sm">
     <div class="input-group-text">
-    <%= radio_string this, 'bleeding_at', :value=>%w{active_bleeding} %>
+    <%= radio_string this, 'bleeding_at', :value=>%w{Active_Bleeding} %>
     </div>
     <%= text_string this, 'blood_loss', :field_only=>true %>
     <div class="input-group-text">
     &nbsp;<label for="trauma_1">CC </label>
     </div>
     <div class="input-group-text">
-    <%= radio_string this, 'bleeding_at', :value=>%w{no_active_bleeding} %>
+    <%= radio_string this, 'bleeding_at', :value=>%w{No_Active_Bleeding} %>
     </div>
 	</div>
 </div>
@@ -112,7 +124,7 @@
 <div class="col-2">
 </div>
 <div class="col-10">
-<%= radio_string this, 'airway', :value=>%w{patent}, :col=>12 %>
+<%= radio_string this, 'airway', :value=>%w{Patent}, :col=>12 %>
 </div>
 
 
@@ -121,7 +133,7 @@
   </div>
 <div class="col-10">
 
-<%= check_string this, 'airway_compromise', :value=>%w{stridor secretion foreign_body bleeding other}, :label=>"", :col=>12 %>
+<%= check_string this, 'airway_compromise', :value=>%w{Stridor Secretion Soreign_body Bleeding Other}, :label=>"", :col=>12 %>
 
 </div>
 
@@ -141,40 +153,43 @@
 </div>
 
 <div class="row">
-<div class="col-2">Diagnosis</div>
-<div class="col-10">
-<%= radio_string this, 'breath_status', :value=>%w{no_breath tachypnea bradypnea retraction other}, :col=>12 %>
+<div class="col-2">Breathing_Characteristics</div>
+<div class="col-10"> 
+<%= radio_string this, 'breath_status', :value=>%w{No_breath Tachypnea Bradypnea Apnea Air_Hunger Other}, :col=>12 %>
 </div>
 </div>
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
 Sound
 </div>
 <div class="col-10">
-<%= radio_string this, 'breath_lung_clear',:value=>%w{rt lt equal_both_lung}, :label=>'Lung clear', :col=>12 %>
-<%= radio_string this, 'breath_wheezing',:value=>%w{rt lt equal_both_lung}, :label=>'Wheezing', :col=>12 %>
-<%= radio_string this, 'breath_rhonchi',:value=>%w{rt lt equal_both_lung}, :label=>'Rhonchi', :col=>12 %>
-<%= radio_string this, 'breath_crepitation',:value=>%w{rt lt equal_both_lung}, :label=>'Crepitation', :col=>12 %>
-<%= radio_string this, 'breath_descrease',:value=>%w{rt lt equal_both_lung}, :label=>'Decrease breath sound', :col=>12 %>
+<%= radio_string this, 'breath_lung_clear',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Lung clear', :col=>12 %>
+<%= radio_string this, 'breath_wheezing',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Wheezing', :col=>12 %>
+<%= radio_string this, 'breath_rhonchi',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Rhonchi', :col=>12 %>
+<%= radio_string this, 'breath_crepitation',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Crepitation', :col=>12 %>
+<%= radio_string this, 'breath_descrease',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Decrease breath sound', :col=>12 %>
 <%= text_string this, 'breath_other', :col=>4, :label=>'Other'%>
 </div>
 </div>
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
 Percussion
 </div>
 <div class="col-10">
-<%= radio_string this, 'percussion_resonance',:value=>%w{rt lt equal_both_lung}, :label=>'Resonance', :col=>12 %>
-<%= radio_string this, 'percussion_dullness',:value=>%w{rt lt equal_both_lung}, :label=>'Dullness', :col=>12 %>
+<%= radio_string this, 'percussion_resonance',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Resonance', :col=>12 %>
+<%= radio_string this, 'percussion_dullness',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Dullness', :col=>12 %>
 </div>
 </div>
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
 Palpation
 </div>
 <div class="col-10">
-<%= radio_string this, 'palpation_subcutaneous',:value=>%w{rt lt equal_both_lung no}, :label=>'Subcutaneous emphysema', :col=>12 %>
-<%= text_string this, 'palpation_deformity', :col=>4, :label=>'Deformity' %>
+<%= radio_string this, 'palpation_subcutaneous',:value=>%w{Rt Lt Equal_both_lung No}, :label=>'Subcutaneous emphysema', :col=>12 %>
+<%= text_string this, 'palpation_deformity', :col=>4, :label=>'wound' %>
 </div>
 </div>
 </div>
@@ -200,30 +215,29 @@ Palpation
 </div>
 <div class="col-2">Skin</div>
 <div class="col-10">
-<%= radio_string this, 'circulation_skin',:value=>%w{normal pale sweat cold}, :col=>12 %>
+<%= radio_string this, 'circulation_skin',:value=>%w{Normal Pale Sweat Cold}, :col=>12 %>
 </div>
+<div style="height: 10px"></div>
 <div class="col-2">Pulse</div>
 <div class="col-10">
-<%= radio_string this, 'circulation_pulse',:value=>%w{weak full regular irregular}, :col=>12 %>
+<%= radio_string this, 'circulation_pulse',:value=>%w{Weak Full Regular Irregular}, :col=>12 %>
 </div>
+<div style="height: 10px"></div>
 <div class="row">
   <div class="col-2">
     Capillary
   </div>
   <div class="col-6">
-  <%= radio_string this, 'circulation_capillary',:value=>%w{fastly <2 >2 Prolong}, :col=>12 %>
+  <%= radio_string this, 'circulation_capillary',:value=>%w{Fastly <2 >2 Prolong}, :col=>12 %>
   </div>
 </div>
-
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
 Vital
 </div>
 <div class="col-9">
 <div class="row">
-<%= text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
-<%= text_string this, 'circulation_sbp', :col=>3, :label=>'SBP'%>
-<%= text_string this, 'circulation_dbp', :col=>3, :label=>'DBP'%>
 <%= text_string this, 'circulation_blood_loss', :col=>3, :label=>'Blood loss(ml)'%>
 </div>
 </div>
@@ -259,23 +273,24 @@ Vital
 </div>
 </div>
 </div>
-
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
   Pupil
 </div>
 <div class="col-10">
 <div class="row">
-
+<br />
 <%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt(mm)'%>
-<%= radio_string this, 'pupil_rt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
+<%= radio_string this, 'pupil_rt_rtl',:value=>%w{Rtl Nrtl Slightly Fxed}, :col=>6 %>
 <div class="clear"></div>
 <%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt(mm)'%>
-<%= radio_string this, 'pupil_lt_rtl',:value=>%w{rtl nrtl}, :col=>4 %>
+<%= radio_string this, 'pupil_lt_rtl',:value=>%w{Rtl Rrtl Slightly Fxed}, :col=>6 %>
+ 
 </div>
 </div>
 </div>
-
+<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
   DTX
@@ -297,7 +312,7 @@ Vital
 <div class="row">
 <div class="col-2">
 </div>
-<%= check_string this, 'exposure_list', :value=>%w{deformity contusion abration penetration burns tenderness laceration swelling pitting_edema }, :col=>10, :col_item=>"col-12" %>
+<%= check_string this, 'exposure_list', :value=>%w{Deformity Contusion Abration Penetration Burns Tenderness Laceration Swelling Pitting_edema }, :col=>10, :col_item=>"col-12" %>
 </div>
 <div class="row">
 <div class="col-2">
@@ -311,9 +326,24 @@ Vital
 </div>
 </div>
 
-
-
-
+<hr/>
+<div class="col-12">
+<div class="card-title d-flex align-items-center">
+			<h5 class="mb-0 text-primary">Vital :</h5>
+</div>
+<div class="row">
+<div class="col-2">
+</div>
+<div class="col-9">
+<div class="row">
+<%= text_string this, 'circulation_pr', :col=>3, :label=>'Pulse Rate'%>
+<%= text_string this, 'circulation_sbp', :col=>3, :label=>'SBP'%>
+<%= text_string this, 'circulation_dbp', :col=>3, :label=>'DBP'%>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 </div>
 </div>
