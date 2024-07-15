@@ -16,11 +16,11 @@
 
 <% elsif  mode=='text'  and query=='2' %>
 <%
-  list = %w{sign_and_symptom allergies  medication  past_history last_oral_intake}
+  list = %w{sign_and_symptom allergies  medication  history_note intake_note} 
   for i in list
 %><%
     if r["#{i}"] and r["#{i}"] != ""
-%><%=i.humanize%> : <%=r["#{i}"] %>
+%><%=i.humanize%> : <%=r["#{i}"]%>
 <% end %>
 <% end %>
 <% elsif  mode=='text'  and query=='3' %>

@@ -10,6 +10,7 @@ age = ''
 sex = ''
 traumaStatus = ''
 diagnosis = ''
+location = ''
 
 if ems_case.patient_age == ''
       age = 'ไม่ระบุ'
@@ -35,6 +36,12 @@ if request.post?
 
 	record.update_attributes :summary=>params[:record][:summary]
 
+end
+
+if ems_case.location == ''
+	location = 'ไม่ระบุ'
+else
+	location = ems_case.location
 end
 
 %>
@@ -128,13 +135,13 @@ for i in notes
 
 end
 
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{ems_case.location}
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{location}
 แรกรับ at scene #{ems_case.chief_complain}    
 
 @primary_survey
 @secondary_survey.1
 @secondary_survey.2
-Event : #{ems_case.emd_event_note} / 
+Event : #{ems_case.emd_event_note} /  
 @secondary_survey.3
 
 Treatment :

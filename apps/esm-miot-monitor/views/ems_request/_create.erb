@@ -156,7 +156,7 @@ end
 	
 
 	
-	@ems_case = EMSCase.new :status=>status, :case_type=>case_type, :schedule_from=>schedule_from, :schedule_to=>schedule_to, :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>date, :request_at=>date
+	@ems_case = EMSCase.new :status=>status, :case_type=>case_type, :schedule_from=>schedule_from, :schedule_to=>schedule_to, :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>date, :request_at=>date , :emd_event_note=>'-'
 	
 	
 	@ems_case.location = params[:location] if params[:location]
