@@ -61,8 +61,9 @@ GA :   <%=r['note'] %> <%=r['response'].classify %>
       result = "Skin #{r['circulation_skin']} " if r['circulation_skin']!="normal"
       pulse = ""
       pulse = "#{r['circulation_pulse'].humanize} peripheral pulse " if r['circulation_pulse']
+      capillary = "Capillary #{r['circulation_capillary']}"  
 
-%>C : <%= result  %>, <%=pulse%>
+%>C : <%= result  %>, <%=pulse%>, <%=capillary%>
 <% end %><%
     # E4V5M6 pupil 3 mm RTLBE
     if r['gcs_e'] and r['gcs_e'] != ""
@@ -74,9 +75,8 @@ GA :   <%=r['note'] %> <%=r['response'].classify %>
 <%
     # E4V5M6 pupil 3 mm RTLBE
     if r['exposure_list'] and r['exposure_list'] != ""
-
-
-%>E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>
+%>
+E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>
 <% end %>
 <%
 list = %w{ sbp pr o2sat temp rr dtx }
@@ -91,7 +91,7 @@ list = %w{ sbp pr o2sat temp rr dtx }
 	v = r[i]
 	
 	if j=='sbp'
-		v = "#{r['sbp']}/#{r['dbp']}"
+		v = "#{r['vs_sbp']}/#{r['vs_dbp']}"
 		j = "bp"
   end	
 	
@@ -104,7 +104,7 @@ list = %w{ sbp pr o2sat temp rr dtx }
   for i in list
 %><%
     if r["#{i}"] and r["#{i}"] != ""
-%><%=i.humanize%> : <%=r["#{i}"] %>
+%><%=i.humanize%> : <%=r["#{i} "] %>
 <% end %>
 <% end %><% end %><% end %>
 <%#r.to_json%>
