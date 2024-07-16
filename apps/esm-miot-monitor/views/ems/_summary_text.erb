@@ -135,7 +135,7 @@ for i in notes
 
 end
 
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา --:-- น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{location}
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา #{ems_case.request_at.strftime('%H:%M')} น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{location}
 แรกรับ at scene #{ems_case.chief_complain}    
 
 @primary_survey
