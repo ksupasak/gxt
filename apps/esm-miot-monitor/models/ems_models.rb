@@ -1118,10 +1118,8 @@ end
 
 class EMSConnect
 
- def self.line_noti params
-   return 'NA'
- end
-  def self.line_noti2 params
+
+  def self.line_noti params
 
 
     url = URI("https://notify-api.line.me/api/notify")
