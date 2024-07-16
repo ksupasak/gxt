@@ -6,12 +6,16 @@
 		session.delete :case_id
 
 		noti_new_case_text = Setting.get('line_first_alert')
+		puts 'line noti ' + noti_new_case_text.inspect 
 
 		if noti_new_case_text
 
 		message = eval("\"#{noti_new_case_text}\"")
 
         result =  EMSConnect.line_noti :message=>message
+
+		puts result
+
 		end
 		
 		
