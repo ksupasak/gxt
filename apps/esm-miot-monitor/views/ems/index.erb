@@ -295,7 +295,8 @@
 			var kmlLayer = new google.maps.KmlLayer({
         	url: '<%=Setting.get("google_kml")%>',
         	map: map1.getMap(),
-			clickable: false
+			clickable: false,
+			preserveViewport: true 
       		});
 			<% end %>
 

@@ -869,7 +869,14 @@
 								
 							
 					
-								
+			<% if Setting.get("google_kml") and Setting.get("google_kml") !="" %>
+			var kmlLayer = new google.maps.KmlLayer({
+        	url: '<%=Setting.get("google_kml")%>',
+        	map: map1.getMap(),
+			preserveViewport: true ,
+			clickable: false
+      		});
+			<% end %>
 							
 
 								map1.changeMarkerPosition(function(marker){
