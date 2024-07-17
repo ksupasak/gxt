@@ -1,0 +1,11 @@
+<%
+    fn, ln = params[:name].split(" ")
+    i = Provider.create :name=>params[:name], :code=>params[:code],:first_name=>fn, :last_name=>ln,  :role=>params[:role]
+
+%>
+<div class="col-4 search-provider " id="provider-<%=i.id%>">
+<div class="chip chip-md chip-select bg-info" provider_id="<%=i.id%>" selected='selected' >
+    <img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person">
+    <%=i.code%> : <%=i.get_name%>
+</div>
+</div>

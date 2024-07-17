@@ -71,13 +71,12 @@
 
 	<% end %>
 	
-	
 
 		
 	function process_message(lines){
-		
-		command_process(lines)
-
+		if(typeof command_process === "function"){
+			command_process(lines)
+		}
 		if(lines[0].split(" ")[0]=='Zone.Refresh'||lines[0].split(" ")[0]=='Zone.Message'){
 
 			refresh_partial();

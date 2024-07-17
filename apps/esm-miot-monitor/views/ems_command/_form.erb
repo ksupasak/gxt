@@ -121,7 +121,7 @@
 
 																		%>
 
-																		<div class="row" style="height:30em;overflow:scroll">
+																		<div class="row provider-list" style="height:30em;overflow:scroll">
 																		<% for i in providers %>
 
 																		<div class="col-4 search-provider " id="provider-<%=i.id%>">
@@ -206,12 +206,22 @@
 
 																		<div class="modal-footer">
 
-																			<h5 class="modal-title text-info">Provider :
+																			<span class="modal-title text-info">Provider :
 																				<input type="text" id="provider_name" value=""/>
-																			</h5>
-																			<h5 class="modal-title text-info">Code :
+																			</span>
+																			<span class="modal-title text-info">Code :
 																				<input type="text" id="provider_code" value=""/>
-																			</h5>
+																			</span>
+																			<span class="modal-title text-info">Role :
+																				<select id="provider_role">
+																					<option value="ems">EMS</option>
+																					<option value="emt">EMT</option>
+																					<option value="doctor">Doctor</option>
+																					<option value="nurse">Nurse</option>
+																				</select>
+																			</span>
+																			
+																			<button type="button" class="btn btn-warning provider-add" >Add</button>
 																			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 																			<button type="button" class="btn btn-primary officer-select">Select</button>
 																		</div>
@@ -220,6 +230,45 @@
 															</div>
 
 															<script>
+
+
+																$('.provider-add').click(function(){
+																	
+																	name = $('#provider_name').val()
+																	code = $('#provider_code').val()
+																	role = $('#provider_role').find(":selected").val()
+																	
+
+																	$.ajax({
+																    url: "<%=get_path 'add_provider'%>?name="+name+"&code="+code+"&role="+role,
+																	  context: document.body
+																	}).done(function(html) {
+
+																	  	$( '.provider-list' ).append(html);
+
+
+																	});
+
+
+
+																	selected = $(this).attr("selected")
+
+																	console.log(selected)
+																	if(selected!='selected'){
+
+																		$(this).addClass("bg-info")
+																		$(this).attr('selected','selected')
+																		$('#provider_search').val("")
+																		$('.search-provider').show()
+
+																	}else{
+																		$(this).removeClass("bg-info")
+																		$(this).removeAttr('selected')
+																	}
+
+
+																})
+																
 
 																$('.chip-select').click(function(){
 

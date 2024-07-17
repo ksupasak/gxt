@@ -790,50 +790,11 @@
 							<script>
 								
 								var map1;
-								var map2;
+								// var map2;
 								
 								
 								
-								
-						function beforeInit(){
-
-
-
-
-								map1 = new EMSMap('dashboard-map',{movable:true});
-								map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
-								var latlng = [];
-								var station_image = "<%=url_for("ems/station.png")%>";
-
-
-								clatlng = [13.68313508354787, 100.69198345629769]
-
-								<% if Setting.get("aoc_center") %>
-								clatlng = [<%=Setting.get("aoc_center")%>]
-
-								<% end %>
-
-							latlng = clatlng
-
-							<% if record.latlng and record.latlng.index(',') %>
-							latlng = [<%=record.latlng%>]
-							<% end %>
-								map1.setPosition(latlng[0], latlng[1])
-								map1.setMarkerPosition(latlng[0], latlng[1])
-							
-								var cpos = new google.maps.LatLng(clatlng[0],clatlng[1] )
-								cmap = map1.getMap()
-								markerx = new google.maps.Marker({position: cpos, map: cmap, icon: station_image})
-
-
-
-								map2.setPosition(latlng[0], latlng[1])
-								map2.setMarkerPosition(latlng[0], latlng[1])
-								
-					
-								
-								
-							}
+						
 							
 
 							function address_search(e){
@@ -860,7 +821,49 @@
 									return false;
 
 							}
+									
+						function beforeInit(){
+
+
+
+
+								map1 = new EMSMap('dashboard-map',{movable:true});
+								// map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
+								var latlng = [];
+								var station_image = "<%=url_for("ems/station.png")%>";
+								const station_image_img = document.createElement('img');
+								station_image_img.src = "<%=url_for("ems/station.png")%>";
+
+								clatlng = [13.68313508354787, 100.69198345629769]
+
+								<% if Setting.get("aoc_center") %>
+								clatlng = [<%=Setting.get("aoc_center")%>]
+
+								<% end %>
+
+							latlng = clatlng
+
+							<% if record.latlng and record.latlng.index(',') %>
+							latlng = [<%=record.latlng%>]
+							<% end %>
+								map1.setPosition(latlng[0], latlng[1])
+								map1.setMarkerPosition(latlng[0], latlng[1])
 							
+								var cpos = new google.maps.LatLng(clatlng[0],clatlng[1] )
+								cmap = map1.getMap()
+							
+								markerx = new google.maps.marker.AdvancedMarkerElement({position: cpos, map: cmap, content: station_image_img})
+								// markerx = new google.maps.Marker({position: cpos, map: cmap,icon : station_image})
+
+
+
+								// map2.setPosition(latlng[0], latlng[1])
+								// map2.setMarkerPosition(latlng[0], latlng[1])
+								
+					
+								
+								
+							}
 							
 							function afterInit(){
 								
@@ -882,8 +885,8 @@
 
 										})
 
-									map2.setPosition(pos.lat(), pos.lng())
-									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+									// map2.setPosition(pos.lat(), pos.lng())
+									// map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 
 								}.bind(this))
 

@@ -99,7 +99,7 @@ if params[:record]
 
 	counter.update(:count=>counter.count+1)
 
-  if line_noti = Setting.get('line_access_code')
+  if line_noti = Setting.get('line_access_code') and @current_user.status=='Active'
 
 	  message = record.noti_message
 		result =  EMSConnect.line_noti :message=>message

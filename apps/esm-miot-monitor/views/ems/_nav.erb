@@ -452,11 +452,17 @@
 			</ul>
 		</li>
 		<li>
-	<a href="#" class="btn-t" t="th" >TH</a> |
-	<a href="#" class="btn-t" t="en" >EN</a>
+	
+	
+
+
 		</li>
 	</ul>
 
+	<div class='text-white d-flex justify-content-center ' style="" >
+	<a href="#" class="btn-t" t="th" style="width:50px;color:white">TH</a>
+	<a href="#" class="btn-t" t="en" style="width:50px;color:white" >EN</a>
+	</div>
 	<script>
 
 		if(sessionStorage.getItem("last_tab")&&sessionStorage.getItem("last_tab").length>0){
@@ -503,14 +509,15 @@ function getCookie(cname) {
 		var tmap_en = {case_open:'Open ', dashboard:'Dashboard',record_contact_phone:'Phone', record_contact_name:'Caller'};
 		var tmap_all = {th:tmap_th, en:tmap_en};
 
-
-
+		var tcurrent_map = tmap_en
+       
 
         function translate(lang, tmap){
 
 			current_t = lang
 
-
+			 tcurrent_map = tmap
+		
 			document.cookie = "t="+lang;
 
 		$('.t').each(function(){
@@ -518,7 +525,7 @@ function getCookie(cname) {
 			
 			e = $(this)
 			tk = e.attr('t')
-			e.html(tmap[tk])
+			e.html(tcurrent_map[tk])
 
 
 		}).bind(this)
@@ -537,8 +544,13 @@ function getCookie(cname) {
 			translate(t, tmap_all[t])
 
 		})
-
+		console.log(getCookie('t'))
+		if(getCookie('t')==null&&getCookie('t')!=""){
+			current_t = getCookie('t');
+		}
+		
 	    translate(current_t, tmap_all[current_t])
+
 
 
 	</script>
