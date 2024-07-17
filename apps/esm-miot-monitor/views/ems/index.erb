@@ -294,7 +294,8 @@
 			<% if Setting.get("google_kml") and Setting.get("google_kml") !="" %>
 			var kmlLayer = new google.maps.KmlLayer({
         	url: '<%=Setting.get("google_kml")%>',
-        	map: map1.getMap()
+        	map: map1.getMap(),
+			clickable: false
       		});
 			<% end %>
 
