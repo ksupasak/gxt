@@ -701,8 +701,10 @@ cls = record.init_code.get_class if code
 			update_message();
 
 		}
-
-	    process_message(lines)
+		if( typeof process_message === 'function'){
+			process_message(lines)
+		}
+	    
 
 
   }

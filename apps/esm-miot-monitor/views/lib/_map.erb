@@ -22,14 +22,14 @@ end
 %>
 <script>
 	var map_inited = false;
-	var maps = [];
+	var google_maps = [];
 	var map_before_init = null;
 	var map_after_init = null;
 	
 	// alert(typeof EMSMap)
 
 	function setMapInitCallback(before, after){
-		maps = [];
+		google_maps = [];
 		map_before_init = before;
 		map_after_init = after;
 		
@@ -39,9 +39,9 @@ end
 		if(map_before_init!=null){
 			map_before_init.call();
 		}
-			 console.log(maps.length)
-		for(var id in maps){
-			mx = maps[id]
+			 console.log(google_maps.length)
+		for(var id in google_maps){
+			mx = google_maps[id]
 	
 		  console.log("xx"+mx)
 			mx.init();
@@ -61,7 +61,7 @@ end
 
 			this.div_id = div_id
 		
-			maps.push(this);
+			google_maps.push(this);
 				
 			this.map = null
 			this.center = null
@@ -283,9 +283,9 @@ end
 				map_before_init.call();
 			}
 
-			for(var id in maps){
-				mx = maps[id]
-		
+			for(var id in google_maps){
+				mx = google_maps[id]
+		  console.log("xxx"+mx)
 			  console.log(mx)
 				mx.init();
 
@@ -296,7 +296,7 @@ end
 			
 			map_inited = true;
 
-		}, 50); // How long you want the delay to be, measured in milliseconds.
+		}, 100); // How long you want the delay to be, measured in milliseconds.
 
 	}
 

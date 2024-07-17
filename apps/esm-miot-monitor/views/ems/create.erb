@@ -5,6 +5,8 @@
 
 		session.delete :case_id
 
+		if @current_user.status=='Active'
+
 		noti_new_case_text = Setting.get('line_first_alert')
 		puts 'line noti ' + noti_new_case_text.inspect 
 
@@ -15,6 +17,8 @@
         result =  EMSConnect.line_noti :message=>message
 
 		puts result
+
+		end
 
 		end
 		

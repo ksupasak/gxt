@@ -246,6 +246,9 @@
 			map1.setMarkerPosition(latlng[0], latlng[1])
 
 
+			
+			
+
 			$('#create-btn').click(function(){
 				loc = $('#record_location').val()
 				zoom = map1.getMap().getZoom()
@@ -288,9 +291,12 @@
 		
 		
 		function afterInit(){
-		
-		
-
+			<% if Setting.get("google_kml") and Setting.get("google_kml") !="" %>
+			var kmlLayer = new google.maps.KmlLayer({
+        	url: '<%=Setting.get("google_kml")%>',
+        	map: map1.getMap()
+      		});
+			<% end %>
 
 			clatlng = [13.68313508354787, 100.69198345629769]
 			<% if Setting.get("aoc_center") %>
@@ -310,11 +316,12 @@
 
 			var latlng = [];
 			
-			var station_image = "<%=url_for("ems/station.png")%>";
+			const station_image_img = document.createElement('img');
+			station_image_img.src = "<%=url_for("ems/station.png")%>";
 
 			var pos = new google.maps.LatLng(clatlng[0],clatlng[1] )
 			latlng.push(new google.maps.LatLng(pos))
-			marker = new google.maps.Marker({position: pos, map: local_map, icon: station_image})
+			marker = new google.maps.Marker({position: pos, map: local_map, content: station_image_img})
 
 			<% for i in cases 
 				
