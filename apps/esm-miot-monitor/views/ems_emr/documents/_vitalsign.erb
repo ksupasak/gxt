@@ -55,6 +55,10 @@
 </div><!--card body-->
 </div><!--card-->
 
+
+
+
+<% if record.empty? %>
 <script>
 	
 	$('.station .pr .value').each(function(){$('.modal-body .pr_cls').val($(this).html())})
@@ -79,7 +83,5 @@
 	})	
 		
 	
-	
-
-	
 </script>	
+<% end %>
