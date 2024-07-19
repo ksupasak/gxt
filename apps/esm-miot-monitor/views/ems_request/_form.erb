@@ -655,17 +655,30 @@
 							<input name='record[schedule_to_time]' id="schedule_to_time"  data-value="<%=record.schedule_to.strftime('%H:%M') if record.schedule_to%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
 							</div>
 							
+
+	<script>
+		$('.datepicker').pickadate({
+			selectMonths: true,
+	        selectYears: true
+		}),
+		$('.timepicker').pickatime()
+	</script>
+
 							<script>
+
+						
+
+
 							// $(document).ready(function(){
 
-    						$('.datepicker').pickadate({
-								format: 'yyyy-mm-dd'
-							})
+    						// $('.datepicker').pickadate({
+							// 	format: 'yyyy-mm-dd'
+							// })
 							
 							
-							$('.timepicker').pickatime({
-								format: 'HH:i'
-							})
+							// $('.timepicker').pickatime({
+							// 	format: 'HH:i'
+							// })
 
 							// })
 						
