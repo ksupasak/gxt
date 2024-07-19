@@ -46,6 +46,7 @@ def run(opts)
     })
     
     
+    
     lives = web_app.settings.live
     
     gw = web_app.settings.gw
@@ -56,8 +57,7 @@ def run(opts)
       # puts "run #{Time.now}"
       
     
-    
-      
+  
       
       online_lives = gw.get_live_incidents
       
@@ -248,4 +248,14 @@ class HelloApp < Sinatra::Base
   end
 end
 
-run app: HelloApp.new
+while(true)
+
+begin
+
+  run app: HelloApp.new
+rescue
+  puts 'RESET'
+end
+sleep(1)
+
+end
