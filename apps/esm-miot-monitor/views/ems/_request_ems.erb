@@ -56,14 +56,87 @@ else
 <link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ 
 
 	<link href="/miot/css/ems.css" rel="stylesheet">
 
 
 	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
 </head>
-<body style="padding:10px">
+<style>
+.box{
+	background-color: rgb(255,255,255);
+	border-radius: 8px;
+	padding:10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+}
+.box_h{
+	background-color: rgb(255,255,255);
+	padding:10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+	border-bottom: 1px solid #A4CAFF;
+}
+.text_color_ffffff{
+	color: #ffffff;
+}
+.boxbtn{
+	background-color: rgb(223,241,255);
+	border-radius: 8px;
+	width: 100%;
+}
+.boxbtn2{
+	background-color: rgb(52,120,242);
+	border-radius: 8px;
+	width: 100%;
+	height:  50px;
+	border: none; 
+	padding:12px;
+}
+.button-container {
+    display: flex;
+    gap: 10px;
+    }
+.row {
+	display: flex;
+	justify-content: space-between;
+	  }
+
+.btn2 {
+      border: 1px solid #ccc;
+      padding: 1px;
+	  
+      cursor: pointer;
+      transition: background-color 0.3s;
+	  flex: 1;  
+      text-align: center;  
+    }
+
+.btn2.active {
+      background-color: #1E9090;  
+      color: #1E9090;  
+    }
+input {
+	color: #FFFFFF;  
+  }
+
+body{
+	padding:10px;
+	background-color: rgb(240,245,245);
+}
+ 
+.row {
+      display: flex;
+      justify-content: space-between;
+}
+.h_br{
+	height:  5px;
+}
+
+
+</style>
+
+<body>
 
 <div class="wrapper">
 	
@@ -90,40 +163,52 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 		<div class="page-wrapper">
 			<div class="page-content">
 				<div class="row">
-					<div class="col align-center alert alert-info">
-						<h4><center><%=Setting.get(:default_center_name)%></center></h4>
+					<div class="box_h">
+						<h6 class="my-1 text-info"><center><%=Setting.get(:default_center_name)%></center></h6>
 					</div>
 				</div>
 				
-				
-				
+<div class="h_br"></div>				
+			
 
 <form action="request_ems?id=<%=ems_case.id%>" method="POST">
 
-    <div class='row'>
+
+ <!-- <div class="box">
+  	<div class="d-flex justify-content-between">
+  	<div class="col-9">
+	  	<p class="mb-0 text-secondary">Contact info</p>
+	  	<h6 class="my-1 text-info"><%= ems_case.contact_phone %></h6>
+  	</div>
+    </div>
+  </div> -->
+
+<div class="h_br"></div>	
+
+  <!--  <div class='row'>
 		<div class="col">
 			<div class="card radius-10 border-start border-0 border-3 border-info">
 			<div class="card-body">
 				<div class="d-flex justify-content-between">
 					<div class="col-9">
 						
-						<p class="mb-0 text-secondary">Contact info</p>
+						<p class="mb-0 text-secondary">Contact info 1</p>
 						<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
 						<p class="mb-0 font-13"></p>
 						
 					</div>
 					
 					
-					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> -->
+					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> 
 
 					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
 
-					</div> -->
+					</div> 
 				</div>
 			</div>
 			</div>
 		</div>
-	</div>
+	</div>  -->
 	
 	<% if ems_case.status=='Completed'%>
 	<div class="card radius-10 border-start border-0 border-3 border-danger">
@@ -145,92 +230,58 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 		att = Attachment.find amb.image
 
 		content = ""
-
+        plate_license = ""
 		if att
  
-		  content = "<center><img src='#{att.path}' width='100%'><br/><br/>#{amb.plate_license} </center>"
-  
+		  content = "<div ><img src='#{att.path}' width='100%'></div>"
+		  plate_license = "#{amb.plate_license}"
 		end
 	
 		%>
 
  
 		
+	<div class="box">	
     <div class='row'>
 		<div class="col">
-			<div class="card radius-10 border-start border-0 border-3 border-warning">
-			<div class="card-body">
+		<!--	<p class="mb-0 text-secondary">Contact info</p>
+			<h6 class="my-1 text-info"><%= ems_case.contact_phone %></h6> -->
+			<div >
 				<div class="d-flex justify-content-between">
-					<div class="col-4">
-						
-						<p class="mb-0 text-secondary">สั่งการ</p>
-						<%
-							
-							
-							
-						%>
-						<h4 class="my-1 text-info">
-							 <%= content %></h4>
-						<p class="mb-0 font-13"></p>
-						
-					</div>
-					
-					<div class="col-8">
-						
-						<p class="mb-0 text-secondary"><center>ระยะเวลา (mins:sec)</center></p>
-						<h4 class="my-1 text-warning">
-						<center style="font-size:3em" class="est">00:00</center>
-						<center >เวลาถึง : <span class="est-text"><%=%><span></center>
-						</h4>
-						<p class="mb-0 font-13"></p>
-						
-					</div>
+					<div class="col-3"><%= content %> </div>
+					<div class="col-1"></div>
+					<div class="col-8"><p class="mb-0 text-secondary">ทะเบียนรถ</p> <p class = "my-1 text-info"> <%= plate_license %> </p> </div>
 					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> -->
-
-					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
-
-					</div> -->
+					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i></div> -->
 				</div>
 			</div>
 			</div>
 		</div>
+		<div class='row'>
+			<div class="col-3" ><p class="mb-0 text-secondary"> ระยะเวลา</p> </div>
+			<div class="col-2">	<h6 class="my-1 text-warning"> 00:00</h6> </div>
+			<div class="col-7">  <p>เวลาถึง : <span class="est-text"><%=%><span></p>  </div>	
+		</div>
 	</div>
 	<% end %>
-	
-    <div class='row'>
-		<div class="col d-flex justify-content-center">
-				<%
-				
-					btn_class = 'success'
-				
-					if ems_case.patient_location and ems_case.patient_location.index(",")
-						
-						btn_class = 'warning'
-						
-					end
-					
-					
-				%>
-				<a href="#" id="func-1" class="func btn btn-<%=btn_class%> col">ส่งตำแหน่ง</a>
+	<div class="h_br"></div>	
+
+	 
+	<div class="box">
+	<div class='row'>
+		<div class="col d-flex justify-content-center" >
+		 	<a href="#" id="func-1" class="func func-3 btn2 btn"><i class="fas fa-map-marker-alt"></i> ตำแหน่ง</a> 
 		</div>
-		
 		<div class="col d-flex justify-content-center">
-				<a href="#" id="func-2" class="func take-picture-open func-2 btn btn-success col"> 
-				ถ่ายรูป
-				</a>
-				
+	 	<a href="#" id="func-2" class="func func-3 take-picture-open btn2 btn"><i class="fas fa-camera"></i> ถ่ายรูป</a> 
 		</div>
-		
 		<div class="col d-flex justify-content-center">
-				<a href="#" id="func-3"  class="func func-3 btn btn-warning col">
-					VideoCall
-				</a>
-				
+		 	<a href="#" id="func-3"  class="func func-3 btn2 btn"><i class="fas fa-video"></i> วิดีโอ</a> 
 		</div>
-		
 	</div>
-	<br/>
-	
+</div>
+
+
 	<script>
 		
 		$('.func').click(function(){
@@ -309,32 +360,41 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 			cls = "border-success" if ems_case.tracking_status=='TRACKING'
 			
 		%>
-
+		<div class="h_br"></div>	
 				<div class="row func-panel func-1">
 
 					<div class="col">
 						
-						<div class="card radius-10 border-start border-0 border-3 <%=cls%>">
+						<div >
 
 
-							<div class="card-body" style="">
-								<p>
-								พิกัดตำแหน่ง
-
-								<span style="float:right"><a  id = "find-me" class="btn btn-outline-success">อ่านตำแหน่ง</a></span>
-							   </p>
+							<div class="box" >
+								<p>พิกัดตำแหน่ง <span style="float:right"><a  id = "find-me" class="btn btn-outline-success"> อ่านตำแหน่ง</a></span></p>
+							  <!--  <p>1.เลื่อนหมุดสีเเดงในเเผนที่เพื่อระบุตำเเหน่ง</p>
+								<p>2.กดปุ่มด้านล่างเเผนที่เพื่อส่งตำเเหน่ง</p> -->
 								<div id="dashboard-map" style="height: 300px">
 									map
 								</div>
-
-							 <br/>
+								<div class="h_br"></div>	
 
 
 							<center>
 							<% if ems_case.patient_location and ems_case.patient_location.index(",") %>
-							<input type="submit" name="Submit" value="ส่งตำแหน่งแล้ว" class="btn btn-warning">
+							 
+							<!--<input type="submit" name="Submit" value="ส่งตำแหน่งอีกครั้ง" class="boxbtn2">-->
+
+							<button type="submit" name="Submit" class="boxbtn2">
+							<p class="text_color_ffffff"><i class="fas fa-location-arrow"></i> ส่งตำแหน่งอีกครั้ง </p>
+						    </button>
+
 							<% else %>
-							<input type="submit" name="Submit" value="ส่งตำแหน่ง" class="btn btn-success">
+							 
+							<!--<input type="submit" name="Submit" value="ส่งตำแหน่ง" class="boxbtn2">-->
+
+							<button type="submit" name="Submit" class="boxbtn2">
+							<p class="text_color_ffffff"><i class="fas fa-location-arrow"></i>ส่งตำแหน่ง </p>
+						    </button>
+
 							<% end %>
 									 <p id = "status" style="font-size:0.8em;padding:20px"></p>
 							</center>
@@ -359,10 +419,10 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 				cls = 'border-success' if imgs.size>0
 					
 				%>
-
+				<div class="h_br"></div>	
 				<div class="row  func-panel func-2">
 				<div class="col">
-				<div class="card radius-10 border-start border-0 border-3 <%=cls%>">
+				<div class="card radius-10 border-0 border-3 <%=cls%>">
 				<div class="card-body">
 				<div class="row">
 					<div class="col">
@@ -381,18 +441,19 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 
 						<button class="btn btn-primary capture-spinner " style="display:none" type="button" disabled=""> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
 															Loading...</button>
-						<video playsinline autoplay ></video>
-
+				 
+					   <video playsinline autoplay ></video>   
+				 
 					</div>
 				</div>
-<br/>
+				<div class="h_br"></div>	
 				<div class="row">
 					<div class="col-12 col-sm-4 text-center">
 					</div>
 					<div class="col-12 col-sm-4 ">
 						<div class="row">
-							<button  type="button" class="take-picture-x  col btn btn-lg btn-success px-5" style="display:none;margin-bottom:10px">
-								<i class="bx bx-bookmark mr-1"></i>ถ่ายภาพ</button>
+							<button  type="button" class="take-picture-x  col btn btn-lg btn-success px-5 boxbtn2" style="display:none;margin-bottom:10px">
+								<i  ></i>ถ่ายภาพ</button>
 
 						</div>
 					</div>
@@ -442,10 +503,10 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 				</div>
 				
 				
-				
+				<div class="h_br"></div>				
 				<div class="row  func-panel func-3">
 				<div class="col">
-				<div class="card radius-10 border-start border-0 border-3 border-warning">
+				<div class="box">
 				<div class="card-body">
 				<div class="row">
 					<div class="col">
@@ -453,7 +514,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 				  สนทนา
 					<center>
 
-					<span  style="col-3"><a  href="<%=conf_url%>" class="btn text-white btn-warning">เริ่ม VideoCall</a></span>
+					<span  style="col-3"><a  href="<%=conf_url%>" class="text-white btn-warning boxbtn2">เริ่ม วิดีโอคอล</a></span>
 
 					</center>
 
@@ -490,7 +551,7 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 				</div> -->
 
 				</div>
-				<br/>
+				<div class="h_br"></div>	
 
 
 <% end %>
