@@ -314,8 +314,46 @@ class EMSCase < GXTModel
     ems_case = self
     channel = EMSChannel.find ems_case.channel_id
     ambulance = Ambulance.find ems_case.ambulance_id
+    patient_gender = ""
+    patient_age = ""
+    location = ""
+    dispatch_note = ""
+    if ems_case.patient_gender == "M"
+      patient_gender = "ชาย"
+    elsif ems_case.patient_gender == "F"
+      patient_gender = "หญิง"
+    else
+      patient_gender = "ไม่ทราบเพศ"
+    end
+    if ems_case.patient_age == nil || ems_case.patient_age == ""
+      patient_age = "ไม่ทราบอายุ"
+    else
+      patient_age = ems_case.patient_age
+    end
+    if ems_case.location == nil || ems_case.location == ""
+      location = "ยังไม่เเน่ชัด รอสั่งการเพิ่มเติม"
+    else
+      location = ems_case.location
+    end  
+    if ems_case.dispatch_note == nil || ems_case.dispatch_note == ""
+      dispatch_note = "ไม่มีคำสั่งเพิ่มเติม"
+    else
+      dispatch_note = ems_case.dispatch_note 
+    end 
+    
     if ems_case.init_code
-      message = "#{ems_case.case_no} รหัส: #{ems_case.init_code.code} ผู้ป่วย: #{ems_case.patient_gender} #{ems_case.patient_age}ปี อาการ: #{ems_case.chief_complain}\nติดต่อ: #{ems_case.contact_phone} สถานที่: #{ems_case.location}\nคำสั่ง: #{ems_case.dispatch_note} ทีม: #{channel.name if channel} รถ: #{ambulance.name if ambulance}"
+      message = 
+"
+#{ems_case.case_no}\n 
+รหัส : #{ems_case.init_code.code}\n 
+ผู้ป่วย : #{patient_gender} #{patient_age} ปี\n 
+อาการ : #{ems_case.chief_complain}\n
+ติดต่อ : #{ems_case.contact_phone}\n 
+สถานที่ : #{location}\n
+คำสั่ง : #{ems_case.dispatch_note}\n 
+ทีม : #{channel.name if channel}\n 
+รถ : #{ambulance.name if ambulance}\n
+"
       return message
     else
       return nil
