@@ -102,12 +102,12 @@ if params[:record]
 		r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED', :response=>'PLAN'
 
 
-		c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
+		#c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
 		c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
 		r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED', :response=>'PLAN'
 
 
-		AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
+		#AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
 	
 	else
 		
@@ -121,7 +121,7 @@ if params[:record]
 		r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED', :response=>'PLAN'
 
 
-		AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
+		#AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'Dischaged', :status=>'PENDING', :note=>'', :sort_order=>8, :parent=>0
 		
 		
 	
