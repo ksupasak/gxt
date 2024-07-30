@@ -9,7 +9,8 @@
 <%
     if r['response'] and r['response'] != ""
 %>
-GA :   <%=r['note'] %> <%=r['response'].classify %>
+GA :  <%=r['note'] %> 
+Response : <%=r['response'].classify %>
 <% end %>
 <%
     if r['airway'] and r['airway'] != ""

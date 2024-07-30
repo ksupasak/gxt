@@ -9,7 +9,7 @@ patient = admit.patient
 age = ''
 sex = ''
 traumaStatus = ''
-diagnosis = ''
+
 location = ''
 
 if ems_case.patient_age == ''
@@ -26,11 +26,6 @@ elsif ems_case.patient_gender == 'F'
 	sex = 'หญิง'
 end
 
-if ems_case.patient_underlying == ''
-	diagnosis = 'Do not have'
-else
-	diagnosis = ems_case.patient_underlying
-end
 
 if request.post?
 
@@ -150,7 +145,7 @@ Treatment :
 
 @transfer
 
-Diagnosis : #{diagnosis}
+Diagnosis : 
 @diagnosis 
 
 ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
@@ -248,7 +243,7 @@ end
 	####################### transfer # NOTE:
 
 if ems_case.transfer_hospital == nil
-		map["transfer"] = "รพ.ปลายทาง : Do not have"
+		map["transfer"] = "รพ.ปลายทาง : "
 else
 		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
 end
