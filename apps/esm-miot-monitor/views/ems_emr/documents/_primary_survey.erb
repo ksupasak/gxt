@@ -91,28 +91,30 @@
 
 </div>
 
+
+<% if record['trauma_status'] != 'non-trauma' %>
 <hr/>
-<div class="card-title d-flex align-items-center">
+  <div class="card-title d-flex align-items-center">
 			<h5 class="mb-0 text-primary">eXsanuinate Hemorrhage :</h5>
-</div>
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10">
+  </div>
+  <div class="row">
+  <div class="col-2"></div>
+  <div class="col-10">
 
-<div class="input-group input-group-sm">
+  <div class="input-group input-group-sm">
     <div class="input-group-text">
-    <%= radio_string this, 'bleeding_at', :value=>%w{Active_Bleeding} %>
-    </div>
-    <%= text_string this, 'blood_loss', :field_only=>true %>
-    <div class="input-group-text">
-    &nbsp;<label for="trauma_1">CC </label>
-    </div>
-    <div class="input-group-text">
-    <%= radio_string this, 'bleeding_at', :value=>%w{No_Active_Bleeding} %>
-    </div>
-	</div>
-</div>
-
+     <%= radio_string this, 'bleeding_at', :value=>%w{Active_Bleeding} %>
+     </div>
+     <%= text_string this, 'blood_loss', :field_only=>true %>
+     <div class="input-group-text">
+     &nbsp;<label for="trauma_1">CC </label>
+     </div>
+     <div class="input-group-text">
+     <%= radio_string this, 'bleeding_at', :value=>%w{No_Active_Bleeding} %>
+      </div>
+	  </div>
+  </div>
+<% end %>
 
 
 </div>
