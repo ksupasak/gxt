@@ -3,9 +3,6 @@
 <%
   @record = record
 %>
-<style>
-.mandatory{color:red;font-weight:bold;}
-</style>
 <div class="card">
 <div class="card-header bg-primary text-white">
 <center>Vital sign</center>
@@ -16,25 +13,25 @@
 
 
 
-<%= text_string this, 'sbp', :col=>3, :label=>'SBP <span class="mandatory">*</span>'%>
-<%= text_string this, 'dbp', :col=>3, :label=>'DBP <span class="mandatory">*</span>'%>
-<%= text_string this, 'pr', :col=>2, :label=>'Heart Rate <span class="mandatory">*</span>'%>
-<%= text_string this, 'rr', :col=>2, :label=>'Resp Rate <span class="mandatory">*</span>'%>
-<%= text_string this, 'o2sat', :col=>2, :label=>'O2Sat <span class="mandatory">*</span>'%>
+<%= text_string this, 'sbp', :col=>3, :label=>'SBP'%>
+<%= text_string this, 'dbp', :col=>3, :label=>'DBP'%>
+<%= text_string this, 'pr', :col=>2, :label=>'Heart Rate'%>
+<%= text_string this, 'rr', :col=>2, :label=>'Resp Rate'%>
+<%= text_string this, 'o2sat', :col=>2, :label=>'O2Sat'%>
 <%= select_string this, 'gcs_e', :col=>2, :label=>'E', :value=>%w{1 2 3 4}%>
 <%= select_string this, 'gcs_v', :col=>2, :label=>'V' , :value=>%w{1 2 3 4 5 T}%>
 <%= select_string this, 'gcs_m', :col=>2, :label=>'M' , :value=>%w{1 2 3 4 5 6}%>
-<%= text_string this, 'temp', :col=>2, :label=>'BT <span class="mandatory">*</span>'%>
-<%= text_string this, 'dtx', :col=>2, :label=>'DTX <span class="mandatory">*</span>'%>
+<%= text_string this, 'temp', :col=>2, :label=>'BT'%>
+<%= text_string this, 'dtx', :col=>2, :label=>'DTX'%>
 <div class="col-12"><br></div>
 
-<!-- <%= text_string this, 'temp_re', :col=>4, :label=>'Repeat Body Temperature <span class="mandatory">*</span>'%>
-<%= text_string this, 'sbp_re', :col=>4, :label=>'Repeat SBP <span class="mandatory">*</span>'%>
-<%= text_string this, 'dbp_re', :col=>4, :label=>'Repeat DBP <span class="mandatory">*</span>'%>
-<%= text_string this, 'pr_re', :col=>4, :label=>'Repeat Pulse Rate <span class="mandatory">*</span>'%>
-<%= text_string this, 'rr_re', :col=>4, :label=>'Repeat Respiratory Rate <span class="mandatory">*</span>'%>
-<%= text_string this, 'o2sat_re', :col=>4, :label=>'Repeat O2Sat <span class="mandatory">*</span>'%>
-<%= text_string this, 'dtx_re', :col=>4, :label=>'Repeat DTX <span class="mandatory">*</span>'%>
+<!-- <%= text_string this, 'temp_re', :col=>4, :label=>'Repeat Body Temperature'%>
+<%= text_string this, 'sbp_re', :col=>4, :label=>'Repeat SBP'%>
+<%= text_string this, 'dbp_re', :col=>4, :label=>'Repeat DBP'%>
+<%= text_string this, 'pr_re', :col=>4, :label=>'Repeat Pulse Rate'%>
+<%= text_string this, 'rr_re', :col=>4, :label=>'Repeat Respiratory Rate'%>
+<%= text_string this, 'o2sat_re', :col=>4, :label=>'Repeat O2Sat'%>
+<%= text_string this, 'dtx_re', :col=>4, :label=>'Repeat DTX'%>
 <div class="col-12"><br></div>
 
 <%= text_string this, 'temp_ed', :col=>4, :label=>'Body Temperature at ED'%>
