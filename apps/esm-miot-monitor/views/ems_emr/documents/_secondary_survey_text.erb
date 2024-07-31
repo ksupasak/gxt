@@ -10,7 +10,8 @@
 %><%
     if r["#{i}_note"] and r["#{i}_note"] != ""
 %>
-<%=i.humanize%> : <%=r["#{i}_note"] %>
+<% if i.humanize == 'Cvs' %>CVS : <%=r["#{i}_note"]%><%else%><%=i.humanize%> : <%=r["#{i}_note"]%>
+<% end %>
 <% end %>
 <% end %>
 
@@ -20,7 +21,9 @@
   for i in list
 %><%
     if r["#{i}"] and r["#{i}"] != ""
-%><%=i.humanize%> : <%=r["#{i}"]%>
+%>
+<% if i.humanize == "History note" %>Past History : <%=r["#{i}"]%> <%elsif i.humanize == "Intake note" %>Last Oral Intake : <%=r["#{i}"]%> <%else%><%=i.humanize%> : <%=r["#{i}"]%>
+<% end %>
 <% end %>
 <% end %>
 <% elsif  mode=='text'  and query=='3' %>
