@@ -224,19 +224,24 @@ end
 
 	list = []
 
-	for it in bin.keys.sort
-	t = bin[it][:t]
-	line = []
-	for i in bin[it][:list]
-	  type =i[0]
-	  des = i[1].strip
-		line << ": #{des}"
-		line << "\n\t\t\t    " if i[2] and i[2]=='emr'
-	end
-
+for it in bin.keys.sort
+ t = bin[it][:t]
+ line = []
+ for i in bin[it][:list]
+	type =i[0]
+	des = i[1].strip
+	line << ": #{des}"
+	#####line << "\n\t\t\t    " if i[2] and i[2]=='emr'
+ end
+ 	if line[0] == ': [Primary Survey]' || line[0] == ': [Secondary Survey]' 
+	line.shift();
+		if line.length >= 1
+			list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
+		end
+	else	
 	list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
-
 	end
+end
 
 	map["progress_note"] = list.join("\n")
 
