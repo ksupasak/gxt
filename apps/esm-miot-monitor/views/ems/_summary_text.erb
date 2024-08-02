@@ -9,7 +9,7 @@ patient = admit.patient
 age = ''
 sex = ''
 traumaStatus = ''
-diagnosis = ''
+
 location = ''
 
 if ems_case.patient_age == ''
@@ -26,11 +26,6 @@ elsif ems_case.patient_gender == 'F'
 	sex = 'หญิง'
 end
 
-if ems_case.patient_underlying == ''
-	diagnosis = 'Do not have'
-else
-	diagnosis = ems_case.patient_underlying
-end
 
 if request.post?
 
@@ -150,7 +145,7 @@ Treatment :
 
 @transfer
 
-Diagnosis : #{diagnosis}
+Diagnosis : 
 @diagnosis 
 
 ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
@@ -229,26 +224,31 @@ end
 
 	list = []
 
-	for it in bin.keys.sort
-	t = bin[it][:t]
-	line = []
-	for i in bin[it][:list]
-	  type =i[0]
-	  des = i[1].strip
-		line << ": #{des}"
-		line << "\n\t\t\t    " if i[2] and i[2]=='emr'
-	end
-
+for it in bin.keys.sort
+ t = bin[it][:t]
+ line = []
+ for i in bin[it][:list]
+	type =i[0]
+	des = i[1].strip
+	line << ": #{des}"
+	#####line << "\n\t\t\t    " if i[2] and i[2]=='emr'
+ end
+ 	if line[0] == ': [Primary Survey]' || line[0] == ': [Secondary Survey]' 
+	line.shift();
+		if line.length >= 1
+			list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
+		end
+	else	
 	list << "[#{t.strftime("%H:%M") } น.] #{line.join(" ")}"
-
 	end
+end
 
 	map["progress_note"] = list.join("\n")
 
 	####################### transfer # NOTE:
 
 if ems_case.transfer_hospital == nil
-		map["transfer"] = "รพ.ปลายทาง : Do not have"
+		map["transfer"] = "รพ.ปลายทาง : "
 else
 		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
 end

@@ -381,8 +381,7 @@ end
 								</table>
 
 
-								<a href="<%=get_path "send_message?id=#{cm.id}" %>" id="send-msg-<%=cm.id%>" class="btn btn-success btn-sm" data-remote="true"  data-remote-update="c<%=cm.id%>">ส่งคำสั่ง Line</a>
-								<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
+									<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
 									Transfer
 								</a>
 
