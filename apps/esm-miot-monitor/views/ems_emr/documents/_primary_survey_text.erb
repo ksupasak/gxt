@@ -82,6 +82,7 @@ E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_not
 <%
 list = %w{ sbp pr o2sat temp rr dtx }
   rs = []
+  test = []
    for j in list
    
    i = "vs_"+j
@@ -96,8 +97,10 @@ list = %w{ sbp pr o2sat temp rr dtx }
 		j = "bp"
   end	
 	
-	rs << "#{j.upcase} : #{v}"
-		
+  if v != ""
+   rs << "#{j.upcase} : #{v} "
+  end  
+	
 %><% end %><% end %>VS first : <%=rs.join(", ")%>
 <% elsif query=='2' %>
 <%
