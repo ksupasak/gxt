@@ -51,8 +51,11 @@ R : <%=r['response'].classify %>
         amu_res << "#{amu_label[ix].humanize}"
       end
     end
+    if amu_res == []
     amu_text = "no accessory muscle use"
+    else
     amu_text = "accessory muscle use at #{ amu_res.join(", ")}"
+    end
 
 %>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%>, <%=amu_text%><% end %>
 <%
@@ -97,7 +100,7 @@ list = %w{ sbp pr o2sat temp rr dtx }
 		j = "bp"
   end	
 	
-  if v != ""
+  if v != "" && v != "-" && v!= " " && v != "/"
    rs << "#{j.upcase} : #{v} "
   end  
 	
