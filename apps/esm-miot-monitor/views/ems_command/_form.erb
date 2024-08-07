@@ -123,14 +123,14 @@
 
 																		<div class="row provider-list" style="height:30em;overflow:scroll">
 																		<% for i in providers %>
-
-																		<div class="col-4 search-provider " id="provider-<%=i.id%>">
-																		<div class="chip chip-md chip-select  " provider_id="<%=i.id%>" >
-																			<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person">
-																			<%=i.code%> : <%=i.get_name%>
-																		</div>
-																		</div>
-
+						  													<% if i.code !='' || i.get_name != ' ' %>
+																			<div class="col-4 search-provider " id="provider-<%=i.id%>">
+																			<div class="chip chip-md chip-select  " provider_id="<%=i.id%>" >
+																				<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person">
+																				<%=i.code%> : <%=i.get_name%>
+																			</div>
+																			</div>
+																			<% end %>
 																		<% end %>
 																		</div>
 																	</div>
