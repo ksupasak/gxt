@@ -18,13 +18,13 @@ CMS_SOLUTION = path1[1]
 end
 
 CMS_PATH = "ws/#{CMS_SOLUTION}/Home/index"
-CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+CMS_URI = URI("https://#{CMS_IP}/ws/#{CMS_PATH}")
 
 module MIOT
 
 def self.connect 
   
-  connect_url = "wss://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}"
+  connect_url = "wss://#{CMS_IP}/ws/#{CMS_PATH}"
   puts connect_url
   loop do 
   begin
@@ -48,8 +48,7 @@ def self.post_config
   
   puts "========================= MIOT Configure ======================="
   puts "CMS IP #{CMS_IP}"
-  puts "CMS PORT #{CMS_PORT}"
-  puts "CMS URI #{CMS_URI}"
+  puts "CMS PATH #{CMS_PATH}"
   puts "IP #{HOST_IP}"
   puts "GW #{HOST_NETWORK}"
   puts "BOARDCAST #{HOST_NETWORK_BOARDCAST}"

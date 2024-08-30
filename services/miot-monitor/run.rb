@@ -51,7 +51,7 @@ end
 select_monitor = ARGV[2]
 
 
-CMS_URI = URI("https://#{CMS_IP}:#{CMS_PORT}/#{CMS_PATH}")
+CMS_URI = URI("wss://#{CMS_IP}/ws/#{CMS_PATH}")
 MIOT::post_config
 
 $global_position = ""

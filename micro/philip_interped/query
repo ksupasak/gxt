@@ -1,0 +1,56 @@
+/esm_image/2015/snap?field_id=F6922889284&p_id=618&path=esm/bnh/endo/1234-sd-dff/colonoscopy/2024-07-16-669626d1790f9b1481000003/images&ref=1234-sd-dff&ref_2=Colonoscopy&ssid=742809825642&snapcount=1
+/esm_image/657/snap?field_id=F8377840798&p_id=397 &path=esm/nci/endo/16705359/gastroscopy/2024-07-16-66962728894d5938ed00000e/image&ref=16705359                          &ssid=742810303260&snapcount=1
+
+
+
+ db.www.patient_module.aggregate([
+ {	
+ $match: {
+      module_name: "rrt#appointment" // Condition to filter records
+    }
+ 
+ } ,
+ {
+     $lookup: {
+       from: "www.patient",
+       localField: "patient_id",
+       foreignField: "_id",
+       as: "foreignDataInfo"
+     }
+   },
+   {
+     $match: {
+       foreignDataInfo: { $eq: [] }
+     }
+   },
+   
+   {
+   	$project: {
+		_id:1,
+		patient_id:1,
+		module_name:1,
+		created_at:1
+	}
+   
+   }
+   
+   
+ ]);
+ 
+ 
+ 
+
+ db.www.patient_module.find({"parent_id":ObjectId("66065c98e13823435c0000a5")})
+ 
+ db.www.patient_module.find({"module_id":ObjectId("66972542e1382343a7000296")})
+ 
+ # find sub record with many as old 
+ db.www.patient_module.find({"parent_id":ObjectId("66065c98e13823435c0000a5")})
+ 
+ 
+ # update the records 
+ 
+ db.www.patient_module.updateMany(
+   { "parent_id":ObjectId("66065c98e13823435c0000a5")},
+   { $set: { "patient_id": ObjectId("66972514e1382343a7000278"), "parent_id":ObjectId("66972542e1382343a7000296") } } 
+ )

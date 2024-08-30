@@ -8,6 +8,8 @@ require 'eventmachine'
 
 def connect solution, host, port
   connect_url = "wss://#{host}:#{port}/ws/#{solution}/Home/index"
+  connect_url = "wss://#{host}/ws/#{solution}/Home/index"
+  
   puts connect_url
   WebSocket::Client::Simple.connect connect_url
 end
@@ -56,7 +58,7 @@ ws.on :close do |e|
   exit 1
 end
 
-ws.on :error do |e|d
+ws.on :error do |e|
   p "ERROR #{e}"
    puts 'will retry connect ..'
    sleep 1
