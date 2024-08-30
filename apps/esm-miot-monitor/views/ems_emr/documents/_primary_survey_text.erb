@@ -56,8 +56,12 @@ R : <%=r['response'].classify %>
     else
     amu_text = "accessory muscle use at #{ amu_res.join(", ")}"
     end
-
-%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%>, <%=amu_text%><% end %>
+   
+     if r['palpation_subcutaneous'] != nil && r['palpation_subcutaneous'] != "No"
+      palpation_subcutaneous = "Subcutaneous emphysema #{ r['palpation_subcutaneous']}"
+     end  
+%>B : <%=r['breath_status'].humanize %>, <%=sounds.join(", ")%> <%=r['breath_special_note']%>, <%=amu_text%> <%=palpation_subcutaneous%>  <%=r['palpation_deformity']%> <%=r['breath_special_note']%>
+<% end %>
 <%
 
     if r['circulation_skin'] and r['circulation_skin'] != ""
@@ -67,7 +71,11 @@ R : <%=r['response'].classify %>
       pulse = "#{r['circulation_pulse'].humanize} peripheral pulse " if r['circulation_pulse']
       capillary = "Capillary #{r['circulation_capillary']}"  
 
-%>C : <%= result  %>, <%=pulse%>, <%=capillary%>
+      if r['circulation_special_note'] != ""
+      circulation_special_note = r['circulation_special_note']
+      end
+
+%>C : <%= result  %>, <%=pulse%>, <%=capillary%> <%=circulation_special_note%>
 <% end %><%
     # E4V5M6 pupil 3 mm RTLBE
     if r['gcs_e'] and r['gcs_e'] != ""
