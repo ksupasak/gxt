@@ -152,6 +152,15 @@ if select_monitor=='unity'
  }
 end
 
+
+
+if select_monitor=='vista_120'
+  puts 'monitor select = unity'
+ threads << Thread.new {
+ Device::monitor_vista_120_v2(ws)
+ }
+end
+
 # threads << Thread.new {
 # Device::monitor_vista_120_v2(ws)
 # }
