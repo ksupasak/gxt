@@ -394,10 +394,10 @@ MSG
        EM.add_periodic_timer(2) do
 
 
-         # puts ""
+         puts "GPS CMS"
 
 
-         if app.settings.apps_rv
+         if app.settings.apps_rv  and false 
 
          for name in app.settings.apps_rv['esm-miot-monitor'].uniq
            switch name, 'esm-miot-monitor'
