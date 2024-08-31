@@ -23,6 +23,8 @@ while true do
   begin
   
   uri = URI("http://#{host}:#{port}/a/monitor/sense")
+  uri = URI("http://#{host}/a/monitor/sense")
+
   stamp = Time.now.to_json
   
   data = {}

@@ -24,6 +24,9 @@ while true do
   begin
   
   uri = URI("http://#{host}:#{port}/miot/Sense/sense")
+  uri = URI("http://#{host}/miot/Sense/sense")
+
+
   now = Time.now
   stamp = now.to_json
   
