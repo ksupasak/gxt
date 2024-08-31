@@ -34,7 +34,7 @@ CMS_PATH = "ws/#{CMS_SOLUTION}/Home/index"
 
 CMS_HOST_PORT = "#{CMS_HOST}#{':'+port if port}"
 
-CMS_URI = URI("wss://#{CMS_HOST_PORT}/#{CMS_PATH}")
+CMS_URI = "wss://#{CMS_HOST_PORT}/#{CMS_PATH}"
 
   
 # path1 = ARGV[0].split("/")
