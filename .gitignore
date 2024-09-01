@@ -7,3 +7,4 @@ log/access.log
 log/nginx.pid
 Gemfile copy.lock
 micro/tempus/out.txt
+public/.well-known/
