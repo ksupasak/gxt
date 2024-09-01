@@ -1,113 +1,121 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<%=inline(this,:'../share/_essential')%>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Login Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Vanta.js and three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    	<%=inline(this,:'../share/_essential')%>
 </head>
-<body>
-<style>
-	@media (min-width: 992px){
-		.lgfs{
-			font-size:18px;
-		}
-	}
-	@media (min-width: 100px) and (max-width: 992px){
-		.lgfs{
-			font-size:4vw;
-			padding:50px;
-		}
-		.lgbt{
-			font-size:4vw;
-			padding:30px;
-		}
-	}
-	.center {
-	  margin: auto;
-	  width: 30%;
-	  min-width:300px;
-/*	  border: 1px solid #1e6dfB;*/
-	  padding: 10px;
-	}
-	</style>
-	<link rel="stylesheet" type="text/css" href="<%=url_for "PatternLock/_style/patternlock.css"%>"/>
-	
-<!--<div class="center">-->
-<div class="container d-flex align-items-center justify-content-center mt-5" >
-<div class="col-12 col-md-12 col-lg-6 mt-5 lgfs">
-<center><h3 class="header display-4"><img src="/miot/img/svg/aoc-icon.svg" width="40"><span style="font-size:0.8em"> <%=Setting.get :default_center_name %></spsn></h3></center>
+<body id="body" class="d-flex align-items-center justify-content-center" style="margin:0; padding:0; height: 100vh;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+            <center>
+            <img src="https://localhost:1792/miot/img/ems/ems-icon-w.png" width="50%">
+            </center>
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h2 class="card-title text-center">
+                        <%=Setting.get :default_center_name %>
+                        
+                        </h2>
+                      	
+                        <form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
+                    		<input type="hidden" class="form-control" id="record_id" name="id" value="<%=params[:id]%>" placeholder="Password">
+                        <div class="login-panel">	
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input name="login" type="text" id="username" class="form-control" placeholder="Enter username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input name="password" type="password" id="password" class="form-control" placeholder="Enter password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button> <a href="#" class="patternlock-toggle"> Login with Pattern </a>
+                        </div>
+                        
+                    		<div class="patternlock-panel">
+                    		<center>
+                    			<div class="col-12" >
+                    			<input type="password" name="pattern_password" class="patternlock">
+                    			<!-- <input type="reset" value="reset" > -->
 
-	<form action="login" method="post" enctype="multipart/form-data" style="width:100%;border:0px solid">
+                    			</div>
+                    		</center>
+                    		<br/>
+                    		<input type="submit" value="login" style="display: none;">
 
-		<input type="hidden" class="form-control" id="record_id" name="id" value="<%=params[:id]%>" placeholder="Password">
+                    		<%#link_to 'Back', "index" %> 
+                    		<a href="#" class="patternlock-toggle"> Login with User </a>
+                            
+                        </form>
+                        
+                        
+                      
+                        
+                    </div>
+                </div>
+                
+                <hr/>
+                <center style="font-size:0.8em; color:gray">Copyright 2024 by E.S.M.Solution Co.,Ltd.</center>
+            </div>
+        </div>
+    </div>
+  
+    <!-- Vanta.js Initialization -->
+    <script>
+        VANTA.WAVES({
+            el: "#body",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 800,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x3b4d4c,
+            waveHeight: 20.50
+        })
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
 
-		<div class="login-panel">	
-			<div class="form-group">
-			<label for="product-name">Login</label>
+    <script>
+    	$('.patternlock-toggle').click(function(){
+    		$('.patternlock-panel').toggle();
+    		$('.login-panel').toggle();
+    	});
+    	<% if @login_mode=='pattern' %>
+    	$('.login-panel').toggle();
+    	<% else %>
+    	$('.patternlock-panel').toggle();
+    	<% end %>
 
-				<input type="text" class="form-control lgfs" id="login" name="login" value="" placeholder="User ID or email">
-				
-
-			</div>
-
-			<div class="form-group">
-				<label for="product-name">Password Confirmation</label>
-				<div class="input-group mb-3">
-					<input type="password" class="form-control lgfs" id="password" name="password" value="" placeholder="Password">
-					<button class="btn btn-outline-secondary" type="button" id="btn-pass"><i class="fas fa-eye" id="i-pass"></i></button>
-				</div>
-
-			</div>
-
-			<button type="submit" class="btn btn-primary lgbt">Submit</button> 
-		<%#link_to 'Back', "index" %>
-			<a href="#" class="patternlock-toggle"> Login with Pattern </a>
-
-		</div>
-
-
-		<div class="patternlock-panel">
-		<center>
-			<div class="col-12" >
-			<input type="password" name="pattern_password" class="patternlock">
-			<!-- <input type="reset" value="reset" > -->
-
-			</div>
-		</center>
-		<br/>
-		<input type="submit" value="login" style="display: none;">
-
-		<%#link_to 'Back', "index" %> 
-		<a href="#" class="patternlock-toggle"> Login with User </a>
-		</div>
-
-	</form>
-
-</div>
-</div>
-
-<script>
-	$('.patternlock-toggle').click(function(){
-		$('.patternlock-panel').toggle();
-		$('.login-panel').toggle();
-	});
-	<% if @login_mode=='pattern' %>
-	$('.login-panel').toggle();
-	<% else %>
-	$('.patternlock-panel').toggle();
-	<% end %>
-
-	$(document).ready(function(){
-		$("#btn-pass").click(function(){
-			t = $("#password").attr('type')
-			i = $("#i-pass")
-			$("#password").attr('type',(t=='password')?"text":"password")
-			if(i.hasClass("fa-eye")){
-				i.removeClass("fa-eye").addClass("fa-eye-slash")
-			}else{
-				i.removeClass("fa-eye-slash").addClass("fa-eye")
-			}
-		})
-	})
-</script>
-	<script src="<%=url_for "PatternLock/_script/patternlock.js"%>"></script>
-	<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+    	$(document).ready(function(){
+    		$("#btn-pass").click(function(){
+    			t = $("#password").attr('type')
+    			i = $("#i-pass")
+    			$("#password").attr('type',(t=='password')?"text":"password")
+    			if(i.hasClass("fa-eye")){
+    				i.removeClass("fa-eye").addClass("fa-eye-slash")
+    			}else{
+    				i.removeClass("fa-eye-slash").addClass("fa-eye")
+    			}
+    		})
+    	})
+    </script>
+    	<script src="<%=url_for "PatternLock/_script/patternlock.js"%>"></script>
+    	<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 </body>
 </html>
+
