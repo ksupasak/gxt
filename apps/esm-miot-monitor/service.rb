@@ -1799,17 +1799,31 @@ MSG
                     active_zone[app.settings.name] = {}
 
 
-                    if admit = Admit.where(:status=>'Admitted', :zone_id=>{'$ne'=>nil}).first
-
-                      zone = admit.zone
+                    # if admit = Admit.where(:status=>'Admitted', :zone_id=>{'$ne'=>nil}).first
+      #
+      #                 zone = admit.zone
+      #
+      #               if zone
+      #                 active_zone[app.settings.name][zone.id] = zone
+      #                 app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
+      #
+      #               end
+      #
+      #               end
+      
+      
+                    for zone in Zone.all 
+                        
+                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems'
+                         
+                         active_zone[app.settings.name][zone.id] = zone
+                         app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
+                       
+                        end
+                        
                       
-                    if zone
-                      active_zone[app.settings.name][zone.id] = zone
-                      app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
-
                     end
-
-                    end
+                      
 
                     for s in Station.all
 
@@ -1872,7 +1886,7 @@ MSG
                                                   
                                                   v = vl[-1]
                                                   
-                                                  if last == nil or last['time']!=v['time']
+                                                  if last == nil or (v and last['time']!=v['time'])
                                                   
                                                     i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
                                                     ambu_status[i.id.to_s] = v
