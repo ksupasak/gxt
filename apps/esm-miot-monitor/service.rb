@@ -49,6 +49,7 @@ def self.registered(app)
      settings.set :emd_map, {}
 
 
+     settings.set :position_list, {}
 
 
 
@@ -987,6 +988,7 @@ MSG
        switch name, 'esm-miot-monitor'
        redis = settings.redis
 
+       
 
        # forward to redis
        # redis.publish("miot/#{@context.settings.name}/in", msg_data)
@@ -1018,32 +1020,51 @@ MSG
 
 
 
-
+         settings.position_list[name] = {} unless settings.position_list[name]
          settings.ambu_status[name] = {} unless settings.ambu_status[name]
+
          ambu_status = settings.ambu_status[name]
 
 
-         json = JSON.parse(body)
-         obj = json['data']
+         sender = headers[1].split("=")[-1]
 
-           if obj['device_type']=='mobile'
-
-            puts "GPS #{obj.inspect}"
-
-            ambu = Ambulance.where(:device_no=>obj["device_no"]).first if obj["device_no"]
-            ambu = Ambulance.where(:name=>json["receiver"]).first unless ambu
+          
+          
+         puts "GPS Sender : #{sender}"
+          
+            settings.position_list[name][sender] = [] unless settings.position_list[name][sender]
+            json = JSON.parse(body)
+            obj = json['data']
+            settings.position_list[name][sender] << obj
+           
             
+            puts settings.position_list[name][sender].inspect
             
+            if settings.position_list[name][sender].size > 20
               
-            if ambu
-              
-              ambu_status[ambu.id.to_s] = obj
-              
-              puts ambu_status.inspect 
-              
+              settings.position_list[name][sender] = []
             end
+           
+             
 
-           end
+           # if obj['device_type']=='mobile'
+           #
+           #  puts "GPS #{obj.inspect}"
+           #
+           #  ambu = Ambulance.where(:device_no=>obj["device_no"]).first if obj["device_no"]
+           #  ambu = Ambulance.where(:name=>json["receiver"]).first unless ambu
+           #
+           #
+           #
+           #  if ambu
+           #
+           #    ambu_status[ambu.id.to_s] = obj
+           #
+           #    puts ambu_status.inspect
+           #
+           #  end
+           #
+           # end
 
 
 
@@ -1679,6 +1700,7 @@ MSG
       active_zone = {}
       active_list = {}
       senses_queue = {}
+      position_list = {}
 
       ambu_map = {}
       admit_map = {}
@@ -1721,6 +1743,7 @@ MSG
             active_list[app.settings.name] = {} unless active_list[app.settings.name]
             active_zone[app.settings.name] = {} unless active_zone[app.settings.name]
             senses_queue[app.settings.name] = [] unless senses_queue[app.settings.name]
+            # position_list[app.settings.name] = {} unless position_list[app.settings.name]
 
               # puts "#{name} station = #{app.settings.stations[name]==nil} sense = #{app.settings.stations[name]==nil}"
               #
@@ -1730,9 +1753,12 @@ MSG
               #   puts active_zone.inspect
               #   puts
               # end
+              
+              ambu_status = app.settings.ambu_status[name]
+              position_list = app.settings.position_list[name]
 
 
-              if  app.settings.apps_ws[app.settings.name] #and app.settings.stations[name] and app.settings.senses[name]
+              if  true || app.settings.apps_ws[app.settings.name] #and app.settings.stations[name] and app.settings.senses[name]
 
 
 
@@ -1832,17 +1858,29 @@ MSG
 
                                             if list = Ambulance.where(:zone_id=>z.id).all and list.size > 0
 
-                                              ambu_status = app.settings.ambu_status[name]
+                                              
 
                                               if ambu_status
 
                                               for i in list
 
-                                                if v = ambu_status[i.id.to_s]
+                                                last =  ambu_status[i.id.to_s]
 
-                                                  puts v.inspect
-
-                                                  i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+                                                if  vl = position_list[i.device_no]    # v = ambu_status[i.id.to_s]
+                                                  
+                                                  puts vl.inspect
+                                                  
+                                                  v = vl[-1]
+                                                  
+                                                  if last == nil or last['time']!=v['time']
+                                                  
+                                                    i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+                                                    ambu_status[i.id.to_s] = v
+                                                    
+                                                    position_list[i.device_no] = []
+                                                   
+                                                  end
+                                                  
 
                                                 end
 
