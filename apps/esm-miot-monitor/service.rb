@@ -1038,7 +1038,7 @@ MSG
             settings.position_list[name][sender] << obj
            
             
-            # puts settings.position_list[name][sender].inspect
+            puts settings.position_list[name][sender].inspect
             
             if settings.position_list[name][sender].size > 20
               
