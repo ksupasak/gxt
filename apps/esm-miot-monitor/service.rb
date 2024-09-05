@@ -1883,7 +1883,7 @@ MSG
 
                                               
 
-                                              if ambu_status
+                                              if ambu_status and position_list
 
                                               for i in list
 
