@@ -1038,11 +1038,20 @@ MSG
             settings.position_list[name][sender] << obj
            
             
-            puts settings.position_list[name][sender].inspect
+            # puts settings.position_list[name][sender].inspect
             
             if settings.position_list[name][sender].size > 20
               
+              
+              if settings.position_list[name][sender][-1]
+                default_zone = Zone.where(:default=>'true').first
+                if default_zone and Ambulance.where(:device_no=>sender).first == nil 
+                  ambu = Ambulance.create :name=>sender.upcase,  :location_policy=>'APP', :device_no=>sender, :zone_id=> default_zone.id
+                end
+              end
               settings.position_list[name][sender] = []
+              
+              
             end
            
              
@@ -1882,13 +1891,16 @@ MSG
 
                                                 if  vl = position_list[i.device_no]    # v = ambu_status[i.id.to_s]
                                                   
-                                                  puts vl.inspect
+                                                
                                                   
                                                   v = vl[-1]
                                                   
-                                                  if last == nil or (v and last['time']!=v['time'])
+                                                  
+                                                  
+                                                  if v and ( last == nil or last['time']!=v['time']))
                                                   
                                                     i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
+                                                    
                                                     ambu_status[i.id.to_s] = v
                                                     
                                                     position_list[i.device_no] = []
@@ -1982,14 +1994,32 @@ MSG
                                   # admit = l[0] if l.size==1
                                   #
                                   # am[:admit_id] = admit.id if admit
-
-                                  if ambu_status and v = ambu_status[am.id.to_s]
-
+                                  
+                                  vl = position_list[i.device_no] 
+                                   
+                                  last =  ambu_status[i.id.to_s]
+                                  v = nil
+                                  
+                                  v = vl[-1] if vl and vl.size > 0 
+                                  
+                                  # puts 'xxxxx'
+   #                                puts ambu_status
+   #                                puts vl.size if vl
+   #                                puts v
+   #                                puts last
+   #
+   #                                puts
+                                  if ambu_status and v and ( last == nil or  last['ts']!=v['ts'] )
+                                      
+                                      
+                                      
                                       am.last_location = "#{v['lat']},#{v['lng']}"
 
-                                      puts "Location #{am.name} #{am.last_location}"
+                                      # puts "Location #{am.name} #{am.last_location}"
 
-                                      ambu_status.delete am.id.to_s
+                                      # ambu_status.delete am.id.to_s
+                                      
+                                      ambu_status[am.id.to_s] = v
 
                                   end
 
