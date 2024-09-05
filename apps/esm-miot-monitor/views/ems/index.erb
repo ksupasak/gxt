@@ -364,7 +364,32 @@
 			
 			if i.last_location and i.last_location!="" and i.last_location.index(",")
 			%>
-		
+      <%
+            
+            device = EMSDevice.where(:name=>i.device_no).first
+            if device
+              
+            logs =  EMSDeviceLog.where(:device_id=>device.id).order_by(_id: :desc).limit(20)
+            
+            for log in logs 
+      %>
+            points = <%=log.data.to_json%>
+            
+            for (var i = 0; i < points.length - 1; i++) {
+                 var color = getColorForSpeed(points[i].speed);
+                 var pathSegment = new google.maps.Polyline({
+                   path: [points[i], points[i + 1]],
+                   geodesic: true,
+                   strokeColor: color,
+                   strokeOpacity: 1.0,
+                   strokeWeight: 4,
+                   map: local_map
+                 });
+               }
+            
+      <% end %>  
+      
+      <% end %>
 		    latlng.push(new google.maps.LatLng(<%=i.last_location%>))
 			 <% end %>
 			 <% end %>
@@ -445,7 +470,12 @@
 
 		
 		setMapInitCallback(beforeInit,afterInit);
-	
+    
+    function getColorForSpeed(speed) {
+          if (speed < 20) return 'green';  // Slow speed
+          if (speed < 40) return 'yellow'; // Moderate speed
+          return 'blue';                    // High speed
+        }
 	
 		function update(lines){
 
@@ -494,7 +524,7 @@
 
 				var image = "<%=url_for("ems/ambu.png")%>";
 
-
+    
 
 				if(marker==null){
 
@@ -511,7 +541,22 @@
 
 				}else{
 						marker_map = 	ambu_map[a['_id']]
+            
+            var color = getColorForSpeed(60);
+            var pathSegment = new google.maps.Polyline({
+              path: [pos, marker_map.getPosition()],
+              geodesic: true,
+              strokeColor: color,
+              strokeOpacity: 1.0,
+              strokeWeight: 4,
+              map: local_map
+            });
+            
+            
+            
 						marker_map.setPosition(pos)
+            
+            
 						// console.log('set')
 
 				}

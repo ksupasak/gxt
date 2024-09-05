@@ -52,7 +52,8 @@ def self.registered(app)
      settings.set :position_list, {}
 
 
-
+    
+     
      data = 0
 
 
@@ -947,7 +948,7 @@ MSG
 
      elsif mode=='service'
 
-       puts "Start MIOT Solution : Service"
+    
 
      EM.next_tick do
 
@@ -1042,14 +1043,22 @@ MSG
             
             if settings.position_list[name][sender].size > 20
               
+              last = settings.position_list[name][sender][-1]
               
-              if settings.position_list[name][sender][-1]
-                default_zone = Zone.where(:default=>'true').first
-                if default_zone and Ambulance.where(:device_no=>sender).first == nil 
+                          
+              default_zone = Zone.where(:default=>'true').first
+              if default_zone and Ambulance.where(:device_no=>sender).first == nil 
                   ambu = Ambulance.create :name=>sender.upcase,  :location_policy=>'APP', :device_no=>sender, :zone_id=> default_zone.id
-                end
               end
-              settings.position_list[name][sender] = []
+                
+              device = EMSDevice.where(:name=>sender).first
+              
+              device = EMSDevice.create(:name=>sender, :type=>last['type']) unless device
+              
+              device_log = EMSDeviceLog.create :device_id=>device.id, :data=> settings.position_list[name][sender][0..-2]
+              
+              
+              settings.position_list[name][sender] = [last]
               
               
             end

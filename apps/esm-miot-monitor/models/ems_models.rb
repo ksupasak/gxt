@@ -858,6 +858,30 @@ class EMSProtocol < GXTModel
   
 end
 
+
+class EMSDevice < GXTModel
+  
+  include Mongoid::Document
+
+  key :name, String # device number
+  key :type, String
+  key :title, String
+  
+  
+end
+
+class EMSDeviceLog < GXTModel
+  
+  include Mongoid::Document
+
+  key :device_id, ObjectId
+  key :data, Object 
+   
+   
+end
+
+
+
 class EMSGXT < GXT
   
   def acl
@@ -1130,6 +1154,14 @@ class EMSPatientStatusController < EMSGXTDocument
 end
 
 class EMSPatientStatusItemController < EMSGXTDocument
+end
+
+class EMSDeviceController < EMSGXTDocument
+
+end
+
+class EMSDeviceLogController < EMSGXTDocument
+
 end
 
 
