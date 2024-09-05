@@ -1976,7 +1976,7 @@ MSG
 
                   if z.mode == 'aoc' || z.mode == 'ems'
 
-                          if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0
+                          if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0 and position_list
 
                             result[:ambu_data] = {}
 
