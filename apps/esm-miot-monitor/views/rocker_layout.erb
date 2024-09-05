@@ -39,7 +39,10 @@
 	<script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
 
 <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
+<% begin %>
 		<%= inline(this,:'../lib/_ems')  %>
+    <% rescue Exception=>e %>
+    <% end %>
 	<link href="<%=url_for 'css/ems.css'%>" rel="stylesheet">
 
 

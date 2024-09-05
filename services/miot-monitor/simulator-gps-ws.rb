@@ -91,6 +91,32 @@ begin
 
 
 
+  def random_gps_movement(lat, lon, radius_in_meters = 50)
+    # Earth radius in meters
+    earth_radius = 6_371_000.0
+
+    # Convert radius from meters to radians
+    radius_in_radians = radius_in_meters.to_f / earth_radius
+
+    # Random angle in radians for the direction of movement
+    random_angle = rand(0..2 * Math::PI)
+
+    # Random distance in radians from the start point
+    random_distance = rand(0..radius_in_radians)
+
+    # Calculate new latitude and longitude using haversine formula
+    new_lat = Math.asin(Math.sin(lat * Math::PI / 180) * Math.cos(random_distance) +
+                Math.cos(lat * Math::PI / 180) * Math.sin(random_distance) * Math.cos(random_angle))
+    new_lon = lon * Math::PI / 180 + Math.atan2(Math.sin(random_angle) * Math.sin(random_distance) * Math.cos(lat * Math::PI / 180),
+                                      Math.cos(random_distance) - Math.sin(lat * Math::PI / 180) * Math.sin(new_lat))
+
+    # Convert radians back to degrees
+    new_lat_deg = new_lat * 180 / Math::PI
+    new_lon_deg = new_lon * 180 / Math::PI
+
+    return { :lat => new_lat_deg, :lng => new_lon_deg }
+  end
+
 
 # bind_event ws
 
@@ -114,8 +140,19 @@ EventMachine.run {
        data = {:device_no=>d[:device_no]}
        data[:type] = 'gps'
        data[:ts] = Time.now.to_i
-       data[:lat] = 13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
-       data[:lng] = 100.6987491+r*Math.sin((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+       
+       # data[:lat] = 13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+#        data[:lng] = 100.6987491+r*Math.sin((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+# =>  
+
+      
+       e = random_gps_movement(d[:lat] ,  d[:lng], 50)
+       d[:lat] = e[:lat]  #13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+       d[:lng] = e[:lng]
+       data[:lat] = d[:lat]
+       data[:lng] = d[:lng]
+       
+       
        d[:sender] =  d[:device_no]
        d[:stamp] = Time.now 
        d[:data] = data
