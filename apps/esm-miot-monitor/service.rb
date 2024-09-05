@@ -1897,7 +1897,7 @@ MSG
                                                   
                                                   
                                                   
-                                                  if v and ( last == nil or last['time']!=v['time']))
+                                                  if v and ( last == nil or last['time']!=v['time'])
                                                   
                                                     i.update_attributes :last_location=>"#{v['lat']},#{v['lng']}"
                                                     
