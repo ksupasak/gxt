@@ -1912,7 +1912,7 @@ MSG
                                                     
                                                     ambu_status[i.id.to_s] = v
                                                     
-                                                    position_list[i.device_no] = []
+                                                    # position_list[i.device_no] = []
                                                    
                                                   end
                                                   
