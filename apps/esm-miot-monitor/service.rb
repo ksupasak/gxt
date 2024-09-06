@@ -1041,7 +1041,7 @@ MSG
             
             puts settings.position_list[name][sender].inspect
             
-            if settings.position_list[name][sender].size > 3
+            if settings.position_list[name][sender].size > 20
               
               puts 'reset'
               
