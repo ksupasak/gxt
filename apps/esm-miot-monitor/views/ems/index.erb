@@ -376,7 +376,7 @@
             points = <%=log.data.to_json%>
             
             for (var i = 0; i < points.length - 1; i++) {
-                 var color = getColorForSpeed(points[i].speed);
+                 var color = getColorForSpeed(points[i].spd);
                  var pathSegment = new google.maps.Polyline({
                    path: [points[i], points[i + 1]],
                    geodesic: true,
@@ -472,9 +472,20 @@
 		setMapInitCallback(beforeInit,afterInit);
     
     function getColorForSpeed(speed) {
-          if (speed < 20) return 'green';  // Slow speed
-          if (speed < 40) return 'yellow'; // Moderate speed
-          return 'blue';                    // High speed
+            
+            
+       // Calculate the gradient color (green to red)
+       const maxSpeed = 40;  // Max speed for the gradient
+       const percentage = speed / maxSpeed;
+        
+        // Convert the percentage to a color (green to red)
+        const red = Math.min(255, Math.floor(percentage * 255));
+        const green = Math.min(255, Math.floor((1 - percentage) * 255));
+        
+        const color = `rgb(${red}, ${green}, 0)`;  
+            
+            
+          return color;                    // High speed
         }
 	
 		function update(lines){
