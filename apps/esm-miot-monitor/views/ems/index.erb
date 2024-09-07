@@ -373,9 +373,9 @@
               
             logs =  EMSDeviceLog.where(:device_id=>device.id).order_by(_id: :desc).limit(20)
             
-            for log in logs 
+            for log in logs.reverse 
                 
-              points += log.data.reverse
+              points += log.data
               
             end
       %>
