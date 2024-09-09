@@ -74,7 +74,7 @@
 
 
 <% fieldset(:record) do |f| %>
-<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form-#{record.id}")  %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"emr#{record.id}")  %>
 <% end %>
 <br/>
 <div class="">

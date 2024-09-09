@@ -1,6 +1,7 @@
 <% require_relative 'lib'%>
 <%
   @record = record
+  @record_id = record_id
 
   if record['trauma_status'] == nil 
     record['trauma_status'] = 'non-trauma'
