@@ -141,16 +141,17 @@ EventMachine.run {
        data[:type] = 'gps'
        data[:ts] = Time.now.to_i
        
-       # data[:lat] = 13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
-#        data[:lng] = 100.6987491+r*Math.sin((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+       data[:lat] = 13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+       data[:lng] = 100.6987491+r*Math.sin((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+       data[:spd] = 22
 # =>  
 
       
-       e = random_gps_movement(d[:lat] ,  d[:lng], 50)
-       d[:lat] = e[:lat]  #13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
-       d[:lng] = e[:lng]
-       data[:lat] = d[:lat]
-       data[:lng] = d[:lng]
+       # e = random_gps_movement(d[:lat] ,  d[:lng], 50)
+      #  d[:lat] = e[:lat]  #13.6908282+r*Math.cos((Time.now.to_i+(360/(num+1))*(i+1))*Math::PI/180)
+      #  d[:lng] = e[:lng]
+      #  data[:lat] = d[:lat]
+      #  data[:lng] = d[:lng]
        
        
        d[:sender] =  d[:device_no]
