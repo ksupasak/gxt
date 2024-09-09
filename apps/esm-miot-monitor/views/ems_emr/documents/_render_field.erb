@@ -72,7 +72,7 @@ col = options[:col] if options[:col]
 <%
     if options[:value]
 %>
-<input type="show"  name="record[<%=name%>]" class="field data-<%=name%>" value="<%=record[name]%>" id="data-<%=name%>">
+<input type="hidden"  name="record[<%=name%>]" class="field data-<%=name%>" value="<%=record[name]%>" id="data-<%=name%>">
 
 <%
     ls = []
@@ -91,13 +91,14 @@ col = options[:col] if options[:col]
 <%= "</div>" if options[:col_item]%>
 <% end %>
 </div>
-fff
+
 <script>
     $(document).ready(function(){
     
+  console.log("xxx<%=name%>vv <%=record_id%>")
    
     $('#<%=record_id%> .check_<%=name%>').change(function(){
-      
+          console.log("xxx")
         ls = []
         $('#<%=record_id%> .check_<%=name%>').each(function(){
           v = $(this).val()
