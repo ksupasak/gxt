@@ -332,7 +332,7 @@ class HomeController < GXT
 
                obj = eobj['data']
 
-               ambu = Ambulance.where(:name=>eobj['receiver']).first
+               ambu = Ambulance.where(:name=>ambu_name).first
 
                if ambu
                  
