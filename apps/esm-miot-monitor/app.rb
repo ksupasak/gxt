@@ -322,7 +322,7 @@ class HomeController < GXT
                
             elsif cmd == 'PAT'
 
-             
+              puts msg_data
 
                lines = msg_data.split("\n")
                tags = lines[0].split(" ")
@@ -335,7 +335,7 @@ class HomeController < GXT
                ambu = Ambulance.where(:name=>eobj['receiver']).first
 
                if ambu
-                     puts msg_data
+                 
                   ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
 
                   if ems_case
