@@ -371,7 +371,7 @@
               
             points = []
               
-            logs =  EMSDeviceLog.where(:device_id=>device.id).order_by(_id: :desc).limit(20)
+            logs =  EMSDeviceLog.where(:device_id=>device.id).order_by(_id: :desc).limit(100)
             
             for log in logs.reverse 
                 
@@ -392,7 +392,7 @@
                    map: local_map
                  });
                }
-               var color = getColorForSpeed(points[points.length-1].spd);
+               var color = 'red' ;//getColorForSpeed(points[points.length-1].spd);
                
                var pathSegment = new google.maps.Polyline({
                  path: [points[points.length-1], {'lat':<%=i.last_location.split(",")[0]%>,'lng':<%=i.last_location.split(",")[1]%>}],
