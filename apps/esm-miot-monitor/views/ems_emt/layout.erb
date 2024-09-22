@@ -85,5 +85,16 @@
 <!--app JS-->
 <script src="/rocker/assets/js/app.js"></script>
 
-
+<script>
+<% if @current_ambulance %>
+if (typeof device_interface !== "undefined") {
+	device_interface.setParams("vehicle_id", "<%=@current_ambulance.name%>")
+}
+<% end %>
+<% if @current_provider %>
+if (typeof device_interface !== "undefined") {
+	device_interface.setParams("user_id",  "<%=@current_provider.code%>")
+}
+<% end %>
+</script>
 </body></html>
