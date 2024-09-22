@@ -5,4 +5,9 @@ ambu = Ambulance.find(params[:ambu_id])
 session[:current_ambu] = ambu.id
 end
 %>
+<script>
+if (typeof device_interface !== "undefined") {
+	device_interface.setParams("vehicle_id", ambu.name)
+}
+</script>
 <meta http-equiv="Refresh" content="0; url='index'" />
