@@ -256,11 +256,7 @@ MSG
                sleep(5)
                ws = connect(solution, host)
                bind_event ws
-               
-               
-               
-               
-             end
+              
            end
     
    
