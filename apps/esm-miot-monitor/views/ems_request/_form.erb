@@ -571,7 +571,7 @@
 											ambu_list = Ambulance.where(:zone_id=>zone).sort(:name=>1).all
 											for ambu in ambu_list
 									%>
-									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> channel="<%=EMSChannel.where(:name=>ambu.msg_channel).first.id%>"><%=ambu.name %></option>
+									<option value="<%=ambu.id%>" <%='selected' if ambu.id==record.ambulance_id %> channel="<%=EMSChannel.where(:name=>ambu.msg_channel).first.id if ambu.msg_channel and EMSChannel.where(:name=>ambu.msg_channel).first%>"><%=ambu.name %></option>
 									<% end %>
 								</select>
 								<script>
