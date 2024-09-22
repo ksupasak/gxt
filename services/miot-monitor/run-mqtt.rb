@@ -248,7 +248,22 @@ MSG
            puts msg
            puts "send #{Time.now}"
     
-        ws.send(msg)
+    
+           # Check if the connection is open
+             if ws.open?
+                    ws.send(msg)
+             else
+               sleep(5)
+               ws = connect(solution, host)
+               bind_event ws
+               
+               
+               
+               
+             end
+           end
+    
+   
        
        
      end
