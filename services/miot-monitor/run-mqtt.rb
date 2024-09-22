@@ -57,7 +57,6 @@ puts "CLIENT_ID #{CLIENT_ID}"
 devices = []
 r = 0.02
 
-ws = connect(solution, host)
 
 # num.times do |i|
 #   data = {:id=>i}
@@ -111,6 +110,12 @@ while true
 
 
 begin
+  
+  
+
+  ws = connect(solution, host)
+  bind_event ws
+  
 
 #
 #
@@ -140,8 +145,6 @@ begin
 #     return { :lat => new_lat_deg, :lng => new_lon_deg }
 #   end
 
-
-bind_event ws
 
 
 
@@ -273,7 +276,7 @@ MSG
 
 }
 
-
+  sleep(5)
 
 rescue Exception=>e
   puts "Try to connect in 5 seconds due to : #{e}"
