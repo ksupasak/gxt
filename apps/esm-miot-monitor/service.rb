@@ -827,6 +827,21 @@ MSG
 
                               filename = obj['filename']
                               content =   Base64.decode64(obj['file'])
+                              audio_tag = "a#{Time.now.to_i}"
+                              audio_input_path = File.join("tmp","#{audio_tag}.3gp")
+                              audio_output_path = File.join("tmp","#{audio_tag}.mp3")
+                              
+                              audio_input = File.open(audio_input_path, 'w')
+                              audio_input.write content
+                              audio_input.close
+                              
+                              `ffmpeg -i #{audio_input_path} -vn -acodec libmp3lame #{audio_output_path}`
+                              
+                              audio_output = File.open(audio_output_path)
+                              content = audio_output.read()
+                              audio_output.close
+                              
+                              
                               connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
                               grid = Mongo::Grid::FSBucket.new(connection.database)
