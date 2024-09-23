@@ -505,16 +505,8 @@
 	
     function getColorForSpeed(speed) {
             
-            
-       // Calculate the gradient color (green to red)
-       const maxSpeed = 40;  // Max speed for the gradient
-       const percentage = speed / maxSpeed;
-        
-        // Convert the percentage to a color (green to red)
-        const red = Math.min(255, Math.floor(percentage * 255));
-        const green = Math.min(255, Math.floor((1 - percentage) * 255));
-        
-        const color = `rgb(${red}, ${green}, 0)`;  
+          
+        var color = `rgb(${red}, ${green}, 0)`;  
         
         if(speed <96 )color = "green";
         else
