@@ -382,6 +382,9 @@
             points = <%=points.to_json%>
             
             for (var i = 0; i < points.length - 1; i++) {
+                
+              if(Math.abs(points[i].ts-points[i + 1].ts)<10){
+              
                  var color = getColorForSpeed(points[i].spd);
                  var pathSegment = new google.maps.Polyline({
                    path: [points[i], points[i + 1]],
@@ -391,17 +394,20 @@
                    strokeWeight: 4,
                    map: local_map
                  });
+                 
+                 }
+              
                }
                var color = 'red' ;//getColorForSpeed(points[points.length-1].spd);
-               
-               var pathSegment = new google.maps.Polyline({
-                 path: [points[points.length-1], {'lat':<%=i.last_location.split(",")[0]%>,'lng':<%=i.last_location.split(",")[1]%>}],
-                 geodesic: true,
-                 strokeColor: color,
-                 strokeOpacity: 1.0,
-                 strokeWeight: 4,
-                 map: local_map
-               });
+              
+             //  var pathSegment = new google.maps.Polyline({
+              //   path: [points[points.length-1], {'lat':<%=i.last_location.split(",")[0]%>,'lng':<%=i.last_location.split(",")[1]%>}],
+              //   geodesic: true,
+            //     strokeColor: color,
+            //     strokeOpacity: 1.0,
+            //     strokeWeight: 4,
+            //     map: local_map
+            //   });
    
       
       <% end %>
@@ -585,6 +591,7 @@
 						marker_map = 	ambu_map[a['_id']]
             
             var color = getColorForSpeed(60);
+            
             var pathSegment = new google.maps.Polyline({
               path: [pos, marker_map.getPosition()],
               geodesic: true,
