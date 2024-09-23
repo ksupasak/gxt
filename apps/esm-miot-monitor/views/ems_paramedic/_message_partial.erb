@@ -195,9 +195,13 @@
 											%>
 											<%="<span class='chat-right-msg'>"+i.content+"</span><br/>" if i.content != "" %>
 											<audio controls preload="none">
-											  <source src="<%=url%>"  type='video/3gpp; codecs="mp4v.20.8, samr"' >
+											  <source src="<%=url%>" type="audio/3gpp" >
 											Your browser does not support the audio element.
 											</audio>
+											<!--<audio controls preload="none">
+											  <source src="<%=url%>" type="audio/3gpp"  type='video/3gpp; codecs="mp4v.20.8, samr"' >
+											Your browser does not support the audio element.
+											</audio>-->
 
 
 											<% else %>
