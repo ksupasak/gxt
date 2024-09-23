@@ -486,6 +486,23 @@
 		
 		setMapInitCallback(beforeInit,afterInit);
     
+    function getColorForSpeed2(speed) {
+            
+            
+       // Calculate the gradient color (green to red)
+       const maxSpeed = 40;  // Max speed for the gradient
+       const percentage = speed / maxSpeed;
+        
+        // Convert the percentage to a color (green to red)
+        const red = Math.min(255, Math.floor(percentage * 255));
+        const green = Math.min(255, Math.floor((1 - percentage) * 255));
+        
+        const color = `rgb(${red}, ${green}, 0)`;  
+            
+            
+          return color;                    // High speed
+        }
+	
     function getColorForSpeed(speed) {
             
             
@@ -498,6 +515,13 @@
         const green = Math.min(255, Math.floor((1 - percentage) * 255));
         
         const color = `rgb(${red}, ${green}, 0)`;  
+        
+        if(speed <96 )color = "green";
+        else
+        if(speed <135 )color = "yellow";
+        else
+        if(speed >135 )color = "yellow";
+            
             
             
           return color;                    // High speed
