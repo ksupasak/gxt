@@ -837,7 +837,7 @@ MSG
                               audio_input.write content
                               audio_input.close
                               
-                              `ffmpeg -i #{audio_input_path} -af loudnorm -vn -acodec libmp3lame #{audio_output_path}`
+                              `ffmpeg -i #{audio_input_path} -vn -acodec libmp3lame  -af "loudnorm=I=-10:TP=-1.5:LRA=11" #{audio_output_path}`
                               
                               audio_output = File.open(audio_output_path)
                               content = audio_output.read()
