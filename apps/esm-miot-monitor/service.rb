@@ -825,6 +825,8 @@ MSG
                               
                             if true # record
 
+                              begin
+
                               filename = obj['filename']
                               content =   Base64.decode64(obj['file'])
                               audio_tag = "a#{Time.now.to_i}"
@@ -840,6 +842,12 @@ MSG
                               audio_output = File.open(audio_output_path)
                               content = audio_output.read()
                               audio_output.close
+                              
+                            rescue Exception=>e
+                              
+                              puts e
+                              
+                            end
                               
                               
                               connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
