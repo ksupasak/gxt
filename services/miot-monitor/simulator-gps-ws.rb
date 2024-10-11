@@ -19,7 +19,7 @@ end
 
 
 uri = 'localhost:1792/miot'
-uri = ARGV[0] if uri
+uri = ARGV[0] if ARGV[0]
 
 host, solution = uri.split('/')
 
