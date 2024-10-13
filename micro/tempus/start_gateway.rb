@@ -49,21 +49,21 @@ def run(opts)
     
     lives = web_app.settings.live
     
-    gw = web_app.settings.gw
-    ws = web_app.settings.ws
+
        
     EventMachine.add_periodic_timer(10) {
  
       # puts "run #{Time.now}"
       
-    
-  
+      gw = web_app.settings.gw
+      ws = web_app.settings.ws
+      
+      begin 
       
       online_lives = gw.get_live_incidents
       
       current = {}
       # puts online_lives.size
-    begin 
       
       
       for i in online_lives
@@ -186,6 +186,32 @@ end
 
 
 
+def connect_tempus_gw 
+  
+  gw = Tempus::Gateway.new :key=> 'nRHprq9d0Y9UefyxJ3buzZp0Do5RpFtacxzDyRK77VQ=', :iv=>'Nki18CKUFhH5CrI3TAaWdg==', :username=>'A5yPKnq8yLJKwtxOnyfhACcsWVpUYUj63VbsDCTdy+D+GGa4rnJATz1bvnPCU+/8', :password=>'gcbfEBUB3nQc+nCsjMknLiqmk+lbbF6l0Leuv+ZY+1I=', :url=>'https://corsium.com.au/WebAPI/chula'
+  # gw = Tempus::Gateway.new :username=>'686d4517-bd7f-4b8d-9ece-7a6ce799ad6f', :password=>'3P(RTe$t1n9', :url=>'https://corsium.info/WebAPI/sdkencr'
+  
+  set :gw, gw
+  
+  org_id = gw.get_organization
+  
+  set :org_id, org_id
+  
+  set :live, {}
+  
+   opts = {}
+  
+  ws_host = opts[:ws_host] || 'pcm-life.com'
+  ws_solution = opts[:ws_solution] || 'cu'
+
+  ws = GXTWS::connect ws_solution, ws_host
+  
+  GXTWS::bind_event ws
+  
+  set :ws, ws
+  
+  
+end
 
 # Our simple hello-world app
 class HelloApp < Sinatra::Base
@@ -201,30 +227,13 @@ class HelloApp < Sinatra::Base
   configure do
     set :threaded, false
     
-    gw = Tempus::Gateway.new :key=> 'nRHprq9d0Y9UefyxJ3buzZp0Do5RpFtacxzDyRK77VQ=', :iv=>'Nki18CKUFhH5CrI3TAaWdg==', :username=>'A5yPKnq8yLJKwtxOnyfhACcsWVpUYUj63VbsDCTdy+D+GGa4rnJATz1bvnPCU+/8', :password=>'gcbfEBUB3nQc+nCsjMknLiqmk+lbbF6l0Leuv+ZY+1I=', :url=>'https://corsium.com.au/WebAPI/chula'
-    # gw = Tempus::Gateway.new :username=>'686d4517-bd7f-4b8d-9ece-7a6ce799ad6f', :password=>'3P(RTe$t1n9', :url=>'https://corsium.info/WebAPI/sdkencr'
     
-    set :gw, gw
+    connect_tempus_gw
     
-    org_id = gw.get_organization
-    
-    set :org_id, org_id
-    
-    set :live, {}
-    
-     opts = {}
-    
-    ws_host = opts[:ws_host] || 'pcm-life.com'
-    ws_solution = opts[:ws_solution] || 'cu'
-
-    ws = GXTWS::connect ws_solution, ws_host
-    
-    GXTWS::bind_event ws
-    
-    set :ws, ws
     
   end
   
+
  
 
   # Request runs on the reactor thread (with threaded set to false)

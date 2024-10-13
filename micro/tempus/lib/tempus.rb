@@ -60,6 +60,9 @@ module Tempus
       
     end
     
+    
+    
+    
     def decode encrypt64
         
        
@@ -103,8 +106,13 @@ module Tempus
     
     def get_token
       
+      
+      begin 
+      
+      
       unless @token
         
+       
         uri = URI("#{@url}/Account/APILogin")
         
         req = Net::HTTP::Post.new(uri, {'Accept'=>'application/json','Content-Type' =>'application/json'})
@@ -130,6 +138,14 @@ module Tempus
       end
       
       return @token
+      
+      
+      rescue Exception=>e
+          
+          
+          
+      end
+      
       
     end
     
@@ -203,7 +219,6 @@ module Tempus
       data = get_data "/Api/Clinical/LiveIncidents?organizationId=#{@organization_id}", nil
       
       unless data
-        
           
         data = get_data "/Api/Clinical/LiveIncidents?organizationId=#{@organization_id}", nil
         
@@ -318,6 +333,9 @@ module Tempus
     
     def get_data uri, raw
       
+      
+      begin
+      
       token = get_token
       
       puts uri
@@ -348,16 +366,26 @@ module Tempus
         return data
         
       else
-        return nil
+        return {'IsSuccessful'=>false, 'Reconnect'=>false}
         
       end
+      
+    rescue Exception=>e
+      
+      # raise 'Error  '
+      puts "GW Error : " +e.message
+      refresh_token
+      # data = {'IsSuccessful'=>false, 'Reconnect'=>true, 'Error'=>e.message}
+      
+   #    return data
+      
+    end
+      
+      
         
     end
     
     
-    def run
-      
-    end
     
   end
   
