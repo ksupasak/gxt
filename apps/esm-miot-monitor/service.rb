@@ -1857,7 +1857,7 @@ MSG
       
                     for zone in Zone.all 
                         
-                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems'
+                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems' or zone.mode =='telecare'
                          
                          active_zone[app.settings.name][zone.id] = zone
                          app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
