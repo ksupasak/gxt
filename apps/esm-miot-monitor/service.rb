@@ -1389,6 +1389,10 @@ MSG
 
 
              pdata =  ActiveSupport::JSON.decode(body)
+             
+             puts Time.now.to_s
+             puts pdata.inspect 
+             puts 
 
              station_name = "Untitled"
              station_name = pdata['station'] if pdata['station']
