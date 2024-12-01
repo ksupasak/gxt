@@ -1631,7 +1631,7 @@ MSG
 
                # keep sensing data
                
-
+               puts "settings.senses"
                 puts settings.senses[name].inspect
 
                settings.senses[name][station_name] = odata
