@@ -1630,11 +1630,12 @@ MSG
                settings.live[name] = {} unless  settings.live[name]
 
                # keep sensing data
+               
 
-               # puts settings.senses[name].keys.inspect
+                puts settings.senses[name].inspect
 
                settings.senses[name][station_name] = odata
-               settings.live[name][station_name] = 5
+               settings.live[name][station_name] = 10
 
                data = odata
 
