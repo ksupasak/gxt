@@ -46,23 +46,6 @@ list..
 </div>
 
 
-<div class="cpr-cmd-x d-flex">
-    <% 
-        assessments = EMSAssessment.where(code: %w[primary secondary vs emr_cpr]).map do |item|
-            { code: item.code, label: "+ #{item.code.capitalize}", id: item.id }
-        end
-
-        assessments.each do |assessment|
-    %>
-                <a href="#" class="dispatch_item_x btn bg-gradient w-10" code="<%= assessment[:code] %>" item="<%= assessment[:id] %>">
-                    <%= assessment[:label] %>
-                </a>
-    <%      
-        end
-    %>
-</div>
-
-
 
 <script>
     $('.dispatch_item_x').click(function(e){
