@@ -484,7 +484,7 @@ get '/promptpay' do
        when 'ean_13'
          barcode = Barby::Ean13.new(params[:code])
        when 'qr_code'
-         barcode = Barby::QrCode.new(params[:code])
+         barcode = Barby::QrCode.new(params[:code])       
        end
        code = params[:code].split("/").join("-")
        xdim = 2

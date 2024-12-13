@@ -10,9 +10,9 @@ RUN bundle install
 COPY . .
 
 # Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod u+x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+#COPY entrypoint.sh /usr/bin/
+#RUN chmod u+x /usr/bin/entrypoint.sh
+#ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 1792
 
 RUN echo "OKay"
