@@ -1194,8 +1194,12 @@ class UserController < GXTDocument
 
   def acl
     # return {:login=>'*',:auto=>'*'}
-    return {'*'=>'*'}
+    return {:create=>'*', :xxx=>'*'}
 
+  end
+  
+  def xxx params
+    return "xxxx"
   end
 
 
