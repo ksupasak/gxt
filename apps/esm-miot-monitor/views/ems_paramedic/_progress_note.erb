@@ -40,10 +40,12 @@ list..
 		if item = EMSAssessment.where(:code=>'emr_cpr').first
 		item_id = item.id if item
 	%>
-	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="emr_cpr" item="<%=item_id%>">+ CPR Record</a>
+	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="emr_cpr" item="<%=item_id%>">+ CPR Data</a>
 	<% end %>
 
 </div>
+
+
 
 <script>
     $('.dispatch_item_x').click(function(e){

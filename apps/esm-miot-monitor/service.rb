@@ -1389,6 +1389,10 @@ MSG
 
 
              pdata =  ActiveSupport::JSON.decode(body)
+             
+             puts Time.now.to_s
+             puts pdata.inspect 
+             puts 
 
              station_name = "Untitled"
              station_name = pdata['station'] if pdata['station']
@@ -1626,11 +1630,12 @@ MSG
                settings.live[name] = {} unless  settings.live[name]
 
                # keep sensing data
-
-               # puts settings.senses[name].keys.inspect
+               
+               puts "settings.senses"
+                puts settings.senses[name].inspect
 
                settings.senses[name][station_name] = odata
-               settings.live[name][station_name] = 5
+               settings.live[name][station_name] = 10
 
                data = odata
 
@@ -1857,7 +1862,7 @@ MSG
       
                     for zone in Zone.all 
                         
-                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems'
+                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems' or zone.mode =='telecare'
                          
                          active_zone[app.settings.name][zone.id] = zone
                          app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
