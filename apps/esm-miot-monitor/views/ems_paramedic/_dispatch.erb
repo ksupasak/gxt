@@ -190,7 +190,7 @@
 		list = gmap[g] unless map[g]
 		
 			
-	    
+	    if list
 		
           for it in list
 
@@ -201,6 +201,7 @@
 		  <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%></a>
         </div>
         <% end %>
+       <% end %>
        
 
       </div>
