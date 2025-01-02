@@ -259,8 +259,8 @@ conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
 		</div>
 		<div class='row'>
 			<div class="col-3" ><p class="mb-0 text-secondary"> ระยะเวลา</p> </div>
-			<div class="col-2">	<h6 class="my-1 text-warning"> 00:00</h6> </div>
-			<div class="col-7">  <p>เวลาถึง : <span class="est-text"><%=%><span></p>  </div>	
+			<div class="col-2">	<h6 class="my-1 text-warning"> <span class="est-duration text-warning">00:00</span></h6> </div>
+			<div class="col-7">  <p>เวลาถึง : <span class="est-text text-warning"><%=%><span></p>  </div>	
 		</div>
 	</div>
 	<% end %>
@@ -945,7 +945,8 @@ geoFindMe()
 			   if(t>0){
 			   min = parseInt(t/60);
 			   sec = t%60;
-			   $('.est').html(""+min+":"+sec)
+			   
+			   $('.est-duration').html(""+min+":"+sec)
 			   $('.est-text').html(obj['arrival_at'])
 			   
 			   

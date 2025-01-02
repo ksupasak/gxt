@@ -10,7 +10,21 @@ if true
     his_get_patient_uri = URI("#{Setting.get(:gateway,'localhost')}/get_patient_by_hn?hn=#{params[:hn]}")
     
 	
+	url_config = Setting.get(:gateway,'localhost')
+	
+	if url_config.split("/").size>4
+	
+	
+    his_get_patient_uri = URI("#{url_config}?hn=#{params[:hn]}")
+	
+	
+	else 
+	
     his_get_patient_uri = URI("#{Setting.get(:gateway,'localhost')}/his/get_patient_info?hn=#{params[:hn]}")
+	
+	end
+	
+	
 	
     ##############################################################  
   
