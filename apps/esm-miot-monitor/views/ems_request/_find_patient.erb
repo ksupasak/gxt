@@ -7,10 +7,10 @@ if true
 
     ##############################################################  
 
-    his_get_patient_uri = URI("#{Setting.get(:gateway,'localhost')}/get_patient_by_hn?hn=#{params[:hn]}")
+    his_get_patient_uri = URI("#{Setting.get(:his_gateway,'localhost')}/get_patient_by_hn?hn=#{params[:hn]}")
     
 	
-	url_config = Setting.get(:gateway,'localhost')
+	url_config = Setting.get(:his_gateway,'localhost')
 	
 	puts url_config
 	
@@ -22,7 +22,7 @@ if true
 	
 	else 
 	
-    his_get_patient_uri = URI("#{Setting.get(:gateway,'localhost')}/his/get_patient_info?hn=#{params[:hn]}")
+    his_get_patient_uri = URI("#{Setting.get(:his_gateway,'localhost')}/his/get_patient_info?hn=#{params[:hn]}")
 	
 	end
 	
