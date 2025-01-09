@@ -77,11 +77,8 @@ end
     <%
         session_id = 'SessionA'
         session_id = "#{Setting.get("aoc_code")}-"+params[:id] if params[:id]
-		
-		
-		
-		
-		
+        session_id = "#{Setting.get("aoc_code")}-#{ems_case.get_meeting_key}"
+	
 		
     %>
 

@@ -1,0 +1,20 @@
+<h1>Unit Monitor</h1> 
+<%
+
+	units = EMSUnit.all
+	
+	online_units = EMSUnit.where(:status=>'Online').all
+	
+	
+	units = online_units
+
+%>
+
+<% for i in units %>
+
+<%= i.to_json %><br/>
+
+<% end  %>
+
+
+<%=link_to "Units", "../EMSUnit/index", :class=>'btn btn-primary' %>

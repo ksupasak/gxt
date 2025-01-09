@@ -1,0 +1,241 @@
+
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Meeting Room</div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item">
+									<a href="../EMS/index"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-success">Actions</button>
+							<button type="button" class="btn btn-success split-bg-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+								<a class="dropdown-item btn-success" href="javascript:;">+ Meeting</a>
+								<!-- <div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<style>
+
+					/* Card Container */
+					.mtr-card {
+					  width: 400px;
+					  padding: 20px;
+					  background-color: #2d2d44;
+					  border-radius: 12px;
+					  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+					  color: #ffffff;
+					}
+
+					/* Header */
+					.mtr-header .mtr-badge {
+					  background-color: #555566;
+					  padding: 5px 10px;
+					  border-radius: 12px;
+					  font-size: 14px;
+					}
+
+					/* Content */
+					.mtr-content h2 {
+					  margin: 10px 0;
+					  font-size: 20px;
+					}
+
+					.mtr-content p {
+					  margin: 5px 0;
+					  font-size: 16px;
+					  color: #aaaaaa;
+					}
+
+					/* Icons */
+					.mtr-icon {
+					  margin-right: 5px;
+					}
+
+					/* Footer */
+					.mtr-footer {
+					  margin-top: 10px;
+					}
+
+					.mtr-footer p {
+					  margin: 5px 0;
+					}
+
+					/* Actions */
+					.mtr-actions {
+					  display: flex;
+					  justify-content: space-between;
+					  margin-top: 10px;
+					}
+
+					.mtr-link-btn {
+					  background: none;
+					  border: 1px solid #aaa;
+					  padding: 10px;
+					  border-radius: 8px;
+					  cursor: pointer;
+					  color: #ffffff;
+					}
+
+					.mtr-enter-btn {
+					  background-color: #3a6ff8;
+					  border: none;
+					  padding: 10px 20px;
+					  border-radius: 8px;
+					  color: #ffffff;
+					  cursor: pointer;
+					}
+
+					.mtr-enter-btn:hover {
+					  background-color: #355edb;
+					}
+					</style>
+<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
+				<%
+					
+					rooms = EMSMeeting.all
+					
+				
+					
+				
+				%>
+				<% for room in rooms 
+				
+					name = "20250103-00001"
+					unit = "ปบ 5511 (ALS)"
+					link = '#'
+					emscase = EMSCase.find room.case_id
+					if emscase
+					  name = emscase.case_no
+					  unit = emscase.ambulance.plate_license
+					  link = "video?id=#{room.name}&case_id=#{emscase.id}&side=emd"
+					  # link = "https://meet.abs.co.th/#{room.name}?case_id=#{emscase.id}&side=emd"
+					  
+					end
+				
+				%>
+				
+				<style>
+					.patient-widget {
+					    border: 1px solid #ddd;
+					    border-radius: 8px;
+					    width: 300px;
+					    padding: 16px;
+					    background-color: #f9f9f9;
+					    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+					    font-family: Arial, sans-serif;
+					    font-size: 14px;
+					    color: #333;
+					}
+
+					.section-header {
+					    font-weight: bold;
+					    font-size: 16px;
+					    margin-bottom: 8px;
+					    color: #555;
+					    border-bottom: 1px solid #ddd;
+					    padding-bottom: 4px;
+					}
+
+					.patient-info p, .incident-status p, .participants p {
+					    margin: 4px 0;
+					}
+
+					.participant-name {
+					    font-weight: bold;
+					    color: #007bff;
+					}
+
+					a {
+					    color: #007bff;
+					    text-decoration: none;
+					}
+
+					a:hover {
+					    text-decoration: underline;
+					}
+					</style>
+				
+		<div class="patient-widget">
+		    <div class="patient-info">
+		        <div class="section-header">ข้อมูลผู้ป่วย</div>
+		        <p><strong>เลขที่ห้องสนทนา:</strong> 20250103-00001</p>
+		        <p><strong>ชื่อ-นามสกุล:</strong> -</p>
+		        <p><strong>เลขที่บัตรประชาชน:</strong> -</p>
+		        <p><strong>วันเดือนปีเกิด:</strong> -</p>
+		        <p><strong>อายุ:</strong> -</p>
+		        <p><strong>วันที่/เวลา:</strong> 3 มกราคม 2568 / 12:47</p>
+		        <p><strong>Link Video Call:</strong> 
+		            <a href="https://meet-poc.clicknext.com/QKn-qJ8r-xpx" target="_blank">
+		                https://meet-poc.clicknext.com/QKn-qJ8r-xpx
+		            </a>
+		        </p>
+		    </div>
+		    <div class="incident-status">
+		        <div class="section-header">สถานที่เกิดเหตุ</div>
+		        <p>hhh</p>
+		    </div>
+		    <div class="participants">
+		        <div class="section-header">ผู้เข้าร่วม</div>
+		        <p><span class="participant-name">staff-erawan 01</span> (เจ้าหน้าที่ที่ 1669)</p>
+		    </div>
+		</div>
+		
+		
+		
+		
+					<div class="col">
+						<div class="card radius-15">
+							<div class="card-header">
+								<div class="d-flex justify-content-between">
+								<div class="col-6"><strong><%= name %></strong></div>
+								<div class="col-6"><%= unit %></div>
+								
+								</div>
+								
+							</div>
+							<div class="card-body">
+								<div class="">
+									<!-- <img src="assets/images/avatars/avatar-1.png" width="110" height="110" class="rounded-circle shadow" alt=""> -->
+					  			  <div class="mtr-content">
+					  			    <h2></h2>
+					  			    <p class="mtr-location">
+					  			      <span class="mtr-icon">📍</span> hhh
+					  			    </p>
+					  			    <p class="mtr-officer">
+					  			      <span class="mtr-icon">👤</span> เจ้าหน้าที่ -
+					  			    </p>
+					  			  </div>
+								</div>
+								
+							</div>
+							
+							<div class='card-footer'>
+						  
+							<div class="d-flex justify-content-between">
+								
+							<div class="list-inline contacts-social "> 
+								<a href="javascript:;" class="list-inline-item bg-facebook text-white border-0">🔗</a>
+								<a href="javascript:;" class="list-inline-item bg-twitter text-white border-0">3</a>
+								<a href="javascript:;" class="list-inline-item bg-google text-white border-0">4</a>
+								<a href="javascript:;" class="list-inline-item bg-linkedin text-white border-0">5</a>
+							</div>
+							
+							<a href="<%=link.html_safe%>" class="btn btn-primary radius-15">เข้าร่วม</a>
+							
+							</div>
+							</div>
+						</div>
+					</div>
+				<% end %>
+					
+				</div>
