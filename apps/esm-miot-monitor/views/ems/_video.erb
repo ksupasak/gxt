@@ -96,8 +96,12 @@ end
 			unless meeting
          
 			   meeting = EMSMeeting.create(:name=>session_id, :creator=>login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
-		   	   ems_case.send_push_noti "EMS-Meeting", "Create EMS Room", "meeting", session_id
-			    
+			   
+			   if type=='EMS' 
+			   
+			   	ems_case.send_push_noti "EMS-Meeting", "Create EMS Room", "meeting", session_id
+			   
+			   end    
 			
 			end
 		
