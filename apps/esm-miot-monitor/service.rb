@@ -1096,7 +1096,8 @@ MSG
               
               device = EMSDevice.create(:name=>sender, :type=>last['type']) unless device
               
-              device.update_attributes :vehicle_id=>last['receiver']
+              receiver = headers[2].split("=")[-1]
+              device.update_attributes :vehicle_id=>receiver
               
               device_log = EMSDeviceLog.create :device_id=>device.id, :data=> settings.position_list[name][sender][0..-2]
               
