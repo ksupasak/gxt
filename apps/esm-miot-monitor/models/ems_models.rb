@@ -416,6 +416,13 @@ MSG
 
   def send_push_noti title, body, cmd, cmd_value
     
+    cmds = self.commands
+    
+    if cmds.size>0 
+    
+    cmd = cmds[0]
+    
+    vid = cmd.ambulance.name
     
     devices = EMSDevice.where(:vehicle_id=>vid, :fcm_tocken=>{'$ne'=>nil}).all
     
@@ -427,6 +434,8 @@ MSG
         # send_firebase_notification 'smart-ems-6dbe1', 'dYxuEu92S5K6AcNZmETCx_:APA91bGDW-wbkWJPlXrHLFJxB33vaCLRSgk881aGWRamnjWlWOxb7A8iLbMBfS96nctIUlf6GlSIBVX-1QPaWmbRv7Y2YXyT16twFDx2gAkw9yCMzj8DgP4', "SmartEMS", "test-push", "meeting", "test"
 
     end
+    
+  end
     
   end
 
