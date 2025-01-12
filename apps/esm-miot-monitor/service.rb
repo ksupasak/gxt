@@ -1066,6 +1066,7 @@ MSG
             if obj['fcm_token']
              
               device = EMSDevice.where(:name=>sender).first
+              
               unless device
                 device = EMSDevice.create(:name=>sender, :type=>last['type'], :fcm_token=>obj['fcm_token']) 
               else
@@ -1095,7 +1096,7 @@ MSG
               
               device = EMSDevice.create(:name=>sender, :type=>last['type']) unless device
               
-             
+              device.update_attributes :vehicle_id=>last['receiver']
               
               device_log = EMSDeviceLog.create :device_id=>device.id, :data=> settings.position_list[name][sender][0..-2]
               

@@ -325,6 +325,7 @@ DEPENDENCIES
   google-cloud-speech
   google-cloud-translate-v2
   google_drive (= 3.0.7)
+  googleauth
   hiredis
   hiredis-client
   mongo
