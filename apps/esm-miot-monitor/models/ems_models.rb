@@ -416,12 +416,12 @@ MSG
 
   def send_push_noti title, body, cmd, cmd_value
     
-    cmds = self.commands
-    if cmds.size>0 
+    commands = self.commands
+    if commands.size>0 
     
-    cmd = cmds[0]
+    command = commands[0]
     
-    vid = cmd.ambulance.name
+    vid = command.ambulance.name
     puts "send_push_noti #{cmds.inspect }"
     
     devices = EMSDevice.where(:vehicle_id=>vid, :fcm_token=>{'$ne'=>nil}).all
