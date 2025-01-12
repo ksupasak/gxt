@@ -86,7 +86,7 @@ if params[:record]
 	record.update_attributes p
 	
 	
-	
+	record.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
 	
 
 path = "miot/#{@context.settings.name}/z/#{record.zone.name}"
