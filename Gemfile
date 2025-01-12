@@ -73,6 +73,8 @@ gem 'rack-ssl-enforcer'
 
 gem 'wkhtmltopdf-binary'
 
+
+gem 'googleauth'
 gem 'google_drive' , "3.0.7"
 gem 'google-cloud-translate-v2'
 gem 'google-cloud-speech'

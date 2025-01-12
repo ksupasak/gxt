@@ -898,6 +898,7 @@ class EMSDevice < GXTModel
   key :name, String # device number
   key :type, String
   key :title, String
+  key :vehicle_id, String
   key :fcm_token, String
   belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
   key :unit_id, ObjectId

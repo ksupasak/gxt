@@ -227,8 +227,10 @@ record = @current_case
 						session_id = "#{key}-EMS"
 					%>
 					alert("Session <%=session_id%>")
-					device_interface.startVideoCall("<%=session_id%>")
+					// device_interface.startVideoCall("<%=session_id%>")
 					
+					
+					window.location = "../EMS/video?id=<%=session_id%>-EMS&case_id=<%=record.id%>&side=ems&type=EMS"
 					
 				})
 				
