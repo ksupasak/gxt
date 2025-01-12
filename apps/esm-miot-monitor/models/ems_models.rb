@@ -78,7 +78,7 @@ class EMSCase < GXTModel
   key :schedule_from, DateTime
   key :schedule_to, DateTime
   
-  key :meeting_prefix, String
+  key :meeting_key, String
 
 
   key :dispatch_note, String
@@ -301,15 +301,16 @@ class EMSCase < GXTModel
   def get_meeting_key solution='miot'
     
     key = nil
-      unless self.meeting_prefix
+    
+      unless self.meeting_key
         
         key = "#{solution}-#{self.case_no}"
      
-        self.update_attributes :meeting_prefix=>key
+        self.update_attributes :meeting_key=>key
                 
       else
         
-        key = self.meeting_prefix
+        key = self.meeting_key
         
       end
     
@@ -897,7 +898,7 @@ class EMSDevice < GXTModel
   key :name, String # device number
   key :type, String
   key :title, String
-  
+  key :fcm_token, String
   belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
   key :unit_id, ObjectId
   
@@ -957,6 +958,7 @@ class EMSMeeting < GXTModel
   key :status, String
   
   key :type, String
+  include Mongoid::Timestamps
 
 end
 

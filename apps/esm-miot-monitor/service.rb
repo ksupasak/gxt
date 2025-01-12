@@ -1061,6 +1061,18 @@ MSG
             obj = json['data']
             settings.position_list[name][sender] << obj
            
+            if obj['fcm_token']
+             
+              device = EMSDevice.where(:name=>sender).first
+              unless device
+                device = EMSDevice.create(:name=>sender, :type=>last['type'], :fcm_token=>obj['fcm_token']) 
+              else
+                device.update_attributes :fcm_token=> obj['fcm_token']
+              end
+              
+              
+            end
+            
             
             puts settings.position_list[name][sender].inspect
             
@@ -1072,6 +1084,7 @@ MSG
               
                           
               default_zone = Zone.where(:default=>'true').first
+              
               if default_zone and Ambulance.where(:device_no=>sender).first == nil 
                   ambu = Ambulance.create :name=>sender.upcase,  :location_policy=>'APP', :device_no=>sender, :zone_id=> default_zone.id
               end
@@ -1079,6 +1092,8 @@ MSG
               device = EMSDevice.where(:name=>sender).first
               
               device = EMSDevice.create(:name=>sender, :type=>last['type']) unless device
+              
+             
               
               device_log = EMSDeviceLog.create :device_id=>device.id, :data=> settings.position_list[name][sender][0..-2]
               
