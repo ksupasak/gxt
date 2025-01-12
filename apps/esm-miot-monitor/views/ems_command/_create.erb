@@ -129,6 +129,7 @@ if params[:record]
 	end
 	
 	
+	ems_case.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
 	
 
 	path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
