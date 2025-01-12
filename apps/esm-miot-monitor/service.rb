@@ -890,11 +890,14 @@ MSG
                               
                                 request = Net::HTTP::Post.new(uri)
                                 puts uri
-                                fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
-                                fout.write content
-                                fout.close
+                                # fout = File.open("tmp/voice_#{Time.now.to_i}.ogg",'w')
+ #                                fout.write content
+ #                                fout.close
+ 
+                                 # form_data = [['file',  File.open("tmp/voice_#{Time.now.to_i}.ogg")]] # or File.open() in case of local file
+                                 
 
-                                form_data = [['file',  File.open("tmp/voice_#{Time.now.to_i}.ogg")]] # or File.open() in case of local file
+                                form_data = [['file',  File.open(audio_output_path)]] # or File.open() in case of local file
 
                                 request.set_form form_data, 'multipart/form-data'
                                 response = Net::HTTP.start(uri.hostname, uri.port) do |http| # pay attention to use_ssl if you need it
