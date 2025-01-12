@@ -89,10 +89,13 @@ end
 			
 			
 			meeting = EMSMeeting.where(:name=>session_id).first
+			login = "N/A"
+			login = @current_user.login if @current_user
+			
 			
 			unless meeting
          
-			   meeting = EMSMeeting.create(:name=>session_id, :creator=>@current_user.login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
+			   meeting = EMSMeeting.create(:name=>session_id, :creator=>login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
 			
 			end
 		
