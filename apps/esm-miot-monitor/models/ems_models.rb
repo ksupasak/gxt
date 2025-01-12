@@ -425,9 +425,11 @@ MSG
     vid = cmd.ambulance.name
     
     devices = EMSDevice.where(:vehicle_id=>vid, :fcm_tocken=>{'$ne'=>nil}).all
+    puts "send_push_noti #{devices.inspect }"
     
     for i in devices
 
+      puts "send_push_noti #{i.inspect }"
 
       send_firebase_notification 'smart-ems-6dbe1', i.fcm_token, title, body, cmd, cmd_value
     
