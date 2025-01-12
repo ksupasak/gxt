@@ -1073,7 +1073,8 @@ MSG
                 device.update_attributes :fcm_token=> obj['fcm_token']
               end
               
-              
+              receiver = headers[2].split("=")[-1]
+              device.update_attributes :vehicle_id=>receiver
             end
             
             

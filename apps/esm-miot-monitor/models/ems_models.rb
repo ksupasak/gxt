@@ -1,6 +1,7 @@
 require "base64"
 require "uri"
 require "net/http"
+require_relative "../lib/push"
 
 module EsmMiotMonitor
 
@@ -410,6 +411,23 @@ MSG
 
     context.settings.redis.publish(path, send_msg)
 
+  end
+
+
+  def send_push_noti title, body, cmd, cmd_value
+    
+    
+    devices = EMSDevice.where(:vehicle_id=>vid, :fcm_tocken=>{'$ne'=>nil}).all
+    
+    for i in devices
+
+
+      send_firebase_notification 'smart-ems-6dbe1', i.fcm_token, title, body, cmd, cmd_value
+    
+        # send_firebase_notification 'smart-ems-6dbe1', 'dYxuEu92S5K6AcNZmETCx_:APA91bGDW-wbkWJPlXrHLFJxB33vaCLRSgk881aGWRamnjWlWOxb7A8iLbMBfS96nctIUlf6GlSIBVX-1QPaWmbRv7Y2YXyT16twFDx2gAkw9yCMzj8DgP4', "SmartEMS", "test-push", "meeting", "test"
+
+    end
+    
   end
 
 
@@ -1071,6 +1089,7 @@ MSG
   end
 
 
+    
 
 
 
@@ -1164,6 +1183,8 @@ class EMSChannelController < EMSGXTDocument
 end
 
 class EMSCaseController < EMSGXTDocument
+  
+  
 
 end
 
