@@ -1060,7 +1060,9 @@ MSG
             json = JSON.parse(body)
             obj = json['data']
             settings.position_list[name][sender] << obj
-           
+            
+            puts obj
+            
             if obj['fcm_token']
              
               device = EMSDevice.where(:name=>sender).first
