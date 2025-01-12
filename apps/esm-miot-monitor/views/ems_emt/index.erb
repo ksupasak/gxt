@@ -225,12 +225,15 @@ record = @current_case
 						
 						key = record.get_meeting_key
 						session_id = "#{key}-EMS"
+						
+						link = "#{Setting.get('host-url')}/EMS/video?id=#{session_id}-EMS&case_id=#{record.id}&side=ems&type=EMS"
 					%>
 					alert("Session <%=session_id%>")
 					// device_interface.startVideoCall("<%=session_id%>")
 					
+					device_interface.startWeb("<%=link%>")
 					
-					window.location = "../EMS/video?id=<%=session_id%>-EMS&case_id=<%=record.id%>&side=ems&type=EMS"
+					// window.location = "../EMS/video?id=<%=session_id%>-EMS&case_id=<%=record.id%>&side=ems&type=EMS"
 					
 				})
 				
