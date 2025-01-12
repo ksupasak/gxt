@@ -417,7 +417,7 @@ MSG
   def send_push_noti title, body, cmd, cmd_value
     
     cmds = self.commands
-    
+    puts "send_push_noti #{cmds.inspect }"
     if cmds.size>0 
     
     cmd = cmds[0]
