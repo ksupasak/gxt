@@ -44,5 +44,11 @@ else
   REDIS_PASS = @conf_redis_password
 end
 
+require 'i18n'
+
+# Load localization files
+I18n.load_path << Dir["./config/locales/*.yml"]
+I18n.default_locale = :en
+
   
 # @default_media_server = 'http://localhost:8080'

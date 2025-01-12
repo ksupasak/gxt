@@ -15,6 +15,8 @@ class EMSUnit < GXTModel
   key :phone, String
   key :status, String
   key :type, String
+  
+  key :image, ObjectId
 
 end
 
@@ -45,7 +47,15 @@ end
 
 class EMSCase < GXTModel
 
+
+
   include Mongoid::Document
+  
+  
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
+  
+  
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
 
   belongs_to :init_code, :class_name=>'EsmMiotMonitor::EMSCode', foreign_key: 'init_cbd_code'
@@ -54,6 +64,8 @@ class EMSCase < GXTModel
 
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
   belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance', foreign_key: 'ambulance_id'
+
+
 
 
   key :user_id, ObjectId
@@ -66,6 +78,7 @@ class EMSCase < GXTModel
   key :schedule_from, DateTime
   key :schedule_to, DateTime
   
+  key :meeting_key, String
 
 
   key :dispatch_note, String
@@ -284,7 +297,26 @@ class EMSCase < GXTModel
   key :export_data, String
   key :export_data_log, String
 
-
+ 
+  def get_meeting_key solution='miot'
+    
+    key = nil
+    
+      unless self.meeting_key
+        
+        key = "#{solution}-#{self.case_no}"
+     
+        self.update_attributes :meeting_key=>key
+                
+      else
+        
+        key = self.meeting_key
+        
+      end
+    
+      return key
+    
+  end
 
   def relocation_target latlng
 
@@ -855,7 +887,7 @@ class EMSProtocol < GXTModel
   key :sort_order, Integer
   key :file_id, ObjectId
   
-  
+   
 end
 
 
@@ -866,6 +898,10 @@ class EMSDevice < GXTModel
   key :name, String # device number
   key :type, String
   key :title, String
+  key :fcm_token, String
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
+  
   
   
 end
@@ -905,6 +941,41 @@ class EMSGXTDocument < GXTDocument
     return :rocker_layout
   end
 end
+
+class EMSMeeting < GXTModel
+
+  include Mongoid::Document
+
+  
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
+  
+  
+  key :creator, String
+  
+  key :name, String
+  key :case_id, ObjectId
+  key :status, String
+  
+  key :type, String
+  include Mongoid::Timestamps
+
+end
+
+
+class EMSMeetingController < GXTDocument
+
+  
+  
+  def default_layout
+    return :rocker_layout
+  end
+  
+  
+end
+
+
+
 
 
 class EMSController < GXT

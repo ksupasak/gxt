@@ -306,9 +306,16 @@ cls = record.init_code.get_class if code
 
 
 				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">
-					<a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd" target="_blank" >
+					<!-- <a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd" target="_blank" >
+						<i class='bx bx-webcam text-white '></i>
+					</a> -->
+						
+					<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectMeeting">Vertically Centered</button> -->
+						
+					<a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd"  data-bs-toggle="modal" data-bs-target="#connectMeeting"  >
 						<i class='bx bx-webcam text-white '></i>
 					</a>
+					
 				</div>
 
 				<div class="widgets-icons-2  <%=' bg-gradient-ohhappiness ' if true %>text-white ms-auto" style="margin:5px">
@@ -714,3 +721,57 @@ cls = record.init_code.get_class if code
 
 
 </script>
+
+
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectMeeting">Vertically Centered</button>
+	<!-- Modal -->
+	<div class="modal fade" id="connectMeeting" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Meeting</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				
+				<%
+					
+			        session_prefix = "#{record.get_meeting_key(Setting.get("aoc_code"))}"
+						
+					
+				%>
+				<a href="video?id=<%=session_prefix%>-PRE&case_id=<%=record.id%>&side=emd&type=PRE" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					PRE : <span>สร้างห้องประชุมติดต่อผู้แจ้งเหตุ</span>
+				</div>
+				</div>
+				</a>
+				
+				<a href="video?id=<%=session_prefix%>-EMS&case_id=<%=record.id%>&side=emd&type=EMS" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					EMS : <span>สร้างห้องประชุมต่อทีมปฏิบัติการ </span>
+				</div>
+				</div>
+				</a>
+				
+				
+				<a href="video?id=<%=session_prefix%>-CON&case_id=<%=record.id%>&side=emd&type=CON" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					CON : <span>สร้างห้องประชุมอื่น ๆ  </span>
+				</div>
+				</div>
+				</a>
+				
+				
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>

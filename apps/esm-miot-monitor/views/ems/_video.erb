@@ -75,8 +75,29 @@ end
 
 
     <%
+    
+        type = 'PRE'
+        type = params[:type] if params[:type]
+    
         session_id = 'SessionA'
-        session_id = "#{Setting.get("aoc_code")}-"+params[:id] if params[:id]
+        session_id = params[:id] if params[:id]
+		
+	    if ems_case
+      
+      
+            session_id = "#{ems_case.get_meeting_key(Setting.get("aoc_code"))}-#{type}" unless params[:id]
+			
+			
+			meeting = EMSMeeting.where(:name=>session_id).first
+			
+			unless meeting
+         
+			   meeting = EMSMeeting.create(:name=>session_id, :creator=>@current_user.login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
+			
+			end
+		
+		
+		end
 		
 		
 		

@@ -221,8 +221,13 @@ record = @current_case
             Video</a>
 			<script>
 				$('.cap-btn').click(function(){
-					
-					device_interface.startVideoCall("<%=record.case_no%>")
+					<%
+						
+						key = record.get_meeting_key
+						session_id = "#{key}-EMS"
+					%>
+					alert("Session <%=session_id%>")
+					device_interface.startVideoCall("<%=session_id%>")
 					
 					
 				})

@@ -151,9 +151,11 @@ location = "#{Setting.get(:aoc_center)}"
 locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
 
 
+session_prefix = "#{ems_case.get_meeting_key(Setting.get("aoc_code"))}"
+
 conf_url = "#{Setting.get('videocall_server')}/\#/#{Setting.get('aoc_code','0000')}-#{ems_case.case_no}"
 
-conf_url = "video?id=#{ems_case.case_no}&case_id=#{ems_case.id}&side=request"
+conf_url = "video?id=#{session_prefix}&case_id=#{ems_case.id}&side=request&type=PRE"
 
 
 %>

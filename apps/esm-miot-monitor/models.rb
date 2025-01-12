@@ -3,7 +3,6 @@ require_relative 'models/er_models'
 require_relative 'models/health_models'
 require_relative 'models/aoc_models'
 require_relative 'models/ems_models'
-require_relative 'models/emr_models'
 
 module EsmMiotMonitor
 
@@ -102,6 +101,10 @@ end
 class Provider < GXTModel
   include Mongoid::Document
   include Mongoid::Timestamps
+  
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
+  
    key :name, String
    key :first_name, String
    key :last_name, String
@@ -118,6 +121,7 @@ class Provider < GXTModel
    key :zone_id, String
    key :short, String
    
+ 
    def get_name
      
      return self.name if self.name and self.name  !=""
@@ -381,6 +385,10 @@ class Admit < GXTModel
 
   belongs_to :created_user, :class_name=>'EsmMiotMonitor::User'
   belongs_to :updated_user, :class_name=>'EsmMiotMonitor::User'
+  
+  
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
 
   key :created_user_id, ObjectId
   key :updated_user_id, ObjectId
@@ -654,7 +662,8 @@ class Patient  < GXTModel
   key :note, String
   key :underlying, String
 
-
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
 
   key :image_id, ObjectId
 
@@ -797,10 +806,16 @@ end
 
 class Ambulance  < GXTModel
   include Mongoid::Document
+  
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
+  key :unit_id, ObjectId
+  
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
   has_one :driver, :class_name=>'EsmMiotMonitor::AmbulanceDriver'
   has_one :admit, :class_name=>'EsmMiotMonitor::Admit'
   belongs_to :station, :class_name=>'EsmMiotMonitor::Station'
+
+ 
 
 
   key :status, String
