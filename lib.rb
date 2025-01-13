@@ -18,9 +18,79 @@ def switch name, app=nil
 
 end
 
+
+
+
+# Helper method to connect to the MJPEG source
+def stream_mjpeg_to_client(client)
+  uri = URI.parse("http://103.20.120.243:8080/stream")
+  Net::HTTP.start(uri.host, uri.port) do |http|
+    request = Net::HTTP::Get.new(uri)
+
+    # Open the MJPEG stream
+    http.request(request) do |response|
+      
+      response.read_body do |chunk|
+        begin
+            # puts chunk.size
+          # Forward each chunk to the client
+          client << chunk
+        
+        rescue Errno::EPIPE
+          puts "Client disconnected"
+          break
+        end
+      end
+      
+    end
+  end
+rescue Errno::ECONNRESET => e
+  # puts "Connection to MJPEG source reset: #{e.message}"
+  retry # Attempt to reconnect
+rescue StandardError => e
+  puts "Unexpected error: #{e.message}"
+end
+
+get '/stream' do
+  content_type 'multipart/x-mixed-replace; boundary=--frame'
+
+  # Stream MJPEG content
+  stream do |out|
+    stream_mjpeg_to_client(out)
+  end
+end
+
+
+# get '/stream' do
+#   content_type 'multipart/x-mixed-replace; boundary=--frame'
+#
+#   stream do |out|
+#     begin
+#       # Open the MJPEG stream
+#       http.request(request) do |response|
+#         response.read_body do |chunk|
+#           begin
+#               puts chunk.size
+#             # Forward each chunk to the client
+#             client << chunk
+#
+#           rescue Errno::EPIPE
+#             puts "Client disconnected"
+#             break
+#           end
+#         end
+#       end
+#     rescue => e
+#       puts "Error: #{e.message}"
+#       out.close
+#     end
+#   end
+# end
+
 # process context
 
 before do
+  pass if %w[stream].include? request.path_info.split('/')[1]
 
 
   solution_name = DEFAULT_APP
@@ -392,6 +462,7 @@ before '/:gxt/:service/:operation' do
 # end
 
 end
+
 
 
 get '/ws/:gxt/:service/:operation' do
