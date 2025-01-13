@@ -107,10 +107,33 @@
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class="bx bx-x"></i></span>
 						</div>
 					</div> -->
+						
+					<%
+					
+					sub_title = ""
+					
+					if @current_user
+						
+					   provider = Provider.where(:user_id=>@current_user.id).first
+					   if provider and provider.unit_id
+						  
+						  current_unit = EMSUnit.find provider.unit_id
+						  
+						  if current_unit
+							 
+							 sub_title = "|  #{current_unit.name}" 
+						  end
+						   
+					   end
+					   
+				   end
+					
+					
+					%>	
 
 					<div class=" flex-grow-1">
 						<div class="position-relative search-bar-box"  style="font-size:1.2em">
-							<b><%=Setting.get('aoc_title')%></b>
+							<b><%=Setting.get('aoc_title')%> <%=sub_title%></b> 
 						</div>
 					</div>
 
