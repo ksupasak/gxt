@@ -1,7 +1,68 @@
 <%
-	
-unit = EMSUnit.find params[:id]
-	
-	
+unit = EMSUnit.find params[:id]	
+
 %>
 <h1><%=unit.name%></h1>
+<style>
+.menu-item1 {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+}
+.menu-item2 {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+}
+.menu-item3 {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+}
+.unit-window {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+#Ambulances {
+            display: block;
+        }
+</style>
+<div>
+    <div style="display: flex; gap: 10px;">
+        <div class="menu-item1" onclick="showUnit('Ambulances')">Ambulances</div>
+        <div class="menu-item2" onclick="showUnit('Provider')">Provider</div>
+        <div class="menu-item3" onclick="showUnit('Case')">Case</div>
+    </div>
+</div>
+<div id="Ambulances" class="unit-window">Ambulances</div>
+<div id="Provider" class="unit-window">Provider</div>
+<div id="Case" class="unit-window">Case</div>
+<script>
+    function showUnit(unit) {
+        var windows = document.querySelectorAll('.unit-window');
+        windows.forEach(function(window) {
+            window.style.display = 'none';
+        });
+        document.getElementById(unit).style.display = 'block';
+    }
+</script>
+ 
+ 
+ 

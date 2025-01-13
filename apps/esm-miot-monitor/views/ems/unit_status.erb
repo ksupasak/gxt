@@ -1,4 +1,3 @@
-<h1>Unit Monitor</h1> 
 <%
 	units = EMSUnit.all
 %>
@@ -24,7 +23,7 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            padding: 20px;
+            padding: 10px;
             border-radius: 5px;
         }
         .menu-item-online {
@@ -51,9 +50,15 @@
             display: block;
         }
 </style> 
-<div class="menu">
-    <div class="menu-item-online" onclick="filterUnits('Online')">Online</div>
-    <div class="menu-item-offline" onclick="filterUnits('Offline')">Offline</div>
+<div style="display: flex; justify-content: space-between;">
+  <div>
+  <h1>Unit Monitor</h1> </div>
+  <div>
+  <div class="menu">
+  <div class="menu-item-online" onclick="filterUnits('Online')">Online</div>
+  <div class="menu-item-offline" onclick="filterUnits('Offline')">Offline</div>
+  </div>
+  </div>
 </div>
 <div class="box" id="unitBox">
     <% for i in units %>
@@ -95,5 +100,5 @@
         filterUnits('Online');
     };
 </script>
-
+<br>
 <%= link_to "Units", "../EMSUnit/index", class: 'btn btn-primary' %>
