@@ -217,10 +217,10 @@ record = @current_case
 
     
 
-          <a href="#" class="btn-nav cap-btn btn btn-danger text-white px-4  radius-5" style="width:100%;">
+          <a href="#" class="video-button btn-nav cap-btn btn btn-danger text-white px-4  radius-5" style="width:100%;">
             Video</a>
 			<script>
-				$('.cap-btn').click(function(){
+				$('.cap-btn-bk').click(function(){
 					<%
 						
 						key = record.get_meeting_key
@@ -314,7 +314,309 @@ end
 
 
 %>
+<style>
 
+	/* Card Container */
+	.mtr-card {
+		width: 400px;
+		padding: 20px;
+		background-color: #2d2d44;
+		border-radius: 12px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+		color: #ffffff;
+	}
+
+	/* Header */
+	.mtr-header .mtr-badge {
+		background-color: #555566;
+		padding: 5px 10px;
+		border-radius: 12px;
+		font-size: 14px;
+	}
+
+	/* Content */
+	.mtr-content h2 {
+		margin: 10px 0;
+		font-size: 20px;
+	}
+
+	.mtr-content p {
+		margin: 5px 0;
+		font-size: 16px;
+		color: #aaaaaa;
+	}
+
+	/* Icons */
+	.mtr-icon {
+		margin-right: 5px;
+	}
+
+	/* Footer */
+	.mtr-footer {
+		margin-top: 10px;
+	}
+
+	.mtr-footer p {
+		margin: 5px 0;
+	}
+
+	/* Actions */
+	.mtr-actions {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 10px;
+	}
+
+	.mtr-link-btn {
+		background: none;
+		border: 1px solid #aaa;
+		padding: 10px;
+		border-radius: 8px;
+		cursor: pointer;
+		color: #ffffff;
+	}
+
+	.mtr-enter-btn {
+		background-color: #3a6ff8;
+		border: none;
+		padding: 10px 20px;
+		border-radius: 8px;
+		color: #ffffff;
+		cursor: pointer;
+	}
+
+	.mtr-enter-btn:hover {
+		background-color: #355edb;
+	}
+</style>
+
+<div class="modal fade" id="modal_video" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header <%=cls%>">
+				<h5 class="modal-title noti_title" id="exampleModalLabel">Case : <%=@current_case.case_no %> </h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				Meeting <%=@current_case.inspect %>
+				<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
+				<%
+					
+				rooms = EMSMeeting.where(:case_id=>@current_case.id).all
+				for room in rooms 
+			
+				name = "20250103-00001"
+				unit = "ปบ 5511 (ALS)"
+				link = '#'
+				emscase = EMSCase.find room.case_id
+				if emscase
+				  name = room.name
+				  unit = emscase.ambulance.plate_license
+				  link = "video?id=#{room.name}&case_id=#{emscase.id}&side=emd"
+				  # link = "https://meet.abs.co.th/#{room.name}?case_id=#{emscase.id}&side=emd"
+				  
+				end
+				
+				title = name.split("-")[1..-1].join("-")
+			%>
+						<div class="col-12" id="<%=name%>">
+						<div class="card radius-15 meeting  border-start border-0 border-3 border-<%=emscase.init_code.get_class if emscase.init_code%>">
+							<div class="card-header">
+								<div class="d-flex justify-content-between">
+								<div class="col-8"><strong><%= title %></strong></div>
+								<div class="col-4"><%= unit %></div>
+								
+								</div>
+								
+							</div>
+							<div class="card-body">
+								<div class="">
+									<!-- <img src="assets/images/avatars/avatar-1.png" width="110" height="110" class="rounded-circle shadow" alt=""> -->
+					  			  <div class="mtr-content">
+					  			    <h2></h2>
+					  			    <p class="mtr-location">
+					  			      <span class="mtr-icon">🔘</span> <span class="btn btn-<%=emscase.init_code.get_class if emscase.init_code%>"> <%=emscase.init_code.code if emscase.init_code %> </span>
+					  			
+					  			      <span class="mtr-icon">📍</span> <%=emscase.location%>
+					  			    </p>
+					  			    <p class="mtr-officer">
+					  			      <span class="mtr-icon">👤</span> เจ้าหน้าที่ : <%=room.creator%>
+					  			    </p>
+									
+					  			    <p class="mtr-officer">
+										<%
+										
+										sec = (Time.now - room.created_at).to_i
+										
+										txt = "< 1 นาที"
+										
+										if sec>60
+											txt = "#{sec/60}.#{((sec%60)*60).to_i} นาที "
+										end
+											
+										%>
+					  			      <span class="mtr-icon">🕒</span> เริ่ม : <% if room.created_at %><%=room.created_at.strftime("%H:%M:%S")%> (<%=txt%>)<% end %>
+					  			    </p>
+									
+					  			  </div>
+								</div>
+								
+							</div>
+							
+							<div class='card-footer'>
+						  
+							<div class="d-flex justify-content-between">
+								<a href="javascript:;" class="btn btn-outline-secondary meeting-tag radius-15 ">ผู้เข้าร่วม <span class="meeting-participant">-</span></a>
+								<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>" class="btn btn-primary radius-15 col-6">เข้าร่วม</a>
+								
+							<div class="list-inline contacts-social "> 
+								<!-- <a href="javascript:;" class="list-inline-item bg-twitter text-white border-0 meeting-participant">-</a> -->
+								<!-- <!-- <a href="javascript:;" class="list-inline-item bg-google text-white border-0">4</a> -->
+								<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>" class="list-inline-item bg-linkedin btn-outline-primary border-1 meeting-link" >🔗</a>
+								
+							</div>
+							
+							
+							</div>
+							</div>
+						</div>
+					</div>	
+			<%	end #for room %>
+				</div>	
+				<script>
+				/**
+				 * --------------------------------------------
+				 * GETTING A TOKEN FROM YOUR APPLICATION SERVER
+				 * --------------------------------------------
+				 * The methods below request the creation of a Session and a Token to
+				 * your application server. This keeps your OpenVidu deployment secure.
+				 *
+				 * In this sample code, there is no user control at all. Anybody could
+				 * access your application server endpoints! In a real production
+				 * environment, your application server must identify the user to allow
+				 * access to the endpoints.
+				 *
+				 * Visit https://docs.openvidu.io/en/stable/application-server to learn
+				 * more about the integration of OpenVidu in your application server.
+				 */
+				
+				var APPLICATION_SERVER_URL = '<%=Setting.get('videocall_server','https://openvidu.pcm-life.com')%>';
+				
+				function getToken(mySessionId) {
+				
+					return new Promise((resolve, reject) => {
+					getSession(mySessionId).then(function(re){
+						console.log(re)
+						if(re=="404"){
+							resolve(createSession(mySessionId).then(sessionId => createToken(sessionId)));
+						}else{
+				
+							resolve(createToken(mySessionId));
+						}
+				
+					})
+				
+					});
+				
+				
+				
+				}
+				
+				
+				
+				function getSession() {
+				
+				
+				return new Promise((resolve, reject) => {
+				
+					$.ajax({
+						type: "GET",
+						url: APPLICATION_SERVER_URL + "/openvidu/api/sessions",
+						beforeSend: function (xhr) {
+							xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
+						},
+						headers: { "Content-Type": "application/json" },
+						success:  response => resolve(response),
+				
+						error: function(error){
+							resolve(error.status)
+						}
+				
+					});
+				
+					});
+				
+				}
+					
+					$(document).ready(function(){
+						getSession().then(function(re){
+							
+								console.log(re["content"])
+							
+							for(var ix in re["content"]){
+								
+								i = re["content"][ix]
+								id = i["id"]
+								
+								console.log(id)
+								num = i["connections"]["numberOfElements"]
+								console.log(num)
+								
+								
+								$("#"+id+" .meeting-participant").html(num)
+								
+								$("#"+id+" .meeting-tag").removeClass('btn-outline-secondary')
+								
+								$("#"+id+" .meeting-tag").addClass('btn-outline-primary')
+								
+								
+							}
+							
+						});
+					})
+					
+				</script>					
+				<div class="gpt-link-container">
+				<span id="copy-success" style="display: none; color: green; margin-left: 10px;">Link copied!</span>
+				</div>
+				<script>
+				// Select elements
+				const copyButton = document.getElementById('copy-button');
+				const videoCallLink = document.getElementById('video-call-link');
+				const copySuccess = document.getElementById('copy-success');
+
+				// Add click event listener to the button
+				$(".meeting-link").click(function(e){
+					
+					// Create a temporary input element to hold the link text
+					const tempInput = document.createElement('input');
+					
+					
+					tempInput.value = $(this).attr("href"); // Get the links href
+					document.body.appendChild(tempInput); // Append to the body
+					tempInput.select(); // Select the text
+					document.execCommand('copy'); // Copy the text
+					document.body.removeChild(tempInput); // Remove the temporary input
+
+					// Show success message
+					copySuccess.style.display = 'inline';
+					setTimeout(() => {
+						copySuccess.style.display = 'none';
+					}, 2000); // Hide success message after 2 seconds
+					
+					e.preventDefault();
+					
+				});
+				</script>					
+			</div>
+			<div class="modal-footer">
+      			<center>
+				<button type="button" class="btn " data-bs-dismiss="modal">Close</button>
+      			</center>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="modal fade" id="modal_info" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-md">
@@ -762,6 +1064,13 @@ $('.btn-tracking').click(function(){
 modal('#modal_tracking')
 
 })
+
+$('.video-button').click(function(){
+	
+	modal('#modal_video')
+	
+})
+
 
 $('.info-button').click(function(){
 	
