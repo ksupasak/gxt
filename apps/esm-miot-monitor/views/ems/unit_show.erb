@@ -71,7 +71,16 @@ providers = Provider.all
     <% if a.unit_id.to_s == params[:id] %>
       <br>
       <div class="row">
-        <div  class="cell"><%=a.image%></div> 
+        <div class="cell">
+          <% if a.image != "" %>
+          <% att = Attachment.find a.image %>
+          <% if att %>
+          <img src="<%= att.path %>" width="50">
+          <% else %>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPAU8rBkD5OxnL5Zmi-mbhJrvyvb09n4Wfw&s"width="50">
+          <% end %>
+          <% end %>
+        </div>
         <div  class="cell"><%=a.name%></div> 
         <div  class="cell"><%=a.plate_license%></div> 
         <div  class="cell" style="color:green;">Online</div> 
@@ -80,6 +89,7 @@ providers = Provider.all
     <% end %>
     </div>
     </div>
+ 
 
     <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
     <div class="table"> 
