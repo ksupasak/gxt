@@ -57,7 +57,7 @@
 </div>
 <div class="box" id="unitBox">
     <% for i in units %>
-	<a href="unit_show">	
+	<a href="unit_show?id=<%=i.id%>">	
     <div class="itembox" data-status="<%= i.status %>">
         <% if i.image != "" %>
         <% att = Attachment.find i.image %>
