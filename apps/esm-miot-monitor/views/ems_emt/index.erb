@@ -389,6 +389,11 @@ end
 		background-color: #355edb;
 	}
 </style>
+<script>
+function startWeb(link){
+	device_interface.startWeb(link)
+}
+</script>
 
 <div class="modal fade" id="modal_video" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-md">
@@ -398,7 +403,6 @@ end
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				Meeting <%=@current_case.inspect %>
 				<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
 				<%
 					
@@ -467,7 +471,7 @@ end
 						  
 							<div class="d-flex justify-content-between">
 								<a href="javascript:;" class="btn btn-outline-secondary meeting-tag radius-15 ">ผู้เข้าร่วม <span class="meeting-participant">-</span></a>
-								<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>" class="btn btn-primary radius-15 col-6">เข้าร่วม</a>
+								<a href="javascript:startWeb('<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>')" class="btn btn-primary radius-15 col-6">เข้าร่วม</a>
 								
 							<div class="list-inline contacts-social "> 
 								<!-- <a href="javascript:;" class="list-inline-item bg-twitter text-white border-0 meeting-participant">-</a> -->
