@@ -18,7 +18,7 @@ providers = Provider.all
         }
         .cell {
             flex: 1;
-            padding: 10px;
+            padding: 1px;
             border-right: 1px solid #ccc;
             text-align: center;
         }
@@ -60,38 +60,48 @@ providers = Provider.all
   <div class="tab-content" id="nav-tabsContent">
 
     <div class="tab-pane fade show active" id="ambulances" role="tabpanel" aria-labelledby="ambulances-tab">
-
     <div class="table"> 
-    <div class="row">
-        <div  class="cell"><h3> Image </h3></div> 
-        <div  class="cell"><h3> Pame </h3></div> 
-        <div  class="cell"><h3> Plate_license </h3></div> 
-        <div  class="cell"><h3> Status </h3></div> 
-      </div>
-      <% for a in ambulances %>
-      <% if a.unit_id.to_s == params[:id] %>
+    <div class="row" >
+        <div  class="cell"><h5 style="color: blue;"> Image </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Pame </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Plate_license </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
+    </div>
+    <% for a in ambulances %>
+    <% if a.unit_id.to_s == params[:id] %>
+      <br>
       <div class="row">
         <div  class="cell"><%=a.image%></div> 
         <div  class="cell"><%=a.name%></div> 
         <div  class="cell"><%=a.plate_license%></div> 
         <div  class="cell" style="color:green;">Online</div> 
       </div>
-      <%end%>   
-      <br>
-      <% end %>
-
+    <%end%>   
+    <% end %>
     </div>
-
     </div>
 
     <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
-
+    <div class="table"> 
+     <div class="row" >
+        <div  class="cell"><h5 style="color: blue;"> First Name </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Last Name </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Phone </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
+     </div>
       <% for p in providers %>
       <% if p.unit_id.to_s == params[:id] %>
-       <p><%=p.name%></p> 
+       <br>
+       <div class="row">
+        <div  class="cell"><%=p.first_name%></div> 
+        <div  class="cell"><%=p.last_name%></div> 
+        <div  class="cell"><%=p.phone%></div> 
+        <div  class="cell" style="color:green;">Online</div> 
+       </div>
       <%end%>   
       <% end %>
 
+    </div>
     </div>
 
     <div class="tab-pane fade" id="case" role="tabpanel" aria-labelledby="case-tab">
