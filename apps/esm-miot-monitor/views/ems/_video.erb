@@ -1,3 +1,14 @@
+<style>
+        .custom-height {
+            height: 600px; /* Default height */
+        }
+
+        @media (min-width: 992px) { /* Large screen breakpoint (Bootstrap lg) */
+            .custom-height {
+                height: 100%; /* Increased height on large screens */
+            }
+        }
+    </style>
 <%
 
 meeting = nil
@@ -124,7 +135,7 @@ emd = true if  params[:side]=='emd'
 <script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 
     </head>
-    <body class="mat-typography" id="body" style="margin-right:20px">
+    <body class="mat-typography" id="body" style="margin-right:20px;height:1000px;overflow:scroll">
 	<div class="container" >
 
 	<div class="row">
@@ -136,7 +147,7 @@ emd = true if  params[:side]=='emd'
 		
 		
 	<% if params[:side]=='request' %>
-	<div   class="col-12" style="height:600px"  >
+	<div   class="col-12 custom-height" style=""  >
 		<app-root>
         <openvidu-webcomponent style=""></openvidu-webcomponent>
 		</app-root>
@@ -152,7 +163,7 @@ emd = true if  params[:side]=='emd'
 	
 	<% else %>
 	
-	<div   class="col-md-9 col-12" style="height:600px"    >
+	<div   class="col-md-9 col-12 custom-height" style=""    >
 		<app-root>
         <openvidu-webcomponent style=""></openvidu-webcomponent>
 		</app-root>
@@ -166,7 +177,7 @@ emd = true if  params[:side]=='emd'
 		
 	</div>
 	
-	
+
 	
 		<div class="col-md-3 col-12" >
 			
@@ -176,7 +187,7 @@ emd = true if  params[:side]=='emd'
 				
 			%>
 			
-			<div class="row">
+			<div class="row" id="<%=meeting.name%>">
 			
 			
 			
@@ -305,6 +316,32 @@ emd = true if  params[:side]=='emd'
 						<%	
 							 link = "video?id=#{meeting.name}&case_id=#{record.id}&side=emd"
 						%>
+						
+						<div class="row">
+
+						
+		  			    <p class="mtr-location">
+		  			    
+		  			      <span class="mtr-icon">📍</span> <%=record.ambulance.plate_license%>
+						<a href="javascript:;" class="btn btn-outline-secondary meeting-tag radius-15 ">ผู้เข้าร่วม <span class="meeting-participant">-</span></a>
+						  
+		  			    </p>
+						
+		  			    <p class="mtr-location">
+		  			      <span class="mtr-icon">🔘</span> <span class="btn btn-<%=record.init_code.get_class if record.init_code%>"> <%=record.init_code.code if record.init_code %> </span>
+		  			
+		  			      <span class="mtr-icon">📍</span> <%=record.location%>
+		  			    </p>
+		  			    <p class="mtr-officer">
+		  			      <span class="mtr-icon">👤</span> เจ้าหน้าที่ : <%=meeting.creator%>
+		  			    </p>
+						
+						
+					
+
+						</div>
+						
+						
 						<div class="row">
 							<div class="col-7">
 								Meeting Link : 						   
@@ -390,6 +427,7 @@ emd = true if  params[:side]=='emd'
 				  
 				  function autoJoin() {
 				    $('#join-button').click()
+					getToken("<%=session_id%>")
 				  }
 			
 		
@@ -416,6 +454,34 @@ emd = true if  params[:side]=='emd'
 
 
 
+
+	// getSession().then(function(re){
+	//
+	// 		console.log(re["content"])
+	//
+	// 	for(var ix in re["content"]){
+	//
+	// 		i = re["content"][ix]
+	// 		id = i["id"]
+	//
+	// 		console.log(id)
+	// 		num = i["connections"]["numberOfElements"]
+	// 		console.log(num)
+	//
+	//
+	// 		$("#"+id+" .meeting-participant").html(num)
+	//
+	// 		$("#"+id+" .meeting-tag").removeClass('btn-outline-secondary')
+	//
+	// 		$("#"+id+" .meeting-tag").addClass('btn-outline-primary')
+	//
+	//
+	// 	}
+	//
+	// });
+
+
+
     		/**
     		 * --------------------------------------------
     		 * GETTING A TOKEN FROM YOUR APPLICATION SERVER
@@ -433,17 +499,33 @@ emd = true if  params[:side]=='emd'
     		 */
 
     		var APPLICATION_SERVER_URL = '<%=Setting.get('videocall_server','https://openvidu.pcm-life.com')%>';
-
-    		function getToken(mySessionId) {
+		
+    		function getToken(sessionId) {
 
     			return new Promise((resolve, reject) => {
-    			getSession(mySessionId).then(function(re){
-    				console.log(re)
+    			getSession(sessionId).then(function(re){
+					
     				if(re=="404"){
-    					resolve(createSession(mySessionId).then(sessionId => createToken(sessionId)));
+    					resolve(createSession(sessionId).then(sessionId => createToken(sessionId)));
     				}else{
 
-    					resolve(createToken(mySessionId));
+    					resolve(createToken(sessionId));
+						
+						updateSession(sessionId)
+						
+							// id = re["id"]
+			//
+			// 				console.log(id)
+			// 				num = re["connections"]["numberOfElements"]
+			// 				console.log(num)
+			//
+			//
+			// 				$("#"+id+" .meeting-participant").html(num)
+			//
+			// 				$("#"+id+" .meeting-tag").removeClass('btn-outline-secondary')
+			//
+			// 				$("#"+id+" .meeting-tag").addClass('btn-outline-primary')
+						
     				}
 
     			})
@@ -454,7 +536,22 @@ emd = true if  params[:side]=='emd'
 
     		}
 
+			function updateSession(sessionId){
+    			getSession(sessionId).then(function(re){
+					
+    				
+						
+					id = re["id"]
+					num = re["connections"]["numberOfElements"]
+					$("#"+id+" .meeting-participant").html(num)
 
+					$("#"+id+" .meeting-tag").removeClass('btn-outline-secondary')
+
+					$("#"+id+" .meeting-tag").addClass('btn-outline-primary')
+
+	
+    			});
+			}
 
     		function getSession(sessionId) {
 
@@ -499,11 +596,18 @@ emd = true if  params[:side]=='emd'
     		}
 
     		function createToken(sessionId) {
+				
     			return new Promise((resolve, reject) => {
+					
+					username="ok"
+					
     				$.ajax({
     					type: 'POST',
     					url: APPLICATION_SERVER_URL + '/openvidu/api/sessions/' + sessionId + '/connection',
-    					data: JSON.stringify({}),
+						data: JSON.stringify({
+		                    role: "PUBLISHER",
+		                    data: `username=${username}`
+						}),
     					beforeSend: function (xhr) {
     					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
     					},
@@ -513,12 +617,12 @@ emd = true if  params[:side]=='emd'
     				});
     			});
     		}
-
+			
+			
 
 			<% if emd %>
 			
 			function reload_message(ems_id, admit_id){
-
 
 
 			ems_case_id = ems_id
@@ -528,9 +632,10 @@ emd = true if  params[:side]=='emd'
 			// alert(""+ems_id +" "+admit_id)
 
 			$.ajax({
-			  url: "<%=get_path "../EMSParamedic/message_partial"%>?admit_id="+message_admit_id+"&di=reverse",
+			  url: "<%= "../EMSParamedic/message_partial"%>?admit_id="+message_admit_id+"&di=reverse",
 			  context: document.body
 			}).done(function(data) {
+				
 			  $( '.message-partial' ).html(data);
 
 			   // $('.element-tab').scrollTop(100000000)
@@ -548,8 +653,6 @@ emd = true if  params[:side]=='emd'
 			}
 			
 			reload_message('<%=ems_case.id%>','<%=ems_case.admit.id%>')
-			
-			
 			
 			
 			<% end %>
@@ -652,13 +755,14 @@ emd = true if  params[:side]=='emd'
 				});
 	
 			});
-
+			
+			
 
 	
 	
 		</script>
-			
-
+		
+	
 	</body>
 
 </html>
