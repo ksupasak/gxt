@@ -101,6 +101,9 @@ providers = Provider.all
         <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
         <div  class="cell"><h5 style="color: blue;">   </h3></div> 
     </div>
+
+
+  
     <% for a in ambulances %>
     <% if a.unit_id.to_s == params[:id] %>
       <br>
@@ -120,7 +123,7 @@ providers = Provider.all
         <div  class="cell" style="color:green;">Online</div> 
         <div class="cell" >
           <div class="menu"> 
-            <div  class="menu-item-edit">Edit</div>
+          <a  href="../Ambulance/edit?id=<%=a.id%>">  <div  class="menu-item-edit">Edit</div> </a>
             <div   class="menu-item-delete">Delete</div>
           </div>
         </div>
@@ -160,5 +163,9 @@ providers = Provider.all
     </div>
 
   </div>
+</div>
+ 
+<div  width: 80px;>
+<%= link_to "Add", "../Ambulance/create", class: 'btn btn-primary' %>
 </div>
 </div>
