@@ -4,7 +4,6 @@
 <%= inline(this,:'_init')  %>
 
 
-
 <style>
        /* Set the size of the div element that contains the map */
       #dashboard-mapx {
@@ -222,6 +221,7 @@ record = @current_case
 			<script>
 				$('.cap-btn-bk').click(function(){
 					<%
+					if record
 						
 						key = record.get_meeting_key
 						session_id = "#{key}-EMS"
@@ -232,6 +232,8 @@ record = @current_case
 					// device_interface.startVideoCall("<%=session_id%>")
 					
 					device_interface.startWeb("<%=link%>")
+					
+					<% end %>
 					
 					// window.location = "../EMS/video?id=<%=session_id%>-EMS&case_id=<%=record.id%>&side=ems&type=EMS"
 					
@@ -497,11 +499,11 @@ function startWeb(link){
 					
 				%w{EMS CON}.each do |m|
 				  
-				  m_id = "#{emscase.get_meeting_key}-#{m}"
+				  m_id = "#{record.get_meeting_key}-#{m}"
 				  
 				  unless mmap[m_id]
 						
-  				  link = "../EMS/video?id=#{m_id}&case_id=#{emscase.id}&side=emd"
+  				  link = "../EMS/video?id=#{m_id}&case_id=#{record.id}&side=emd"
 				
 				%>
 				<div class="col-12">

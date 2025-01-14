@@ -3,9 +3,10 @@ require 'json'
 
 
 host = 'https://corsium.com.au/WebAPI/chula'
-
+# host = 'https://corsium.com.au/WebAPI/ratchaphiphat'
 uri = URI("#{host}/Account/APILogin")
 
+puts host
 
 req = Net::HTTP::Post.new(uri, {'Accept'=>'application/json','Content-Type' =>'application/json'})
 
@@ -19,7 +20,8 @@ p['Username'] = "smart_ems@chula.go.th"
 p['Password'] = "87CX9D4VGA5y"
 p['DEM'] = "AES"
 p['Key'] = ""
-
+# p['Username'] = "ems@ratchaphiphat.co.th"
+# p['Password'] = "RPPems1669"
 
 req.body = p.to_json
 
