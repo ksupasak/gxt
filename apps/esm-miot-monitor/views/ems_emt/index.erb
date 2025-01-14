@@ -405,9 +405,14 @@ function startWeb(link){
 			<div class="modal-body">
 				<div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
 				<%
+				
+				mmap = {}
 					
 				rooms = EMSMeeting.where(:case_id=>@current_case.id).all
+				
 				for room in rooms 
+					
+					mmap[room.name] = room
 			
 				name = "20250103-00001"
 				unit = "ปบ 5511 (ALS)"
@@ -486,6 +491,34 @@ function startWeb(link){
 						</div>
 					</div>	
 			<%	end #for room %>
+			
+				
+				<%
+					
+				%w{EMS CON}.each do |m|
+				  
+				  m_id = "#{emscase.get_meeting_key}-#{m}"
+				  
+				  unless mmap[m_id]
+						
+  				  link = "../EMS/video?id=#{m_id}&case_id=#{emscase.id}&side=emd"
+				
+				%>
+				<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<%=link_to "สร้าง Meeting #{m}", link , :class=>'btn btn-outline-primary'%>
+					</div>
+				</div >
+				</div >
+				
+				<%
+					end
+				end
+			
+				%>
+			
+			
 				</div>	
 				<script>
 				/**

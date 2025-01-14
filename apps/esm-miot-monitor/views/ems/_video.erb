@@ -45,7 +45,47 @@ emd = false
 
 emd = true if  params[:side]=='emd'
 
-%>
+    
+        type = 'PRE'
+        type = params[:type] if params[:type]
+    
+        session_id = 'SessionA'
+        session_id = params[:id] if params[:id]
+		
+	    if ems_case
+      
+      
+            session_id = "#{ems_case.get_meeting_key(Setting.get("aoc_code"))}-#{type}" unless params[:id]
+			
+			
+			meeting = EMSMeeting.where(:name=>session_id).first
+			login = "N/A"
+			login = @current_user.login if @current_user
+			
+			
+			unless meeting
+         
+			   meeting = EMSMeeting.create(:name=>session_id, :creator=>login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
+			   
+			   if type=='EMS' 
+			   
+			   	ems_case.send_push_noti "EMS-Meeting", "Create EMS Room", "meeting", session_id
+			   
+			   end    
+			   
+		   #	meeting  = EMSMeeting.where(:name=>params[:id]).first 
+			   
+			
+			end
+		
+		
+		end
+		
+	
+		
+		
+		
+    %>
 
 <html>
     <head>
@@ -330,45 +370,7 @@ emd = true if  params[:side]=='emd'
     publishAudio = true;
 
 
-    <%
-    
-        type = 'PRE'
-        type = params[:type] if params[:type]
-    
-        session_id = 'SessionA'
-        session_id = params[:id] if params[:id]
-		
-	    if ems_case
-      
-      
-            session_id = "#{ems_case.get_meeting_key(Setting.get("aoc_code"))}-#{type}" unless params[:id]
-			
-			
-			meeting = EMSMeeting.where(:name=>session_id).first
-			login = "N/A"
-			login = @current_user.login if @current_user
-			
-			
-			unless meeting
-         
-			   meeting = EMSMeeting.create(:name=>session_id, :creator=>login, :case_id=>ems_case.id, :status=>'OPEN', :type=>type)
-			   
-			   if type=='EMS' 
-			   
-			   	ems_case.send_push_noti "EMS-Meeting", "Create EMS Room", "meeting", session_id
-			   
-			   end    
-			
-			end
-		
-		
-		end
-		
-	
-		
-		
-		
-    %>
+  
 
 
 		window.onload = () => {
