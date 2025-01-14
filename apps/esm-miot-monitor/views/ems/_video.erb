@@ -20,18 +20,39 @@ if params[:case_id]
 	    ems_case.update_message @context, "video call", 'Zone.Message'
 	end
 		
-end
+		
+	record = ems_case	
 
+
+	code = EMSCode.find record.init_cbd_code
+
+
+
+	cls = "primary"
+
+	cls = record.init_code.get_class if code	
+		
+end
+	
+	
+emd = false
+
+emd = true if  params[:side]=='emd'
 
 %>
 
 <html>
     <head>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWtMwbjaQqTxTHFwobS+4UzldSm8U7sFtKJgg5c7DQm7Kr1YHySR2O+Cz1hh3zEZ" crossorigin="anonymous">
+		
+		<link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
+			<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+		<link href="/rocker/assets/css/app.css" rel="stylesheet">
+		<link href="/rocker/assets/css/icons.css" rel="stylesheet">
         <script src='/vendor/openvidu/openvidu-webcomponent-2.28.0.js'></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.28.0.css">
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <style>
 	:root {
 	  --ov-primary-color: #303030;
@@ -54,12 +75,22 @@ end
 	  --ov-panel-radius: 5px;
 	}
 	</style>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
 
     </head>
-    <body class="mat-typography" id="body">
-	<div class="container">
+    <body class="mat-typography" id="body" style="margin-right:20px">
+	<div class="container" >
+
 	<div class="row">
-		<div class="col-9">
+		<div class="col-xs-9">
+		
+		</div>
+	</div>
+	<div class="row" >
+		
+		
+	<% if params[:side]=='request' %>
+	<div   class="col-12" style="height:600px"  >
 		<app-root>
         <openvidu-webcomponent style=""></openvidu-webcomponent>
 		</app-root>
@@ -69,15 +100,206 @@ end
 		    <button (click)="toggleAudio()">Toggle Audio</button> -->
 		  </div>
 		</ov-videoconference>
+		
+		
 	</div>
 	
-		<div class="col-3">
-			dfdfdf
-		</div>
+	<% else %>
+	
+	<div   class="col-md-9 col-12" style="height:600px"    >
+		<app-root>
+        <openvidu-webcomponent style=""></openvidu-webcomponent>
+		</app-root>
+		<ov-videoconference [tokens]="tokens">
+		  <div *ovToolbar style="text-align: center;">
+		    <!-- <button (click)="toggleVideo()">Toggle Video</button>
+		    <button (click)="toggleAudio()">Toggle Audio</button> -->
+		  </div>
+		</ov-videoconference>
+		
+		
 	</div>
+	
+	
+	
+		<div class="col-md-3 col-12" >
+			
+			
+			<%
+				
+				
+			%>
+			
+			<div class="row">
+			
+			
+			
+			<div class="col-12  d-flex align-items-stretch">
+	
+				<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
+				<div class="card-body">
+					<div class="d-flex align-items-center">
+						<div class="row" >
+
+
+							<div class="row">
+
+								<div class="col-12 col-xl-7">
+									<h4 class="my-1 text-<%=cls%>">
+
+										<%=record.case_no%>
+
+									</h4>
+
+								</div>
+
+								<div class="col-12 col-xl-5">
+									<h4 class="my-1 text-info " >
+
+									 <%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
+
+									</h4>
+								</div>
+
+							</div>
+
+
+							<div class="row">
+
+								<div class="col-7">
+									ผู้แจ้ง : <span class="contact_name"><%=record.contact_name%></span>
+								</div>
+
+							<div class="col-5">
+								<label class="phone">สถานที่<label> : <span class="contact_name v"><%=record.location%></span>
+							</div>
+
+
+							</div>
+
+
+
+							<div class="row">
+
+								<div class="col-12">
+									<label class="phone">อาการนำ<label> : <span class="cheif_complain v"><%=record.chief_complain%></span>
+								</div>
+
+
+
+							</div>
+
+
+
+							<!-- <p class="mb-0 text-secondary">
+
+
+							ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%>
+
+
+
+							</p>
+							<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p> -->
+							<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
+
+					<div class="d-flex align-items-center">
+							<div class="row">
+
+						<div class="row">
+
+							<div class="col-7">
+								<h4 class="my-1 ">
+
+									ผู้ป่วย <%=record.patient_gender%> <%=record.patient_age%>
+
+								</h4>
+
+							</div>
+
+							<div class="col-5">
+								<h4 class="my-1 text-<%=cls%>">
+									<%=record.init_code.name.split(" ")[0] if record.init_code %>
+
+								</h4>
+							</div>
+
+						</div>
+
+
+
+						<div class="row">
+
+							<div class="col-7">
+								ผู้ป่วย : <span class=":init_cbd_code v"><%=record.patient_name%></span>
+							</div>
+
+							<div class="col-5">
+								CID : <span class=":init_cbd_code v"><%=record.patient_cid%></span>
+							</div>
+
+
+
+						</div>
+
+
+						<div class="row">
+
+
+
+							<div class="col-7">
+								<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain v"><%=record.patient_underlying%></span>
+							</div>
+
+						<div class="col-5">
+							<label class="phone">HN : <label> <span class="contact_name v"><%=record.patient_hn%></span>
+						</div>
+
+
+						</div>
+
+
+					</div>
+						<!-- <div>
+							<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] if record.init_code %></h4>
+							<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
+							<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
+
+
+						</div> -->
+						<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+						</div> -->
+					</div>
+				</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
+			</div>
+			
+		
+			
+			
+			
+		</div>
+			
+			
+			<div class="card col-12 d-flex align-items-stretch">
+			<img src="/stream" width="100%" >
+			</div>
+		
+			
+			<div class=" card col-12 message-partial d-flex align-items-stretch" id="" style="border:0px solid;height:500px;overflow:scroll">
+			
+			</div>
+			
+		
+	</div>
+
+<% end %>
 </div>
-
-
     <script>
 
 
@@ -268,9 +490,118 @@ end
     				});
     			});
     		}
+
+
+			<% if emd %>
+			
+			function reload_message(ems_id, admit_id){
+
+
+
+			ems_case_id = ems_id
+
+			message_admit_id = admit_id
+
+			// alert(""+ems_id +" "+admit_id)
+
+			$.ajax({
+			  url: "<%=get_path "../EMSParamedic/message_partial"%>?admit_id="+message_admit_id+"&di=reverse",
+			  context: document.body
+			}).done(function(data) {
+			  $( '.message-partial' ).html(data);
+
+			   // $('.element-tab').scrollTop(100000000)
+
+
+				// update_message();
+	//
+	// 			if(text_mode==true){
+	// 				update_text();
+	// 			}
+
+
+			});
+
+			}
+			
+			reload_message('<%=ems_case.id%>','<%=ems_case.admit.id%>')
+			
+			
+			
+			
+			<% end %>
+
+				
+			<%
+			
+			@current_zone = Zone.find session[:current_zone]
+			
+			
+			%>
+			
+			function show(obj){
+				console.log(obj)
+			}
+
+
+		    tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+
+
+		    var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+		    ws.onopen    = function()  { show('websocket opened');
+
+		    	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+
+
+		    };
+
+
+		    ws.onclose   = function()  { show('websocket closed');
+
+		   	setTimeout(function () {
+		         // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+		      }, 2000); //will call the function after 2 secs.
+
+
+		    }
+
+		    ws.onmessage = function(m) {
+
+
+		  	  // console.log("package="+m.data.length)
+
+		  	  // show(m.data)
+
+		  		lines = m.data.split("\n")
+
+		  		// console.log(lines[0].split(" ")[0])
+		  		if(lines[0].split(" ")[0]=='Zone.Message'){
+		
+		  		  reload_message("<%=ems_case.id%>","<%=ems_case.admit.id%>")
+					
+		  		}
+		  		if( typeof process_message === 'function'){
+		  			process_message(lines)
+		  		}
+	    
+
+
+		    }
+
+		  	var interval = null;
+	
+
+
+
+
+
+
+
+
     	</script>
 			
-			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-zB50ffvGpkA78+Q9hrW63MZ7PhZDWfBLFkYYALsjxaV4ZhL5o10MRTkuQpJsf3xz" crossorigin="anonymous"></script>
 
 	</body>
 

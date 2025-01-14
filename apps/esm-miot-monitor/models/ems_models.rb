@@ -1207,6 +1207,11 @@ end
 
 class EMSParamedicController < EMSGXTDocument
 
+  def acl
+
+    return {:message_partial=>'*',:image_upload=>'*', :register_remote=>'*', :provider=>'*'}
+
+  end
 end
 
 
