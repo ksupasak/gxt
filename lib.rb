@@ -35,7 +35,7 @@ def stream_mjpeg_to_client(client)
             # puts chunk.size
           # Forward each chunk to the client
           client << chunk
-        
+         sleep 0.02
         rescue Errno::EPIPE
           puts "Client disconnected"
           break
