@@ -18,18 +18,51 @@ providers = Provider.all
         }
         .cell {
             flex: 1;
-            padding: 1px;
+            border-right: 1px solid #ccc;
+            text-align: center;
+        }
+        .cell-name {
+            flex: 1;
+            padding: 20px;
             border-right: 1px solid #ccc;
             text-align: center;
         }
         .cell:last-child {
             border-right: none;
         }
+        .menu {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu-item-delete {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+		.menu-item-edit {
+            padding: 10px 20px;
+            background-color: yellow;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
     </style>
-
+<div class="card" style=" padding: 20px;">
 <h1><%=unit.name%></h1>
 <p><%=unit.id%></p>
-<div class="card-body">
+<div class="card"  >
   <!-- Nav tabs -->
   <ul class="nav nav-tabs nav-primary" id="nav-tabs" role="tablist">
     <li class="nav-item" role="presentation">
@@ -63,9 +96,10 @@ providers = Provider.all
     <div class="table"> 
     <div class="row" >
         <div  class="cell"><h5 style="color: blue;"> Image </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Pame </h3></div> 
+        <div  class="cell"><h5 style="color: blue;"> Name </h3></div> 
         <div  class="cell"><h5 style="color: blue;"> Plate_license </h3></div> 
         <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
+        <div  class="cell"><h5 style="color: blue;">   </h3></div> 
     </div>
     <% for a in ambulances %>
     <% if a.unit_id.to_s == params[:id] %>
@@ -75,15 +109,21 @@ providers = Provider.all
           <% if a.image != "" %>
           <% att = Attachment.find a.image %>
           <% if att %>
-          <img src="<%= att.path %>" width="50">
+          <img src="<%= att.path %>" width="150">
           <% else %>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPAU8rBkD5OxnL5Zmi-mbhJrvyvb09n4Wfw&s"width="50">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPAU8rBkD5OxnL5Zmi-mbhJrvyvb09n4Wfw&s"width="100">
           <% end %>
           <% end %>
         </div>
         <div  class="cell"><%=a.name%></div> 
         <div  class="cell"><%=a.plate_license%></div> 
         <div  class="cell" style="color:green;">Online</div> 
+        <div class="cell" >
+          <div class="menu"> 
+            <div  class="menu-item-edit">Edit</div>
+            <div   class="menu-item-delete">Delete</div>
+          </div>
+        </div>
       </div>
     <%end%>   
     <% end %>
@@ -101,12 +141,12 @@ providers = Provider.all
      </div>
       <% for p in providers %>
       <% if p.unit_id.to_s == params[:id] %>
-       <br>
+      
        <div class="row">
-        <div  class="cell"><%=p.first_name%></div> 
-        <div  class="cell"><%=p.last_name%></div> 
-        <div  class="cell"><%=p.phone%></div> 
-        <div  class="cell" style="color:green;">Online</div> 
+        <div  class="cell-name"><%=p.first_name%></div> 
+        <div  class="cell-name"><%=p.last_name%></div> 
+        <div  class="cell-name"><%=p.phone%></div> 
+        <div  class="cell-name" style="color:green;">Online</div> 
        </div>
       <%end%>   
       <% end %>
@@ -120,4 +160,5 @@ providers = Provider.all
     </div>
 
   </div>
+</div>
 </div>
