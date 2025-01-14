@@ -1,5 +1,7 @@
 <%
 
+meeting = nil
+
 if params[:case_id]
 	
 	ems_case = EMSCase.find params[:case_id]
@@ -26,11 +28,15 @@ if params[:case_id]
 
 	code = EMSCode.find record.init_cbd_code
 
-
+	
 
 	cls = "primary"
 
 	cls = record.init_code.get_class if code	
+	
+	
+	meeting  = EMSMeeting.where(:name=>params[:id]).first 
+	
 		
 end
 	
@@ -256,6 +262,22 @@ emd = true if  params[:side]=='emd'
 
 
 						</div>
+						<%	
+							 link = "video?id=#{meeting.name}&case_id=#{record.id}&side=emd"
+						%>
+						<div class="row">
+							<div class="col-7">
+								Meeting Link : 						   
+
+							</div>
+							<div class="col-5">
+									<div class="list-inline contacts-social "> 
+							<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>" class="list-inline-item bg-linkedin btn-outline-primary border-1 meeting-link" >🔗</a>
+							<br/> <span id="copy-success" style="display: none; color: green; margin-left: 10px;">Link copied!</span>
+							
+									</div>
+							</div>
+						</div>
 
 
 					</div>
@@ -342,8 +364,7 @@ emd = true if  params[:side]=='emd'
 		
 		end
 		
-		
-		
+	
 		
 		
 		
@@ -534,7 +555,7 @@ emd = true if  params[:side]=='emd'
 				
 			<%
 			
-			@current_zone = Zone.find session[:current_zone]
+			@current_zone = Zone.find record.zone_id
 			
 			
 			%>
@@ -597,10 +618,43 @@ emd = true if  params[:side]=='emd'
 
 
 
+			// Select elements
+			const copyButton = document.getElementById('copy-button');
+			const videoCallLink = document.getElementById('video-call-link');
+			const copySuccess = document.getElementById('copy-success');
+
+			$(document).ready(function(){
+				
+				// Add click event listener to the button
+				$(".meeting-link").click(function(e){
+						
+					e.preventDefault();
+			
+				    // Create a temporary input element to hold the link text
+				    const tempInput = document.createElement('input');
+		
+		
+				    tempInput.value = $(this).attr("href"); // Get the link's href
+				    document.body.appendChild(tempInput); // Append to the body
+				    tempInput.select(); // Select the text
+				    document.execCommand('copy'); // Copy the text
+				    document.body.removeChild(tempInput); // Remove the temporary input
+
+				    // Show success message
+				    copySuccess.style.display = 'inline';
+				    setTimeout(() => {
+				        copySuccess.style.display = 'none';
+				    }, 2000); // Hide success message after 2 seconds
+		
+				
+				});
+	
+			});
 
 
-
-    	</script>
+	
+	
+		</script>
 			
 
 	</body>
