@@ -3,6 +3,8 @@ require_relative 'models/er_models'
 require_relative 'models/health_models'
 require_relative 'models/aoc_models'
 require_relative 'models/ems_models'
+require_relative 'models/emr_models'
+
 
 module EsmMiotMonitor
 
