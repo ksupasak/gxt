@@ -16,12 +16,12 @@
 			
 		ref_cases = EMSCase.where(:_id=>{'$nin'=>ems_cases.collect{|i| i.id }},:schedule_from=>{'$gte'=>start_date.beginning_of_day,'$lte'=>end_date.end_of_day })
 		
-			
+		ems_cases_all = EMSCase.all	
 			
 		%>
 	
 		<h6 class="mb-0 text-uppercase">Date : <%=start_date%> - <%= end_date %>
-		
+		 
 		
 		<%= link_to "+ Request", "create?start=#{start_date.strftime("%Y-%m-%dT%H:%M")}&end=#{end_date.strftime("%Y-%m-%dT%H:%M")}", :class=>'btn btn-success'%>
 		
@@ -33,33 +33,40 @@
 		<div class="card">
 	
 			<div class="card-body" >
-				<table class="table">
-					<% for i in ems_cases+ref_cases%>
+				 
+				<% for i in ems_cases+ref_cases%>
+				<div class="card">
+					<div class="card-body" >
 					<tr>
-				
-					
-					<td>
-					<a href="show?id=<%=i.id%>">
-						<%= i.case_type   %>
-					</a>
-					</td>
-					
-					<td>
-					<a href="show?id=<%=i.id%>">
-						<%= i.case_no   %>
-					</a>
-					</td>
-					
-					<td>
-						<%= i.location   %>
-					</td>
-						
-					<td>
-						<%= i.status   %>
-					</td>
-				
-					</tr>
-					<% end %>
-		
+						<td>
+							<a href="show?id=<%=i.id%>">
+							Type: <%= i.case_type   %>
+							</a>
+						</td>
+						<td>
+							HN: <%= i.patient_hn %>
+						</td>
+						<td>
+							Patient Name: <%= i.patient_name   %>     
+						</td>
+						<td>
+						<a href="show?id=<%=i.id%>">
+							Case No: <%= i.case_no   %>
+						</a>
+						</td>
+						<td>
+							Location: <%= i.location   %>
+						</td>
+						<td>
+							Status: <%= i.status   %>
+						</td>
+						</tr>
+					</div>
+				</div>
+
+				<% end %>
+			 
+
+				 
 			</div>
 		</div>
