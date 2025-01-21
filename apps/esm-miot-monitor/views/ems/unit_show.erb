@@ -5,65 +5,12 @@ ambulances = Ambulance.all
 providers = Provider.all
 
 %>
-<style>
-        .table {
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #ccc;
-            width: 100%;
-        }
-        .row {
-            display: flex;
-            border-bottom: 1px solid #ccc;
-        }
-        .cell {
-            flex: 1;
-            border-right: 1px solid #ccc;
-            text-align: center;
-        }
-        .cell-name {
-            flex: 1;
-            padding: 20px;
-            border-right: 1px solid #ccc;
-            text-align: center;
-        }
-        .cell:last-child {
-            border-right: none;
-        }
-        .menu {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .menu-item-delete {
-            padding: 10px 20px;
-            background-color: red;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-		.menu-item-edit {
-            padding: 10px 20px;
-            background-color: yellow;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-    </style>
+ 
 <div class="card" style=" padding: 20px;">
 <h1><%=unit.name%></h1>
 <p><%=unit.id%></p>
-<div class="card"  >
-  <!-- Nav tabs -->
+<div class="card">
+
   <ul class="nav nav-tabs nav-primary" id="nav-tabs" role="tablist">
     <li class="nav-item" role="presentation">
       <a class="nav-link active" id="ambulances-tab" data-bs-toggle="tab" href="#ambulances" role="tab" aria-selected="true">
@@ -90,82 +37,108 @@ providers = Provider.all
       </a>
     </li>
   </ul>
+
   <div class="tab-content" id="nav-tabsContent">
-
     <div class="tab-pane fade show active" id="ambulances" role="tabpanel" aria-labelledby="ambulances-tab">
-    <div class="table"> 
-    <div class="row" >
-        <div  class="cell"><h5 style="color: blue;"> Image </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Name </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Plate_license </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
-        <div  class="cell"><h5 style="color: blue;">   </h3></div> 
-    </div>
-
-
   
-    <% for a in ambulances %>
-    <% if a.unit_id.to_s == params[:id] %>
-      <br>
-      <div class="row">
-        <div class="cell">
-          <% if a.image != "" %>
-          <% att = Attachment.find a.image %>
-          <% if att %>
-          <img src="<%= att.path %>" width="150">
-          <% else %>
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPAU8rBkD5OxnL5Zmi-mbhJrvyvb09n4Wfw&s"width="100">
-          <% end %>
-          <% end %>
-        </div>
-        <div  class="cell"><%=a.name%></div> 
-        <div  class="cell"><%=a.plate_license%></div> 
-        <div  class="cell" style="color:green;">Online</div> 
-        <div class="cell" >
-          <div class="menu"> 
-          <a  href="../Ambulance/edit?id=<%=a.id%>">  <div  class="menu-item-edit">Edit</div> </a>
-            <div   class="menu-item-delete">Delete</div>
-          </div>
-        </div>
-      </div>
-    <%end%>   
-    <% end %>
-    </div>
-    </div>
- 
-
-    <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
-    <div class="table"> 
-     <div class="row" >
-        <div  class="cell"><h5 style="color: blue;"> First Name </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Last Name </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Phone </h3></div> 
-        <div  class="cell"><h5 style="color: blue;"> Status </h3></div> 
-     </div>
-      <% for p in providers %>
-      <% if p.unit_id.to_s == params[:id] %>
-      
-       <div class="row">
-        <div  class="cell-name"><%=p.first_name%></div> 
-        <div  class="cell-name"><%=p.last_name%></div> 
-        <div  class="cell-name"><%=p.phone%></div> 
-        <div  class="cell-name" style="color:green;">Online</div> 
-       </div>
-      <%end%>   
+    <table class="table mb-0 table-striped" style="width:100%">
+    <thead>
+      <tr>
+        <th scope="col">Image</th>
+        <th scope="col">Name</th>
+        <th scope="col">Plate License</th>
+        <th scope="col">Status</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for a in ambulances %>
+        <% if a.unit_id.to_s == params[:id] %>
+          <tr>
+            <td>
+              <% if a.image != "" %>
+                <% att = Attachment.find a.image %>
+                <% if att %>
+                  <img src="<%= att.path %>" width="150">
+                <% else %>
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFPAU8rBkD5OxnL5Zmi-mbhJrvyvb09n4Wfw&s" width="100">
+                <% end %>
+              <% end %>
+            </td>
+            <td><%=a.name%></td>
+            <td><%=a.plate_license%></td>
+            <td>
+              <div class="cell" style="color:green;">Online</div>
+            </td>
+            <td>
+              <a href="../Ambulance/edit?id=<%=a.id%>">
+                <div class="menu-item-edit">Edit</div>
+              </a>
+              <div class="menu-item-delete">Delete</div>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
+    </tbody>
+  </table>  
+    
+    </div>
+    <div class="tab-pane fade" id="provider" role="tabpanel" aria-labelledby="provider-tab">
+      
+    <table class="table mb-0 table-striped" style="width:100%">
+    <thead>
+      <tr>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name </th>
+        <th scope="col">Phone</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for p in  providers %>
+        <% if p.unit_id.to_s == params[:id] %>
+          <tr>
+            <td><%=p.first_name%></td>
+            <td><%=p.last_name%></td>
+            <td><%=p.phone%></td>
+            <td><div  class="cell-name" style="color:green;">Online</div></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+    </table>
+
 
     </div>
-    </div>
-
     <div class="tab-pane fade" id="case" role="tabpanel" aria-labelledby="case-tab">
-       
-
+      <p>44444</p>
     </div>
-
   </div>
+
+  <div style="width: 80px;">
+    <%= link_to "Add", "../Ambulance/create", class: 'btn btn-primary' %>
+  </div>
+
 </div>
- 
-<div  width: 80px;>
-<%= link_to "Add", "../Ambulance/create", class: 'btn btn-primary' %>
-</div>
-</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const tabContent = document.getElementById('nav-tabsContent');
+    
+    function adjustTabContentHeight() {
+      const activePane = document.querySelector('.tab-pane.show.active');
+      tabContent.style.height = activePane.offsetHeight + 'px';
+    }
+    
+    // Adjust the height on load
+    adjustTabContentHeight();
+    
+    // Adjust the height on tab change
+    let tabs = document.querySelectorAll('.nav-link');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', function() {
+        setTimeout(adjustTabContentHeight, 50); // Adjust height after transition
+      });
+    });
+  });
+</script>
