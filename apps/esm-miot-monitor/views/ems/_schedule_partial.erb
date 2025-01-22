@@ -35,13 +35,12 @@
 			<div class="card-body" >
 				 
 				<% for i in ems_cases+ref_cases%>
+				 
 				<div class="card">
 					<div class="card-body" >
 					<tr>
 						<td>
-							<a href="show?id=<%=i.id%>">
 							Type: <%= i.case_type   %>
-							</a>
 							<br>
 						</td>
 						<td>
@@ -53,10 +52,11 @@
 							<br> 
 						</td>
 						<td>
+						Case No:
 						<a href="show?id=<%=i.id%>">
-							Case No: <%= i.case_no   %>
+							 <%= i.case_no   %>
+						</a> 
 							<br>
-						</a>
 						</td>
 						<td>
 							Location: <%= i.location   %>
