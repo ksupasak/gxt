@@ -2034,11 +2034,28 @@ MSG
                   
 
                   admits = admit_map[name][z.id]
-
+                  
+                  if app.settings.name =='pyts'
+                    puts "PYTS" 
+                    
+                    puts admits.inspect 
+                    
+                  end
+                  
 
                   if z.mode == 'aoc' || z.mode == 'ems'
 
+                  
+                    if app.settings.name =='pyts'
+                      puts "PYTS 2"
+                      puts  ambu_map.inspect 
+                    end
+                  
                           if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0 and position_list
+
+                            if app.settings.name =='pyts'
+                              puts "PYTS 2" 
+                            end
 
                             result[:ambu_data] = {}
 
