@@ -2074,7 +2074,7 @@ MSG
                                   #
                                   # am[:admit_id] = admit.id if admit
                                   
-                                  if position_list[i.device_no] 
+                                  if position_list and position_list[i.device_no]  
                                   
                                   vl = position_list[i.device_no] 
                                    
