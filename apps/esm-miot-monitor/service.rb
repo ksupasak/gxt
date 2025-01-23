@@ -2048,13 +2048,13 @@ MSG
                   
                     if app.settings.name =='pyts'
                       puts "PYTS 2"
-                      puts  ambu_map.inspect 
+                      # puts  ambu_map.inspect 
                     end
                   
-                          if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0 and position_list
+                          if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0 #and position_list
 
                             if app.settings.name =='pyts'
-                              puts "PYTS 2" 
+                              puts "PYTS 3" 
                             end
 
                             result[:ambu_data] = {}
@@ -2073,6 +2073,8 @@ MSG
                                   # admit = l[0] if l.size==1
                                   #
                                   # am[:admit_id] = admit.id if admit
+                                  
+                                  if position_list[i.device_no] 
                                   
                                   vl = position_list[i.device_no] 
                                    
@@ -2101,9 +2103,14 @@ MSG
                                       ambu_status[am.id.to_s] = v
 
                                   end
+                                  
+                                  end
 
 
                                   result[:ambu_data][i.id] = am
+                                  
+                                  
+                                  
 
                             end
 
