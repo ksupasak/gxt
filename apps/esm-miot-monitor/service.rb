@@ -239,7 +239,6 @@ def self.registered(app)
                     if route.last_location == nil or dis > 0.05 #  and i.last_speed and
                       
                       
-                     # puts "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy #{i.name}"
 
                     kcache = "#{i.last_location.split(",").collect{|j| j.to_f.round(4)}.join(",")}-#{route.stop_latlng}"
                     direction = cache_directions[kcache]
@@ -1093,7 +1092,7 @@ MSG
               default_zone = Zone.where(:default=>'true').first
               
               if default_zone and Ambulance.where(:device_no=>sender).first == nil 
-                  ambu = Ambulance.create :name=>sender.upcase,  :location_policy=>'APP', :device_no=>sender, :zone_id=> default_zone.id
+                  # ambu = Ambulance.create :name=>sender.upcase,  :location_policy=>'APP', :device_no=>sender, :zone_id=> default_zone.id
               end
                 
               device = EMSDevice.where(:name=>sender).first

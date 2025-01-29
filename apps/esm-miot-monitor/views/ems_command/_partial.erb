@@ -104,7 +104,7 @@
 		<div class="card" style="background:#f7f7ff">
 				<div class="card-header">
 
-				<a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-warning btn-sm" data-remote="true"  style="float:right;" data-remote-update="command-panel">แยก Case </a>
+				<!-- <a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-warning btn-sm" data-remote="true"  style="float:right;" data-remote-update="command-panel">แยก Case </a> -->
 				<a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-info btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command-panel">แก้ไข</a>
 				<a href="<%=get_path "destroy?id=#{cm.id}" %>" class="btn btn-danger btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command-panel">ลบ</a>
 
@@ -893,9 +893,24 @@ var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.
 var ambu_map = {}
 
 
+		var monitoring = true
+
+		function set_monitoring(i) {
+			alert('Set Monitoring to '+i)
+			monitoring = i
+		}
+
+
+
 		function command_process(lines){
 
-	
+			if(monitoring){
+				if(lines[0].split(" ")[0]=='Zone.Refresh'||lines[0].split(" ")[0]=='Zone.Message'){
+
+					refresh_partial();
+					
+				}
+			
 		
 	
 			if(lines[0].split(" ")[0]=='ZoneUpdate'){
@@ -981,6 +996,11 @@ var ambu_map = {}
 
 
 		}
+		
+		}
+		
+		
+		
 
 		current_process = command_process
 
@@ -1014,5 +1034,13 @@ var ambu_map = {}
 
 		refresh_remote()
 		
+		$(document).ready(function(){
+			$('.btn-sm').click(function(){
+				alert('click')
+				set_monitoring(false)
+			})
+		})
+		
+	
 		
 	</script>
