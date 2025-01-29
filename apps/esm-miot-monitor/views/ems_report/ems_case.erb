@@ -83,13 +83,17 @@
 										<input name="q[to_time]" type="time" class="form-control timepicker" value="<%=params[:q][:to_time] if params[:q]%>">
 									</div>
 									<div class="col-2 mb-3">
-										<label class="form-label">Section:</label>
-										<select name="q[section]" class="form-control">
+										<label class="form-label">Type:</label>
+										<select name="q[case_type]" class="form-control">
 											<option value=""></option>
 											
-											<option value="0">เช้า</option>
-											<option value="1">บ่าย</option>
-											<option value="2">ดึก</option>
+											<% 
+											%w{EMS Refer Service}.each do |i| 
+											%>
+											<option value="<%=i%>" <%='selected' if params[:q] and params[:q][:case_type]==i %> ><%=i%></option>
+											<% end %>
+											
+									
 												
 										</select>
 									</div>
@@ -119,7 +123,7 @@
 										<% providers =  Provider.where({}).all
 										providers.each do |p| 
 										%>
-										<option value="<%=p.id%>"><%=p.name%> (<%=p.code%>)</option>
+										<option value="<%=p.id%>" <%='selected' if params[:q] and params[:q][:provider]==p.id.to_s %>><%=p.name%> (<%=p.code%>) </option>
 										<% end %>
 											
 									</select>
@@ -224,10 +228,17 @@ if request.post?
 		end
 		
 		
+		params[:q].each_pair do |k,v|
+			
+			q[k] = v if v!="" and k!="from_date" and k!="to_date" and k!="provider"
+			
+		end
+		
+	
 		
 		records = EMSCase.where(q).all
 	
-	    if params[:q][:from_time]!=""
+	    if params[:q][:from_time] and params[:q][:from_time]!=""
 			
 		now = Time.now 
 		s1 = Time.parse(params[:q][:from_time],now)
@@ -249,15 +260,67 @@ if request.post?
 				
 			end
 		
-		}.compact
+		}.compact!
 		
 		end
 		
+		%>
+		
+		<%= q.inspect %>
+		
+		<%
+		if params[:q][:provider] and params[:q][:provider]!=""
 		
 		
 		
+			records = records.collect{|i|
+			
+				# if i.init_cbd_code
+				
+				
+				# end
+				
+				ems_command = EMSCommand.where(:case_id=>i.id).first
+				
+				found = false 
+				
+				if ems_command
+					
+					 ems_command.providers.each do |cp|
+						 if cp.provider.id.to_s ==  params[:q][:provider]
+						 	found = true 
+					 	 end
+						 
+					 end
+					 
+				 end
+	
+				if found 
+ 				
+					i
+				
+				end
 		
+			}.compact!
+			
+			
+			
+		    # ems_command = EMSCommand.where(:case_id=>i.id).first
+	    #
+	    # 		   
+	    #
+	    #
+	    # 		    ems_command.providers.each do |cp|
+	    #
+	    # 		       p = cp.provider
+	    #
+	    #
+	    #
+	    #
+			   
+			   
 		
+		end
 		
 	
 	end
@@ -329,7 +392,7 @@ records.each do |i|
 	
 	end
 end
-%>fff
+%>
 <div class="col-12">
 <div class="row" style="border:0px black solid">
                 
@@ -340,7 +403,7 @@ end
    								<div>
    									<h6 class="mb-0">CBD Init</h6>
    								</div>
-   								<div class="dropdown ms-auto">
+   								<!-- <div class="dropdown ms-auto">
    									<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
    									</a>
    									<ul class="dropdown-menu">
@@ -354,7 +417,7 @@ end
    										<li><a class="dropdown-item" href="javascript:;">Something else here</a>
    										</li>
    									</ul>
-   								</div>
+   								</div> -->
    							</div>
    							<div class="chart-container-3 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
    								<canvas id="chart1" width="884" height="440" class="chartjs-render-monitor" style="display: block; height: 220px; width: 442px;"></canvas>
@@ -373,8 +436,8 @@ end
 					<div>
 						<h6 class="mb-0">Ativation Time</h6>
 					</div>
-					<div class="dropdown ms-auto">
-						<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
+					<!-- <div class="dropdown ms-auto"> -->
+						<!-- <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i class="bx bx-dots-horizontal-rounded font-22 text-option"></i>
 						</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="javascript:;">Action</a>
@@ -387,7 +450,7 @@ end
 							<li><a class="dropdown-item" href="javascript:;">Something else here</a>
 							</li>
 						</ul>
-					</div>
+					</div> -->
 				</div>
 				<div class="chart-container-2 mt-4"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
 					<canvas id="chart2" width="884" height="440" class="chartjs-render-monitor" style="display: block; height: 220px; width: 442px;"></canvas>
@@ -751,13 +814,14 @@ end
 
 		  
 </script>
-ffffff
+
 <%#groups.collect{|i| i.name }.to_json.html_safe%>
+<div class="col-12" style="overflow:scroll">
 <table class="table table-striped mb-0">
 <thead>
   <tr>
       <th>Date</th>
-      <th>Section</th>
+      <th>No#</th>
       <th>Location</th>
       <th>Dispatch Time</th>
       <th>Type</th>
@@ -836,7 +900,7 @@ end
   <td><%=link_to i.case_no, "../EMS/show?id=#{i.id}"%></td>
   <td><%=i.location%></td>
   <td><%=i.dispatch_at.strftime("%H:%M") if i.dispatch_at%></td>
-  <td><%=i.ems_trauma%></td>
+  <td><%=i.case_type%></td>
 
   <td><%=m_providers['ems'].collect{|p|p.code}.join(", ") if m_providers['ems']%></td>
   <td><%=m_providers['emt'].collect{|p|p.code}.join(", ") if m_providers['emt']%></td>
@@ -905,8 +969,9 @@ end
 <% end %>
 </tbody>
 </table>
+</div>
 
-	<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+	<!-- <script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script> -->
 	<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
 	<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
 	<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>

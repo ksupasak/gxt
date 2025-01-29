@@ -24,8 +24,15 @@
     record = EMRRecord.new
 
     values = {}
+	
+	if document.type and document.type=='docuseal_link'
 
 %>
+<% fieldset(:record) do |f| %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form")  %>
+<% end %>
+
+<% else %>
 <form action="<%=get_path 'create'%>" id="form" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
@@ -61,3 +68,4 @@
   });
 
 </script>
+<% end %>

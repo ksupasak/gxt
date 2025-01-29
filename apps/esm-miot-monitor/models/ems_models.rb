@@ -953,9 +953,9 @@ class EMSGXT < GXT
        return {'*'=>'admin'}
   end
   
-  def nav params
-    return '.'
-  end
+  # def nav params
+  #   return '.'
+  # end
   
   def default_layout
     return :rocker_layout

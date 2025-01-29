@@ -454,7 +454,7 @@
 			</a>
 			<ul class="mm-collapse">
 
-				<li > <a href="../EmsReport/ems_case"><i class="bx bx-right-arrow-alt"></i>Data Record</a>
+				<li > <a href="../EmsReport/ems_case"><i class="bx bx-right-arrow-alt"></i>Cases</a>
 				</li>
 
 			</ul>
@@ -510,54 +510,55 @@ function getCookie(cname) {
 }
 
 
-		var current_t = getCookie('t')
-	
-		
-		var tmap_th = {case_open:'เปิด', dashboard:'ภาพรวม', record_contact_phone:'เบอร์โทร', record_contact_name:'ผู้แจ้งเหตุ'};
-		var tmap_en = {case_open:'Open ', dashboard:'Dashboard',record_contact_phone:'Phone', record_contact_name:'Caller'};
-		var tmap_all = {th:tmap_th, en:tmap_en};
+		// var current_t = getCookie('t')
+		//
+		//
+		// var tmap_th = {case_open:'เปิด', dashboard:'ภาพรวม', record_contact_phone:'เบอร์โทร', record_contact_name:'ผู้แจ้งเหตุ'};
+		// var tmap_en = {case_open:'Open ', dashboard:'Dashboard',record_contact_phone:'Phone', record_contact_name:'Caller'};
+		// var tmap_all = {th:tmap_th, en:tmap_en};
+		//
+		// var tcurrent_map = tmap_en
+		//
+		//
+		//         function translate(lang, tmap){
 
-		var tcurrent_map = tmap_en
-       
+		// 	current_t = lang
+		//
+		// 	 tcurrent_map = tmap
+		//
+		// 	document.cookie = "t="+lang;
+		//
+		// $('.t').each(function(){
+		//
+		//
+		// 	e = $(this)
+		// 	tk = e.attr('t')
+		// 	if(tcurrent_map&&tcurrent_map.hasOwnProperty(tk))
+		// 	e.html(tcurrent_map[tk])
+		//
+		//
+		// }).bind(this)
+		//
+		// }
 
-        function translate(lang, tmap){
-
-			current_t = lang
-
-			 tcurrent_map = tmap
-		
-			document.cookie = "t="+lang;
-
-		$('.t').each(function(){
-			
-			
-			e = $(this)
-			tk = e.attr('t')
-			e.html(tcurrent_map[tk])
-
-
-		}).bind(this)
-
-		}
-
-		function retranslate(){
-			 translate(current_t, tmap_all[current_t])
-		}
-
-
-
-		$('.btn-t').click(function(){
-
-			t = $(this).attr('t')
-			translate(t, tmap_all[t])
-
-		})
-		console.log(getCookie('t'))
-		if(getCookie('t')==null&&getCookie('t')!=""){
-			current_t = getCookie('t');
-		}
-		
-	    translate(current_t, tmap_all[current_t])
+		// function retranslate(){
+		// 	 translate(current_t, tmap_all[current_t])
+		// }
+		//
+		//
+		//
+		// $('.btn-t').click(function(){
+		//
+		// 	t = $(this).attr('t')
+		// 	translate(t, tmap_all[t])
+		//
+		// })
+		// console.log(getCookie('t'))
+		// if(getCookie('t')==null&&getCookie('t')!=""){
+		// 	current_t = getCookie('t');
+		// }
+		//
+		// 	    translate(current_t, tmap_all[current_t])
 
 
 

@@ -40,6 +40,7 @@
 
 %>
 
+
 <script>
 
 	<%
@@ -71,22 +72,19 @@
 
 	<% end %>
 	
-
-		
+	//     var monitoring = true
+	//
+	// function monitoring(i) {
+	// 	alert('Set Monitoring to '+i)
+	// 	monitoring = i
+	// }
+	//
 	function process_message(lines){
+		
 		if(typeof command_process === "function"){
 			command_process(lines)
 		}
-		if(lines[0].split(" ")[0]=='Zone.Refresh'||lines[0].split(" ")[0]=='Zone.Message'){
-
-			refresh_partial();
-
-			// location.reload()
-
-		}
 	
-		
-		// 
 
 		
 		
