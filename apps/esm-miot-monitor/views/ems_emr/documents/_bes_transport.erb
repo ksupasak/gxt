@@ -1,0 +1,97 @@
+<% require_relative 'lib' %>
+
+<%
+  @record = record
+  ems_case = EMSCase.find params[:case_id]
+  document = EMRDocument.where(:name=>params[:document]).first
+  
+  link = document.link
+  t = link.split("/")
+  slug = t[-1]
+  host = t[0..2].join("/")
+  
+  # find template
+  
+  # Define the API URL
+  url = URI("#{host}/api/templates")
+  # Initialize Net::HTTP with SSL enabled
+  http = Net::HTTP.new(url.host, url.port)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # Disable SSL verification (not secure)
+
+  req = Net::HTTP::Get.new(url)
+  req["Content-Type"] = "application/json"
+  req["X-Auth-Token"] = Setting.get('docuseal_token')
+  
+  response = http.request(req)
+
+  parsed_data = JSON.parse(response.body)
+  template = nil
+  
+  for i in parsed_data['data']
+	  
+	  if i['slug'] = slug
+		  template = i
+	  end
+	  
+  end
+  template_id = nil
+  if template
+	  
+	  template_id = template['id']
+	 
+  end
+  
+  if template_id
+	  
+	  name = ems_case.case_no
+	  # Define the API URL
+	  url = URI("#{host}/api/submissions?template_id=#{template_id}&q=#{name}")
+	  # Initialize Net::HTTP with SSL enabled
+	  # http = Net::HTTP.new(url.host, url.port)
+	  # http.use_ssl = true
+	  # http.verify_mode = OpenSSL::SSL::VERIFY_NONE  # Disable SSL verification (not secure)
+
+	  req = Net::HTTP::Get.new(url)
+	  req["Content-Type"] = "application/json"
+	  req["X-Auth-Token"] = Setting.get('docuseal_token')
+  
+	  response = http.request(req)
+
+	  parsed_data = JSON.parse(response.body)
+	  
+	  
+	  
+   end
+  
+   if parsed_data['data'] and parsed_data['data'].size>0 
+	   
+	  if parsed_data['data'].collect{|i| i if i['archived_at'] == nil }.compact.size>0
+	   
+	  last_slug = parsed_data['data'][0]['submitters'][0]['slug']
+      url = URI("#{host}/s/#{last_slug}")
+%>
+<a href="<%=url%>" class="btn btn-info">Show</a>
+	<%=last_slug%>
+<%# parsed_data.to_json %>
+<% end %>
+<% end %>
+<div class='card'>
+	
+	<div class='card-body'>
+	
+    <h1>Start <%=document.title %></h1>
+    <form action="<%=document.link%>/link" target="_blank" method="POST">
+        <label for="email">Ref:</label>
+		<input type="text" id="ref" name="submitter[ref]" required value="<%=ems_case.case_no%>">
+        <br/><br/>
+        <label for="email">Patient name:</label>
+		<input type="text" id="ref" name="data[patient_name]" required value="<%=ems_case.patient_name%>">
+		<br/><br/>
+        <label for="email">Return:</label>
+		<input type="text" name="return" value="<%=request.url%>">
+		<br/><br/>
+		<button type="submit" class='btn btn-success' >Submit</button>
+    </form>
+	</div>
+</div>

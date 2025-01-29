@@ -11,6 +11,11 @@ class EMRDocument < GXTModel
   key :title, String
   key :schema, String
   key :sort_order, Integer
+  
+  key :type, String # docuseal_link
+  key :template_id, String # docuseal_link
+  key :link, String 
+  
 
 end
 
@@ -23,6 +28,7 @@ class EMRRecord < GXTModel
   key :admit_id, ObjectId
   key :data, Hash
   key :stamp, DateTime
+  key :submission_id, String
 
 end
 
