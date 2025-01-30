@@ -2,7 +2,7 @@
 <%= inline(this,:'../lib/_map')  %>
 
 <%= inline(this,:'_init')  %>
-
+ 
 
 <style>
        /* Set the size of the div element that contains the map */
@@ -812,7 +812,12 @@ function startWeb(link){
 					
 				</div>
 			</div>
-		   
+			<center>
+			 <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10">
+			  <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
+		     </a>
+			<!--  <p> <%= Setting.get(:host_url)  %> <%= record.id %>  </p> --!>
+			 </center>
 			</div>
 			<div class="modal-footer">
       <center>
