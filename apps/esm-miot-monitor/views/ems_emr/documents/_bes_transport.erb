@@ -64,33 +64,179 @@
 	  
    end
   
-   if parsed_data['data'] and parsed_data['data'].size>0 
-	   
-	  if parsed_data['data'].collect{|i| i if i['archived_at'] == nil }.compact.size>0
-	   
-	  last_slug = parsed_data['data'][0]['submitters'][0]['slug']
-      url = URI("#{host}/s/#{last_slug}")
-%>
-<a href="<%=url%>" class="btn btn-info">Show</a>
-	<%=last_slug%>
-<%# parsed_data.to_json %>
-<% end %>
-<% end %>
+  
+  %>
+
 <div class='card'>
 	
 	<div class='card-body'>
 	
-    <h1>Start <%=document.title %></h1>
+    <h1><%=document.title %></h1>
     <form action="<%=document.link%>/link" target="_blank" method="POST">
+		
+	<div class="row">
+	<div class="col-6">
+			
         <label for="email">Ref:</label>
 		<input type="text" id="ref" name="submitter[ref]" required value="<%=ems_case.case_no%>">
         <br/><br/>
-        <label for="email">Patient name:</label>
-		<input type="text" id="ref" name="data[patient_name]" required value="<%=ems_case.patient_name%>">
+		
+		<label for="patient_name">Mission number:</label>
+		<input type="text" id="ref" name="data[mission_number]" required value="<%=ems_case.ext_case_no%>">
+		<input type="hidden" id="ref" name="data[mission_number_2]" required value="<%=ems_case.ext_case_no%>">
 		<br/><br/>
+        
+		<label for="patient_name">Patient name:</label>
+		<input type="text" id="ref" name="data[patient_name]" required value="<%=ems_case.patient_name%>">
+		<input type="hidden" id="ref" name="data[patient_name_2]" required value="<%=ems_case.patient_name%>">
+		<br/><br/>
+        <label for="patient_hn">Patient HN:</label>
+		<input type="text" id="ref" name="data[patient_hn]" required value="<%=ems_case.patient_hn%>">
+		<input type="hidden" id="ref" name="data[patient_hn_2]" required value="<%=ems_case.patient_hn%>">
+		<br/><br/>
+		
+        <label for="visit_date">Visit Date:</label>
+		<input type="text" id="ref" name="data[visit_date]" required value="<%=ems_case.date%>">
+		<input type="hidden" id="ref" name="data[visit_date_2]" required value="<%=ems_case.date%>">
+		<br/><br/>
+	
+		<%
+			birth_date_txt = "- "
+			birth_date = ems_case.patient_birth_date
+			if birth_date
+					birth_date_txt = birth_date.strftime("%d/%m/%Y")
+			end
+		%>
+        <label for="birth_date">Birth Date:</label>
+		<input type="text" id="ref" name="data[birth_date]" required value="<%=birth_date_txt%>">
+		<input type="hidden" id="ref" name="data[birth_date_2]" required value="<%=birth_date_txt%>">
+		<br/><br/>
+		
+		<%
+			age_text = "- "
+			birth_date = ems_case.patient_birth_date
+			if birth_date
+					age_text =  ((ems_case.date - birth_date)/365).to_i.to_s+"yr"
+			end
+		%>
+        <label for="age">Age:</label>
+		<input type="text" id="ref" name="data[age]" required value="<%=age_text%>">
+		<input type="hidden" id="ref" name="data[age_2]" required value="<%=age_text%>">
+		<br/><br/>
+		
+		<%
+			patient_gender_text = "- "
+			patient_gender = ems_case.patient_gender
+			if patient_gender
+					patient_gender_text =  'male' if patient_gender=="M"
+					patient_gender_text =  'female' if patient_gender=="F"
+					patient_gender_text =  'none' if patient_gender=="" or patient_gender=="-"
+					
+			end
+			
+		%>
+        <label for="sex">Age:</label>
+		<input type="text" id="ref" name="data[sex]" required value="<%=patient_gender_text%>">
+		<input type="hidden" id="ref" name="data[sex_2]" required value="<%=patient_gender_text%>">
+		<br/><br/>
+		
+        <label for="department">Department:</label>
+		<input type="text" id="ref" name="data[department]" required value="<%=ems_case.case_type %>">
+		<input type="hidden" id="ref" name="data[department_2]" required value="<%=ems_case.case_type%>">
+		<br/><br/>
+		
+		
+		
         <label for="email">Return:</label>
 		<input type="text" name="return" value="<%=request.url%>">
 		<br/><br/>
+		
+  
+	
+	</div>
+	
+	<div class="col-6">
+		
+		
+		<%
+			
+		list = 	%w{
+		job_receive
+		actual_departure_time
+		actual_departure_mile
+		arrival_scene_time 
+		arrival_scene_mile 
+		patient_init_contact
+		patient_packaging_complete
+		patient_departure_time
+		arrival_driving
+		arrival_receiving_time
+		arrival_receiving_mile
+		completing_time
+		return_base_time
+		return_base_mile} 
+		
+		obj = {}
+		logs = {}
+		obj['job_receive'] = ems_case.request_at.strftime("%H:%M:%S")
+		
+		if ems_case.commands.size>0 and cmd = ems_case.commands[0]
+			for i in AdmitLog.where(:ems_command_id=>cmd.id).all
+				logs[i.code] = i
+			end	
+		end
+		
+		obj['actual_departure_time'] = logs['active_at'].stamp.strftime("%H:%M:%S")
+		obj['actual_departure_mile'] = logs['active_at'].mile_meter
+		
+		obj['arrival_scene_time'] = logs['response_at'].stamp.strftime("%H:%M:%S")
+		obj['arrival_scene_mile'] = logs['response_at'].mile_meter
+		
+		obj['patient_init_contact'] = logs['contact_at'].stamp.strftime("%H:%M:%S")
+		obj['patient_packaging_complete'] = logs['packing_at'].stamp.strftime("%H:%M:%S")
+		
+		obj['patient_departure_time'] = logs['leaving_at'].stamp.strftime("%H:%M:%S")
+		# obj['arrival_driving'] = logs['active_at'].mile_meter
+		
+		obj['arrival_receiving_time'] = logs['deliver_at'].stamp.strftime("%H:%M:%S")
+		obj['arrival_receiving_mile'] = logs['deliver_at'].mile_meter
+		
+		obj['completing_time'] =  ems_case.dispatch_at.strftime("%H:%M:%S")
+		
+		obj['return_base_time'] = logs['base_at'].stamp.strftime("%H:%M:%S")
+		obj['return_base_mile'] = logs['base_at'].mile_meter
+		
+		
+		%>
+		<%# logs.inspect %>	
+		<%# logs.to_json %>	
+		<%
+		list.each_with_index do |i,ix|
+		%>
+	
+
+		<label for="<%=i%>"><%=i.humanize%> :</label>
+		<input type="text" id="ref" name="data[<%=i%>]" required value="<%=obj[i]%>">
+		<br/><br/>
+		<% end %>
+		
+		
+	</div>
+	
+	</div>
+		 <%
+		   if parsed_data['data'] and parsed_data['data'].size>0 
+	   
+			  if parsed_data['data'].collect{|i| i if i['archived_at'] == nil }.compact.size>0
+	   
+			  last_slug = parsed_data['data'][0]['submitters'][0]['slug']
+		      url = URI("#{host}/s/#{last_slug}")
+		%>
+		<a href="<%=url%>" class="btn btn-info" target="_blank">Show</a>
+			<%=last_slug%>
+		<%# parsed_data.to_json %>
+		<% end %>
+		<% end %>
 		<button type="submit" class='btn btn-success' >Submit</button>
     </form>
 	</div>

@@ -484,6 +484,7 @@ class AdmitLog  < GXTModel
   key :ems_command_id, ObjectId
   key :type, String
   key :name, String
+  key :code, String 
   key :address, String
   key :status, String
   key :latlng, String

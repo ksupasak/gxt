@@ -84,26 +84,26 @@ if params[:record]
 
 	ems_case.update_attributes :ambulance_id=>ambu.id
 
-	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'รับแจ้ง', :status=>'COMPLETED', :note=>'', :sort_order=>0, :stamp=>ems_case.request_at
-	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
+	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'รับแจ้ง', :code=>'request_at' , :status=>'COMPLETED', :note=>'', :sort_order=>0, :stamp=>ems_case.request_at
+	AdmitLog.create  :ems_command_id=>record.id, :admit_id=>admit.id,:name=>'สั่งการ', :code=>'command_at', :status=>'COMPLETED', :note=>'', :sort_order=>1, :stamp=>Time.now
 
 	if ems_case.case_type == 'EMS'
 		
 		
-		a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
-		a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+		a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :code=>'active_at', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
+		a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงที่เกิดเหตุ', :code=>'response_at', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
 		r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ที่เกิดเหตุ', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED', :response=>'PLAN'
 
-		t1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'พบผู้ป่วย', :status=>'PENDING', :note=>'', :sort_order=>3.10, :type=>'ems'
-		t2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'เคลื่อนย้าย', :status=>'PENDING', :note=>'', :sort_order=>3.20, :type=>'ems'
+		t1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'พบผู้ป่วย', :code=>'contact_at', :status=>'PENDING', :note=>'', :sort_order=>3.10, :type=>'ems'
+		t2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'เคลื่อนย้าย', :code=>'packing_at', :status=>'PENDING', :note=>'', :sort_order=>3.20, :type=>'ems'
 		
-		b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4
-		b2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		b1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากที่เกิดเหตุ', :code=>'leaving_at', :latlng=>ems_case.latlng, :status=>'PENDING', :note=>'', :sort_order=>4
+		b2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงโรงพยาบาล', :code=>'deliver_at', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
 		r2 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'นำส่งโรงพยาบาล', :departure_log_id=> b1.id, :arrival_log_id=>b2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>10, :status=>'SCHEDULED', :response=>'PLAN'
 
 
 		#c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
-		c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
+		c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :code=>'base_at', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
     # r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED', :response=>'PLAN'
 
 
@@ -111,13 +111,13 @@ if params[:record]
 	
 	else
 		
-		a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
-		a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงปลายทาง', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
+		a1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกฐาน', :code=>'active_at', :status=>'PENDING', :note=>'', :sort_order=>2, :latlng=>ambu.last_location
+		a2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงปลายทาง', :code=>'response_at', :status=>'PENDING', :note=>'', :sort_order=>3, :parent=>2, :address=>params[:address], :latlng=>params[:location]
 		r1 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ปลายทาง', :departure_log_id=> a1.id, :arrival_log_id=>a2.id, :start_latlng=>ambu.last_location, :stop_latlng=>ems_case.latlng, :sort_order=>0, :status=>'STARTED', :response=>'PLAN'
 
 		
-		c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากตำแหน่ง', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
-		c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
+		c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากตำแหน่ง', :code=>'leaving_at', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>4
+		c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :code=>'base_at', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>5, :parent=>4
 		r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED', :response=>'PLAN'
 
 
