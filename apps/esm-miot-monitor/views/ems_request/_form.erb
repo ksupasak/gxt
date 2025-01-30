@@ -1,4 +1,4 @@
-
+    <script src="https://cdn.tailwindcss.com"></script>
 <style>
 
 	.w-auto{
@@ -76,11 +76,84 @@
 
 							<p class="px-3">
 								<span class="t" t="record_chief_complain">Chief Complain</span> *
+								<span class="" style="float:right" >
+						            <button id="start" class="btn btn-info">พูด</button>
+						            <button id="stop" class="btn btn-danger rounded-lg shadow-md hover:bg-red-600 transition hidden">หยุด</button>
+									<!-- <a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">พูด</a> -->
+								</span>
 							</p>
 							<div class="input-group   mb-3">
 								<%# f.textarea(:chief_complain, record.chief_complain, :class=>'form-control') %>
 								<textarea name="record[chief_complain]" id="record_chief_complain" required rows="2" class="form-control"><%=record.chief_complain%></textarea>
 							</div>
+							
+						    <script>
+						        // Check for Speech Recognition API
+						        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+						        const recognition = new SpeechRecognition();
+
+						        // Speech Recognition Settings
+						        recognition.continuous = true;
+						        recognition.interimResults = true;
+						        recognition.lang = 'th-EN'; // Supports both Thai & English
+
+						        const output = document.getElementById("record_chief_complain");
+						        const startBtn = document.getElementById("start");
+						        const stopBtn = document.getElementById("stop");
+						        const status = document.getElementById("status");
+								
+						        // Start Listening
+						        startBtn.addEventListener("click", (e) => {
+						            recognition.start();
+						            status.innerText = "Listening (English & Thai)...";
+						            status.classList.add("text-green-500");
+						            startBtn.classList.add("hidden");
+						            stopBtn.classList.remove("hidden");
+									e.preventDefault();
+						        });
+
+						        // Stop Listening
+						        stopBtn.addEventListener("click", (e) => {
+						            recognition.stop();
+						            status.innerText = "Stopped Listening";
+						            status.classList.remove("text-green-500");
+						            startBtn.classList.remove("hidden");
+						            stopBtn.classList.add("hidden");
+									e.preventDefault();
+						        });
+
+						        // // Reset Text
+ // 						        resetBtn.addEventListener("click", () => {
+ // 						            output.innerText = "";
+ // 						            status.innerText = "Click 'Start' to begin listening";
+ // 						        });
+
+						        // Append Recognized Speech
+						        recognition.onresult = (event) => {
+						            let transcript = '';
+						            for (let i = 0; i < event.results.length; i++) {
+						                transcript += event.results[i][0].transcript;
+						            }
+						            output.innerText = transcript;
+						        };
+
+						        // Handle Errors
+						        recognition.onerror = (event) => {
+						            console.error("Speech Recognition Error:", event.error);
+						            status.innerText = "Error: " + event.error;
+						            status.classList.remove("text-green-500");
+						            startBtn.classList.remove("hidden");
+						            stopBtn.classList.add("hidden");
+						        };
+						    </script>
+							
+							
+							
+							
+							
+							
+							
+							
 
 							<p class="px-3">
 								<span class="t" t="record_emd_event_note">Event Note</span>
