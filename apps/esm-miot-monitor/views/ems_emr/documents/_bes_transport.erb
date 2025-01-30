@@ -83,22 +83,25 @@
 		
 		<label for="patient_name">Mission number:</label>
 		<input type="text" id="ref" name="data[mission_number]" required value="<%=ems_case.ext_case_no%>">
-		<input type="hidden" id="ref" name="data[mission_number_2]" required value="<%=ems_case.ext_case_no%>">
+		<input type="hidden" id="ref" name="data[mission_number_2]"  value="<%=ems_case.ext_case_no%>">
 		<br/><br/>
         
 		<label for="patient_name">Patient name:</label>
-		<input type="text" id="ref" name="data[patient_name]" required value="<%=ems_case.patient_name%>">
-		<input type="hidden" id="ref" name="data[patient_name_2]" required value="<%=ems_case.patient_name%>">
-		<br/><br/>
+		<input type="text" id="ref" name="data[patient_name]"  value="<%=ems_case.patient_name%>">
+		<input type="hidden" id="ref" name="data[patient_name_2]"  value="<%=ems_case.patient_name%>">
+		<br/><br/>	
         <label for="patient_hn">Patient HN:</label>
-		<input type="text" id="ref" name="data[patient_hn]" required value="<%=ems_case.patient_hn%>">
-		<input type="hidden" id="ref" name="data[patient_hn_2]" required value="<%=ems_case.patient_hn%>">
+		<input type="text" id="ref" name="data[patient_hn]"  value="<%=ems_case.patient_hn%>">
+		<input type="hidden" id="ref" name="data[patient_hn_2]"  value="<%=ems_case.patient_hn%>">
 		<br/><br/>
 		
         <label for="visit_date">Visit Date:</label>
-		<input type="text" id="ref" name="data[visit_date]" required value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
-		<input type="hidden" id="ref" name="data[visit_date_2]" required value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
+		<input type="text" id="ref" name="data[visit_date]"  value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
+		<input type="hidden" id="ref" name="data[visit_date_2]"  value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
 		<br/><br/>
+		
+
+		
 	
 		<%
 			birth_date_txt = "- "
@@ -108,8 +111,8 @@
 			end
 		%>
         <label for="birth_date">Birth Date:</label>
-		<input type="text" id="ref" name="data[birth_date]" required value="<%=birth_date_txt%>">
-		<input type="hidden" id="ref" name="data[birth_date_2]" required value="<%=birth_date_txt%>">
+		<input type="text" id="ref" name="data[birth_date]"  value="<%=birth_date_txt%>">
+		<input type="hidden" id="ref" name="data[birth_date_2]"  value="<%=birth_date_txt%>">
 		<br/><br/>
 		
 		<%
@@ -120,8 +123,8 @@
 			end
 		%>
         <label for="age">Age:</label>
-		<input type="text" id="ref" name="data[age]" required value="<%=age_text%>">
-		<input type="hidden" id="ref" name="data[age_2]" required value="<%=age_text%>">
+		<input type="text" id="ref" name="data[age]"  value="<%=age_text%>">
+		<input type="hidden" id="ref" name="data[age_2]"  value="<%=age_text%>">
 		<br/><br/>
 		
 		<%
@@ -136,15 +139,25 @@
 			
 		%>
         <label for="sex">Age:</label>
-		<input type="text" id="ref" name="data[sex]" required value="<%=patient_gender_text%>">
-		<input type="hidden" id="ref" name="data[sex_2]" required value="<%=patient_gender_text%>">
+		<input type="text" id="ref" name="data[sex]"  value="<%=patient_gender_text%>">
+		<input type="hidden" id="ref" name="data[sex_2]"  value="<%=patient_gender_text%>">
 		<br/><br/>
 		
         <label for="department">Department:</label>
-		<input type="text" id="ref" name="data[department]" required value="<%=ems_case.case_type %>">
-		<input type="hidden" id="ref" name="data[department_2]" required value="<%=ems_case.case_type%>">
+		<input type="text" id="ref" name="data[department]"  value="<%=ems_case.case_type %>">
+		<input type="hidden" id="ref" name="data[department_2]"  value="<%=ems_case.case_type%>">
 		<br/><br/>
 		
+		<%
+		
+		%w{ allergies side_effect nationality physician room}.each do |i| 
+			
+		%>
+    	<label for="<%=i%>"><%=i.humanize%>:</label>
+		<input type="text" id="ref" name="data[<%=i%>]"  value="-">
+		<input type="hidden" id="ref" name="data[<%=i%>_2]"  value="-">
+		<br/><br/>
+		<% end %>
 		
 		
         <label for="email">Return:</label>
@@ -217,7 +230,7 @@
 	
 
 		<label for="<%=i%>"><%=i.humanize%> :</label>
-		<input type="text" id="ref" name="data[<%=i%>]" required value="<%=obj[i]%>">
+		<input type="text" id="ref" name="data[<%=i%>]"  value="<%=obj[i]%>">
 		<br/><br/>
 		<% end %>
 		
@@ -225,6 +238,9 @@
 	</div>
 	
 	</div>
+		<hr/>
+		<button type="submit" class='btn btn-success' >Submit</button>
+		
 		 <%
 		   if parsed_data['data'] and parsed_data['data'].size>0 
 	   
@@ -238,7 +254,6 @@
 		<%# parsed_data.to_json %>
 		<% end %>
 		<% end %>
-		<button type="submit" class='btn btn-success' >Submit</button>
     </form>
 	</div>
 </div>
