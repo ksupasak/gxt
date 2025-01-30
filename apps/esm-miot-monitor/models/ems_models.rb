@@ -113,6 +113,8 @@ class EMSCase < GXTModel
   # request ============================================================================
 
   key :case_no, String
+  key :ext_case_no, String
+  
 
   key :chief_complain, String
 
