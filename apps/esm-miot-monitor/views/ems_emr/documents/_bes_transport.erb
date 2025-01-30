@@ -96,8 +96,8 @@
 		<br/><br/>
 		
         <label for="visit_date">Visit Date:</label>
-		<input type="text" id="ref" name="data[visit_date]" required value="<%=ems_case.date%>">
-		<input type="hidden" id="ref" name="data[visit_date_2]" required value="<%=ems_case.date%>">
+		<input type="text" id="ref" name="data[visit_date]" required value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
+		<input type="hidden" id="ref" name="data[visit_date_2]" required value="<%=ems_case.date.strftime("%d/%m/%Y")%>">
 		<br/><br/>
 	
 		<%
@@ -186,25 +186,26 @@
 			end	
 		end
 		
-		obj['actual_departure_time'] = logs['active_at'].stamp.strftime("%H:%M:%S")
-		obj['actual_departure_mile'] = logs['active_at'].mile_meter
 		
-		obj['arrival_scene_time'] = logs['response_at'].stamp.strftime("%H:%M:%S")
-		obj['arrival_scene_mile'] = logs['response_at'].mile_meter
+		obj['actual_departure_time'] = logs['active_at'].stamp.strftime("%H:%M:%S") if logs['active_at']
+		obj['actual_departure_mile'] = logs['active_at'].mile_meterif if logs['active_at']
 		
-		obj['patient_init_contact'] = logs['contact_at'].stamp.strftime("%H:%M:%S")
-		obj['patient_packaging_complete'] = logs['packing_at'].stamp.strftime("%H:%M:%S")
+		obj['arrival_scene_time'] = logs['response_at'].stamp.strftime("%H:%M:%S")  if logs['response_at']
+		obj['arrival_scene_mile'] = logs['response_at'].mile_meter  if logs['response_at']
 		
-		obj['patient_departure_time'] = logs['leaving_at'].stamp.strftime("%H:%M:%S")
+		obj['patient_init_contact'] = logs['contact_at'].stamp.strftime("%H:%M:%S")  if logs['contact_at']
+		obj['patient_packaging_complete'] = logs['packing_at'].stamp.strftime("%H:%M:%S")  if logs['packing_at']
+		
+		obj['patient_departure_time'] = logs['leaving_at'].stamp.strftime("%H:%M:%S")  if logs['leaving_at']
 		# obj['arrival_driving'] = logs['active_at'].mile_meter
 		
-		obj['arrival_receiving_time'] = logs['deliver_at'].stamp.strftime("%H:%M:%S")
-		obj['arrival_receiving_mile'] = logs['deliver_at'].mile_meter
+		obj['arrival_receiving_time'] = logs['deliver_at'].stamp.strftime("%H:%M:%S")  if logs['deliver_at']
+		obj['arrival_receiving_mile'] = logs['deliver_at'].mile_meter  if logs['deliver_at']
 		
-		obj['completing_time'] =  ems_case.dispatch_at.strftime("%H:%M:%S")
+		obj['completing_time'] =  ems_case.dispatch_at.strftime("%H:%M:%S")  if ems_case.dispatch_at
 		
-		obj['return_base_time'] = logs['base_at'].stamp.strftime("%H:%M:%S")
-		obj['return_base_mile'] = logs['base_at'].mile_meter
+		obj['return_base_time'] = logs['base_at'].stamp.strftime("%H:%M:%S")  if logs['base_at']
+		obj['return_base_mile'] = logs['base_at'].mile_meter  if logs['base_at']
 		
 		
 		%>
