@@ -17,6 +17,7 @@
 
 record = @current_case
 
+
      if record
 
      com_list = EMSCommand.where(:case_id=>record.id, :ambulance_id=>@current_ambulance.id).all
@@ -29,8 +30,10 @@ record = @current_case
      last_mile = com.ambulance.last_mile
 
      last_log = admit.logs.where(:status=>'PENDING').sort(:sort_order=>1).first
+	 
 	 if last_log
-     current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
+     
+	 current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
      previous_log = admit.logs.where(:admit_id=>last_log.admit_id, :sort_order=>last_log.sort_order-1).first if last_log
 
 

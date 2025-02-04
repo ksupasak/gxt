@@ -28,7 +28,7 @@
 
 
 
-  if @current_ambulance and @current_case = EMSCase.where(:ambulance_id=>@current_ambulance.id, :status=>'New').first
+  if @current_ambulance and @current_case = EMSCase.where(:ambulance_id=>@current_ambulance.id, :status=>'New', :case_type=>'EMS').first
 
 
   end

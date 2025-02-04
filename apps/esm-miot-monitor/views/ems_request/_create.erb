@@ -150,6 +150,9 @@ end
 		schedule_from = DateTime.parse(params[:start]+"+07:00")
 		schedule_to =DateTime.parse(params[:end]+"+07:00")
 		status = 'Schedule'
+		
+		status = params[:status] if params[:status]
+		
 		date = nil
 			
 	end
