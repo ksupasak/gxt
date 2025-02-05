@@ -819,7 +819,7 @@ function startWeb(link){
 			 <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10">
 			  <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
 		     </a>
-			<!--  <p> <%= Setting.get(:host_url)  %> <%= record.id %>  </p> --!>
+			
 			 </center>
 			</div>
 			<div class="modal-footer">
@@ -1167,7 +1167,7 @@ modal('#modal_notification')
         // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
         connect()
 
-     }, 10000); //will call the function after 2 secs.
+     }, 5000); //will call the function after 2 secs.
 
 
   }

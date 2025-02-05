@@ -119,13 +119,13 @@
 					unit = "ปบ 5511 (ALS)"
 					link = '#'
 					emscase = EMSCase.find room.case_id
-					if emscase
+					if emscase and emscase.status=='New'
 					  name = room.name
 					  unit = emscase.ambulance.plate_license
 					  link = "video?id=#{room.name}&case_id=#{emscase.id}&side=emd"
 					  # link = "https://meet.abs.co.th/#{room.name}?case_id=#{emscase.id}&side=emd"
 					  
-					end
+					
 					
 					title = name.split("-")[1..-1].join("-")
 				
@@ -263,7 +263,7 @@
 						</div>
 					</div>
 				<% end %>
-					
+				<% end %>	
 				</div>
 				
 	<!-- Button trigger modal -->
