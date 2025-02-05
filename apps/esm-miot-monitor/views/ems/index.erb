@@ -900,11 +900,16 @@ airport_shuttle
 
 		if(lines[0].split(" ")[0]=='Zone.Refresh'){
 			// (lines[1])
-			header = JSON.parse(lines[1])['msg'].split(" ")
-			if(header[0]=='notify_callback'){
-				window.location="show?id="+header[1]
-			}else
-			window.location.reload();
+			// alert('iofj')
+		// 	header = JSON.parse(lines[1])['msg'].split(" ")
+		// 	if(header[0]=='notify_callback'){
+		//
+		// 		window.location="show?id="+header[1]
+		// 	}else{
+		// 		alert('dijf')
+					window.location.reload();
+			// }
+		
 
 		}else
 		if(lines[0].split(" ")[0]=='Zone.Message'){
