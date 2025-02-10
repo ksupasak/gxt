@@ -120,12 +120,15 @@ if true
 		
 		puts robj.inspect 
 		
+		dob = Date.parse(robj['birthdate']) if robj['birthdate']
+		dob = Date.parse(robj['birth_date']) if robj['birth_date']
+		
 		if patient
 			
-			patient.update_attributes                :phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
+			patient.update_attributes                :phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>dob, :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
 	
 		else 
-			patient = Patient.create :hn=>robj['hn'],:phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
+			patient = Patient.create :hn=>robj['hn'],:phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>dob, :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
 	
 		end
 		
