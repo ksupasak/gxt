@@ -667,7 +667,7 @@ class Patient  < GXTModel
   key :first_name, String
   key :middle_name, String
   key :last_name, String
-  key :dob, Time
+  key :dob, Date
   key :age, String
   key :gender, String
   key :phone, String
