@@ -180,6 +180,7 @@ if true
 	rescue Exception =>exception        
 	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
 	        msg = exception.to_s
+		    puts exception.backtrace 
     end
 
 	puts msg
