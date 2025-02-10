@@ -20,11 +20,19 @@ class User < GXTModel
   key :salt,  String
   key :passcode, String
   key :pattern, String
+  key :mobile, String
+  key :email , String
   key :hashed_password,  String
   key :last_accessed, DateTime
   key :picture_id, ObjectId
   key :role_id, ObjectId
   key :status, String
+  key :verify_2fa, Boolean
+  key :verify_2fa_at, DateTime
+  
+  key :password_updated_at, DateTime
+  
+  
 
   key :email, String
    include Mongoid::Timestamps
@@ -45,11 +53,13 @@ class User < GXTModel
     @password=pass
     self.salt = User.random_string(10) if !self.salt?
     self.hashed_password = User.encrypt(@password, self.salt)
+    self.password_updated_at = Time.now
   end
 
   def login_perform
     self.last_accessed = Time.now
     self.save
+    UserLog.create :user_id=>self.id, :action=>"Login"
     self
   end
 
@@ -76,6 +86,20 @@ class User < GXTModel
 
 end
 
+class UserLog <  GXTModel
+    include Mongoid::Document
+  
+    key :user_id, ObjectId
+    key :log, String
+    key :action, String
+    key :note, String 
+    key :link, String
+    
+    include Mongoid::Timestamps
+    timestamps!
+end
+
+
 class Role < GXTModel
   include Mongoid::Document
 
@@ -83,6 +107,9 @@ class Role < GXTModel
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone'
 
   key :zone_id, ObjectId
+  
+  key :idle_time_limit, Integer
+  key :password_expiration_days, Integer
 
   include Mongoid::Timestamps
   timestamps!
@@ -1200,10 +1227,6 @@ class HomeController < GXT
 
   end
   
-  def xxx params
-    return 'xxx'
-  end
-  
 
 end
 
@@ -1216,9 +1239,13 @@ class UserController < GXTDocument
 
   end
   
-  def xxx params
-    return "xxxx"
-  end
+
+end
+
+
+
+class UserLogController < GXTDocument
+
 
 
 end
