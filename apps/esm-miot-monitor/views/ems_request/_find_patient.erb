@@ -120,8 +120,9 @@ if true
 		
 		puts robj.inspect 
 		
-		dob = Date.parse(robj['birthdate']) if robj['birthdate']
 		dob = Date.parse(robj['birth_date']) if robj['birth_date']
+		dob = Date.parse(robj['birthdate']) if robj['birthdate']
+	
 		
 		if patient
 			

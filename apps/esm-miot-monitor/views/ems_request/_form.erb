@@ -544,13 +544,18 @@
 													name = ""+obj['prefix_name']+" "+obj['first_name']+" "+obj['last_name']
 													contact = "-"
 													// if(obj['contact_phone']!=null)
-													contact = obj['contact_name']+" "+obj['contact_phone'] 
+													contact = obj['contact_phone'] 
 													
 													$('#patient-name').val(name)
 													$('#patient-gender').val(obj['gender'])
 													$('#patient-age').val(obj['age'])
+													$('#patient_birth_date').val(obj['dob'])
+													
 													$('#record_patient_cid').val(obj['public_id'])
 													$('#record_patient_phone').val(contact)
+													$('#record_patient_nationality').val(obj['nation'])
+													
+													
 													
 													
 												})
