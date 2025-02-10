@@ -192,13 +192,13 @@ if true
 end
 
 
-patient = Patient.new :hn=>params[:hn] unless patient 
-
-
-patient.age = patient.to_age_text
-patient = Patient.where(:hn=>params[:hn]).first
-
-@current_zone = Zone.find session[:current_zone]
+# patient = Patient.new :hn=>params[:hn] unless patient
+#
+#
+# patient.age = patient.to_age_text
+# patient = Patient.where(:hn=>params[:hn]).first
+#
+# @current_zone = Zone.find session[:current_zone]
 
 patient.age = patient.to_age
 	
