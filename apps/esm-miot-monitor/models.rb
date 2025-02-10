@@ -670,6 +670,7 @@ class Patient  < GXTModel
   key :dob, Time
   key :age, String
   key :gender, String
+  key :phone, String
   key :contact_name, String
   key :contact_phone, String
 
