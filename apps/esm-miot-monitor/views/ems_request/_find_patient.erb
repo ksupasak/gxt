@@ -19,6 +19,12 @@ if true
 	
     his_get_patient_uri = URI("#{url_config}?hn=#{params[:hn]}")
 	
+	if url_config.index("?")
+	
+	    his_get_patient_uri = URI("#{url_config}&hn=#{params[:hn]}")
+		
+	end
+	
 	
 	else 
 	
@@ -26,8 +32,6 @@ if true
 	
 	end
 	
-	
-	puts his_get_patient_uri
 	
     ##############################################################  
   
@@ -44,18 +48,44 @@ if true
     content = "{}"    
   
   
+        #
+    #
+    # req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
+    #
+    # # setting both OpenTimeout and ReadTimeout
+    # res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 5, :read_timeout => 5, :use_ssl=>true) {|http|
+    #
+    #      http.request(req)
+    #
+    # }
+    #
+    #
     
-  
-    req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
+	url = his_get_patient_uri
 
-    # setting both OpenTimeout and ReadTimeout
-    res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 5, :read_timeout => 5, :use_ssl=>true) {|http|
+	http = Net::HTTP.new(url.host, url.port)
+	
+	if his_get_patient_uri.to_s.index("https://") # Enable SSL/TLS
+		http.use_ssl = true  
+		http.verify_mode = OpenSSL::SSL::VERIFY_NONE	
+	end
+	
+	http.open_timeout = 5  # Time to establish a connection (seconds)
+	http.read_timeout = 10 # Time to wait for response (seconds)
+
+	request = Net::HTTP::Get.new(url)
+	
+	request["Content-Type"] = "application/json"
+	
+	if token = Setting.get(:his_bearer)
 		
-         http.request(req)
-
-    }
+		request["Authorization"] = "Bearer #{token}"
 	
+	end
 	
+	puts request.inspect 
+	
+	res = http.request(request)
 	
 	
 	content = res.body
@@ -66,12 +96,10 @@ if true
 	
 	
 	
+	if rx['statuscode'].to_s.index('200')
 		
-		
-	if rx['status'].to_s.index('200')
-		
-		if rx['record']
-		robj.merge! rx['record'] 
+		if rx['data']
+		robj.merge! rx['data'] 
 		else
 		robj.merge! rx 
 		end
@@ -82,26 +110,63 @@ if true
 		gender = "-"
 		gender = "M" if robj['gender']=='1'
 		gender = "F" if robj['gender']=='2'
+		gender = "M" if robj['gender']=='ชาย'
+		gender = "F" if robj['gender']=='หญิง'
+		gender = "M" if robj['gender']=='M'
+		gender = "F" if robj['gender']=='F'
+		gender = "M" if robj['gender']=='Male'
+		gender = "F" if robj['gender']=='Female'
+		
 		
 		puts robj.inspect 
 		
-		
-		
 		if patient
 			
-			patient.update_attributes :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['public_id'], :contact_name=>robj['contact_desc'], :contact_phone=>robj['contact_tel']
+			patient.update_attributes                :phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
 	
 		else 
-  	  	
-			patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date'], :public_id=>robj['public_id'], :contact_name=>robj['contact_desc'], :contact_phone=>robj['contact_tel'])
-		
+			patient = Patient.create :hn=>robj['hn'],:phone=>robj['patient_phone'],:addr=>robj['address'] ,:nation=>robj['nationality'], :first_name=>robj['fname'], :last_name=>robj['lname'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['cid'], :contact_phone=>robj['contact_phone']
+	
 		end
 		
 	else
 		
 		patient = Patient.new :hn=>params[:hn] unless patient 
 	
-	end
+	end	
+	#
+	# if rx['statuscode'].to_s.index('200')
+	#
+	# 	if rx['record']
+	# 	robj.merge! rx['record']
+	# 	else
+	# 	robj.merge! rx
+	# 	end
+	#
+	# 	prefix = robj['prefix_name']
+	# 	prefix = robj['prefix'] if robj['prefix']
+	#
+	# 	gender = "-"
+	# 	gender = "M" if robj['gender']=='1'
+	# 	gender = "F" if robj['gender']=='2'
+	#
+	# 	puts robj.inspect
+	#
+	# 	if patient
+	#
+	# 		patient.update_attributes :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date']), :public_id=>robj['public_id'], :contact_name=>robj['contact_desc'], :contact_phone=>robj['contact_tel']
+	#
+	# 	else
+	#
+	# 		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>prefix, :gender=>gender, :dob=>Date.parse(robj['birth_date'], :public_id=>robj['public_id'], :contact_name=>robj['contact_desc'], :contact_phone=>robj['contact_tel'])
+	#
+	# 	end
+	#
+	# else
+	#
+	# 	patient = Patient.new :hn=>params[:hn] unless patient
+	#
+	# end
 	
 
 	rescue Net::ReadTimeout => exception
