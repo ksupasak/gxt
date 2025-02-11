@@ -173,6 +173,7 @@
 								<a class="nav-link" href="#">	<i class="bx bx-search"></i>
 								</a>
 							</li>
+							<% if %w{admin user_admin super_admin}.index(@current_role) %>
 							<li class="nav-item dropdown dropdown-small">
 								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-folder"></i>
 								</a>
@@ -185,6 +186,20 @@
 												</div>
 											</div>
 										</a> -->
+											<a class="dropdown-item" href="../User/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">User</h6>
+													</div>
+												</div>
+											</a>
+											<a class="dropdown-item" href="../Role/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">Role</h6>
+													</div>
+												</div>
+											</a>
 										<a class="dropdown-item" href="../Provider/index">
 											<div class="d-flex align-items-center">
 												<div class="flex-grow-1">
@@ -285,6 +300,8 @@
 									</div>
 								</div>
 							</li>
+							<% end %>
+							<% if %w{admin user_admin super_admin user}.index(@current_role) %>
 							<li class="nav-item dropdown dropdown-large">
 								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-category"></i>
 								</a>
@@ -335,7 +352,7 @@
 									</div>
 								</div>
 							</li>
-
+							<% end %>
 						</ul>
 					</div>
 					<div class="user-box dropdown">
