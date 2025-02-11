@@ -129,8 +129,7 @@ end
 
 class Provider < GXTModel
   include Mongoid::Document
-  include Mongoid::Timestamps
-  
+
   belongs_to :unit, :class_name=>'EsmMiotMonitor::EMSUnit', foreign_key: 'unit_id'
   key :unit_id, ObjectId
   
@@ -149,7 +148,8 @@ class Provider < GXTModel
    key :role, String
    key :zone_id, String
    key :short, String
-   
+   include Mongoid::Timestamps
+  
  
    def get_name
      
@@ -1232,7 +1232,7 @@ class HomeController < GXT
 end
 
 
-class UserController < GXTDocument
+class UserController < EMSGXTDocument
 
   def acl
     # return {:login=>'*',:auto=>'*'}
@@ -1245,7 +1245,7 @@ end
 
 
 
-class UserLogController < GXTDocument
+class UserLogController < EMSGXTDocument
 
 
 
@@ -1255,7 +1255,7 @@ class AddressBookController < GXTDocument
 
 end
 
-class RoleController < GXTDocument
+class RoleController < EMSGXTDocument
 
 end
 
@@ -1334,7 +1334,7 @@ class BedController < GXTDocument
 end
 
 
-class ProviderController < GXTDocument
+class ProviderController < EMSGXTDocument
 
 end
 
