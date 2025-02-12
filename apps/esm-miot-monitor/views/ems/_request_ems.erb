@@ -374,7 +374,11 @@ conf_url = "video?id=#{session_prefix}&case_id=#{ems_case.id}&side=request&type=
 
 
 							<div class="box" >
-								<p>พิกัดตำแหน่ง <span style="float:right"><a  id = "find-me" class="btn btn-outline-success"> อ่านตำแหน่ง</a></span></p>
+								<p class="d-flex justify-content-between">พิกัดตำแหน่ง 
+								<input type="text" value="" placeholder="ค้นหาตำแหน่ง" id="record_location" style="color:black">	
+								<span style="float:right"><a  id = "find-me" class="btn btn-outline-success"> อ่านตำแหน่ง</a></span></p>
+								
+							
 							  <!--  <p>1.เลื่อนหมุดสีเเดงในเเผนที่เพื่อระบุตำเเหน่ง</p>
 								<p>2.กดปุ่มด้านล่างเเผนที่เพื่อส่งตำเเหน่ง</p> -->
 								<div id="dashboard-map" style="height: 300px">
@@ -586,6 +590,44 @@ conf_url = "video?id=#{session_prefix}&case_id=#{ems_case.id}&side=request&type=
 	map1.ready(function(){
 		
 		
+		$('#record_location').keydown(function(e){
+
+			if(e.keyCode == 13) {
+				e.preventDefault()
+
+				address_search(e)
+
+					return false;
+				}
+		});
+		
+		function address_search(e){
+
+
+				var address = $('#record_location').val()
+
+				map1.geocode({'address':address},function(result){
+					
+					// $('#record_address').val(result.formatted_address)
+
+					var pos = result.geometry.location;
+
+					map1.setPosition(pos.lat(), pos.lng())
+					// map1.setPosition(latitude,longitude)
+					map1.setMarkerPosition(pos.lat(), pos.lng())
+					
+					if(map1.getMap().getZoom()<15)
+					map1.getMap().setZoom(15);
+					// map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+
+				})
+
+				e.preventDefault();
+				return false;
+
+		}
+		
 	<% if @current_ambulance %>
 		
 	t = <%=@current_ambulance.last_location.split(',').to_json%>
@@ -601,12 +643,12 @@ conf_url = "video?id=#{session_prefix}&case_id=#{ems_case.id}&side=request&type=
 		var pos = marker.position
 		$('#location').val(""+pos.lat()+","+pos.lng())
 
-		map1.geocode({'location':pos},function(result){
-
-			$('#record_address').val(result.formatted_address)
-			$('#status').html(result.formatted_address)
-
-		})
+		// map1.geocode({'location':pos},function(result){
+	//
+	// 		$('#record_address').val(result.formatted_address)
+	// 		$('#status').html(result.formatted_address)
+	//
+	// 	})
 
 
 

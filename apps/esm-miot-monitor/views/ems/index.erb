@@ -173,7 +173,7 @@
 												console.log(transcript)
 			   						            // output.innerText = transcript;
 												$('#record_location').val(transcript)
-												address_search(event)
+												// address_search(event)
 												
 			   						        };
 
@@ -372,18 +372,19 @@
 
 
 
-
 					pos = marker.position
 		
 					// marker.setAnimation(google.maps.Animation.BOUNCE);
 					
 		
-					map1.geocode({'location':pos},function(result){
-
-						$('#record_latlng').val(result.formatted_address)
-
-					})
-					
+					// map1.geocode({'location':pos},function(result){
+		// 				alert(result.formatted_address)
+		// 				$('#record_latlng').val(result.formatted_address)
+		//
+		// 			})
+						
+						
+						$('#record_latlng').val(""+pos.lat()+","+pos.lng());
 					
 
 					if(map1.getMap().getZoom()<18)
@@ -619,7 +620,7 @@
 		});
 
 
-		$('#record_location').change(address_search);
+		// $('#record_location').change(address_search);
 
 
 
@@ -772,9 +773,9 @@
 
 
 				var address = $('#record_location').val()
-
+			
 				map1.geocode({'address':address},function(result){
-					
+					console.log('xxx')
 					// $('#record_address').val(result.formatted_address)
 
 					var pos = result.geometry.location;
