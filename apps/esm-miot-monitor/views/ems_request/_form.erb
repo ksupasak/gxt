@@ -886,14 +886,24 @@
 								
 								
 								
-						
+								var last_location = "";
 							
 
 							function address_search(e){
-
-
+								
+								
 									var address = $('#record_location').val()
-
+									// alert('a1'+address)
+								    if(last_location ==""){
+								    	last_location = address
+								    }else{
+										if(last_location==address){
+											return
+										}	
+								    }
+								
+									
+						
 									map1.geocode({'address':address},function(result){
 
 										// $('#record_address').val(result.formatted_address)
@@ -976,13 +986,13 @@
 									var pos = marker.position
 									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
+									// alert('a2')
 									
-									
-									map1.geocode({'location':pos},function(result){
-
-											$('#record_address').val(result.formatted_address)
-
-										})
+									// map1.geocode({'location':pos},function(result){
+	//
+	// 										$('#record_address').val(result.formatted_address)
+	//
+	// 									})
 
 									// map2.setPosition(pos.lat(), pos.lng())
 									// map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -1029,7 +1039,9 @@
 									var address = $(this).val()
 									latlng = address.split(",")
 									var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
-
+									
+									alert('a3')
+									
 									map1.geocode({'location':latlng},function(result){
 
 										// $('#record_address').val(result.formatted_address)
