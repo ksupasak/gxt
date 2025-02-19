@@ -910,12 +910,12 @@
 
 										var pos = result.geometry.location;
 
-										map1.setPosition(pos.lat(), pos.lng())
-										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map1.setPosition(pos.lat, pos.lng)
+										map1.setMarkerPosition(pos.lat, pos.lng, false)
 										// map2.setPosition(pos.lat(), pos.lng())
 	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 										$('#record_address').val(result.formatted_address)
-										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+										$('#record_latlng').val(""+pos.lat+","+pos.lng)
 
 									})
 
@@ -1048,13 +1048,13 @@
 
 										var pos = result.geometry.location;
 
-										map1.setPosition(pos.lat(), pos.lng())
-										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map1.setPosition(pos.lat, pos.lng)
+										map1.setMarkerPosition(pos.lat, pos.lng, false)
 										// map2.setPosition(pos.lat(), pos.lng())
 	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 										
 										$('#record_address').val(result.formatted_address)
-										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+										$('#record_latlng').val(""+pos.lat+","+pos.lng)
 
 									})
 
