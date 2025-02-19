@@ -270,48 +270,19 @@ end
 
    	 geocode(query, callback  ){
 		 		
+		 let geocode = this.geocoder;
 				
 				<% 
 		 
 		 	    geo_server = Setting.get('geocode_server')
 		 
-		 		if geo_server == nil or geo_server==""
-				
-				%>
-   		 		this.geocoder.geocode(query, function(results, status) {
-					// alert('geocode')
-   				      if (status === 'OK') {
-   				        if (results[0]) {
-
-
-   						  var position = results[0].geometry.location;
-						  console.log(position)
-   		  				 	callback(results[0])
-   						  // alert(results[0].formatted_address)
-
-   				        } else {
-   				          // window.alert('No results found');
-     				      console.log('No results found');
-						  
-   				        }
-   				      } else {
-   				        // window.alert('Geocoder failed due to: ' + status);
-   				        console.log('Geocoder failed due to: ' + status);
-						
-   				      }
-   				    }.bind(this));
-					
-				<%
-				else
+		 		if geo_server and geo_server!=""
 					
 					lat,lng = Setting.get('aoc_center').split(",").collect{|i| i.to_f }
-					
-					
-				%>	
+				%>
 					
 				  console.log(query)
-				
-				
+				console.log('<%=geo_server%>')
 				
 				$.ajax({
 				  url: '<%=geo_server%>/search?format=json&q='+query['address'],
@@ -323,37 +294,135 @@ end
 					const referenceLon = <%=lng%>;		
 					
 					
-					const sortedLocations =  sortByDistance(referenceLat, referenceLon, data);
+					if(data.length>0){
+						const sortedLocations =  sortByDistance(referenceLat, referenceLon, data);
 					
-				
 					
-					const googleGeocodeObject = {
+						const googleGeocodeObject = {
 				
-					      formatted_address: sortedLocations[0].display_name,
+						      formatted_address: sortedLocations[0].display_name,
 			
-					      geometry: {
-					        location: {
-					          lat: parseFloat(sortedLocations[0].lat),
-					          lng: parseFloat(sortedLocations[0].lon)
-					        }
-					      },
-					      place_id: data[0].place_id,
-					      types: ["neighborhood"] // Adjust as needed
+						      geometry: {
+						        location: {
+						          lat: parseFloat(sortedLocations[0].lat),
+						          lng: parseFloat(sortedLocations[0].lon)
+						        }
+						      },
+						      place_id: data[0].place_id,
+						      types: ["neighborhood"] // Adjust as needed
 				
-					};
+						};
 					
-					// console.log(firstLocation.lat())
-						callback(googleGeocodeObject)
+						// console.log(firstLocation.lat())
+							callback(googleGeocodeObject)
+						
+						return;
+						
+						
+						
+					}else{
+						
+
+							geocode.geocode(query, function(results, status) {
+							// alert('geocode')
+							if (status === 'OK') {
+							if (results[0]) {
+
+
+
+  	   						  var position = results[0].geometry.location;
+  							  console.log(position)
+							  
+  	  						const googleGeocodeObject = {
+				
+  	  						      formatted_address: results[0].formatted_address,
+			
+  	  						      geometry: {
+  	  						        location: {
+  	  						          lat: position.lat(),
+  	  						          lng: position.lng()
+  	  						        }
+  	  						      },
+				
+  	  						};
+							
+							callback(googleGeocodeObject)
+							return;
+							  // alert(results[0].formatted_address)
+
+							} else {
+							  // window.alert('No results found');
+							  console.log('No results found');
+
+							}
+							} else {
+							// window.alert('Geocoder failed due to: ' + status);
+							console.log('Geocoder failed due to: ' + status);
+
+							}
+							}.bind(this));
+
+					}
 					
+					
+				
 				  },
 				  error: function(error) {
 				    console.error('Error:', error);
 				  }
 				});
+					
+				<%
+			else
+				%>	
+					
+					
+			
 				
 					// https://geocode.pcm-life.com/search?q=Bangna&format=json
 					
-				<% end %>
+	   		 		this.geocoder.geocode(query, function(results, status) {
+						// alert('geocode')
+	   				      if (status === 'OK') {
+	   				        if (results[0]) {
+
+
+	   						  var position = results[0].geometry.location;
+							  console.log(position)
+							  
+	  						const googleGeocodeObject = {
+				
+	  						      formatted_address: results[0].formatted_address,
+			
+	  						      geometry: {
+	  						        location: {
+	  						          lat: position.lat(),
+	  						          lng: position.lng()
+	  						        }
+	  						      },
+				
+	  						};
+					
+							  
+							  
+	   		  				 	callback(googleGeocodeObject)
+	   						  // alert(results[0].formatted_address)
+
+	   				        } else {
+	   				          // window.alert('No results found');
+	     				      console.log('No results found');
+						  
+	   				        }
+	   				      } else {
+	   				        // window.alert('Geocoder failed due to: ' + status);
+	   				        console.log('Geocoder failed due to: ' + status);
+						
+	   				      }
+	   				    }.bind(this));
+							<%
+					end
+							%>	
+		
 				
 				
    	}
