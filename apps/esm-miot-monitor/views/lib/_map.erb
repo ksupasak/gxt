@@ -53,6 +53,26 @@ end
 		}
 		
 	}
+	function	 haversineDistance(lat1, lon1, lat2, lon2) {
+		    const toRad = angle => angle * (Math.PI / 180);
+    
+		    const R = 6371; // Earth radius in km
+		    const dLat = toRad(lat2 - lat1);
+		    const dLon = toRad(lon2 - lon1);
+		    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+		              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+		    return R * c; // Distance in km
+		}
+
+		function sortByDistance(referenceLat, referenceLon, locations) {
+		    return locations.map(location => ({
+		        ...location,
+		        distance: haversineDistance(referenceLat, referenceLon, parseFloat(location.lat), parseFloat(location.lon))
+		    })).sort((a, b) => a.distance - b.distance);
+		}
 
 	class EMSMap{
 
@@ -249,7 +269,15 @@ end
 
 
    	 geocode(query, callback  ){
-		 	
+		 		
+				
+				<% 
+		 
+		 	    geo_server = Setting.get('geocode_server')
+		 
+		 		if geo_server == nil or geo_server==""
+				
+				%>
    		 		this.geocoder.geocode(query, function(results, status) {
 					// alert('geocode')
    				      if (status === 'OK') {
@@ -257,7 +285,7 @@ end
 
 
    						  var position = results[0].geometry.location;
-
+						  console.log(position)
    		  				 	callback(results[0])
    						  // alert(results[0].formatted_address)
 
@@ -272,7 +300,62 @@ end
 						
    				      }
    				    }.bind(this));
-
+					
+				<%
+				else
+					
+					lat,lng = Setting.get('aoc_center').split(",").collect{|i| i.to_f }
+					
+					
+				%>	
+					
+				  console.log(query)
+				
+				
+				
+				$.ajax({
+				  url: '<%=geo_server%>/search?format=json&q='+query['address'],
+				  type: 'GET',
+				  dataType: 'json',
+				  success: function(data) {
+				    console.log('Data received:', data);
+					const referenceLat = <%=lat%>;
+					const referenceLon = <%=lng%>;		
+					
+					
+					const sortedLocations =  sortByDistance(referenceLat, referenceLon, data);
+					
+				
+					
+					const googleGeocodeObject = {
+				
+					      formatted_address: sortedLocations[0].display_name,
+			
+					      geometry: {
+					        location: {
+					          lat: parseFloat(sortedLocations[0].lat),
+					          lng: parseFloat(sortedLocations[0].lon)
+					        }
+					      },
+					      place_id: data[0].place_id,
+					      types: ["neighborhood"] // Adjust as needed
+				
+					};
+					
+					// console.log(firstLocation.lat())
+						callback(googleGeocodeObject)
+					
+				  },
+				  error: function(error) {
+				    console.error('Error:', error);
+				  }
+				});
+				
+					// https://geocode.pcm-life.com/search?q=Bangna&format=json
+					
+				<% end %>
+				
+				
    	}
 
 	}

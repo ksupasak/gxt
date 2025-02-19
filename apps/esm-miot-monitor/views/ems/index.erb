@@ -173,7 +173,7 @@
 												console.log(transcript)
 			   						            // output.innerText = transcript;
 												$('#record_location').val(transcript)
-												// address_search(event)
+												address_search(event)
 												
 			   						        };
 
@@ -780,11 +780,12 @@
 
 					var pos = result.geometry.location;
 
-					map1.setPosition(pos.lat(), pos.lng())
+					// map1.setPosition(pos.lat(), pos.lng())
+					map1.setPosition(pos.lat, pos.lng)
 
 					if(map1.getMap().getZoom()<15)
 					map1.getMap().setZoom(15);
-					// map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+					map1.setMarkerPosition(pos.lat, pos.lng, false)
 
 
 				})

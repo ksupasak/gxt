@@ -47,6 +47,16 @@ items = %w{
 g[:items] = items
 groups << g
 
+
+g = {:name=>'Map Features'}
+items = %w{
+	map_server
+	geocode_server
+	route_server
+}
+g[:items] = items
+groups << g
+
 g = {:name=>'LINE Features'}
 items = %w{
 	line_channel_token
@@ -79,6 +89,8 @@ items = %w{
 	license_issue
 	api_token
 }
+
+
 g[:items] = items
 groups << g
 		
