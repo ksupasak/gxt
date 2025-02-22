@@ -281,14 +281,13 @@ end
 		 		if geo_server and geo_server!=""
 					
 					lat,lng = Setting.get('aoc_center').split(",").collect{|i| i.to_f }
+				
 				%>
 					
 				  console.log(query)
 				console.log('<%=geo_server%>')
 				
-		 	    log_file = File.open("~/geocode.log","a")	
-				log_file.puts("#{Time.now.to_json}\tpcm\t#{query}")
-				
+		 	   
 				
 				$.ajax({
 				  url: '<%=geo_server%>/search?format=json&q='+query['address'],
@@ -328,8 +327,7 @@ end
 						
 					}else{
 						
-							log_file.puts("#{Time.now.to_json}\tgoogle\t#{query}")
-							
+								
 							geocode.geocode(query, function(results, status) {
 							// alert('geocode')
 							if (status === 'OK') {
