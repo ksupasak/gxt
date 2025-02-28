@@ -1137,10 +1137,47 @@ MSG
   	ems_case.update_message @context, "request send sms"
 
 
-    return  response.read_body + '<META HTTP-EQUIV="Refresh" CONTENT="3;URL='+url+'">'
+    return   '<center>Send Message</center><META HTTP-EQUIV="Refresh" CONTENT="3;URL='+url+'"><br/>'+response.read_body 
 
   end
 
+
+  def send_otp params
+    
+
+    url = URI("https://portal-otp.smsmkt.com/api/otp-send")
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Post.new(url)
+    request["Accept"] = 'application/json'
+    request["Content-Type"] = 'application/json'
+    request["api_key"] = Setting.get("sms_api_key")
+    request["secret_key"] = Setting.get("sms_secret_key")
+    project_key = "e66c042574"
+    phone = params[:phone]
+    ref = params[:ref] || "#{format("%06d",rand(999999))}"
+    request.body = "{\"project_key\":\"#{project_key}\",\"phone\":\"#{phone}\",\"ref_code\":\"#{ref}\"}"
+
+    response = http.request(request)
+    
+    url = params[:return] || "../EMSUser/profile"
+    
+    res = JSON.parse(response.body)
+    ref_code = ""
+    if res['code'] == "000"
+      ref_code = res['result']['ref_code']
+      token =  res['result']['token']
+      query = "ref=#{ref_code}&token=#{token}"
+    end
+
+  
+    return  '<center>Send OTP </center><META HTTP-EQUIV="Refresh" CONTENT="3;URL='+url.to_s+'?'+query+'"><br/>'+response.read_body 
+    
+    
+  end
 
 
 

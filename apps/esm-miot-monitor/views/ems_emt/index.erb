@@ -17,6 +17,7 @@
 
 record = @current_case
 
+
      if record
 
      com_list = EMSCommand.where(:case_id=>record.id, :ambulance_id=>@current_ambulance.id).all
@@ -29,8 +30,10 @@ record = @current_case
      last_mile = com.ambulance.last_mile
 
      last_log = admit.logs.where(:status=>'PENDING').sort(:sort_order=>1).first
+	 
 	 if last_log
-     current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
+     
+	 current_route =  AocCaseRoute.where('$or'=>[{:departure_log_id=>last_log.id},{:arrival_log_id=>last_log.id} ]).first
      previous_log = admit.logs.where(:admit_id=>last_log.admit_id, :sort_order=>last_log.sort_order-1).first if last_log
 
 
@@ -814,6 +817,7 @@ function startWeb(link){
 				</div>
 			</div>
 			<center>
+<<<<<<< HEAD
 			<!-- <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10"> --!>
 			  <button type="button" class=" info-qr btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
 			  <!--   </a> --!>
@@ -841,6 +845,12 @@ function startWeb(link){
 			</script>		
 
 			<!--  <p> <%= Setting.get(:host_url)  %> <%= record.id %>  </p> --!>
+=======
+			 <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10">
+			  <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
+		     </a>
+			
+>>>>>>> 5de7baeda04da9d22792da6ce9a320b4121a0378
 			 </center>
 			</div>
 			<div class="modal-footer">
@@ -1188,7 +1198,7 @@ modal('#modal_notification')
         // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
         connect()
 
-     }, 10000); //will call the function after 2 secs.
+     }, 5000); //will call the function after 2 secs.
 
 
   }

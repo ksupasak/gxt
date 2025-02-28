@@ -173,6 +173,7 @@
 								<a class="nav-link" href="#">	<i class="bx bx-search"></i>
 								</a>
 							</li>
+							<% if %w{admin user_admin super_admin}.index(@current_role) %>
 							<li class="nav-item dropdown dropdown-small">
 								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-folder"></i>
 								</a>
@@ -185,6 +186,20 @@
 												</div>
 											</div>
 										</a> -->
+											<a class="dropdown-item" href="../User/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">User</h6>
+													</div>
+												</div>
+											</a>
+											<a class="dropdown-item" href="../Role/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">Role</h6>
+													</div>
+												</div>
+											</a>
 										<a class="dropdown-item" href="../Provider/index">
 											<div class="d-flex align-items-center">
 												<div class="flex-grow-1">
@@ -285,6 +300,8 @@
 									</div>
 								</div>
 							</li>
+							<% end %>
+							<% if %w{admin user_admin super_admin user}.index(@current_role) %>
 							<li class="nav-item dropdown dropdown-large">
 								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-category"></i>
 								</a>
@@ -335,7 +352,7 @@
 									</div>
 								</div>
 							</li>
-
+							<% end %>
 						</ul>
 					</div>
 					<div class="user-box dropdown">
@@ -373,7 +390,7 @@
 		<!--end header -->
 		<!--start page wrapper -->
 		<div class="page-wrapper">
-			<div class="page-content">
+			<div class="page-content" style="overflow:scroll">
 
 
 
@@ -394,10 +411,75 @@
 		<!--Start Back To Top Button-->
 		  <a href="javaScript:;" class="back-to-top"><i class="bx bxs-up-arrow-alt"></i></a>
 		<!--End Back To Top Button-->
-		<footer class="page-footer">
+		<footer class="page-footer d-flex justify-content-between">
+			<span class="col-1"> EMS</span>
+			
 			<p class="mb-0">Copyright © 2021 E.S.M.Solution Co.,Ltd. All right reserved.</p>
+			
+			<span class="col-1 " id=""><%=link_to "History","../EMSUser/history" %> <span class="" id="counter"> - </span> </span>
+				
 		</footer>
 	</div>
+  <script>
+	  
+	  <%
+	  
+	    idle_time_limit = 60*60
+		limit = nil
+		role = Role.find @current_user.role_id
+	  	if role and role.idle_time_limit and limit = role.idle_time_limit.to_i			
+			idle_time_limit = limit
+		end
+	   
+	  	
+	  %>
+	   <% if limit and limit > 0 %>
+	  
+        let idleTime = 0;
+		let limit= <%=idle_time_limit%>;
+        let interval;
+		
+        function startCounting() {
+		
+            clearInterval(interval);
+            idleTime = 0; // Reset counter
+            interval = setInterval(() => {
+                idleTime++;
+				
+				i = limit-idleTime
+				if(i>60){
+				  t = ""+ Math.floor(i/60)+"m" 
+					if(i/60>10)
+				  	  t = t 
+				}else{
+				  t = ""+ i+"s" 
+				}
+				
+				
+                document.getElementById("counter").innerText = " "+(t);
+				if(idleTime>limit){
+					window.location.href= "../User/logout"
+				}
+            }, 1000);
+			 document.getElementById("counter").innerText = "-"
+        }
+
+        document.addEventListener("mousemove", startCounting);
+        document.addEventListener("click", startCounting);
+
+        window.onload = startCounting; // Start counting when the page loads
+		<% end %>
+		
+			//
+		// window.addEventListener("load", () => {
+		//     let loadTime = (performance.timing.loadEventEnd - performance.timing.navigationStart) / 1000;
+		//     // console.log(`Page Load Time: ${loadTime.toFixed(2)} seconds`);
+		//     document.getElementById("load-time").textContent = ` ${loadTime.toFixed(2)} ms`;
+		// });
+		
+    </script>
+		 
+		 
 	<!--end wrapper-->
 	<!--start switcher-->
 	<% if false %>

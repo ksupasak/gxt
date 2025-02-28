@@ -372,18 +372,19 @@
 
 
 
-
 					pos = marker.position
 		
 					// marker.setAnimation(google.maps.Animation.BOUNCE);
 					
 		
-					map1.geocode({'location':pos},function(result){
-
-						$('#record_latlng').val(result.formatted_address)
-
-					})
-					
+					// map1.geocode({'location':pos},function(result){
+		// 				alert(result.formatted_address)
+		// 				$('#record_latlng').val(result.formatted_address)
+		//
+		// 			})
+						
+						
+						$('#record_latlng').val(""+pos.lat()+","+pos.lng());
 					
 
 					if(map1.getMap().getZoom()<18)
@@ -619,7 +620,7 @@
 		});
 
 
-		$('#record_location').change(address_search);
+		// $('#record_location').change(address_search);
 
 
 
@@ -772,18 +773,19 @@
 
 
 				var address = $('#record_location').val()
-
+			
 				map1.geocode({'address':address},function(result){
-
+					console.log('xxx')
 					// $('#record_address').val(result.formatted_address)
 
 					var pos = result.geometry.location;
 
-					map1.setPosition(pos.lat(), pos.lng())
+					// map1.setPosition(pos.lat(), pos.lng())
+					map1.setPosition(pos.lat, pos.lng)
 
 					if(map1.getMap().getZoom()<15)
 					map1.getMap().setZoom(15);
-					// map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+					map1.setMarkerPosition(pos.lat, pos.lng, false)
 
 
 				})
@@ -900,11 +902,16 @@ airport_shuttle
 
 		if(lines[0].split(" ")[0]=='Zone.Refresh'){
 			// (lines[1])
-			header = JSON.parse(lines[1])['msg'].split(" ")
-			if(header[0]=='notify_callback'){
-				window.location="show?id="+header[1]
-			}else
-			window.location.reload();
+			// alert('iofj')
+		// 	header = JSON.parse(lines[1])['msg'].split(" ")
+		// 	if(header[0]=='notify_callback'){
+		//
+		// 		window.location="show?id="+header[1]
+		// 	}else{
+		// 		alert('dijf')
+					window.location.reload();
+			// }
+		
 
 		}else
 		if(lines[0].split(" ")[0]=='Zone.Message'){

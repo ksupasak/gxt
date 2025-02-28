@@ -553,13 +553,18 @@
 													name = ""+obj['prefix_name']+" "+obj['first_name']+" "+obj['last_name']
 													contact = "-"
 													// if(obj['contact_phone']!=null)
-													contact = obj['contact_name']+" "+obj['contact_phone'] 
+													contact = obj['contact_phone'] 
 													
 													$('#patient-name').val(name)
 													$('#patient-gender').val(obj['gender'])
 													$('#patient-age').val(obj['age'])
+													$('#patient_birth_date').val(obj['dob'])
+													
 													$('#record_patient_cid').val(obj['public_id'])
 													$('#record_patient_phone').val(contact)
+													$('#record_patient_nationality').val(obj['nation'])
+													
+													
 													
 													
 												})
@@ -890,26 +895,36 @@
 								
 								
 								
-						
+								var last_location = "";
 							
 
 							function address_search(e){
-
-
+								
+								
 									var address = $('#record_location').val()
-
+									// alert('a1'+address)
+								    if(last_location ==""){
+								    	last_location = address
+								    }else{
+										if(last_location==address){
+											return
+										}	
+								    }
+								
+									
+						
 									map1.geocode({'address':address},function(result){
 
 										// $('#record_address').val(result.formatted_address)
 
 										var pos = result.geometry.location;
 
-										map1.setPosition(pos.lat(), pos.lng())
-										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map1.setPosition(pos.lat, pos.lng)
+										map1.setMarkerPosition(pos.lat, pos.lng, false)
 										// map2.setPosition(pos.lat(), pos.lng())
 	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 										$('#record_address').val(result.formatted_address)
-										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+										$('#record_latlng').val(""+pos.lat+","+pos.lng)
 
 									})
 
@@ -980,13 +995,13 @@
 									var pos = marker.position
 									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
+									// alert('a2')
 									
-									
-									map1.geocode({'location':pos},function(result){
-
-											$('#record_address').val(result.formatted_address)
-
-										})
+									// map1.geocode({'location':pos},function(result){
+	//
+	// 										$('#record_address').val(result.formatted_address)
+	//
+	// 									})
 
 									// map2.setPosition(pos.lat(), pos.lng())
 									// map2.setMarkerPosition(pos.lat(), pos.lng(), false)
@@ -1033,20 +1048,22 @@
 									var address = $(this).val()
 									latlng = address.split(",")
 									var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
-
+									
+									alert('a3')
+									
 									map1.geocode({'location':latlng},function(result){
 
 										// $('#record_address').val(result.formatted_address)
 
 										var pos = result.geometry.location;
 
-										map1.setPosition(pos.lat(), pos.lng())
-										map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+										map1.setPosition(pos.lat, pos.lng)
+										map1.setMarkerPosition(pos.lat, pos.lng, false)
 										// map2.setPosition(pos.lat(), pos.lng())
 	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
 										
 										$('#record_address').val(result.formatted_address)
-										$('#record_latlng').val(""+pos.lat()+","+pos.lng())
+										$('#record_latlng').val(""+pos.lat+","+pos.lng)
 
 									})
 
