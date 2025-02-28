@@ -164,8 +164,8 @@
 
 
 					<p class="px-3">
-
-					CBD code
+ 
+					CBD code  
 
 					<span class="" style="float:right" >
 						<a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">เลือก</a>
@@ -174,8 +174,17 @@
 
 					<div class="input-group pb-3">
 					<%= f.select(:init_cbd_code, [['','']]+EMSCode.where({}).sort(:group_id=>1,:code=>1).all().collect{|i| [i.id,i.name]}, :value=>record.init_cbd_code,:class=>'form-select') %>
+			
+					<%   flows = EMSKWorkflow.all() %>
+					<input type="hidden" name="record[case_id]" value="<%=params[:case_id]%>" >
+                    <input type="text" name="record[text]" class="alert-warning form-control flow-search-value" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+					<datalist id="datalistOptions" >
+					 <% for i in flows %>
+						<option value="<%=i.name%>"> </option>
+					 <%end%>
+					</datalist>
 					</div>
-
+					 
 
 
 					<!-- Modal -->
@@ -217,7 +226,7 @@
 											<div class="card radius-10 btn btn-info">
 												<a href="javascript:group('<%=g.id%>')" class='w-100 align-middle' >
 												<div class="card-body " style="text-align:left">
-											 	<%=g.code%> <%=g.name%>
+											 	  <%=g.code%> <%=g.name%>
 												</div>
 												</a>
 											</div>
