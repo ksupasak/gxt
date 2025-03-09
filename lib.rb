@@ -3,7 +3,7 @@
 def switch name, app=nil
 
   settings.set :name, name
-
+  @current_solution = name
   app = settings.apps[name] unless app
 
 

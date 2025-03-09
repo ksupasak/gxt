@@ -24,10 +24,7 @@ module EsmMiotMonitor
 
 
     name = settings.name
-    #---- {"ZoneUpdate"=>{"zone_id=*"=>"66dd17be5164100f13fd1ee9d742df188c4a1ba793b9defe312838d77066690a"}}
-    # puts 'event for '+name
-    # puts "#{settings.cmd_map.inspect  }"
-    # puts
+
     if settings.cmd_map[name]
     if m = settings.cmd_map[name][cmd]
         m.each_pair do |k,line|
@@ -96,9 +93,7 @@ class OpdController < GXT
 
 end
 
-class ErController < GXT
 
-end
 
 class SolutionController < GXT
 

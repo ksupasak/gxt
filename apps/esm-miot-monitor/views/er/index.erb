@@ -1,107 +1,95 @@
-<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
-<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
-<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
-    <!--Content-->
-    <section>
-        <div class="container">
-                <header class=" d-flex align-items-center title-fill">
-                    <div class="col">
-                        <p class="mb-0"><strong>ER ZONE</strong></p>
-                        <small>Observation Room</small>
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <button class=" btn  er-scan">
-                            <img src="<%=url_for('img/svg/scan.svg')%>" alt="scan" class="p-1" />
-                            Scan
-                        </button>
-                    </div>
-                </header>
-                <br>
-                <!--er room-->
-                <section id="er-room">
-                    <div class="container-fluid">
-                        <div class="row justify-content-between mb-2">
-                            <div class="col-sm mb-2 ">
-                                <a href="./connect" class="btn er-room">
-                                    <span>
-                                        <i class="fas fa-bed pr-2"></i>
-                                    </span>
-                                    ER-001
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-002
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-003
-                                </a>
-                            </div>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Smart ER </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
+<style>
+        .patient-card {
+            border: 2px solid yellow;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .red-line {
+            height: 5px;
+            background-color: red;
+            margin: 5px 0;
+        }
 
-                        </div>
-                        <div class="row justify-content-between mb-2">
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <span >
-                                        <i class="fas fa-bed pr-2"></i>
-                                    </span>
-                                    ER-004
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-005
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-006
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row justify-content-between mb-2">
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <span>
-                                        <i class="fas fa-bed pr-2"></i>
-                                    </span>
+        .yellow-line {
+            height: 5px;
+            background-color: yellow;
+            margin: 5px 0;
+        }
+    </style>
 
-                                    ER-007
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-008
-                                </a>
-                            </div>
-                            <div class="col-sm mb-2">
-                                <a href="#" class="btn er-room">
-                                    <i class="fas fa-bed pr-2"></i>
-                                    ER-009
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!--end of er-room--> 
-                <hr class="hr-new">
+    <div class="row gy-4">
+    <div class="d-flex flex-wrap justify-content-start">
+    <% 10.times do |i| %>
+    <div class="card  m-2  patient-card alert-warning">
+            <div class="row g-2 mb-2">
+                <div class="col-6">
+                    <input type="text" class="form-control text-center" value="patient_name" readonly>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control text-center" value="HN" readonly>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control text-center fw-bold" value="case_id" readonly>
+                </div>
             </div>
-           
-            <div class="container d-flex justify-content-center">
-                <a href="./create" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-                        <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
-                      </svg>
-                    <span class="pl-2 pb-0">เพิ่มใหม่</span>
-                </a>
+            <div class="d-flex justify-content-between">
+                <span>IN 13:00</span>
+                <span>Stay 2.3 Hr</span>
+            </div>
+            <div class="yellow-line"></div>
+            <input type="text" class="form-control text-center mb-2" value="msg" readonly>
+            <div class="row g-2 mb-2">
+                <div class="col-3">
+                    <button class="btn btn-light w-100">120/80</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">90</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">70</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">20</button>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 1</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 2</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 3</button>
+                </div>
             </div>
         </div>
-    </section>
+
+<% end %>
+    </div>   </div>

@@ -1,6 +1,63 @@
 module EsmMiotMonitor
   
 
+class ERCase < GXTModel
+  include Mongoid::Document
+  belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  include Mongoid::Timestamps
+  key :case_no, String
+  key :case_type, String # EMS / Refer
+  key :patient_type, String # Trauma
+
+
+  # key :final_cbd_code, ObjectId
+
+  key :contact_name, String
+
+  key :contact_phone, String
+
+  key :patient_id, ObjectId
+  key :patient_name, String
+  key :patient_info, String
+  key :patient_gender, String
+  key :patient_age, String
+  key :patient_birth_date, DateTime
+  key :patient_nationality, String
+
+
+  key :patient_cid, String
+  key :patient_hn, String
+  key :patient_phone, String
+
+  key :patient_underlying, String
+
+  key :ems_type, String
+  key :ems_trauma, String
+  key :scene_triage, String
+
+  key :code_155, String
+
+  key :patient_weight, Float
+
+  key :patient_height, Float
+
+  key :patient_bmi, Float
+
+
+  key :admit_id, ObjectId
+  key :date, Time
+  key :status, String
+
+  key :diagnosis, String
+  key :diagnosis_icd, String
+
+
+end
+
+class ERCaseController < GXTDocument
+  
+end
+
 class ERCaseReport < GXTModel
   
   include Mongoid::Document

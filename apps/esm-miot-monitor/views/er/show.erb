@@ -1,126 +1,61 @@
-<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
-<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
-<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
-    <!--Content-->
-    <section>
-        <div class="container">
-            <!--patient card-->
-            <div class="card patient-info">
-                <div class="card-body d-flex align-items-center">
-                    <div class="col">
-                        <h6 class="font-weight-bold" id="patient-name">นายธนารัฐ พิพิธยการ</h6>
-                        <span class="col p-0 " id="HN">HN: 58749-61</span>
-                        <span class="col p-0 mr-3" id="age">อายุ: 57 ปี</span>
-                        <span class="col p-0" id="gender">เพศ: ชาย</span>
-                        <span class="col p-0" id="complaint">Complaint: Chest Pain</span>
-                    </div>
-                    <div class="col text-right">
-                        <h6 class="" id="arrival-time">Arrival:
-                            <span>09:59 AM</span>
-                        </h6>
-                        <span id="duration">Duration:
-                            <span>00:35 HR</span>
-                        </span>
-                        <br>
-                        <span id="lastvisit--">Last Visit:
-                            <span>09:59 AM</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <!--end of patient card-->
-            <!--nurse summary-->
-            <h4 class="font-weight-bold mt-4">Summary Report</h4>
-            <div class="card sum-report mt-4">
-                <div class="card-header card-vital">
-                    <strong> Triage Assessment</strong>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4">09:58</div>
-                        <div class="col-8">
-                            <span class="pr-2">Patient's triage acuity: </span>
-                            <span class="badge badge-danger">
-                                <h6 class="m-0 pl-2 pr-2">วิกฤติ</h6>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mt-3 mb-2">
-                        <div class="col-4">13:25</div>
-                        <div class="col-8">
-                            <span class="pr-2">Appear in no apparent distress, Behavior is agitated Complaint of pain in
-                                chest </span>
-                        </div>
-                    </div>
-                </div>
-                <!--vital sign part-->
-                <div class="card-header card-vital">
-                    <strong> Vital Sign</strong>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover table-vital text-center">
-                        <thead>
-                          <tr>
-                            <th scope="col">เวลา</th>
-                            <th scope="col">BP</th>
-                            <th scope="col">Pulse/SpO<sub>2</sub></th>
-                            <th scope="col">RR</th>
-                            <th scope="col">BT</th>
-                            <th scope="col">Change</th>
-                            <th scope="col">Pain</th>
-                            <th scope="col">Staff</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">09:58</th>
-                            <td>120/90</td>
-                            <td>82/90</td>
-                            <td>85</td>
-                            <td>37.0</td>
-                            <td>1%</td>
-                            <td>5</td>
-                            <td>นารารัตน์</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">09:58</th>
-                            <td>120/90</td>
-                            <td>82/90</td>
-                            <td>85</td>
-                            <td>37.0</td>
-                            <td>1%</td>
-                            <td>5</td>
-                            <td>นารารัตน์</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">09:58</th>
-                            <td>120/90</td>
-                            <td>82/90</td>
-                            <td>85</td>
-                            <td>37.0</td>
-                            <td>1%</td>
-                            <td>5</td>
-                            <td>นารารัตน์</td>
-                          </tr>
-                        </tbody>
-                      </table>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">ER Case </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+                       
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
 
-                </div>
-            </div>
+ <div class=" mt-4 border p-3 rounded shadow-sm">
+        <!-- Patient Info Section -->
+        <div class="row bg-light p-3 rounded mb-3 text-center">
+            <div class="col-md">Patient Name</div>
+            <div class="col-md">Male</div>
+            <div class="col-md">Age</div>
+            <div class="col-md">สิทธิ์</div>
+            <div class="col-md">ALG</div>
+            <div class="col-md">IN 13:00</div>
+            <div class="col-md">Stay 2.3 Hr</div>
+            <div class="col-md">HN <strong>2546</strong></div>
+        </div>
 
+        <!-- Navigation Buttons -->
+        <div class="d-flex flex-wrap justify-content-left gap-2 mb-3">
+            <button class="btn btn-primary"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+            <button class="btn btn-primary"><i class="fas fa-user-edit"></i> Registration</button>
+            <button class="btn btn-primary"><i class="fas fa-notes-medical"></i> Diagnosis</button>
+          
+            <button type="button" class="btn btn-primary position-relative"> <i class="bx bx-group align-middle"></i> Orders 
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">24 <span class="visually-hidden">unread messages</span>
+            </span>
+			</button>
+            <button class="btn btn-primary"><i class="fas fa-heartbeat"></i> Monitor</button>
+            <button class="btn btn-primary"><i class="fas fa-file-medical"></i> EMR</button>
+            <button class="btn btn-primary"><i class="fas fa-camera"></i> Photo</button>
+            <button class="btn btn-primary"><i class="fas fa-procedures"></i> ADT</button>
+            <button class="btn btn-primary"><i class="fas fa-file-invoice-dollar"></i> Billing</button>
+        </div>
 
+        <!-- Content Section -->
+        <div class="border p-4 text-center bg-light rounded" style="min-height:400px">
+            content for future ajax
         </div>
-        <div class="d-flex justify-content-center mt-5">
-            <a href="connect" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center">
-                <img src="<%=url_for('img/svg/heart.svg')%>" alt="heart" class="pr-3"/>
-                วัดค่า
-            </a>
-
-        </div>
-        <br>
-        <a href="index" class="d-flex justify-content-center">
-            <p>กลับสู่หน้าหลัก</p>
-        </a>
-        </div>
-        </div>
-    </section>
+    </div>

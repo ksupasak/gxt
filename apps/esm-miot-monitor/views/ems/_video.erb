@@ -12,10 +12,12 @@
 <%
 
 meeting = nil
+cls = "primary"
 
 if params[:case_id]
 	
 	ems_case = EMSCase.find params[:case_id]
+
 	mask = ""
 	
 	if ems_case
@@ -31,24 +33,24 @@ if params[:case_id]
 		ems_case.update_attributes :video_status=>mask.join("|")
 	
 	    ems_case.update_message @context, "video call", 'Zone.Message'
+		
+		
+		code = EMSCode.find record.init_cbd_code 
+
+		cls = record.init_code.get_class if code	
+	
+	
 	end
 		
-		
 	record = ems_case	
-
-
-	code = EMSCode.find record.init_cbd_code
-
-	
-
-	cls = "primary"
-
-	cls = record.init_code.get_class if code	
-	
 	
 	meeting  = EMSMeeting.where(:name=>params[:id]).first 
 	
 		
+elsif params[:id]
+
+	meeting  = EMSMeeting.where(:name=>params[:id]).first 
+
 end
 	
 	
@@ -92,8 +94,13 @@ emd = true if  params[:side]=='emd'
 		
 		end
 		
-	
+	if record
+		link = "video?id=#{meeting.name}&case_id=#{record.id}" 
+		else
+		link = "video?id=#{meeting.name}" 
+	end
 		
+
 		
 		
     %>
@@ -136,6 +143,11 @@ emd = true if  params[:side]=='emd'
 
     </head>
     <body class="mat-typography" id="body" style="margin-right:20px;height:1000px;overflow:scroll">
+	
+	<% if meeting.status!='OPEN' or (ems_case and ems_case.status!="New")  %>	
+	<meta http-equiv="refresh" content="0; url=video_close" />
+	<% end %>
+		
 	<div class="container" >
 
 	<div class="row">
@@ -192,13 +204,37 @@ emd = true if  params[:side]=='emd'
 			
 			
 			<div class="col-12  d-flex align-items-stretch">
-	
+				<% 
+					# record = EMSCase.new unless record 
+				
+				%>
 				<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
 				<div class="card-body">
 					<div class="d-flex align-items-center">
 						<div class="row" >
 
 
+								
+							<div class="row">
+
+								<div class="col-12 col-xl-12">
+									<h4 class="my-1 text-<%=cls%> d-flex justify-content-center">
+
+										<%=meeting.name%>
+
+									</h4>
+
+								</div>
+
+							
+
+							</div>
+							
+							
+							<% if record %>
+							
+						
+			
 							<div class="row">
 
 								<div class="col-12 col-xl-7">
@@ -213,13 +249,13 @@ emd = true if  params[:side]=='emd'
 								<div class="col-12 col-xl-5">
 									<h4 class="my-1 text-info " >
 
-									 <%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
+									 Tel: <%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
 
 									</h4>
 								</div>
 
 							</div>
-
+							
 
 							<div class="row">
 
@@ -248,17 +284,7 @@ emd = true if  params[:side]=='emd'
 
 
 
-							<!-- <p class="mb-0 text-secondary">
-
-
-							ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%>
-
-
-
-							</p>
-							<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p> -->
-							<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
-
+				
 					<div class="d-flex align-items-center">
 							<div class="row">
 
@@ -313,43 +339,32 @@ emd = true if  params[:side]=='emd'
 
 
 						</div>
-						<%	
-							 link = "video?id=#{meeting.name}&case_id=#{record.id}&side=emd"
-						%>
-						
-						<div class="row">
-
-						
-		  			    <p class="mtr-location">
-		  			    
-		  			      <span class="mtr-icon">📍</span> <%=record.ambulance.plate_license%>
-						<a href="javascript:;" class="btn btn-outline-secondary meeting-tag radius-15 ">ผู้เข้าร่วม <span class="meeting-participant">-</span></a>
-						  
-		  			    </p>
-						
-		  			    <p class="mtr-location">
-		  			      <span class="mtr-icon">🔘</span> <span class="btn btn-<%=record.init_code.get_class if record.init_code%>"> <%=record.init_code.code if record.init_code %> </span>
-		  			
-		  			      <span class="mtr-icon">📍</span> <%=record.location%>
-		  			    </p>
-		  			    <p class="mtr-officer">
-		  			      <span class="mtr-icon">👤</span> เจ้าหน้าที่ : <%=meeting.creator%>
-		  			    </p>
-						
-						
 					
 
+
+
+					
+						
+						<% end %>
+						<%= inline(this,"../ems/_video_partial", :this=>this, :meeting=>meeting, :ems_case=>record)  %>
+
+						<div class="row">
+						<div class="col-7">
+								ผู้เข้าร่วม : 						   
+							</div>
+							<div class="col-5">
+						<a href="javascript:;" class="  meeting-tag  "> <span class="meeting-participant">-</span></a>
 						</div>
 						
-						
+						</div>
 						<div class="row">
 							<div class="col-7">
-								Meeting Link : 						   
+								Link : 						   
 
 							</div>
 							<div class="col-5">
 									<div class="list-inline contacts-social "> 
-							<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>" class="list-inline-item bg-linkedin btn-outline-primary border-1 meeting-link" >🔗</a>
+							<a href="<%="#{Setting.get(:host_url)}"%>/EMS/<%= link.html_safe%>&side=request" class="list-inline-item bg-linkedin btn-outline-primary border-1 meeting-link" >🔗</a>
 							<br/> <span id="copy-success" style="display: none; color: green; margin-left: 10px;">Link copied!</span>
 							
 									</div>
@@ -358,15 +373,7 @@ emd = true if  params[:side]=='emd'
 
 
 					</div>
-						<!-- <div>
-							<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] if record.init_code %></h4>
-							<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
-							<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
-
-
-						</div> -->
-						<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
-						</div> -->
+						
 					</div>
 				</div>
 				</div>
@@ -609,7 +616,7 @@ emd = true if  params[:side]=='emd'
 		                    data: `username=${username}`
 						}),
     					beforeSend: function (xhr) {
-    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','OPENVIDUAPP:minadadmin')%>"));
+    					    xhr.setRequestHeader ("Authorization", "Basic " + btoa("<%=Setting.get('videocall_password','')%>"));
     					},
     					headers: { "Content-Type": "application/json" },
     					success: (response) => resolve(response.token), // The token
@@ -620,8 +627,9 @@ emd = true if  params[:side]=='emd'
 			
 			
 
-			<% if emd %>
+			<% if emd and ems_case %>
 			
+
 			function reload_message(ems_id, admit_id){
 
 
@@ -651,16 +659,20 @@ emd = true if  params[:side]=='emd'
 			});
 
 			}
-			
+			<% if ems_case %>
 			reload_message('<%=ems_case.id%>','<%=ems_case.admit.id%>')
-			
+			<% end %>
 			
 			<% end %>
 
 				
 			<%
-			
-			@current_zone = Zone.find record.zone_id
+			@current_zone  = nil
+
+			@current_zone = Zone.find meeting.zone_id if meeting
+			@current_zone = Zone.find record.zone_id if record
+
+
 			
 			
 			%>
@@ -678,7 +690,7 @@ emd = true if  params[:side]=='emd'
 
 		    ws.onopen    = function()  { show('websocket opened');
 
-		    	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+		    	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name if @current_zone}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
 
 
 		    };
@@ -704,9 +716,9 @@ emd = true if  params[:side]=='emd'
 
 		  		// console.log(lines[0].split(" ")[0])
 		  		if(lines[0].split(" ")[0]=='Zone.Message'){
-		
+				  <% if ems_case %>
 		  		  reload_message("<%=ems_case.id%>","<%=ems_case.admit.id%>")
-					
+				  <% end %>	
 		  		}
 		  		if( typeof process_message === 'function'){
 		  			process_message(lines)
