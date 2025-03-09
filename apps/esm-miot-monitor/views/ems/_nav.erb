@@ -326,7 +326,7 @@
 		<%
 			menus = %w{EMS Refer Service}
 			cls_menus = %w{red yellow green}
-			all_cases = EMSCase.where(:status=>{'$in'=>['New', 'Schedule']}, '$or'=>[{:request_at=>{'$gte'=>Time.now-76800}},{:schedule_from=>{'$lte'=>Time.now+76800}}]).sort(:case_no=>-1).all()
+			all_cases = EMSCase.where(:status=>{'$in'=>['New', 'Schedule']}, '$or'=>[{:request_at=>{'$gte'=>Time.now-76800}},{:schedule_from=>{'$lte'=>Time.now+76800,'$gte'=>Time.now-76800}}]).sort(:case_no=>-1).all()
 			
 			menus.each_with_index do |m,mi| 
 
@@ -367,7 +367,8 @@
 					end
 			
 					if i.case_type == 'Refer' or i.case_type == 'Service'
-					cls = 'warning'	
+					# cls = 'warning'	
+					cls = '' #if i.case_type=='Service'
 					txt = "#{i.schedule_from.strftime("%H:%M") if i.schedule_from } : #{i.location}"
 
 					end
