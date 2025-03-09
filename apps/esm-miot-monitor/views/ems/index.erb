@@ -831,65 +831,38 @@ airport_shuttle
 
 <script>
 
-
-  tag = 'wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index";
-
-
-  var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+  var ws 
 
 
+  function onopen(event){
 
-  var active_dispatch = 'Active' ;
-
-
-  function check_dispatch(){
-
-
-
-	status = 'Active'
-
-	if(active_dispatch==false)status= "InActive"
-
-  	ws.send("EMD.Update name=<%=@current_user.id %>\n{\"user_id\":\"<%=@current_user.id%>\",\"zone_name\":\"<%=@current_zone.name%>\", \"zone_id\":\"<%=@current_zone.id%>\",\"status\":\""+status+"\"}")
-
-
-  }
-
-   $('#flexSwitchCheckChecked').change(function() {
-        if(this.checked) {
-            var returnVal = true;
-            $(this).prop("checked", returnVal);
-        }
-       active_dispatch = this.checked
-		 check_dispatch()
-    });
-
-
-  ws.onopen    = function()  { show('websocket opened');
-
-
+	show('websocket opened');
   	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
 
+  }
 
-  //  var intervalId = setInterval(function() {
-  //  check_dispatch()
-  // }, 5000);
-  //
-
-
-  };
-
-
-  ws.onclose   = function()  { show('websocket closed');
+  function onclose(event){
+	show('websocket closed, reconnect in 2 sec');
 
  	setTimeout(function () {
-       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-    }, 2000); //will call the function after 2 secs.
-
+		ws.close();
+       //window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+		//reconnect();
+    }, 2000); //will call the function after ถ secs.
 
   }
 
-  ws.onmessage = function(m) {
+ function onerror(event) {
+	show('websocket error, reconnect in 5 sec');
+
+    console.error("WebSocket error:", event);
+		setTimeout(function () {
+    	//window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+		reconnect();
+    }, 5000);
+ };
+
+  function onmessage(m) {
 
 
 
@@ -898,19 +871,10 @@ airport_shuttle
 
 		lines = m.data.split("\n")
 
-		// console.log(lines[0].split(" ")[0])
-
 		if(lines[0].split(" ")[0]=='Zone.Refresh'){
-			// (lines[1])
-			// alert('iofj')
-		// 	header = JSON.parse(lines[1])['msg'].split(" ")
-		// 	if(header[0]=='notify_callback'){
-		//
-		// 		window.location="show?id="+header[1]
-		// 	}else{
-		// 		alert('dijf')
+	
 					window.location.reload();
-			// }
+
 		
 
 		}else
@@ -926,13 +890,55 @@ airport_shuttle
 
 
 		}
+  }
 
 
+ function reconnect(){
+		
+	ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+	ws.onopen = onopen;
+	ws.onclose = onclose;
+	ws.onmessage = onmessage;
+	ws.onerror = onerror;
+	
+	show('websocket reconnect');
+
+  }	
+
+
+  tag = 'wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index";
+
+
+
+
+
+  var active_dispatch = 'Active' ;
+
+
+  function check_dispatch(){
+
+
+
+	status = 'Active'
+
+	if(active_dispatch==false)status= "InActive"
+
+  	ws.send("EMD.Update name=<%=@current_user.id %>\n{\"user_id\":\"<%=@current_user.id%>\",\"zone_name\":\"<%=@current_zone.name%>\", \"zone_id\":\"<%=@current_zone.id%>\",\"status\":\""+status+"\"}")
+	
 
 
   }
 
+   $('#flexSwitchCheckChecked').change(function() {
+        if(this.checked) {
+            var returnVal = true;
+            $(this).prop("checked", returnVal);
+        }
+       active_dispatch = this.checked
+		 check_dispatch()
+    });
 
+reconnect();
 
 </script>
 

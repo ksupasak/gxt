@@ -747,10 +747,42 @@
 							
 
 	<script>
-		$('.datepicker').pickadate({
+
+		$('#schedule_from').pickadate({
 			selectMonths: true,
-	        selectYears: true
-		}),
+	        selectYears: true,
+       		 onStart: function() {
+            var defaultDate = $('#schedule_from').data('value'); // Get the default date from data-value
+		
+            if (defaultDate) {
+                this.set('select', defaultDate, { format: 'yyyy-mm-dd' });
+            }
+        }
+		})
+
+		$('#schedule_to').pickadate({
+			selectMonths: true,
+	        selectYears: true,
+       		 onStart: function() {
+            var defaultDate = $('#schedule_to').data('value'); // Get the default date from data-value
+		
+            if (defaultDate) {
+                this.set('select', defaultDate, { format: 'yyyy-mm-dd' });
+            }
+        }
+		})
+
+		$('#date').pickadate({
+			selectMonths: true,
+	        selectYears: true,
+       		 onStart: function() {
+            var defaultDate = $('#date').data('value'); // Get the default date from data-value
+		
+            if (defaultDate) {
+                this.set('select', defaultDate, { format: 'yyyy-mm-dd' });
+            }
+        }
+		})
 		$('.timepicker').pickatime()
 	</script>
 
