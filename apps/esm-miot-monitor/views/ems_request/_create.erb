@@ -75,7 +75,7 @@ if params[:record]
 
     p[:user_id] = @current_user.id if @current_user
 
-	p[:request_at] = Time.now 
+	p[:request_at] = Time.now if  p[:case_type] == 'EMS'
 	
 	init_cbd_code = EMSCode.find p[:init_cbd_code]
 	if init_cbd_code

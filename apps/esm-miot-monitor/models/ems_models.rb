@@ -21,6 +21,23 @@ class EMSUnit < GXTModel
   
   key :image, ObjectId
 
+  def self.current current_user
+
+    provider = Provider.where(:user_id=>current_user.id).first
+
+    if provider and provider.unit_id
+     
+     current_unit = EMSUnit.find provider.unit_id
+
+     return current_unit
+      
+    end
+
+    return nil
+
+  end
+
+
 end
 
 class EMSHospital < GXTModel
@@ -987,6 +1004,16 @@ class EMSMeeting < GXTModel
   key :name, String
   key :case_id, ObjectId
   key :status, String
+  
+  key :partial_hn, String
+  key :partial_patient_name, String
+  key :partial_detail, String 
+  key :partial_address, String
+  key :location, String
+  key :eta, String
+  key :remark, String 
+  key :schedule_at, DateTime
+  key :zone_id, ObjectId
   
   key :type, String
   include Mongoid::Timestamps

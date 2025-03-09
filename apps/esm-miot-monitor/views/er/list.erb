@@ -1,0 +1,101 @@
+<%
+
+    records = ERCase.all
+
+%>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Registration </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+                        <div class="btn-group">
+							<a href="../ERCase/create" class="btn btn-primary">+ Patient</a>
+                        </div>
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
+    <style>
+        .table th {
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+        .table td {
+            text-align: center;
+        }
+        .gray-bg {
+            background-color: #ccc;
+        }
+        .red-bg {
+            background-color: #f8caca;
+        }
+        .yellow-bg {
+            background-color: #fff5b1;
+        }
+        .pink-bg {
+            background-color: #f8c1ff;
+        }
+    </style>
+  <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>case_no</th>
+                    <th>patient_name</th>
+                    <th>gender</th>
+                    <th>age</th>
+                    <th>triage_room</th>
+                    <th>doctor_name</th>
+                    <th>special</th>
+                    <th>In_time</th>
+                    <th>stay</th>
+                    <th>status</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            <% for i in records %>
+                <tr class="red-bg">
+                    <td>case_no</td>
+                    <td>patient_name</td>
+                    <td>gender</td>
+                    <td>age</td>
+                    <td class="">triage_room</td>
+                    <td>doctor_name</td>
+                    <td>special</td>
+                    <td>In_time</td>
+                    <td>stay</td>
+                    <td>status</td>
+                </tr>
+           <% end %>
+<!--
+                <tr class="red-bg">
+                    <td>case_no</td>
+                    <td>patient_name</td>
+                    <td>gender</td>
+                    <td>age</td>
+                    <td class="">triage_room</td>
+                    <td>doctor_name</td>
+                    <td>special</td>
+                    <td>In_time</td>
+                    <td>stay</td>
+                    <td>status</td>
+                </tr>
+            -->
+            </tbody>
+        </table>

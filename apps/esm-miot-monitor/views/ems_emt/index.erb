@@ -659,6 +659,7 @@ function startWeb(link){
 		</div>
 	</div>
 </div>
+ 
 
 <div class="modal fade" id="modal_info" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
 	<div class="modal-dialog modal-md">
@@ -816,10 +817,40 @@ function startWeb(link){
 				</div>
 			</div>
 			<center>
+<<<<<<< HEAD
+			<!-- <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10"> --!>
+			  <button type="button" class=" info-qr btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
+			  <!--   </a> --!>
+			  <script>
+				$('.cap-btn-bk').click(function(){
+					<%
+					if record
+						
+						key = record.get_meeting_key
+						session_id = "#{key}-EMS"
+						
+						link = "#{Setting.get(:host_url)}/EMS/video?id=#{session_id}&case_id=#{record.id}&side=ems&type=EMS"
+					%>
+					// alert("Session <%=session_id%>")
+					// device_interface.startVideoCall("<%=session_id%>")
+					
+					device_interface.startWeb("<%=link%>")
+					
+					<% end %>
+					
+					// window.location = "../EMS/video?id=<%=session_id%>-EMS&case_id=<%=record.id%>&side=ems&type=EMS"
+					
+				})
+				
+			</script>		
+
+			<!--  <p> <%= Setting.get(:host_url)  %> <%= record.id %>  </p> --!>
+=======
 			 <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10">
 			  <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
 		     </a>
 			
+>>>>>>> 5de7baeda04da9d22792da6ce9a320b4121a0378
 			 </center>
 			</div>
 			<div class="modal-footer">
@@ -1124,7 +1155,7 @@ $('.info-button').click(function(){
 	modal('#modal_info')
 	
 })
-
+ 
 
 $('.noti-button').click(function(){
   // $('#modal_notification').modal('show');

@@ -18,16 +18,24 @@
 
 		if ems_case
 			cls = "primary"
+			i = ems_case
+	
+				
+					txt = '-'
+					txt2 = ""
+					if i.case_type == 'EMS' #i.init_code
+					cls = i.init_code.get_class if i.init_code
+					cls = "danger" 			
+					txt = "#{i.init_code.code if i.init_code} #{i.location} ".html_safe
+					txt2= "#{i.patient_gender} #{i.patient_age} #{i.chief_complain}"
+					end
 			
-			if ems_case.init_code
-			cls = ems_case.init_code.get_class 			
-			txt = "#{ems_case.location } #{ems_case.init_code.code if ems_case.init_code }"
-			end
+					if i.case_type == 'Refer' or i.case_type == 'Service'
+					cls = 'warning'	
+					txt = "#{i.schedule_from.strftime("%H:%M") if i.schedule_from } : #{i.location}"
+
+					end
 			
-			if ems_case.case_type == 'Refer'
-			cls = 'warning'			
-			txt = ems_case.location
-			end
 			
 			
 		%>
@@ -37,17 +45,15 @@
 				</div>
 				<div class="menu-title"><%=ems_case.case_no%><br/>
 
-				<span class="badge bg-<%=cls%>" >
-					<%=txt%> 
-				</span>
+					<span class="badge bg-<%=cls%>" ><%= txt %></span>
+					<% if txt2!= ""%>
+					<span class="badge bg-<%=cls%>" ><%= txt2 %></span>
+					<% end %>
+					</div>
 				
 				</div>
 			</a>
 			<ul  class="mm-show mm-collapse">
-<!--
-				<li >
-					<a id="tab-dashboard" ><i class="bx bx-right-arrow-alt"></i>Dash</a>
-				</li> -->
 
 
 			<li >
@@ -316,16 +322,22 @@
 		</script>
 
 		<% end %>
+	
+		<%
+			menus = %w{EMS Refer Service}
+			cls_menus = %w{red yellow green}
+			all_cases = EMSCase.where(:status=>{'$in'=>['New', 'Schedule']}, '$or'=>[{:request_at=>{'$gte'=>Time.now-76800}},{:schedule_from=>{'$lte'=>Time.now+76800}}]).sort(:case_no=>-1).all()
+			
+			menus.each_with_index do |m,mi| 
 
+			cases = all_cases.collect{|i| i if i.case_type==m}.compact
+		%>
 		<li>
 			<a href="javascript:;" class="has-arrow">
 				<div class="parent-icon"><i class="bx bx-support"></i>
 				</div>
-				<div class="menu-title t " t="case_open">Open</div>
+				<div class="menu-title t " t="case_open" style="color:<%=cls_menus[mi]%>"><%=m%></div>
 			</a>
-
-		
-
 
 
 			<ul class="mm-show mm-collapse">
@@ -333,27 +345,31 @@
 
 				# cases = EMSCase.where(:status=>"New", '$or'=>[{:user_id=>nil},{user_id:@current_user.id}]).sort(:case_no=>-1).all()
 					
-				cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
+				# cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
 					
 					
 				%>
 				<% for i in cases
 
-				if i != ems_case
+				if true #i != ems_case
 
 					code_class  = "primary"
 				
 				
 				
 					txt = '-'
-					if i.init_code
-					cls = i.init_code.get_class 			
-					txt = "#{i.init_code.code} #{i.location}"
+					txt2 = ""
+					if i.case_type == 'EMS' #i.init_code
+					cls = i.init_code.get_class if i.init_code
+					cls = "danger" 			
+					txt = "#{i.init_code.code if i.init_code} #{i.location} ".html_safe
+					txt2= "#{i.patient_gender} #{i.patient_age} #{i.chief_complain}"
 					end
 			
-					if i.case_type == 'Refer'
-					cls = 'warning'			
-					txt = i.location
+					if i.case_type == 'Refer' or i.case_type == 'Service'
+					cls = 'warning'	
+					txt = "#{i.schedule_from.strftime("%H:%M") if i.schedule_from } : #{i.location}"
+
 					end
 			
 					
@@ -364,9 +380,12 @@
 				<a  id="tab-dashboard" href="show?id=<%=i.id%>" class="tab-dashboard  tab-dashboard border-<%=cls%>">
 					<div class="parent-icon"><i class="bx bx-taxi"></i>
 					</div>
-					<div class="menu-title"><%=i.case_no%><br/>
+					<div class="menu-title "><%=i.case_no%><br/>
 
 					<span class="badge bg-<%=cls%>" ><%= txt %></span>
+					<% if txt2!= "" and false %>
+					<span class="badge bg-<%=cls%>" ><%= txt2 %></span>
+					<% end %>
 					</div>
 				</a>
 				
@@ -376,6 +395,8 @@
 				<% end %>
 
 			</ul>
+		<% end %>
+
 			<li  class="">
 				<a href="./create">
 					<div class=""><i class="bx bx-plus"></i> </div>
@@ -384,7 +405,7 @@
 				</a>
 			</li>
 			<li  class="meeting">
-				<a href="./meeting">
+				<a href="../EMSMeeting/index">
 					<div class=""><i class="bx bx-calendar "></i> </div>
 
 					<div class="menu-title">Meeting</div>

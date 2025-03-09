@@ -250,7 +250,13 @@ class Room < GXTModel
   has_many :beds, :class_name=>'EsmMiotMonitor::Bed'
 
   key :name, String
+  key :title, String
+  key :capacity, Integer
   key :zone_id, ObjectId
+  key :color, String
+
+  key :bg_color, String
+  key :bg_class, String
 
 end
 
@@ -1200,7 +1206,35 @@ class DataRecord  < GXTModel
 end
 
 
+class Counter < GXTModel
+  include Mongoid::Document
 
+  key :unit_id, ObjectId
+  key :name, String
+  key :count, Integer
+
+  include Mongoid::Timestamps
+
+  timestamps!
+
+
+  def self.get name, unit_id = nil
+
+       counter = self.where(:name=>name,:unit_id=>unit_id).first
+
+       next_count = 0 
+       if counter 
+          next_count = counter.count+1
+          counter.update_attributes :count => next_count
+       else
+        next_count = 1 
+        counter = self.create(:name=>name,:unit_id=>unit_id, :count=>next_count)
+       end
+       return next_count 
+
+  end
+
+end
 
 class Post < GXTModel
   include Mongoid::Document

@@ -35,7 +35,9 @@ elsif @current_zone.mode == 'smart_opd'
 	
 elsif @current_zone.mode == 'ems'
 	redirect_home = "../EMS/index"
-	
+elsif @current_zone.mode == 'er'
+	redirect_home = "../ER/index"
+		
 end
 
 if redirect_home

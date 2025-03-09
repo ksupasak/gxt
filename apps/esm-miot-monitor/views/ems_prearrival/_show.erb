@@ -72,7 +72,7 @@ Pre-arrival Instruction :
         cbd_codes = EMSCode.all()
         m_cbd_codes = cbd_codes.collect{|i| [i.id,i.code]}.compact.to_h
   %>
-  <form action="<%= get_path 'case_select_cbd'%>" id="flow_search" method="post" >
+   <form action="<%= get_path 'case_select_cbd'%>" id="flow_search" method="post" >
     <div class="card-body p-0">
       <datalist id="datalistOptions">
         <%  for f in flows%>
@@ -234,7 +234,7 @@ Pre-arrival Instruction :
   <input type="hidden" name="record[case_id]" value="<%=params[:case_id]%>" >
     <input type="text" name="record[text]" class="alert-warning form-control flow-search-value" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
 
-
+ 
   </form>
 </div></div>
  </div>
