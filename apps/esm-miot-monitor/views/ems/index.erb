@@ -11,7 +11,10 @@
 
 	<%
 
-	cases = EMSCase.where(:status=>{'$in'=>["New","Pending"]}, :user_id=>@current_user.id).sort(:case_no=>-1).all()
+
+	cases = EMSCase.where(:status=>{'$in'=>['New', 'Schedule']}, '$or'=>[{:request_at=>{'$gte'=>Time.now-76800}},{:schedule_from=>{'$lte'=>Time.now+76800,'$gte'=>Time.now-76800}}]).sort(:case_no=>-1).all()
+
+	# cases = EMSCase.where(:status=>{'$in'=>["New","Pending"]}, :user_id=>@current_user.id).sort(:case_no=>-1).all()
 	cases_count = EMSCase.where( :user_id=>@current_user.id).count()
 
 
@@ -31,7 +34,7 @@
 			 
 			 
 		 	.marker-position {
-		 	    bottom: -40px;
+		 	    bottom: -10px;
 		 	    left: 0;
 		 	    position: relative;
 		 	}
@@ -444,7 +447,7 @@
 
 			<%
 
-			cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
+			#cases = EMSCase.where(:status=>"New").sort(:case_no=>-1).all()
 
 			%>
 
@@ -462,6 +465,12 @@
 				text = i.case_no
 			
 				text = "#{i.init_code.code if i.init_code} #{i.location}" if i.location
+
+				cls_menus = %w{red orange green}
+				menus = %w{EMS Refer Service}
+
+				cls = cls_menus[menus.index(i.case_type)] 
+
 			
 			%>
 		    latlng.push(new google.maps.LatLng(<%=i.latlng%>))
@@ -469,11 +478,19 @@
 			var pos = new google.maps.LatLng(<%=i.latlng%> )
 			marker = new google.maps.Marker({position: pos, map: local_map, case_id:'<%=i.case_no%>',label:{
 							fontSize: '20px',
-							color: 'red',
+							color: '<%=cls%>',
 							text: "<%= text %>",
 							className: 'marker-position',
 							
-						}})
+						},
+						 icon: {
+        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW, // Change to MARKER if needed
+        fillColor: '<%=cls%>', // Set your color dynamically
+        fillOpacity: 1,
+        strokeColor: 'black',
+        strokeWeight: 2,
+        scale: 10 // Adjust size if needed
+    }})
 
 			infowindow = new google.maps.InfoWindow({
 			content: "<%=i.case_no%>",
