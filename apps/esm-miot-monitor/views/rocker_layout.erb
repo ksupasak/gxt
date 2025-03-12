@@ -127,13 +127,15 @@
 					   end
 					   
 				   end
-					
-					
+					now = Time.now 
+					messages = SystemMessage.where(:start_at=>{'$lte'=>now}, :stop_at=>{'$gte'=>now}).all
+					messages_txt = messages.collect{|i| i.content }.join(', ')
+
 					%>	
 
 					<div class=" flex-grow-1">
 						<div class="position-relative search-bar-box"  style="font-size:1.2em">
-							<b><%=Setting.get('default_center_name')%> <%=sub_title%></b> 
+							<b><%=Setting.get('default_center_name')%> <%=sub_title%> <% if messages.size > 0 %> <span class="alert alert-warning" ><%= messages_txt %></span> <% end %></b> 
 						</div>
 					</div>
 
