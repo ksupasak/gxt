@@ -1,0 +1,31 @@
+<%
+
+	ems_case =  EMSCase.find params[:id]
+
+	zone = ems_case.zone
+
+	admit = ems_case.admit
+
+	patient = admit.patient
+
+    admits = Admit.where(:patient_id=>patient.id).all
+    if admits.size == 1 
+
+        patient.destroy 
+
+    end
+
+    zone_name = admit.zone.name
+
+    admit.destroy
+    ems_case.destroy
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+%>

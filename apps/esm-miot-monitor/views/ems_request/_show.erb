@@ -16,6 +16,7 @@
 							</ol>
 						</nav>
 					</div>
+					<!--
 					<div class="ms-auto">
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary">Settings</button>
@@ -28,7 +29,8 @@
 							</div>
 						</div>
 					</div>
-				</div>
+					-->
+</div>
 
 
 
@@ -48,8 +50,10 @@
 <%= inline(this,:'_form', :f=>f, :record=>record)  %>
 
 <% end %>
+<div class="d-flex justify-content-between">
 <input type="submit" name="create" value="Update" class="btn btn-info">
-
+<a class=" btn btn-outline-danger" onclick="confirmNavigation(event, 'destroy?id=<%= record.id %>')">Delete</a>
+</div>
 </form>
 
 <div id="reqeust-panel">
@@ -125,4 +129,34 @@
 	}
 	
 	
+</script>
+
+
+							<!-- Bootstrap Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this case?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmBtn" class="btn btn-danger">Yes, Continue</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmNavigation(event, url) {
+    event.preventDefault(); // Prevent default link behavior
+    var confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.href = url; // Set the URL on the confirm button
+    var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show(); // Show the confirmation modal
+}
 </script>

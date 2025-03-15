@@ -30,13 +30,18 @@
 		
 		
 		<hr/>
-		<div class="card">
-	
-			<div class="card-body" >
+		<div class="cardx">
+		
+			<div class="card-bodyx" >
 				 
 				<% for i in ems_cases+ref_cases%>
 				 
 				<div class="card">
+					<div class="card-header d-flex justify-content-between">
+			<b><a href="show?id=<%=i.id%>"><%= i.case_no %></a></b>
+			<span class="col-3  d-flex justify-content-end " ><a class="  btn-outline-danger" onclick="confirmNavigation(event, 'destroy?id=<%= i.id %>')">Del</a></span>
+
+			</div>
 					<div class="card-body" >
 					<tr>
 						<td>
@@ -73,3 +78,34 @@
 				<% end %>
 			</div>
 		</div>
+
+
+							<!-- Bootstrap Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete this case?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmBtn" class="btn btn-primary">Yes, Continue</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmNavigation(event, url) {
+    event.preventDefault(); // Prevent default link behavior
+    var confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.href = url; // Set the URL on the confirm button
+    var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show(); // Show the confirmation modal
+}
+</script>
+</div>

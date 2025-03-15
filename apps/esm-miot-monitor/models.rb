@@ -939,6 +939,22 @@ class CaseReport < GXTModel
 end
 
 
+class SystemMessage < GXTModel
+  
+  include Mongoid::Document
+  key :name, String
+  key :content, String
+  key :start_at, DateTime
+  key :stop_at, DateTime
+  
+  include Mongoid::Timestamps
+
+end
+
+
+class SystemMessageController < GXTDocument
+
+end
 
 
 class DataRecord  < GXTModel
