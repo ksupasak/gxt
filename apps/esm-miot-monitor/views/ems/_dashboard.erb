@@ -11,7 +11,58 @@
 
 
 %>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Case</div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Actions</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
 
+								<a class="dropdown-item btn btn-danger" onclick="confirmNavigation(event, 'destroy?id=<%= ems_case.id %>')">Delete</a>
+						
+							</div>
+						</div>
+					</div>
+					<!-- Bootstrap Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Navigation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to leave this page?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="#" id="confirmBtn" class="btn btn-primary">Yes, Continue</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmNavigation(event, url) {
+    event.preventDefault(); // Prevent default link behavior
+    var confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.href = url; // Set the URL on the confirm button
+    var modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show(); // Show the confirmation modal
+}
+</script>
+</div>
 
 <style>
 	.card-x{

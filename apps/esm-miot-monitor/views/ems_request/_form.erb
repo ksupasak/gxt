@@ -169,6 +169,13 @@
 
 					<span class="" style="float:right" >
 						<a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">เลือก</a>
+						<script>
+					
+
+						$('#selectCodeModal').on('shown.bs.modal', function () {
+							$('#search_cbd').focus()
+    					});
+						</script>
 					</span>
 					</p>
 
@@ -190,7 +197,7 @@
 
 
 					<!-- Modal -->
-					<div class="modal fade" id="selectCodeModal" tabindex="-1" aria-hidden="true" style="display: none;">
+					<div class="modal fade" id="selectCodeModal" tabindex="-1" aria-hidden="true" style="display: none;min-height:500px">
 						<div class="modal-dialog modal-dialog-centered modal-xl">
 							<div class="modal-content">
 								<div class="modal-header bg-primary bbg-gradient text-white">
@@ -201,6 +208,15 @@
 								</div>
 								<div class="modal-body">
 
+									<div class="row">
+									<div class="col">
+									<div class="d-flex justify-content-center">
+										<input type="text" class="form-control col-6" placeholder="Search..." id="search_cbd">
+									</div>
+									</div>
+									
+									</div>
+									<br/>
 									<div id="cbd-group" class="row">
 										<%
 
@@ -268,6 +284,24 @@
 											$("#cbd-group").hide()
 										})
 									}
+
+									function searchCBD(query){
+										$.ajax({
+											type:'POST',
+											url:'../EMSCode/search',
+											data:{query:query},
+										}).done(function(data){
+											$("#cbd-list").html(data)
+											$("#cbd-group").hide()
+										})
+									}
+									$('#search_cbd').keyup(function(){
+										val = $(this).val()
+										if(val.length>1){
+											searchCBD(val)
+										}
+									})
+
 									</script>
 
 
@@ -342,34 +376,7 @@
 											line = $("#patient_underlying").val() + ui +", "
 											$("#patient_underlying").val(line)
 										}
-										
-									// function selCode(code){
-// 										$("#record_init_cbd_code").val(code)
-// 										$("#selectCodeModal").modal('hide')
-// 										$("#cbd-list").html('')
-// 										$("#cbd-group").show()
-// 									}
-//
-// 									function selGroup(id){
-// 										$("#cbd-list").html('')
-// 										$("#cbd-group").show()
-// 									}
-// 									function selColor(c){
-// 										$(".cbd-color").hide()
-// 										$("#"+c).show()
-// 										$(".sel-color").removeClass("text-white").removeClass("bg-primary")
-// 										$("#sel-"+c).addClass("text-white").addClass("bg-primary")
-// 									}
-// 									function group(id){
-// 										$.ajax({
-// 											type:'POST',
-// 											url:'../EMSCode/group_list',
-// 											data:{id:id},
-// 										}).done(function(data){
-// 											$("#cbd-list").html(data)
-// 											$("#cbd-group").hide()
-// 										})
-// 									}
+									
 									</script>
 
 								</div>
