@@ -136,7 +136,7 @@
 
 
 												<p class="mb-3">
-												รถพยาบาล :
+												รถพยาบาล : 
 											    </p>
 												<div class="input-group">
 												<div class="form-control" style="">
@@ -323,7 +323,7 @@ end
 
 								<tr>
 									<td>
-										<%=i.name%> 
+										<%=if("รับเเจ้ง"=="รับเเจ้ง") {i.name} end%> 
 									</td>
 									<td><% if i.stamp %>
 										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
@@ -333,6 +333,7 @@ end
 										<% end %>
 
 									</td>
+								 
 									<td style="display:none">
 										<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp
 										lap = (i.stamp - p.stamp).to_i/60

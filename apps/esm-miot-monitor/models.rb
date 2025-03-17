@@ -86,6 +86,21 @@ class User < GXTModel
 
 end
 
+class  Reimbursement  < GXTModel
+  include Mongoid::Document
+
+  key :title_en,String
+  key :title_th ,String
+  key :name_en, String
+  key :name_th,String
+
+  include Mongoid::Timestamps
+end  
+
+class ReimbursementController < GXTDocument
+
+end
+
 class UserLog <  GXTModel
     include Mongoid::Document
   
