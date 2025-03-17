@@ -2,7 +2,7 @@
 <%
 
   record = ems_case
-
+  list_patient_reimbursement = ['','UC/UHC:(บัตรทอง)', 'SSS:(สิทธิประกันสังคม)','CSMBS:(สวัสดิการข้าราชการ)','PCF:(พระราชบัญญัติคุ้มครองผู้ประสบภัยจากรถ)','WCF:(กองทุนเงินทดแทน)','SOE Welfare:(สวัสดิการรัฐวิสาหกิจ)','LAO Welfare:(สิทธิข้าราชการท้องถิ่น)','PHI:(สิทธิประกันสุขภาพเอกชน)', 'อื่นๆ'] 
 
 
 %>
@@ -72,12 +72,16 @@
 <input class="form-control" type="text" name="record[diagnosis]" id="" value="<%=record.diagnosis%>">
 </div>
 
+<!--
 <div class="col-4">
 <label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
 <input class="form-control" type="text" name="record[patient_reimbursement]" id="" value="<%=record.patient_reimbursement%>">
 </div>
-
-
+--> <!-- อันเก่า -->
+<div class="col-4">
+<label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
+<%= f.select(:patient_reimbursement, list_patient_reimbursement , :value=>record.patient_reimbursement, :class=>' form-select') %> 
+</div>  <!-- อันใหม่ -->
 
 <div class="col-12">
   <input class="form-check-input" type="checkbox" name="record[bls_onscene]" id="bls_onscene">
