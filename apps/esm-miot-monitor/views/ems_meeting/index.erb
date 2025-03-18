@@ -104,16 +104,32 @@
 					  background-color: #355edb;
 					}
 					</style>
+					<%=1.day.ago%>
 <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-4">
 				<%
 					
-					rooms = EMSMeeting.all
+					rooms = EMSMeeting.where(:status=>'OPEN').all
+
+					rooms.collect! do |room|
+						
+
+
+						if  (room.schedule_at ==nil and room.created_at < 1.day.ago)  or (room.schedule_at and room.schedule_at < 1.day.ago)
+							room.status = 'CLOSED'
+							room.save
+							nil
+						else
+							room
+						end
+
+						
+					end
 					
 				
 					
 				
 				%>
-				<% for room in rooms 
+				<% for room in rooms.compact 
 				
 					name = "20250103-00001"
 					unit = "-"
