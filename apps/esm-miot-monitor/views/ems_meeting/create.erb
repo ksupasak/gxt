@@ -5,7 +5,7 @@
 
 	@record =  this.model.new  params[:record]
 
-    @record.unit_id = current_unit.id
+    @record.unit_id = current_unit.id if current_unit
 	@record.creator = @current_user.login
 
 	# name is code 
@@ -46,7 +46,7 @@ return_url = params[:return] if params[:return]
 
 		
 	%>
-	<%=redirect_to "show?id=#{record.id}"%>
+	<%=redirect_to "index?id=#{record.id}"%>
 	<%	
 	end
 	
