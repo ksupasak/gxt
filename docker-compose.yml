@@ -18,6 +18,9 @@ services:
     ports:
       - "27017:27017"
     restart: always
+    volumes:
+      - ./db/mongo:/data/db
+      - ./db/seed:/dump
   gxt_server:
     restart: always
     build: .
