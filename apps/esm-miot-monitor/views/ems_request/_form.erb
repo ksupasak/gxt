@@ -588,32 +588,6 @@
 
 
 
-						<!-- <div class="col-4">
-
-
-							<p class="px-3">
-								ผู้ป่วยมีสติหรือไม่
-							</p>
-							<div class="form-check mx-3">
-								<input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault1"> <label class="form-check-label" for="flexRadioDefault1">ใช่</label>
-							</div>
-							<div class="form-check mx-3">
-								<input class="form-check-input" type="radio" name="flexRadioDefault1" id="flexRadioDefault2"> <label class="form-check-label" for="flexRadioDefault2">ไม่</label>
-							</div>
-							<p class="px-3">
-								ผู้ป่วยหายใจปกติหรือไม่
-							</p>
-							<div class="form-check mx-3">
-								<input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault3"> <label class="form-check-label" for="flexRadioDefault3">ใช่</label>
-							</div>
-							<div class="form-check mx-3 mb-3">
-								<input class="form-check-input" type="radio" name="flexRadioDefault2" id="flexRadioDefault4"> <label class="form-check-label" for="flexRadioDefault4">ไม่</label>
-							</div>
-
-
-
-						</div> -->
-
 
 
 
@@ -623,15 +597,7 @@
 				</div>
 
 			</div>
-			<!-- <div class="col-12">
-			<% unless params[:id]%>
-			<input type="submit" name="create" value="Create" class="btn btn-success">
-			<% else %>
-			<input type="submit" name="create" value="Update" class="btn btn-info">
-			<% end %>
-			</div><br/> -->
-
-
+		
 	<div class="card ">
 				<div class="card-header bg-gradient bg-primary">
 					<div class="d-flex align-items-center">
@@ -793,27 +759,7 @@
 		$('.timepicker').pickatime()
 	</script>
 
-							<script>
-
-						
-
-
-							// $(document).ready(function(){
-
-    						// $('.datepicker').pickadate({
-							// 	format: 'yyyy-mm-dd'
-							// })
-							
-							
-							// $('.timepicker').pickatime({
-							// 	format: 'HH:i'
-							// })
-
-							// })
-						
-										
-							</script>
-							
+			
 						</div>
 
 
@@ -911,24 +857,7 @@
 							</div>
 							<br/>
 
-							<div class="row "  style="display:none">
-							<%#render_map  'dashboard-map', :center=>'13.69313508354787, 100.69198345629769', :main_pin=>{:latlng=>'13.656436171031853, 100.70025782511473'} %>
-							<div class="col-12">
-							<div id="dashboard-map-2"  class=""  style="height:60vh">
-								map
-							</div>
-						</div>
-
-
-
-
-
-
-
-
-
-							</div>
-
+				
 							<script>
 								
 								var map1;
@@ -943,7 +872,7 @@
 								
 								
 									var address = $('#record_location').val()
-									// alert('a1'+address)
+					
 								    if(last_location ==""){
 								    	last_location = address
 								    }else{
@@ -956,14 +885,11 @@
 						
 									map1.geocode({'address':address},function(result){
 
-										// $('#record_address').val(result.formatted_address)
-
 										var pos = result.geometry.location;
 
 										map1.setPosition(pos.lat, pos.lng)
 										map1.setMarkerPosition(pos.lat, pos.lng, false)
-										// map2.setPosition(pos.lat(), pos.lng())
-	// 									map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+
 										$('#record_address').val(result.formatted_address)
 										$('#record_latlng').val(""+pos.lat+","+pos.lng)
 
@@ -980,7 +906,6 @@
 
 
 								map1 = new EMSMap('dashboard-map',{movable:true});
-								// map2 = new EMSMap('dashboard-map-2', {type:'hybrid',movable:true} );
 								var latlng = [];
 								var station_image = "<%=url_for("ems/station.png")%>";
 								const station_image_img = document.createElement('img');
@@ -998,6 +923,7 @@
 							<% if record.latlng and record.latlng.index(',') %>
 							latlng = [<%=record.latlng%>]
 							<% end %>
+
 								map1.setPosition(latlng[0], latlng[1])
 								map1.setMarkerPosition(latlng[0], latlng[1])
 							
@@ -1005,14 +931,6 @@
 								cmap = map1.getMap()
 							
 								markerx = new google.maps.marker.AdvancedMarkerElement({position: cpos, map: cmap, content: station_image_img})
-								// markerx = new google.maps.Marker({position: cpos, map: cmap,icon : station_image})
-
-
-
-								// map2.setPosition(latlng[0], latlng[1])
-								// map2.setMarkerPosition(latlng[0], latlng[1])
-								
-					
 								
 								
 							}
@@ -1022,49 +940,62 @@
 							
 					
 			<% if Setting.get("google_kml") and Setting.get("google_kml") !="" %>
-			var kmlLayer = new google.maps.KmlLayer({
-        	url: '<%=Setting.get("google_kml")%>',
-        	map: map1.getMap(),
-			preserveViewport: true ,
-			clickable: false
-      		});
+			
+							renderKML(map1.getMap(), '<%=Setting.get("google_kml")%>')
+			
 			<% end %>
-							
 
+							
 								map1.changeMarkerPosition(function(marker){
 
 									var pos = marker.position
 									$('#record_latlng').val(""+pos.lat()+","+pos.lng())
 
-									// alert('a2')
-									
-									// map1.geocode({'location':pos},function(result){
-	//
-	// 										$('#record_address').val(result.formatted_address)
-	//
-	// 									})
+									map1.geocode({'address':""+pos.lat()+","+pos.lng()},function(result){
 
-									// map2.setPosition(pos.lat(), pos.lng())
-									// map2.setMarkerPosition(pos.lat(), pos.lng(), false)
+										var pos = result.geometry.location;
+
+										map1.setPosition(pos.lat, pos.lng)
+										map1.setMarkerPosition(pos.lat, pos.lng, false)
+
+										$('#record_address').val(result.formatted_address)
+										$('#record_latlng').val(""+pos.lat+","+pos.lng)
+
+									})
 
 								}.bind(this))
 
-				// 				map2.changeMarkerPosition(function(marker){
-			//
-			// 						var pos = marker.position
-			// 						$('#record_latlng').val(""+pos.lat()+","+pos.lng())
-			//
-			//
-			// 						// map2.geocode({'location':pos},function(result){
-			// //
-			// // 								$('#record_address').val(result.formatted_address)
-			// //
-			// // 							})
-			//
-			// 						map1.setPosition(pos.lat(), pos.lng())
-			// 						map1.setMarkerPosition(pos.lat(), pos.lng(), false)
-			// 					})
-			//
+
+			 <%
+			 
+			 zone = Zone.find(session[:current_zone])
+				ambu_list = Ambulance.where(:zone_id=>zone).sort(:name=>1).all
+				for ambu in ambu_list
+
+			%>
+			
+			a = <%=ambu.to_json%>
+
+			var t = a['last_location'].split(",")
+			var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+        	marker = ambu_map[a['_id']]
+
+			var image = "<%=url_for("ems/ambu.png")%>";
+
+                marker_map = new google.maps.Marker({position: pos,icon: image,  map: map1.getMap(),label:{
+                    fontSize: '20px',
+                    text: a['name'],
+                    className: 'marker-position',
+                    
+                }});
+                
+			<%
+			
+			end
+
+			%>
+
 
 
 								$('#record_location').keydown(function(e){
@@ -1090,7 +1021,6 @@
 									latlng = address.split(",")
 									var latlng = new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1]) )
 									
-									alert('a3')
 									
 									map1.geocode({'location':latlng},function(result){
 
@@ -1124,7 +1054,80 @@
 							
 
 							setMapInitCallback(beforeInit,afterInit);
+   var ambu_map = {}
+   		
+       
 
+		function update(lines){
+
+
+
+			obj = JSON.parse(lines[1])
+			console.log(obj)
+
+			if(obj['ambu_data']){
+
+			var keys = Object.keys(obj['ambu_data']);
+
+			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+
+			for(ai in values){
+
+				a = values[ai]
+
+				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
+
+
+			var t = a['last_location'].split(",")
+			var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+        	marker = ambu_map[a['_id']]
+
+			var image = "<%=url_for("ems/ambu.png")%>";
+
+
+			if(marker==null){  // if new ambualance
+
+                marker_map = new google.maps.Marker({position: pos,icon: image,  map: local_map,label:{
+                    fontSize: '20px',
+                    text: a['name'],
+                    className: 'marker-position',
+                    
+                }});
+                ambu_map[a['_id']] = marker_map
+                
+
+
+			}else{
+
+                marker_map = 	ambu_map[a['_id']]
+            
+                var color = getColorForSpeed(60);
+                
+                var pathSegment = new google.maps.Polyline({
+                path: [pos, marker_map.getPosition()],
+                geodesic: true,
+                strokeColor: color,
+                strokeOpacity: 1.0,
+                strokeWeight: 4,
+                map: local_map
+                });
+                marker_map.setPosition(pos)
+                      
+
+			}
+
+			}
+
+			}
+
+			if(obj['emd']!=null){
+			    console.log(obj['emd'])
+			}
+
+		}
+
+		}
 
 							</script>
 
