@@ -20,13 +20,13 @@ if request.post?
 
 	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location], :tracking_status=>'TRACKING'
 
-
 	ems_case.update_message @context, "request send location"
-	
 	
 	ems_case.relocation_target params[:location]
 	
 	ems_case.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
+	
+
 	
 
 #     admit = Admit.find ems_case.admit_id
