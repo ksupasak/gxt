@@ -3,11 +3,9 @@
 <%= inline(this,:'../lib/_map')  %>
 <%= inline(this,:'_map')  %>
     <script src="https://cdn.tailwindcss.com"></script>
-
 	<link rel="stylesheet" href="/rocker/assets/plugins/notifications/css/lobibox.min.css" />
-
     <script src="/rocker/assets/plugins/notifications/js/lobibox.min.js"></script>
-    	<script src="/rocker/assets/plugins/notifications/js/notifications.min.js"></script>
+    <script src="/rocker/assets/plugins/notifications/js/notifications.min.js"></script>
 
 	<%
 
@@ -34,10 +32,17 @@
 			 
 			 
 		 	.marker-position {
+		 	    bottom: -40px;
+		 	    left: 0;
+		 	    position: relative;
+		 	}
+			 
+		 	.marker-position-2 {
 		 	    bottom: -10px;
 		 	    left: 0;
 		 	    position: relative;
 		 	}
+			
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -377,14 +382,6 @@
 
 					pos = marker.position
 		
-					// marker.setAnimation(google.maps.Animation.BOUNCE);
-					
-		
-					// map1.geocode({'location':pos},function(result){
-		// 				alert(result.formatted_address)
-		// 				$('#record_latlng').val(result.formatted_address)
-		//
-		// 			})
 						
 						
 						$('#record_latlng').val(""+pos.lat()+","+pos.lng());
@@ -393,10 +390,7 @@
 					if(map1.getMap().getZoom()<18)
 					map1.getMap().setZoom(18);
 					
-			//
-			// 								map2.setPosition(pos.lat(), pos.lng())
-			// 								map2.setMarkerPosition(pos.lat(), pos.lng(), false)
-
+		
 
 			}.bind(this))
 		}
@@ -480,7 +474,7 @@
 							fontSize: '20px',
 							color: '<%=cls%>',
 							text: "<%= text %>",
-							className: 'marker-position',
+							className: 'marker-position-2',
 							
 						},
 						 icon: {
@@ -489,7 +483,7 @@
         fillOpacity: 1,
         strokeColor: 'black',
         strokeWeight: 2,
-        scale: 10 // Adjust size if needed
+        scale: 8 // Adjust size if needed
     }})
 
 			infowindow = new google.maps.InfoWindow({
@@ -499,7 +493,7 @@
 			marker.addListener("click", () => {
 
 
-    	    infowindow.open(marker.get("map"), marker);
+    	    infowindow.open(marker.get("map"));
 
 			});
 			
@@ -644,38 +638,7 @@
 		
 		setMapInitCallback(beforeInit,afterInit);
     
-    function getColorForSpeed2(speed) {
-            
-            
-       // Calculate the gradient color (green to red)
-       const maxSpeed = 40;  // Max speed for the gradient
-       const percentage = speed / maxSpeed;
-        
-        // Convert the percentage to a color (green to red)
-        const red = Math.min(255, Math.floor(percentage * 255));
-        const green = Math.min(255, Math.floor((1 - percentage) * 255));
-        
-        const color = `rgb(${red}, ${green}, 0)`;  
-            
-            
-          return color;                    // High speed
-        }
-	
-    function getColorForSpeed(speed) {
-            
-          
-        var color ="green"
-        
-        if(speed <96 )color = "green";
-        else
-        if(speed <135 )color = "yellow";
-        else
-        if(speed >135 )color = "red";
-            
-            
-            
-          return color;                    // High speed
-        }
+   
 	
 		function update(lines){
 

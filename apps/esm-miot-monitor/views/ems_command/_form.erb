@@ -448,6 +448,33 @@
 
 								mapc.changeMarkerPosition(function(marker){
 
+								 <%
+			 
+			 zone = Zone.find(session[:current_zone])
+				ambu_list = Ambulance.where(:zone_id=>zone).sort(:name=>1).all
+				for ambu in ambu_list
+
+			%>
+			
+			a = <%=ambu.to_json%>
+
+			var t = a['last_location'].split(",")
+			var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+			var image = "<%=url_for("ems/ambu.png")%>";
+
+                marker_map = new google.maps.Marker({position: pos,icon: image,  map: mapc.getMap(),label:{
+                    fontSize: '20px',
+                    text: a['name'],
+                    className: 'marker-position',
+                    
+                }});
+                
+			<%
+			
+			end
+
+			%>
 
 
 								}.bind(this))

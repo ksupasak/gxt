@@ -696,18 +696,15 @@ cls = record.init_code.get_class if code
   ws.onmessage = function(m) {
 
 
-	  // console.log("package="+m.data.length)
-
-	  // show(m.data)
 
 		lines = m.data.split("\n")
 
-		// console.log(lines[0].split(" ")[0])
 		if(lines[0].split(" ")[0]=='Zone.Message'){
 	
 			// update_message();
 
 		}
+	
 		if( typeof process_message === 'function'){
 			process_message(lines)
 		}

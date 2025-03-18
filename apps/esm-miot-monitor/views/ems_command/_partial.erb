@@ -323,7 +323,7 @@ end
 
 								<tr>
 									<td>
-										<%=if("รับเเจ้ง"=="รับเเจ้ง") {i.name} end%> 
+										<%=i.name %> 
 									</td>
 									<td><% if i.stamp %>
 										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
