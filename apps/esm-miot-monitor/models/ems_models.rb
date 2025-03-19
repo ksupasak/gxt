@@ -460,6 +460,33 @@ MSG
   end
 
 
+  def self.estimate start_latlng , stop_latlng, mode = 'driving'
+
+    base_url = "https://maps.googleapis.com/maps/api/directions/json"
+    params = {
+      origin: start_latlng,
+      destination: stop_latlng,
+      mode: mode,
+      key: Setting.get("google_api_key")
+    }
+  
+    uri = URI(base_url)
+    uri.query = URI.encode_www_form(params)
+  
+    response = Net::HTTP.get_response(uri)
+    result = JSON.parse(response.body)
+  
+    if result["status"] == "OK"
+      duration = result["routes"][0]["legs"][0]["duration"]["text"]
+      puts "Estimated travel time: #{duration}"
+      return result
+    else
+      puts "Error: #{result["status"]}"
+      return result
+    end
+
+  end
+
 
   include Mongoid::Timestamps
 
@@ -681,6 +708,11 @@ class EMSCommand < GXTModel
   key :channel_id, String
 
   include Mongoid::Timestamps
+
+
+
+
+
 
 end
 

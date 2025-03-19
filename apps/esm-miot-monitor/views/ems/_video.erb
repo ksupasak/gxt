@@ -19,6 +19,7 @@ if params[:case_id]
 	ems_case = EMSCase.find params[:case_id]
 
 	mask = ""
+	record = nil
 	
 	if ems_case
 		
@@ -34,6 +35,7 @@ if params[:case_id]
 	
 	    ems_case.update_message @context, "video call", 'Zone.Message'
 		
+		record = ems_case	
 		
 		code = EMSCode.find record.init_cbd_code 
 
@@ -42,7 +44,7 @@ if params[:case_id]
 	
 	end
 		
-	record = ems_case	
+
 	
 	meeting  = EMSMeeting.where(:name=>params[:id]).first 
 	
