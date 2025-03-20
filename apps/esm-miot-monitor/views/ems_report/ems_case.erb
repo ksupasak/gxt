@@ -821,6 +821,7 @@ end
 <thead>
   <tr>
       <th>Date</th>
+      <th>Status</th>
       <th>No#</th>
       <th>Location</th>
       <th>Dispatch Time</th>
@@ -897,6 +898,7 @@ end
 <tr>
 
   <td><%=i.created_at.strftime("%d/%m/%Y")%></td>
+  <td><%=i.status%></td>
   <td><%=link_to i.case_no, "../EMS/show?id=#{i.id}"%></td>
   <td><%=i.location%></td>
   <td><%=i.dispatch_at.strftime("%H:%M") if i.dispatch_at%></td>
