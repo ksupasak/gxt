@@ -823,6 +823,7 @@ end
       <th>Date</th>
       <th>Status</th>
       <th>No#</th>
+	  <th>Schedule</th>
       <th>Location</th>
       <th>Dispatch Time</th>
       <th>Type</th>
@@ -900,6 +901,7 @@ end
   <td><%=i.created_at.strftime("%d/%m/%Y")%></td>
   <td><%=i.status%></td>
   <td><%=link_to i.case_no, "../EMS/show?id=#{i.id}"%></td>
+  <td><%=i.schedule_from.strftime("%d/%m/%Y %H:%M") if i.schedule_from%></td>
   <td><%=i.location%></td>
   <td><%=i.dispatch_at.strftime("%H:%M") if i.dispatch_at%></td>
   <td><%=i.case_type%></td>
