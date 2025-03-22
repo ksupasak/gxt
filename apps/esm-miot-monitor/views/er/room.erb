@@ -1,1 +1,95 @@
-Room Page / Dashboard
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">Smart ER </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
+<style>
+        .patient-card {
+            border: 2px solid yellow;
+            border-radius: 10px;
+            padding: 15px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .red-line {
+            height: 5px;
+            background-color: red;
+            margin: 5px 0;
+        }
+
+        .yellow-line {
+            height: 5px;
+            background-color: yellow;
+            margin: 5px 0;
+        }
+    </style>
+
+    <div class="row gy-4">
+    <div class="d-flex flex-wrap justify-content-start">
+    <% 10.times do |i| %>
+    <div class="card  m-2  patient-card alert-warning">
+            <div class="row g-2 mb-2">
+                <div class="col-6">
+                    <input type="text" class="form-control text-center" value="patient_name" readonly>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control text-center" value="HN" readonly>
+                </div>
+                <div class="col-3">
+                    <input type="text" class="form-control text-center fw-bold" value="case_id" readonly>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>IN 13:00</span>
+                <span>Stay 2.3 Hr</span>
+            </div>
+            <div class="yellow-line"></div>
+            <input type="text" class="form-control text-center mb-2" value="msg" readonly>
+            <div class="row g-2 mb-2">
+                <div class="col-3">
+                    <button class="btn btn-light w-100">120/80</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">90</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">70</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-light w-100">20</button>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 1</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 2</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-light w-100">Resource 3</button>
+                </div>
+            </div>
+        </div>
+
+<% end %>
+    </div>   </div>

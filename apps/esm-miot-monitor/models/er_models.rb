@@ -4,6 +4,13 @@ module EsmMiotMonitor
 class ERCase < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :reimbursement, :class_name=>'EsmMiotMonitor::Reimbursement'
+  belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
+  belongs_to :room, :class_name=>'EsmMiotMonitor::Room'
+  belongs_to :bed, :class_name=>'EsmMiotMonitor::Bed'
+  belongs_to :unit, :class_name=>'EsmMiotMonitor::Unit'
+
+  
   include Mongoid::Timestamps
   key :case_no, String
   key :case_type, String # EMS / Refer
@@ -24,6 +31,8 @@ class ERCase < GXTModel
   key :patient_birth_date, DateTime
   key :patient_nationality, String
 
+  key :chief_complain, String
+  key :remark, String
 
   key :patient_cid, String
   key :patient_hn, String
@@ -43,6 +52,7 @@ class ERCase < GXTModel
 
   key :patient_bmi, Float
 
+  key :reimbursement_id, ObjectId
 
   key :admit_id, ObjectId
   key :date, Time
@@ -51,7 +61,20 @@ class ERCase < GXTModel
   key :diagnosis, String
   key :diagnosis_icd, String
 
+  key :triage_room, String
+  key :doctor_name, String
+  key :special, String
 
+  key :provider_id, ObjectId
+
+  key :room_id, ObjectId
+  key :bed_id, ObjectId
+  key :unit_id, ObjectId
+  key :bed_name, String
+
+  key :round_period, Integer
+
+  key :referred_to, String
 end
 
 class ERCaseController < GXTDocument

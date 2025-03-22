@@ -39,19 +39,30 @@
 	<script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
 
 <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
-<% begin %>
-		<%= inline(this,:'../lib/_ems')  %>
-    <% rescue Exception=>e %>
+ 
+<%
+	mode = "ems"
+	if session[:current_zone]
+		@current_zone = Zone.find session[:current_zone]
+		mode = @current_zone.mode 
+	end
+
+%>
+    <% begin %>
+		<%= inline(this,('../lib/_'+mode).to_sym)  %>
+    <% rescue Exception=>e 
+		puts e.message
+	%>
+	
     <% end %>
 	<link href="<%=url_for 'css/ems.css'%>" rel="stylesheet">
+	
 
-
-	<title>Smart EMS - EMS Innovation </title>
+	<title><%= @application_title %> - ESM Solution </title>
 <style type="text/css">/* Chart.js */
 @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
 
 <body class="  pace-done"><div class="pace  pace-inactive"><div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
- 
 
  
   <div class="pace-progress-inner"></div>
@@ -63,10 +74,10 @@
 		<div class="sidebar-wrapper "   data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content mm-active" style="padding: 0px;">
 			<div class="sidebar-header">
 				<div>
-					<img src="/miot/img/ems/ems-icon-w.png" class="" alt="logo icon" style="border-radius:5px;width:45px">
+					<img src="<%=@application_logo %>" class="" alt="logo icon" style="border-radius:5px;width:45px">
 				</div>
 				<div>
-					<a href="../EMS/index"><h4 class="logo-text">Smart EMS</h4></a>
+					<a href="../<%=@application_main%>/index"><h4 class="logo-text"><%=  @application_title %></h4></a>
 				</div>
 				<div class="toggle-icon ms-auto"><i class="bx bx-arrow-to-left"></i>
 				</div>

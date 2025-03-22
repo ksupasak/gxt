@@ -1,0 +1,345 @@
+<%
+
+
+        record = ERCase.find params[:id]
+        admit = record.admit
+        patient = admit.patient
+        data_records = DataRecord.where(:admit_id=>admit.id).all
+
+%>
+<%#data_records.to_json%>
+<div class="card">
+    <div class="card-body">
+        <div class="chart-container">
+            <div class="chart-header d-flex justify-content-between align-items-center">
+            <div class="col-4"><h4>Vital Sign</h4></div>
+            <div class="chart-info" style="display:flex;gap:10px;">
+               
+                <a href="connect?id=<%=record.id%>" class="btn btn-info">Connect</a>
+
+            </div>  
+        </div>
+
+        <div id="chartWrapper" class="chart-wrapper">
+            <svg id="chart"></svg>
+        </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(() => {
+            createChart();
+        }, 100);
+
+        function createChart() {
+            d3.select("#chart").selectAll("*").remove();
+
+            const chartWrapper = document.getElementById('chartWrapper');
+            const width = chartWrapper.offsetWidth;
+            const height = chartWrapper.offsetHeight;
+            const margin = { 
+                top: Math.max(20, height * 0.05), 
+                right: Math.max(100, width * 0.1),
+                bottom: Math.max(50, height * 0.1), 
+                left: Math.max(50, width * 0.05) 
+            };
+
+            const data = [];
+            const records = <%= data_records.to_json %>;
+
+            for (let i = 0; i < records.length; i++) {
+                data.push({
+                    time: i * 5,
+                    bloodPressure: parseInt(records[i].bp.split('/')[0]),
+                    pulse: parseInt(records[i].pr),
+                    spO2: parseInt(records[i].spo2),
+                    temperature: parseFloat(records[i].temp),
+                    co2: parseInt(records[i].co2),
+                    timestamp: new Date(records[i].stamp)
+                });
+            }
+
+            const svg = d3.select("#chart")
+                .attr("width", width)
+                .attr("height", height)
+                .attr("viewBox", `0 0 ${width} ${height}`);
+
+            const xScale = d3.scaleTime()
+                .domain([new Date(data[0].timestamp), new Date()])
+                .range([margin.left, width - margin.right]);
+
+            const yScale = d3.scaleLinear()
+                .domain([30, 150])
+                .range([height - margin.bottom, margin.top]);
+
+            const xAxis = d3.axisBottom(xScale)
+                .ticks(width < 600 ? 5 : 10)
+                .tickFormat(d3.timeFormat(width < 600 ? "%H:%M" : "%Y-%m-%d %H:%M"));
+
+            const createLine = (accessor) => {
+                return d3.line()
+                    .x(d => xScale(d.timestamp))
+                    .y(d => yScale(accessor(d)))
+                    .curve(d3.curveMonotoneX);
+            };
+
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0,${height - margin.bottom})`)
+                .call(xAxis)
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .attr("transform", "rotate(-45)");
+
+            svg.append("g")
+                .attr("class", "y-axis")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale));
+
+            const lines = [
+                { data: data, color: "blue", accessor: d => d.bloodPressure, name: "Blood Pressure" },
+                { data: data, color: "red", accessor: d => d.pulse, name: "Pulse" },
+                { data: data, color: "green", accessor: d => d.spO2, name: "SpO2" },
+                { data: data, color: "orange", accessor: d => d.temperature, name: "Temperature" },
+                { data: data, color: "purple", accessor: d => d.co2, name: "CO2" }
+            ];
+
+            lines.forEach(line => {
+                svg.append("path")
+                    .datum(line.data)
+                    .attr("fill", "none")
+                    .attr("stroke", line.color)
+                    .attr("stroke-width", 2)
+                    .attr("d", createLine(line.accessor));
+            });
+
+            const legendGroup = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
+
+            lines.forEach((line, i) => {
+                const legendItem = legendGroup.append("g")
+                    .attr("transform", `translate(0, ${i * 20})`);
+
+                legendItem.append("rect")
+                    .attr("width", 12)
+                    .attr("height", 12)
+                    .attr("fill", line.color);
+
+                legendItem.append("text")
+                    .attr("x", 20)
+                    .attr("y", 10)
+                    .text(line.name)
+                    .style("font-size", width < 600 ? "10px" : "12px");
+            });
+
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "d3-tooltip")
+                .style("opacity", 0);
+
+            lines.forEach(line => {
+                svg.selectAll(".dot")
+                    .data(line.data)
+                    .enter()
+                    .append("circle")
+                    .attr("class", "dot")
+                    .attr("cx", d => xScale(d.timestamp))
+                    .attr("cy", d => yScale(line.accessor(d)))
+                    .attr("r", 4)
+                    .attr("fill", line.color)
+                    .on("mouseover", function(event, d) {
+                        d3.select(this).attr("r", 6);
+                        tooltip.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        tooltip.html(`
+                            ${line.name}<br/>
+                            Time: ${d.timestamp.toLocaleTimeString()}<br/>
+                            Value: ${line.accessor(d)}
+                        `)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function() {
+                        d3.select(this).attr("r", 4);
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+        }
+
+        const resizeObserver = new ResizeObserver(debounce(() => {
+            createChart();
+        }, 250));
+
+        resizeObserver.observe(document.getElementById('chartWrapper'));
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    });
+    </script>
+
+        <h5 class="card-title">Monitor</h5>
+
+
+         <div class="card sum-report mt-3 station">
+                <div class="card-header card-vital">
+                    <strong> General Information</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+						<%
+							weight = admit.weight
+							weight = ' - ' unless weight 
+							
+							height = admit.height
+							height = ' - ' unless height 
+							 
+							
+						%>
+                        <div class="col-3">Weight : <%=weight%> kg.</div>
+						<div class="col-3">Height : <%=height%> cm.</div>
+					</div>
+					
+				</div>
+                <div class="card-header card-vital">
+                    <strong> Triage Assessment</strong>
+                </div>
+                <div class="card-body">
+			        <div class="row">
+                        <div class="col-4"><%= admit.admit_stamp.strftime("%H:%M")  %></div>
+                        <div class="col-8">
+                         	
+							Admit เข้าระบบ
+						 
+                        </div>
+                    </div>
+					<%
+						
+					nurse_records = NurseRecord.where(:admit_id=>admit.id).all
+						
+						for i in nurse_records  
+							stamp =  i.start_time.strftime("%H:%M")
+					%>
+			        <div class="row">
+                        <div class="col-4"><%= stamp %></div>
+                        <div class="col-8">
+                         	
+							<%= i.description %>
+						 
+                        </div>
+                    </div>
+					<% end %>
+            
+                </div>
+                <!--vital sign part-->
+                <div class="card-header card-vital">
+                    <strong> Vital Sign</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover table-vital text-center" style="overflow:hidden;font-size:0.8em">
+                        <thead>
+                          <tr>
+                            <th scope="col">เวลา</th>
+                            <th scope="col">BP</th>
+                            <th scope="col">Pulse/SpO<sub>2</sub></th>
+                            <th scope="col">RR</th>
+                            <th scope="col">BT</th>
+                    
+                            <th scope="col">Score</th>
+						    <th scope="col">Staff</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                         
+						 <%
+						 	   
+						 data_records.each_with_index do |i,ix| 
+							
+						 %>
+						 
+						  <tr class="<%='last' if ix==data_records.size-1%>">
+                            <th scope="row"><%=i.stamp.strftime("%H:%M")%></th>
+                            <td class="bp"><%=i.bp%></td>
+                            <td class="pr"><%=i.pr%>/<%=i.spo2%></td>
+                            <td class="rr"><%=i.rr%></td>
+                            <td class="temp"><%=i.temp%></td>
+                       
+                            <td><%=i.score%></td>
+                            <td><%
+                            	user = '-'
+								user = User.find i.updated_user_id 
+								
+                            %><%=user.login if user%></td>
+                          </tr>
+                         
+						 <% end  %>
+						 
+                        </tbody>
+                      </table>
+
+
+
+
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<style>
+.chart-container {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+.d3-tooltip {
+    position: absolute;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.dot {
+    transition: r 0.2s ease;
+}
+
+@media (max-width: 768px) {
+    .legend text {
+        font-size: 10px;
+    }
+    
+    .x-axis text, .y-axis text {
+        font-size: 10px;
+    }
+}
+
+.chart-wrapper {
+    width: 100%;
+    height: 450px;
+    position: relative;
+    min-width: 300px;
+}
+
+.chart-wrapper svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+</style>

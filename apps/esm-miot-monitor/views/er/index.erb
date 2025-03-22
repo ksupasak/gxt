@@ -1,95 +1,196 @@
-<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Smart ER </div>
-					<div class="ps-3">
-						<nav aria-label="breadcrumb">
-							<ol class="breadcrumb mb-0 p-0">
-								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
-								</li>
-								<li class="breadcrumb-item active" aria-current="page"></li>
-							</ol>
-						</nav>
-					</div>
-					<div class="ms-auto">
-						<div class="btn-group">
-							<button type="button" class="btn btn-primary">Settings</button>
-							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
-								<a class="dropdown-item" href="javascript:;">Another action</a>
-								<a class="dropdown-item" href="javascript:;">Something else here</a>
-								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
-							</div>
-						</div>
-					</div>
-				</div>
-<style>
-        .patient-card {
-            border: 2px solid yellow;
-            border-radius: 10px;
-            padding: 15px;
-            max-width: 500px;
-            margin: auto;
-        }
-        .red-line {
-            height: 5px;
-            background-color: red;
-            margin: 5px 0;
-        }
 
-        .yellow-line {
-            height: 5px;
-            background-color: yellow;
-            margin: 5px 0;
-        }
-    </style>
-
-    <div class="row gy-4">
-    <div class="d-flex flex-wrap justify-content-start">
-    <% 10.times do |i| %>
-    <div class="card  m-2  patient-card alert-warning">
-            <div class="row g-2 mb-2">
-                <div class="col-6">
-                    <input type="text" class="form-control text-center" value="patient_name" readonly>
-                </div>
-                <div class="col-3">
-                    <input type="text" class="form-control text-center" value="HN" readonly>
-                </div>
-                <div class="col-3">
-                    <input type="text" class="form-control text-center fw-bold" value="case_id" readonly>
-                </div>
-            </div>
-            <div class="d-flex justify-content-between">
-                <span>IN 13:00</span>
-                <span>Stay 2.3 Hr</span>
-            </div>
-            <div class="yellow-line"></div>
-            <input type="text" class="form-control text-center mb-2" value="msg" readonly>
-            <div class="row g-2 mb-2">
-                <div class="col-3">
-                    <button class="btn btn-light w-100">120/80</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">90</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">70</button>
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-light w-100">20</button>
-                </div>
-            </div>
-            <div class="row g-2">
-                <div class="col-4">
-                    <button class="btn btn-light w-100">Resource 1</button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-light w-100">Resource 2</button>
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-light w-100">Resource 3</button>
-                </div>
-            </div>
+  <style>
+    .highlight {
+      font-size: 2em;
+      font-weight: bold;
+    }
+    svg {
+      width: 100%;
+      height: 200px;
+    }
+  </style>
+  <div class="container-fluid">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">patient type</h5>
+            <div id="chart-patient-type"></div>
+          </div>
         </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">กลุ่มโรค</h5>
+            <div id="chart-disease-group"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">ผลการรักษา</h5>
+            <div id="chart-outcome"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">สิทธิ์</h5>
+            <div id="chart-rights"></div>
+          </div>
+        </div>
+      </div>
 
-<% end %>
-    </div>   </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Today</h5>
+            <div class="highlight">30</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Week</h5>
+            <div class="highlight">40</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Month</h5>
+            <div class="highlight">60 +20%</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title">Year</h5>
+            <div class="highlight">325</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">24 hours</h5>
+            <div id="chart-24h"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">d,w,m,3m,y</h5>
+            <div id="chart-period"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Triage Section -->
+      <div class="col-md-3">
+        <div class="card bg-danger-subtle text-center">
+          <div class="card-body">
+            <h5 class="card-title">Current</h5>
+            <div class="highlight">3</div>
+            <p>Max : 30m<br>Total : 5 cases</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-primary-subtle text-center">
+          <div class="card-body">
+            <h5 class="card-title">Triage</h5>
+            <div class="highlight">12</div>
+            <p>Max : 30m<br>Total : 5 cases</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning-subtle text-center">
+          <div class="card-body">
+            <div class="highlight">3</div>
+            <p>Max : 30m<br>Total : 5 cases</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-success-subtle text-center">
+          <div class="card-body">
+            <div class="highlight">3</div>
+            <p>Max : 30m<br>Total : 5 cases</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const barData = [
+      { label: "Red", value: 10 },
+      { label: "Blue", value: 8 },
+      { label: "Green", value: 6 },
+      { label: "Yellow", value: 12 },
+      { label: "Pink", value: 9 }
+    ];
+
+    const pieData = [
+      { label: "40%", value: 40 },
+      { label: "30%", value: 30 },
+      { label: "10%", value: 10 },
+      { label: "7%", value: 7 },
+      { label: "13%", value: 13 }
+    ];
+
+    function drawBarChart(id, data) {
+      const svg = d3.select(id).append("svg")
+        .attr("viewBox", "0 0 200 100")
+        .append("g")
+        .attr("transform", "translate(10,10)");
+
+      const x = d3.scaleBand().domain(data.map(d => d.label)).range([0, 180]).padding(0.1);
+      const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value)]).range([80, 0]);
+
+      svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", d => x(d.label))
+        .attr("y", d => y(d.value))
+        .attr("width", x.bandwidth())
+        .attr("height", d => 80 - y(d.value))
+        .attr("fill", "steelblue");
+    }
+
+    function drawPieChart(id, data) {
+      const width = 200, height = 200, radius = Math.min(width, height) / 2;
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      const arc = d3.arc().outerRadius(radius - 10).innerRadius(0);
+      const pie = d3.pie().value(d => d.value);
+
+      const svg = d3.select(id).append("svg")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+      svg.selectAll("path")
+        .data(pie(data))
+        .enter().append("path")
+        .attr("d", arc)
+        .attr("fill", (d, i) => color(i));
+    }
+
+    drawBarChart("#chart-patient-type", barData);
+    drawBarChart("#chart-disease-group", barData);
+    drawBarChart("#chart-outcome", barData);
+    drawPieChart("#chart-rights", pieData);
+  </script>
+

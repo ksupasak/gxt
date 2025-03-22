@@ -112,7 +112,7 @@ record = @current_case
 					 
 					 // window.location.reload();
 					
-					 window.location='index';
+					//  window.location='index';
 					
                   })
                   .fail(function() {
@@ -817,10 +817,8 @@ function startWeb(link){
 				</div>
 			</div>
 			<center>
-<<<<<<< HEAD
-			<!-- <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10"> --!>
-			  <button type="button" class=" info-qr btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
-			  <!--   </a> --!>
+
+		
 			  <script>
 				$('.cap-btn-bk').click(function(){
 					<%
@@ -844,13 +842,7 @@ function startWeb(link){
 				
 			</script>		
 
-			<!--  <p> <%= Setting.get(:host_url)  %> <%= record.id %>  </p> --!>
-=======
-			 <a href="https://emr-life.com/barcode?code=<%= Setting.get(:host_url) %>/EMS/pdf?id=<%=record.id%>&type=qr_code&xdim=10">
-			  <button type="button" class=" info-button btn btn-primary px-4  radius-5" style="width:50%;">Open QR</button>
-		     </a>
-			
->>>>>>> 5de7baeda04da9d22792da6ce9a320b4121a0378
+
 			 </center>
 			</div>
 			<div class="modal-footer">
@@ -1248,7 +1240,7 @@ modal('#modal_notification')
 	   <% if record %>
 		   
 	   if(obj['ems_data']['<%=record.id%>']==null){
-	   		window.location="index";
+	   		// window.location="index";
 	   }	   
 		   
 		   <% end %>
