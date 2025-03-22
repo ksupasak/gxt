@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Charting</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+        svg {
+            border: 1px solid black;
+        }
+        .axis-label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .legend text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h2>Patient Vital Signs Chart</h2>
+        <svg id="chart" width="800" height="450"></svg>
+    </div>
+    <script>
+        const width = 800, height = 450;
+        const margin = { top: 20, right: 100, bottom: 50, left: 60 };
+        const data = [];
+        
+        // for (let i = 0; i <= 36; i++) {
+        //     data.push({
+        //         time: i * 5, // in minutes
+        //         bloodPressure: Math.random() * (140 - 110) + 110,
+        //         pulse: Math.random() * (100 - 60) + 60,
+        //         spO2: Math.random() * (100 - 95) + 95,
+        //         temperature: Math.random() * (39 - 36) + 36,
+        //         co2: Math.random() * (45 - 35) + 35
+        //     });
+        // }
+        
+        const svg = d3.select("#chart");
+        const xScale = d3.scaleLinear()
+            .domain([0, 180])
+            .range([margin.left, width - margin.right]);
+        
+        const yScale = d3.scaleLinear()
+            .domain([30, 150])
+            .range([height - margin.bottom, margin.top]);
+        
+        const lineBP = d3.line()
+            .x(d => xScale(d.time))
+            .y(d => yScale(d.bloodPressure));
+        
+        const linePulse = d3.line()
+            .x(d => xScale(d.time))
+            .y(d => yScale(d.pulse));
+        
+        const lineSpO2 = d3.line()
+            .x(d => xScale(d.time))
+            .y(d => yScale(d.spO2));
+        
+        const lineTemp = d3.line()
+            .x(d => xScale(d.time))
+            .y(d => yScale(d.temperature));
+        
+        const lineCO2 = d3.line()
+            .x(d => xScale(d.time))
+            .y(d => yScale(d.co2));
+        
+        svg.append("g")
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(xScale).ticks(10).tickFormat(d => `${d} min`))
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", 40)
+            .attr("fill", "black")
+            .attr("class", "axis-label")
+            .text("Time (minutes)");
+        
+        svg.append("g")
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(yScale))
+            .append("text")
+            .attr("x", -40)
+            .attr("y", height / 2)
+            .attr("fill", "black")
+            .attr("class", "axis-label")
+            .attr("transform", "rotate(-90, -40, " + height / 2 + ")")
+            .text("Vital Sign Values");
+        
+        svg.append("path").datum(data).attr("fill", "none").attr("stroke", "blue").attr("stroke-width", 2).attr("d", lineBP);
+        svg.append("path").datum(data).attr("fill", "none").attr("stroke", "red").attr("stroke-width", 2).attr("d", linePulse);
+        svg.append("path").datum(data).attr("fill", "none").attr("stroke", "green").attr("stroke-width", 2).attr("d", lineSpO2);
+        svg.append("path").datum(data).attr("fill", "none").attr("stroke", "orange").attr("stroke-width", 2).attr("d", lineTemp);
+        svg.append("path").datum(data).attr("fill", "none").attr("stroke", "purple").attr("stroke-width", 2).attr("d", lineCO2);
+        
+        // Legend
+        const legend = svg.append("g").attr("transform", `translate(${width - 90}, 30)`);
+        const legendItems = [
+            { color: "blue", label: "Blood Pressure" },
+            { color: "red", label: "Pulse" },
+            { color: "green", label: "SpO2" },
+            { color: "orange", label: "Temperature" },
+            { color: "purple", label: "CO2" }
+        ];
+        
+        legendItems.forEach((item, index) => {
+            legend.append("rect")
+                .attr("x", 0).attr("y", index * 20)
+                .attr("width", 12).attr("height", 12)
+                .attr("fill", item.color);
+            
+            legend.append("text")
+                .attr("x", 20).attr("y", index * 20 + 10)
+                .text(item.label)
+                .attr("class", "legend-text");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<%
+    record = ERCase.find(params[:id])
+    admit = Admit.find(record.admit_id)
+    patient = Patient.find(admit.patient_id)
+
+    if request.post?
+        # สร้าง transaction เพื่อให้แน่ใจว่าข้อมูลทั้งหมดถูกบันทึกพร้อมกัน
+            # สร้าง ERCase record
+            
+            
+            if record
+
+                record.update_attributes(params[:record])
+
+                patient.update_attributes(
+                    
+                    hn: params[:patient][:hn],
+                    # เพิ่มข้อมูล patient ตามที่ต้องการ เช่น
+                    first_name: params[:patient][:first_name],
+                    last_name: params[:patient][:last_name],
+                    nationality: params[:patient][:nationality],
+                    dob: params[:patient][:dob],
+                    gender: params[:patient][:gender]
+                )
+                
+
+                record.update(:admit_id=>admit.id, :patient_name=>patient.to_s, :patient_gender=>patient.gender, :patient_age=>patient.age, :patient_birth_date=>patient.dob, :patient_nationality=>patient.nationality)
+                
+                %>
+                <meta http-equiv="refresh" content="0; url=show?id=<%= record.id %>" />
+                <%
+            end
+        
+  
+    end
+
+%>
+
+<div class="card">
+    <form action="edit" method="POST">
+
+    <div class="card-body">
+
+    <input type="hidden" name="id" value="<%= record.id %>">
+     
+<% fieldset(:record) do |f| %>
+
+    <%= inline(this,'forms/_form_regis', :this=>this, :f=>f, :record=>record, :patient=>patient)  %>
+
+<% end %>
+</div>
+<div class="card-footer">
+        <button type="submit" class="btn btn-primary mt-4">Update Case</button>
+</div>
+    </form>
+</div>

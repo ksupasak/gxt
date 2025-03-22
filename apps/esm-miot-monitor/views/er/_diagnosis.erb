@@ -1,0 +1,56 @@
+<%
+    record = ERCase.find(params[:id])
+    admit = Admit.find(record.admit_id)
+    patient = Patient.find(admit.patient_id)
+
+    if request.post?
+        # สร้าง transaction เพื่อให้แน่ใจว่าข้อมูลทั้งหมดถูกบันทึกพร้อมกัน
+            # สร้าง ERCase record
+          params[:order]={}
+
+          params[:order][:order_date] = Time.now
+          params[:order][:admit_id] = admit.id
+          params[:order][:provider_id] = record.provider_id
+          params[:order][:created_user_id] = @current_user.id
+          params[:order][:updated_user_id] = @current_user.id
+          order = EsmMiotMonitor::Order.create(params[:order])
+
+          params[:order_items].each do |item|
+            item[:status] = 'new'
+            order_item = EsmMiotMonitor::OrderItem.create(item)
+            order_item.order_id = order.id
+            order_item.save
+            log = order_item.status_logs.create(
+              created_user_id: @current_user.id,
+              previous_status: '-',
+              new_status: 'new',
+              note: 'สร้างรายการใหม่'
+            )
+            
+          end   
+        
+       %>
+       <meta http-equiv="refresh" content="0; url=show?id=<%= record.id %>" />
+       <%
+    end
+
+%>
+
+<div class="card">
+    <form action="diagnosis" method="POST">
+
+    <div class="card-body">
+
+    <input type="hidden" name="id" value="<%= record.id %>">
+     
+<% fieldset(:record) do |f| %>
+
+    <%= inline(this,'forms/_form_order', :this=>this, :f=>f, :record=>record, :patient=>patient)  %>
+
+<% end %>
+</div>
+<div class="card-footer">
+        <button type="submit" class="btn btn-primary mt-4">Submi</button>
+</div>
+    </form>
+</div>
