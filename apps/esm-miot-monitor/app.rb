@@ -13,7 +13,7 @@ require_relative 'smart_opd'
 
 require 'active_support'
 
-require_relative 'models'
+require_relative 'models/base_models'
 
 
 

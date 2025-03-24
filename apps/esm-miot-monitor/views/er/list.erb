@@ -1,11 +1,21 @@
 <%
+    lists = []
 
-    records = ERCase.all
+
+    records = ERCase.where(:status=>{'$in'=>['New','Admitted']}).order(:room_id=>1,:created_at=>1)
+    
+    lists << {'name'=>'New/Admitted', 'list'=>records}
+
+    records = ERCase.where(:status=>{'$in'=>['Discharged', 'Referred']}).order(:room_id=>1,:created_at=>1)
+   
+    lists << {'name'=>'Discharged/Referred', 'list'=>records}
+
 
 %>
-<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-					<div class="breadcrumb-title pe-3">Registration </div>
-					<div class="ps-3">
+
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Registration </div>
+            <div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
 								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
@@ -16,7 +26,7 @@
 					</div>
 					<div class="ms-auto">
                         <div class="btn-group">
-							<a href="../ERCase/create" class="btn btn-primary">+ Patient</a>
+							<a href="create" class="btn btn-primary">+ Patient</a>
                         </div>
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary">Settings</button>
@@ -32,7 +42,7 @@
 				</div>
     <style>
         .table th {
-            background-color: black;
+            background-color: gray;
             color: white;
             text-align: center;
         }
@@ -52,50 +62,94 @@
             background-color: #f8c1ff;
         }
     </style>
+
+
+    <% for list in lists 
+        if list['list'].size > 0
+        %>
+    <div class="card">
+    <div class="card-body">
+        <h3><%= list['name'] %></h3>
   <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>case_no</th>
-                    <th>patient_name</th>
-                    <th>gender</th>
-                    <th>age</th>
-                    <th>triage_room</th>
-                    <th>doctor_name</th>
-                    <th>special</th>
-                    <th>In_time</th>
-                    <th>stay</th>
-                    <th>status</th>
+                     <th>เลขที่เคส</th>
+                    <th>ชื่อ-นามสกุล</th>
+                    <th>เพศ</th>
+                    <th>อายุ</th>
+                    <th>Bed</th>
+                    <th>แพทย์</th>
+                    <th>หมายเหตุ</th>
+                    <th>เวลาเข้า</th>
+                    <th>ระยะเวลา (min)</th>
+                    <th>สถานะ</th>
+                    <th>จัดการ</th>
+
                 </tr>
             </thead>
             <tbody>
+            <% for er_case in list['list'] 
+               
+                er_case.case_no = "N/A" unless er_case.case_no && er_case.case_no != ""
 
-            <% for i in records %>
-                <tr class="red-bg">
-                    <td>case_no</td>
-                    <td>patient_name</td>
-                    <td>gender</td>
-                    <td>age</td>
-                    <td class="">triage_room</td>
-                    <td>doctor_name</td>
-                    <td>special</td>
-                    <td>In_time</td>
-                    <td>stay</td>
-                    <td>status</td>
+
+                admit = Admit.find(er_case.admit_id)
+                if admit
+                patient = Patient.find(admit.patient_id)
+                room = nil
+                doctor = nil
+                bed = nil
+                if admit.room_id
+                    room = Room.find(admit.room_id)
+                    bed = Bed.find(admit.bed_id)
+                    room = bed.room
+                    
+                    doctor = Provider.find(er_case.provider_id)
+                    resident = Provider.find(er_case.resident_id)
+                    nurse = Provider.find(er_case.nurse_id)
+                    nurse_assistant = Provider.find(er_case.nurse_assistant_id)
+
+
+                end 
+
+            %>
+                <tr class="" >
+                    <td><%=link_to er_case.case_no, "show?id=#{er_case.id}" %></td>
+                    <td><%= patient.to_s %></td>
+                    <td><%= patient.gender %></td>
+                    <td><%= patient.to_age %></td>
+                    <td style="background: <%= bed.room.bg_color if bed and bed.room %>"><%= bed.name if bed %></td>
+                    <td><%= doctor.name if doctor %></td>
+                    <td><%= er_case.special %></td>
+                    <td><%= er_case.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+                    <td><%= ((Time.now - er_case.created_at) / 60).round(1) %> </td>
+                    <td><%= er_case.status %><%= "<br/>"+er_case.referred_to if er_case.referred_to and er_case.referred_to != ""%></td>
+                      <td>
+                        <a href="destroy?id=<%= er_case.id %>" 
+                           onclick="return confirm('คุณแน่ใจหรือไม่ที่จะลบข้อมูลนี้?')"
+                           class="btn btn-outline-danger btn-sm">&nbsp;
+                            <i class="bx bx-trash"></i>
+                        </a>
+                    </td>
                 </tr>
-           <% end %>
-<!--
-                <tr class="red-bg">
-                    <td>case_no</td>
-                    <td>patient_name</td>
-                    <td>gender</td>
-                    <td>age</td>
-                    <td class="">triage_room</td>
-                    <td>doctor_name</td>
-                    <td>special</td>
-                    <td>In_time</td>
-                    <td>stay</td>
-                    <td>status</td>
-                </tr>
-            -->
+                  <% else %>
+                    <tr> 
+                        <td><%=link_to er_case.case_no, "show?id=#{er_case.id}" %></td>
+                        <td colspan="8">ไม่พบข้อมูล</td>
+                        <td><%= er_case.status %><%= "<br/>"+er_case.referred_to if er_case.referred_to and er_case.referred_to != ""%></td>
+                      <td>
+                        <a href="destroy?id=<%= er_case.id %>" 
+                           onclick="return confirm('คุณแน่ใจหรือไม่ที่จะลบข้อมูลนี้?')"
+                           class="btn btn-danger btn-sm">
+                            <i class="bx bx-trash"></i>
+                        </a>
+                    </td>
+                    </tr>
+                <% end %>
+            <% end %>
             </tbody>
         </table>
+    </div>
+</div>
+<% end %>
+<% end %>

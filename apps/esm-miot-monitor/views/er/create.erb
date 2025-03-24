@@ -1,118 +1,72 @@
 <%
+    record = nil
 
-    record = ERCase.new 
+    if request.post?
+        # สร้าง transaction เพื่อให้แน่ใจว่าข้อมูลทั้งหมดถูกบันทึกพร้อมกัน
+            # สร้าง ERCase record
+            if params[:visit_date]
+                params[:record][:date] = params[:visit_date] + "T" + params[:visit_time]
+            end
+
+            record = ERCase.create params[:record]
+            
+            if record
+                # สร้างความสัมพันธ์กับ Patient
+                patient = Patient.find_or_create_by(
+                    hn: params[:patient][:hn],
+                    # เพิ่มข้อมูล patient ตามที่ต้องการ เช่น
+                    first_name: params[:patient][:first_name],
+                    last_name: params[:patient][:last_name],
+                    nationality: params[:patient][:nationality],
+                    dob: params[:patient][:dob],
+                    gender: params[:patient][:gender]
+                )
+                
+                # สร้าง Admit record และเชื่อมความสัมพันธ์
+                admit = Admit.create(
+                    patient_id: patient.id,
+       
+                    station_id: params[:admit][:station_id],
+               
+                    admit_stamp: Time.now,
+                    status: 'Admitted',
+                    zone_id: session[:current_zone]
+                )
+
+                
+
+                record.update(:patient_id=>patient.id, :admit_id=>admit.id, :patient_name=>patient.to_s, :patient_gender=>patient.gender, :patient_age=>patient.age, :patient_birth_date=>patient.dob, :patient_nationality=>patient.nationality)
+                
+                %>
+                <meta http-equiv="refresh" content="0; url=list" />
+                <%
+                ERCase.notify @context, :zone_id=>admit.zone_id
+            end
+        
+    else
+        record = ERCase.new 
+        record.date = Time.now
+        patient = Patient.new
+        record.status = 'New'
+        counter = ERCase.where(:date=>{"$gte"=>Time.now.beginning_of_month, "$lt"=>Time.now.end_of_month}).count
+        record.case_no = "ER#{Time.now.strftime("%y%m")}" + (counter+1).to_s.rjust(4, '0')
+    end
 
 %>
-<div class="">
+<div class="card">
+    <div class="card-body">
     <h2 class="">ER Case Create</h2>
-    <form action="/submit_case" method="POST">
-        <!-- Case Details -->
-        <div class="card mb-3">
-            <div class="card-header bg-primary text-white">Case Information</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label">Case No</label>
-                        <input type="text" class="form-control" name=record[case_no] value="<%= record['case_no'] %>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Case Type</label>
-                        <input type="text" class="form-control" name=record[case_type] value="<%= record['case_type'] %>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Patient Type</label>
-                        <input type="text" class="form-control" name=record[patient_type] value="<%= record['patient_type'] %>">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <form action="create" method="POST">
+     
+<% fieldset(:record) do |f| %>
 
-        <!-- Contact Details -->
-        <div class="card mb-3">
-            <div class="card-header bg-success text-white">Contact Information</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Contact Name</label>
-                        <input type="text" class="form-control" name=record[contact_name] value="<%= record['contact_name'] %>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Contact Phone</label>
-                        <input type="text" class="form-control" name=record[contact_phone] value="<%= record['contact_phone'] %>">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <%= inline(this,'forms/_form_regis', :this=>this, :f=>f, :record=>record, :patient=>patient)  %>
 
-        <!-- Patient Details -->
-        <div class="card mb-3">
-            <div class="card-header bg-info text-white">Patient Information</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" name=record[patient_name] value="<%= record['patient_name'] %>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Gender</label>
-                        <select class="form-control" name=record[patient_gender]>
-                            <option <% if record['patient_gender'] == 'Male' %>selected<% end %>>Male</option>
-                            <option <% if record['patient_gender'] == 'Female' %>selected<% end %>>Female</option>
-                            <option <% if record['patient_gender'] == 'Other' %>selected<% end %>>Other</option>
-                        </select>
-                    </div>
-                </div>
+<% end %>
 
-                <div class="row mt-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Age</label>
-                        <input type="number" class="form-control" name=record[patient_age] value="<%= record['patient_age'] %>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Birth Date</label>
-                        <input type="date" class="form-control" name=record[patient_birth_date] value="<%= record['patient_birth_date'] %>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Nationality</label>
-                        <input type="text" class="form-control" name=record[patient_nationality] value="<%= record['patient_nationality'] %>">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Diagnosis -->
-        <div class="card mb-3">
-            <div class="card-header bg-warning text-dark">Diagnosis</div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Diagnosis</label>
-                        <input type="text" class="form-control" name=record[diagnosis] value="<%= record['diagnosis'] %>">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Diagnosis ICD</label>
-                        <input type="text" class="form-control" name=record[diagnosis_icd] value="<%= record['diagnosis_icd'] %>">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Other Information -->
-        <div class="row">
-            <div class="col-md-4">
-                <label class="form-label">Admit</label>
-                <input type="text" class="form-control" name=record[admit] value="<%= record['admit'] %>">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Created At</label>
-                <input type="datetime-local" class="form-control" name=record[created_at] value="<%= record['created_at'] %>">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Updated At</label>
-                <input type="datetime-local" class="form-control" name=record[updated_at] value="<%= record['updated_at'] %>">
-            </div>
-        </div>
-
+    <div class="card-footer">
         <button type="submit" class="btn btn-primary mt-4">Submit Case</button>
+    </div>
     </form>
+    </div>
 </div>

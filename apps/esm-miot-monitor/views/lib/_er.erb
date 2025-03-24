@@ -5,3 +5,52 @@
         @application_main = "ER"
 
 %>  
+
+<style>
+        .patient-card {
+            border: 2px solid yellow;
+            border-radius: 10px;
+            padding: 15px;
+            margin: auto;
+        
+        }
+        .red-line {
+            height: 5px;
+            background-color: red;
+            margin: 5px 0;
+        }
+
+        .yellow-line {
+            height: 5px;
+            background-color: yellow;
+            margin: 5px 0;
+        }
+    </style>
+<script>
+  function darkenColor(hex, factor = 0.5) {
+    // Remove #
+    hex = hex.replace('#', '');
+
+    // Expand shorthand like #ccc → #cccccc
+    if (hex.length === 3) {
+        hex = hex.split('').map(ch => ch + ch).join('');
+    }
+
+    // Parse RGB
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+
+    // Apply darkening
+    const darken = c => Math.max(0, Math.min(255, Math.floor(c * (1 - factor))));
+
+    const rD = darken(r);
+    const gD = darken(g);
+    const bD = darken(b);
+
+    // Convert back to hex
+    const toHex = c => c.toString(16).padStart(2, '0');
+
+    return `#${toHex(rD)}${toHex(gD)}${toHex(bD)}`;
+}
+</script>

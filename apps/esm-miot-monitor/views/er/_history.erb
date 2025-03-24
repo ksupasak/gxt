@@ -1,0 +1,31 @@
+<%  
+
+    er_case = ERCase.find(params[:id])
+    admits = Admit.where(:patient_id=>er_case.patient_id).all
+
+
+%>
+<h4>History</h4>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>วันที่</th>
+        <th>ผู้บันทึก</th>
+        <th>ประเภท</th>
+        <th>รายละเอียด</th>
+      </tr> 
+    </thead>
+    <tbody>
+      <% admits.each do |admit| %>
+        <tr>
+          <td><%= admit.admit_stamp.strftime("%d/%m/%Y %H:%M") %></td> 
+          <td><%= admit.status %></td>
+          <td><%= admit.zone.name if admit.zone %></td>
+          <td><%= admit.bed.name if admit.bed %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+

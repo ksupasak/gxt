@@ -4,6 +4,7 @@ module EsmMiotMonitor
 class ERCase < GXTModel
   include Mongoid::Document
   belongs_to :admit, :class_name=>'EsmMiotMonitor::Admit'
+  belongs_to :patient, :class_name=>'EsmMiotMonitor::Patient'
   belongs_to :reimbursement, :class_name=>'EsmMiotMonitor::Reimbursement'
   belongs_to :provider, :class_name=>'EsmMiotMonitor::Provider'
   belongs_to :room, :class_name=>'EsmMiotMonitor::Room'
@@ -40,8 +41,7 @@ class ERCase < GXTModel
 
   key :patient_underlying, String
 
-  key :ems_type, String
-  key :ems_trauma, String
+  key :inbound, String
   key :scene_triage, String
 
   key :code_155, String
@@ -66,6 +66,14 @@ class ERCase < GXTModel
   key :special, String
 
   key :provider_id, ObjectId
+  key :provider_name, String
+  key :resident_id, ObjectId
+  key :resident_name, String
+  key :nurse_id, ObjectId
+  key :nurse_name, String
+  key :nurse_assistant_id, ObjectId
+  key :nurse_assistant_name, String
+
 
   key :room_id, ObjectId
   key :bed_id, ObjectId
@@ -75,6 +83,19 @@ class ERCase < GXTModel
   key :round_period, Integer
 
   key :referred_to, String
+
+  def self.notify context, options={}
+    zone = Zone.find(options[:zone_id])
+    path = "miot/#{context.settings.name}/z/#{zone.name}"
+    msg = 'NULL'
+    send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+puts send_msg
+res = context.settings.redis.publish(path, send_msg)
+puts res
+  end
 end
 
 class ERCaseController < GXTDocument

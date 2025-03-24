@@ -1,0 +1,15 @@
+       <% er_case = ERCase.find(params[:id]) 
+        admit = Admit.find(er_case.admit_id)
+       %>
+       
+        <a href="#" class="btn btn-success d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
+                    <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
+                    ถ่ายรูป
+                </a>
+			    <script>
+				    $('#image_capture_btn').click(function(){
+				
+					device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
+
+				    })
+			    </script>
