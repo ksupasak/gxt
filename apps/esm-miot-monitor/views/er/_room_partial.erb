@@ -17,14 +17,38 @@
 
         beds.each do |bed| 
         data = {}
+
+        need_update = false
         record = ERCase.where(:bed_id=>bed.id, :status=>'Admitted').first
+        update_in = 0
+
         if record
             admit = Admit.find(record.admit_id)
             patient = Patient.find(admit.patient_id)
             
-          
+            first_data_record = DataRecord.where({admit_id: admit.id}).sort(:stamp=>1).first
+            start_at = nil
+            start_at = first_data_record.stamp if first_data_record
+            
+            last_data_record = DataRecord.where({admit_id: admit.id}).sort(:stamp=>-1).first
+               if last_data_record
+                    data = last_data_record
+                else
+                    data = {}
+                end
 
-            last_data_record = DataRecord.where({admit_id: admit.id}).sort(:stamp=>1).first
+            unless start_at
+                need_update = true
+            else
+                update_in = current_room.round_period*(1-(((Time.now - start_at).to_f/current_room.round_period/60).to_f - ((last_data_record.stamp - start_at).to_f/current_room.round_period/60).to_f))
+                if (Time.now - start_at).to_f/current_room.round_period/60 -(last_data_record.stamp - start_at).to_f/current_room.round_period/60 > 1
+                    need_update = true
+                end
+
+            end
+
+
+
             if last_data_record
                 data = last_data_record
             else
@@ -48,8 +72,8 @@
   <%
                 station = Station.find(admit.station_id)
  %>
-    <a href="show?id=<%=record.id if record%>">   
-    <div class="card  m-2  patient-card  <%='station-'+station.name if station%> room-<%=current_room.name%>" style="background-color: <%=current_room.bg_color%>;">
+    <a href="show?id=<%=record.id if record%>">  
+    <div class="card <%='border-start border-0 border-3 border-danger' if need_update%> m-2  patient-card  <%='station-'+station.name if station%> room-<%=current_room.name%>" style="background-color: <%=current_room.bg_color%>;">
             <div class="row g-2 mb-2">
                 <div class="col-2">
                     <input type="text" class="form-control text-center" value="<%=bed.name%>" readonly>
@@ -64,14 +88,15 @@
             <div class="d-flex justify-content-between">
             <% if record and record.date %>
                 <span>IN <%=record.date.strftime("%H:%M")%></span>
+                <span>Update in <%=update_in.round(1)%> min</span>
                 <span>Stay <%=((Time.now - record.date) / 3600).round(1)%> Hr</span>
             <% else %>
                 <span>IN -</span>
                 <span>Stay -</span>
             <% end %>
             </div>
-            <div class=""></div>
-          
+            <div class=""> </div>
+        
             <input type="text" class="form-control text-center mb-2" value="<%=station.name if station%>" readonly>
             <div class="row g-2 mb-2">
                 <div class="col-3">
