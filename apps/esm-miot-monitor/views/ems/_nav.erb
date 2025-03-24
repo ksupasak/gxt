@@ -405,15 +405,8 @@
 					<div class="menu-title">New Request</div>
 				</a>
 			</li>
-			<li  class="meeting">
-				<a href="../EMSMeeting/index">
-					<div class=""><i class="bx bx-calendar "></i> </div>
 
-					<div class="menu-title">Meeting</div>
 					
-				</a>
-			</li>
-			
 			<li  class="">
 				<a href="./schedule">
 					<div class=""><i class="bx bx-calendar"></i> </div>
@@ -422,6 +415,15 @@
 				</a>
 			</li>
 
+			<li  class="meeting">
+				<a href="../EMSMeeting/index">
+					<div class=""><i class="bx bx-calendar "></i> </div>
+
+					<div class="menu-title">Meeting</div>
+					
+				</a>
+			</li>
+	
 		</li>
 		<li class="menu-label">History</li>
 		<li>
@@ -459,6 +461,25 @@
 				<%
 
 				cases = EMSCase.where(:completed_at=>{"$gte"=>Time.now-846000}).limit(5).sort(:case_no=>1).all()
+
+				%>
+				<% for i in cases %>
+				<li <%='class="mm-active" ' if i.id==params[:id]%> > <a href="show?id=<%=i.id%>"><i class="bx bx-right-arrow-alt"></i><%=i.case_no%></a>
+				</li>
+				<% end %>
+
+			</ul>
+		</li>
+				<li>
+			<a href="javascript:;" class="has-arrow">
+				<div class="parent-icon"><i class="bx bx-check-circle"></i>
+				</div>
+				<div class="menu-title">Clearance</div>
+			</a>
+			<ul class="mm-collapse">
+				<%
+
+				cases = EMSCase.where(:status=>'New',:request_at=>{'$lte'=>Time.now-76800} ).limit(20).sort(:case_no=>1).all()
 
 				%>
 				<% for i in cases %>
