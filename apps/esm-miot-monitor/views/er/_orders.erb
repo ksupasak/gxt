@@ -34,6 +34,7 @@
 <input type="hidden" name="id" value="<%= record.id %>">
 <div class="card">
   <div class="card-body">
+  <h4>Orders</h4>
     <div class="table-responsive">
       <table class="table table-hover" id="ordersTable">
         <thead>
@@ -122,40 +123,7 @@
 
 <style>
 /* ปรับสไตล์สำหรับแถวตามสถานะ */
-.status-row {
-  transition: all 0.3s ease;
-  border-left: 4px solid transparent;
-}
 
-.status-row[data-status="new"] {
-  background-color: #e3f2fd30;
-  border-left-color: #2196F3;
-}
-
-.status-row[data-status="pending"] {
-  background-color: #fff3e030;
-  border-left-color: #FF9800;
-}
-
-.status-row[data-status="processing"] {
-  background-color: #f3e5f530;
-  border-left-color: #9C27B0;
-}
-
-.status-row[data-status="waiting"] {
-  background-color: #efebe930;
-  border-left-color: #795548;
-}
-
-.status-row[data-status="completed"] {
-  background-color: #e8f5e930;
-  border-left-color: #4CAF50;
-}
-
-.status-row[data-status="cancel"] {
-  background-color: #ffebee30;
-  border-left-color: #F44336;
-}
 
 /* ปรับ select ให้เข้ากับแถว */
 .status-select {

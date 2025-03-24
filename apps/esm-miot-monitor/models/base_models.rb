@@ -1,10 +1,10 @@
 
-require_relative 'models/er_models'
-require_relative 'models/health_models'
-require_relative 'models/aoc_models'
-require_relative 'models/ems_models'
-require_relative 'models/emr_models'
-
+require_relative 'er_models'
+require_relative 'health_models'
+require_relative 'aoc_models'
+require_relative 'ems_models'
+require_relative 'emr_models'
+require_relative 'order_models'
 
 module EsmMiotMonitor
 
@@ -89,11 +89,13 @@ end
 class  Reimbursement  < GXTModel
   include Mongoid::Document
 
-  key :title_en,String
-  key :title_th ,String
+  key :name, String
+  key :code, String
   key :name_en, String
+  key :title_en,String
   key :name_th,String
-
+  key :title_th ,String
+  
   include Mongoid::Timestamps
 end  
 
@@ -266,12 +268,15 @@ class Room < GXTModel
 
   key :name, String
   key :title, String
+  key :room_no, String
+  key :code, String
   key :capacity, Integer
   key :zone_id, ObjectId
   key :color, String
 
   key :bg_color, String
   key :bg_class, String
+  key :round_period, Integer
 
 end
 
@@ -530,6 +535,7 @@ class AdmitLog  < GXTModel
   key :admit_id, ObjectId
   key :addressbook_id, ObjectId
   key :ems_command_id, ObjectId
+  key :ref_id, ObjectId
   key :type, String
   key :name, String
   key :code, String 
@@ -541,6 +547,8 @@ class AdmitLog  < GXTModel
   key :mile_meter, Integer
   key :sort_order, Float
   key :parent, Integer
+  key :previous_status, String
+  key :duration, Integer
   include Mongoid::Timestamps
   timestamps!
 end
@@ -694,10 +702,12 @@ class Patient  < GXTModel
   key :phone, String
   key :contact_name, String
   key :contact_phone, String
+  key :nationality, String
 
   key :hospital_id, ObjectId
   key :network_id, ObjectId
   key :zone_id, ObjectId
+
 
   key :picture, ObjectId
 

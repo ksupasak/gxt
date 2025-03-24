@@ -1,0 +1,137 @@
+<%
+    records = ERCase.where(:status=>'Admitted').all
+    admit_ids = records.map(&:admit_id)
+    admits = Admit.where(:id=>admit_ids).all
+    orders = EsmMiotMonitor::Order.where(admit_id: admits.map(&:id)).all
+    items = EsmMiotMonitor::OrderItem.where(order_id: orders.map(&:id), :status=>{'$nin'=>['cancel','completed']}).sort(:created_at=>1).all
+%>
+
+
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Orders</div>
+            <div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li>
+							</ol>
+						</nav>
+					</div>
+					<div class="ms-auto">
+                        <div class="btn-group">
+							     <button type="button" class="btn btn-warning">ERP</button>
+							<button type="button" class="btn btn-warning split-bg-warning dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                <a class="dropdown-item" href="../Product/index">Product</a>
+								<a class="dropdown-item" href="../ProductGroup/index">ProductGroup</a>
+								<div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="../Order/index">Order</a>
+                <a class="dropdown-item" href="../OrderItem/index">OrderItem</a>
+                
+							</div>
+                        
+                        </div>
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+				</div>
+<div class="card">
+    <div class="card-body">
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+        <thead>
+            <tr> <th>Bed</th>
+                <th>HN</th>
+                <th>ชื่อ-สกุล</th>
+                <th>Order No.</th>
+                <th>รายการ</th>
+                <th>จำนวน</th>
+                <th>สถานะ</th>
+             
+                <th>สร้างเมื่อ</th>
+                <th>แก้ไขเมื่อ</th>
+                <th>ระยะเวลา TAT</th>
+                <th>แก้ไขโดย</th>
+                <th>หมายเหตุ</th>
+            </tr>   
+        </thead>
+        <tbody>
+            <% for item in items 
+
+                    order = EsmMiotMonitor::Order.find(item.order_id)
+                    admit = EsmMiotMonitor::Admit.find(order.admit_id)
+                    patient = EsmMiotMonitor::Patient.find(admit.patient_id)
+                    record = ERCase.where(:admit_id=>admit.id).first
+
+            %>
+                <tr class="status-row" data-status="<%= item.status %>">
+                    <td style="background-color: <%= record.room.bg_color if record.room %>;"><%= record.bed.name if record.bed %></td>
+                    <td><%= patient.hn %></td>
+                    <td><%= patient.to_s %></td>
+                    <td><%= link_to order.order_number, "show?id=#{record.id if record}&tab=orders" %></td>  
+                    <td><%= item.product.name %></td>
+                    <td><%= item.quantity %></td>
+                    <td  class="status-row" data-status="<%= item.status %>"><%= item.status %></td>
+                   
+                    <td><%= item.created_at.strftime("%H:%M") %></td>
+                    <td><%= item.updated_at.strftime("%H:%M") %></td>
+                    <td><%= (Time.now - item.created_at).to_i/60 %> m </td>
+                    <td><%= item.updated_user %></td>
+                    <td><%= item.note %></td>
+
+                </tr>
+            <% end %>
+        </tbody>            
+    </table>
+    </div>
+</div>
+<style>
+
+.status-row {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.status-row[data-status="new"] {
+  background-color: #e3f2fd30;
+  border-left-color: #2196F3;
+}
+
+.status-row[data-status="pending"] {
+  background-color: #fff3e030;
+  border-left-color: #FF9800;
+}
+
+.status-row[data-status="processing"] {
+  background-color: #f3e5f530;
+  border-left-color: #9C27B0;
+}
+
+.status-row[data-status="waiting"] {
+  background-color: #efebe930;
+  border-left-color: #795548;
+}
+
+.status-row[data-status="completed"] {
+  background-color: #e8f5e930;
+  border-left-color: #4CAF50;
+}
+
+.status-row[data-status="cancel"] {
+  background-color: #ffebee30;
+  border-left-color: #F44336;
+}
+
+
+</style>

@@ -4,7 +4,6 @@
 %>
 <div class="card">
   <div class="card-body">
-    <form id="orderForm" action="<%=url_for("/#{settings.name}/Order/create")%>" method="POST">
       <input type="hidden" name="admit_id" value="<%=admit.id%>">
       
       <div class="row mb-3">
@@ -51,11 +50,9 @@
         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#productModal">
           <i class="fas fa-plus"></i> เพิ่มรายการ
         </button>
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-save"></i> บันทึก
-        </button>
+       
       </div>
-    </form>
+    
   </div>
 </div>
 
@@ -184,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <input type="text" name="order_items[][instruction]" class="form-control form-control-sm">
         </td>
         <td>
-          <button type="button" class="btn btn-sm btn-danger remove-item">
+          <button type="button" class="btn btn-sm btn-danger remove-item">&nbsp;
             <i class="fas fa-trash"></i>
           </button>
         </td>

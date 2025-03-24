@@ -515,10 +515,10 @@ a {
   display: -ms-flexbox;
   display:         flex;
 }
-.row > [class*='col-'] {
+/* .row > [class*='col-'] {
 	 display: flex;
 	 flex-direction: column;
-}
+} */
 
 .station .pr{color:#00b3b7;
 

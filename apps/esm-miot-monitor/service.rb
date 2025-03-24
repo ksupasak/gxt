@@ -1034,7 +1034,7 @@ MSG
        headers = t[0].split()
        body = t[1..-1].join("\n")
        cmd = headers[0]
-
+       puts "cmd : #{cmd}"
 
        case cmd
 
