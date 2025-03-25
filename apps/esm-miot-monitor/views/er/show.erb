@@ -2,6 +2,7 @@
     @record = ERCase.find(params[:id])
     @admit = Admit.find(@record.admit_id)
     @patient = Patient.find(@admit.patient_id)
+    room = Room.find(@admit.bed.room_id)
 %>
 
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -9,9 +10,27 @@
 					<div class="ps-3">
 						<nav aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0 p-0">
-								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+								<li class="breadcrumb-item">
+                                    <% if room %>
+                                    <a href="room?id=<%=room.id%>">
+                                       <%=room.title%>
+                                    </a>
+                                    <% else %>
+                                    <a href="javascript:;">
+                                        <i class="bx bx-home-alt"></i>
+                                    </a>
+                                    <% end %>
+                                    
 								</li>
-								<li class="breadcrumb-item active" aria-current="page"></li>
+								<li class="breadcrumb-item active" aria-current="page">
+                                
+                                 <a href="show?id=<%=@record.id%>">
+                                       <%=@record.case_no%>
+                                    </a>
+                                </li>
+
+
+
 							</ol>
 						</nav>
 					</div>

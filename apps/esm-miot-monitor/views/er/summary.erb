@@ -32,7 +32,7 @@
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">patient type</h5>
+            <h5 class="card-title">ประเภทผู้ป่วย</h5>
             <div id="chart-patient-type"></div>
           </div>
         </div>
@@ -56,7 +56,7 @@
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">สิทธิ์</h5>
+            <h5 class="card-title">สิทธิ์การรักษา</h5>
             <div id="chart-rights"></div>
           </div>
         </div>
@@ -65,32 +65,37 @@
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Today</h5>
-            <div class="highlight">30</div>
+            <h5 class="card-title">วันนี้</h5>
+            <div class="highlight"><%= case_today_records %></div>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Week</h5>
-            <div class="highlight">40</div>
+            <h5 class="card-title">สัปดาห์นี้</h5>
+            <div class="highlight"><%= case_today_records %></div>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Month</h5>
-            <div class="highlight">60 +20%</div>
+            <h5 class="card-title">เดือนนี้</h5>
+            <div class="highlight">
+              <%= case_thismonth_records %>
+              <small class="text-<%= case_thismonth_records > case_thismonth_records ? 'success' : 'danger' %>">
+                (<%= case_thismonth_records > case_thismonth_records ? '+' : '' %><%= ((case_thismonth_records - case_thismonth_records) / case_thismonth_records) * 100 %>%)
+              </small>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card text-center">
           <div class="card-body">
-            <h5 class="card-title">Year</h5>
-            <div class="highlight">325</div>
+            <h5 class="card-title">ปีนี้</h5>
+            <div class="highlight"><%= case_thisyear_records %></div>
           </div>
         </div>
       </div>
@@ -98,7 +103,7 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">24 hours</h5>
+            <h5 class="card-title">24 ชั่วโมงที่ผ่านมา</h5>
             <div id="chart-24h"></div>
           </div>
         </div>
@@ -114,36 +119,38 @@
 
       <!-- Triage Section -->
       <div class="col-md-3">
-        <div class="card bg-danger-subtle text-center">
-          <div class="card-body">
-            <h5 class="card-title">Current</h5>
-            <div class="highlight">3</div>
-            <p>Max : 30m<br>Total : 5 cases</p>
+        <div class="card triage-card triage-red">
+          <div class="card-body text-center">
+            <h5 class="card-title">Red</h5>
+            <div class="highlight"><%= case_today_records %></div>
+            <p>
+              สูงสุด: 30m<br>
+              รวม: <%= case_today_records %> ราย
+            </p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card bg-primary-subtle text-center">
-          <div class="card-body">
-            <h5 class="card-title">Triage</h5>
-            <div class="highlight">12</div>
-            <p>Max : 30m<br>Total : 5 cases</p>
+        <div class="card triage-card triage-yellow">
+          <div class="card-body text-center">
+            <h5 class="card-title">Yellow</h5>
+            <div class="highlight"><%= case_today_records %></div>
+            <p>
+              สูงสุด: 30m<br>
+              รวม: <%= case_today_records %> ราย
+            </p>
           </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card bg-warning-subtle text-center">
-          <div class="card-body">
-            <div class="highlight">3</div>
-            <p>Max : 30m<br>Total : 5 cases</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card bg-success-subtle text-center">
-          <div class="card-body">
-            <div class="highlight">3</div>
-            <p>Max : 30m<br>Total : 5 cases</p>
+        <div class="card triage-card triage-green">
+          <div class="card-body text-center">
+            <h5 class="card-title">Green</h5>
+            <div class="highlight"><%= case_today_records %></div>
+            <p>
+              สูงสุด: 30m<br>
+              รวม: <%= case_today_records %> ราย
+            </p>
           </div>
         </div>
       </div>

@@ -4,15 +4,24 @@
                 <div class="col-md-6">
                     <h4>Case Details</h4>
                     <div class="row">
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Case No</label>
                         <input type="text" class="form-control" name="record[case_no]" value="<%= record['case_no'] %>">
                     </div>
-                    <div class="mb-3 col-md-6">
+                    <div class="mb-3 col-md-4">
                         <label class="form-label">Case Type</label>
                         <select class="form-select" name="record[case_type]">
                             <% ['EMS', 'Refer','Walk-in'].each do |option| %>
                                 <option value="<%= option %>" <%= 'selected' if record['case_type'] == option %>><%= option %></option>
+                            <% end %>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" name="record[department]">
+                            <option value="">-</option>
+                            <% ERDepartment.all.each do |department| %>
+                                <option value="<%= department.name %>" <%= 'selected' if record['department'] == department.name %>><%= department.name %></option>
                             <% end %>
                         </select>
                     </div>
@@ -138,7 +147,28 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label class="form-label">Remark</label>
-                        <textarea class="form-control" name="record[remark]"><%= record['remark'] %></textarea>
+                        <div class="input-group voice-input-group">
+                            <textarea class="form-control" 
+                                      name="record[remark]" 
+                                      id="remarkText"><%= record['remark'] %></textarea>
+                            <button class="btn btn-outline-secondary start-recording" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="btn btn-outline-danger stop-recording d-none" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="btn btn-outline-warning clear-text" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div id="remarkLiveTranscript" class="form-text text-primary"></div>
+                        <small class="text-muted" id="remarkStatus"></small>
                     </div>
                 </div>
 
@@ -546,5 +576,37 @@
 .btn-primary.position-fixed:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* เพิ่ม CSS สำหรับปุ่มบันทึกเสียง */
+.voice-input-group .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.voice-input-group .btn i {
+    font-size: 1rem;
+}
+
+#remarkLiveTranscript {
+    min-height: 20px;
+    margin-top: 5px;
+}
+
+.voice-input-group .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.voice-input-group .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.voice-input-group .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: black;
 }
 </style>
