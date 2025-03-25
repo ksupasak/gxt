@@ -1,0 +1,184 @@
+<%
+
+    	
+    record = ERCase.find params[:id]
+	admit = Admit.find record.admit_id
+	patient = admit.patient
+
+
+
+%>
+<style>
+.field-item{
+	margin-bottom:20px
+}
+	</style>
+<%
+
+
+		 # tranexamic  interhospital_ecmo_transport opioil_overdose copd_with_acute anaphylaxis bradycardia status_eplilepticus
+		list = %w{primary_survey secondary_survey  cpr_record  trauma non_trauma cardiac_arrest stroke stemi sepsis  intubation patient_assessment }
+
+		list.each_with_index do |i,ix|
+
+			doc = EMRDocument.where(:name=>i).first
+
+			unless doc
+
+					doc = EMRDocument.create(:name=>i, :title=>i.humanize, :sort_order=>ix)
+
+			end
+
+
+		end
+
+
+		documents = EMRDocument.where({}).sort(:sort_order=>1).all
+
+%>
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+					<div class="breadcrumb-title pe-3">EMR </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<!-- <ol class="breadcrumb mb-0 p-0">
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>request</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong class="">Command</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Pre Arrival</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Assessment</strong></a>
+								</li>
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>EMR</strong></a>
+								</li>
+
+								<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i>
+								<strong>Discharge</strong></a>
+								</li>
+
+							</ol> -->
+
+
+						</nav>
+					</div>
+
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Settings</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">	<a class="dropdown-item" href="javascript:;">Action</a>
+								<a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a>
+							</div>
+						</div>
+					</div>
+</div>
+<div class="row">
+<div class="col-lg-8">
+<div id="emr-panel">
+</div>
+</div>
+
+<div class="col-lg-4">
+<div class="card">
+<div class="card-header bg-primary text-white">
+Offline protocol
+</div>
+
+<div class="card-body">
+<div class="accordion accordion-flush">
+<% for doc in documents %>
+
+	<div class="accordion-item">
+	<div class="accordion-body">
+
+
+		<%
+				records = EMRRecord.where(:case_id=>record.id, :document_id=>doc.id).all
+				if records.size == 0
+		%>
+
+   	<a href="<%= '../EmsEMR/create'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>" class="btn btn-outline-info  emr-create-btn">+ <%=doc.title%></a>
+
+
+   <% else %>
+
+
+		<!-- <div class="accordion"> -->
+			<% for i in records %>
+			<div class="accordion-item">
+			<a href="<%=get_path 'update'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>&id=<%=i.id%>"
+				class="btn btn-info text-dark emr-update-btn">
+					<%=doc.title%>
+				 <%=i.stamp.strftime('%d/%m/%Y %H:%M') if i.stamp%></a>
+			</div>
+			<% end %>
+		<!-- </div> -->
+  <% end %>
+
+	</div>
+	</div>
+<% end %>
+</div>
+</div><!--card-body-->
+</div><!--card-->
+</div><!--col-->
+</div><!--row-->
+
+<script>
+	$('.emr-create-btn').click(function(e){
+
+		$.ajax({
+			url: $(this).attr('href') ,
+			context: document.body
+		}).done(function(html) {
+
+			$( '#emr-panel' ).html(html);
+		});
+
+		e.preventDefault();
+
+	})
+	$('.emr-update-btn').click(function(e){
+
+		$.ajax({
+			url: $(this).attr('href') ,
+			context: document.body
+		}).done(function(html) {
+
+			$( '#emr-panel' ).html(html);
+		});
+
+		e.preventDefault();
+
+	})
+</script>
+
+<script>
+	$('.datepicker').pickadate({
+		selectMonths: true,
+				selectYears: true
+	}),
+	$('.timepicker').pickatime()
+</script>
+<script>
+	$(function () {
+		$('#date-time').bootstrapMaterialDatePicker({
+			format: 'YYYY-MM-DD HH:mm'
+		});
+		$('#date').bootstrapMaterialDatePicker({
+			time: false
+		});
+		$('#timex').bootstrapMaterialDatePicker({
+			date: false,
+			format: 'HH:mm'
+		});
+	});
+</script>

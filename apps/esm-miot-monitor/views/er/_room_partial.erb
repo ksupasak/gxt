@@ -11,7 +11,6 @@
 
 
     <div class="row gy-4">
-    <div class="d-flex flex-wrap justify-content-start">
     <%  
         beds = Bed.where(:room_id=>current_room.id).sort(:name=>1).all
 
@@ -66,14 +65,18 @@
         border: 2px solid yellow;
         border-radius: 10px;
         padding: 15px;
-        max-width: 500px;
+        max-width: 700px;
+        min-height:22vh;
+      
+        
     }
 </style>
   <%
-                station = Station.find(admit.station_id)
+    station = Station.find(admit.station_id)
  %>
-    <a href="show?id=<%=record.id if record%>">  
-    <div class="card <%='border-start border-end  border-0 border-3 border-danger' if need_update%> m-2  patient-card  <%='station-'+station.name if station%> room-<%=current_room.name%>" style="background-color: <%=current_room.bg_color%>;">
+    <a href="show?id=<%=record.id if record%>" class="col-md-3">  
+
+    <div  class="card  <%='border-start border-end  border-0 border-3 border-danger' if need_update%> patient-card  <%='station-'+station.name if station%> room-<%=current_room.name%>" style="width:100%;background-color: <%=current_room.bg_color%>;">
             <div class="row g-2 mb-2">
                 <div class="col-2">
                     <input type="text" class="form-control text-center" value="<%=bed.name%>" readonly>
@@ -119,12 +122,12 @@
 
                 
             %>
-            <div class="row g-2">
+            <div class="row g-2" style="font-size: 0.8em">
                 <% for item in items[0..3] 
                     product = item.product
                 %>
                 <div class="col-3"> 
-                    <button class="btn btn-light w-100"><%=product.name%><br/><span class="badge bg-secondary "><%=item.status%> <%=item.created_at.strftime("%H:%M")%></span></button>
+                    <button class="btn btn-light w-100"><%=product.name%><br/><span class="badge bg-secondary " style="font-size: 0.8em"><%=item.status%> </span></button>
                 </div>
                 <% end %>
                 
@@ -133,7 +136,7 @@
    
     </a>
 <% end %>
-    </div>
+
     
    <center> <%= Time.now %> </center>
     
