@@ -57,7 +57,7 @@ def self.connect
   begin
     
     ssl_context = OpenSSL::SSL::SSLContext.new
-    ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE  # ⚠️ Not safe for production
+    ssl_context.verify_mode = OpenSSL::SSL::VERIFY_PEER  # ⚠️ Not safe for production
     ssl_context.min_version =  OpenSSL::SSL::TLS1_2_VERSION
     return   WebSocket::Client::Simple.connect connect_url, ssl: ssl_context
   
