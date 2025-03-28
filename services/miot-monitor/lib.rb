@@ -56,7 +56,10 @@ def self.connect
   loop do 
   begin
     
-    return   WebSocket::Client::Simple.connect connect_url
+    ssl_context = OpenSSL::SSL::SSLContext.new
+    ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE  # ⚠️ Not safe for production
+
+    return   WebSocket::Client::Simple.connect connect_url, ssl: ssl_context
   
   rescue Exception => e
     sleep 5
