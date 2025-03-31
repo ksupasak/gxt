@@ -236,7 +236,7 @@ def self.registered(app)
 
                     puts "Dis = #{dis}"
                     
-                    if route.last_location == nil or dis > 0.05 #  and i.last_speed and
+                    if route.last_location == nil or dis > 0.1 #  and i.last_speed and
                       
                       
 

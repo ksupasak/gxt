@@ -616,11 +616,19 @@
 							<div class="col-6 col-xl-3">
 								<p class="px-3">
 									Case type :
+									<%
+									license_package = Setting.get(:license_package)
+									if license_package == 'EMS'
+										case_types = %w{EMS}
+									else
+										case_types = %w{EMS Refer Service}
+									end
+									%>
 								</p>
 								<select class="form-select mb-3" name='record[case_type]' aria-label="Default select example">
-									<option <%='selected=""' if record.case_type=='EMS' %> value="EMS">EMS</option>
-									<option <%='selected=""' if record.case_type=='Refer' %>value="Refer">Refer</option>
-									<option <%='selected=""' if record.case_type=='Service' %>value="Service">Service</option>
+									<% for case_type in case_types %>
+										<option <%='selected=""' if record.case_type==case_type %> value="<%=case_type%>"><%=case_type%></option>
+									<% end %>
 								</select>
 							</div>
 							<div class="col-6 col-xl-3">
@@ -693,11 +701,15 @@
 							</div>
 							
 							
+							<%
+
+							if license_package != 'EMS'
 							
+							%>
 							<div class="col-12 col-xl-12">
-							
-								<hr/>
+							<hr/>
 							</div>
+												
 							<div class="col-6 col-xl-3">
 							<p class="px-3">From Date</p>
 							<input name='record[schedule_from]'  id="schedule_from" data-value="<%=record.schedule_from.strftime('%Y-%m-%d') if record.schedule_from %>"  class="form-control datepicker mb-3" type="text" placeholder="วัน" aria-label="default input example">
@@ -718,6 +730,7 @@
 							<input name='record[schedule_to_time]' id="schedule_to_time"  data-value="<%=record.schedule_to.strftime('%H:%M') if record.schedule_to%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
 							</div>
 							
+							<% end %>
 
 	<script>
 
