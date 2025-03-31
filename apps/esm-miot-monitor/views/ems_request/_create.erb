@@ -58,6 +58,7 @@ if params[:record]
 
 	type = 'EMS'
 	type = 'REF' if p[:case_type] == 'Refer'
+	type = 'SER' if p[:case_type] == 'Service'
 	
 	counter_key = Time.now.strftime("#{type}-%y%m")
 

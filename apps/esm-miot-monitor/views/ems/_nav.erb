@@ -324,7 +324,13 @@
 		<% end %>
 	
 		<%
+			
 			menus = %w{EMS Refer Service}
+			license_package = Setting.get(:license_package)
+			if license_package == 'EMS'
+				menus = %w{EMS}
+			end
+
 			cls_menus = %w{red yellow green}
 			all_cases = EMSCase.where(:status=>{'$in'=>['New', 'Schedule']}, '$or'=>[{:request_at=>{'$gte'=>Time.now-76800}},{:schedule_from=>{'$lte'=>Time.now+76800,'$gte'=>Time.now-76800}}]).sort(:case_no=>-1).all()
 			

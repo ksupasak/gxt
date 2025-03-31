@@ -237,9 +237,9 @@ cls = record.init_code.get_class if code
 								user = User.find record.user_id
 
 							    %>
-								EMD : <%=  user.login if user%>
-								Channel : <%=record.channel.name if record.channel%>
-
+								EMD : <%=  record.user.login if record.user%>, 
+								Channel : <%=record.channel.name if record.channel%><br/>
+								GPS : <%=format("%0.1f",record.gps_distance/1000) if record.gps_distance%> km <%=format("%0.1f",record.gps_duration/60) if record.gps_duration	%> min
 
 
 						</div>

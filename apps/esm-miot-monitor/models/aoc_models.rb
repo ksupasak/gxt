@@ -24,10 +24,10 @@ module EsmMiotMonitor
     key :departure_log_id, ObjectId
     key :arrival_log_id, ObjectId
 
-    key :est_distance, Integer # km
-    key :est_duration, Integer # min
-    key :act_distance, Integer
-    key :act_duration, Integer
+    key :est_distance, Float   # km
+    key :est_duration, Float # min
+    key :act_distance, Float
+    key :act_duration, Float
     
     key :last_location, String
     key :last_cal, Time

@@ -25,8 +25,17 @@
 		admit_log.update_attributes :stamp=>Time.now, :mile_meter=>plog.mile_meter, :status=>"COMPLETED"
 
 		to_route = AocCaseRoute.where(:departure_log_id=>admit_log.id).first
-		to_route.update_attributes :status=>'STARTED' if to_route
 
+		if to_route
+			to_route.update_attributes :status=>'STARTED'
+
+			key = Setting.get(:google_api_key)
+			direction = google_direction(ambulance.last_location, to_route.stop_latlng, key)
+
+			if direction[:status]=='200 OK'
+				to_route.update_attributes :est_distance=>direction[:total_distance][:value], :est_duration=>direction[:total_duration][:value], :act_distance=>direction[:total_distance][:value], :act_duration=>direction[:total_duration][:value]
+			end
+		end
 
 		from_route = AocCaseRoute.where(:arrival_log_id=>admit_log.id).first
 		from_route.update_attributes :status=>'COMPLETED' if from_route
