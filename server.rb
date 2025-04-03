@@ -35,8 +35,17 @@ require 'sinatra/asset_pipeline'
   # register Sinatra::Sprockets::Helpers
 
 
-
+  require 'sprockets'
+  require 'sassc'
+  require 'uglifier'
   
+  assets = Sprockets::Environment.new
+  assets.append_path 'rocker/assets/stylesheets'
+  assets.append_path 'rocker/assets/javascripts'
+  assets.js_compressor  = :uglifier
+  assets.css_compressor = :scss
+  
+ 
   register Sinatra::AssetPipeline
 
    # set :environment, :production
@@ -106,6 +115,10 @@ require 'sinatra/asset_pipeline'
          settings.assets["#{image}.#{format}"]
        end
      end
+
+ 
+
+
    end
   
   
@@ -219,6 +232,12 @@ end
 
 
 use Assets
+
+
+get '/assets' do
+  puts 'assets rocker'
+  run assets
+end
 
 # =========================================
 require_relative 'lib'

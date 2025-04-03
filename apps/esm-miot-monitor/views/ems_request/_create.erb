@@ -98,6 +98,9 @@ if params[:record]
 	
 	record = EMSCase.create p
 
+	record.relocation_target p[:latlng]	if p[:latlng]
+
+
 	counter.update(:count=>counter.count+1)
 
   if line_noti = Setting.get('line_access_code') and @current_user.status=='Active'
@@ -165,7 +168,6 @@ end
 	
 	@ems_case.location = params[:location] if params[:location]
 	@ems_case.latlng = params[:latlng] if params[:latlng]
-	
 	now = Time.now
 	
 

@@ -21,11 +21,8 @@ if params[:record]
 	# if location change then notify
 
 	if p[:latlng] != record.latlng
-
-			record.relocation_target p[:latlng]
-
-
-			
+		puts 'relocation_target'
+		record.relocation_target p[:latlng]
 
 	end
 
