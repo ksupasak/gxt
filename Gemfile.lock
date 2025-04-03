@@ -243,6 +243,10 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    sassc (2.4.0)
+      ffi (~> 1.9)
+    sassc (2.4.0-x64-mingw32)
+      ffi (~> 1.9)
     signet (0.18.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -294,6 +298,8 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
+    uglifier (4.2.1)
+      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
@@ -347,6 +353,7 @@ DEPENDENCIES
   roo
   rqrcode
   sass
+  sassc
   sinatra
   sinatra-asset-pipeline
   sinatra-cross_origin
@@ -356,6 +363,7 @@ DEPENDENCIES
   sinatra-websocket
   sprockets
   thin
+  uglifier
   websocket-client-simple
   wkhtmltopdf-binary
   xmpp4r
