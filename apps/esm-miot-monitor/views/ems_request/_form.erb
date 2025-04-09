@@ -316,7 +316,7 @@
 					<p class="px-3">
 
 						<span class="t" t="record_patient_underlying">Underlying Disease</span>
-						'
+						
 					<span class="" style="float:right" >
 						<a href="#" class="btn btn-info btn-sm" id="select-underlying" data-bs-toggle="modal" data-bs-target="#selectUnderlyingModal">เลือก</a>
 					</span>
@@ -392,6 +392,14 @@
 </div>
 
 </div>
+
+
+	<div class="col-6 ">
+	<p class="px-3">Time Stamp</p>
+	<input name='record[start_at]' id="start_at" data-value="<%=record.start_at.strftime('%H:%M:%S') if record.start_at%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
+	</div>
+
+
 </div>
 
 <div class="row">
@@ -732,6 +740,9 @@
 							
 							<% end %>
 
+						
+
+
 	<script>
 
 		$('#schedule_from').pickadate({
@@ -769,7 +780,20 @@
             }
         }
 		})
-		$('.timepicker').pickatime()
+		// $('.timepicker').pickatime()
+
+		$('.timepicker').pickatime({
+			interval: 1,
+			editable: true,
+       		onStart: function() {
+            var defaultDate = $('#date').data('value'); // Get the default date from data-value
+		
+            if (defaultDate) {
+                this.set('select', defaultDate, { format: 'hh:mm' });
+            }
+        }
+		})
+
 	</script>
 
 			

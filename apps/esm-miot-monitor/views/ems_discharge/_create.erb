@@ -52,37 +52,54 @@ Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params
 #c1 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ออกจากโรงพยาบาล', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>6
 #c2 = AdmitLog.create :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'ถึงฐาน', :latlng=>ambu.last_location, :status=>'PENDING', :note=>'', :sort_order=>7, :parent=>6
 #r3 = AocCaseRoute.create :ems_command_id=>record.id,:admit_id=>admit.id, :address=>'ฐาน', :departure_log_id=> c1.id, :arrival_log_id=>c2.id, :start_latlng=>nil, :stop_latlng=>ambu.last_location, :sort_order=>20, :status=>'SCHEDULED'
+
+
+	if ems_case.start_at
+		ems_case.dispatch_time = format('%.01f',(ems_case.created_at-ems_case.start_at)/60.0) 
+	end
+
+	%>
+	<%= ems_case.start_at %> - <%= ems_case.created_at %>
+	<%
 begin
-	
-command = EMSCommand.where(:case_id=>record.id).first
+
+	command = EMSCommand.where(:case_id=>record.id).first
+
 if command
 
+   # สั่งการ
     log1 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>1).first
 
-    ems_case.dispatch_time = format('%.01f',(log1.stamp-ems_case.created_at)/60.0)
+    ems_case.dispatch_time = format('%.01f',(log1.stamp-ems_case.created_at)/60.0)  unless ems_case.dispatch_time
 
-
+	# ออกฐาน
     log2 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>2).first
 
-    ems_case.activation_time = format('%.01f',(log2.stamp-log1.stamp)/60.0)
+    ems_case.activation_time = format('%.01f',(log2.stamp-log1.stamp)/60.0) if log2 and log1
 
+	# ถึงที่เกิดเหตุ	
     log3 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>3).first
 
-    ems_case.response_time = format('%.01f',(log3.stamp-ems_case.created_at)/60.0)
+    ems_case.response_time = format('%.01f',(log3.stamp-ems_case.created_at)/60.0) if log3
 
 	if ems_case.case_type == 'EMS'
-	
+
+	# ออกจากที่เกิดเหตุ	
     log4 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>4).first
 
-    ems_case.onscene_time = format('%.01f',(log4.stamp-log3.stamp)/60.0)
 
+    ems_case.onscene_time = format('%.01f',(log4.stamp-log3.stamp)/60.0) if log4 and log3
+	
+	# ถึงโรงพยาบาล	
     log5 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>5).first
 
-    ems_case.transfer_time = format('%.01f',(log5.stamp-log4.stamp)/60.0)
+    ems_case.transfer_time = format('%.01f',(log5.stamp-log4.stamp)/60.0) if log5 and log4
 	
 	end
-	
-    ems_case.total_time = format('%.01f',(Time.now-ems_case.created_at)/60.0) unless  ems_case.total_time 
+	# ถึงฐาน
+    log6 = AdmitLog.where(:ems_command_id=>command.id, :sort_order=>7).first
+
+    ems_case.total_time = format('%.01f',(log6.stamp-ems_case.created_at)/60.0) if log6
 	
 
 end

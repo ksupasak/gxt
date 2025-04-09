@@ -34,6 +34,12 @@ end
 
 class EmsEMRController < GXTDocument
 
+  def acl
+
+    return {:webhook=>'*'}
+
+  end
+
 end
 
 

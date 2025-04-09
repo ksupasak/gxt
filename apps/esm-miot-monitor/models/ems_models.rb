@@ -92,6 +92,7 @@ class EMSCase < GXTModel
   key :dispatch_unit_id, ObjectId
   key :dispatch_unit_at, DateTime
 
+  key :start_at, DateTime
   key :request_at, DateTime
   
   
