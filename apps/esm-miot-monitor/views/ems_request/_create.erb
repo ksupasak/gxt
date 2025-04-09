@@ -169,7 +169,7 @@ end
 	@ems_case.location = params[:location] if params[:location]
 	@ems_case.latlng = params[:latlng] if params[:latlng]
 	now = Time.now
-	
+	@ems_case.start_at = now
 
 	
 

@@ -163,7 +163,11 @@ emd = true if  params[:side]=='emd'
 	<% if params[:side]=='request' %>
 	<div   class="col-12 custom-height" style=""  >
 		<app-root>
-        <openvidu-webcomponent style=""></openvidu-webcomponent>
+        <openvidu-webcomponent style=""
+		 prejoin="false"
+ 		 video-muted="true"
+		
+		></openvidu-webcomponent>
 		</app-root>
 		<ov-videoconference [tokens]="tokens">
 		  <div *ovToolbar style="text-align: center;">
