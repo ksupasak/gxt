@@ -1174,7 +1174,7 @@ modal('#modal_notification')
   ws.onopen    = function()  { show('websocket opened');
 
   	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*",  "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>"]')
 // "ZoneUpdate zone_id=*",
   // "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", 
 
@@ -1327,7 +1327,7 @@ modal('#modal_notification')
 
     if(lines[0].split(" ")[0]=='Zone.Message'){
 
-			// reload_message()
+			window.location.reload(true); 
 
 	}else{}
 	
