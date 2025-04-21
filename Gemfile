@@ -74,6 +74,11 @@ gem 'rack-ssl-enforcer'
 gem 'wkhtmltopdf-binary'
 
 
+# Gemfile
+
+gem 'uglifier'      # สำหรับ JS minification
+gem 'sassc'
+
 gem 'googleauth'
 gem 'google_drive' , "3.0.7"
 gem 'google-cloud-translate-v2'

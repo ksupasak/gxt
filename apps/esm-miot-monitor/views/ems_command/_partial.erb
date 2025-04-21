@@ -153,20 +153,20 @@
 												<br/>
 												
 												<p class="mb-3">
-												GPS Distance (km) / Duration (mins)
+												GPS Distance (km) / Duration (min)
 											    </p>
 												<div class="row">
 													
 												
 												<div class=" col-6">
 												<div class="input-group">
-												<input type="text" name="gps_distance" id="gps_distance" value="<%=ems_case.gps_distance%>" class="form-control"/>
+												<input type="text" name="gps_distance" id="gps_distance" value="<%=format("%0.3f",ems_case.gps_distance/1000) if ems_case.gps_distance%>" class="form-control"/>
 												</div>
 												</div>
 													
 												<div class=" col-6">
 												<div class="input-group">
-												<input type="text" name="gps_duration" id="gps_duration" value="<%=ems_case.gps_duration%>" class="form-control" />
+												<input type="text" name="gps_duration" id="gps_duration" value="<%=format("%0.3f",ems_case.gps_duration/60) if ems_case.gps_duration%>" class="form-control" />
 												</div>
 												</div>
 												

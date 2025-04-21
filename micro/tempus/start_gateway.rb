@@ -90,7 +90,8 @@ def run(opts)
        
     rescue Exception=>e
       
-      puts e
+      puts "Error during processing: #{$!}"
+      puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
       
       gw.refresh_token
       
@@ -262,7 +263,9 @@ while(true)
 begin
 
   run app: HelloApp.new
-rescue
+rescue Exception=>e
+   puts "Error during processing: #{$!}"
+  puts "Backtrace:\n\t#{e.backtrace.join("\n\t")}"
   puts 'RESET'
 end
 sleep(1)

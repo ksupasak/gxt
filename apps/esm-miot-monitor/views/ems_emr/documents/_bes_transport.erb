@@ -14,6 +14,8 @@
   
   # Define the API URL
   url = URI("#{host}/api/templates")
+
+  puts url
   # Initialize Net::HTTP with SSL enabled
   http = Net::HTTP.new(url.host, url.port)
   http.use_ssl = true
@@ -24,6 +26,8 @@
   req["X-Auth-Token"] = Setting.get('docuseal_token')
   
   response = http.request(req)
+
+  puts response.body
 
   parsed_data = JSON.parse(response.body)
   template = nil
@@ -55,12 +59,22 @@
 	  req = Net::HTTP::Get.new(url)
 	  req["Content-Type"] = "application/json"
 	  req["X-Auth-Token"] = Setting.get('docuseal_token')
-  
+	  
 	  response = http.request(req)
 
-	  parsed_data = JSON.parse(response.body)
+	  body = response.body
+      puts body
+	  parsed_data = JSON.parse(body)
+	  if parsed_data['data'] and parsed_data['data'].size>0 
+	   
+		if parsed_data['data'].collect{|i| i if i['archived_at'] == nil }.compact.size>0
+	   
+		last_slug = parsed_data['data'][0]['submitters'][0]['slug']
+		url = URI("#{host}/s/#{last_slug}")
+
+		end
 	  
-	  
+	  end
 	  
    end
   
@@ -201,7 +215,7 @@
 		
 		
 		obj['actual_departure_time'] = logs['active_at'].stamp.strftime("%H:%M:%S") if logs['active_at']
-		obj['actual_departure_mile'] = logs['active_at'].mile_meterif if logs['active_at']
+		obj['actual_departure_mile'] = logs['active_at'].mile_meter  if logs['active_at']
 		
 		obj['arrival_scene_time'] = logs['response_at'].stamp.strftime("%H:%M:%S")  if logs['response_at']
 		obj['arrival_scene_mile'] = logs['response_at'].mile_meter  if logs['response_at']

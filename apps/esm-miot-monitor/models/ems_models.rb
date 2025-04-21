@@ -85,13 +85,14 @@ class EMSCase < GXTModel
   belongs_to :zone, :class_name=>'EsmMiotMonitor::Zone', foreign_key: 'zone_id'
   belongs_to :ambulance, :class_name=>'EsmMiotMonitor::Ambulance', foreign_key: 'ambulance_id'
 
-
+  belongs_to :user, :class_name=>'EsmMiotMonitor::User', foreign_key: 'user_id'
 
 
   key :user_id, ObjectId
   key :dispatch_unit_id, ObjectId
   key :dispatch_unit_at, DateTime
 
+  key :start_at, DateTime
   key :request_at, DateTime
   
   
@@ -341,6 +342,14 @@ class EMSCase < GXTModel
   end
 
   def relocation_target latlng
+
+      ambu = self.ambulance
+      key = Setting.get(:google_api_key)
+      direction = google_direction(ambu.last_location, latlng, key)
+
+      if direction[:status]=='200 OK'
+          self.update_attributes :gps_distance=>direction[:total_distance][:value], :gps_duration=>direction[:total_duration][:value]
+      end
 
       admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
       puts 'Relocat '+self.admit_id.to_s

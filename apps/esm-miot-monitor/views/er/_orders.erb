@@ -6,6 +6,7 @@
  
 
  if request.post?
+    updated = false
     params[:order_items].each_pair do |key, item|
 
         order_item = EsmMiotMonitor::OrderItem.find(key)
@@ -19,8 +20,14 @@
           new_status: item[:status],
           note: item[:note]
         )
+        updated |= true
+        
         end
     end
+    if updated
+        ERCase.notify @context, :zone_id=>admit.zone_id
+    end
+
     %>
     <meta http-equiv="refresh" content="0; url=show?id=<%= record.id %>" />
     <%

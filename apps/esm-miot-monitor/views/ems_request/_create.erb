@@ -58,6 +58,7 @@ if params[:record]
 
 	type = 'EMS'
 	type = 'REF' if p[:case_type] == 'Refer'
+	type = 'SER' if p[:case_type] == 'Service'
 	
 	counter_key = Time.now.strftime("#{type}-%y%m")
 
@@ -96,6 +97,9 @@ if params[:record]
 	
 	
 	record = EMSCase.create p
+
+	record.relocation_target p[:latlng]	if p[:latlng]
+
 
 	counter.update(:count=>counter.count+1)
 
@@ -164,9 +168,8 @@ end
 	
 	@ems_case.location = params[:location] if params[:location]
 	@ems_case.latlng = params[:latlng] if params[:latlng]
-	
 	now = Time.now
-	
+	@ems_case.start_at = now
 
 	
 

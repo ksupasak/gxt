@@ -24,6 +24,9 @@ class ERCase < GXTModel
 
   key :contact_phone, String
 
+  key :department, String
+
+
   key :patient_id, ObjectId
   key :patient_name, String
   key :patient_info, String
@@ -99,7 +102,12 @@ puts res
 end
 
 class ERCaseController < GXTDocument
-  
+
+  def acl
+
+    return {:room_board=>'*'}
+
+  end
 end
 
 class ERCaseReport < GXTModel
@@ -169,6 +177,17 @@ class ERCaseReport < GXTModel
   
 end
 
+class ERDepartment < GXTModel
+  include Mongoid::Document
+  key :name, String
+  key :code, String
+  key :color, String
+  
+end
+
+class ERDepartmentController < GXTDocument
+  
+end
 
 
 class ERCaseReportController < GXTDocument
