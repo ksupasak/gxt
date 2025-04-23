@@ -1,1 +1,153 @@
 <h1>Report</h1>
+
+<script>
+
+$(document).ready(function(){
+   console.log('okok')
+})
+</script>
+
+<%= inline(this,:'_lib')  %>
+
+
+<form id="data" >
+  <label>Start Date:</label>
+  <input type="date" name="start_date"  value="2025-04-08">
+  
+  <label>End Date:</label>
+  <input type="date" name="end_date"   value="2025-04-08">
+  
+  <label>Filter:</label>
+  <input type="text" name="filter"   value="">
+
+<br/>
+  <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div id="results"></div>
+
+<div class="">
+    
+<div class="card">
+<div class="card-body">
+<div class="row">
+    
+    <div class="col-md-6">
+        <div class="header">
+            <h3>Init CBD Color</h3>
+        </div>
+        <div id="chart_init_cbd_color" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="header">
+            <h3>Case Type</h3>
+        </div>
+         <div id="chart_case_type" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+        <div class="col-md-6">
+        <div class="header">
+            <h3>Patient Type</h3>
+        </div>
+         <div id="chart_patient_type" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+       <div class="col-md-6">
+        <div class="header">
+            <h3>Operation Result</h3>
+        </div>
+        <div id="chart_operation_result" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="header">
+            <h3>Case Shift</h3>
+        </div>
+        
+         <div id="chart_shift" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+
+       <div class="col-md-6">
+        <div class="header">
+            <h3>CBD Code</h3>
+        </div>
+        
+         <div id="chart_cbd_code" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+    
+
+</div>
+
+</div>
+<script>
+
+
+ 
+ 
+    core = init_report('data');
+    
+    
+    width = 300;
+    height = 300;
+    radius = Math.min(width, height) / 2;
+    
+    function callback(name, col, value){
+        console.log("filter "+name+" "+col+" "+value)
+
+        filter = ""+col+" "+value
+        process();
+    }
+    
+    core.setOptions({callback:callback})
+    
+    core.showBar("chart_init_cbd_color", "init_cbd_color", {'fill':'pattern'})
+    core.showDonut("chart_case_type", "case_type", {'fill':'orange'})
+    core.showBar("chart_patient_type", "patient_type", {'fill':'orange'})
+    core.showDonut("chart_operation_result", "operation_result", {'fill':'orange'})
+    core.showDonut("chart_shift", "shift", {'fill':'orange'})
+    core.showBar("chart_cbd_code", "cbd_code", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
+
+    filter = ""
+    
+    function process(){
+    console.log('process')          
+        const formData = {
+            start_date: $('input[name="start_date"]').val(),
+            end_date: $('input[name="end_date"]').val(),
+            filter: filter
+        };
+            console.log(formData)          
+
+        core.process(formData)
+        
+    }
+    
+    $('#data').on('submit', function (e) {
+       
+        e.preventDefault();
+        filter = ""
+        process();
+    
+    });
+    
+          
+
+</script>
+
+
+
+
+
+
