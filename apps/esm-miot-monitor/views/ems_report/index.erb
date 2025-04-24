@@ -12,13 +12,13 @@ $(document).ready(function(){
 
 <form id="data" >
   <label>Start Date:</label>
-  <input type="date" name="start_date"  value="2025-04-08">
+  <input type="date" name="start_date"  value="<%=Time.now.beginning_of_year.strftime("%Y-%m-%d")%>">
   
   <label>End Date:</label>
-  <input type="date" name="end_date"   value="2025-04-08">
+  <input type="date" name="end_date"   value="<%=Time.now.strftime("%Y-%m-%d")%>">
   
   <label>Filter:</label>
-  <input type="text" name="filter"   value="">
+  <input type="hidden" name="filter"   value="">
 
 <br/>
   <button type="submit" class="btn btn-primary">Search</button>
