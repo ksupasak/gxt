@@ -301,7 +301,7 @@ end
 								parent_map = {}
 								%>
 								<p class="text-center font-weight-bold"></p>
-								<table class='table form-control' >
+								<table class='table form-control' style="width:100%" >
 								<thead>
 									<tr>
 										<th>รายการ</th><th>เวลา</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
@@ -309,10 +309,14 @@ end
 									</tr>
 								</thead>
 									<tbody>
-								<% for i in logs
+								<% 
+									stamp = nil
+								
+								for i in logs
 
-								parent_map[i.sort_order] = i
+									parent_map[i.sort_order] = i
 
+									stamp = i.stamp unless stamp
 
 									last_mile = cm.ambulance.last_mile
 									last_mile = i.mile_meter if i.mile_meter
@@ -329,7 +333,7 @@ end
 										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
 										<%#i.stamp.localtime.strftime("%H:%M")%>
 
-										<v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
+										<v class="time-alert">+<%=(i.stamp - stamp).to_i/60 %>m</v>
 										<% end %>
 
 									</td>
@@ -343,7 +347,7 @@ end
 									</td>
 									<td>
 										<% if i.status=='COMPLETED'%>
-										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=last_mile%>" style="width:80px">
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=last_mile%>" style="width:100px">
 										<% end %>
 									</td>
 
@@ -381,15 +385,44 @@ end
 									</tbody>
 								</table>
 
-
-									<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
+								<input type="submit" name="Update" value="Update" class="btn btn-info btn-sm">
+								
+							
+								<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
 									Transfer
 								</a>
 
-								<input type="submit" name="Update" value="Update" class="btn btn-info btn-sm">
+
+								<a  data-bs-toggle="modal" data-bs-target="#check_ambulance_modal" id="add-path-<%=cm.id%>" class="btn btn-warning btn-sm" >
+									Check Ambulance
+								</a>
 
 
-						
+<script>
+
+	$(document).ready(function(){
+
+		$('#check_ambulance_modal').on('show.bs.modal', function (e) {
+			console.log("show.bs.modal")
+			$.ajax({
+				url: "<%=get_path "check_ambulance?case_id=#{ems_case.id}&id=#{cm.id}" %>",
+				success: function(data) {
+					$('#check_ambulance_modal_body').html(data)
+				}
+			})
+
+		})
+
+	})
+
+</script>
+
+
+					
+
+
+								<br/>
+								<br/>
 
 
 <script>
@@ -491,7 +524,7 @@ end
 
 					<h6 class="row">
 						<div class="col">
-						Hospital
+						Hospital Transfer
 						</div>
 						<div class="col d-flex justify-content-end">
 							right
@@ -1044,3 +1077,31 @@ var ambu_map = {}
 	
 		
 	</script>
+
+
+
+<div class="modal fade" id="check_ambulance_modal" tabindex="-1" aria-hidden="true" style="display: none;">
+						<div class="modal-dialog modal-dialog-centered modal-xl">
+						
+							<div class="modal-content">
+
+								<div class="modal-header bg-primary bbg-gradient text-white">
+									<h5 class="modal-title text-white">Check Ambulance
+
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<form action="<%=get_path "check_ambulance?case_id=#{ems_case.id}&id=#{cm.id}" %>" method="post">
+								<div class="modal-body" id="check_ambulance_modal_body">
+								
+								checking...
+
+								</div>
+								<div class="modal-footer">
+									<a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
+									<input type="submit" value="Update" class="btn btn-info">
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>

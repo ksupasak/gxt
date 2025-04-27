@@ -1,0 +1,171 @@
+<%
+
+ record = EMSCase.find(params[:case_id])
+ command = EMSCommand.find(params[:id])
+
+ ambulance = command.ambulance
+
+
+ previous_commands = EMSCommand.where(ambulance_id: ambulance.id, case_id: {'$ne':record.id}).all
+ previous_commands.collect! { |i| 
+    i if EMSCase.find(i.case_id)
+ }.compact!.sort! { |a,b| a.created_at <=> b.created_at }
+previous_commands = previous_commands[-4..-1].compact
+
+
+
+ logs = %w{active_at response_at leaving_at deliver_at}
+ labels = %w{emscase.case_no emscase.start_at emscase.location cmd.driver_name log.active_at.stamp log.response_at.stamp log.leaving_at.stamp log.deliver_at.stamp log.active_at.mile_meter log.response_at.mile_meter log.deliver_at.mile_meter cmd.est_fuel cmd.oxygen_1 cmd.oxygen_2 cmd.check_result cmd.check_time cmd.check_note}
+
+# mile_meter
+
+if request.post?
+   
+
+
+mlog = {}
+for i in [command]
+    mlog[i.id] = {}
+    for j in logs
+        mlog[i.id][j] = AdmitLog.where(ems_command_id: i.id, code: j).first
+    end
+
+    mlog[i.id]['emscase'] = EMSCase.find(i.case_id)
+    mlog[i.id]['cmd'] = EMSCommand.find(i.id)
+end
+
+map = mlog[command.id]
+
+for j in labels
+    t = j.split('.')
+    key = t[-1]
+    if t.size == 2
+        obj = map[t[0]]
+        key = t[1]
+    else
+        obj = map[t[1]]
+        key = t[1]
+    end
+
+    val = nil
+    if obj
+        val = params[j]
+    end
+
+    if val
+    %>
+    <%=key%> <%= val %>
+    <br/>
+
+    <%
+       
+        if t.size == 2
+            obj[key] = val
+        else
+            obj[t[-1]] = val
+        end
+        obj.save
+    end
+    
+end
+
+
+
+%>
+<div class="alert alert-success">
+    Command updated
+</div>
+<%=params.to_json.html_safe%>
+<meta http-equiv="refresh" content="0; url=../EMS/show?id=<%=record.id%>" />
+
+<%
+else
+
+%>
+
+<center>
+<h3>
+    <%=ambulance.name%> : <%=ambulance.plate_license%>
+</h3>
+</center>
+
+<table class="table table-bordered">
+<% 
+
+mlog = {}
+for i in previous_commands + [command]
+    mlog[i.id] = {}
+    for j in logs
+        mlog[i.id][j] = AdmitLog.where(ems_command_id: i.id, code: j).first
+    end
+
+    mlog[i.id]['emscase'] = EMSCase.find(i.case_id)
+    mlog[i.id]['cmd'] = EMSCommand.find(i.id)
+end
+%>
+<%
+
+for j in labels
+        t = j.split('.')
+        key = t[-1]
+        if t.size == 2
+            key = t[1]
+        else
+            key = t[1]
+        end
+    %>
+    <tr>
+
+    <th><%=key.humanize%></th>
+        <% 
+        for i in previous_commands + [command]
+
+            map = mlog[i.id]
+
+            t = j.split('.')
+            key = t[-1]
+            if t.size == 2
+                obj = map[t[0]]
+                key = t[1]
+            else
+                obj = map[t[1]]
+                key = t[1]
+            end
+            val = '-'
+            if obj
+                val = obj[t[-1]]
+            end
+            if j == 'emscase.start_at'
+                val = val.strftime('%Y-%m-%d') if val
+            end
+
+            if t[-1] == 'stamp'
+                val = val.strftime('%H:%M') if val
+            end
+
+            if j == 'emscase.case_no'
+                val = link_to(val, "../EMS/show?id=#{obj.id}")
+            end
+            if j == 'cmd.check_time'
+                val = Time.now
+            end
+
+        %>
+
+
+            <%
+            if i == command and j != 'emscase.case_no'
+                %>
+                <td>
+                <input type="text" name="<%=j%>" class="form-control" value="<%=val%>">
+                </td>
+            <% else %>
+                <td><%=val%></td>
+            <% end %>
+<% end %>
+    </tr>
+
+<% end %>
+</table>
+
+<% end %>

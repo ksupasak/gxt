@@ -344,31 +344,32 @@ class EMSCase < GXTModel
   def relocation_target latlng
 
       ambu = self.ambulance
-      key = Setting.get(:google_api_key)
-      direction = google_direction(ambu.last_location, latlng, key)
+      if ambu
+        key = Setting.get(:google_api_key)
+        direction = google_direction(ambu.last_location, latlng, key)
 
-      if direction[:status]=='200 OK'
-          self.update_attributes :gps_distance=>direction[:total_distance][:value], :gps_duration=>direction[:total_duration][:value]
-      end
+        if direction[:status]=='200 OK'
+            self.update_attributes :gps_distance=>direction[:total_distance][:value], :gps_duration=>direction[:total_duration][:value]
+        end
 
-      admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
-      puts 'Relocat '+self.admit_id.to_s
-      for i in admit_log_list
+        admit_log_list = AdmitLog.where(:admit_id=>self.admit_id, :sort_order=>{'$in'=>[3,4]}).all
+        puts 'Relocat '+self.admit_id.to_s
+        for i in admit_log_list
 
-          i.update_attributes :latlng=>latlng
+            i.update_attributes :latlng=>latlng
 
-          if i.sort_order==3
-              aoc_case_routes = AocCaseRoute.where(:arrival_log_id=>i.id).all
-              for aoc_case_route in aoc_case_routes
-              if aoc_case_route
-                  aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation', :last_location=>nil, :last_cal=>nil
+            if i.sort_order==3
+                aoc_case_routes = AocCaseRoute.where(:arrival_log_id=>i.id).all
+                for aoc_case_route in aoc_case_routes
+                if aoc_case_route
+                    aoc_case_route.update_attributes :stop_latlng=>latlng, :est_distance=>nil, :est_duration=>nil, :response=> nil, :note=>'Relocation', :last_location=>nil, :last_cal=>nil
+                end
               end
             end
-          end
 
-      end
+        end
 
-
+    end
 
   end
 
@@ -710,11 +711,20 @@ class EMSCommand < GXTModel
   key :transfer_hospital, String
   key :transfer_hospital_id, ObjectId
   key :emd_code, String
+  key :driver_name, String
   key :emt_driver_code, String
   key :emt_partner_code, String
    
   key :note, String
   key :channel_id, String
+
+  key :est_fuel, String
+  key :oxygen_1, String
+  key :oxygen_2, String
+  key :check_result, String
+  key :check_time, DateTime
+  key :check_note, String
+
 
   include Mongoid::Timestamps
 
@@ -1302,6 +1312,10 @@ end
 class EMSCaseController < EMSGXTDocument
   
   
+
+end
+
+class EMSCaseCounterController < EMSGXTDocument
 
 end
 

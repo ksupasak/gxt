@@ -67,7 +67,7 @@ if params[:record]
 
 	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
 	
-	
+	counter.update_attributes(:count=>counter.count+1)
 	
 	
 	
@@ -181,7 +181,7 @@ end
 <form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
 <% fieldset(:record) do |f| %>
 
-<%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case)  %>
+<%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case, :mode=>'create')  %>
 
 <% end %>
 <input type="submit" name="create" value="Create" class="btn btn-success">

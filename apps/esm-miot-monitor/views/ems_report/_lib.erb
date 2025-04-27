@@ -76,6 +76,10 @@ class Core {
        
        console.log(results)
 
+       if(this.options['data_callback']){
+        this.options['data_callback'](results)
+       }
+
        for(var i=0;i<this.charts.length;i++){
            
            var chart = this.charts[i]
