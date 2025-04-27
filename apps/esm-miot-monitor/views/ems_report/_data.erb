@@ -34,6 +34,9 @@
     end
   end
   
+  data['positions'] = sources.collect{|i| 
+  t = i.latlng.split(',')
+  {lat:t[0].to_f, lng:t[1].to_f, label:i.location} }  
   
   for i in cmd
   
