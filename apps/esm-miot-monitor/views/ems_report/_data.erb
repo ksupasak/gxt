@@ -16,6 +16,42 @@
       i['cbd_code'] = "#{group.code}.#{group.name.slice(0..6)}"
     end
 
+    if i.ambulance_id
+      ambulance = Ambulance.find(i.ambulance_id)
+      i['ambulance'] = ambulance.name if ambulance
+    end
+
+    if true
+      t = i.response_time
+      #puts t
+      
+      if t.nil?
+        t = 'NA'
+      else
+        t = t.to_i
+      if t<2 
+        t="<2"
+      elsif t<4
+        t="<4"
+      elsif t<6
+        t="<6"
+      elsif t<8
+        t="<8"
+      elsif t<10
+        t="<10"
+      else 
+        t=">10"
+      end
+
+      end
+      puts t
+      i['response_time_group']  = t
+    end
+
+    if i.total_time
+      i['total_time'] = i.total_time.to_i
+    end
+
     i
   
   }

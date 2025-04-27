@@ -136,11 +136,11 @@ for j in labels
                 val = obj[t[-1]]
             end
             if j == 'emscase.start_at'
-                val = val.strftime('%Y-%m-%d') if val
+                val = val.strftime('%Y-%m-%d') if val and val!="-"
             end
 
             if t[-1] == 'stamp'
-                val = val.strftime('%H:%M') if val
+                val = val.strftime('%H:%M') if val and val!="-"
             end
 
             if j == 'emscase.case_no'
