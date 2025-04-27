@@ -1,3 +1,4 @@
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
 <%
 
     records = EMSCase.all()
@@ -817,7 +818,9 @@ end
 
 <%#groups.collect{|i| i.name }.to_json.html_safe%>
 <div class="col-12" style="overflow:scroll">
-<table class="table table-striped mb-0">
+<button onclick="downloadTableAsExcel()" class="btn btn-primary">Download as Excel</button>
+
+<table class="table table-striped mb-0" id="result_table">
 <thead>
   <tr>
       <th>Date</th>
@@ -834,7 +837,7 @@ end
 	  <th>Init Triage</th>
       <th>Sex</th>
       <th>Age</th>
-      <th ><span style="width:200px">Cheif Comp</span></th>
+      <th><span style="width:200px">Cheif Comp</span></th>
       <th>CODE  155  ?</th>
       <th>Dispatch </th>
       <th>Activate </th>
@@ -994,3 +997,21 @@ end
 		
 		<script src="/rocker/assets/plugins/chartjs/js/Chart.min.js"></script>
 		<script src="/rocker/assets/plugins/chartjs/js/Chart.extension.js"></script>
+
+
+<br/>
+<br/>
+
+<script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+
+<script>
+function downloadTableAsExcel() {
+  const table = document.getElementById("result_table");
+
+  // Convert HTML table to SheetJS worksheet
+  const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+
+  // Generate Excel file and force download
+  XLSX.writeFile(wb, "table.xlsx");
+}
+</script>

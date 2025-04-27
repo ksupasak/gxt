@@ -84,6 +84,25 @@ $(document).ready(function(){
         </div>
     </div>
 
+  <div class="col-md-4">
+        <div class="header">
+            <h3>Ambulance</h3>
+        </div>
+        
+         <div id="chart_ambulance" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+ <div class="col-md-4">
+        <div class="header">
+            <h3>Response Time</h3>
+        </div>
+        
+         <div id="chart_response_time" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+
         <div id="google_map"></div>
 
 
@@ -128,7 +147,8 @@ $(document).ready(function(){
     core.showDonut("chart_operation_result", "operation_result", {'fill':'orange'})
     core.showDonut("chart_shift", "shift", {'fill':'orange'})
     core.showBar("chart_cbd_code", "cbd_code", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
-
+    core.showBar("chart_ambulance", "ambulance", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
+    core.showBar("chart_response_time", "response_time_group", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
     filter = ""
     
     function process(){
@@ -160,9 +180,13 @@ $(document).ready(function(){
 
 
 
+<%
 
+google_api_key = Setting.get('google_api_key')
 
- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnHoGXEdEI4hqJMDVoIOFcZiVud4MHIv0&libraries=visualization"></script>
+%>
+
+ <script src="https://maps.googleapis.com/maps/api/js?key=<%=google_api_key%>&libraries=visualization"></script>
     <style>
       #google_map {
         height: 60vh;
