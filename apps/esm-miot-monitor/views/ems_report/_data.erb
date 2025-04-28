@@ -19,6 +19,7 @@
     if i.ambulance_id
       ambulance = Ambulance.find(i.ambulance_id)
       i['ambulance'] = ambulance.name if ambulance
+      i['ambulance'] = 'NA' if ambulance.nil?
     end
 
     if true
