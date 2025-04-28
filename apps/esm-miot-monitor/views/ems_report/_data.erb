@@ -19,6 +19,13 @@
     if i.ambulance_id
       ambulance = Ambulance.find(i.ambulance_id)
       i['ambulance'] = ambulance.name if ambulance
+      unless ambulance
+        cmd = EMSCommand.where(case_id: i.id).first
+        if cmd
+          ambulance = Ambulance.find(cmd.ambulance_id)
+          i['ambulance'] = ambulance.name if ambulance
+        end
+      end
       i['ambulance'] = 'NA' if ambulance.nil?
     end
 
