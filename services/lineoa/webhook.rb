@@ -34,7 +34,7 @@ webrick_options = {
 
 
 
-class LINEOA < Sinatra::Base
+class LineOA < Sinatra::Base
  
 set :clients, {}
 
@@ -207,4 +207,4 @@ end
 
 
 
-Rack::Handler::WEBrick.run LINEOA, **webrick_options
+Rack::Handler::WEBrick.run LineOA, **webrick_options
