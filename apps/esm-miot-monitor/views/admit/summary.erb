@@ -174,7 +174,7 @@ for i in records
 		tmap[k] = [] unless tmap[k]
 		bp = "#{i['bp_sys']}/#{i['bp_dia']}"
 		i['bp'] = bp if i['bp'] == nil or i['bp']==""
-		tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
+		tmap[k] << ['VS',%w{ bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
 	end
 end	
 	
