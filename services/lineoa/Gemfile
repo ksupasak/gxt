@@ -9,6 +9,6 @@ gem "webrick"
 gem "rack"
 gem 'rdkafka'
 gem 'json'
-# gem 'puma'
+gem 'thin'
 gem 'rackup'
 gem 'eventmachine'
