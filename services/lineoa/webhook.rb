@@ -15,7 +15,8 @@ require 'openssl'
 require 'net/http'
 require 'active_support/all'
 require 'active_record'
-disable :protection
+use Rack::Protection::HostAuthorization, hosts: ['localhost', '127.0.0.1', '147.92.150.194']
+
 
 require_relative 'lib/kafka'
 
