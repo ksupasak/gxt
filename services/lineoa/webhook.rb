@@ -158,7 +158,7 @@ post '/' do
       
       end
 
-      if clients[channel][:media]=='kafka'
+      if clients[channel]['media']=='kafka'
         kafka_message = {
           "url"=>url,
           "channel"=>channel,
