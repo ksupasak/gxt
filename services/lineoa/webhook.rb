@@ -15,7 +15,7 @@ require 'openssl'
 require 'net/http'
 require 'active_support/all'
 require 'active_record'
-
+disable :protection
 
 require_relative 'lib/kafka'
 
