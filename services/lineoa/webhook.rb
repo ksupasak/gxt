@@ -16,7 +16,16 @@ require 'net/http'
 require 'active_support/all'
 require 'active_record'
 use Rack::Protection::HostAuthorization, hosts: ['localhost', '127.0.0.1', '147.92.150.194']
+disable :protection  # Only for local dev testing!
 
+before do
+  puts "== Incoming Request =="
+  puts "Host: #{request.env['HTTP_HOST']}"
+  puts "Method: #{request.request_method}"
+  puts "Path: #{request.path}"
+  puts "Params: #{params.inspect}"
+  puts "Headers: #{request.env.select { |k, _| k.start_with?('HTTP_') }}"
+end
 
 require_relative 'lib/kafka'
 
