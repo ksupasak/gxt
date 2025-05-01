@@ -2,7 +2,7 @@
 require 'sinatra'
 require 'line/bot'
 require 'base64'
-
+require 'thin'
 set :server,'thin'
 set :bind, '0.0.0.0'
 
