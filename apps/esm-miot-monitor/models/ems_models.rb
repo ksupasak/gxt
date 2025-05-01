@@ -2,7 +2,7 @@ require "base64"
 require "uri"
 require "net/http"
 require_relative "../lib/push"
-
+require_relative "msg_models"
 
 
 module EsmMiotMonitor
@@ -801,100 +801,80 @@ class EMSChannel < GXTModel
 end
 
 
-class LineMessage < GXTModel
-
-  include Mongoid::Document
-
-  belongs_to :account, :class_name=>'EsmMiotMonitor::LineAccount',  foreign_key: 'account_id'
-
-  key :account_id, ObjectId
-
-  key :message_id, String
-  key :user_id, String
-
-  key :type, String
-  key :message_type, String
-  key :text, String
-  key :source_type, String
-
-  key :content, String
-
-    include Mongoid::Timestamps
-
-
-end
 
 
 
-class LineAccount < GXTModel
+# class LineAccount < GXTModel
 
-  include Mongoid::Document
+#   include Mongoid::Document
 
-  has_many :messages, :class_name=>'EsmMiotMonitor::LineMessage', foreign_key: 'account_id'
+#   has_many :messages, :class_name=>'EsmMiotMonitor::LineMessage', foreign_key: 'account_id'
 
-  key :name, String
+#   key :name, String
 
-  key :user_id, String
+#   key :user_id, String
 
-  key :type, String
+#   key :type, String
   
-  key :solution, String
+#   key :solution, String
 
 
-  def send_message text, option={:type=>'text'}
+#   def send_message text, option={:type=>'text'}
 
 
-    url = 'http://103.20.120.53:4567/send?channel=ems'
+#     url = 'http://103.20.120.53:4567/send?channel=ems'
 
-    url = Setting.get 'outgoing_webhook', url
+#     url = Setting.get 'outgoing_webhook', url
 
-    if self.user_id
-     uri = URI(url)
-     if option[:type] == 'text'
+#     if self.user_id
+#      uri = URI(url)
+#      if option[:type] == 'text'
 
-          res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'text' => text)
+#           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'text' => text)
 
-      elsif option[:type] == 'raw'
-        puts 'type=raw'+text+' user_id:'+self.user_id
-          res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'msg' => text)
+#       elsif option[:type] == 'raw'
+#         puts 'type=raw'+text+' user_id:'+self.user_id
+#           res = Net::HTTP.post_form(uri, 'user_id' => self.user_id, 'msg' => text)
 
-      end
-      puts res.body
-      return res.body
-  #   puts res.body
+#       end
+#       puts res.body
+#       return res.body
+#   #   puts res.body
 
-    end
+#     end
 
-  end
-
-
-end
+#   end
 
 
+# end
 
 
-class LineMessage < GXTModel
-
-  include Mongoid::Document
-
-  belongs_to :account, :class_name=>'EsmMiotMonitor::LineAccount',  foreign_key: 'account_id'
-
-  key :account_id, ObjectId
-
-  key :message_id, String
-  key :user_id, String
-
-  key :type, String
-  key :message_type, String
-  key :text, String
-  key :source_type, String
-
-  key :content, String
-
-    include Mongoid::Timestamps
 
 
-end
+# class LineMessage < GXTModel
+
+#   include Mongoid::Document
+
+#   belongs_to :account, :class_name=>'EsmMiotMonitor::LineAccount',  foreign_key: 'account_id'
+
+#   key :account_id, ObjectId
+
+#   key :message_id, String
+#   key :user_id, String
+
+#   key :type, String
+#   key :message_type, String
+#   key :text, String
+#   key :source_type, String
+
+#   key :content, String
+
+#     include Mongoid::Timestamps
+
+
+# end
+
+
 
 
 class EMSAssessment < GXTModel
@@ -1294,19 +1274,6 @@ class EMSUnitController < EMSGXTDocument
 
 end
 
-class LineAccountController < GXTDocument
-
-  def acl
-
-    return {:register=>'*',:image_upload=>'*', :register_remote=>'*', :provider=>'*'}
-
-  end
-
-end
-
-class LineMessageController < GXTDocument
-
-end
 
 class EMSChannelController < EMSGXTDocument
 
