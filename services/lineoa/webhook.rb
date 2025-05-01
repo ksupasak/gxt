@@ -15,6 +15,8 @@ require 'openssl'
 require 'net/http'
 require 'active_support/all'
 require 'active_record'
+set :protection, except: :host_header
+
 use Rack::Protection::HostAuthorization, hosts: ['localhost', '127.0.0.1', '147.92.150.194']
 disable :protection  # Only for local dev testing!
 
