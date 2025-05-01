@@ -5,7 +5,7 @@ require 'base64'
 
 
 set :bind, '0.0.0.0'
-
+require 'rack'
 require 'sinatra/base'
 require 'webrick'
 require 'webrick/https'
