@@ -103,7 +103,7 @@ end
 
 post '/' do
   body = request.body.read
-  
+  puts "Body: #{body}"
   channel = 'praram9'
 
   channel = params[:channel] if params[:channel]
