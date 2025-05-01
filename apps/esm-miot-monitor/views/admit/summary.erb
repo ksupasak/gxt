@@ -172,6 +172,8 @@ for i in records
 	if i.stamp
 		k = i.stamp.localtime.strftime("%H:%M:%S") 
 		tmap[k] = [] unless tmap[k]
+		bp = "#{i['bp_sys']}/#{i['bp_dia']}"
+		i['bp'] = bp if i['bp'] == nil or i['bp']==""
 		tmap[k] << ['VS',%w{bp_stamp bp pr hr rr spo2 }.collect{|j| "#{j}(#{i[j]})" }.join(", ")]
 	end
 end	
