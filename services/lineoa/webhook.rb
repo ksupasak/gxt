@@ -77,7 +77,7 @@ def client channel='praram9'
   }
 
 
-  clients[channel] = {:client=>c, :conf=>conf, :url=>conf['delegate_url']}
+  clients[channel] = {:client=>c, :conf=>conf, :url=>conf['delegate_url'], :media=>conf['media']}
 
   end
 
