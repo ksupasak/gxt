@@ -168,6 +168,7 @@ post '/' do
       hash['message']['content_raw'] = content.to_json
       
       end
+      puts "XXXXXX"
       puts clients[channel].inspect
       if clients[channel]['media']=='kafka'
         kafka_message = {
