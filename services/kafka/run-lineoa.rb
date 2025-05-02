@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'rdkafka'
 require 'eventmachine'
+require 'net/http'
 
 # Kafka consumer config
 KAFKA_CONFIG = {
