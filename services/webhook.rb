@@ -1,23 +1,20 @@
+# app.rb
 require 'sinatra'
 require 'line/bot'
 require 'base64'
-require 'rack'
+
+
+set :bind, '0.0.0.0'
+
+require 'sinatra/base'
 require 'webrick'
+require 'webrick/https'
 require 'openssl'
 require 'net/http'
 require 'active_support/all'
 require 'active_record'
 
-# Allow requests from any host (only safe for development)
-set :protection, except: :http_origin
-disable :protection
-
-set :bind, '0.0.0.0'
-require_relative 'lib/kafka'
-
-
-
-CERT_PATH = '../../'
+CERT_PATH = '/home/esmroot/apps/cert'
 
 webrick_options = {
 	:BindAddress        => '0.0.0.0',
@@ -26,35 +23,19 @@ webrick_options = {
         :DocumentRoot       => "",
         :SSLEnable          => false,
         :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
-        :SSLCertificate     => OpenSSL::X509::Certificate.new(  File.open(File.join(CERT_PATH, "server.crt")).read),
+        :SSLCertificate     => OpenSSL::X509::Certificate.new(  File.open(File.join(CERT_PATH, "certificate.crt")).read),
         :SSLPrivateKey      => OpenSSL::PKey::RSA.new(          File.open(File.join(CERT_PATH, "private.key")).read),
         :SSLCertName        => [ [ "CN",WEBrick::Utils::getservername ] ]
 }
 
 
-
-
-#class LineOA < Sinatra::Base
-
-before do
-  puts "== Incoming Request =="
-  puts "Host: #{request.env['HTTP_HOST']}"
-  puts "Method: #{request.request_method}"
-  puts "Path: #{request.path}"
-  puts "Params: #{params.inspect}"
-  puts "Headers: #{request.env.select { |k, _| k.start_with?('HTTP_') }}"
-end
-
+class MyServer < Sinatra::Base
  
 set :clients, {}
 
   get '/' do
-    'LINEOA Webhook!'
+    'SSL FTW!'
   end
-
-producer = GXTKafka.producer
-
-producer.produce(topic: LOG_TOPIC, payload: "Start LINEOA", key: "lineoa").wait
 
 
 def client channel='praram9'
@@ -113,7 +94,7 @@ end
 
 post '/' do
   body = request.body.read
-  #puts "Body: #{body}"
+  
   channel = 'praram9'
 
   channel = params[:channel] if params[:channel]
@@ -124,37 +105,54 @@ post '/' do
   end
 
   events = client(channel).parse_events_from(body)
-  clients = settings.clients
+clients = settings.clients
   
-  url = URI("https://praram9.emr-life.com/www/Api/lineoa")
-  url = URI(clients[channel][:url])
+    url = URI("https://praram9.emr-life.com/www/Api/lineoa")
+    url = URI(clients[channel][:url])
 
+    puts "Delegate to #{url}"
 
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true #if uri.instance_of? URI::HTTPS
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      http.read_timeout = 10 # seconds
 
-  puts "Delegate to #{url}"
-
-  http = Net::HTTP.new(url.host, url.port)
-  http.use_ssl = true #if uri.instance_of? URI::HTTPS
-  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-  http.read_timeout = 10 # seconds
-
-  request = Net::HTTP::Post.new(url, {'x-api-key'=>'','Content-Type' =>'application/json'})
+      request = Net::HTTP::Post.new(url, {'x-api-key'=>'DCTIoTCovid19','Content-Type' =>'application/json'})
 
 
   events.each do |event|
    
-   # puts event.inspect 
+    puts event.inspect 
 
     puts 
 
-    
-    puts event.to_hash
-
+    	puts event.to_hash
 
     case event
     when Line::Bot::Event::Message
 
 	
+
+
+    #  url = URI("https://sherry.emr-life.com/www/Api/lineoa")
+
+
+     # http = Net::HTTP.new(url.host, url.port)
+     # http.use_ssl = true #if uri.instance_of? URI::HTTPS
+     # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+     # http.read_timeout = 10 # seconds
+
+     # request = Net::HTTP::Post.new(url, {'x-api-key'=>'DCTIoTCovid19','Content-Type' =>'application/json'})
+      
+      # request['x-api-key'] = 'DCTIoTCovid19'
+    #  request.each_header {|key,value| puts "#{key} = #{value.inspect}" }
+      # {"hn"=>"", "weight"=>"90.00", "height"=>"180.00", "bmi"=>"27.78", "pr"=>"80", "rr"=>nil, "spo2"=>"99", "temp"=>"35.4", "time"=>"23:44:41", "date"=>"2021-05-12", "serial_number"=>"00000"}
+ 
+
+#      obj = {"type"=>"message", "message"=>{"type"=>"text", "id"=>"15229438606003", "text"=>"f"}, "timestamp"=>1639211885245, "source"=>{"type"=>"user", "userId"=>"U7921527448ec9cbf2021991d997ab1de"}, "replyToken"=>"6108188eb56143ac95f22e2e57c9ab9a", "mode"=>"active"}     
+
+ 
+  #    request.set_form_data(obj)
 
       hash = event.to_hash
 
@@ -168,24 +166,13 @@ post '/' do
       hash['message']['content_raw'] = content.to_json
       
       end
-      puts clients[channel].inspect
-      if clients[channel]['media']=='kafka'
-        kafka_message = {
-          "url"=>url,
-          "channel"=>channel,
-          "method"=>"POST",
-          "body"=>hash
-        }
-        producer.produce(topic: INBOUND_TOPIC, payload: kafka_message.to_json, key: "lineoa").wait
 
-      else
+      request.body = hash.to_json
 
-        request.body = hash.to_json
- 
-        response = http.request(request)
-
-
-      end
+      puts 
+      puts hash.to_json      
+      
+      response = http.request(request)
 
 
 
@@ -214,9 +201,8 @@ post '/' do
 end
 
 
-    
-# end
+end
 
-puts 'Ready'
 
-# Rack::Handler::WEBrick.run LineOA, **webrick_options
+
+Rack::Handler::WEBrick.run MyServer, **webrick_options

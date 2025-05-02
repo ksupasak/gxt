@@ -18,6 +18,7 @@ FORWARD_TOPIC = "line.message.forward"
 configure do
   Thread.new do
     sleep 1 # let Thin/EM boot completely
+    puts 'start'
     EM.next_tick do
       kafka = Rdkafka::Config.new(KAFKA_CONFIG)
 
@@ -84,6 +85,7 @@ configure do
 
       log_consumer = kafka.consumer
       log_consumer.subscribe(LOG_TOPIC)
+      puts LOG_TOPIC
 
       EM.defer do
         begin
