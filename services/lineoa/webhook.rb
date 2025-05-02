@@ -170,7 +170,7 @@ post '/' do
       end
       puts "XXXXXX"
       puts clients[channel].inspect
-      if clients[channel]['media']=='kafka'
+      if clients[channel][:media]=='kafka'
         kafka_message = {
           "url"=>url,
           "channel"=>channel,
