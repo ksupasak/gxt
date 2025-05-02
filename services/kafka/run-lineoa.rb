@@ -15,6 +15,7 @@ FORWARD_TOPIC = "line.message.forward"
 
 def start_inbound_consumer
   Thread.new do
+    puts "Starting INBOUND consumer..."
     kafka = Rdkafka::Config.new(KAFKA_CONFIG)
     consumer = kafka.consumer
     consumer.subscribe(INBOUND_TOPIC)
@@ -47,6 +48,7 @@ end
 
 def start_outbound_consumer
   Thread.new do
+    puts "Starting OUTBOUND consumer..."
     kafka = Rdkafka::Config.new(KAFKA_CONFIG)
     consumer = kafka.consumer
     consumer.subscribe(OUTBOUND_TOPIC)
@@ -64,6 +66,7 @@ end
 
 def start_forward_consumer
   Thread.new do
+    puts "Starting FORWARD consumer..."
     kafka = Rdkafka::Config.new(KAFKA_CONFIG)
     consumer = kafka.consumer
     consumer.subscribe(FORWARD_TOPIC)
@@ -81,6 +84,7 @@ end
 
 def start_log_consumer
   Thread.new do
+    puts "Starting LOG consumer..."
     kafka = Rdkafka::Config.new(KAFKA_CONFIG)
     consumer = kafka.consumer
     consumer.subscribe(LOG_TOPIC)
@@ -98,16 +102,19 @@ end
 
 # Start Kafka consumers
 configure do
-  Thread.new do
-    sleep 1 # let Thin/EM boot completely
-    EM.next_tick do
-      # Start all consumers in separate threads
-      start_inbound_consumer
-      start_outbound_consumer
-      start_forward_consumer
-      start_log_consumer
-    end
-  end
+  # Start all consumers in separate threads
+  @inbound_thread = start_inbound_consumer
+  @outbound_thread = start_outbound_consumer
+  @forward_thread = start_forward_consumer
+  @log_thread = start_log_consumer
+end
+
+# Keep threads alive
+at_exit do
+  @inbound_thread.join if @inbound_thread
+  @outbound_thread.join if @outbound_thread
+  @forward_thread.join if @forward_thread
+  @log_thread.join if @log_thread
 end
 
 set :port, 4556
