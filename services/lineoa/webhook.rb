@@ -95,7 +95,8 @@ end
             type: 'text',
             text: params[:text]
           }
-    
+    puts params.inspect
+    puts '--------------------------------' 
     puts params[:msg]
 
     message = JSON::parse params[:msg] if params[:msg]
@@ -105,7 +106,7 @@ end
     client(channel)
 
     clients = settings.clients
-    puts "Channel = #{channel}"
+    puts "Channel = #{channel} #{message.inspect}"
     c = clients[channel][:client]
     result = c.push_message user_id, message
     puts result.inspect
