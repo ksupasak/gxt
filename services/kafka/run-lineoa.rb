@@ -137,11 +137,13 @@ end
 post '/forward' do 
   puts "Received FORWARD request: #{params}"
   url = request.env['Forward-To']
+  headers = request.env.select { |k, _| k.start_with?('HTTP_') }
 
+  puts headers.inspect
   #create payload
   payload = {
     "url" => url,
-    "body" => request.body.read
+    "body" => JSON.parse(request.body.read)
   }
   #send to kafka
   kafka = Rdkafka::Config.new(KAFKA_CONFIG)
