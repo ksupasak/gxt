@@ -60,7 +60,7 @@ if solution_name
 
 
 	hostname = uri.hostname # => "example.com"
-	puts 'repost to '+line_account.solution
+	puts 'repost to '+solution_name
 	headers = {
 		'Content-Type' => 'application/json',
 		'Forward-To' => forward_uri.to_s,
