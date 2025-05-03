@@ -85,28 +85,31 @@ def client channel='praram9'
 
 end
 	
+
   post '/send' do 
 	
 	  
-	user_id = params[:user_id]
+    user_id = params[:user_id]
 
-	message = {
-          type: 'text',
-          text: params[:text]
-        }
-	
-	puts params[:msg]
+    message = {
+            type: 'text',
+            text: params[:text]
+          }
+    
+    puts params[:msg]
 
-	message = JSON::parse params[:msg] if params[:msg]
-	
-	channel = 'praram9'
-	channel = params[:channel] if params[:channel]
-  clients = settings.clients
-	puts "Channel = #{channel}"
-  c = clients[channel][:client]
-	result = c.push_message user_id, message
-	puts result.inspect
-	puts result.body
+    message = JSON::parse params[:msg] if params[:msg]
+    
+    channel = params[:channel] if params[:channel]
+    
+    client(channel)
+
+    clients = settings.clients
+    puts "Channel = #{channel}"
+    c = clients[channel][:client]
+    result = c.push_message user_id, message
+    puts result.inspect
+    puts result.body
 
 
   end
