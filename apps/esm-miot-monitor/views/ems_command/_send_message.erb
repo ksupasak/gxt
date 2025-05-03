@@ -38,6 +38,7 @@ command = ems_command.init_command.split("\r\n").join("|") if ems_command.init_c
 
 
 providers = "#{providers_items.join(", ")}"
+providers = "-" if providers.size==0
 
 patient_info = "ไม่ระบุ"
 patient_info = ems_case.patient_info if ems_case.patient_info and ems_case.patient_info.size>0
@@ -291,6 +292,15 @@ msg =<<MSG
             "type": "uri",
             "label": "CASE RECORD",
             "uri": "#{link}"
+          }
+        },{
+          "type": "button",
+          "style": "link",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "CALL NOW",
+            "uri": "tel:#{phone}"
           }
         },
         {
