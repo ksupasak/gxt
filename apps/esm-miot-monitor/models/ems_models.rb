@@ -1390,30 +1390,44 @@ class EMSConnect
   def self.line_noti params
 
 
-    url = URI("https://notify-api.line.me/api/notify")
+    line_group_id = Setting.get('line_group_id')
 
-    https = Net::HTTP.new(url.host, url.port)
-    https.use_ssl = true
+    if line_group_id
 
-    line_access_code = Setting.get('line_access_code')
-    if line_access_code
-    message = params[:message]
+   
+      line_group = LineGroup.where(:group_id=>line_group_id).first
 
-    request = Net::HTTP::Post.new(url)
-    request["Authorization"] = "Bearer #{line_access_code}"
-    request["Content-Type"] = "application/x-www-form-urlencoded"
-    request.body = "message=#{ERB::Util.url_encode(message)}"
+      if line_group
 
-    response = https.request(request)
-    puts response.read_body
+        line_group.send_message params[:message], :type=>'text'
 
-    return response.read_body
+      end
 
-    else
 
-    return "NA"
+    # url = URI("https://notify-api.line.me/api/notify")
 
-    end
+    # https = Net::HTTP.new(url.host, url.port)
+    # https.use_ssl = true
+
+    # line_access_code = Setting.get('line_access_code')
+    # if line_access_code
+    # message = params[:message]
+
+    # request = Net::HTTP::Post.new(url)
+    # request["Authorization"] = "Bearer #{line_access_code}"
+    # request["Content-Type"] = "application/x-www-form-urlencoded"
+    # request.body = "message=#{ERB::Util.url_encode(message)}"
+
+    # response = https.request(request)
+    # puts response.read_body
+
+    # return response.read_body
+
+    # else
+
+    # return "NA"
+
+     end
 
   end
 

@@ -47,8 +47,8 @@ patient_info = ems_case.patient_info if ems_case.patient_info and ems_case.patie
 duration = "-"
 distance = "-"
 
-duration = params[:duration] if params[:duration] and  params[:duration].size>0
-distance = params[:distance] if params[:distance] and  params[:distance].size>0
+duration = "#{format("%0.3f",ems_case.gps_duration/60)} m" if ems_case.gps_duration 
+distance = "#{format("%0.3f",ems_case.gps_distance/1000)} km" if ems_case.gps_distance 
 
 
 phone = "-"
