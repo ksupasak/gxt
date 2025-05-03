@@ -50,9 +50,11 @@ elsif user_id
 end
 
 if solution_name
+
+    line_solution = LineSolution.where(:name=>solution_name).first
 	
 	# uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
-	forward_uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
+	forward_uri = URI("https://pcm-life.com/#{solution_name}/API/lineoa")
 
 	uri = URI("http://localhost:4556/forward")
 
