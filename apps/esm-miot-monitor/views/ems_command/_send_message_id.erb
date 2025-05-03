@@ -319,18 +319,10 @@ MSG
 
 obj = JSON::parse(msg)
 
-#for i in lines
+for i in lines
 		
-#	out = i.send_message obj.to_json, :type=>'raw'
+	out = i.send_message obj.to_json, :type=>'raw'
 
-#end
-
-group_id = Setting.get 'line_group_id'
-
-line_group = LineGroup.where(:group_id=>group_id).first
-
-line_group.send_message obj.to_json, :type=>'raw'
-
-
+end
 
 %>Sent

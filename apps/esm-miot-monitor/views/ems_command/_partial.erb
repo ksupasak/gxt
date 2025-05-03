@@ -388,6 +388,10 @@ end
 								<input type="submit" name="Update" value="Update" class="btn btn-info btn-sm">
 								
 							
+								<a href="<%=get_path "send_message?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-success btn-sm" data-remote="true"  data-remote-update="update-route">
+									Line Notify
+								</a>
+
 								<a href="<%=get_path "update_route?case_id=#{params[:case_id]}&id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
 									Transfer
 								</a>

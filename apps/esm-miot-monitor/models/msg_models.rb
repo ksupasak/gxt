@@ -24,6 +24,35 @@ class LineGroup < GXTModel
     key :solution, String
     key :solution_id, ObjectId
 
+
+    def send_message text, option={:type=>'text'}
+  
+  
+      url = 'http://103.20.120.53:4556/send?channel=ems'
+  
+      url = Setting.get 'outgoing_webhook', url
+  
+      if self.group_id
+        
+       uri = URI(url)
+       if option[:type] == 'text'
+  
+            res = Net::HTTP.post_form(uri, 'group_id' => self.group_id, 'text' => text)
+  
+        elsif option[:type] == 'raw'
+          puts 'type=raw'+text+' group_id:'+self.group_id
+            res = Net::HTTP.post_form(uri, 'group_id' => self.group_id, 'msg' => text)
+  
+        end
+        puts res.body
+        return res.body
+    #   puts res.body
+  
+      end
+  
+    end
+  
+
 end
 
 class LineAccount < GXTModel
@@ -45,7 +74,7 @@ class LineAccount < GXTModel
     def send_message text, option={:type=>'text'}
   
   
-      url = 'http://103.20.120.53:4567/send?channel=ems'
+      url = 'http://103.20.120.53:4556/send?channel=ems'
   
       url = Setting.get 'outgoing_webhook', url
   

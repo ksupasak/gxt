@@ -103,8 +103,8 @@ end
 	channel = params[:channel] if params[:channel]
 	
 	puts "Channel = #{channel}"
-
-	result = client(channel).push_message user_id, message
+  c = clients[channel][:client]
+	result = c.push_message user_id, message
 	puts result.inspect
 	puts result.body
 
