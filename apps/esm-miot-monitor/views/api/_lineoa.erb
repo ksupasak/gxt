@@ -51,7 +51,7 @@ elsif user_id
 
 end
 
-if solution_name
+if solution_name and @current_solution != solution_name
 
     line_solution = LineSolution.where(:name=>solution_name).first
 	
