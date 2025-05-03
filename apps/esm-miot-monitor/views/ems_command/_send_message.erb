@@ -65,6 +65,10 @@ link = "#{Setting.get("host_url")}/EMS/show?id=#{ems_case.id}"
 
 map_link = "https://www.google.com/maps/dir//#{ems_case.latlng}"
 
+map_link = "#{Setting.get("host_url")}/EMS/request_map?id=#{ems_case.id}"
+
+#map_link = "https://www.google.com/maps/dir//#{ems_case.latlng}"
+
 msg =<<MSG
 {
       "type": "flex",
