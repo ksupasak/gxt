@@ -97,9 +97,17 @@ when 'message'
 
     message = obj['message']
 
+	
+	line_account = LineAccount.where(:user_id=>obj['source']['userId']).first
+  		# line_account = LineAccount.create(:user_id=>user_id) unless line_account
+	line_account_id = line_account.id if line_account
+
     if message['type'] == 'text'
 
-        line_message = LineMessage.create :type=>type, :account_id=>line_account.id, :text=>message['text'], :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
+
+	
+
+        line_message = LineMessage.create :type=>type, :account_id=>line_account_id, :text=>message['text'], :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
 
         if message['text'].index('#reg:')
 
@@ -130,7 +138,7 @@ when 'message'
 
     else message['type'] == 'image'
 
-        line_message = LineMessage.create :type=>type, :account_id=>line_account.id, :text=>'img', :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
+        line_message = LineMessage.create :type=>type, :account_id=>line_account_id, :text=>'img', :message_id=>message['id'], :message_type=>message['type'], :source_type=>source['type'], :user_id=>user_id, :content=>data
 
 		obj = JSON.parse(data)
 		
