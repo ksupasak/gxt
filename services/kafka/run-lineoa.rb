@@ -136,9 +136,11 @@ end
 
 post '/forward' do 
   puts "Received FORWARD request: #{params}"
+  url = request.env['Forward-To']
+
   #create payload
   payload = {
-    "url" => params['url'],
+    "url" => url,
     "body" => request.body.read
   }
   #send to kafka
