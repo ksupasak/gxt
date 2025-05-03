@@ -160,7 +160,7 @@ post '/' do
 
       if event.type == Line::Bot::Event::MessageType::Image
 
-      content = client.get_message_content(event.message['id'])
+      content = clients[channel].get_messagget_message_contente_content(event.message['id'])
       tf = Tempfile.open('content')
       tf.write(content.body)
 	
@@ -203,7 +203,7 @@ post '/' do
       when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
 	puts 'Got content '
         puts event.to_hash.to_json
-        response = client.get_message_content(event.message['id'])
+        response = clients[channel].get_message_content(event.message['id'])
         tf = Tempfile.open("content")
         tf.write(response.body)
       end
