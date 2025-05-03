@@ -101,7 +101,7 @@ end
 	
 	channel = 'praram9'
 	channel = params[:channel] if params[:channel]
-	
+  clients = settings.clients
 	puts "Channel = #{channel}"
   c = clients[channel][:client]
 	result = c.push_message user_id, message
