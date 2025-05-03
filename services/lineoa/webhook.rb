@@ -160,7 +160,7 @@ post '/' do
 
       if event.type == Line::Bot::Event::MessageType::Image
 
-      content = clients[channel].get_messagget_message_contente_content(event.message['id'])
+      content = clients[channel].get_message_content(event.message['id'])
       tf = Tempfile.open('content')
       tf.write(content.body)
 	
