@@ -75,6 +75,21 @@ def start_forward_consumer
     begin
       consumer.each do |message|
         puts "[Kafka] Received FORWARD: #{message.payload} (offset #{message.offset})"
+
+          # Parse the message payload as JSON
+          payload = JSON.parse(message.payload)
+        
+          url = URI(payload['url'])
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+          http.read_timeout = 10
+          
+          request = Net::HTTP::Post.new(url, {'x-api-key'=>'','Content-Type' =>'application/json'})
+          request.body = payload['body'].to_json
+          response = http.request(request)
+          
+          puts "Response: #{response.body}"
       end
     rescue => e
       puts "Kafka FORWARD error: #{e.message}"
@@ -123,4 +138,19 @@ set :port, 4556
 # Sinatra route
 get '/' do
   "Kafka consumers running in separate threads. Sinatra is responding!"
+end
+
+post '/forward' do 
+  puts "Received FORWARD request: #{params}"
+  #create payload
+  payload = {
+    "url" => params['url'],
+    "body" => request.body.read
+  }
+  #send to kafka
+  kafka = Rdkafka::Config.new(KAFKA_CONFIG)
+  producer = kafka.producer
+  producer.produce(payload.to_json, topic: FORWARD_TOPIC)
+  producer.flush
+  "OK"
 end

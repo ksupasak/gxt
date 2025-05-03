@@ -17,7 +17,7 @@ puts
 
 
 
-if obj['type']
+if obj['type'] == 'message'
 
 type = obj['type']
 timestamp = obj['timestamp']
@@ -26,19 +26,46 @@ user_id = source['userId']
 
 line_account = nil
 
-if user_id
+solution_name = nil
+
+if source['groupId']
+
+  line_group = LineGroup.where(:group_id=>source['groupId']).first
+  line_group = LineGroup.create(:group_id=>source['groupId']) unless line_group
+  if obj['message']['type'] == 'text'
+	t = obj['message']['text'].split(" ")
+	if t[0] == ':ems'
+		line_group.update_attributes :solution=>t[1]
+		# register group
+	end
+  end
+  solution_name = line_group.solution
+
+elsif user_id
 
   line_account = LineAccount.where(:user_id=>user_id).first
   line_account = LineAccount.create(:user_id=>user_id) unless line_account
+  solution_name = line_account.solution
 
 end
 
-if line_account.solution and line_account.solution!=""
+if solution_name
 	
-	uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
+	# uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
+	forward_uri = URI("https://pcm-life.com/#{line_account.solution}/API/lineoa")
+
+	uri = URI("http://localhost:4556/forward")
+
+
 	hostname = uri.hostname # => "example.com"
 	puts 'repost to '+line_account.solution
-	req = Net::HTTP::Post.new(uri) # => #<Net::HTTP::Post POST>
+	headers = {
+		'Content-Type' => 'application/json',
+		'Forward-To' => forward_uri.to_s,
+		'x-api-key' => 'pcm-life'
+	}
+	req = Net::HTTP::Post.new(uri, headers) # => #<Net::HTTP::Post POST>
+
 	req.body = data
 	
 	req.content_type = 'application/json'
@@ -51,6 +78,10 @@ if line_account.solution and line_account.solution!=""
 	end
 	
     puts res.inspect
+
+    
+
+
 
 	puts 'repost to '+line_account.solution+" Completed"
 	
