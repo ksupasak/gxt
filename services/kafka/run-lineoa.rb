@@ -125,13 +125,7 @@ configure do
   @log_thread = start_log_consumer
 end
 
-# Keep threads alive
-at_exit do
-  @inbound_thread.join if @inbound_thread
-  @outbound_thread.join if @outbound_thread
-  @forward_thread.join if @forward_thread
-  @log_thread.join if @log_thread
-end
+
 
 set :port, 4556
 
@@ -153,4 +147,14 @@ post '/forward' do
   producer.produce(payload.to_json, topic: FORWARD_TOPIC)
   producer.flush
   "OK"
+end
+
+
+
+# Keep threads alive
+at_exit do
+  @inbound_thread.join if @inbound_thread
+  @outbound_thread.join if @outbound_thread
+  @forward_thread.join if @forward_thread
+  @log_thread.join if @log_thread
 end
