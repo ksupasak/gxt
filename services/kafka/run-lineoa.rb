@@ -136,7 +136,7 @@ end
 
 post '/forward' do 
   puts "Received FORWARD request: #{params}"
-  url = request.env['Forward-To']
+  url = request.env['HTTP_FORWARD_TO']
   headers = request.env.select { |k, _| k.start_with?('HTTP_') }
 
   puts headers.inspect
