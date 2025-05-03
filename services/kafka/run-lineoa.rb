@@ -151,10 +151,10 @@ end
 
 
 
-# Keep threads alive
-at_exit do
-  @inbound_thread.join if @inbound_thread
-  @outbound_thread.join if @outbound_thread
-  @forward_thread.join if @forward_thread
-  @log_thread.join if @log_thread
-end
+# # Keep threads alive
+# at_exit do
+#   @inbound_thread.join if @inbound_thread
+#   @outbound_thread.join if @outbound_thread
+#   @forward_thread.join if @forward_thread
+#   @log_thread.join if @log_thread
+# end
