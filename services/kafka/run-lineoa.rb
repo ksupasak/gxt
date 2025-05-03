@@ -144,7 +144,9 @@ post '/forward' do
   #send to kafka
   kafka = Rdkafka::Config.new(KAFKA_CONFIG)
   producer = kafka.producer
-  producer.produce(payload.to_json, topic: FORWARD_TOPIC)
+  # producer.produce(payload.to_json, topic: FORWARD_TOPIC)
+  producer.produce(topic: FORWARD_TOPIC, payload: payload.to_json, key: "lineoa").wait
+
   producer.flush
   "OK"
 end
