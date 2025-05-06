@@ -63,9 +63,11 @@ def run(opts)
       online_lives = gw.get_live_incidents
       
       current = {}
-      # puts online_lives.size
-      
-      
+      puts "Online #{online_lives.size}"
+      puts online_lives.inspect 
+      puts 
+      if online_lives.class != Hash
+        
       for i in online_lives
       
          id = i['IncidentId']
@@ -87,6 +89,12 @@ def run(opts)
         
         
       puts "Current #{lives.keys.size } #{Time.now}"
+      
+    else
+      if online_lives['IsSuccessful'] == false
+        gw.refresh_token
+      end
+    end
        
     rescue Exception=>e
       
@@ -117,9 +125,11 @@ def run(opts)
           datetime = Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S")
           
           # vitals = gw.get_trended_vitals k, datetime
+          gw = web_app.settings.gw
+          ws = web_app.settings.ws
           vitals = gw.get_trended_vitals k , datetime
           
-          if vitals
+          if vitals and vitals['VitalDetailsInfo']
 
             puts "vitals from corium"
             puts vitals 
@@ -147,15 +157,22 @@ def run(opts)
               end
             end
 
-          end
-  
-          if twelve_leads_id and File.exists?(File.join("sent","#{twelve_leads_id}.jpg"))==false
+            if twelve_leads_id and File.exists?(File.join("sent","#{twelve_leads_id}.jpg"))==false
             
-            gw.download_twelve_leads k, twelve_leads_id, File.join("data","#{twelve_leads_id}.jpg")
-            GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.jpg")
-            FileUtils.mv(File.join("data","#{twelve_leads_id}.jpg"), File.join("sent","#{twelve_leads_id}.jpg"))
+              gw.download_twelve_leads k, twelve_leads_id, File.join("data","#{twelve_leads_id}.jpg")
+              GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.jpg")
+              FileUtils.mv(File.join("data","#{twelve_leads_id}.jpg"), File.join("sent","#{twelve_leads_id}.jpg"))
 
+            end
+            
+          else
+            
+            lives.delete k
+            
           end
+          
+          
+        
           
           # puts vitals.to_json
           

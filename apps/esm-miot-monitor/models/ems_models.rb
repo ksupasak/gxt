@@ -1075,7 +1075,7 @@ class EMSController < GXT
 
   def acl
 
-    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*', :pdf=>'*'}
+    return {:request_ems=>'*',:image_upload=>'*', :provider_registration=>'*', :video=>'*', :pdf=>'*', :request_map=>'*'}
 
   end
 
