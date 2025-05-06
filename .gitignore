@@ -8,6 +8,7 @@ log/nginx.pid
 Gemfile copy.lock
 micro/tempus/out.txt
 public/.well-known/
+micro/tempus/sent/*
 db/mongo
 db/seed
 
