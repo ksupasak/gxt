@@ -461,7 +461,7 @@ class Admit < GXTModel
   key :bed_id, ObjectId
 
   key :period, Integer
-
+ 
   key :admit_stamp, Time
   key :discharge_stamp, Time
 

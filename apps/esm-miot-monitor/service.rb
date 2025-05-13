@@ -1881,11 +1881,16 @@ MSG
       #
       #               end
       
-      
+                    now = Time.now 
+                    now24 = now - 24*60*60
+                    now24 = now - 5*60
+
                     for zone in Zone.all 
                         
-                        if admit = Admit.where(:status=>'Admitted', :zone_id=>zone.id).first or zone.mode =='ems' or zone.mode =='telecare'
+
+                        if admit = Admit.where(:admit_stamp.gte=>now24, :status=>'Admitted', :zone_id=>zone.id).sort(:admit_stamp.desc).first or zone.mode =='ems' or zone.mode =='telecare'
                          
+                                               
                          active_zone[app.settings.name][zone.id] = zone
                          app.settings.senses[app.settings.name] = {} unless app.settings.senses[app.settings.name]
                        
@@ -1921,7 +1926,7 @@ MSG
                               puts "Check Zone : #{z.name}"
 
 
-                                    admits = Admit.where(:zone_id=>z.id, :status=>'Admitted').all
+                                    admits = Admit.where(:admit_stamp.gte=>now24, :zone_id=>z.id, :status=>'Admitted').all
 
                                     admit_map[name] = {} unless admit_map[name]
 
@@ -2034,28 +2039,17 @@ MSG
 
                   admits = admit_map[name][z.id]
                   
-                  if app.settings.name =='pyts'
-                    puts "PYTS" 
-                    
-                    puts admits.inspect 
-                    
-                  end
+         
                   
 
                   if z.mode == 'aoc' || z.mode == 'ems'
 
                   
-                    if app.settings.name =='pyts'
-                      puts "PYTS 2"
-                      # puts  ambu_map.inspect 
-                    end
+                
                   
                           if ambu_map[name] and list = ambu_map[name][z.id] and list.size > 0 #and position_list
 
-                            if app.settings.name =='pyts'
-                              puts "PYTS 3" 
-                            end
-
+                       
                             result[:ambu_data] = {}
 
                             ambu_status = app.settings.ambu_status[name]
@@ -2082,13 +2076,7 @@ MSG
                                   
                                   v = vl[-1] if vl and vl.size > 0 
                                   
-                                  # puts 'xxxxx'
-   #                                puts ambu_status
-   #                                puts vl.size if vl
-   #                                puts v
-   #                                puts last
-   #
-   #                                puts
+                        
                                   if ambu_status and v and ( last == nil or  last['ts']!=v['ts'] )
                                       
                                       
@@ -2138,7 +2126,7 @@ MSG
                                   ad[:station_name] = i.station.name if i.station
                                   ad[:note] = i.note
 
-                                  puts i.id
+                                  puts "#{i.id} #{i.admit_stamp} #{now - i.admit_stamp}"
 
                                   if z.mode == 'ems'
 
