@@ -1883,7 +1883,7 @@ MSG
       
                     now = Time.now 
                     now24 = now - 24*60*60
-                    now24 = now - 5*60
+                    # now24 = now - 5*60
 
                     for zone in Zone.all 
                         
