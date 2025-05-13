@@ -163,6 +163,13 @@ def run(opts)
               GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.jpg")
               FileUtils.mv(File.join("data","#{twelve_leads_id}.jpg"), File.join("sent","#{twelve_leads_id}.jpg"))
 
+              gw.download_twelve_leads k, twelve_leads_id, File.join("data","#{twelve_leads_id}.xml"), 'aECG'
+              GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.xml")
+              FileUtils.mv(File.join("data","#{twelve_leads_id}.xml"), File.join("sent","#{twelve_leads_id}.xml"))
+
+
+
+
             end
             
           else

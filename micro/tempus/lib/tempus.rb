@@ -293,9 +293,9 @@ module Tempus
       
     end
     
-    def download_twelve_leads incident_id, twelve_leads_id, filename
+    def download_twelve_leads incident_id, twelve_leads_id, filename, format='JPEG'
 # TWELVE_LEADS
-        data = get_data "/Api/Clinical/Incidents/#{incident_id}/Events/TwelveLead/#{twelve_leads_id}?Format=JPEG", nil
+        data = get_data "/Api/Clinical/Incidents/#{incident_id}/Events/TwelveLead/#{twelve_leads_id}?Format=#{format}", nil
         puts data.size
         if data['TwelveLeadData']
         
@@ -303,13 +303,12 @@ module Tempus
           out.write data['TwelveLeadData'].unpack('m')[0]
           out.flush
           out.close
-          
         
         end
-        
-        
-      
+
     end
+
+
     
     def download_pdf incident_id, filename
 # TWELVE_LEADS
