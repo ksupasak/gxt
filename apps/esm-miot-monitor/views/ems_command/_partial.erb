@@ -800,10 +800,13 @@ end
 										loc=loc.split(",").collect{|i| i.to_f}
 								%>
 							 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
+							 <%
+							 	latlng = loc unless latlng
+							 %>
 							 target = new google.maps.LatLng(latlng[0], latlng[1] )
 
 							 console.log("Start "+ start)
-							 console.log("Target "+ target)
+							 console.log("Target "+ target) 
 							 console.log("Map "+ mapc.map)
 					
 
