@@ -803,15 +803,14 @@ end
 							 
 							 console.log("latlng "+ latlng) 
 
-							 if(Number.isNaN(latlng[0])){
+							 if(latlng==""){
 								latlng[0] = <%=loc[0]%>
 								latlng[1] = <%=loc[1]%>  
 							 }
 							 target = new google.maps.LatLng(latlng[0], latlng[1] )
 
 							 console.log("Start "+ start)
-							 console.log("Target "+ latlng) 
-							 console.log("Map "+ mapc.map)
+							 console.log("Target "+ target) 
 					
 
 							directionsService = new google.maps.DirectionsService;
