@@ -801,6 +801,10 @@ end
 								%>
 							 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
 							 target = new google.maps.LatLng(latlng[0], latlng[1] )
+
+							 console.log("Start "+ start)
+							 console.log("Target "+ target)
+							 console.log("Map "+ mapc.map)
 					
 
 							directionsService = new google.maps.DirectionsService;

@@ -96,7 +96,7 @@ emd = true if  params[:side]=='emd'
 		
 		end
 		
-	if record
+	if record and meeting
 		link = "video?id=#{meeting.name}&case_id=#{record.id}" 
 		else
 		link = "video?id=#{meeting.name}"

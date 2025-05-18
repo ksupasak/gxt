@@ -346,7 +346,7 @@ class EMSCase < GXTModel
       ambu = self.ambulance
       if ambu
 
-        ambu.last_location = Setting.get('aoc_center') unless ambu.last_location
+        ambu.last_location = Setting.get('aoc_center') unless ambu.last_location or ambu.last_location == ""
 
         key = Setting.get(:google_api_key)
         direction = google_direction(ambu.last_location, latlng, key)
