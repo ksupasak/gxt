@@ -801,6 +801,8 @@ end
 								%>
 							 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
 							 
+							 console.log("latlng "+ latlng) 
+
 							 if(Number.isNaN(latlng[0])){
 								latlng[0] = <%=loc[0]%>
 								latlng[1] = <%=loc[1]%>  
@@ -808,7 +810,7 @@ end
 							 target = new google.maps.LatLng(latlng[0], latlng[1] )
 
 							 console.log("Start "+ start)
-							 console.log("Target "+ target) 
+							 console.log("Target "+ latlng) 
 							 console.log("Map "+ mapc.map)
 					
 
