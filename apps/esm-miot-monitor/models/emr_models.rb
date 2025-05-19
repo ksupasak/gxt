@@ -11,7 +11,7 @@ class EMRDocument < GXTModel
   key :title, String
   key :schema, String
   key :sort_order, Integer
-  
+  key :group, String
   key :type, String # docuseal_link
   key :template_id, String # docuseal_link
   key :link, String 

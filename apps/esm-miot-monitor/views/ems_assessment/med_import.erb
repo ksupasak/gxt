@@ -1,19 +1,7 @@
-<%
-
-
-
-%>
 
 
 <%
 
-   #@document = get_document(this.document_name)
-
-   #fields = @document.fields
-
-   # fields.collect!{|i| i.column_name unless Document.visual_types.index(i.field_type) }.compact!
-   # fields << 'created_at'
-   # fields << 'updated_at'
 
    for m in this.model.where({:type=>'med'}).sort(:group=>1, :sort_order=>1).all
 

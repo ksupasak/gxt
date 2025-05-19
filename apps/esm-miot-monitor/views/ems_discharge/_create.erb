@@ -13,6 +13,11 @@
 			params[:record].merge!(:status=>'Completed', :completed_at=>Time.now)
 			
 			
+	 else
+
+			params[:record].delete(:summary)
+
+			
 	 end
 		
 		

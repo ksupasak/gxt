@@ -146,7 +146,8 @@ Treatment :
 @transfer
 
 Diagnosis : 
-@diagnosis 
+@diagnosis
+
 
 ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
 )
@@ -160,7 +161,6 @@ Progress note :
 
 Diagnosis : 
 @diagnosis
-
 
 
 
@@ -250,7 +250,7 @@ end
 if ems_case.transfer_hospital == nil
 		map["transfer"] = "รพ.ปลายทาง : "
 else
-		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital}"
+		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital} HN:#{ems_case.transfer_hn}"
 end
 
 
@@ -259,9 +259,9 @@ end
 
 	records = EMSCasePatientStatus.where(:case_id=>record.id).all
 
-	map["diagnosis"] = records.collect{|i| " - เวลา #{i.created_at.strftime("%H:%M") } น. : #{i.title}" }.join("\n")
+	#map["diagnosis"] = records.collect{|i| " - เวลา #{i.created_at.strftime("%H:%M") } น. : #{i.title}" }.join("\n")
 
-
+	map["diagnosis"] = record.diagnosis
 	#######################
 
 
@@ -276,6 +276,7 @@ end
 			 key = i[1..-1]
 			if map[key]
 			 	res = map[key]
+			
 		 	else
 
 		 		ns = key.split(".")
