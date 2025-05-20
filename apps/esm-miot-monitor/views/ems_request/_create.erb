@@ -103,10 +103,10 @@ if params[:record]
 
 	counter.update(:count=>counter.count+1)
 
-  if line_noti = Setting.get('line_group_id') and @current_user.status=='Active' and (record.status == 'New' or record.status =='Open')
+  if false and line_noti = Setting.get('line_group_id') and @current_user.status=='Active' and (record.status == 'New' or record.status =='Open')
 
-	  message = record.noti_message
-	  result =  EMSConnect.line_noti :message=>message
+	#   message = record.noti_message
+	#   result =  EMSConnect.line_noti :message=>message
 
 	end
 

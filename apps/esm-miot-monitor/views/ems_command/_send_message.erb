@@ -1,7 +1,13 @@
 <% 
 
-ems_command = EMSCommand.find params[:id]
-ems_case  = EMSCase.find ems_command.case_id
+if params[:case_id]
+  ems_case = EMSCase.find params[:case_id]
+  ems_command = EMSCommand.where(:case_id=>ems_case.id).order("created_at desc").first
+else
+  ems_command = EMSCommand.find params[:id]
+
+  ems_case  = EMSCase.find ems_command.case_id
+end
 
 providers_list = ems_command.providers
 
@@ -347,4 +353,4 @@ line_group.send_message obj.to_json, :type=>'raw'
 
 
 
-%>Sent
+%>Notification was sent<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">

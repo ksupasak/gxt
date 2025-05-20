@@ -147,8 +147,13 @@ end
 
 %>
 Update ... <%=Time.now%>
-<META HTTP-EQUIV="Refresh" CONTENT="1;URL=show?id=<%=ems_case.id%>">
-
+<%
+  if line_noti = Setting.get('line_group_id') and @current_user.status=='Active' and (ems_case.status == 'New' or ems_case.status =='Open')
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMSCommand/send_message?id=<%=record.id%>">
+<% else %>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+<% end %>
 
 <% else %>
 
