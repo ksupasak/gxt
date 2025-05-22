@@ -653,7 +653,7 @@ MSG
                    end
 
 
-                   ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).sort(:request_at=>-1).first
+                   ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).sort(:request_at=>1).first
 
                    puts ems_case.id if ems_case
 
