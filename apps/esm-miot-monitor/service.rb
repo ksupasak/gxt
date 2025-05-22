@@ -863,7 +863,7 @@ MSG
 
                               if ems_channel
 
-                                  ems_case = EMSCase.where(:channel_id=>ems_channel.id, :status=>"New").first
+                                  ems_case = EMSCase.where(:channel_id=>ems_channel.id, :status=>"New").sort(:request_at=>-1).first
 
                                   if ems_case
                                       zone = ems_case.zone
