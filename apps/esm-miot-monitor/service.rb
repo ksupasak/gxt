@@ -636,7 +636,7 @@ MSG
                    # pattern : [station_name].[zone].[solution]
 
 
-                   elsif sz.size==3 and sz[2] == name
+                   elsif sz.size==3 and sz[2] == namez
                      zone = Zone.where(:name=> /#{sz[1]}/i).first
 
                      station = Station.where(:name=>sz[0],:zone_id=>zone.id).first
@@ -653,7 +653,7 @@ MSG
                    end
 
 
-                   ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).first
+                   ems_case = EMSCase.where(:channel_id=>channel.id, :status=>{'$ne'=>'Completed'}).sort(:request_at=>-1).first
 
                    puts ems_case.id if ems_case
 
