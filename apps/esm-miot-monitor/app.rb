@@ -335,7 +335,7 @@ class HomeController < GXT
 
                if ambu
                  
-                  ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+                  ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).sort(:request_at=>-1).first
 
                   if ems_case
 
@@ -411,7 +411,7 @@ MSG
                              
                                 if station
                                      puts "#{station.name}"
-                                  ems_case = EMSCase.where(:station_id=>station.id, :status=>'New').first
+                                  ems_case = EMSCase.where(:station_id=>station.id, :status=>'New').sort(:request_at=>-1).first
                                   
                                   if ems_case
                                     puts "#{ems_case.case_no}"
@@ -430,7 +430,7 @@ MSG
 
                                 puts 'found ambu'
 
-                                ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).first
+                                ems_case = EMSCase.where(:status=>'New', :ambulance_id=>ambu.id).sort(:request_at=>-1).first
 
                                 if ems_case
 
