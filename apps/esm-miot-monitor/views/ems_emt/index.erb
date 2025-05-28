@@ -103,7 +103,8 @@ record = @current_case
                 // and remember the jqxhr object for this request
                 var jqxhr = $.post( "check?id=<%=com.id%>&admit_log_id=<%=last_log.id%>&mile_meter="+v, function() {
                   console.log("sueccess")
-                  window.location.reload();
+                  //window.location.reload();
+				  window.location="index";
 
                 })
                   .done(function() {
@@ -172,12 +173,6 @@ record = @current_case
 	     <% if current_route %>
     <div class="col-3">
  
-      <!-- https://www.google.com/maps/search/?api=1&query=13.0106708,77.5552532
-      <a href="https://www.google.com/maps/search/?api=1&query=<%=current_route.stop_latlng.split().join()%>" class="btn btn-warning text-white px-4  radius-5" style="width:100%;">
-        NAV</a>-->
-		         <!-- https://www.google.com/maps/dir//13.6086178,100.5946353/@13.6085003,100.5536058,13z?entry=ttu -->
-        <!--<a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="btn-nav btn btn-warning text-white px-4  radius-5" style="width:100%;">
-          NAV</a>-->
 		 <a href="https://www.google.com/maps/dir//<%=current_route.stop_latlng.split().join()%>/@<%=current_route.stop_latlng.split().join()%>,18z?entry=ttu" class="nav-btn btn btn-warning text-white px-4  radius-5" style="width:100%;">NAV</a>
 		 <script>
 			 
