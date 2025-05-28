@@ -23,6 +23,7 @@ require_relative 'devices/iacs-m540-gw'
 require_relative 'devices/b450-gw'
 
 require_relative 'devices/comen-nc3a-gw'
+require_relative 'devices/comen-s5-gw'
 # require_relative 'devices/ids-combo-gw'
 require_relative 'devices/gps/gps'
 
@@ -89,13 +90,19 @@ unless select_monitor
  }
 end
 
-if select_monitor=='nc3a'
-  puts 'monitor select = nc3a'
- threads << Thread.new {
- Device::monitor_comen_nc3a(ws)
- }
-end
+  if select_monitor=='nc3a'
+    puts 'monitor select = nc3a'
+  threads << Thread.new {
+  Device::monitor_comen_nc3a(ws)
+  }
+  end
 
+  if select_monitor=='s5'
+    puts 'monitor select = s5'
+   threads << Thread.new {
+   Device::monitor_comen_s5_live(ws)
+   }
+  end
 
 if select_monitor=='carescape'
   puts 'monitor select = carescape'
