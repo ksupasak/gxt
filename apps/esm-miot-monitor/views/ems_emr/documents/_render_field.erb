@@ -5,6 +5,9 @@ record_id = @record_id
 label = name.humanize
 label = options[:label] if options[:label]
 
+%>
+
+<%
 
 case type
 when 'radio_string'
@@ -42,9 +45,10 @@ col = options[:col] if options[:col]
 
 <div class="field-item col-<%=col%>">
 <% if options[:label] %>
-<label  style="min-width:150px"><%= label%></label>
+<label  style="min-width:150px"><%= label%>
+<span class="<%=name%>_ext"></span></label>
 <% end %>
-<select class="field form-select"  name="record[<%=name%>]" field_type="select_string">
+<select class="field form-select form-control" id="<%=name%>_<%=j%>" name="record[<%=name%>]" field_type="select_string">
 <option></option>
 <%
     options[:value].each_with_index do |i,j|
@@ -66,7 +70,8 @@ col = options[:col] if options[:col]
 
 <div class="field-item col-<%=col%>">
 <% if options[:label]!=nil %>	
-<label  class="col-12"  for="<%=name%>"><%=label%></label>
+<label  class="col-12"  for="<%=name%>"><%=label%>
+<span class="<%=name%>_ext"></span></label>
 <% end %>
 <%= "<div class='row'>" if options[:col_item]%>
 <%
@@ -136,7 +141,8 @@ col = options[:col] if options[:col]
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
 <% if options[:label]%>
-<label for="<%=name%>"><%=label%></label>
+<label for="<%=name%>"><%=label%>
+<span class="<%=name%>_ext"></span></label>
 <% end %>
 <% end %>
 <input type="text" id="<%=name%>_<%=j%>" name="record[<%=name%>]" placeholder="<%=options[:placeholder]%>" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
@@ -152,9 +158,26 @@ col = options[:col] if options[:col]
 %>
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
-<label for="<%=name%>"><%=label%></label>
+<label for="<%=name%>"><%=label%>
+<span class="<%=name%>_ext"></span></label>
 <% end %>
-<input type="text" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
+<input type="date" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
+<% unless options[:field_only]%>
+</div>
+<% end %>
+
+<%
+when 'time_string'
+
+col = 12
+col = options[:col] if options[:col]
+%>
+<% unless options[:field_only]%>
+<div class="field-item col-<%=col%>">
+<label for="<%=name%>"><%=label%>
+<span class="<%=name%>_ext"></span></label>
+<% end %>
+<input type="time" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
 <% unless options[:field_only]%>
 </div>
 <% end %>

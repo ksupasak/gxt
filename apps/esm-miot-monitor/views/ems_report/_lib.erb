@@ -68,10 +68,9 @@ class Core {
        
   }
   
-  update(response){
+  update(response, callback=null){
        
        console.log(response)
-
        var results = JSON.parse(response);
        
        console.log(results)
@@ -94,18 +93,21 @@ class Core {
            }
            
            
-       }
+       }   
+        if(callback){
+            callback(results)
+        }
       
   }
   
-  process(formData){
+  process(formData, callback=null){
       this.query = formData
       
       if(this.filter.length>0){
         formData['filter'] = this.filter
       }
 
-      
+     
       formData['cmd'] = this.params()
       
       const core = this
@@ -118,7 +120,10 @@ class Core {
       contentType: 'application/json',
       success: function (response) {
           
-        core.update(response)
+        core.update(response,callback)
+
+      
+       
         
       },
       error: function (xhr, status, error) {

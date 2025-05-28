@@ -26,14 +26,14 @@ Update ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.
     values = record.data
 
 %>
-<form action="<%=get_path 'update'%>" id="form" method="post">
+<form action="<%=get_path 'update'%>" id="<%=record.id%>" method="post">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
 <input type="hidden" name="id" value="<%=record.id%>">
 <input type="hidden" name="document" value="<%=document.name%>">
 <input type="hidden" name="schema" id="schema" value="">
 
 <% fieldset(:record) do |f| %>
-<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form")  %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>record.id)  %>
 <% end %>
 <br/>
 <input type="submit" value="Update" class="btn btn-success">
@@ -42,7 +42,7 @@ Update ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.
 
 <script>
 
-  $("#form").submit(function(e){
+  $("#<%=record.id%>").submit(function(e){
 
     fields = []
     // e.preventDefault()

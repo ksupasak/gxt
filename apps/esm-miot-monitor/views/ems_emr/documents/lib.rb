@@ -21,4 +21,9 @@ def date_string this, name, options={}
   return inline(this,'documents/_render_field', :this=>this, :name=>name, :options=>options, :type=>'date_string')
 end
 
+def time_string this, name, options={}
+  return inline(this,'documents/_render_field', :this=>this, :name=>name, :options=>options, :type=>'time_string')
+end
+
+
 end

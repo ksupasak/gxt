@@ -6,7 +6,12 @@
 
   px = JSON.parse(body)
 
-  sources = EMSCase.where(:date=>{"$gte"=>px['start_date'], "$lte"=>px['end_date']}).all 
+  query = {:date=>{"$gte"=>px['start_date'], "$lte"=>px['end_date']}}
+  query[:shift] = px['shift'] if px['shift'] and px['shift']!=''
+  query[:init_cbd_color] = px['scene_cbd_color'] if px['scene_cbd_color'] and px['scene_cbd_color']!=''
+  query[:patient_type] = px['patient_type'] if px['patient_type'] and px['patient_type']!=''
+
+  sources = EMSCase.where(query).all 
 
   sources.collect!{|i| 
     
@@ -108,5 +113,5 @@
   end
   
   
-  
+  data[:number_of_cases] = sources.count
 %><%=data.to_json.html_safe%>

@@ -103,17 +103,12 @@ record = @current_case
                 // and remember the jqxhr object for this request
                 var jqxhr = $.post( "check?id=<%=com.id%>&admit_log_id=<%=last_log.id%>&mile_meter="+v, function() {
                   console.log("sueccess")
-                  // alert( "success" );
-                  	// window.location.reload();
+                  window.location.reload();
+
                 })
                   .done(function() {
                        console.log( "second success" );
                   	 
-					 
-					 // window.location.reload();
-					
-					//  window.location='index';
-					
                   })
                   .fail(function() {
                        console.log( "error" );
@@ -123,8 +118,6 @@ record = @current_case
                        console.log( "finished" );
                     	window.location.reload();
                   });
-
-                // Perform other work here ...
 
                 // Set another completion function for the request above
                 jqxhr.always(function() {

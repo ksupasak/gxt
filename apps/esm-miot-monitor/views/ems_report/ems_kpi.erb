@@ -1,4 +1,4 @@
-<h1>Report</h1>
+<h1>EMS KPI</h1>
 
 <script>
 
@@ -11,29 +11,144 @@ $(document).ready(function(){
 
 
 <form id="data" >
-  <label>Start Date:</label>
-  <input type="date" name="start_date"  value="<%=Time.now.beginning_of_year.strftime("%Y-%m-%d")%>">
-  
-  <label>End Date:</label>
-  <input type="date" name="end_date"   value="<%=Time.now.strftime("%Y-%m-%d")%>">
-  
-  <label>Filter:</label>
-  <input type="hidden" name="filter"   value="">
+<% fieldset(:record) do |f| %>
 
+<div class="row">
+  <div class="col-3">
+      <label>Start Date:</label>
+  <input type="date" name="start_date"  class="form-control" value="<%=Time.now.beginning_of_year.strftime("%Y-%m-%d")%>">
+  </div>
+
+  <div class="col-3">
+  <label>End Date:</label>
+  <input type="date" name="end_date"   class="form-control" value="<%=Time.now.strftime("%Y-%m-%d")%>">
+  </div>
+
+ <div class="col-3">
+  <label>เวร:</label>
+  <%= f.select(:shift, [['',''],['เช้า','เช้า'],['บ่าย','บ่าย'],['ดึก','ดึก']], :class=>'form-select') %>
+  </div>
+
+
+ <div class="col-3">
+  <label>Triage:</label>
+    <%= f.select(:scene_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :class=>' form-select') %>
+</div>
+ <div class="col-3">
+  <label>Trauma:</label>
+<%= f.select(:patient_type, [['',''], ['non-trauma','Non-Trauma'],['trauma','Trauma']], :class=>' form-select') %>
+  </div>
+
+ <div class="col-3">
+  <label>Filter:</label>
+  <input type="text" id="filter" name="filter"   value=""  class="form-control">
+  </div>
+</div>
+<% end %>
 <br/>
   <button type="submit" class="btn btn-primary">Search</button>
 </form>
-
 <script>
   $(document).ready(function(){
     $('#data').submit();
   })
 </script>
-
 <div id="results"></div>
 
 <div class="">
-    
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+                   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Total Orders</p>
+									<h4 class="my-1 text-info" id="number_of_cases">-</h4>
+									<p class="mb-0 font-13">+2.5% from last week</p>
+								</div>
+								<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>
+							</div>
+						</div>
+					 </div>
+				   </div>
+				   <div class="col-2">
+					<div class="card radius-10 border-start border-0 border-3 border-danger">
+					   <div class="card-body">
+						   <div class="d-flex align-items-center">
+							   <div>
+								   <p class="mb-0 text-secondary">Total Revenue</p>
+								   <h4 class="my-1 text-danger">$84,245</h4>
+								   <p class="mb-0 font-13">+5.4% from last week</p>
+							   </div>
+							   <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="bx bxs-wallet"></i>
+							   </div>
+						   </div>
+					   </div>
+					</div>
+				  </div>
+				  <div class="col-2">
+					<div class="card radius-10 border-start border-0 border-3 border-success">
+					   <div class="card-body">
+						   <div class="d-flex align-items-center">
+							   <div>
+								   <p class="mb-0 text-secondary">Bounce Rate</p>
+								   <h4 class="my-1 text-success">34.6%</h4>
+								   <p class="mb-0 font-13">-4.5% from last week</p>
+							   </div>
+							   <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class="bx bxs-bar-chart-alt-2"></i>
+							   </div>
+						   </div>
+					   </div>
+					</div>
+				  </div>
+				  <div class="col-2">
+					<div class="card radius-10 border-start border-0 border-3 border-warning">
+					   <div class="card-body">
+						   <div class="d-flex align-items-center">
+							   <div>
+								   <p class="mb-0 text-secondary">Total Customers</p>
+								   <h4 class="my-1 text-warning">8.4K</h4>
+								   <p class="mb-0 font-13">+8.4% from last week</p>
+							   </div>
+							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
+							   </div>
+						   </div>
+					   </div>
+					</div>
+				  </div> 
+
+                   <div class="col-2">
+					<div class="card radius-10 border-start border-0 border-3 border-warning">
+					   <div class="card-body">
+						   <div class="d-flex align-items-center">
+							   <div>
+								   <p class="mb-0 text-secondary">Total Customers</p>
+								   <h4 class="my-1 text-warning">8.4K</h4>
+								   <p class="mb-0 font-13">+8.4% from last week</p>
+							   </div>
+							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
+							   </div>
+						   </div>
+					   </div>
+					</div>
+				  </div> 
+                   <div class="col-2">
+					<div class="card radius-10 border-start border-0 border-3 border-warning">
+					   <div class="card-body">
+						   <div class="d-flex align-items-center">
+							   <div>
+								   <p class="mb-0 text-secondary">Total Customers</p>
+								   <h4 class="my-1 text-warning">8.4K</h4>
+								   <p class="mb-0 font-13">+8.4% from last week</p>
+							   </div>
+							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
+							   </div>
+						   </div>
+					   </div>
+					</div>
+				  </div> 
+				</div>
 <div class="card">
 <div class="card-body">
 <div class="row">
@@ -136,6 +251,7 @@ $(document).ready(function(){
         console.log("filter "+name+" "+col+" "+value)
 
         filter = ""+col+" "+value
+        $('#filter').val(filter)
         process();
     }
     function data_callback(data){
@@ -158,22 +274,34 @@ $(document).ready(function(){
     filter = ""
     
     function process(){
-    console.log('process')          
+    console.log('process')     
+  
         const formData = {
             start_date: $('input[name="start_date"]').val(),
             end_date: $('input[name="end_date"]').val(),
+            shift: $('#record_shift').val(),
+            scene_cbd_color: $('#record_scene_cbd_color').val(),
+            patient_type: $('#record_patient_type').val(),
             filter: filter
         };
             console.log(formData)          
+ 
+       core.process(formData, after_process)
 
-        core.process(formData)
         
+    }
+
+    function after_process(res){
+        console.log(res)
+
+        console.log(res['number_of_cases'])
+       $('#number_of_cases').html(res['number_of_cases'])
     }
     
     $('#data').on('submit', function (e) {
        
         e.preventDefault();
-        filter = ""
+      
         process();
     
     });
