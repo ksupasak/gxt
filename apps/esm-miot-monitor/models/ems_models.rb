@@ -147,6 +147,7 @@ class EMSCase < GXTModel
   key :dispatch_cbd_color, String
   key :scene_cbd_color, String
   key :screen_cbd_color, String
+  key :triage_note, String
 
   key :case_type, String # EMS / Refer
   key :patient_type, String # Trauma

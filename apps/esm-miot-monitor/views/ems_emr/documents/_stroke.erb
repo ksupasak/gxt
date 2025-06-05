@@ -20,22 +20,30 @@
 <%= check_string this, 'chief_complain',:col_item=>'col-3', :col=>12,   :value=>%w{weakness dysarthria vertigo seizure อื่นๆ}, :label=>'Chief complain of Stroke <span class="mandatory">*</span>' %>
 <%= text_string this, 'chief_complain_other', :col=>4, :label=>''%>
 
-<div class="col-12">
-<%= select_string this, 'upper_rt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Upper Rt. Motor Power <span class="mandatory">*</span>'%>
-<%= select_string this, 'upper_lt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Upper Lt. Motor Power <span class="mandatory">*</span>'%>
-<%= select_string this, 'lower_rt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Lower Rt. Motor Power <span class="mandatory">*</span>'%>
-<%= select_string this, 'lower_lt',:value=>%w{0 I II III IV V}, :col=>4 , :label=>'Lower Lt. Motor Power <span class="mandatory">*</span>'%>
+<div class="row">
 
-<%= date_string this, 'last_seen_normal_time', :col=>4 , :label=>'Last seen normal <span class="mandatory">*</span>'%>
-<%= date_string this, 'first_seen_abnormal_time', :col=>4 , :label=>'First seen abnormal <span class="mandatory">*</span>'%>
-<%= date_string this, 'stroke_fasttrack_time', :col=>4 , :label=>'EMS Activated stoke fast track time'%>
-<%= date_string this, 'ct_time', :col=>4 , :label=>'CT time'%>
+<div class="col-6">
 
-<%= text_string this, 'lvo_score', :col=>4, :label=>'LVO score <span class="mandatory">*</span>'%>
+<%= select_string this, 'upper_rt',:value=>%w{0 I II III IV V}, :col=>8 , :label=>'Upper Rt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'upper_lt',:value=>%w{0 I II III IV V}, :col=>8 , :label=>'Upper Lt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'lower_rt',:value=>%w{0 I II III IV V}, :col=>8 , :label=>'Lower Rt. Motor Power <span class="mandatory">*</span>'%>
+<%= select_string this, 'lower_lt',:value=>%w{0 I II III IV V}, :col=>8 , :label=>'Lower Lt. Motor Power <span class="mandatory">*</span>'%>
+<%= radio_string this, 'transfer_to_stroke_center_level', :col=>8, :label=>'Transfer to stroke center level<span class="mandatory">*</span>',  :value=>["1", "2", "3"]%>
+<%= text_string this, 'lvo_score', :col=>8, :label=>'LVO score <span class="mandatory">*</span>'%>
+<%= time_string this, 'ct_time', :col=>8 , :label=>'CT time'%>
 
-<%= radio_string this, 'transfer',   :value=>["Yes", "No"], :label=>'Transfer stoke unit <span class="mandatory">*</span>' %>
+</div>
+<div class="col-6">
+<%= time_string this, 'last_seen_normal_time', :col=>8 , :label=>'Last seen normal <span class="mandatory">*</span>'%>
+<%= time_string this, 'first_seen_abnormal_time', :col=>8 , :label=>'First seen abnormal <span class="mandatory">*</span>'%>
+<%= time_string this, 'stroke_fasttrack_time', :col=>8 , :label=>'EMS Activated stoke fast track time'%>
+<%= time_string this, 'neuromed_at', :col=>8, :label=>'Specialist neuromed at <span class="mandatory">*</span>'%>
+<%= time_string this, 'rtpa_at', :col=>8, :label=>'r-tPA at <span class="mandatory">*</span>'%>
+<%= time_string this, 'thrombectomy_at', :col=>8, :label=>'Thrombectomy at <span class="mandatory">*</span>'%>
+<%= text_string this, 'duration_to_neuromed', :col=>8 , :label=>'Duration to neuromed (min)'%>
 
-<%= radio_string this, 'thrombectomy',   :value=>["Yes", "No"], :label=>'Thrombectomy' %>
+
+</div>
 </div>
     </div><!--row-->
   </div><!--card body-->

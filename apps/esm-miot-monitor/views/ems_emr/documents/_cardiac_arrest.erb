@@ -146,10 +146,10 @@
 
   <div class="row">
   <div class="col-6">
-  <label class="form-label">On scene to ED within 30 min. <span class="mandatory">*</span></label>
+  <label class="form-label">Collapse to ED within 30 min. <span class="mandatory">*</span></label>
 </div>
 <div class="col-6">
-  <%= radio_string this, 'on_scene_to_ed',   :value=>["Yes", "No"] %>
+  <%= radio_string this, 'collapse_to_ed',   :value=>["Yes", "No"] %>
 </div>
 </div>
 
@@ -165,14 +165,38 @@
 
 
   <div class="row">
-  <div class="col-6">
-  <label class="form-label">EtCO2 > 10mmHg. <span class="mandatory">*</span>/label>
+   <div class="col-6">
+  <label class="form-label">EtCO2 > 10mmHg. <span class="mandatory">*</span></label>
   </div>
   <div class="col-6">
     <%= radio_string this, 'etco2',   :value=>["Yes", "No"] %>
   </div>
   </div>
 
+<div class="row">
+   <div class="col-6">
+  <label class="form-label">Candidate ECMO <span class="mandatory">*</span></label>
+  </div>
+  <div class="col-6">
+    <%= radio_string this, 'candidate_ecmo',   :value=>["Yes", "No"] %>
+  </div>
+  </div>
+ <div class="row">
+  <div class="col-6">
+  <label class="form-label">EMS activate ECMO <span class="mandatory">*</span></label>
+  </div>
+  <div class="col-6"> 
+    <%= radio_string this, 'ecmo_activate_ecmo',   :value=>["Yes", "No"] %>
+  </div>
+  </div>
+ <div class="row">
+  <div class="col-6">
+  <label class="form-label">EMS activate note <span class="mandatory">*</span></label>
+  </div>
+  <div class="col-6"> 
+    <%= text_string this, 'ecmo_activate_note' %>
+  </div>
+  </div>
 
   <div class="row">
   <div class="col-6">
@@ -241,11 +265,34 @@ LIST
 
 
 </div>
+<hr/>
+<div class="row">
+<div class="col-4">
+  <label class="form-label">Transfer to hospital <span class="mandatory">Follow up</span></label>
+  <%= radio_string this, 'transfer_to_hospital',   :value=>%w{yes no} %>
+</div>
+<div class="col-4">
+  <label class="form-label">Survival to admit <span class="mandatory">Follow up</span></label>
+  <%= radio_string this, 'survival_to_admit',   :value=>%w{yes no unknown} %>
+</div>
+<div class="col-4"> 
+  <label class="form-label">Survival to discharge <span class="mandatory">Follow up</span></label>
+  <%= radio_string this, 'survival_to_discharge',   :value=>%w{yes no unknown} %>
+</div>
+ <div class="col-4">
+   <label class="form-label">Length of stay <span class="mandatory">Follow up</span></label>
+  <%= text_string this, 'length_of_stay' , :label=>""%>
+</div>
 
-<div class="col-12"><br/></div>
+</div>
 
 
 
-    </div><!--row-->
+    </div><!--row-->  
+
+
+
+
+
   </div><!--card body-->
 </div><!--card-->

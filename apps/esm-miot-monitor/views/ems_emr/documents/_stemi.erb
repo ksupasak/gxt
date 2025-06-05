@@ -26,20 +26,23 @@
 LIST
 %>
 <%= check_string this, 'chief_complain', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Chief complain of STREMI <span class="mandatory">*</span>'%>
-<%= text_string this, 'chief_complain_other', :col=>8, :label=>'Chief complain other'%>
 
-<div class="row">
-<%= date_string this, 'chest_pain_time', :col=>4 , :label=>'Onset chest pain <span class="mandatory">*</span>'%>
-</div>
+
+<%= text_string this, 'chief_complain_other', :col=>4, :label=>'Chief complain other'%>
+<div class="clear"></div>
+<%= time_string this, 'first_medical_contact_time', :col=>4, :label=>'First medical contact time'%>
+
+<%= time_string this, 'chest_pain_time', :col=>4 , :label=>'Onset chest pain <span class="mandatory">*</span>'%>
+
 <%= select_string this, 'painscore',:value=>%w{0 1 2 3 4 5 6 7 8 9 10}, :col=>12 , :label=>'Pain score ณ เวลารับแจ้ง <span class="mandatory">*</span>'%>
   
 <%= select_string this, 'painscore_at_scene',:value=>%w{0 1 2 3 4 5 6 7 8 9 10}, :col=>12 , :label=>'Pain score at scene <span class="mandatory">*</span>'%>
 
-<%= date_string this, 'first_ekg_time', :col=>4 , :label=>'First EKG 12 lead time <span class="mandatory">*</span>'%>
+<%= time_string this, 'first_ekg_time', :col=>4 , :label=>'First EKG 12 lead time <span class="mandatory">*</span>'%>
 
-<%= date_string this, 'ems_diagnosis_time', :col=>4 , :label=>'EMS diagnosis time <span class="mandatory">*</span>'%>
+<%= time_string this, 'ems_alert_stemi_time', :col=>4 , :label=>'EMS alert STEMI time <span class="mandatory">*</span>'%>
 
-<%= date_string this, 'ep_diagnosis_time', :col=>4 , :label=>'EP diagnosis time'%>
+<%= time_string this, 'confirm_stemi_by_ep_time', :col=>4 , :label=>'Confirm STEMI by EP time'%>
 
 <%= text_string this, 'interpretion', :col=>12, :label=>'Interpretion <span class="mandatory">*</span>'%>
 
@@ -54,32 +57,26 @@ LIST
 LIST
 %>
 <%= check_string this, 'diagnosis', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Diagnosis <span class="mandatory">*</span>'%>
-<%= text_string this, 'diagnosis_other', :col=>8, :label=>'Diagnosis other'%>
+<%= text_string this, 'diagnosis_other', :col=>12, :label=>'Diagnosis other'%>
+
+<%= time_string this, 'pci_time', :col=>3 , :label=>'PCI time'%>
+<%= time_string this, 'fibrinolysis_time', :col=>3 , :label=>'Fibrinolysis time'%>
+<%= time_string this, 'asa_time', :col=>3 , :label=>'ASA 81 mg 4 tabs'%>
+<%= time_string this, 'ticagrelor_time', :col=>3 , :label=>'Ticagrelor 2 tab'%>
+<%= time_string this, 'clopidogrel_time', :col=>3 , :label=>'Clopidogrel 4 tab'%>
+<%= text_string this, 'other_medication', :col=>3, :label=>'Other medication'%>
+
+
 
 <div class="row">
 <%= date_string this, 'activate_er_time', :col=>4 , :label=>'Activate ER/Erawam time <span class="mandatory">*</span>'%>
 </div>
-<%= radio_string this, 'transfer',:value=>%w{yes no}, :col=>12 , :label=>'Transfer to PCI center <span class="mandatory">*</span>'%>
+<%= radio_string this, 'transfer_to',:value=>%w{ER Cathlab}, :col=>12 , :label=>'Transfer to<span class="mandatory">*</span>'%>
 
-<%= date_string this, 'pci_time', :col=>4 , :label=>'PCI time'%>
-
-<%= date_string this, 'fibrinolysis_time', :col=>4 , :label=>'Fibrinolysis time'%>
-
-<%= date_string this, 'asa_time', :col=>4 , :label=>'ASA 81 mg 4 tabs'%>
 
 <%= check_string this, 'isosorbide',:value=>%w{1 2 3 อื่นๆ}, :col=>4 , :label=>'Isosorbide dinitrate SL(tab)'%>
 
 <%= text_string this, 'isosorbide_other', :col=>8, :label=>''%>
-
-<%
-  list = <<LIST
-1|Ticagrelor 2 tab
-2|Clopidogrel 4 tab
-3|อื่นๆ
-LIST
-%>
-<%= check_string this, 'sl', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Other'%>
-<%= text_string this, 'sl_other', :col=>8, :label=>''%>
 
 <%= radio_string this, 'cardiac_arrest',:value=>%w{yes no}, :col=>12 , :label=>'Cardiac Arrest <span class="mandatory">*</span>'%>
 

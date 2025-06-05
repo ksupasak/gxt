@@ -47,6 +47,11 @@
 <%= f.select(:screen_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :value=>record.screen_cbd_color, :class=>' form-select') %>
 </div>
 
+<div class="col-12">
+<label class="form-label" for="triage_note">Triage Note</label>
+<input class="form-control" type="text" name="record[triage_note]" id="" value="<%=record.triage_note%>" placeholder="ระบุสาเหตุการทำการตรวจรักษา">
+</div>
+
 
 <div class="clear"></div>
 <div class="col-8">
