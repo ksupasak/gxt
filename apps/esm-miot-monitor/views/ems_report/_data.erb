@@ -108,6 +108,8 @@
             list << {label:k, value:v, key:k}
         end
         
+        list << {label:'', value:0, key:''} if list.count==1
+
         data[i['name']] = list
     
   end
