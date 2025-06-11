@@ -197,7 +197,7 @@ class Core {
           arcs.append("text")
             .attr("transform", d => `translate(${arc.centroid(d)})`)
             .attr("text-anchor", "middle")
-            .text(d => d.data.label);
+            .text(d => `${d.data.label} (${d.data.value})`);
     }
     
     function showBar(div, data, options={}){

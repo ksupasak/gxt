@@ -3,6 +3,7 @@
 record = @record
 record_id = @record_id
 record_id = params[:id] if params[:id]
+record_id = "form" unless record_id
 
 label = name.humanize
 label = options[:label] if options[:label]
