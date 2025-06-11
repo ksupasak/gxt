@@ -38,22 +38,22 @@
 <div class="row">
 <div class="col-6">
   <label class="form-label">Last seen normal (OHCA) <span class="mandatory">*</span></label>
-  <%= date_string this, 'last_seen_normal_time', :col=>12   , :label=>''%>
+  <%= time_string this, 'last_seen_normal_time', :col=>12   , :label=>''%>
 </div>
 <div class="col-6">
   <label class="form-label">First seen abnormal (OHCA) <span class="mandatory">*</span></label>
-  <%= date_string this, 'first_seen_abnormal_time', :col=>12  , :label=>''%>
+  <%= time_string this, 'first_seen_abnormal_time', :col=>12  , :label=>''%>
 </div>
 </div>
 
 <div class="row">
 <div class="col-6">
   <label class="form-label">Bystander start CPR time</label>
-  <%= date_string this, 'bystander_start_cpr_time' , :label=>'' %>
+  <%= time_string this, 'bystander_start_cpr_time' , :label=>'' %>
 </div>
 <div class="col-6">
   <label class="form-label">EMS start CPR time</label>
-  <%= date_string this, 'ems_start_cpr_time', :label=>''%>
+  <%= time_string this, 'ems_start_cpr_time', :label=>''%>
 </div>
 </div>
 
@@ -63,33 +63,33 @@
 
 <div class="row">
 <div class="col-6">
-  <%= date_string this, 'first_shock_time' %>
+  <%= time_string this, 'first_shock_time' %>
 </div>
 <div class="col-6">
-  <%= date_string this, 'first_amiodarone_time' , :label=>'First Amiodarone 300 mg time'%>
+  <%= time_string this, 'first_amiodarone_time' , :label=>'First Amiodarone 300 mg time'%>
 </div>
 </div>
 
 <div class="row">
 <div class="col-6">
-  <%= date_string this, 'third_shock_time', :label=>'3rd shock time'%>
+  <%= time_string this, 'third_shock_time', :label=>'3rd shock time'%>
 </div>
 <div class="col-6">
-  <%= text_string this, 'shock_time', :label=>'Total Shock times(ครั้ง)'%>
+  <%= time_string this, 'shock_time', :label=>'Total Shock times(ครั้ง)'%>
 </div>
 </div>
 <div class="row">
 <div class="col-6">
   <label class="form-label">First adrenaline time</label>
-  <%= date_string this, 'first_adrenaline_time', :label=>''%>
+  <%= time_string this, 'first_adrenaline_time', :label=>''%>
 </div>
 <div class="col-6">
   <label class="form-label">On ETT time</label>
-  <%= date_string this, 'on_ett_time' , :label=>''  %>
+  <%= time_string this, 'on_ett_time' , :label=>''  %>
 </div>
 </div>
   <label class="form-label">Time start autopulse</label>
-  <%= date_string this, 'autopulse_time',:col=>6, :label=>''%>
+  <%= time_string this, 'autopulse_time',:col=>6, :label=>''%>
 
 </div>
 
@@ -269,15 +269,15 @@ LIST
 <div class="row">
 <div class="col-4">
   <label class="form-label">Transfer to hospital <span class="mandatory">Follow up</span></label>
-  <%= radio_string this, 'transfer_to_hospital',   :value=>%w{yes no} %>
+  <%= radio_string this, 'transfer_to_hospital',   :value=>%w{Yes No} %>
 </div>
 <div class="col-4">
   <label class="form-label">Survival to admit <span class="mandatory">Follow up</span></label>
-  <%= radio_string this, 'survival_to_admit',   :value=>%w{yes no unknown} %>
+  <%= radio_string this, 'survival_to_admit',   :value=>%w{Yes No Unknown} %>
 </div>
 <div class="col-4"> 
   <label class="form-label">Survival to discharge <span class="mandatory">Follow up</span></label>
-  <%= radio_string this, 'survival_to_discharge',   :value=>%w{yes no unknown} %>
+  <%= radio_string this, 'survival_to_discharge',   :value=>%w{Yes No Unknown} %>
 </div>
  <div class="col-4">
    <label class="form-label">Length of stay <span class="mandatory">Follow up</span></label>

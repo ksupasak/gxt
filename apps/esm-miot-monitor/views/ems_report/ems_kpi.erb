@@ -1,4 +1,4 @@
-<h1>EMS KPI</h1>
+<h1>Activate EMS KPI</h1>
 
 <script>
 
@@ -13,8 +13,12 @@ $(document).ready(function(){
 <form id="data" >
 <% fieldset(:record) do |f| %>
 
+
+
 <div class="row">
-  <div class="col-3">
+<div class="col-6">
+<div class="row">
+<div class="col-3">
       <label>Start Date:</label>
   <input type="date" name="start_date"  class="form-control" value="<%=Time.now.beginning_of_year.strftime("%Y-%m-%d")%>">
   </div>
@@ -38,15 +42,25 @@ $(document).ready(function(){
   <label>Trauma:</label>
 <%= f.select(:patient_type, [['',''], ['non-trauma','Non-Trauma'],['trauma','Trauma']], :class=>' form-select') %>
   </div>
+  <div class="col-3">
+    <label><br/><br/></label>
 
+  <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</div>
+</div>
+  
+<div class="col-6">
+<div class="row">
  <div class="col-3">
   <label>Filter:</label>
   <input type="text" id="filter" name="filter"   value=""  class="form-control">
   </div>
 </div>
+</div>
+</div>
 <% end %>
-<br/>
-  <button type="submit" class="btn btn-primary">Search</button>
+
 </form>
 <script>
   $(document).ready(function(){
@@ -55,100 +69,192 @@ $(document).ready(function(){
 </script>
 <div id="results"></div>
 
-<div class="">
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
-                   <div class="col-2">
+<div class="row">
+
+
+ <div class="col-2">
 					 <div class="card radius-10 border-start border-0 border-3 border-info">
 						<div class="card-body">
 							<div class="d-flex align-items-center">
 								<div>
-									<p class="mb-0 text-secondary">Total Orders</p>
+									<p class="mb-0 text-secondary">Total Cases</p>
 									<h4 class="my-1 text-info" id="number_of_cases">-</h4>
-									<p class="mb-0 font-13">+2.5% from last week</p>
+									<p class="mb-0 font-13">- days</p>
 								</div>
-								<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
-								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
 							</div>
 						</div>
 					 </div>
-				   </div>
-				   <div class="col-2">
-					<div class="card radius-10 border-start border-0 border-3 border-danger">
-					   <div class="card-body">
-						   <div class="d-flex align-items-center">
-							   <div>
-								   <p class="mb-0 text-secondary">Total Revenue</p>
-								   <h4 class="my-1 text-danger">$84,245</h4>
-								   <p class="mb-0 font-13">+5.4% from last week</p>
-							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class="bx bxs-wallet"></i>
-							   </div>
-						   </div>
-					   </div>
-					</div>
-				  </div>
-				  <div class="col-2">
-					<div class="card radius-10 border-start border-0 border-3 border-success">
-					   <div class="card-body">
-						   <div class="d-flex align-items-center">
-							   <div>
-								   <p class="mb-0 text-secondary">Bounce Rate</p>
-								   <h4 class="my-1 text-success">34.6%</h4>
-								   <p class="mb-0 font-13">-4.5% from last week</p>
-							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto"><i class="bx bxs-bar-chart-alt-2"></i>
-							   </div>
-						   </div>
-					   </div>
-					</div>
-				  </div>
-				  <div class="col-2">
-					<div class="card radius-10 border-start border-0 border-3 border-warning">
-					   <div class="card-body">
-						   <div class="d-flex align-items-center">
-							   <div>
-								   <p class="mb-0 text-secondary">Total Customers</p>
-								   <h4 class="my-1 text-warning">8.4K</h4>
-								   <p class="mb-0 font-13">+8.4% from last week</p>
-							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
-							   </div>
-						   </div>
-					   </div>
-					</div>
-				  </div> 
+	</div>
 
-                   <div class="col-2">
-					<div class="card radius-10 border-start border-0 border-3 border-warning">
-					   <div class="card-body">
-						   <div class="d-flex align-items-center">
-							   <div>
-								   <p class="mb-0 text-secondary">Total Customers</p>
-								   <h4 class="my-1 text-warning">8.4K</h4>
-								   <p class="mb-0 font-13">+8.4% from last week</p>
-							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
-							   </div>
-						   </div>
-					   </div>
-					</div>
-				  </div> 
-                   <div class="col-2">
-					<div class="card radius-10 border-start border-0 border-3 border-warning">
-					   <div class="card-body">
-						   <div class="d-flex align-items-center">
-							   <div>
-								   <p class="mb-0 text-secondary">Total Customers</p>
-								   <h4 class="my-1 text-warning">8.4K</h4>
-								   <p class="mb-0 font-13">+8.4% from last week</p>
-							   </div>
-							   <div class="widgets-icons-2 rounded-circle bg-gradient-blooker text-white ms-auto"><i class="bx bxs-group"></i>
-							   </div>
-						   </div>
-					   </div>
-					</div>
-				  </div> 
-				</div>
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Dispatch Time</p>
+									<h4 class="my-1 text-info" id="dispatch_time">-</h4>
+									<p class="mb-0 font-13">Dispatch time <1m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Activate Time</p>
+									<h4 class="my-1 text-info" id="activate_time">-</h4>
+									<p class="mb-0 font-13">Activate time <2m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Response Time</p>
+									<h4 class="my-1 text-info" id="response_time">-</h4>
+									<p class="mb-0 font-13">Response time <8m (RED)</p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Scene Time</p>
+									<h4 class="my-1 text-info" id="scene_time">-</h4>
+									<p class="mb-0 font-13">Scene time 0-10m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Scene Time</p>
+									<h4 class="my-1 text-info" id="scene_time_over_10m">-</h4>
+									<p class="mb-0 font-13">Scene time >10m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_5km">-</h4>
+									<p class="mb-0 font-13">Distance < 5 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_10km">-</h4>
+									<p class="mb-0 font-13">Distance < 10 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+     <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_over_10km">-</h4>
+									<p class="mb-0 font-13">Distance > 10 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+       <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-warning">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Over Triage</p>
+									<h4 class="my-1 text-warning" id="over_triage">-</h4>
+									<p class="mb-0 font-13">Over Triage </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+       <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-warning">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Under Triage</p>
+									<h4 class="my-1 text-warning" id="under_triage">-</h4>
+									<p class="mb-0 font-13">Under Triage </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+</div>
+
 <div class="card">
 <div class="card-body">
 <div class="row">
@@ -296,6 +402,19 @@ $(document).ready(function(){
 
         console.log(res['number_of_cases'])
        $('#number_of_cases').html(res['number_of_cases'])
+
+       $('#dispatch_time').html(res['dispatch_time'])
+       $('#activate_time').html(res['activate_time'])
+       $('#response_time').html(res['response_time'])
+       $('#scene_time').html(res['scene_time'])
+       $('#scene_time_over_10m').html(res['scene_time_over_10m'])
+       $('#average_time_5km').html(res['average_time_5km'])
+       $('#average_time_10km').html(res['average_time_10km'])
+       $('#average_time_over_10km').html(res['average_time_over_10km'])
+       $('#over_triage').html(res['over_triage'])
+       $('#under_triage').html(res['under_triage'])
+
+
     }
     
     $('#data').on('submit', function (e) {
@@ -404,9 +523,9 @@ google_api_key = Setting.get('google_api_key')
                 const distances = [
           { radius: 5000, color: '#ff0000' },  // 1 km - red
           { radius: 10000, color: '#ffa500' },  // 3 km - orange
-          { radius: 15000, color: '#ffff00' },  // 5 km - yellow
-          { radius: 20000, color: '#00ff00' },  // 7 km - green
-          { radius: 25000, color: '#0000ff' }, // 10 km - blue
+          // { radius: 15000, color: '#ffff00' },  // 5 km - yellow
+          // { radius: 20000, color: '#00ff00' },  // 7 km - green
+          // { radius: 25000, color: '#0000ff' }, // 10 km - blue
         ];
 
         distances.forEach((zone) => {

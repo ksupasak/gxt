@@ -2,6 +2,8 @@
 
 record = @record
 record_id = @record_id
+record_id = params[:id] if params[:id]
+
 label = name.humanize
 label = options[:label] if options[:label]
 
@@ -24,11 +26,23 @@ display = 'block' if options[:display]
 <label  style="min-width:150px"><%= label%></label>
 <% end %>
 <%
-    options[:value].each_with_index do |i,j|
+    ls = []
+    if options[:pair]==true
+        options[:value].each_with_index do |i,j|
+            val = i
+            label = val.humanize
+            val,label = val.split("|") if options[:pair]==true
+            ls.push([val,label])
+        end
+    else
+        ls = options[:value].collect{|i| [i,i]}
+    end
+
+    ls.each_with_index do |i,j|
 %>
 <div style="display:<%=display%>">
-<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i %> value="<%=i%>" class="<%=options[:class]%>  field" field_type="radio_string" >
-<label for="<%=name%>_<%=j%>"><%=i%></label>
+<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i[0] %> value="<%=i[0]%>" class="<%=options[:class]%>  field" field_type="radio_string" >
+<label for="<%=name%>_<%=j%>"><%=i[1]%></label>
 </div>
 &nbsp;
 &nbsp;
@@ -113,8 +127,7 @@ col = options[:col] if options[:col]
         })
         console.log(ls)
 		
-        $('#<%=record_id%> .data-<%=name%>').val(ls.join("|"))
-        // alert('')
+        $('#<%=record_id%> .data-<%=name%>').val(ls.join("|")).trigger('change');
 
 
     })

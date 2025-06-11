@@ -84,7 +84,7 @@
   
   data['positions'] = sources.collect{|i| 
   t = i.latlng.split(',')
-  {lat:t[0].to_f, lng:t[1].to_f, label:i.location} }  
+  {lat:t[0].to_f, lng:t[1].to_f, label:i.case_no} }  
   
   for i in cmd
   
@@ -114,4 +114,28 @@
   
   
   data[:number_of_cases] = sources.count
+
+  sum = sources.count.to_f
+  triage = {'red'=>5,'yellow'=>4,'green'=>3,'white'=>2,'black'=>1, nil=>nil, ""=>nil}
+
+  data[:dispatch_time] = format("%.2f ",sources.collect{|i| 1 if  i.dispatch_time and i.dispatch_time <= 1 }.compact.sum/sum*100.0)+'%'
+  data[:activate_time] = format("%.2f ",sources.collect{|i| 1 if i.activation_time and i.activation_time <= 2 }.compact.sum/sum*100.0)+'%'
+  data[:response_time] = format("%.2f ",sources.collect{|i| 1 if i.response_time and i.response_time <= 8  and i.init_cbd_color=='red'}.compact.sum/sum*100.0)+'%'
+  data[:scene_time] = format("%.2f ",sources.collect{|i| 1 if i.onscene_time and i.onscene_time <= 10 }.compact.sum/sum*100.0)+'%'
+  data[:scene_time_over_10m] = format("%.2f ",sources.collect{|i| 1 if i.onscene_time and i.onscene_time > 10 }.compact.sum/sum*100.0)+'%'
+  data[:average_time_5km] = format("%.2f ",sources.collect{|i| i.response_time.to_i if i.response_time and i.gps_distance and i.gps_distance<5000 }.compact.sum/sum)
+  data[:average_time_10km] = format("%.2f ",sources.collect{|i| i.response_time.to_i if i.response_time and i.gps_distance and i.gps_distance<10000 }.compact.sum/sum)
+  data[:average_time_over_10km] = format("%.2f ",sources.collect{|i| i.response_time.to_i if i.response_time and i.gps_distance and i.gps_distance>10000 }.compact.sum/sum)
+  data[:over_triage] = sources.collect{|i| 1 if  i.init_cbd_color and i.scene_cbd_color and triage[i.init_cbd_color] and triage[i.scene_cbd_color] and triage[i.init_cbd_color] > triage[i.scene_cbd_color] }.compact.sum
+  data[:under_triage] = sources.collect{|i| 1 if  i.init_cbd_color and i.scene_cbd_color and triage[i.init_cbd_color] and triage[i.scene_cbd_color] and triage[i.init_cbd_color] < triage[i.scene_cbd_color] }.compact.sum
+
+
+# for i in sources
+#  if i.init_cbd_color and i.scene_cbd_color 
+#    puts i.init_cbd_color+' '+i.scene_cbd_color+' '+triage[i.init_cbd_color].to_s+' '+triage[i.scene_cbd_color].to_s
+#  end
+# end
+
+
+
 %><%=data.to_json.html_safe%>
