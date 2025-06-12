@@ -1,5 +1,5 @@
 <h1>Out Hospital Cardiac Arrest - OHCA</h1>
- 
+ <script src="https://unpkg.com/vue@3"></script>
 <script>
 
 $(document).ready(function(){
@@ -365,6 +365,31 @@ $(document).ready(function(){
 </div>
     
 
+<div class="row">
+  <div class="col-md-12">
+  <div id="app" class="card">
+  <div class="card-body">
+    <h5 class="card-title">Patients</h5>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Patient name</th>
+          <th>HN</th>
+          <th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(patient, index) in patients" :key="index">
+          <td><a href="../EMS/show?id={{ patient.case_no }}" >{{ patient.case_no }}</a></td>
+          <td>{{ patient.patient_name }}</td>
+          <td>{{ patient.patient_hn }}</td>
+          <td>{{ patient.patient_gender }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> 
+ </div>
 </div>
 
 </div>
@@ -445,6 +470,18 @@ $(document).ready(function(){
        $('#average_time_over_10km').html(res['average_time_over_10km'])
        $('#over_triage').html(res['over_triage'])
        $('#under_triage').html(res['under_triage'])
+
+     
+
+const app = Vue.createApp({
+  data() {
+    return {
+      patients: res['patients']
+    };
+  }
+});
+
+app.mount("#app");
 
 
     }

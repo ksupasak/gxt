@@ -33,8 +33,8 @@
 		
 		<div class="row d-flex justify-content-between ">
 		<div class="col-2">
-		<a href="#" class="progress_time"  id="l<%=i.id%>"><b><%=i.time.strftime("%H:%M") if i.time %></b></a>
-		<span class="l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
+		<a href="#" class="progress_time" rid="l<%=i.id%>" id="l<%=i.id%>_time"><b><%=i.time.strftime("%H:%M") if i.time %></b></a>
+		<span class="progress_ctrl l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
 		<input type="text" class="progress_time_txt" name="" value="<%=i.time.strftime("%H:%M:%S")%>" rid="<%=i.id%>" >
 		</span>
 
@@ -46,11 +46,11 @@
 		</div>
 		<div class="col-8">
 		
-		<a href="#" class="progress_item  w-100 " code="<%=code%>" item="<%=item_id%>" id="l<%=i.id%>" ref_id="<%=ref_id%>">
+		<a href="#" class="progress_item  w-100 " rid="l<%=i.id%>" code="<%=code%>" item="<%=item_id%>" id="l<%=i.id%>_item" ref_id="<%=ref_id%>">
 		<%=i.text %><%='empty!' if i.text=='' or i.text==nil%>
 		</a>
-		<span class="l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
-			<input type="text" class="progress_item_txt" name="" value="<%=i.text%>" rid="<%=i.id%>" >
+		<span class="progress_ctrl l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
+		<input type="text" class="progress_item_txt" name="" value="<%=i.text%>" rid="<%=i.id%>" >
 		</span>
 
 		</div>
@@ -80,9 +80,9 @@
       cmd = $(this).attr('code')
 	  item = $(this).attr('item')
 	  ref_id = $(this).attr('ref_id')
-	  rid = $(this).attr('id')
-	 	
-		console.log(item)
+
+	  rid = $(this).attr('rid')
+	 
       if(item==''){
 		
 		$('.'+rid+'_ctl').show()
@@ -99,33 +99,45 @@
 
     })
 
-    $('.progress_time').click(function(e){
+	$('.progress_time').click(function(e){
 		
-	  rid = $(this).attr('id')
-	 	
-      
-	  	$('.'+rid+'_ctl').show()
-		// $('#'+rid+'_txt').show()
-		$('#'+rid+'_txt .progress_item_txt').focus()
+      cmd = $(this).attr('code')
+	  ref_id = $(this).attr('ref_id')
+	  rid = $(this).attr('rid')
+	   
+
+	   $('.'+rid+'_ctl').show()
+    
 
       e.preventDefault();
 
     })
 
-
    $('.progress_time_txt').change(function(e){
-		
-		 rid = $(this).attr('rid')
+	
+		//  rid = $(this).attr('rid')
+		//  txt = $(this).val()
+
+		//  $('.'+rid+'_ctl').each(function(){
+		// 	$(this).hide()
+		//  })
+
+	     rid = $(this).attr('rid')
 		 txt = $(this).val()
 
-		 $('.'+rid+'_ctl').hide()
+		 $('#l'+rid+'_time').html(txt)
+		//  $('.l'+rid+"_ctrl").hide()
 
+		$('#'+rid+' .progress_ctrl').hide()
+	
 		 $.ajax({
 	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&time='+txt,
 	 			context: document.body
 	 		}).done(function(data) {
 
-	 			$( '#progress-x' ).html(data);
+			update_progress(); 
+
+
 
 
 	 		});
@@ -136,16 +148,20 @@
 		
 		 rid = $(this).attr('rid')
 		 txt = $(this).val()
-		 $('#l'+rid).html(txt)
-		 $('#l'+rid+"_txt").hide()
+	
+		 $('#l'+rid+'_item').html(txt)
+		//  $('.l'+rid+"_ctrl").hide()
 
+		$('#'+rid+' .progress_ctrl').hide()
+		
 		 $.ajax({
 	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&txt='+txt,
 	 			context: document.body
 	 		}).done(function(data) {
 
-	 			$( '#progress-x' ).html(data);
-
+	 			// if (typeof update_progress_list === "function") {
+  				// 	update_progress_list(); 
+				// } 
 
 	 		});
 		
@@ -154,15 +170,24 @@
 		$('.btn-del').click(function(e){
 			
 			pid = $(this).attr('pid')
-	 		$.ajax({
+
+			$('#'+pid).animate({
+				opacity: 0
+			}, 500, function() {
+				$(this).remove();
+
+ 			$.ajax({
 	 			url: "<%="../EMSParamedic/progress_update?cmd=DEL"%>&pid="+pid,
 	 			context: document.body
 	 		}).done(function(data) {
-
-	 			$( '#progress-x' ).html(data);
-
-
+	 			// update_progress(); 
 	 		});
+				
+			});
+
+	
+
+
 			e.preventDefault();
 			
 		})
@@ -201,13 +226,7 @@
 							
 				 })
 				 if(first_time&&last_time){
-						// alert(""+first_time+" "+last_time)
-				 		// first = Date.parse(first_time)
-					 	// last = Date.parse(last_time)
-					 	//  alert(""+first+" "+last)
-					 	// new_time = new Date(first+(last-first)/2)
-					 	// alert((new_time))
-					 	// new_time = first_time
+			
 					  url =  "<%="../EMSParamedic/progress_update"%>?id="+ems_case_id+"&first_time="+escape(first_time)+"&last_time="+escape(last_time)+"&pid="+ui.item.attr("id")
 					//   alert(url)
 			 		$.ajax({

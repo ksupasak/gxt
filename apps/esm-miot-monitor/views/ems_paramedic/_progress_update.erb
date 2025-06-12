@@ -28,7 +28,7 @@ if params[:cmd] == "DEL"
 elsif params[:cmd] == "TXT"
 	if params[:txt]
 		note.update_attributes :text=>params[:txt]
-		update = false;
+		update = true;
 	elsif params[:time]
 		note.update_attributes :time=>params[:time]
 		update = true;
@@ -73,6 +73,5 @@ end
 	if update
 %>
 <script>
-	update_progress_list();
 </script>
 <% end %>

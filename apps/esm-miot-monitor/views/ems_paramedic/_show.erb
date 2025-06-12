@@ -1,4 +1,3 @@
-<script src="<%=url_for('hls/hls.js')%>"></script>
 
 <%
 
@@ -1032,8 +1031,10 @@ end
 		  reload_message("<%=ems_case.id%>","<%=admit.id%>")
       	  update_message();
 		  update_message_page();
-		  update_progress_list();
-		  
+
+		update_progress();
+
+
 		  if(data!="NULL"){
 			   console.log("EMR test")
 			  data = JSON.parse(lines[1])

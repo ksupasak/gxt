@@ -198,7 +198,12 @@ data.merge! rdata
 #    puts i.init_cbd_color+' '+i.scene_cbd_color+' '+triage[i.init_cbd_color].to_s+' '+triage[i.scene_cbd_color].to_s
 #  end
 # end
+  patients = []
 
+  sources.each do |i|
+    patients <<  i.attributes
+  end
 
+  data[:patients] = patients
 
 %><%=data.to_json.html_safe%>
