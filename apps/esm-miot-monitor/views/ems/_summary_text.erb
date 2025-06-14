@@ -124,9 +124,12 @@ end
 
 notes = EMSProgressNote.where(:case_id=>record.id).sort(:time=>1).all
 for i in notes
-	k = i.time.localtime
+	
+	k = i.time.localtime if i.time
+
 	tmap[k] = [] unless tmap[k]
 	tmap[k] << ['Note', i.text, i.type]
+	end
 
 end
 
