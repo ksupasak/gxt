@@ -35,7 +35,7 @@
 		<div class="col-2">
 		<a href="#" class="progress_time" rid="l<%=i.id%>" id="l<%=i.id%>_time"><b><%=i.time.strftime("%H:%M") if i.time %></b></a>
 		<span class="progress_ctrl l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
-		<input type="text" class="progress_time_txt" name="" value="<%=i.time.strftime("%H:%M:%S")%>" rid="<%=i.id%>" >
+		<input type="text" class="progress_time_txt" name="" value="<%=i.time.strftime("%H:%M:%S") if i.time%>" rid="<%=i.id%>" >
 		</span>
 
 		<br/>
