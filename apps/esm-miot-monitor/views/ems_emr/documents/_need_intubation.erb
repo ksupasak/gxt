@@ -32,14 +32,73 @@
 10|อื่นๆ
 LIST
 %>
+<%= radio_string this, 'cardiac_arrest',   :value=>["Yes", "No"], :label=>'Cardiac arrest <span class="mandatory">*</span>' %>
 
+<%
+     providers = Provider.where({}).order(:name=>'code').all
+     map = {}
+     providers.each do |provider|
+      map[provider.code.to_s] = provider.name
+     end
+%>
+
+<div class="row">
+<%= text_string this, 'insert_time_1', :col=>2, :label=>'Insert time 1', :class=>'insert_time' %>
+<%= text_string this, 'insert_time_2', :col=>2, :label=>'Insert time 2', :class=>'insert_time' %>
+<%= text_string this, 'insert_time_3', :col=>2, :label=>'Insert time 3', :class=>'insert_time' %>
+<%= text_string this, 'insert_time_4', :col=>2, :label=>'Insert time 4', :class=>'insert_time' %>
+<%= text_string this, 'insert_time_5', :col=>2, :label=>'Insert time 5', :class=>'insert_time' %>
+<%= text_string this, 'insert_time_6', :col=>2, :label=>'Insert time 6', :class=>'insert_time' %>
+</div>
+
+<script>
+  var map = <%= map.to_json %>;
+  console.log(map); 
+  $('.insert_time').on('change', function() {
+    var value = $(this).val();
+    var provider = map[value];
+    console.log(value);
+    console.log(provider);
+    if(provider){
+      $('.insert_by_cls').val(provider);
+    }else{
+      $('.insert_by_cls').val('-');
+    }
+
+    count = 0 
+
+    $('.insert_time').each(function() {
+      if($(this).val()!=''){
+        count++;
+      }
+    });
+      $('.insert_time_cls').val(count);
+
+  });
+  
+
+  $('#fail_intubation_').on('change', function() {
+    var value = $(this).val();
+    if(value!=''){
+      $('.insert_by_cls').val("Failed");
+    }
+  });
+
+
+</script>
+
+
+<div class="row">
+<%= text_string this, 'insert_by', :col=>4, :label=>'Insert สำเร็จโดย' %>
+<%= text_string this, 'insert_time', :col=>4, :label=>'Attempt to intubation(ใส่จำนวนครั้งในอื่นๆ)' %>
+<%= select_string this, 'fail_intubation',   :value=>["Successful intubation","Hold ambo bag","Supra glottic airway","Mask with bag"], :col=>4, :label=>'Fail intubation? <span class="mandatory">*</span>' %>
+
+</div>
 
 
 <%# check_string this, 'treatment', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 , :label=>'Treatment Exsanguination'%>
 <%# text_string this, 'treatment_other', :col=>8, :label=>''%>
 
-<%= check_string this, 'intubation_by',   :value=>%w{141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157},:col_item=>'col-2', :col=>12, :label=>'Intubation by ช่องอื่นๆ เติมชื่อแพทย์ผู้ใส่ <span class="mandatory">*</span>' %>
-<%= text_string this, 'intubation_other', :col=>8, :label=>''%>
 
 <%= radio_string this, 'position',   :value=>["Paramedic","Resident GP","Staff GP"], :label=>'ตำแหน่ง <span class="mandatory">*</span>' %>
 <%= check_string this, 'indication',   :value=>["Airway protection","Ventilation Failure","Oxygenation Failure","Crash airway"], :label=>'Indication <span class="mandatory">*</span>' %>
@@ -68,7 +127,7 @@ LIST
 LIST
 %>
 <%= check_string this, 'moans', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 , :label=>'MOANS(difficult to ventilation) <span class="mandatory">*</span>'%>
-<%= radio_string this, 'method',   :value=>["Non-sedative","Sedative","esi"], :label=>'Method <span class="mandatory">*</span>' %>
+<%= radio_string this, 'method',   :value=>["Non-sedative","Sedative","RSI"], :label=>'Method <span class="mandatory">*</span>' %>
 <%
   list = <<LIST
 1|Etomidate
@@ -87,16 +146,16 @@ LIST
 
 <%= radio_string this, 'successful_by',   :value=>["Video laryngoscope","Direct laryngoscope"], :label=>'Successful by <span class="mandatory">*</span>' %>
 <%= radio_string this, 'glottic_view',   :value=>%w{1 2 3 4}, :label=>'Glottic view <span class="mandatory">*</span>' %>
-<%= radio_string this, 'attempt_to_intubation',   :value=>["Fail","1","อื่นๆ"], :label=>'Attempt to intubation(ใส่จำนวนครั้งในอื่นๆ) <span class="mandatory">*</span>' %>
-<%= text_string this, 'attempt_other', :col=>4, :label=>''%>
 
-<%= select_string this, 'fail_intubation',   :value=>["Successful intubation","Hold ambo bag","Supra glottic airway","Mask with bag"], :label=>'Fail intubation? <span class="mandatory">*</span>' %>
+<%# radio_string this, 'attempt_to_intubation',   :value=>["Fail","1","อื่นๆ"], :label=>'Attempt to intubation(ใส่จำนวนครั้งในอื่นๆ) <span class="mandatory">*</span>' %>
+<%# text_string this, 'attempt_other', :col=>4, :label=>''%>
 <%= check_string this, 'adjunct_airway',   :value=>["No","Oral airway","Nasal airway","Closed suction","อื่นๆ"], :label=>'Adjunct airway <span class="mandatory">*</span>' %>
 <%= text_string this, 'adjunct_other', :col=>4, :label=>''%>
-
-<%= select_string this, 'ett_no',   :value=>%w{2.5 3 3.5 4 4.5 5 5.5 6 6.5 7 7.5 8 8.5}, :label=>'ETT No <span class="mandatory">*</span>' %>
-<%= text_string this, 'ett_mask', :col=>4, :label=>'ETT Mask <span class="mandatory">*</span>'%>
-<%= text_string this, 'etco2', :col=>4, :label=>'EtCO2(mmHg.) <span class="mandatory">*</span>'%>
+<div class="row">
+<%= select_string this, 'ett_no',   :value=>%w{2.5 3 3.5 4 4.5 5 5.5 6 6.5 7 7.5 8 8.5}, :col=>3,:label=>'ETT No <span class="mandatory">*</span>' %>
+<%= text_string this, 'ett_mask', :col=>3, :label=>'ETT Mask <span class="mandatory">*</span>'%>
+<%= text_string this, 'etco2', :col=>3, :label=>'EtCO2(mmHg.) <span class="mandatory">*</span>'%>
+</div>
 
 </div>
 

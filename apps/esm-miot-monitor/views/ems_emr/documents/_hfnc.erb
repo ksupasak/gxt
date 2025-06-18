@@ -1,0 +1,55 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+
+<div class="card">
+
+  <div class="card-header bg-primary text-white">
+  <center>High Flow Nasal Cannula</center>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+
+<div class="col-12 ">
+
+  <style>
+    .field-item{
+        margin-bottom:20px
+        ;border:0px solid
+     }
+    </style>
+
+
+  <label class="form-label">Oxygen Therapy ก่อน on HFNC<span class="mandatory">*</span></label>
+  <%= radio_string this, 'oxygen_before',   :value=>%w{room_air cannula mask_with_bag nebulizer_mask bag_value_mask}, :col=>12 %>
+
+  <label class="form-label">เปิด Flow oxygen ก่อน on HFNC เท่าไหร่<span class="mandatory">*</span> (ถ้า room air ให้ตอบ 0)</label>
+  <%= text_string this, 'oxygen_params',   :col=>4 %>
+
+  <label class="form-label">Temperature HFNC<span class="mandatory">*</span></label>
+  <%= text_string this, 'temperature',   :col=>4 %>
+
+  <label class="form-label">FiO2 HFNC<span class="mandatory">*</span></label>
+  <%= text_string this, 'fi_o2',   :col=>4 %>
+
+  <label class="form-label">Flow HFNC<span class="mandatory">*</span></label>
+  <%= text_string this, 'flow',   :col=>4 %>
+
+  <label class="form-label">เวลาเริ่มใช้ HFNC<span class="mandatory">*</span></label>
+  <%= time_string this, 'start_time',   :col=>4 %>
+
+  <label class="form-label">ผู้ป่วย DNR<span class="mandatory">*</span></label>
+  <%= radio_string this, 'patient_status',   :value=>['yes1|Yes (ครั้งแรก ณ จุดเกิดเหตุ)','yes2|Yes (เคยเซ็นที่โรงพยาบาล)', 'no|No' ],:pair=>true, :col=>12 %>
+
+
+
+  </div>
+  </div>
+</div>
+</div>
