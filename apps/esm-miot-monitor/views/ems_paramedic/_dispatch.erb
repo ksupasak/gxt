@@ -331,19 +331,28 @@
 			
 			   
 			   text.focus();
-			   
-			   if(found['data']!=null&found['data'].length>0){
+			   if(found['data']!=null&&found['data'].length>0){
 			   	
 				   data = JSON.parse(found['data'])
 				   if(data['default']){
-				   	 $('#dispatch-free_text-title').html(data['name'])
+				   	$('#dispatch-free_text-title').html(data['name'])
 					 text.val(data['default'])
 					
 				   }
 				
+			   }else{
+					console.log(found['name'])
+				   text.val(found['name'])
 			   }
 			   
+		}else if(found!=null&&found['type']==''){
+			
+			$('#free-text').modal('show')
+			text = $('#dispatch-free_text')
+			text.focus();
+			text.val(found['name'])
 		}
+
     else{
 
       var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item+"&ref_id="+ref_id;
