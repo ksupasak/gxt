@@ -40,9 +40,21 @@
 
   <label class="form-label">Flow HFNC<span class="mandatory">*</span></label>
   <%= text_string this, 'flow',   :col=>4 %>
-
+<div class="row">
+<div class="col-4">
   <label class="form-label">เวลาเริ่มใช้ HFNC<span class="mandatory">*</span></label>
-  <%= time_string this, 'start_time',   :col=>4 %>
+  <%= time_string this, 'start_time',   :col=>12, :label=>"" %>
+  </div>
+  <div class="col-4">
+    <label class="form-label">เวลาถึงรพปลายทาง <span class="mandatory">*</span></label>
+  <%= time_string this, 'stop_time',   :col=>12, :label=>"" %>
+  </div>
+
+  <div class="col-4">
+    <label class="form-label">ระยะเวลาใช้ HFNC<span class="mandatory">*</span></label>
+  <%= text_string this, 'duration',   :col=>12, :label=>"" %>
+  </div>
+  </div>
 
   <label class="form-label">ผู้ป่วย DNR<span class="mandatory">*</span></label>
   <%= radio_string this, 'patient_status',   :value=>['yes1|Yes (ครั้งแรก ณ จุดเกิดเหตุ)','yes2|Yes (เคยเซ็นที่โรงพยาบาล)', 'no|No' ],:pair=>true, :col=>12 %>
