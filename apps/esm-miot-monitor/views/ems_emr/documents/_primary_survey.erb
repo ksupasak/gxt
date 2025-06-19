@@ -153,8 +153,8 @@
 </div>
 </div>
 
-<hr/>
 <div class="col-12">
+<hr/ style="margin-top: 0px;color:black">
 <div class="card-title d-flex align-items-center">
 			<h5 class="mb-0 text-primary">Breathing :</h5>
 </div>
@@ -176,7 +176,6 @@ Sound
 <%= radio_string this, 'breath_rhonchi',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Rhonchi', :col=>12 %>
 <%= radio_string this, 'breath_crepitation',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Crepitation', :col=>12 %>
 <%= radio_string this, 'breath_descrease',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Decrease breath sound', :col=>12 %>
-<%= text_string this, 'breath_other', :col=>4, :label=>'Other'%>
 </div>
 </div>
 <div class="row">
@@ -184,6 +183,8 @@ Sound
 Accessory muscles used
 </div>
 <div class="col-10">
+<%= radio_string this, 'breath_amu_used',:value=>%w{Yes No}, :label=>'Used accessory muscles', :col=>12 %>
+
 <%= radio_string this, 'breath_amu_s1',:value=>%w{Yes No}, :label=>'Sternocleidomastoids', :col=>12 %>
 <%= radio_string this, 'breath_amu_s2',:value=>%w{Yes No}, :label=>'Scalenes', :col=>12 %>
 <%= radio_string this, 'breath_amu_s3',:value=>%w{Yes No}, :label=>'External Intercostals', :col=>12 %>
@@ -191,18 +192,17 @@ Accessory muscles used
 <%= radio_string this, 'breath_amu_s5',:value=>%w{Yes No}, :label=>'Diaphragm', :col=>12 %>
 <%= radio_string this, 'breath_amu_s6',:value=>%w{Yes No}, :label=>'Abdominal muscles', :col=>12 %>
 
-<%= text_string this, 'breath_amu_other', :col=>4, :label=>'Other'%>
 </div>
 </div>
 
-<div style="height: 10px"></div>
+
 <div class="row">
 <div class="col-2">
 Percussion
 </div>
 <div class="col-10">
-<%= radio_string this, 'percussion_resonance',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Resonance', :col=>12 %>
-<%= radio_string this, 'percussion_dullness',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Dullness', :col=>12 %>
+<%= radio_string this, 'percussion_hyper',:value=>%w{Rt Lt }, :label=>'Hyperresonance', :col=>12 %>
+<%= radio_string this, 'percussion_hypo',:value=>%w{Rt Lt }, :label=>'Hyporesonance', :col=>12 %>
 </div>
 </div>
 <div style="height: 10px"></div>
@@ -211,18 +211,29 @@ Percussion
 Palpation
 </div>
 <div class="col-10">
-<%= radio_string this, 'palpation_subcutaneous',:value=>%w{Rt Lt Equal_both_lung No}, :label=>'Subcutaneous emphysema', :col=>12 %>
-<%= text_string this, 'palpation_deformity', :col=>4, :label=>'wound' %>
+<%= radio_string this, 'palpation_subcutaneous',:value=>%w{Rt Lt  No}, :label=>'Subcutaneous emphysema', :col=>12 %>
 </div>
 </div>
 </div>
+
+<div style="height: 10px"></div>
+<div class="row">
+<div class="col-2">
+Wound
+</div>
+<div class="col-10">
+<%= text_string this, 'breathing_wound', :col=>4, :label=>'Detail' %>
+</div>
+</div>
+</div>
+
 
 <div class="row">
 <div class="col-2">
 
 </div>
 
-<div class="col-10" style="margin-bottom:20px">
+<div class="col-10" style="margin-bottom:0px">
 
   <%= text_string this, 'breath_special_note', :col=>10, :label=>'Note'%>
 </div>
@@ -236,14 +247,29 @@ Palpation
 <div class="row">
 <div class="col-12">
 </div>
-<div class="col-2">Skin</div>
+<div class="col-2">Sign of Shock</div>
 <div class="col-10">
-<%= radio_string this, 'circulation_skin',:value=>%w{Normal Pale Sweat Cold}, :col=>12 %>
+<%= radio_string this, 'sign_of_shock',:value=>%w{Yes No}, :col=>12 %>
 </div>
 <div style="height: 10px"></div>
+<div class="col-2">Skin</div>
+<div class="col-10">
+<%= check_string this, 'circulation_skin',:value=>%w{Normal Pale Sweat Cold}, :col=>12 %>
+</div>
+<div style="height: 10px"></div>
+<div class="row">
 <div class="col-2">Pulse</div>
 <div class="col-10">
-<%= radio_string this, 'circulation_pulse',:value=>%w{Weak Full Irregular}, :col=>12 %>
+<%= radio_string this, 'circulation_pulse',:value=>%w{Weak Full  }, :col=>12 %>
+</div>
+<div class="col-2">Weak or Full at</div>
+<div class="col-10">
+<%= radio_string this, 'circulation_pulse_at',:value=>%w{peripheral_pulse carotid_pulse femoral_pulse}, :col=>12 %>
+</div>
+<div class="col-2">Pulse Rate</div>
+<div class="col-10">
+<%= radio_string this, 'circulation_pulse_rate',:value=>%w{ Irregular Regular}, :col=>12 %>
+</div>
 </div>
 <div style="height: 10px"></div>
 <div class="row">
@@ -251,7 +277,7 @@ Palpation
     Capillary
   </div>
   <div class="col-6">
-  <%= radio_string this, 'circulation_capillary',:value=>%w{Fastly <2 >2 Prolong}, :col=>12 %>
+  <%= radio_string this, 'circulation_capillary',:value=>%w{Fastly <2sec >2sec Prolong}, :col=>12 %>
   </div>
 </div>
 <div style="height: 10px"></div>
@@ -333,7 +359,7 @@ Palpation
 <hr/>
 <div class="col-12">
 <div class="card-title d-flex align-items-center">
-			<h5 class="mb-0 text-primary">Vital :</h5>
+			<h5 class="mb-0 text-primary">Vital Sign:</h5>
 </div>
 <div class="row">
 <div class="col-2">
@@ -343,13 +369,13 @@ Palpation
 
 <%= text_string this, 'vs_sbp', :col=>3, :label=>'SBP'%>
 <%= text_string this, 'vs_dbp', :col=>3, :label=>'DBP'%>
-<%= text_string this, 'vs_pr', :col=>3, :label=>'Heart Rate'%>
+<%= text_string this, 'vs_map', :col=>3, :label=>'MAP'%>
 <%= text_string this, 'vs_rr', :col=>3, :label=>'Resp Rate'%>
 
 </div>
 <div class="row">
+<%= text_string this, 'vs_pr', :col=>3, :label=>'Heart Rate'%>
 <%= text_string this, 'vs_o2sat', :col=>3, :label=>'O2Sat'%>
-<%= text_string this, 'vs_gcs', :col=>3, :label=>'Resp Rate'%>
 <%= text_string this, 'vs_temp', :col=>3, :label=>'Body Temp (C)'%>
 <%= text_string this, 'vs_dtx', :col=>3, :label=>'DTX (mg%)'%>
 </div>
