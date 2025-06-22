@@ -1,5 +1,43 @@
 
 <% require_relative 'lib'%>
+
+
+<%
+  if record.empty?
+
+    case_record = EMSCase.find(params[:case_id])
+    first_medical_contact_time = nil
+    if case_record
+    
+      c = case_record
+      cmd = EMSCommand.where(case_id: params[:case_id]).first
+      if cmd
+    
+         admit_log_contact = AdmitLog.where(ems_command_id: cmd.id, code: 'contact_at').first
+
+           %>
+      <%=admit_log_contact.stamp%>
+      <%
+         if admit_log_contact
+          first_medical_contact_time = admit_log_contact.stamp.strftime("%H:%M")
+         else
+          first_medical_contact_time = nil
+         end
+
+
+      else
+        first_medical_contact_time = nil
+      end
+
+
+    record = {
+      'first_medical_contact_time' => first_medical_contact_time,
+    }
+     end
+  end
+
+%>
+
 <%
   @record = record
 %>
@@ -25,7 +63,7 @@
 6|อื่นๆ
 LIST
 %>
-<%= check_string this, 'chief_complain', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Chief complain of STREMI <span class="mandatory">*</span>'%>
+<%= check_string this, 'chief_complain', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 , :label=>'Chief complain of STEMI <span class="mandatory">*</span>'%>
 
 
 <%= text_string this, 'chief_complain_other', :col=>4, :label=>'Chief complain other'%>
@@ -69,7 +107,7 @@ LIST
 
 
 <div class="row">
-<%= date_string this, 'activate_er_time', :col=>4 , :label=>'Activate ER/Erawam time <span class="mandatory">*</span>'%>
+<%= time_string this, 'activate_er_time', :col=>4 , :label=>'Activate ER/Erawam time <span class="mandatory">*</span>'%>
 </div>
 <%= radio_string this, 'transfer_to',:value=>%w{ER Cathlab}, :col=>12 , :label=>'Transfer to<span class="mandatory">*</span>'%>
 
@@ -79,6 +117,7 @@ LIST
 <%= text_string this, 'isosorbide_other', :col=>8, :label=>''%>
 
 <%= radio_string this, 'cardiac_arrest',:value=>%w{yes no}, :col=>12 , :label=>'Cardiac Arrest <span class="mandatory">*</span>'%>
+
 
 
     </div><!--row-->
