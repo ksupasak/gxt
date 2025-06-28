@@ -237,7 +237,7 @@
 				<br/>
 		
 			<div class="row">
-			<div class=" col-4">
+			<div class=" col-6">
 			<p class="">
 			EMD :
 			</p>
@@ -246,15 +246,16 @@
 			</div>
 			</div>
 			
-			<div class=" col-4">
+			<div class=" col-6">
 			<p class="">
-			EMT 1 :
+			EMT (Driver) :
 			</p>
 			<div class="input-group">
 			<input type="text" name="command[emt_driver_code]" id="" value="<%=cm.emt_driver_code%>" class="form-control" />
 			</div>
 			</div>
 			
+			<% if false %>
 			<div class=" col-4">
 			<p class="">
 			EMT 2 :
@@ -263,7 +264,7 @@
 			<input type="text" name="command[emt_partner_code]" id="" value="<%=cm.emt_partner_code%>" class="form-control" />
 			</div>
 			</div>
-
+			<% end %>
 			</div>
 			</div>
 <br/>
@@ -275,14 +276,25 @@ content = ""
 
 if att
  
-  content = "<center><img src='#{att.path}' width='200'><br/><br/>#{cm.ambulance.name} : #{cm.ambulance.plate_license} </center>"
+  content = "<center><img src='#{att.path}' width='100%'> </center>"
   
 end
 	
 %>
+<div class="row">
+<div class="col-6">
+<center style="font-size:1.2em">
+<b>
+  <%= cm.ambulance.name %><br/>
+  <%= cm.ambulance.plate_license %><br/>
+</b>
+</center>
+</div>
+<div class="col-6">
+  <%= content %>
+</div>
+</div>
 
- 
- <%= content %>
 		</div>
 
 				<br/>
