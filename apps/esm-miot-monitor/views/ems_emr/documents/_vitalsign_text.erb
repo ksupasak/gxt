@@ -15,14 +15,12 @@
 		v = "#{r['sbp']}/#{r['dbp']}"
 		i = 'bp'	
 	elsif i=='gcs'
-
     v = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
-
   end	
 	
 
 
-	rs << "#{i.upcase} : #{v}"
+	rs << "#{i.upcase} : #{v}" if v != "" && v != "-" && v!= " " && v != "/"
 		
 		
 %><% end %><% end %><%=rs.join(", ")%>

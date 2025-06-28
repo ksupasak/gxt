@@ -22,10 +22,7 @@
 %><%
     if r["#{i}"] and r["#{i}"] != ""
 %>
-<% if i.humanize == "History note" %>Past History : <%=r["#{i}"]%> <%elsif i.humanize == "Intake note" %>Last Oral Intake : <%=r["#{i}"]%> <%else%><%=i.humanize%> : <%=r["#{i}"]%>
-<% end %>
-<% end %>
-<% end %>
+<% if i.humanize == "History note" %>Past History : <%=r["#{i}"]%> <%elsif i.humanize == "Intake note" %>Last Oral Intake : <%=r["#{i}"]%> <%else%><%=i.humanize%> : <%=r["#{i}"]%><% end %><% end %><% end %>
 <% elsif  mode=='text'  and query=='3' %>
 <%
   list = %w{event }

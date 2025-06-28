@@ -162,7 +162,7 @@
 <div class="row">
 <div class="col-2">Characteristics</div>
 <div class="col-10"> 
-<%= radio_string this, 'breath_status', :value=>%w{Normal No_breath Tachypnea Bradypnea Apnea Air_Hunger Other}, :col=>12 %>
+<%= radio_string this, 'breath_status', :value=>%w{Normal No_breath Tachypnea Bradypnea Apnea Air_Hunger}, :col=>12 %>
 </div>
 </div>
 <div style="height: 10px"></div>
@@ -312,7 +312,6 @@ Wound
 </div>
 </div>
 </div>
-<div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
   Pupil
@@ -320,15 +319,80 @@ Wound
 <div class="col-10">
 <div class="row">
 <br />
+<%= text_string this, 'mm_rtlbe', :col=>3, :label=>'mm RTLBE'%>
+<div class="clear"></div>
 <%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt(mm)'%>
-<%= radio_string this, 'pupil_rt_rtl',:value=>%w{Rtl Nrtl Slightly Fxed}, :col=>6 %>
+<%= radio_string this, 'pupil_rt_rtl',:value=>%w{RTL NRTL Slightly Fxed Blind Cataract}, :col=>9 %>
 <div class="clear"></div>
 <%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt(mm)'%>
-<%= radio_string this, 'pupil_lt_rtl',:value=>%w{Rtl Rrtl Slightly Fxed}, :col=>6 %>
- 
+<%= radio_string this, 'pupil_lt_rtl',:value=>%w{RTL RRTL Slightly Fxed Blind Cataract}, :col=>9 %>
+</div>
+</div>
+<div class="row">
+
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:0px">
+  <%= radio_string this, 'dis_facial_palsy', :col=>10, :label=>'Facial palsy' ,:value=>%w{No Lt Rt} %>
+</div>
+
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:0px">
+  <%= radio_string this, 'dis_dysarthria', :col=>10, :label=>'Dysarthria',:value=>%w{No Yes} %>
+</div>
+
+<div class="col-2"></div>
+<div class="col-10" style="margin-bottom:0px">
+  <%= radio_string this, 'dis_eye_deviation', :col=>10, :label=>'Eye deviation',:value=>%w{No Lt Rt} %>
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="row">
+<div class="col-2">
+  Motor power grade
+</div>
+<div class="col-10">
+<div class="row">
+<br />
+<div class="col-6">
+<label>Lt. Upper</label>
+<%= radio_string this, 'motor_lt_upper',:value=>%w{1 2 3 4 5}, :col=>12  %>
+</div>
+<div class="col-6">
+<label>Rt. Upper</label>
+<%= radio_string this, 'motor_rt_upper',:value=>%w{1 2 3 4 5}, :col=>12  %>
+</div>
+<div class="clear"></div>
+<div class="col-6">
+<label>Lt. Lower</label>
+<%= radio_string this, 'motor_lt_lower',:value=>%w{1 2 3 4 5}, :col=>12  %>
+</div>
+<div class="col-6">
+<label>Rt. Lower</label>
+<%= radio_string this, 'motor_rt_lower',:value=>%w{1 2 3 4 5}, :col=>12  %>
+
 </div>
 </div>
 </div>
+
+
+<div class="row">
+<div class="col-2">
+  </div>
+<div class="col-10" style="margin-bottom:20px">
+
+  <%= text_string this, 'disability_special_note', :col=>10, :label=>'Note'%>
+</div>
+</div>
+
+
 <div style="height: 10px"></div>
 
 
