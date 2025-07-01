@@ -1,0 +1,104 @@
+<%
+
+require 'net/http'
+require 'json'
+require 'uri'
+
+# Set your API key
+api_key = Setting.get('chatgpt_api_key')
+
+# Sample pasted text
+pasted_text = <<~TEXT
+EMS-2506-0221
+0949529544
+ผู้แจ้ง : อาสาสมัคร
+สถานที่ : อาคารเพลินจิตทาวเวอร์
+อาการนำ : จุกแน่นใต้ลิ้นปี่ หายใจไม่สะดวก
+ผู้ป่วย M 66
+5แดง2
+ผู้ป่วย : นายสุรพล หิรัญชัย
+CID : 3120101504717
+โรคประจำตัว :
+HN : 55600/68
+D0001 ()
+EMD : emd, Channel : Team1
+GPS : 5.0 km 12.0 min
+Route :
+Case
+Request
+Request at : 30-06-2025 20:54 (191.6mins)
+Address : Ploen Chit Tower, 898 Thanon Phloen Chit, Khwaeng Lumphini, Pathum Wan, Krung Thep Maha Nakhon 10330, Thailand
+Location : 13.743417,100.5448178
+Identify Patient : นายสุรพล หิรัญชัย
+PreArrival
+Command
+Ambu : D0001 ()
+Route :
+EMS : (144 )
+EMS : (104 )
+EMS : (114 )
+Paramedic
+Start :
+Stop :
+Duration :
+Note : 1 records, Med : 0 records
+EMR
+N/A
+Discharge
+Status : Completed
+Admit : Discharged
+Discharge at : 30-06-2025 21:50 (135.8mins)
+Case Duration : 55.8 mins (Request-Discharge)
+
+TEXT
+
+pasted_text = params[:pasted_text]
+
+# Prepare the messages for ChatGPT
+messages = [
+  { role: "system", content: "You are a helpful assistant that expert in EMS dispatch personal can well understand thai language and can extract the information from the text" },
+  { role: "user", content: "extract อาการ เบอร์ติดต่อ สถานที่เกิดเหตุ ตำแหน่ง GPS ระดับความรุนแรง รหัสคัดกรอง รายละเอียดของเหตุการณ์ ในรูปแบบ JSON {stamp:timestamp, severity:severity, dispatch_code:dispatch_code เช่น 1แดง1, location:location, gps:(lat,lng) ไม่ต้องทำ nestest, chief_complain:chief_complain, event:event, contact_phone:phone, contact_name:name } จากข้อความต่อไปนี้ #{pasted_text} ถ้าข้อมูล เป็น ผู้ป่วย M 66 แสดงว่า ผู้ป่วยเป็นชาย=M และ F แทนผู้หญิง ใน gender และ อายุ 66 ใน age"}
+]
+
+# Create HTTP request
+uri = URI("https://api.openai.com/v1/chat/completions")
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = true
+
+request = Net::HTTP::Post.new(uri.path, {
+  "Content-Type" => "application/json",
+  "Authorization" => "Bearer #{api_key}"
+})
+
+# Request body
+request.body = {
+  model: "gpt-4",
+  messages: messages,
+  temperature: 0
+}.to_json
+
+# Send the request
+response = http.request(request)
+
+# Parse and print the result
+result = JSON.parse(response.body)
+puts result["choices"][0]["message"]["content"]
+
+json = JSON.parse(result["choices"][0]["message"]["content"])
+
+if json.has_key?('severity')
+	severity = json['severity'].strip
+    code = EMSCode.where('code'=>severity).first
+    # puts severity.inspect
+    # puts code.inspect
+    # puts EMSCode.all.inspect
+    if code
+        json['cbd_code_id'] = code.id
+    end
+end
+
+
+
+
+#{ "stamp": "30-06-2025 20:54", "severity": "5แดง2", "dispatch_code": "D0001", "location": "อาคารเพลินจิตทาวเวอร์, 898 Thanon Phloen Chit, Khwaeng Lumphini, Pathum Wan, Krung Thep Maha Nakhon 10330, Thailand", "gps": "13.743417,100.5448178", "chief_complaint": "จุกแน่นใต้ลิ้นปี่ หายใจไม่สะดวก", "event": "EMS-2506-0221", "contact_phone": "0949529544", "contact_name": "นายสุรพล หิรัญชัย" }
+%><%= json.to_json %>
