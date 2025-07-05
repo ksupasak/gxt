@@ -42,7 +42,7 @@ display = 'block' if options[:display]
     ls.each_with_index do |i,j|
 %>
 <div style="display:<%=display%>">
-<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i[0] %> value="<%=i[0]%>" class="<%=options[:class]%>  field" field_type="radio_string" >
+<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i[0] %> value="<%=i[0]%>" class="radio_<%=name%> <%=options[:class]%>  field" field_type="radio_string" >
 <label for="<%=name%>_<%=j%>"><%=i[1]%></label>
 </div>
 &nbsp;
@@ -50,6 +50,33 @@ display = 'block' if options[:display]
 &nbsp;
 
 <% end %>
+<script>
+    $(document).ready(function(){
+
+        var selectedValue = $('input[name="record[<%=name%>]"]:checked').val();
+
+        $('#<%=record_id%> .radio_<%=name%>').change(function(){
+            console.log("change")
+            selectedValue = $('input[name="record[<%=name%>]"]:checked').val();
+            console.log($(this).val() + " " + selectedValue)
+
+            // $('#<%=record_id%> .data-<%=name%>').val(selectedValue).trigger('change');
+            
+        }) 
+        $('#<%=record_id%> .radio_<%=name%>').click(function(){
+            console.log("click")
+            console.log($(this).val() + " " + selectedValue)
+            if ($(this).val() == selectedValue) {
+                $(this).prop('checked', false);
+            }
+
+            // this.checked = false;
+           
+            // $('#<%=record_id%> .data-<%=name%>').val(selectedValue).trigger('change');
+            
+        }) 
+    })
+</script>
 </div>
 <%
 when 'select_string'

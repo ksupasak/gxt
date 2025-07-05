@@ -159,7 +159,7 @@
 								<span class="t" t="record_emd_event_note">Event Note</span>
 							</p>
 							<div class="input-group   mb-3">
-								<textarea name="record[emd_event_note]" id="record_emd_event_note" required rows="2" class="form-control"><%=record.emd_event_note%></textarea>
+								<textarea name="record[emd_event_note]" id="record_emd_event_note" required rows="5" class="form-control"><%=record.emd_event_note%></textarea>
 							</div>
 
 
@@ -325,7 +325,7 @@
 
 
 	<div class="col-6 ">
-	<p class="px-3">Time Stamp</p>
+	<p class="px-3">Time Stamp</p><%#record.start_at%>
 	<input name='record[start_at]' id="start_at" data-value="<%=record.start_at.strftime('%H:%M:%S') if record.start_at%>" class="form-control timepicker mb-3" type="text" placeholder="เวลา" aria-label="default input example">
 	</div>
 
@@ -727,7 +727,9 @@
 							
 							%>
 							<div class="col-12 col-xl-12">
+							<br/>
 							<hr/>
+							<br/>
 							</div>
 												
 							<div class="col-6 col-xl-3">
@@ -798,7 +800,7 @@
 			interval: 1,
 			editable: true,
        		onStart: function() {
-            var defaultDate = $('#date').data('value'); // Get the default date from data-value
+            var defaultDate = $(this).data('value'); // Get the default date from data-value
 		
             if (defaultDate) {
                 this.set('select', defaultDate, { format: 'hh:mm' });

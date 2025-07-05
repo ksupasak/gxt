@@ -2,7 +2,7 @@
 
 if params[:case_id]
   ems_case = EMSCase.find params[:case_id]
-  ems_command = EMSCommand.where(:case_id=>ems_case.id).order("created_at desc").first
+  ems_command = EMSCommand.where(:case_id=>ems_case.id).first #order("created_at desc").first
 else
   ems_command = EMSCommand.find params[:id]
 
@@ -337,6 +337,9 @@ msg =<<MSG
 }
 MSG
 
+
+
+#/ direction.to_direction
 obj = JSON::parse(msg)
 
 #for i in lines
