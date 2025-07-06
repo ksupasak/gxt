@@ -36,7 +36,9 @@ MSG
 
 
 %>
-Discharge ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=params[:id]%>">
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMSNoti/send_discharge?id=<%=record.id%>">
+
+Discharge ... 
 	<%#params.inspect %>
 <% else %>
 <%
