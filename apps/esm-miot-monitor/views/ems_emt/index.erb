@@ -859,6 +859,56 @@ function startWeb(link){
 
 
 
+  var noti_status=false;
+  var modal_id = null;
+
+ function modal(id){
+
+     $(id).css('display','block')
+     $(id).addClass('show')
+     modal_id= id
+     $(id).find('button[data-bs-dismiss="modal"]').each(function(){
+       $(this).click(function(){
+          $(modal_id).hide()
+          $('.modal-x').hide()
+       })
+     })
+     $('.modal-x').show()
+
+
+     // $('.modal-backdrop').addClass('show')
+
+ }
+
+$('.btn-tracking').click(function(){
+// $('#modal_notification').modal('show');
+modal('#modal_tracking')
+
+})
+
+$('.video-button').click(function(){
+	
+	modal('#modal_video')
+	
+})
+
+
+$('.info-button').click(function(){
+	
+	modal('#modal_info')
+	
+})
+ 
+
+$('.noti-button').click(function(){
+  // $('#modal_notification').modal('show');
+modal('#modal_notification')
+
+})
+
+
+
+
 
     $(document).ready(function(){
 		
@@ -1092,56 +1142,6 @@ function startWeb(link){
   });
 
     // map1.init()
-
-
-
-
-  var noti_status=false;
-  var modal_id = null;
-
- function modal(id){
-
-     $(id).css('display','block')
-     $(id).addClass('show')
-     modal_id= id
-     $(id).find('button[data-bs-dismiss="modal"]').each(function(){
-       $(this).click(function(){
-          $(modal_id).hide()
-          $('.modal-x').hide()
-       })
-     })
-     $('.modal-x').show()
-
-
-     // $('.modal-backdrop').addClass('show')
-
- }
-
-$('.btn-tracking').click(function(){
-// $('#modal_notification').modal('show');
-modal('#modal_tracking')
-
-})
-
-$('.video-button').click(function(){
-	
-	modal('#modal_video')
-	
-})
-
-
-$('.info-button').click(function(){
-	
-	modal('#modal_info')
-	
-})
- 
-
-$('.noti-button').click(function(){
-  // $('#modal_notification').modal('show');
-modal('#modal_notification')
-
-})
 
 
 

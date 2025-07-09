@@ -996,7 +996,9 @@ end
 
 class EMSNotiController < GXT
 
+
 end
+
 
 class EMSController < GXT
 
