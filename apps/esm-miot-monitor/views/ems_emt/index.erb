@@ -857,6 +857,13 @@ function startWeb(link){
 <script>
 
 
+    $(document).ready(function(){
+		
+
+  function show(msg){
+    $('.msg2').html(msg)
+  }
+
 
 
   var noti_status=false;
@@ -909,9 +916,232 @@ modal('#modal_notification')
 
 
 
+  var ws = null
 
-    $(document).ready(function(){
+  function connect(){
+
+
+  // ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+  ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+  ws.onopen    = function()  { show('websocket opened');
+
+  	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+    ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*",  "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>"]')
+// "ZoneUpdate zone_id=*",
+  // "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", 
+
+  };
+
+
+  ws.onerror = function(){
+
+    noti_msg('Reconnect in 5 seconds')
+    ws.close()
+    // alert('Reconnect in 5 sec')
+    setTimeout(function () {
+        // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+        connect()
+
+     }, 5000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onclose   = function()  { show('websocket closed');
+
+ 	// setTimeout(function () {
+  //      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+  //      connect()
+  //
+  //   }, 10000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) {
+
+	  console.log(m.data)
+
+
+	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
+
+
+		lines = m.data.split("\n")
+
+
+    // when new case
+
+		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+
+			window.location="index";
+
+		}else
 		
+    if(lines[0].split(" ")[0]=='EMS.Update'){
+
+       obj = JSON.parse(lines[1])
+       console.log(obj)
+
+       if(obj['alert']=="1"||obj['alert']=="0"){
+         console.log(obj)
+
+	   }
+	   
+	   update(lines)
+	   
+	   <% if record %>
+		   
+	   if(obj['ems_data']['<%=record.id%>']==null){
+	   		// window.location="index";
+	   }	   
+		   
+		   <% end %>
+
+       jQuery.each(obj['ems_data'], function (key, val) {
+
+       // Object.values().forEach(val => {
+
+         // console.log(val)
+         jQuery.each(val['commands'], function (key, cmd) {
+         // Object.values(val['commands']).forEach(cmd => {
+
+           // console.log('EMT noti')
+
+
+           if(cmd['emt_driver_code']==null){
+             if(noti_status==false){
+
+            // console.log(cmd)
+             $('.noti_title').html("Accept Case");
+
+             $('.noti_msg').html("Case No : "+val['case_record']['case_no']+"<br/>Location : "+val['case_record']['location']+"<br/>Tel : "+val['case_record']['contact_phone']);
+
+
+
+             $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_accept"+"&command_id="+cmd['_id'])
+             $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_denied"+"&command_id="+cmd['_id'])
+             // $('#modal_notification').modal('show');
+             modal('#modal_notification')
+
+             noti_status = true;
+            }
+
+
+           }
+
+
+         });
+
+         jQuery.each(val['routes'], function (key, route) {
+         // Object.values(val['routes']).forEach(route => {
+
+
+
+           if(route['response']==null){
+
+
+             console.log('EMT route')
+
+
+
+               if(noti_status==false){
+              console.log('EMT case noti')
+              // console.log(cmd)
+
+               $('.noti_title').html("Route Update / Transfer");
+
+               $('.noti_msg').html("Change Route");
+
+               $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])
+               $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_denied"+"&route_id="+route['_id'])
+               // $('#modal_notification').modal('show');
+               modal('#modal_notification')
+
+               noti_status = true;
+
+
+
+             }
+
+           }
+
+
+         });
+
+
+
+
+       });
+
+	 
+
+    }else
+
+    if(lines[0].split(" ")[0]=='Zone.Message'){
+
+			window.location.reload(true); 
+
+	}else{}
+	
+	
+
+
+
+  }
+
+}
+
+
+
+  $('.modal_notification_accept').click(function(){
+    url = $('.noti_url_accept').val()
+    window.location=url
+
+  })
+
+  $('.modal_notification_denied').click(function(){
+    url = $('.noti_url_denied').val()
+    window.location=url
+
+  })
+
+	
+
+
+function noti_msg(msg) {
+	Lobibox.notify('warning', {
+		pauseDelayOnHover: true,
+		size: 'mini',
+		rounded: true,
+		delayIndicator: false,
+		icon: 'bx bx-error',
+		continueDelayOnInactiveTab: false,
+		position: 'top center',
+		msg: msg
+	});
+}
+
+
+// function update(lines){
+//     console.log(lines)
+//     show(lines[0])
+//   }
+$(document).ready(function(){
+  connect()
+
+})
+
+function resize(height){
+  alert(height);
+}
+	// modal('#modal_info')
+
+
+
+
 		
   		var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
 
@@ -1145,236 +1375,8 @@ modal('#modal_notification')
 
 
 
-  function show(msg){
-    $('.msg2').html(msg)
-  }
-
-  var ws = null
-
-  function connect(){
-
-
-  // ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
-
-  ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
-
-
-  ws.onopen    = function()  { show('websocket opened');
-
-  	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
-    ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>",  "EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/IOT"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*",  "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>"]')
-// "ZoneUpdate zone_id=*",
-  // "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>", 
-
-  };
-
-
-  ws.onerror = function(){
-
-    noti_msg('Reconnect in 5 seconds')
-    ws.close()
-    // alert('Reconnect in 5 sec')
-    setTimeout(function () {
-        // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-        connect()
-
-     }, 5000); //will call the function after 2 secs.
-
-
-  }
-
-  ws.onclose   = function()  { show('websocket closed');
-
- 	// setTimeout(function () {
-  //      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
-  //      connect()
-  //
-  //   }, 10000); //will call the function after 2 secs.
-
-
-  }
-
-  ws.onmessage = function(m) {
-
-	  console.log(m.data)
-
-
-	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
-
-
-		lines = m.data.split("\n")
-
-
-    // when new case
-
-		if(lines[0].split(" ")[0]=='Zone.Refresh'){
-
-			window.location="index";
-
-		}else
-		
-    if(lines[0].split(" ")[0]=='EMS.Update'){
-
-       obj = JSON.parse(lines[1])
-       console.log(obj)
-
-       if(obj['alert']=="1"||obj['alert']=="0"){
-         console.log(obj)
-
-	   }
-	   
-	   update(lines)
-	   
-	   <% if record %>
-		   
-	   if(obj['ems_data']['<%=record.id%>']==null){
-	   		// window.location="index";
-	   }	   
-		   
-		   <% end %>
-
-       jQuery.each(obj['ems_data'], function (key, val) {
-
-       // Object.values().forEach(val => {
-
-         // console.log(val)
-         jQuery.each(val['commands'], function (key, cmd) {
-         // Object.values(val['commands']).forEach(cmd => {
-
-           // console.log('EMT noti')
-
-
-           if(cmd['emt_driver_code']==null){
-             if(noti_status==false){
-
-            // console.log(cmd)
-             $('.noti_title').html("Accept Case");
-
-             $('.noti_msg').html("Case No : "+val['case_record']['case_no']+"<br/>Location : "+val['case_record']['location']+"<br/>Tel : "+val['case_record']['contact_phone']);
-
-
-
-             $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_accept"+"&command_id="+cmd['_id'])
-             $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_denied"+"&command_id="+cmd['_id'])
-             // $('#modal_notification').modal('show');
-             modal('#modal_notification')
-
-             noti_status = true;
-            }
-
-
-           }
-
-
-         });
-
-         jQuery.each(val['routes'], function (key, route) {
-         // Object.values(val['routes']).forEach(route => {
-
-
-
-           if(route['response']==null){
-
-
-             console.log('EMT route')
-
-
-
-               if(noti_status==false){
-              console.log('EMT case noti')
-              // console.log(cmd)
-
-               $('.noti_title').html("Route Update / Transfer");
-
-               $('.noti_msg').html("Change Route");
-
-               $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])
-               $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_denied"+"&route_id="+route['_id'])
-               // $('#modal_notification').modal('show');
-               modal('#modal_notification')
-
-               noti_status = true;
-
-
-
-             }
-
-           }
-
-
-         });
-
-
-
-
-       });
-
-	 
-
-    }else
-
-    if(lines[0].split(" ")[0]=='Zone.Message'){
-
-			window.location.reload(true); 
-
-	}else{}
-	
-	
-
-
-
-  }
-
-}
-
-
-
-  $('.modal_notification_accept').click(function(){
-    url = $('.noti_url_accept').val()
-    window.location=url
-
-  })
-
-  $('.modal_notification_denied').click(function(){
-    url = $('.noti_url_denied').val()
-    window.location=url
-
-  })
-
-	
-
-
-function noti_msg(msg) {
-	Lobibox.notify('warning', {
-		pauseDelayOnHover: true,
-		size: 'mini',
-		rounded: true,
-		delayIndicator: false,
-		icon: 'bx bx-error',
-		continueDelayOnInactiveTab: false,
-		position: 'top center',
-		msg: msg
-	});
-}
-
-
-// function update(lines){
-//     console.log(lines)
-//     show(lines[0])
-//   }
-$(document).ready(function(){
-  connect()
-
-})
-
-function resize(height){
-  alert(height);
-}
-	// modal('#modal_info')
-  })
-
   
- 
+   })
 
 
 </script>
