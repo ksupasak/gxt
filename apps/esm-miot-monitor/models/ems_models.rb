@@ -1294,6 +1294,16 @@ class EMSDeviceLogController < EMSGXTDocument
 end
 
 
+class EMSApiController < GXT
+   def acl 
+    return {'*'=>'*'}
+   end
+
+
+
+   
+end
+
 class EMSEmtController < GXT
 
   def acl
