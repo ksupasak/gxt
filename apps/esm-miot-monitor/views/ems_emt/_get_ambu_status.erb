@@ -17,10 +17,13 @@ if params[:name]
        if command
 
         log = AdmitLog.where(:ems_command_id=>command.id, :status=>'PENDING').sort(:sort_order=>1).first
+        route = AocCaseRoute.where(:ems_command_id=>command.id, :status=>'STARTED').sort(:sort_order=>1).first
 
         res = {}
         res[:ambulance] = ambu
         res[:log] = log
+        res[:route] = route
+
 
         results[:data] = res
 
