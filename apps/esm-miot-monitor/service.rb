@@ -794,12 +794,13 @@ MSG
                 begin
 
 
-                  redis.pubsub.psubscribe('ptt/*/in') do |channel, message|
+                  redis.pubsub.psubscribe("ptt/in/*") do |channel, message|
 
                           puts "msg in ptt #{channel} : #{message.size} :"
 
                           t = channel.split("/")
-                          name = t[1]
+                          name = t[-1]
+                          path_name = t[2..-1].join("/")
 
                           puts "PTT Rquest #{name}"
 
@@ -812,12 +813,13 @@ MSG
                             ptt_channel = tags[-1].split('=')[-1]
 
 
-                            puts "Send to ptt/#{name}/z/#{ptt_channel}"
+                            puts "Send to ptt/#{path_name}/#{ptt_channel}"
                             json = JSON.parse(lines[1])
 
                             obj = json['data']
                             # puts obj.inspect
                             redis.publish("ptt/#{name}/z/#{ptt_channel}", message)
+                            redis.publish("ptt/out/#{path_name}/#{ptt_channel}", message)
 
                               
                              EM.next_tick do  

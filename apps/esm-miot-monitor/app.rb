@@ -315,7 +315,7 @@ class HomeController < GXT
                # redis.publish("PTT/miot/z/0", msg_data)
 
 
-               redisx.publish("ptt/#{@context.settings.name}/in", msg_data)
+               redisx.publish("ptt/in/#{@context.settings.name}", msg_data)
                
                
                
