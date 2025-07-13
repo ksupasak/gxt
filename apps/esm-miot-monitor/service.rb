@@ -1,6 +1,6 @@
 
 require_relative 'zello'
-
+ 
 module EsmMiotMonitor
 
 def self.settings
@@ -1420,8 +1420,8 @@ MSG
              station_name = pdata['station'] if pdata['station']
 
              if cmd == 'VTS.Send'
-               puts 'VTS'
-               puts pdata.inspect
+              #  puts 'VTS'
+              #  puts pdata.inspect
               station_name = pdata['receiver']
              end
 
@@ -1486,51 +1486,41 @@ MSG
 
              # inject last score
 
-             if ref and ref!="" and ref !="-"
+            #  if ref and ref!="" and ref !="-"
 
-               patient = Patient.where(:hn=>ref).first
+            #    patient = Patient.where(:hn=>ref).first
 
-               unless patient
+            #    unless patient
 
-                 # previous_admit = Admit.where(:station_id=>station.id,:status=>'Admitted').first
-
-
-                 patient = Patient.create :hn=>ref
-                 admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now)
-
-                else
-
-                   admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
-
-                     unless admit
-                       admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-                     else
-                       if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
-                         admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
-                         admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
-                       end
-                     end
-
-                end
+            #      # previous_admit = Admit.where(:station_id=>station.id,:status=>'Admitted').first
 
 
-            else
+            #      patient = Patient.create :hn=>ref
+            #      admit = Admit.where(:station_id=>station.id,:status=>'Admitted', :patient_id=>patient.id,:admit_stamp=>Time.now).first
+
+            #     else
+
+            #        admit = Admit.where(:status=>'Admitted', :patient_id=>patient.id).first
+
+            #          unless admit
+            #            admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+            #          else
+            #            if admit.admit_stamp and admit.admit_stamp.strftime("%d-%m-%Y")!=Time.now.strftime("%d-%m-%Y")
+            #              admit.update_attributes :status=>'Discharged', :discharge_stamp=>Time.now
+            #              admit = Admit.create :status=>'Admitted', :patient_id=>patient.id, :station_id=>station.id ,:admit_stamp=>Time.now
+            #            end
+            #          end
+
+            #     end
+
+
+            # else
 
                 admit = Admit.where(:station_id=>station.id,:status=>'Admitted').last
                 
 
-            end
-            
-            # unless admit
-         #
-         #     puts "XXX not found admit : #{station.name} #{body.size} #{}"
-         #
-         #   else
-         #
-         #     puts "XXX found admit : #{station.name} #{body.size} #{admit.id}"
-         #
-         #
-         #   end
+            # end
+       
 
           
            
@@ -1581,6 +1571,9 @@ MSG
                 odata['vs'] = [] unless odata['vs']
 
                 odata['vs'] << record
+                if  odata['vs'].size > 5 
+                  odata['vs'].shift
+                end
 
                 if data['spot']
                   # puts 'spot'
@@ -1589,7 +1582,7 @@ MSG
                   v = data
                   d = DataRecord.create :admit_id=>admit.id, :station_id=>station.id, :bp=>v['bp'], :bp_sys=>v['bp_sys'], :bp_dia=>v['bp_dia'], :bp_mean=>v['bp_mean'], :pr=>v['pr'], :hr=>v['hr'], :spo2=>v['spo2'], :rr=>v['rr'], :co2=>v['co2'], :temp=>v['temp'], :stamp=>  Time.now, :bp_stamp=>v['bp_stamp']
 
-                   puts d.inspect
+                  #  puts d.inspect
                    
                 end
 
@@ -1653,8 +1646,8 @@ MSG
 
                # keep sensing data
                
-               puts "settings.senses"
-                puts settings.senses[name].inspect
+              #  puts "settings.senses"
+              #   puts settings.senses[name].keys.inspect
 
                settings.senses[name][station_name] = odata
                settings.live[name][station_name] = 10
@@ -2187,6 +2180,7 @@ end
                 # each Station
                 if  active_list[name]
 
+              
 
                 active_list[name].values.each do |s|
 
@@ -2216,19 +2210,31 @@ end
 
                     else
                     ##############################################################################################
-
+                    # puts '-----------------------------live---'
+                    # puts settings.live[name].inspect
 
                     v = app.settings.senses[name][s.name]
 
             
-                    
-                    
+                    # puts '-----------------------------senses---'
+                    # puts v.inspect
+                    # puts '-----------------------------senses---'
+                    # puts v['admit_id']
 
-                                               #
+                                               #    
                             #       # store to sense
+
+
+
+                            # if  v['admit_id'] == nil
+                              # puts "YYY #{v['admit_id']}"
+                            # end 
+                                # puts '--------------------------------'
+                                # puts v.inspect
+
                             #
                                    if v and v['station_id'] and v['admit_id']
-                                       puts "YYY #{v['admit_id']}"
+                                      #  puts "YYY #{v['admit_id']}"
                                      # puts 'enter 1 '
 
                                      # admit = Admit.find v['admit_id']
