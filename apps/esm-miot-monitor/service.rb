@@ -91,13 +91,13 @@ def self.registered(app)
 
 
                                       begin
-                                        puts "PUBSUB #{k}"
+                                        # puts "PUBSUB #{k}"
 
                                         redis.pubsub.psubscribe(k) { |channel, message|
 
-                                          # puts message.inspect
+                                          # puts "PUBSUB #{k} #{channel} #{message.inspect}"
 
-                                          ws_list = app.settings.ch_map[channel][:ws].keys
+                                          ws_list = app.settings.ch_map[k][:ws].keys
                                           # puts app.settings.ch_map[channel][:ws].keys.inspect
                                           # puts message
                                            for i in ws_list
