@@ -5,11 +5,13 @@ record_id = @record_id
 record_id = params[:id] if params[:id]
 record_id = "form" unless record_id
 
+prefix = record_id
+prefix = "#{params[:prefix]}-#{record_id}" if params[:prefix]
+
 label = name.humanize
 label = options[:label] if options[:label]
 
 %>
-
 <%
 
 case type
@@ -42,8 +44,8 @@ display = 'block' if options[:display]
     ls.each_with_index do |i,j|
 %>
 <div style="display:<%=display%>">
-<input type="radio" id="<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i[0] %> value="<%=i[0]%>" class="radio_<%=name%> <%=options[:class]%>  field" field_type="radio_string" >
-<label for="<%=name%>_<%=j%>"><%=i[1]%></label>
+<input type="radio" id="<%=prefix%>-<%=name%>_<%=j%>" name="record[<%=name%>]" <%='checked' if record[name]==i[0] %> value="<%=i[0]%>" class="radio_<%=name%> <%=options[:class]%>  field" field_type="radio_string" >
+<label for="<%=prefix%>-<%=name%>_<%=j%>"><%=i[1]%></label>
 </div>
 &nbsp;
 &nbsp;
@@ -55,15 +57,15 @@ display = 'block' if options[:display]
 
         var selectedValue = $('input[name="record[<%=name%>]"]:checked').val();
 
-        $('#<%=record_id%> .radio_<%=name%>').change(function(){
+        $('#<%=prefix%> .radio_<%=name%>').change(function(){
             console.log("change")
-            selectedValue = $('input[name="record[<%=name%>]"]:checked').val();
+            selectedValue = $(this).val()  //$('input[name="record[<%=name%>]"]:checked').val();
             console.log($(this).val() + " " + selectedValue)
 
             // $('#<%=record_id%> .data-<%=name%>').val(selectedValue).trigger('change');
             
         }) 
-        $('#<%=record_id%> .radio_<%=name%>').click(function(){
+        $('#<%=prefix%> .radio_<%=name%>').click(function(){
             console.log("click")
             console.log($(this).val() + " " + selectedValue)
             if ($(this).val() == selectedValue) {
@@ -88,9 +90,9 @@ col = options[:col] if options[:col]
 <div class="field-item col-<%=col%>">
 <% if options[:label] %>
 <label  style="min-width:150px"><%= label%>
-<span class="<%=name%>_ext"></span></label>
+<span class="<%=prefix%>-<%=name%>_ext"></span></label>
 <% end %>
-<select class="field form-select form-control" id="<%=name%>_<%=j%>" name="record[<%=name%>]" field_type="select_string">
+<select class="field form-select form-control" id="<%=prefix%>-<%=name%>_<%=j%>" name="record[<%=name%>]" field_type="select_string">
 <option></option>
 <%
     options[:value].each_with_index do |i,j|
@@ -112,8 +114,8 @@ col = options[:col] if options[:col]
 
 <div class="field-item col-<%=col%>">
 <% if options[:label]!=nil %>	
-<label  class="col-12"  for="<%=name%>"><%=label%>
-<span class="<%=name%>_ext"></span></label>
+<label  class="col-12"  for="<%=prefix%>-<%=name%>"><%=label%>
+<span class="<%=prefix%>-<%=name%>_ext"></span></label>
 <% end %>
 <%= "<div class='row'>" if options[:col_item]%>
 <%
@@ -130,8 +132,8 @@ col = options[:col] if options[:col]
     val,label = val.split("|") if options[:pair]==true
 %>
 <%= "<div class='#{options[:col_item]}'>" if options[:col_item]%>
-<input type="checkbox" id="<%=name%>_<%=j%>"  <%='checked' if ls.index(val) %> value="<%=val%>" class="<%=options[:class]%> check_<%=name%>"  field_type="check_string" >
-<label for="<%=name%>_<%=j%>"><%=label%></label>
+<input type="checkbox" id="<%=prefix%>-<%=name%>_<%=j%>"  <%='checked' if ls.index(val) %> value="<%=val%>" class="<%=options[:class]%> check-<%=name%>"  field_type="check_string" >
+<label for="<%=prefix%>-<%=name%>_<%=j%>"><%=label%></label>
 &nbsp;
 &nbsp;
 &nbsp;
@@ -142,12 +144,12 @@ col = options[:col] if options[:col]
 <script>
     $(document).ready(function(){
     
-  console.log("xxx<%=name%>vv <%=record_id%>")
+  console.log("xxx<%=prefix%>-<%=name%>vv ")
    
-    $('#<%=record_id%> .check_<%=name%>').change(function(){
-          console.log("xxx")
+    $('#<%=prefix%> .check-<%=name%>').change(function(){
+         
         ls = []
-        $('#<%=record_id%> .check_<%=name%>').each(function(){
+        $('#<%=prefix%> .check-<%=name%>').each(function(){
           v = $(this).val()
           if($(this).is(":checked"))
           ls.push(v)
@@ -155,7 +157,7 @@ col = options[:col] if options[:col]
         })
         console.log(ls)
 		
-        $('#<%=record_id%> .data-<%=name%>').val(ls.join("|")).trigger('change');
+        $('#<%=prefix%> .data-<%=name%>').val(ls.join("|")).trigger('change');
 
 
     })
@@ -166,9 +168,9 @@ col = options[:col] if options[:col]
 
 <% else %>
 
-<input type="hidden" id="<%=name%>_false" name="record[<%=name%>]"  value="false"  >
-<input type="checkbox" id="<%=name%>" name="record[<%=name%>]" <%='checked' if record[name]=='true' %> value="true" class="field"  field_type="check_string" >
-<label for="<%=name%>"><%=label%></label>
+<input type="hidden" id="<%=prefix%>-<%=name%>_false" name="record[<%=name%>]"  value="false"  >
+<input type="checkbox" id="<%=prefix%>-<%=name%>" name="record[<%=name%>]" <%='checked' if record[name]=='true' %> value="true" class="field"  field_type="check_string" >
+<label for="<%=prefix%>-<%=name%>"><%=label%></label>
 
 <% end %>
 </div>
@@ -182,11 +184,11 @@ col = options[:col] if options[:col]
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
 <% if options[:label]%>
-<label for="<%=name%>"><%=label%>
-<span class="<%=name%>_ext"></span></label>
+<label for="<%=prefix%>-<%=name%>"><%=label%>
+<span class="<%=prefix%>-<%=name%>_ext"></span></label>
 <% end %>
 <% end %>
-<input type="text" id="<%=name%>_<%=j%>" name="record[<%=name%>]" placeholder="<%=options[:placeholder]%>" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
+<input type="text" id="<%=prefix%>-<%=name%>_<%=j%>" name="record[<%=name%>]" placeholder="<%=options[:placeholder]%>" value="<%=record[name]%>" class="<%=prefix%>-<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
 <% unless options[:field_only]%>
 </div>
 <% end %>
@@ -199,10 +201,10 @@ col = options[:col] if options[:col]
 %>
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
-<label for="<%=name%>"><%=label%>
-<span class="<%=name%>_ext"></span></label>
+<label for="<%=prefix%>-<%=name%>"><%=label%>
+<span class="<%=prefix%>-<%=name%>_ext"></span></label>
 <% end %>
-<input type="date" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
+<input type="date" id="<%=prefix%>-<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=prefix%>-<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
 <% unless options[:field_only]%>
 </div>
 <% end %>
@@ -215,10 +217,10 @@ col = options[:col] if options[:col]
 %>
 <% unless options[:field_only]%>
 <div class="field-item col-<%=col%>">
-<label for="<%=name%>"><%=label%>
-<span class="<%=name%>_ext"></span></label>
+<label for="<%=prefix%>-<%=name%>"><%=label%>
+<span class="<%=prefix%>-<%=name%>_ext"></span></label>
 <% end %>
-<input type="time" id="<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
+<input type="time" id="<%=prefix%>-<%=name%>_<%=j%>" name="record[<%=name%>]" value="<%=record[name]%>" class="<%=prefix%>-<%=name%>_cls field form-control form-control-sm <%=options[:class]%>"  field_type="text_string" >
 <% unless options[:field_only]%>
 </div>
 <% end %>

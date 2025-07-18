@@ -47,7 +47,7 @@ $('#dispatch_emr_panel').modal("show")
 
 <% if params[:ref_id]!='undefined'&&params[:ref_id]!='null' %>
 
-var url = "<%=get_path "../EmsEMR/update_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>&item_id=<%=assess.id%>&id=<%=params[:ref_id]%>";
+var url = "<%=get_path "../EmsEMR/update_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>&item_id=<%=assess.id%>&id=<%=params[:ref_id]%>&prefix=form";
 
 <% else %>
 var url = "<%=get_path "../EmsEMR/create_partial" %>?case_id=<%=@ems_case.id%>&admit_id=<%=@admit.id%>&document=<%=document_name%>&item_id=<%=assess.id%>";

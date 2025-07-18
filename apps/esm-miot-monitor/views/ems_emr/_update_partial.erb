@@ -46,17 +46,18 @@
 #     nurse_record = admit.nurse_records.create :name=>"Paramedic" ,:description=>text.strip, :start_time=>Time.now
 #
 #
-#       path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
-#       msg = {:type=>'emr', :document_id=>document.id, :record_id=>record.id, :case_id=>ems_case.id}
-#   send_msg = <<MSG
-# #{'Zone.Message'} #{path}
-# #{msg.to_json}
-# MSG
-#
-#     @context.settings.redis.publish(path, send_msg)
+       path = "miot/#{@context.settings.name}/z/#{ems_case.zone.name}"
+       msg = {:type=>'emr', :document_id=>document.id, :record_id=>record.id, :case_id=>ems_case.id}
+   send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+
+     @context.settings.redis.publish(path, send_msg)
 
 
 %>
+
 <!--<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">-->
 <% else %>
 <%
@@ -66,7 +67,8 @@
 
 
 %>
-<form action="<%=get_path 'update_partial'%>" class="form-<%=record.id%>" method="post">
+<%=params[:prefix]%>
+<form action="<%=get_path 'update_partial'%>" class="form-<%=record.id%>" id="<%=params[:prefix]+"-" if params[:prefix]%><%=record.id%>" method="post">
 
 <input type="hidden" name="id" value="<%=record.id%>">
 <input type="hidden" name="case_id" value="<%=ems_case.id%>">
@@ -120,10 +122,11 @@
         data: form.serialize(), // serializes the form's elements.
         success: function(data)
         {
-          // alert(data);
-            $('#dispatch_emr_panel').modal("hide")
+         
+          $('#dispatch_emr_panel').modal("hide")
           $('#result-<%=record.id%>').html("update")
-          update_progress_list();
+         
+
           // show response from the php script.
         }
     });
