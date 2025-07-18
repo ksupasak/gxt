@@ -44,7 +44,7 @@
 
 
 
-				for m in admit.medication_records
+				for m in admit.medication_records.limit(20).all
 
 					console << [m.start_time, :med, m]
 
@@ -52,7 +52,7 @@
 
 				end
 
-				records = admit.records.limit(100).sort(:created_at=>-1).all
+				records = admit.records.limit(20).sort(:created_at=>-1).all
 				last_bp = "-"
 				for m in records
 
@@ -62,14 +62,14 @@
 					end
 				end
 
-				records = admit.logs.where(:status=>'COMPLETED').all
+				records = admit.logs.where(:status=>'COMPLETED').limit(20).all
 				for m in records
 
 					console << [m.stamp, :log, m]
 
 				end
 
-				msgs = admit.messages.where({}).sort(:created_at=>-1).all
+				msgs = admit.messages.where({}).limit(20).sort(:created_at=>-1).all
 				# msgs += admit.messages.where({}).limit(30).sort(:created_at=>-1).all
 
 				# Message.where(:admit_id=>record.id).sort(:created_at=>-1).all
