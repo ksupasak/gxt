@@ -882,6 +882,8 @@ class Ambulance  < GXTModel
 
   key :status, String
   key :name, String
+  key :vehicle_name, String
+  key :vehicle_type, String
   key :plate_license, String
   key :phone, String
   key :station_id, ObjectId
