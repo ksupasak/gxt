@@ -148,9 +148,15 @@ module Tempus
       
       
     end
+
+    def logout
+
+        @token = nil
+      
+    end
     
     def refresh_token
-      
+      puts "refresh_token"
       token = get_token
       
       
@@ -168,46 +174,29 @@ module Tempus
 
       puts res.body
 
-      result = JSON.parse(res.body)['Data']
-      if result
-      data = JSON.parse(decode(result))
+      if JSON.parse(res.body)['IsSuccessful'] == false
+
+        logout
         
-      puts data
+
+      else
+
+        result = JSON.parse(res.body)['Data']
+
+
+        if result
+
+          data = JSON.parse(decode(result))
+            
+          puts data
+            
+          set_token data
         
-      set_token data
+        end
+
+    end
       
-      end
-      
-      
-      # access_token = result['Access_token'].split(".")[0]
-      # access_token = result['Access_token']
-      #
-      #
-      # uri = URI("#{host}/Account/APIRefreshToken")
-      #
-      # req = Net::HTTP::Post.new(uri, {'Accept'=>'application/json','Content-Type' =>'application/json','Authorization'=>"bearer #{access_token}"})
-      #
-      # req.each_header {|key,value| puts "#{key} = #{value.inspect}" }
-      #
-      #
-      # puts "Bearer #{access_token}"
-      #
-      # puts "Refresh_token #{result['Refresh_token']}"
-      #
-      # p = {}
-      # p['refreshToken'] = result['Refresh_token']
-      #
-      #
-      # req.body = p.to_json
-      #
-      # puts p.to_json
-      #
-      # res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl=>true) {|http|
-      #   http.request(req)
-      # }
-      #
-      #
-      
+
       
     end
     

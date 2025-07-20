@@ -1,11 +1,13 @@
 FROM ruby:3.1.3-buster
 RUN apt-get update -qq && apt-get install -y imagemagick
-RUN apt-get install -y build-essential
+RUN apt-get install -y build-essential 
+RUN apt-get install -y nodejs
 RUN mkdir /docker_gxt
 WORKDIR /docker_gxt
 COPY Gemfile /docker_gxt/Gemfile
 COPY Gemfile.lock /docker_gxt/Gemfile.lock
-RUN bundle update --bundler
+RUN gem install bundler -v 2.2.21
+# RUN bundle update --bundler
 RUN bundle install
 COPY . .
 

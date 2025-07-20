@@ -55,6 +55,24 @@ services:
       REDIS_HOST: redis
       REDIS_PASS: minadadmin
       DEFAULT_APP: miot
+
+  gxt_ptt:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/ptt.pid && bundle exec ruby server.rb ptt"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1795:1795"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      REDIS_PASS: minadadmin
+      DEFAULT_APP: miot    
   gxt_gps:
     restart: always
     build: .

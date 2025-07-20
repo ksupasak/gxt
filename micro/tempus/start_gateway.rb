@@ -68,33 +68,40 @@ def run(opts)
       puts 
       if online_lives.class != Hash
         
-      for i in online_lives
+            for i in online_lives
+            
+              id = i['IncidentId']
+              current[id] = id
+              lives[id] = {} unless lives[id]
+              lives[id] = i
+              
+            end
       
-         id = i['IncidentId']
-         current[id] = id
-         lives[id] = {} unless lives[id]
-         lives[id] = i
+            lives.each_pair do |k,v|
+                  
+                  unless current[k]
+                    
+                    lives.delete k 
+                    
+                  end
+              
+            end
+              
         
+              puts "Current #{lives.keys.size } #{Time.now}"
+              
+      else
+
+
+          if online_lives['IsSuccessful'] == false
+
+            
+            gw.refresh_token
+
+
+
+          end
       end
-      
-      lives.each_pair do |k,v|
-        
-        unless current[k]
-          
-          lives.delete k 
-          
-        end
-        
-      end
-        
-        
-      puts "Current #{lives.keys.size } #{Time.now}"
-      
-    else
-      if online_lives['IsSuccessful'] == false
-        gw.refresh_token
-      end
-    end
        
     rescue Exception=>e
       
