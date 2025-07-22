@@ -1,6 +1,0 @@
-<h1>Product</h1>
-<%
-	p = Product.find params[:id]
-%>
-<%=p.name%>
-<%= link_to image_id_tag(p.image_1, :width=>400, :height=>100), 'index', :onclick=>'javascript:alert("idfj");return false' %>

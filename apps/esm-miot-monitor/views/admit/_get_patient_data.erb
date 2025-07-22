@@ -1,5 +1,0 @@
-<%
-	his = Setting.get :his
-	url = "#{his}#{params[:hn]}"
-	data = `curl #{url}` 
-%><%=data.html_safe%>

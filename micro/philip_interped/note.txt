@@ -1,6 +1,0 @@
-au.philips-emergencycare.com
-
-username : ksupasak@gmail.com
-password : SCU_1792
-
-

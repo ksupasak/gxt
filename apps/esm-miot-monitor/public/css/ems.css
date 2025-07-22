@@ -1,9 +1,0 @@
-@font-face {
-  font-family: IBMPlex;
-  src: url("/miot/css/IBMPlexSansThai-Regular.ttf");
-}
-
-
-body {
-  font-family: "IBMPlex","Sarabun", sans-serif;
-}

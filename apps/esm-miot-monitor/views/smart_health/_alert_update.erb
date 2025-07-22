@@ -1,7 +1,0 @@
-<%
-
-	alert = SHAlert.find(params[:id])
-		
-	alert.update_attributes :operator_user_id=>@current_user.id, :operator_ack=>'True',:operator_ack_at=>Time.now, :status=>'Closed',:closed_at=>Time.now
-	
-%>
