@@ -46,13 +46,16 @@
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+<!-- แถวหัวข้อและแถบค้นหา -->
+
 <div class="row ">
 <div class="col-12 ">
 
-<div class="row row-cols-1 row-cols-md-4 row-cols-xl-4 d-flex align-items-stretch">
+<div class="row row-cols-1 row-cols-md-4 row-cols-xl-4 d-flex align-items-stretch gx-lg-3 gy-lg-3 gx-sm-0  gy-sm-0">
 
-	<div class="col-6 col-xl-2 hidden-lg-down  " >
-		<div class="card radius-10 border-start border-0 border-3 card-x">
+	<div class="col-6 col-xl-2 hidden-lg-down  p-sm-1"  >
+		<div class="card radius-10 border-start border-0 border-3 card-x mb-sm-2">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -65,8 +68,8 @@
 		</div>
 		</div>
     </div>
-	<div class="col-6 col-xl-2 hidden-lg-down">
-		<div class="card radius-10 border-start border-0 border-3  card-x">
+	<div class="col-6 col-xl-2 hidden-lg-down p-sm-1">
+		<div class="card radius-10 border-start border-0 border-3  card-x mb-sm-2">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -79,26 +82,27 @@
 		</div>
 		</div>
     </div>
-	<div class="col-12 col-xl-4">
-		<div class="card radius-10 border-start border-0 border-3  card-x ">
+	<div class="col-12 col-xl-4 p-sm-1">
+		<div class="card radius-10 border-start border-0 border-3  card-x mb-sm-2">
 		<div class="card-body">
-			<div class=" d-flex align-items-center">
+		<div class=" d-flex align-items-center">
 				
-				<div style="border:0px solid" class="col-9">
-					
-			<span class="" style="" >		
+		 <div style="border:0px solid" class="col-10 ">
+			<div class="row d-flex justify-content-between">		
+			<span class="col-9" style="" >		
 					<input name='record[location]' id="record_location" value=""  class="form-control  " type="text" placeholder="Address.." >
-					
+			
 					<input name='record[latlng]' id="record_latlng"  value=""  class="form-control  " type="text" placeholder="Location.." style="display:none" >
 			</span>
-			<span class="" style="float:right" >
+			<span class="col-3 d-flex justify-content-start" style="border:0px solid " >
 	            <button id="start" class="btn btn-info">พูด</button>
 	            <button id="stop" class="btn btn-danger rounded-lg shadow-md hover:bg-red-600 transition hidden">หยุด</button>
-	            <button id="reset" class="btn btn-warning  rounded-lg shadow-md hover:bg-gray-600 transition">Reset</button>
+	            <button id="reset" class="btn btn-warning  rounded-lg shadow-md hover:bg-gray-600 transition hidden">Reset</button>
 				
 				<!-- <a href="#" class="btn btn-info btn-sm" id="select-code" data-bs-toggle="modal" data-bs-target="#selectCodeModal">พูด</a> -->
 			</span>
-			    </div>
+				    </div>
+			</div>
 				
 				
 			   						    <script>
@@ -208,8 +212,8 @@
 		</div>
 		</div>
     </div>
-	<div class="col-6 col-xl-2">
-		<div class="card radius-10 border-start border-0 border-3  card-x">
+	<div class="col-6 col-xl-2 p-sm-1">
+		<div class="card radius-10 border-start border-0 border-3  card-x mb-sm-2">
 		<div class="card-body">
 			<div class="d-flex align-items-center">
 				<div>
@@ -222,8 +226,8 @@
 		</div>
 		</div>
     </div>
-	<div class="col-6 col-xl-2">
-		<div class="card radius-10 border-start border-0 border-3  card-x">
+	<div class="col-6 col-xl-2 p-sm-1">
+		<div class="card radius-10 border-start border-0 border-3  card-x mb-sm-2">
 		<div class="card-body">
 			<div class="d-flex align-items-between justify-content-between">
 				<div style="">
@@ -246,7 +250,7 @@
 
 
 
-<div class="row">
+<div class="row gx-0 gy-0">
 	<div class="col-12">
     <div class="card radius-10">
 	<div class="card-body">

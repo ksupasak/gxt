@@ -3,6 +3,7 @@
 			record = EMSCase.find params[:id]
 			admit = record.admit
 
+   puts params.inspect
 
   if request.post?
 
@@ -13,12 +14,7 @@
 			params[:record].merge!(:status=>'Completed', :completed_at=>Time.now)
 			
 			
-	 else
 
-			params[:record].delete(:summary)
-
-			
-	 end
 		
 		
 			record.update_attributes params[:record]
@@ -39,6 +35,21 @@ MSG
 <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMSNoti/send_discharge?id=<%=record.id%>">
 
 Discharge ... 
+
+<%
+	 else
+
+			params[:record].delete(:summary)
+			
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=record.id%>">
+
+<%
+			
+	 end
+%>
+
 	<%#params.inspect %>
 <% else %>
 <%

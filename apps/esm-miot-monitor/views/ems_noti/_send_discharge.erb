@@ -9,6 +9,7 @@ else
   ems_case  = EMSCase.find ems_command.case_id
 end
 
+if ems_command
 
 providers_list = ems_command.providers
 providers_items = []
@@ -452,6 +453,7 @@ line_group.send_message obj.to_json, :type=>'raw'
 %>
 Notification was sent<br/>
 <%#obj.to_json%>
+<% end %>
 <% if true %>
 <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
 <% end %>

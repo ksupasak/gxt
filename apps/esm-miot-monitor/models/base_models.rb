@@ -1541,7 +1541,7 @@ class PatientController < GXTDocument
 end
 
 
-class AmbulanceController < GXTDocument
+class AmbulanceController < EMSGXTDocument
 
 end
 

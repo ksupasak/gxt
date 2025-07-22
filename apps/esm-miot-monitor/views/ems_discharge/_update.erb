@@ -12,8 +12,8 @@ record = EMSCase.find params[:id]
 			admit.discharge
 
       record.update_attributes params[:record]
-
-			record.update_attributes :status=>'Completed', :completed_at=>Time.now
+     
+			#record.update_attributes :status=>'Completed', :completed_at=>Time.now
 
 
 	# update_attributies

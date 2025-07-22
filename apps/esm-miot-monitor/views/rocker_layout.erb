@@ -117,13 +117,13 @@
 				<nav class="navbar navbar-expand">
 					<div class="mobile-toggle-menu"><i class="bx bx-menu"></i>
 					</div>
-					<!-- <div class="search-bar flex-grow-1">
+					 <div class="search-bar flex-grow-1  ">
 						<div class="position-relative search-bar-box">
 							<input type="text" class="form-control search-control" placeholder="Type to search...">
 							<span class="position-absolute top-50 search-show translate-middle-y"><i class="bx bx-search"></i></span>
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class="bx bx-x"></i></span>
 						</div>
-					</div> -->
+					</div> 
 						
 					<%
 					
@@ -150,13 +150,14 @@
 
 					%>	
 
-					<div class=" flex-grow-1">
-						<div class="position-relative search-bar-box"  style="font-size:1.2em">
-							<b><%=Setting.get('default_center_name')%> <%=sub_title%> <% if messages.size > 0 %> <span class="alert alert-warning" ><%= messages_txt %></span> <% end %></b> 
+					<div class=" flex-grow-1 col-4" style="border:0px solid ">
+						<div class=""  style="font-size:1.2em">
+							<b><%=Setting.get('default_center_name')%> <%=sub_title%> 
+							<% if messages.size > 0 %> <span class="alert alert-warning" ><%= messages_txt %></span> <% end %></b> 
 						</div>
 					</div>
 
-				 <div class="top-menu">
+				 <div class="top-menu " style="border:0px solid ">
 					 <div id="clock" class="text-secondary" style="font-size:1.2em">
 				 	</div>
 				 	<script>
@@ -166,14 +167,8 @@
 						}
 				 		setInterval(function () {
 
-				 			var currentdate = new Date();
-				 			// var datetime = "" + weekday[currentdate.getDay()] + " "
-				 			// 						+ currentdate.getDate() + "/"
-				 			// 						+ (currentdate.getMonth()+1)  + "/"
-				 			// 						+ currentdate.getFullYear() + "  "
-				 			// 						+ currentdate.getHours() + ":"
-				 			// 						+ currentdate.getMinutes() + ":"
-				 			// 						+ currentdate.getSeconds();
+				 		var currentdate = new Date();
+				
    						var datetime = "" + weekday[currentdate.getDay()] + " "
 																			+ currentdate.getDate() + "/"
 																			+ (currentdate.getMonth()+1)  + "/"
@@ -362,10 +357,10 @@
 										</a>
 										</div>
 										<div class="col text-center">
-                    	<a href="../EMS/meeting">
+                    						<a href="../Ambulance/index">
 											<div class="app-box mx-auto bg-gradient-moonlit text-white"><i class="bx bx-filter-alt"></i>
 											</div>
-											<div class="app-title">Meeting</div>
+											<div class="app-title">Ambulance</div>
                       </a>
 										</div>
 									</div>
@@ -408,8 +403,9 @@
 		</header>
 		<!--end header -->
 		<!--start page wrapper -->
+		
 		<div class="page-wrapper">
-			<div class="page-content" style="overflow:scroll">
+			<div class="page-content px-lg-3 px-sm-0" style="overflow:scroll">
 
 
 
