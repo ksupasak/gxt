@@ -1,0 +1,1217 @@
+<%=inline(this,:'_init')%>
+<% params[:admit_id] = params[:id]%>
+<%=inline(this,:'_feed')%>
+<%
+	
+admit = Admit.find params[:id]
+patient = admit.patient
+
+#fix duplicate patient
+allpatients = Patient.where(:hn=>patient.hn).all #.collect{|i| i.id}
+allpatients_id = allpatients.collect{|i| i.id}
+allrelations = SHRelation.where(:patient_id=>allpatients_id).all.collect{|i| i.patient_id if i.hospital_id}.compact
+allpatients2 = allpatients.collect{|i| i.id if !allrelations.index(i.id)}.compact
+for ap in allpatients
+	 ap.destroy if !allrelations.index(ap.id)
+end
+allpatients = Patient.where(:hn=>patient.hn).all.collect{|i| i.id}
+
+data_records = admit.records
+
+
+
+# report = ERCaseReport.where(:admit_id=>admit.id).first
+# report = ERCaseReport.new unless report
+sdate = Time.now
+sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
+
+report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
+
+reportclass = "btn-submit"
+reportclass = "btn-secondary" unless report
+reportid = ""
+reportid = "&record_id=#{report.id}" if report
+%>
+<style>
+	table {
+	    max-width: 100%;
+	}
+	.last{
+		background:#E2FFFA;
+	}
+	.table-head{
+		color:white;
+	}
+	</style>
+
+
+    <!--Content-->
+    <section>
+    
+	
+	<div class="containerx">
+	<div class="row">
+	
+	<div class="col" style="margin-left:0px;margin-right:0px;border-radius:0px;">
+	
+	<div class="row banner-header" style="">
+
+	<div class="col">
+	<div class="row">
+		<div class="col">
+			<div>
+				<span class="banner-title"><%=link_to @access_title, "index" %>&nbsp; &nbsp; </span><br/>
+		Smart Health
+			</div>
+		</div>
+		
+		<div class="col  d-flex justify-content-end">
+			<div>
+				<span class=""><%=@current_provider.name if @current_provider%></span><br/>
+				<span class="banner-text"> <%=patient.to_s%> [ HN : <%=patient.hn%> ]</span>
+			
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+		
+		</div>
+	</div>
+</div>
+	</div>
+	
+    </div>
+	</div>
+	
+			
+            <!--patient card-->
+            <div class="card patient-info">
+                <div class="card-body d-flex align-items-center">
+				<div class="row">
+				 <div class="col-12 col-md-3 pb-3">
+				 	<div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1.2em" id="patient-name"><%=patient.to_s%></h6>
+						</div>
+						<div class="col" style="font-size:0.8em">HN: <%=patient.hn%></div>
+						<div class="col" style="font-size:0.8em">อายุ: <%=patient.to_age_text %> ปี</div>
+						<div class="col" style="font-size:0.8em">เพศ: <%=patient.gender%></div>
+						<div class="col" style="font-size:0.8em">DOB: <%=patient.dob.strftime("%d/%m")+"/"+(patient.dob.year+543).to_s if patient.dob%></div>
+						
+						<div class="col-12" style="font-size:0.8em">
+							<span class=" p-0" id="gender">อาการสำคัญ: <%=admit.note%></span>
+						</div>
+					</div>	 
+				 </div>
+				 
+				 <%
+				 	
+				 relation = SHRelation.where(:patient_id=>patient.id).first
+				 
+				 relation = SHRelation.new(:patient_id=>patient.id) unless relation
+				 
+				 if relation 
+					
+					
+					 hospital = SHHospital.find relation.hospital_id
+					 
+					 hospital_doctor = Provider.find relation.hospital_doctor_id
+					 hospital_doctor_2 = Provider.find relation.hospital_doctor_2_id
+					 hospital_nurse = Provider.find relation.hospital_nurse_id
+					 
+					 network = SHNetwork.find relation.network_id
+					 
+					 network_doctor = Provider.find relation.network_doctor_id
+					 network_nurse = Provider.find relation.network_nurse_id
+					 network_officer = Provider.find relation.network_officer_id
+					 
+					 
+					 
+					
+				 %>
+				 
+				 
+				 <div class="col-6 col-md-3">
+				 	<div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1em" id="patient-name"><%=hospital.name if hospital%></h6>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
+							แพทย์ประจำ : <%=hospital_doctor.name if hospital_doctor%>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
+							แพทย์รอง : <%=hospital_doctor_2.name if hospital_doctor_2%>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
+							พยาบาล : <%=hospital_nurse.name if hospital_nurse %>
+						</div>
+					</div>
+				 </div>
+				 
+				 <div class="col-6 col-md-3">
+					 <div class="row">
+						<div class="col-12">
+							<h6 class="font-weight-bold" style="font-size:1em" id="patient-name"><%=network.name if network%></h6>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
+							แพทย์ประจำ : <%=network_doctor.name if network_doctor%>
+						</div>
+						<div class="col-12"  style="font-size:0.8em">
+							พยาบาล : <%=network_nurse.name if network_nurse %>  <%=", T : "+network_nurse.phone if network_nurse and network_nurse.phone.size>0 %>
+						</div>
+					</div>
+				 </div>
+
+				 <div class="col-12 col-md-3">
+					 <div class="row">
+						<div class="col-12">
+				     		<h6 class="font-weight-bold" style="font-size:1em" id="patient-name">อสม</h6>
+						</div>
+						<div class="col-12" style="font-size:0.8em">
+			    	 		<%=network_officer.name if network_officer %>  <%=", T : "+network_officer.phone if network_officer and network_officer.phone.size>0 %>
+						</div>
+					</div>	 
+				 </div>
+				 
+				 <% end %>
+				 
+				 <!-- <div class="col-2 text-right">
+				     <h6 class="" id="arrival-time">Registered at:
+				         <span><%= admit.admit_stamp.strftime("%d/%m/%Y - %H:%M")%></span>
+				     </h6> 
+				
+			
+					
+					<div class="level-content <%#=report.level if report%>" style="float:right">
+				
+					</div>
+				 </div>-->
+				</div>
+                </div>
+            </div>
+            <!--end of patient card-->
+            <!--nurse summary-->
+
+            <div class="d-flex bd-highlight mb-3 justify-content-center align-items-center mt-3">
+               
+				
+<!--                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+                    <a href="#" class="btn  d-flex align-items-center justify-content-center "  data-toggle="modal" data-target="#doctor3"style="float:right">
+                        <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                        ระบบ 3 หมอ
+                     </a>
+                </div>
+-->					
+            <!-- <a href="edit?admit_id=<%=admit.id%><%=reportid%>" class="btn  btn-action  <%=reportclass%>  d-flex align-items-center justify-content-center">
+                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+                แบบฟอร์ม
+            </a>&nbsp; -->
+
+			<div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+                <a href="connect?admit_id=<%=admit.id%>" class="connect-btn btn  d-flex align-items-center justify-content-center " style="float:right">
+                    <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                    ตรวจ
+                 </a>
+            </div>
+
+
+                <div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+                    <a href="#" class="btn d-flex align-items-center justify-content-center " style="float:right" id="image_capture_btn">
+                    <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:3em;fill:white;" alt="heart" class="pr-3 pulse"/>
+                    ถ่ายรูป
+                </a>
+
+
+			    <script>
+				    $('#image_capture_btn').click(function(){
+					device_interface.image_capture(window.location.origin+"<%=url_for("SmartER/upload?admit_id=#{admit.id}")%>", "key")
+				    })
+			    </script>
+                </div> 
+				
+			<script>
+				
+				$('.connect-btn').click(function(e){
+					
+					<%
+					dob = '00000000'
+					dob = patient.dob.strftime('%d%m')+format('%04d',patient.dob.year+543) if patient.dob
+					
+					if dob =="00000000"
+						
+					%>
+					
+					alert('ไม่ได้ระบุวันเดือนปีเกิดผู้ป่วย')
+					
+					<% else %>
+					
+					var dob = prompt("กรุณาใส่วันเดือนปีเกิดเป็น DDMMYYYY ในปี พศ. ", "");
+					
+					if (dob != null && dob=='<%=dob%>') {
+					  
+					}else{
+						e.preventDefault();
+					}
+					
+					<% end %>
+				})
+				
+			
+				
+			</script>
+			
+				
+<!--				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="summary?admit_id=<%=admit.id%>" class="btn d-flex align-items-center justify-content-center " style="float:right">
+	            <img src="<%=url_for('img/ER/description.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	                 Summary
+	            </a>&nbsp;
+				
+				</div>
+-->			
+				<% if true
+		
+				host = 'prod.vidyo.io'
+
+				#
+				# display_name = "userDemo#{rand(999)}"
+				# cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+				# out = `#{cmd}`
+				# puts cmd
+				# puts out
+				# out = out.split("\n") if out
+				# puts out.inspect
+				#
+				# puts
+				# token = out[-1] if out
+				# @token = token
+
+				resource_id = "telehealth-#{format("%03d",rand(999))}"
+				resource_id = "#{params[:id]}"
+
+				%>
+
+				
+			    &nbsp;
+                <div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+			
+			
+     
+			<!--
+	    	 <a target="_blank" href="tele?resourceId=<%=resource_id%>" class="btn video-call "><span class="label">
+                <img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                พบหมอ
+			 </span></a>-->
+	
+	 	    	 <a target="_blank" href="tele_create?admit_id=<%=resource_id%>" class="btn video-call detail" ctype="conference" cid="<%=admit.id%>"><span class="label">
+	                 <img src="<%=url_for('img/svg/video.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+	                 พบหมอ
+	 			 </span></a>
+				  
+				  
+                </div>
+				<% end %>
+				
+				
+            </div>
+            
+			<div class="clear"></div>
+	
+	
+	
+	<!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+	  </li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+	  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">.1</div>
+	  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">..2.</div>
+	  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">.3..</div>
+	</div> -->
+	
+	
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	  <li class="nav-item">
+	    <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">ประวัติการตรวจ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">ภาพรวมสุขภาพ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">ศูนย์ข้อความ</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="tab4-tab" data-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false">คลังภาพ</a>
+	  </li>
+	</ul>
+	
+	
+	
+	<div class="tab-content" id="myTabContent">
+		
+	  <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab" style="border:0px solid red">
+	
+    <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ประวัติการรักษา</h4></div>
+	
+	
+	<div class="row" style="background:#fff;padding:10px">		
+			
+			<%
+				
+				map = {}
+				
+				key = "#{patient.created_at.strftime('%Y-%m-%d')}"
+				map[key] = [] unless map[key]
+				admit_start = NurseRecord.new :description=>"ลงทะเบียนเข้าระบบ"
+				map[key] << {:stamp=>patient.created_at, :type=>'note',:data=>admit_start}
+			
+				# data record
+				
+				data_records = admit.records
+				
+				for i in data_records
+					
+					key = "#{i.stamp.strftime('%Y-%m-%d')}"
+					stamp = i.stamp
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'vitalsign',:data=>i}
+						
+				end
+				
+				
+				visits = SHVisit.where(:patient_id=>patient.id).all
+				
+				for i in visits
+					
+					key = "#{i.date.strftime('%Y-%m-%d')}"
+					stamp = i.date
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'visit',:data=>i}
+						
+				end
+				
+			
+				
+				records = SHCaseReport.where(:admit_id=>admit.id).all
+				
+				for i in records
+					
+					key = "#{i.date.strftime('%Y-%m-%d')}"
+					stamp = i.date
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'case_record',:data=>i}
+						
+				end
+				
+				nurse_records = NurseRecord.where(:admit_id=>admit.id).all
+				
+				for i in nurse_records
+					
+					key = "#{i.start_time.strftime('%Y-%m-%d')}"
+					stamp = i.start_time
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'note',:data=>i}
+						
+				end
+				
+				
+				
+				msgs = Message.where(:admit_id=>admit.id,:type=>'image').sort(:created_at=>-1).all.reverse 
+				
+				for i in msgs
+					
+					key = "#{i.created_at.strftime('%Y-%m-%d')}"
+					stamp = i.created_at
+					
+					map[key] = [] unless map[key]
+					map[key] << {:stamp=>stamp, :type=>'image',:data=>i}
+						
+				end
+				
+				
+				
+				
+				date_list = map.keys.sort(){|a,b| b<=>a} 
+				
+				
+				
+				
+				
+				
+			%>
+			
+			
+			
+			<div class="col-12 col-xl-6">
+			
+			<table class="table station" style="font-size:0.8em">	
+			<!-- <thead>
+				<th>วันเวลา</th><th>กิจกรรม</th><th>สถานะ</th><th>BP</th><th>SPO2/Pulse</th><th>WH</th><th>T</th><th>Glu</th><th>ผู้ลงข้อมูล</th>
+			</thead> -->
+			<tbody>
+			<% for date in date_list 
+			
+				 stamp = map[date][0][:stamp]
+		
+				 distance = ""
+	 
+				 distance = "#{((Time.now-stamp)/86400).to_i.abs} วัน" if (Time.now-stamp).abs/86400>1
+	 
+				 distance = "#{((Time.now-stamp)/86400/30).to_i.abs} เดือน" if (Time.now-stamp).abs/86400/30 > 1 
+	 			
+				
+				 if distance.size>0
+		 			
+					 if (Time.now-stamp)>0
+						 
+					 	 distance = "#{distance}" 
+				 	 else
+						 distance = "(#{distance})" 
+				 	 
+					 end
+					 
+			 	 else
+					 distance = "วันนี้"
+				
+				 end
+			
+				 
+			
+			%>	
+			
+			<tr class="card-header card-vital">
+			<th >
+				<%=stamp.strftime("%d/%m/%y")%> 
+			</th>
+			<th><span style=""><%=distance%></span></th>
+			<td class="table-head">สถานะ</td><td class="table-head">BP</td><td class="table-head">O2:PR</td><td class="table-head">W:H</td><td class="table-head">Temp</td><td class="table-head">Glu</td><td class="table-head">ผู้ลงข้อมูล</td>
+			
+			
+			</tr>
+			
+			<% for i in map[date].sort(){|a,b| a[:stamp]<=>b[:stamp]} 
+			
+			data = i[:data]
+			
+			
+			
+			%>
+			<tr>
+				<td style="font-size:1em">
+					<%=i[:stamp].strftime("%H:%M")%>
+					<% if @current_role.index('admin') %>	
+   		     
+				     <a href="#" class="detail_delete c<%=data.id%> " style="font-size:1em;color:red" ctype="<%=i[:type]%>" cid="<%=data.id%>">Del</a>
+					
+					<% end %>
+				</td>
+				<td>
+					
+					
+		         <a href="#" class="detail c<%=data.id%>" style="font-size:1em" ctype="<%=i[:type]%>" cid="<%=data.id%>"><%=i[:type].humanize%></a>
+				
+			
+				</td>
+				
+				<% if i[:type]=='visit'
+					user = nil
+					user = User.find data.completed_user if data.status=='Completed'
+				%>
+				
+				<td><%=data.status%></td>
+				<td colspan="5"></td>
+				<td><%=user.login if user%></td>
+				
+				<% elsif i[:type] == 'case_record'
+					user = nil
+					editor = '-'
+					if data.updated_user_id
+						user = User.find data.updated_user_id  
+					end
+					if user 
+						editor = user.login
+					else
+						editor = "-"
+					end
+				%>
+				<td colspan="6">
+				<a href="edit?admit_id=<%=admit.id%>&record_id=<%=data.id%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Record</a>
+				
+				<a href="summary?admit_id=<%=admit.id%>&record_id=<%=data.id%>" class="btn btn-sm btn-action"><i class="fas fa-print"></i> Print</a>
+				
+				<a href="destroy_report?admit_id=<%=admit.id%>&record_id=<%=data.id%>" class="btn btn-sm btn-action"><i class="far fa-file-alt"></i> Delete</a>
+				
+				
+				</td>
+				<td>
+					<%=editor %>
+				</td>
+				
+				<% elsif i[:type] =='vitalsign'
+				
+				i = data
+				%>
+				
+				
+				
+                <td> Score <%=i.score%></td>
+                <td class="bp"><%=i.bp%></td>
+                <td class="pr"><%=i.spo2%> : <%=i.pr%> </td>
+                <td class="wh"><%=i.weight%> : <%=i.height%></td>
+				<td class="bt"><%=i.temp%></td>
+                <td class="glu"><%=i.glucose%></td>
+				
+            
+                <td><%
+                	user = '-'
+					user = User.find i.updated_user_id 
+					
+                %><%=user.login if user%></td>
+			
+				
+				<% elsif i[:type] =='note'%>
+				<td colspan="6">
+					<i><%=data.description%></i>
+				</td>
+                <td><%
+                	user = '-'
+					user = User.find data.updated_user_id 
+					
+                %><%=user.login if user%></td>
+				<% elsif i[:type] =='image'%>
+				
+				<% 
+				
+				url  = "/miot/img/svg/aoc-icon.svg"
+				url = "../Message/content?id=#{data.id}" 
+				
+				%>
+				<td colspan="7">
+					<a href="javascript:$('.c<%=data.id%>').click()"><img src="<%=url%>" height="200">
+				</td>
+				
+				
+				<% else %>
+				<% end %>
+				
+				
+				
+			</tr>
+			
+			<% end %>
+			
+			
+			
+			<% end %>
+			
+			</tbody>
+			</table>
+			
+			</div>
+			
+			
+			<div class="col-12 col-xl-6">
+			<div class="content-detail" >
+	
+			
+			</div>
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+	</div>	
+	
+	
+	
+	  </div>
+	  <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+	    
+		<div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ภาพรวมสุขภาพ</h4></div>
+	  	
+		<%
+		
+		params[:admit_id] = admit.id
+	
+		%>
+		
+		<%=inline(this,:'_chart')%>
+		
+	  </div>
+	  <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+	  	
+		
+  	  <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">ศูนย์การสื่อสาร</h4></div>
+	  	<%=inline(this,:'_patient_message')%>
+	  </div>
+	  
+	
+	  
+	  
+	   <div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
+	   	
+    	  <div class="mr-auto p-2 bd-highlight"><h4 class="font-weight-bold " style="">คลังภาพ</h4></div>
+		
+   		<%
+			
+   		msgs = Message.where(:admit_id=>admit.id).sort(:created_at=>-1).all.reverse 
+			
+   		%>
+   	 <div class="card sum-report mt-4 station">
+           <div class="card-header card-vital">
+               <strong>Images</strong>
+           </div>
+           <div class="card-body">
+   		<div class='row'>
+   		<% for i in msgs %>
+   		<% if i.type == 'image' 
+
+   			url  = "/miot/img/svg/aoc-icon.svg"
+   			url = "../Message/content?id=#{i.id}" 
+   		%>
+		
+   		<div class="col-4"><a href="#" target="_blank" >
+   			<img src="<%=url%>" height="150"></a>
+   		</div>
+		
+   		<% end %>
+   		<% end %>
+   		</div>
+   	    </div>
+          </div>
+		
+	   </div>
+	</div>
+	
+	
+	
+			
+			
+	
+			
+			
+            <div class="card sum-report mt-3 station">
+            
+            </div>
+
+
+        </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+        <div class="d-flex justify-content-center mt-5">
+			
+            <!-- <a href="#" class="btn btn-primary btn-action btn-info d-flex align-items-center justify-content-center" data-toggle="modal" data-target="#opdModal" style="float:right">
+                <img src="<%=url_for('img/ER/arrow_circle.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                Transfer
+            </a>&nbsp; -->
+			
+			<div class=" p-2 btn-submit d-flex align-items-center justify-content-center mr-1">
+				<a href="#" class="btn  d-flex align-items-center justify-content-center "  data-toggle="modal" data-target="#doctor3"style="float:right">
+					<img src="<%=url_for('img/ER/pulse-base.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+					ระบบ 3 หมอ
+					</a>
+			</div>
+
+			<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+			<a href="summary?admit_id=<%=admit.id%>" class="btn d-flex align-items-center justify-content-center " style="float:right">
+			<img src="<%=url_for('img/ER/description.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+					Summary
+			</a>&nbsp;
+			
+			</div>
+       
+
+				&nbsp;
+
+				<% unless @current_network %>
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="visit?id=<%=params[:id]%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                นัดหมาย
+	            </a>
+				</div>
+				<% end %>
+				
+				&nbsp;
+				<% if @current_hospital %>
+				<div class="p-2 btn-submit d-flex align-items-center justify-content-center">
+	            <a href="manage_patient_user?id=<%=relation.id%>" class="btn d-flex align-items-center justify-content-center ">
+	                <img src="<%=url_for('img/ER/post_add.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3"/>
+	                Login ผู้ป่วย
+	            </a>
+				</div>
+				<% end %>
+				
+				
+		
+			&nbsp;
+
+          
+      
+<!--            <a href="connect?admit_id=<%=admit.id%>" class="btn btn-primary  btn-action btn-danger d-flex align-items-center justify-content-center" style="float:right">
+                <img src="<%=url_for('img/ER/exit_to_app.svg') %>" style="opacity:0.5;width:3em" alt="heart" class="pr-3 pulse"/>
+                Discharge
+            </a> -->
+
+        </div>
+		<br/>
+		<div class="btn-noline">
+		<%
+			return_url='index'
+			return_url= params[:return] if params[:return]
+		%>
+        <a href="<%=return_url%>" class="d-flex justify-content-center">
+            <p>กลับสู่หน้าหลัก</p>
+        </a>
+		</div>
+        <br/>
+	
+        </div>
+        </div>
+    </section>
+	
+	<!-- Modal for vital sign -->
+	<div class="modal fade" id="opdModal" tabindex="-1" role="dialog" aria-labelledby="opdModalTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="opdModalTitle">Transfer</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" style="color:black">
+	        <center>
+	        
+			<%
+			
+			zone = Zone.find session[:current_zone]
+	
+			name = zone.name if zone
+	
+			rooms = zone.rooms
+		
+			%>
+			<% for room in rooms %>
+			<div class="">
+				<%=link_to room.name, "transfer?id=#{admit.id}&room_id=#{room.id}" if room %>
+			</div>
+			<div class=" row">
+			<% for bed in room.beds
+			
+				current_admit = Admit.where(:bed_id=>bed.id, :zone_id=>session[:current_zone], :status=>'Admitted').first 
+			 %>
+			<div class="col-4">
+				<% unless current_admit %>
+				<%=link_to bed.name, "transfer?id=#{admit.id}&bed_id=#{bed.id}" %>
+				<% else %>
+				<%=link_to bed.name, "show?id=#{current_admit.id}"%><br/>
+				<%= current_admit.patient.to_s %>
+				<% end %>
+			</div>
+			<% end %>
+			
+		</div>
+			<hr/>
+				<div class="clear"></div>
+			<% end %>
+	        </center>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-clear " style="float:left" >Clear</button>
+		
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" id="save-modal">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+  <% if true %><div id="msgs" style="font-size:0.8em"></div><% end %>
+	
+	<script>
+	   	 
+		 
+		 
+	
+		 
+		 
+		 
+		 
+		 
+		<%
+		
+		
+		@current_zone = Zone.find session[:current_zone]
+	
+		%>
+	
+		
+		 var show = function(el){
+	        return function(msg){ el.innerHTML = msg  }
+	      }(document.getElementById('msgs'));
+		 
+		 	  
+		 
+			  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+			  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+
+<%
+path = ""
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}" if admit.zone
+			  
+				  
+			  
+%>	
+	
+			  function call(){
+			  	
+				
+				  sb = "Zone.Message <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>\n"
+				  sb += "OK\n"
+				 ws.send(sb) 
+			  }
+			  
+			  $('.video-call').click(function(e){
+				  
+				  call();
+ //
+ // 				  e.preventDefault();
+			  });
+			  
+	
+		      ws.onopen    = function()  { show('websocket opened'); 
+		  
+			  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+			
+			  };
+    
+	
+			  ws.onclose   = function()  { show('websocket closed'); 
+		
+			 	setTimeout(function () {
+			       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+			    }, 2000); //will call the function after 2 secs.
+	
+
+		      }
+	  
+		      ws.onmessage = function(m) { 
+				  // alert(m.data)
+			  
+			  }
+		  
+		  
+		  
+			
+		
+	</script>
+	
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="doctor3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+ 		   <form action="update_relation?id=<%=params[:id]%>" method="post">
+			
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">ระบบ 3 หมอ</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	       <%
+	       		
+		   	# relation = SHRelation.where(:patient_id=>patient.id).first
+			
+	       %>
+		   
+  		  <div class="row">
+
+  		 		<div class="col">
+  		 		<label for="relation-hospital_id">โรงพยาบาลต้นสังกัด</label>
+				<br/>
+				<select name="relation[hospital_id]" class="form-control">
+				<option value="" ></option>
+				<%
+				
+				
+				hospitals = SHHospital.where(:_id=>relation.hospital_id).all
+				
+				%>
+				<% for i in hospitals
+				
+				%>
+				<option value="<%=i.id%>" <%="selected" if i.id==relation.hospital_id %>><%=i.name%></option>
+				<% end %>
+				</select>
+				
+			
+				</div>
+				 
+ 	
+ 		
+				 
+  		 </div>
+		   
+		  <div class="row">
+
+		 		<div class="col">
+		 		<label for="relation-hospital_doctor_id">แพทย์</label>
+		 		<br/>
+				<select name="relation[hospital_doctor_id]"  class="form-control">
+				<option value="" ></option>
+				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'doctor').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_doctor_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+				
+				</div>
+				 
+				 
+
+ 		 		<div class="col">
+ 		 		<label for="relation-hospital_doctor_id">แพทย์รอง</label>
+ 		 		<br/>
+ 				<select name="relation[hospital_doctor_2_id]"  class="form-control">
+ 				<option value="" ></option>
+ 				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'doctor').all
+ 				provider = i.provider
+ 				%>
+ 				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_doctor_2_id %>><%=provider.name%></option>
+ 				<% end %>
+ 				</select>
+				
+ 				</div>
+				
+	 		<div class="col">
+	 		<label for="relation-hospital_nurse_id">พยาบาล</label>
+				<br/>
+				<select name="relation[hospital_nurse_id]"  class="form-control">
+				<option value="" ></option>
+				<% for i in SHUserHospital.where(:hospital_id=>relation.hospital_id,:provider_type=>'nurse').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.hospital_nurse_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+		
+		    </div>
+			 
+		 		<div class="col">
+		 		</div>
+				 
+		 </div>
+		 <br/>
+  		  <div class="row">
+
+  		 		<div class="col">
+  		 		<label for="relation-network_id">โรงพยาบาลส่งเสริมสุขภาพตำบล</label>
+			
+				<br/>
+				<select name="relation[network_id]" class="form-control">
+				<option value="" ></option>
+				<% 
+				
+				@current_network = SHNetwork.find relation.network_id
+				if @current_network
+					
+				for i in SHNetwork.where(:hospital_id=>@current_network.hospital_id).all
+			
+				%>
+				<option value="<%=i.id%>" <%="selected" if i.id==relation.network_id %>><%=i.name%></option>
+				<% end %>
+				<% end %>
+				</select>
+			
+			    </div>
+				 
+  	 	
+				 
+  		 </div>
+		 
+		  <div class="row">
+
+		 		<!--
+				 <div class="col">
+		 		<label for="relation-network_doctor_id">แพทย์</label>
+				<br/>
+				<select name="relation[network_doctor_id]" class="form-control">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id,:provider_type=>'doctor').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_doctor_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+			
+			    </div>
+				 
+		 		<div class="col">
+		 		<label for="relation-network_nurse_id">พยาบาล</label><br/>
+				<select name="relation[network_nurse_id]" class="form-control">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id,:provider_type=>'nurse').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_nurse_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+				</div>
+				-->
+			 
+		 		<div class="col">
+		 		<label for="relation-network_officer_id">อสม</label><br/>
+			
+				<select name="relation[network_officer_id]" class="form-control">
+				<option value="" ></option>
+				<% for i in SHUserNetwork.where(:network_id=>relation.network_id, :provider_type=>'officer').all
+				provider = i.provider
+				%>
+				<option value="<%=provider.id%>" <%="selected" if provider.id==relation.network_officer_id %>><%=provider.name%></option>
+				<% end %>
+				</select>
+			
+			
+			    </div>
+				 
+		 </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <input type="submit" class="btn btn-primary" value='บันทึก' name='บันทึก'/>
+	      </div>
+		  
+		    </form>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	<div class="feed" style=""></div>	
+	
+	
+
+	 
+	<div class="modal fade" id="modal-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <!-- <div class="modal-header">
+	       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times</span>
+	        </button>
+	      </div> -->
+	      <div class="modal-body">
+			  <div class="modal-detail">
+       		   </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary " data-dismiss="modal">Close</button>
+	        <!-- <button type="button" class="btn btn-info">Accept</button> -->
+	      </div>
+	    </div>
+	  </div>
+	</div>	 
+	<style>
+		.modal {
+		  width: 550px;
+		  margin: auto;
+		}
+		.modal-dialog {
+			max-width:550px;
+		}
+		</style>
+	
+	<script>
+	 
+	 $('.detail').click(function(event){
+	 	
+		ctype = $(this).attr('ctype')
+		cid = $(this).attr('cid')
+		 
+		 $.ajax({
+		   url: "detail?id="+cid+"&ctype="+ctype+"&admit_id=<%=params[:id]%>",
+		   context: document.body
+		 }).done(function(content) {
+		   
+			width =  $(window).width() 
+		
+			 if(width>1200){
+			 	 $( '.content-detail' ).html( content );
+			 }else{
+				 $( '.content-detail' ).html("");
+				 $( '.modal-detail' ).html( content );
+			 	 $("#modal-popup").modal()
+			 }
+			
+		 });
+		 
+		 event.preventDefault()
+		 
+	 })
+	 
+	 
+	 
+	 $('.detail_delete').click(function(event){
+	 	
+		ctype = $(this).attr('ctype')
+		cid = $(this).attr('cid')
+		 
+		 $.ajax({
+		   url: "detail_delete?id="+cid+"&ctype="+ctype+"&admit_id=<%=params[:id]%>",
+		   context: document.body
+		 }).done(function(content) {
+		
+			 location.reload();
+		   
+			// width =  $(window).width()
+	//
+	// 		 if(width>1200){
+	// 		 	 $( '.content-detail' ).html( content );
+	// 		 }else{
+	// 			 $( '.content-detail' ).html("");
+	// 			 $( '.modal-detail' ).html( content );
+	// 		 	 $("#modal-popup").modal()
+	// 		 }
+	//
+		 });
+		 
+		 event.preventDefault()
+		 
+	 })
+	 
+	 
+		</script>

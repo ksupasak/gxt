@@ -1,0 +1,626 @@
+<%
+   sidebarcolor = Setting.get('ui_nav_color','sidebarcolor2')
+   style = 'color-sidebar ' + sidebarcolor 
+
+%>
+<html lang="en" class="<%=style%>"><head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!--favicon-->
+	<script src="/rocker/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+	<script src="/rocker/assets/js/jquery.min.js"></script>
+	<link rel="icon" href="/rocker/assets/images/favicon-32x32.png" type="image/png">
+	<!--plugins-->
+	<link href="/rocker/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet">
+	<link href="/rocker/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet">
+	<link href="/rocker/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
+	<link href="/rocker/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet">
+	<!-- loader-->
+	<link href="/rocker/assets/css/pace.min.css" rel="stylesheet">
+	<script src="/rocker/assets/js/pace.min.js"></script>
+	<!-- Bootstrap CSS -->
+	<link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+	<link href="/rocker/assets/css/app.css" rel="stylesheet">
+	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
+	<!-- Theme Style CSS -->
+	<link rel="stylesheet" href="/rocker/assets/css/dark-theme.css">
+	<link rel="stylesheet" href="/rocker/assets/css/semi-dark.css">
+	<link rel="stylesheet" href="/rocker/assets/css/header-colors.css">
+    <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
+    <script src="/vendor/d3/d3.min.cus.js"></script>
+	
+	<link rel="stylesheet" href="/assets/stylesheets/application.css">
+	<script src="/assets/javascripts/application.js"></script>
+
+
+    <!-- jQuery UI -->
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+      <!-- jQuery UI CSS -->
+	<script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
+
+<link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
+ 
+<%
+	mode = "ems"
+	if session[:current_zone]
+		@current_zone = Zone.find session[:current_zone]
+		mode = @current_zone.mode 
+	end
+
+%>
+    <% begin %>
+		<%= inline(this,('../lib/_'+mode).to_sym)  %>
+    <% rescue Exception=>e 
+		puts e.message
+	%>
+	
+    <% end %>
+	<link href="<%=url_for 'css/ems.css'%>" rel="stylesheet">
+	
+
+	<title><%= @application_title %> - ESM Solution </title>
+<style type="text/css">/* Chart.js */
+@-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style></head>
+
+<body class="  pace-done"><div class="pace  pace-inactive" style="padding:20px">
+
+
+<div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+
+ 
+  <div class="pace-progress-inner"></div>
+</div>
+<div class="pace-activity"></div></div>
+	<!--wrapper-->
+	<div class="wrapper">
+		<!--sidebar wrapper -->
+		<div class="sidebar-wrapper "   data-simplebar="init"><div class="simplebar-wrapper" style="margin: 0px;"><div class="simplebar-height-auto-observer-wrapper"><div class="simplebar-height-auto-observer"></div></div><div class="simplebar-mask"><div class="simplebar-offset" style="right: 0px; bottom: 0px;"><div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden scroll;"><div class="simplebar-content mm-active" style="padding: 0px;">
+			<div class="sidebar-header">
+				<div>
+					<img src="<%=@application_logo %>" class="" alt="logo icon" style="border-radius:5px;width:45px">
+				</div>
+				<div>
+					<a href="../<%=@application_main%>/index"><h4 class="logo-text"><%=  @application_title %></h4></a>
+				</div>
+				<div class="toggle-icon ms-auto"><i class="bx bx-arrow-to-left"></i>
+				</div>
+			</div>
+			<!--navigation-->
+			<div class="nav-menu" >
+			</div>
+			<script>
+
+			 url = "nav"
+			 <% if params[:page] %>
+			 url = "nav?page=<%=params[:page]%>"
+			<% end %>
+			$.ajax({
+		      url: url,
+			  context: document.body
+			}).done(function(html) {
+
+			  $( '.nav-menu' ).html(html);
+			});
+			</script>
+
+
+
+			<!--end navigation-->
+		</div></div></div></div><div class="simplebar-placeholder" style="width: auto; height: 1390px;"></div></div><div class="simplebar-track simplebar-horizontal" style="visibility: hidden;"><div class="simplebar-scrollbar" style="width: 0px; display: none;"></div></div><div class="simplebar-track simplebar-vertical" style="visibility: visible;"><div class="simplebar-scrollbar" style="height: 118px; transform: translate3d(0px, 0px, 0px); display: block;"></div></div></div>
+		<!--end sidebar wrapper -->
+		<!--start header -->
+		<header>
+			<div class="topbar d-flex align-items-end">
+				<nav class="navbar navbar-expand">
+					<div class="mobile-toggle-menu"><i class="bx bx-menu"></i>
+					</div>
+					 <div class="search-bar flex-grow-1  ">
+						<div class="position-relative search-bar-box">
+							<input type="text" class="form-control search-control" placeholder="Type to search...">
+							<span class="position-absolute top-50 search-show translate-middle-y"><i class="bx bx-search"></i></span>
+							<span class="position-absolute top-50 search-close translate-middle-y"><i class="bx bx-x"></i></span>
+						</div>
+					</div> 
+						
+					<%
+					
+					sub_title = ""
+					
+					if @current_user
+						
+					   provider = Provider.where(:user_id=>@current_user.id).first
+					   if provider and provider.unit_id
+						  
+						  current_unit = EMSUnit.find provider.unit_id
+						  
+						  if current_unit
+							 
+							 sub_title = "|  #{current_unit.name}" 
+						  end
+						   
+					   end
+					   
+				   end
+					now = Time.now 
+					messages = SystemMessage.where(:start_at=>{'$lte'=>now}, :stop_at=>{'$gte'=>now}).all
+					messages_txt = messages.collect{|i| i.content }.join(', ')
+
+					%>	
+
+					<div class=" flex-grow-1 col-4" style="border:0px solid ">
+						<div class=""  style="font-size:1.2em">
+							<b><%=Setting.get('default_center_name')%> <%=sub_title%> 
+							<% if messages.size > 0 %> <span class="alert alert-warning" ><%= messages_txt %></span> <% end %></b> 
+						</div>
+					</div>
+
+				 <div class="top-menu " style="border:0px solid ">
+					 <div id="clock" class="text-secondary" style="font-size:1.2em">
+				 	</div>
+				 	<script>
+				 		const weekday = ["Sun","Mon","Tue","Wed","Thu","Fr","Sat"];
+						function fn(n){
+								return n > 9 ? "" + n: "0" + n;
+						}
+				 		setInterval(function () {
+
+				 		var currentdate = new Date();
+				
+   						var datetime = "" + weekday[currentdate.getDay()] + " "
+																			+ currentdate.getDate() + "/"
+																			+ (currentdate.getMonth()+1)  + "/"
+																			+ currentdate.getFullYear() + "  "
+																			+ fn(currentdate.getHours()) + ":"
+																			+ fn(currentdate.getMinutes())+ ":"
+																			+ fn(currentdate.getSeconds());
+				 			$('#clock').html(datetime)
+
+				 		}, 1000);
+				 	</script>
+					 </div>
+					<div class="top-menu ms-auto">
+						<ul class="navbar-nav align-items-center">
+							<li class="nav-item mobile-search-icon">
+								<a class="nav-link" href="#">	<i class="bx bx-search"></i>
+								</a>
+							</li>
+							<% if %w{admin user_admin super_admin}.index(@current_role) %>
+							<li class="nav-item dropdown dropdown-small">
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-folder"></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<div class="header-notifications-list ps">
+										<!-- <a class="dropdown-item" href="../EMSUnit/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMS</h6>
+												</div>
+											</div>
+										</a> -->
+											<a class="dropdown-item" href="../User/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">User</h6>
+													</div>
+												</div>
+											</a>
+											<a class="dropdown-item" href="../Role/index">
+												<div class="d-flex align-items-center">
+													<div class="flex-grow-1">
+														<h6 class="msg-name">Role</h6>
+													</div>
+												</div>
+											</a>
+										<a class="dropdown-item" href="../Provider/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Provider</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMSHospital/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Hospital</h6>
+												</div>
+											</div>
+										</a>
+
+										<a class="dropdown-item" href="../Ambulance/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Ambulance</h6>
+												</div>
+											</div>
+										</a>
+
+										<a class="dropdown-item" href="../EMSAssessment/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMS Assessment</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMSPatientStatus/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMS Patient Status</h6>
+												</div>
+											</div>
+										</a>
+
+
+										<a class="dropdown-item" href="../EMRDocument/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMR Document</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMRRecord/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">EMR Record</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMSCode/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">CBD Code</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EMSCodeGroup/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">CBD Code Group</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../EmsKM/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Knowledge Management</h6>
+												</div>
+											</div>
+										</a>
+
+
+										<a class="dropdown-item" href="../EMSKWorkflow/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">KWorkflow</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../LineAccount/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Line Account</h6>
+												</div>
+											</div>
+										</a>
+										<a class="dropdown-item" href="../LineMessage/index">
+											<div class="d-flex align-items-center">
+												<div class="flex-grow-1">
+													<h6 class="msg-name">Line Message</h6>
+												</div>
+											</div>
+										</a>
+									</div>
+								</div>
+							</li>
+							<% end %>
+							<% if %w{admin user_admin super_admin user}.index(@current_role) %>
+							<li class="nav-item dropdown dropdown-large">
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class="bx bx-category"></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<div class="row row-cols-3 g-3 p-3">
+										<div class="col text-center">
+											<a href="../Provider/index">
+											<div class="app-box mx-auto bg-gradient-cosmic text-white"><i class="bx bx-group"></i>
+											</div>
+											<div class="app-title">Providers</div>
+											</a>
+										</div>
+										<div class="col text-center">
+			  							<a href="../EMS/dispatch">
+											<div class="app-box mx-auto bg-gradient-burning text-white"><i class="bx bx-atom"></i>
+											</div>
+											<div class="app-title">Dispatch</div>
+											</a>
+										</div>
+										<div class="col text-center">
+											<a href="../EMSProtocol/index" target="_blank">
+											<div class="app-box mx-auto bg-gradient-lush text-white"><i class="bx bx-shield"></i>
+											</div>
+											<div class="app-title">Protocols</div>
+											</a>
+										</div>
+										<div class="col text-center">
+											<a href="../EMSAssessment/med">
+											<div class="app-box mx-auto bg-gradient-kyoto text-dark"><i class="bx bx-notification"></i>
+											</div>
+											<div class="app-title">Medication</div>
+											</a>
+										</div>
+										<div class="col text-center">
+											<a href="../EMS/unit_status">
+											<div class="app-box mx-auto bg-gradient-blues text-dark"><i class="bx bx-file"></i>
+											</div>
+											<div class="app-title">Units</div>
+										</a>
+										</div>
+										<div class="col text-center">
+                    						<a href="../Ambulance/index">
+											<div class="app-box mx-auto bg-gradient-moonlit text-white"><i class="bx bx-filter-alt"></i>
+											</div>
+											<div class="app-title">Ambulance</div>
+                      </a>
+										</div>
+									</div>
+								</div>
+							</li>
+							<% end %>
+						</ul>
+					</div>
+					<div class="user-box dropdown">
+
+						<% if @current_user
+
+
+						%>
+
+						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<!-- <img src="/rocker/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar"> -->
+							<div class="user-info ps-3">
+								<p class="user-name mb-0"><%=@current_user.get_name %></p>
+								<p class="designattion mb-0"><%= @current_role.humanize if @current_role %></p>
+							</div>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li><a class="dropdown-item" href="../EMSUser/profile"><i class="bx bx-user"></i><span>Profile</span></a>
+							</li>
+							<% if @current_role == 'admin'%>
+							<li><a class="dropdown-item" href="../EMSAdmin/setting"><i class="bx bx-cog"></i><span>Administrator</span></a>
+							</li>
+							<% end %>
+							<li>
+								<div class="dropdown-divider mb-0"></div>
+							</li>
+							<li><a class="dropdown-item" href="../User/logout"><i class="bx bx-log-out-circle"></i><span>Logout</span></a>
+							</li>
+						</ul>
+						<% end %>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--end header -->
+		<!--start page wrapper -->
+		
+		<div class="page-wrapper">
+			<div class="page-content px-lg-3 px-sm-0" style="overflow:scroll">
+
+
+
+
+
+				<%=yield :content%>
+
+
+
+
+
+			</div>
+		</div>
+		<!--end page wrapper -->
+		<!--start overlay-->
+		<div class="overlay toggle-icon"></div>
+		<!--end overlay-->
+		<!--Start Back To Top Button-->
+		  <a href="javaScript:;" class="back-to-top"><i class="bx bxs-up-arrow-alt"></i></a>
+		<!--End Back To Top Button-->
+		<footer class="page-footer d-flex justify-content-between">
+			<span class="col-1"> EMS</span>
+			
+			<p class="mb-0">Copyright © 2021 E.S.M.Solution Co.,Ltd. All right reserved.</p>
+			
+			<span class="col-1 " id=""><%=link_to "History","../EMSUser/history" %> <span class="" id="counter"> - </span> </span>
+				
+		</footer>
+	</div>
+  <script>
+	  
+	  <%
+	  
+	    idle_time_limit = 60*60
+		limit = nil
+		role = Role.find @current_user.role_id
+	  	if role and role.idle_time_limit and limit = role.idle_time_limit.to_i			
+			idle_time_limit = limit
+		end
+	   
+	  	
+	  %>
+	   <% if limit and limit > 0 %>
+	  
+        let idleTime = 0;
+		let limit= <%=idle_time_limit%>;
+        let interval;
+		
+        function startCounting() {
+		
+            clearInterval(interval);
+            idleTime = 0; // Reset counter
+            interval = setInterval(() => {
+                idleTime++;
+				
+				i = limit-idleTime
+				if(i>60){
+				  t = ""+ Math.floor(i/60)+"m" 
+					if(i/60>10)
+				  	  t = t 
+				}else{
+				  t = ""+ i+"s" 
+				}
+				
+				
+                document.getElementById("counter").innerText = " "+(t);
+				if(idleTime>limit){
+					window.location.href= "../User/logout"
+				}
+            }, 1000);
+			 document.getElementById("counter").innerText = "-"
+        }
+
+        document.addEventListener("mousemove", startCounting);
+        document.addEventListener("click", startCounting);
+
+        window.onload = startCounting; // Start counting when the page loads
+		<% end %>
+		
+			//
+		// window.addEventListener("load", () => {
+		//     let loadTime = (performance.timing.loadEventEnd - performance.timing.navigationStart) / 1000;
+		//     // console.log(`Page Load Time: ${loadTime.toFixed(2)} seconds`);
+		//     document.getElementById("load-time").textContent = ` ${loadTime.toFixed(2)} ms`;
+		// });
+		
+    </script>
+		 
+		 
+	<!--end wrapper-->
+	<!--start switcher-->
+	<% if false %>
+	<div class="switcher-wrapper">
+		<div class="switcher-btn"> <i class="bx bx-cog bx-spin"></i>
+		</div>
+		<div class="switcher-body">
+			<div class="d-flex align-items-center">
+				<h5 class="mb-0 text-uppercase">Theme Customizer</h5>
+				<button type="button" class="btn-close ms-auto close-switcher" aria-label="Close"></button>
+			</div>
+			<hr>
+			<h6 class="mb-0">Theme Styles</h6>
+			<hr>
+			<div class="d-flex align-items-center justify-content-between">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="lightmode" checked="">
+					<label class="form-check-label" for="lightmode">Light</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="darkmode">
+					<label class="form-check-label" for="darkmode">Dark</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="flexRadioDefault" id="semidark">
+					<label class="form-check-label" for="semidark">Semi Dark</label>
+				</div>
+			</div>
+			<hr>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" id="minimaltheme" name="flexRadioDefault">
+				<label class="form-check-label" for="minimaltheme">Minimal Theme</label>
+			</div>
+			<hr>
+			<h6 class="mb-0">Header Colors</h6>
+			<hr>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator headercolor1" id="headercolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor2" id="headercolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor3" id="headercolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor4" id="headercolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor5" id="headercolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor6" id="headercolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor7" id="headercolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator headercolor8" id="headercolor8"></div>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<h6 class="mb-0">Sidebar Colors</h6>
+			<hr>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator sidebarcolor1" id="sidebarcolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor2" id="sidebarcolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor3" id="sidebarcolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor4" id="sidebarcolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor5" id="sidebarcolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor6" id="sidebarcolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor7" id="sidebarcolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor8" id="sidebarcolor8"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% end %>
+	<!--end switcher-->
+	<!-- Bootstrap JS -->
+	<script src="/rocker/assets/js/bootstrap.bundle.min.js"></script>
+	<!--plugins-->
+ <link href="/rocker/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.time.css" rel="stylesheet" />
+	<link href="/rocker/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet" />
+	<script src="/rocker/assets/plugins/datetimepicker/js/legacy.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.time.js"></script>
+	<script src="/rocker/assets/plugins/datetimepicker/js/picker.date.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/moment.min.js"></script>
+	<script src="/rocker/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.min.js"></script>
+ 
+	<script src="/rocker/assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="/rocker/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+
+	<script src="/rocker/assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="/rocker/assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="/rocker/assets/plugins/chartjs/js/Chart.min.js"></script>
+	<script src="/rocker/assets/plugins/chartjs/js/Chart.extension.js"></script>
+	<!-- <script src="/rocker/assets/js/index.js"></script> -->
+	<!--app JS-->
+	<script src="/rocker/assets/js/app.js"></script>
+
+	<script>
+		 $('html').attr('class', '<%=style%>');
+	</script>
+<div class="jvectormap-tip"></div>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+</body></html>

@@ -1,0 +1,222 @@
+<%=inline(this,:'_init')%>
+
+<%
+begin	
+	date = Time.now
+	date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+	
+	visits = []
+	visits_other = []
+
+	if @current_hospital
+		shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+		
+		patient_ids = shrelations.collect{|i| i.patient_id }
+		
+		# for doctor 
+		if @current_user_hospital.provider_type == 'doctor'  
+			
+			patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
+		
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
+		elsif @current_user_hospital.provider_type == 'nurse'  
+			
+			
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
+		end
+		
+		
+		
+	elsif @current_network
+		
+		
+		shrelations = SHRelation.where(:network_id=>@current_network.id).all
+		
+	
+	
+		if @current_provider 
+		
+			patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+		
+			visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			%>
+			here
+			<%
+		else
+			
+			patient_ids = shrelations.collect{|i| i.patient_id }
+			
+			
+			visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}, :date=>{'$gte'=>date.beginning_of_day,'$lte'=>date.end_of_day}).all
+			
+			
+		end
+		
+	
+	
+	end
+
+	p_all = Patient.all.collect{|i| i.id}.compact
+	visits = visits.collect{|i| i if p_all.index(i.patient_id)}.compact
+	visits_other = visits_other.collect{|i| i if p_all.index(i.patient_id)}.compact
+	
+	
+	# for doctor only
+	my_list = visits
+	
+	# for all
+	other_list = visits_other
+	
+	# for i in visits
+	#
+	# 	if i.appoint_type == '1'
+	# 		my_list << i
+	# 	else
+	# 		other_list << i
+	# 	end
+	#
+	# end
+	
+	
+	count = 0 
+%>
+
+
+<span style="font-size:1.2em;font-weight:bold">
+วันที่ : <%=date.strftime("%d %B %Y") %> 
+</span>
+<br><br>
+ผู้ป่วยของฉัน <%="(#{my_list.size})".html_safe if my_list.size>0%>
+<%= tabular :data=>my_list, :model=>%w{status hn cond name provider action}, :label=>{'provider'=>'แพทย์','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ'} do|row,out| 
+	
+	patient = Patient.find(row.patient_id)
+	phn = '-'
+	pname = '-'
+	cid = '-'
+	if patient
+		admit = Admit.where(:patient_id=>patient.id).first 
+		phn = patient.hn if patient.hn and patient.hn.size>0
+		cid = patient.public_id  if patient.public_id and patient.public_id.size>0
+		pname = patient.first_name if patient.first_name
+		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
+	end
+
+	bname = "รอตรวจ"
+	bclass = "b-wait"
+	
+	if row.status=='Completed'
+		bname = "ตรวจแล้ว"
+		bclass = "b-hos"
+		case row.complated_by
+		when '1'	
+			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
+		end
+		
+	end
+	
+	if admit
+	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{cid}","admit?id=#{admit.id}")
+	
+	out[3] = link_to("#{pname}","admit?id=#{admit.id}")
+	provider = Provider.find(row.provider_id)
+	out[4] = provider.name if provider
+	
+	status = ""
+	status = "แสดง" # if row.status==nil
+	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	out[-1] += link_to("ลบ","../SHVisit/destroy?id=#{row.id}&return=../Home/index", :class=>'btn btn-danger') if bname!='ตรวจแล้ว'
+	end
+
+	out
+
+end
+%>
+<br/>
+ผู้ป่วยเยี่ยมบ้าน รพสต อสม 
+<%= tabular :data=>other_list, :model=>%w{status hn public_id name network  action}, :label=>{'No'=>'สถานะ','hn'=>'HN','name'=>'ชื่อ-สกุล','status'=>'สถานะ','network'=>'เครือข่ายรพ'} do|row,out| 
+
+	patient = Patient.find(row.patient_id)
+	admit = Admit.where(:patient_id=>patient.id).first
+	phn = '-'
+	pname = '-'
+	cid = '-'
+	if patient
+		phn = patient.hn if patient.hn and patient.hn.size>0
+		cid = patient.public_id  if patient.public_id and patient.public_id.size>0
+		pname = patient.first_name if patient.first_name
+		pname = patient.first_name if patient.first_name
+		pname += patient.last_name[0..3] if patient.last_name and patient.last_name.size>3
+	end
+
+	bname = "รอตรวจ"
+	bclass = "b-wait"
+	
+	if row.status=='Completed'
+		bname = "ตรวจแล้ว"
+		bclass = "b-hos"
+		case row.complated_by
+		when '1'	
+			bclass = "b-hos"
+		when '2'
+			bclass = "b-network"	
+		when '3'
+			bclass = "b-officer"
+		end
+		
+	elsif row.status == 'Pending'
+		bname = "รอจ่ายงาน"	
+		bclass = "b-network"	
+	elsif row.status == 'Accepted'
+		bname = "รอตรวจ"	
+		bclass = "b-wait"	
+	end
+	
+	out[0] = "<a href='visit?id=#{admit.id}&vid=#{row.id}'><span class='badge #{bclass}'>#{bname}</span></a>"
+	out[1] = link_to("#{phn}","admit?id=#{admit.id}")
+	out[2] = link_to("#{cid}","admit?id=#{admit.id}")
+	out[3] = link_to("#{pname}","admit?id=#{admit.id}")
+	network = SHNetwork.find(row.network_id)
+	out[4] = link_to("#{network.name}","#")
+	
+	
+	status = ""
+	status = "แสดง" #if row.status==nil
+	out[-1] = link_to("#{status}","show?id=#{admit.id}", :class=>'btn btn-info')
+	out[-1] += link_to("ลบ","../SHVisit/destroy?id=#{row.id}&return=../Home/index", :class=>'btn btn-danger') if bname!='ตรวจแล้ว'
+	
+	out
+
+end
+
+%>
+
+<%
+rescue Exception=>e
+end
+%>
+
+<div class="row">
+	<div class="col"><br/>
+		<span class="badge b-wait">&nbsp;&nbsp;</span> ยังไม่ได้ตรวจ 
+		<span class="badge b-hos">&nbsp;&nbsp;</span> รพ.ตรวจแล้ว
+		<span class="badge b-network">&nbsp;&nbsp;</span> รพสต.ตรวจแล้ว
+		<span class="badge b-officer">&nbsp;&nbsp;</span> อสม.ตรวจแล้ว
+	</div>
+</div>
+<br/>
+เจ้าหน้าที่ : <%= @current_provider.name if @current_provider %> รพ : <%= @current_hospital.name if @current_hospital  %> รพสต : <%= @current_network.name  if @current_network %>

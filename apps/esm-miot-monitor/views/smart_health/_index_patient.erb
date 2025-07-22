@@ -1,0 +1,216 @@
+<%=inline(this,:'_init')%>
+<%
+		
+  relation = SHRelation.where(:user_id=>@current_user.id).first
+		
+  @patient = Patient.find relation.patient_id
+  
+  @admit = Admit.where(:patient_id=>@patient.id).first
+  
+  params[:admit_id] = @admit.id	
+	
+%>
+<%=inline(this,:'_feed')%>
+
+
+<style>
+	
+	
+</style>
+
+<div class="containerx" style="background:none">
+
+<div class="row" style="border:0px solid;">
+
+<div class="col" style="">
+	
+<div class="row banner-header" style="">
+
+<div class="col">
+	<div>
+		<span class="banner-title"><%=link_to @access_title, "index" %></span>
+		<br/>
+		ระบบบันทึกข้อมูลสุภาพ
+    </div>
+</div>
+
+<div class="col  d-flex justify-content-end">
+	<div> <%=@patient.to_s %>	<br/><%=@patient.hn%></div>
+</div>
+
+
+</div>
+
+<div class="container content-main" style="">
+
+<div class="row content-header" style="border-radius: 10px;">
+	<div class="col">
+		<div class=" " style="padding:15px;" >
+			<h4><%=@patient.to_s%></h4>
+			
+			<div class="row">
+			<div class="col-4"> HN <%=@patient.hn%> </div> 
+			<div class="col-4"> อายุ : <%=@patient.to_age%></div>
+			<div class="col-4"> เพศ: <%=@patient.gender%> </div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+
+<br/>
+
+<div class="row " >
+	<div class="col">
+		<div class=" content-main row" >
+			
+			<div class="col-4 link-text " style=" ">
+			<a href="connect?admit_id=<%=@admit.id%>&return=index"><img src="../../nci/img/svg/vitalsign.svg" width="80"/><br/>
+			วัดค่าสัญญาณชีพ
+			</a>
+			</div>
+			
+			
+			<div class="col-4 link-text">
+			<!-- <a href="show?id=<%=@admit.id%>"><img src="../../nci/img/svg/history.svg" width="80"/><br/>
+			ประวัติการตรวจ
+			</a> -->
+			
+			<a href="#" class="patient-history-link"><img src="../../nci/img/svg/history.svg" width="80"/><br/>
+			ประวัติการตรวจ
+			</a>
+			</div>
+			
+			<div class="col-4 link-text">
+				
+			<!-- <a href="tele_create?admit_id=<%=@admit.id%>" ><img src="../../nci/img/svg/telecon.svg" width="80"/><br/>
+			ติดต่อแพทย์
+			</a> -->
+			
+			<a href="#" class="patient-message-link"><img src="../../nci/img/svg/telecon.svg" width="80"/><br/>
+			ติดต่อแพทย์
+			</a>
+			</div>
+		</div>
+	</div>
+</div>
+<br/>
+
+<script>
+		
+		$('.patient-history-link').click(function(){
+			
+			$.ajax({
+			  url: "patient_history?admit_id=<%=@admit.id%>",
+			  context: document.body
+			}).done(function(data) {
+				$('.panel').html(data);
+			});
+			
+		})
+		
+		$('.patient-message-link').click(function(){
+			
+			$.ajax({
+			  url: "patient_message?admit_id=<%=@admit.id%>",
+			  context: document.body
+			}).done(function(data) {
+				$('.panel').html(data);
+			});
+			
+		})
+	
+</script>
+
+
+<div class="row " >
+	<div class="col panel">
+		
+		<div class="row" >
+			
+			<% 
+			
+			sense_list = DataRecord.get_sense_list #%w{bp pr spo2 temp weight height}.collect{|t| t.to_sym}
+			sense_label = DataRecord.get_sense_label #%w{ความดันโลหิต อัตราการเต้นหัวใจ ปริมาณออกซิเจน อุณหภูมิ น้ำหนัก ส่วนสูง}
+			sense_unit = DataRecord.get_sense_unit #%w{mmHg bpm % &#8451; kg cm}
+
+
+			res = DataRecord.get_current_status [@admit]
+			
+			maps = res[:maps]
+			
+			map = maps[@admit.id]
+			
+			sense_list.each_with_index do |x,xi| 
+				
+				v = map[x]
+				
+				%>
+			<div class="col-6 col-md-6 col-lg-4 " style="">
+			<div class="content-widget">
+				
+				<div class="row" style="font-size:0.8em">
+				<div class="col"  style="text-align:center">
+					<h4><%=sense_label[xi]%></h4>
+					
+				</div>	
+				</div>
+				
+				
+				<div class="row">
+				<div class="col"  style="text-align:center">
+					<span class="med-value">
+					<%=v[:value] if v%>
+				    </span>
+					<span style="font-size:0.8em;color:#aaa"><%=sense_unit[xi]%></span>
+				
+				</div>
+				</div>
+				<div class="row" style="font-size:0.8em">
+				<div class="col-8"><span style=";color:#aaa"><%=v[:stamp] if  v%></span>
+				</div>
+				<div class="col-4" style="text-align:center">
+					<% if v and v[:alert]  %>
+					<div class=" alert-<%=v[:alert][:class] if v %>">
+					<span >
+						<%=v[:alert][:text] if v%>
+					</span>
+					</div>
+					<% end %>
+				</div>	
+				</div>
+				
+			</div>
+			</div>
+			
+			<% end %>
+			
+			
+			
+			
+			
+			
+		</div>
+		
+		<div class="row">
+		<div class="col">
+		<%
+		
+		params[:admit_id] = @admit.id
+	
+		%>
+		<%=inline(this,:'_chart')%>
+		</div>
+		</div>
+		
+	</div>
+</div>
+
+
+
+
+</div>
+</div>
+
+</div>
+</div>

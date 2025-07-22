@@ -1,0 +1,60 @@
+
+<div class="row">
+<div class='col-12' style="padding-left:40px">
+<h1>History</h1>
+<%
+n = 100
+m = 10
+
+senses = Sense.where(:admit_id=>params[:admit_id]).limit(n).sort('start_time desc').all
+
+list = []
+
+m.times do |i|
+		
+	r = {}
+	
+	
+	last = nil
+	l = []
+	
+	
+	
+	(n/m).times do |j|
+	
+		id = i*n/m+j
+		
+		
+		s = senses[id]
+		
+		if s 
+			
+			r[:first]=s.start_time unless r[:first]
+			l << s
+			
+			last = s
+			
+		end
+		
+		
+	end
+	
+	if last
+	
+	r[:last] = last.start_time 
+	r[:list] = l
+    list << r
+	
+    end
+	
+end
+	
+%>
+<table class="table">
+<% for i in list %>
+<tr>
+	<td><%=Time.now-i[:first]%></td><td><%=i[:first]%></td><td><%=i[:last]%></td><td><%=link_to "Show", "../Admit/print_ecg?ids=#{i[:list].collect{|j| j.id}.join(",")}", :target=>'_blank' %></td>
+</tr>
+<% end %>
+</table>
+</div></div>

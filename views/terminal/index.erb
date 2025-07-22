@@ -1,0 +1,56 @@
+<h1> Terminal <%=@info%></h1>
+   <div id="msgs" style="font-size:0.8em"></div>
+
+
+  
+<form id="form" action='#' >
+  <label for='user'>User Name:</label>
+  <input id="user" name='user' value='' />
+  <input type='submit' value="GO!" />
+</form>
+
+
+<image src="/images/analogin_variableresistor.jpeg" width="600"><br/>
+
+	<image src="/images/img.png" width="600"><br/>
+		
+		
+		<image src="/images/analogin_variableresistor.jpeg" width="600"><br/>
+
+
+		
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+
+		var show = function(el){
+	        return function(msg){ el.innerHTML = msg  }
+	      }(document.getElementById('msgs'));
+
+
+		  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+
+
+
+	      ws.onopen    = function()  { show('websocket opened'); };
+	      ws.onclose   = function()  { show('websocket closed'); 
+
+		 	setTimeout(function () {
+		 			       window.location.href = "terminal"; //will redirect to your blog page (an ex: blog.html)
+		 			    }, 2000); //will call the function after 2 secs.
+
+
+	      }
+	      ws.onmessage = function(m) {
+			show(''+m.data)
+		
+		  }
+		
+		$('#form').submit(function(){
+			
+			ws.send($('#user').val())
+			return false;
+		})
+		
+		
+	});
+</script>

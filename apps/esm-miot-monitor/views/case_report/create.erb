@@ -1,0 +1,37 @@
+	<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+	<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
+	<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+
+<h1><%=name params[:service]%> Create</h1>
+<% 
+return_url = "javascript:history.back();"
+
+return_url = params[:return] if params[:return]
+
+
+	@record =  this.model.new  params[:record]
+	if request.post?
+		
+	if params[:record]
+	
+		record =  this.model.create params[:record]
+		
+		
+		
+	%>
+	<%=redirect_to "../Admit/show?id=#{record.admit_id}"%>
+	<%	
+	end
+	
+		
+		
+		
+   else 
+%>
+<form action="create" method="post" enctype="multipart/form-data">
+<%= inline(this,:'_form') %>
+<button type="submit" class="btn btn-primary">Submit</button>
+<%=link_to 'Back', return_url ,:class=>'btn'%>
+
+</form>
+<% end %>

@@ -1,0 +1,66 @@
+<h1><%=name params[:service]%> Create</h1>
+<% 
+return_url = "javascript:history.back();"
+
+return_url = params[:return] if params[:return]
+
+
+	@record =  this.model.new
+	if request.post?
+		
+	if params[:record]
+	
+		record =  this.model.create params[:record]
+		
+		
+		
+	%>
+	<%=redirect_to "show?id=#{record.id}"%>
+	<%	
+	end
+	
+		
+		
+		
+   else 
+%>
+<form action="create" method="post" enctype="multipart/form-data">
+<%= inline(this,:'_form') %>
+<button type="submit" class="btn btn-primary">Submit</button>
+<%=link_to 'Back', return_url ,:class=>'btn'%>
+</form>
+<% end %>
+<script>
+
+$('#record-open_date').val('<%=Time.now.strftime("%d/%m/%Y")%>')
+$('#record-open_time').val('<%=Time.now.strftime("%H:%M")%>')
+$('#record-sale').val('<%=settings.current_user%>')
+$('#record-sale_id').val('<%=session[:identity]%>')
+<% if Setting.get :salling_price %>
+$('#record-gold_price').val('<%=Setting.get :salling_price%>')
+<% end %>
+<% if session[:branch] %>
+$('#record-branch_id').val('<%=session[:branch]%>')
+<% end %>
+<% if params[:member_id] %>
+$('#record-member_id').val('<%=params[:member_id]%>')
+<% end %>
+$(document).ready(function(){
+	
+$('#record-weight').change(function(){
+
+	v = parseFloat($(this).val());
+	i = parseFloat($('#record-gold_price').val())
+
+	if(v>0 && i>0){
+		alert("Total = "+i*v);
+		$('#record-total_amount').val(v*i);
+	}
+
+	
+	
+})
+
+})
+
+</script>

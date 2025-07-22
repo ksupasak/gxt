@@ -1,0 +1,15 @@
+<%
+
+require "google/cloud/translate/v2"
+
+translate = Google::Cloud::Translate::V2.new(
+  key: "AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w"
+)
+
+translation = translate.translate "n หากไม่รู้สึกตัว ดูเรื่อง ไม่รู้สึกตัว/หายใจปกติ - การดูแลทางหายใจผู้ป่วยที่ไม่ได้มีสาเหตุจากการบาดเจ็บ ตามคำสั่งแนะนำ ส่วนที่ IV", to: "en"
+out = translation.text #=> "Salve mundi!"
+	
+	
+%>Translate : 
+<%= out %>
+

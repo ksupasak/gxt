@@ -1,0 +1,155 @@
+<%
+
+	admit = Admit.find(params[:admit_id])
+
+	patient = admit.patient
+	score = admit.score
+	station = admit.station
+
+	staiton_name = ""
+
+	station_name = station.name if station and station.name
+
+	data = {}
+
+
+	# data = settings.senses[settings.name][station_name]
+	# if data and data['bp'] and t = data['bp'].split("/")
+	#
+	# 	data['bp_sys'] = t[0].to_i
+	# 	data['bp_dia'] = t[1].to_i
+	#
+	# else
+	#
+	# data = {}
+	# end
+
+
+	record = nil
+
+	if params[:id]
+
+		record = admit.records.find params[:id]
+	else
+		record = admit.records.new
+		record.admit_id = admit.id
+		record.stamp = Time.now
+
+
+
+		%w{ bp pr hr rr temp spo2 bp_sys bp_dia}.each do |i|
+
+			record[i] = data[i]
+
+		end
+
+
+	end
+
+
+%>
+
+<div class="form-group">
+<input type="hidden" name="admit_id" value="<%=record.admit_id %>">
+
+
+
+ <div class="field">
+ <label>BP (Sys/Dia)</label>
+ <div class="value col-12">
+	 <div class="row">
+	<%=text_field_tag  "record[bp_sys]", "#{record.bp_sys}", :class=>'col-5 form-control form-bp_sys' %>
+	<%=text_field_tag  "record[bp_dia]", "#{record.bp_dia}", :class=>'col-5 form-control form-bp_dia' %>
+</div>
+ </div>
+ </div>
+
+ <div class="field">
+ <label>HR</label>
+ <div class="value">
+	<%=text_field_tag  "record[hr]", "#{record.hr}" , :class=>'form-control form-hr'%>
+ </div>
+ </div>
+
+ <div class="field">
+ <label>PR</label>
+ <div class="value">
+	<%=text_field_tag  "record[pr]", "#{record.pr}" , :class=>'form-control form-pr'%>
+ </div>
+ </div>
+
+ <div class="field">
+ <label>SpO2</label>
+ <div class="value">
+	<%=text_field_tag  "record[spo2]", "#{record.spo2}" , :class=>'form-control form-spo2'%>
+ </div>
+ </div>
+ <div class="field">
+ <label>Temp</label>
+ <div class="value">
+	<%=text_field_tag  "record[temp]", "#{record.temp}" , :class=>'form-control form-temp'%>
+ </div>
+ </div>
+
+ <div class="field">
+ <label>RR</label>
+ <div class="value">
+	<%=text_field_tag  "record[rr]", "#{record.rr}" , :class=>'form-control form-rr'%>
+ </div>
+ </div>
+
+
+ <div class="field">
+ <label>Time</label>
+ <div class="value ">
+  	<!-- <select name="time">
+ 		<option value="1">1</option>
+ 	</select > -->
+
+ 	<%=text_field_tag  "record[stamp]", "#{record.stamp}", :class=>'form-control'%>
+
+ </div>
+ </div>
+
+
+ </div>
+ <script>
+	 <%
+
+ 	unless params[:id]
+
+ 		record = admit.records.new
+ 		record.admit_id = admit.id
+ 		record.stamp = Time.now
+
+
+
+ 		%w{ pr hr rr temp spo2 bp_sys bp_dia}.each do |i|
+			tag = i
+			if i=='bp_sys' or i=='bp_dia'
+				tag = 'bp'
+			end
+ 			%>
+			tag = '<%=tag%>'
+			value = $('.'+tag+' .value').text()
+
+			if('<%=i%>'=='bp_sys'){
+				value = value.split('/')[0];
+			}
+			if('<%=i%>'=='bp_dia')
+				value = value.split('/')[1];
+
+			$('.form-<%=i%> ').val(value)
+
+
+			<%
+
+ 		end
+
+
+ 	end
+
+	%>
+
+
+</script>

@@ -1,0 +1,193 @@
+<div class="geo-all-map">
+				<div class="row">
+					<div class="col-12  my-2" >
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #geo-all-map {
+					        min-height:48vh;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+					    <!--The div element for the map -->
+					    <div id="geo-all-map" style="border-radius: 5px;"></div>	<%=link_to '', "javascript:goPosition()"%>
+					    <script>
+					// Initialize and add the map
+					var marker_all = {};
+					var map_all = null;
+					var poly_all = null;
+					
+					var bounds = null;
+					var set_bounds = null;
+					var icon
+					
+					var uluru  = null;
+
+					function initMapAllMap() {
+						
+						bounds = new google.maps.LatLngBounds();
+						
+					 <%
+						
+						latlng = Setting.get('aoc_center','13.740238222634025,100.73196802231529')
+						
+						lat = 13.740238222634025
+						lng = 100.73196802231529
+						
+						lat,lng = latlng.split(',') if latlng.index(',')
+						
+					%>
+						
+						
+					  // The location of Uluru
+					uluru = {lat: <%=lat%>, lng: <%=lng%>};
+					  // The map, centered at Uluru
+					  map_all = new google.maps.Map(document.getElementById('geo-all-map'), {zoom: 16, center: uluru});
+					  // The marker, positioned at Uluru
+					  // marker_all = new google.maps.Marker({position: uluru, map: map_all});
+
+					// var image="https://example.com/images/carnew.svg";
+
+					 // marker = new google.maps.Marker({
+					 // 			    position: uluru,
+					 // 			    icon: image,
+					 // 			    map: map
+					 // 			});
+					 
+					 poly_all = new google.maps.Polyline({
+					    strokeColor: '#0000ff',
+					    strokeOpacity: 1.0,
+					    strokeWeight: 3
+					  });
+					  poly_all.setMap(map_all);
+					 
+					 
+  					var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+						// url: "<%=url_for "img/aoc/ambu.svg"%>",
+					
+					sizeX=100
+					sizeY=40
+  					icon = {
+  					  path: car,
+  					  scale: 0.9,
+  					  strokeColor: 'white',
+  					  strokeWeight: .10,
+  					  fillOpacity: 1,
+  					  fillColor: '#303bef',
+  					  offset: '5%',
+						// size: new google.maps.Size(sizeX, sizeY),
+		//         				origin: new google.maps.Point(0, 0),
+		//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+  					  // rotation: parseInt(heading[i]),
+  					  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+  					};
+					 
+					 
+					}
+
+					function goPosition(){
+						<%
+							latlng = Setting.get(:google_map_key,"13.6908282,100.6987491").split(",")
+							
+						%>
+							setPosition(<%=latlng[0]%>,latlng[1])
+					}
+				
+					function widget_all_map_update(locations){
+						
+						setPositions(locations);
+					}
+					
+					function setPositions(locations){
+						
+						
+						
+						
+						for (i = 0; i < locations.length; i++) {  
+						
+							if(locations[i][1]!=null&&locations[i][1]!=0){
+						
+						
+						console.log(locations)
+						console.log('GPS : '+locations[i][1])
+								
+						  var objs = marker_all[locations[i][0]]
+						 marker = null
+						 mlabel = null
+						 if(objs){	
+						  	marker = objs[0]
+						  	mlabel = objs[1]	
+						 }
+							
+						 if(marker==null){
+							 
+						  marker  = new google.maps.Marker({
+						    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+						    map: map_all,
+							icon: icon
+							  
+						  });
+						  
+						  
+   						  mlabel = new MapLabel({
+   						  text: locations[i][0],
+   						  position: new google.maps.LatLng( locations[i][1], locations[i][2] ),
+   						  map: map_all,
+   						  fontSize: 20,
+   						  align: 'left'
+   						 });
+						  
+						 marker_all[locations[i][0]] = [marker, mlabel]
+						  
+						  }
+						  
+						  
+						  // console.log("hx " +locations[i][4])
+						  var ic = marker.get("icon");
+						  ic.rotation = locations[i][4];
+						  
+						  
+						  marker.set("icon", ic);
+						  
+						  marker.setPosition(new google.maps.LatLng( locations[i][1], locations[i][2] ))
+						  
+						  
+						  mlabel.position = new google.maps.LatLng( locations[i][1], locations[i][2] +0.0001)
+						  mlabel.setText(locations[i][0] +" : "+locations[i][3]+"km/h")
+						
+  					
+						  
+						  //extend the bounds to include each marker's position
+						  bounds.extend(marker.position);
+
+						}
+						}
+						
+						
+						bounds.extend(uluru);
+
+						//now fit the map to the newly inclusive bounds
+						if(true||set_bounds==null<%='||true' if params['operation'] == 'dashboard' %>){
+							map_all.fitBounds(bounds);
+							set_bounds = true;
+						}
+					}
+
+					function setPosition(lat,lng){
+
+	
+
+					}
+					    </script>
+					    <!--Load the API from the specified URL
+					    * The async attribute allows the browser to render the page while the API loads
+					    * The key parameter will contain your own API key (which is not needed for this tutorial)
+					    * The callback parameter executes the initMap() function
+					    -->
+					    <!-- <script async defer
+					    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJG2R9rUftEv54TroM0Pv8c-L4STj4A4w&callback=initMapAllMap">
+					    </script> -->
+					</div>
+
+				</div>
+</div>

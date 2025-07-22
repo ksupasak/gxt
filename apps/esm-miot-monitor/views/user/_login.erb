@@ -1,0 +1,82 @@
+
+<%
+	
+@login_mode = Setting.get 'default_login'
+
+
+record = User.find params[:id] 
+	
+if request.post?
+	
+	puts params.inspect 
+	
+	if params[:login] and params[:password]
+		user_login = User.authenticate(params[:login], params[:password])
+		# user_login = User.where(:login=> params[:login]).first
+		user_login.login_perform if user_login
+		
+		session[:identity] = user_login.id if user_login	
+	end
+	
+	if  params[:pattern_password] and params[:pattern_password]!="" #and @login_mode == 'pattern' and
+		user_login = User.where(:pattern=>params[:pattern_password]).first
+		if user_login
+			user_login.login_perform
+			session[:identity] = user_login.id  if user_login
+		end
+	end
+	
+	if session[:identity]
+		session[:current_solution] = @context.settings.name
+	end
+	
+	
+	path = '../Home/index'
+	 
+	if user_login and user_login.password_updated_at
+	
+		role = Role.find user_login.role_id
+		
+		if role and role.password_expiration_days and role.password_expiration_days > 0 and Time.now - user_login.password_updated_at > role.password_expiration_days
+				
+			path='../EMSUser/profile'
+				
+		end
+		
+	end 
+	 
+	
+	if user_login and user_login.role 
+		if  user_login.role.zone
+			session[:current_zone] = user_login.role.zone_id
+		elsif first = Zone.where(:default=>'true').first
+			session[:current_zone] = first.id
+		elsif first = Zone.first
+			session[:current_zone] = first.id	
+		end
+	end
+	
+
+	
+%>
+<script>
+	history.pushState(null, null, document.title);
+	window.addEventListener('popstate', function () {
+	    history.pushState(null, null, document.title);
+	});
+</script>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=<%=path%>">
+	Redirecting..
+
+<% else 
+
+   default_zone = Zone.where(:default=>true).first
+   
+   if false and  default_zone and  File.exist?(File.join(__dir__,"..",default_zone.mode,"_login.erb"))
+%>
+<%=inline(this,:"#{File.join("..",default_zone.mode,"_login")}")%>
+<% else %>
+<%=inline(this,:'_default_login')%>
+<% end %>
+
+<% end %>

@@ -1,0 +1,49 @@
+<% 
+
+records = DataRecord.where(:send_status=>{'$ne'=>true}).order(:created_at=>-1).limit(100).sort{|a,b| b.stamp<=>a.stamp}
+puts DataRecord.count
+puts records.size
+
+
+list = []
+
+for i in records
+
+
+
+result = nil
+
+
+admit = Admit.find i.admit_id
+
+if admit
+	
+patient = Patient.find admit.patient_id
+
+
+##############################################################
+
+
+url =  URI("#{Setting.get(:gateway,'localhost')}/send")
+
+result = i.send_record url 
+
+list << {:id=>i.id, :result=>result}
+
+end
+
+##############################################################
+
+
+end
+
+
+
+
+
+%><%=list%>
+
+    </table>
+    </div>
+</div>
+<meta http-equiv="refresh" content="30">  

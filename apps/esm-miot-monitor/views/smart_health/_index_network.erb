@@ -1,0 +1,249 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<style>
+@font-face {
+  font-family: IBMPlex;
+  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+}
+body { 
+  background-image: url("<%=url_for('img/health/bg-purple.png')%>");
+  color: var(--btn-grey-text);
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "IBMPlex", sans-serif;
+  height:100vh;
+}
+.bg-panel{
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="white" fill-opacity="0.8" x="0" y="0" width="1000" height="1000"/></svg>');
+} 
+.day{
+	font-size:2vw;
+}
+.day-active{
+	/* background:#005D91;
+	color:#F0F0F0; */
+	background: #3D145A;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to bottom, #3D145A, #5F1C78);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to bottom, #3D145A, #5F1C78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	color:#eee;
+}
+.day-normal{
+	background:#EAEBEB;
+	color:#BBBBBB;
+}
+.pname{
+    color:#0066A8;
+    font-size:1.4em;
+}
+.btn-panel{
+    background:#179D92;
+}
+a.btn-panel{
+    color:#fff;
+}
+th{
+  background: #3D145A;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom, #3D145A, #5F1C78);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom, #3D145A, #5F1C78); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	color:#eee;
+}
+
+</style>
+<div class="container" style="background:none">
+<br/>
+<center>
+<h1>SMART TELEHEALTH</h1>
+<div>โรงพยาบาลส่งเสริมสุภภาพตำบล บ้านโคกสงวน ตำบลโคกสงวน</div>
+</center>
+<%
+
+zone = Zone.find session[:current_zone]
+patients = Patient.where(:zone_id=>session[:current_zone]).all
+mp = Hash[patients.collect{|i| [i.id,i]}]
+admits = Admit.where(:zone_id=>session[:current_zone]).all
+patient = patients.last
+hospital = SHHospital.find patient.hospital_id 	
+officer = SHOfficer.where(:user_id=>session[:identity]).first
+visits = []
+visits = SHVisit.where(:officer_id=>officer.id).all if officer
+mv = {} 
+for v in visits
+	dd = v.start.strftime('%Y%m%d')
+	mv[dd] = [] unless mv[dd]
+	mv[dd] << v.patient_id
+end
+%>
+<div class="row">
+	<div class="col">
+	<h3><%=officer.name if officer%></h3>
+	</div>
+</div>
+
+<div class="row bg-panel p-4 m-1 shadow-sm rounded">
+<%
+	d = Time.now.beginning_of_week
+	d_end = Time.now.end_of_week
+	d_th = %w{จ. อ. พ. พฤ. ศ. ส. อา.}
+	
+	while d<d_end
+		is_today = Time.now.strftime("%d")==d.strftime('%d')
+		dd = d.strftime('%Y%m%d')
+		vs = 0
+		vs = mv[dd].size if mv[dd]
+%>
+<div class="col day <%=(is_today)? "day-active" : "day-normal" %> rounded p-4 m-2 d-flex justify-content-center" id="<%=dd%>">
+	<div class="row">
+		<div class="col-12"><%=d_th[d.strftime('%w').to_i-1]%><br><%=d.strftime('%d')%></div>
+		<%if vs>0 %> <div class="col-4" style="white-space:nowrap;font-size:0.7em;"><i class="fas fa-user-injured"></i></div><div class="col-8" style="white-space:nowrap;font-size:0.7em;">(<%=vs%>) </div> <% end %>
+	</div>
+</div>
+<%	
+		d += 1.day
+	end
+%>
+</div>
+<div class="row pl-4 mt-4">
+	<div class="col-4 bg-panel p-4 m-0 rounded shadow-sm">
+		รายชื่อผู้ป่วย
+	</div>
+	<div class="col-4 bg-panel day-normal p-4 m-0 rounded shadow-sm">
+		ประวัติการตรวจ
+	</div>
+</div>
+<div id="p-list" class="row bg-panel p-4 m-1 mt-0 rounded shadow-sm">
+<%	
+	for v in visits
+		patient = mp[v.patient_id]
+		if patient
+		admit = Admit.where(:patient_id=>patient.id).first
+%>
+	<div class="col-12 p-list <%=v.start.strftime('%Y%m%d')%>" style="border-bottom:1px solid #BBBBBB;">
+		<div class="row p-2 mt-2 mb-4" >
+			<div class="col-2">
+			<image id="patient-image" src="<%=url_for 'img/patient.png' %>" class="w-100">
+			</div>
+			<div class="col">
+				<span class="pname"><%="#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" %></span>
+				<br>HN: <%=patient.hn%>
+				<br>เพศ: <%=patient.gender%>
+				<br>อายุ: <%=patient.age%>
+				<br/>Hospital : <%=hospital.name %>
+			</div>
+			<div class="col-4">
+				<a href="show?id=<%=admit.id%>" class="btn btn-submit w-100  p-3 m-2">
+					ตรวจ
+				</a>
+				<a href="admit?hn=<%=patient.hn%>" class="btn btn-health w-100  p-3 m-2">
+					แก้ไขข้อมูล
+				</a>
+			</div>
+		</div>
+	</div>
+<%	
+		end #if
+	end #for
+%>
+	
+</div>
+
+<div class="row bg-panel p-4 m-1 mt-4 shadow-sm rounded">
+	<div class="col-12">
+		<div id="calendar"></div>
+	</div>
+</div>
+
+<%=inline(this,:'_banner')%>
+
+</div><!--container-->
+
+<script>
+function day_load(d){
+	$('.p-list').hide()
+	$('.'+d).slideDown()
+}
+day_load('<%=Time.now.strftime('%Y%m%d')%>')
+$(document).ready(function(){
+	$(".day").click(function(){
+		
+		$(".day").removeClass("day-active").addClass("day-normal")
+		$(this).removeClass("day-normal").addClass("day-active")
+		//alert($(this).attr('class'))
+		day_load($(this).attr('id'))
+	})
+})
+</script>
+
+
+<script>
+  
+<% if officer
+
+	visits = SHVisit.where(:officer_id=>officer.id).all
+	
+	
+	visits.collect!{|i|
+	
+        {
+          title: i.title,
+          url: "../Visit/show?id=#{i.id}",
+          start: i.start.strftime("%Y-%m-%d")
+        }
+		
+	}
+%>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+	
+		
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        events: <%=visits.to_json.html_safe%>,
+		dateClick: function(info) {
+		    // alert('Clicked on: ' + info.dateStr);
+ // 		    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+ // 		    alert('Current view: ' + info.view.type);
+ // 		    // change the day's background color just for fun
+ // 		    info.dayEl.style.backgroundColor = 'red';
+ 
+ var myKeyVals = {'patient_id':'<%=params[:patient_id]%>','officer_id':'<%=params[:officer_id]%>','date':info.dateStr}
+ 
+ 
+ $.ajax({
+     type: "POST",
+     url: "_create_visit",
+     data: myKeyVals ,
+     dataType: "json",
+            success: function (result) {   // Result is not coming here please help
+                alert("before popup");                
+            },
+            failure: function (response) {
+                alert("sdfjsdjf2222");
+                console.log(response.responseText);
+            },
+            error: function (response) {
+                window.location.reload();
+            }
+ });
+ 			
+ 
+		  }
+      });
+
+      calendar.render();
+    
+  	
+	
+	});
+	<% end %>
+
+</script>

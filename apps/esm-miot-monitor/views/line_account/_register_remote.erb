@@ -1,0 +1,47 @@
+<%
+	
+provider = nil
+
+line_account = nil
+
+if params[:user_id]
+	
+	line_account = LineAccount.where(:user_id=>params[:user_id]).first
+
+	
+	line_account = LineAccount.create(:user_id=>params[:user_id], :solution=>params[:solution]) unless line_account
+	
+	
+	
+  if params[:provider]
+	  
+	  p = JSON.parse(params[:provider])
+	
+	  
+	  
+	  provider =  Provider.where(:line_account_id=>line_account.id).first
+	  
+	  provider =  Provider.where(:code=>p['code']).first unless provider
+	  
+	  
+	  if provider
+  
+	 	 provider.update_attributes(:code=>p['code'],:department=>p['department'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
+  
+	  else 
+  	
+		 provider = Provider.create(:code=>p['code'],:department=>p['department'],:name=>p['name'], :phone=>p['phone'], :email=>p['email'], :line_account_id=>line_account.id)
+	 
+	
+	  end
+	  
+	  
+	  line_account.update_attributes(:name=>p['name'])
+  	
+   	  line_account.send_message "ลงทะเบียนสำเร็จ : #{provider.get_name} - #{provider.code}" 
+  
+  end
+
+ end
+	
+%><%=provider.to_json%>

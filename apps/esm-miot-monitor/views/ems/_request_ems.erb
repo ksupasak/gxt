@@ -1,0 +1,1139 @@
+<%
+
+ems_case = EMSCase.new
+
+
+ems_case = EMSCase.find params[:id] if params[:id]
+
+if ems_case.tracking_status=='SENT'
+	ems_case.update_attributes :tracking_status=>'ACCESSED'	
+	ems_case.update_message @context, "request access tracking"
+	
+end
+
+
+@current_zone = ems_case.zone
+
+if request.post?
+
+	ems_case = ESMCase.create unless ems_case
+
+	ems_case.update_attributes :patient_location=>params[:location], :latlng=>params[:location], :tracking_status=>'TRACKING'
+
+	ems_case.update_message @context, "request send location"
+	
+	ems_case.relocation_target params[:location]
+	
+	ems_case.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
+	
+
+	
+
+#     admit = Admit.find ems_case.admit_id
+#
+# path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+#
+# msg = 'NULL'
+# send_msg = <<MSG
+# #{'Zone.Message'} #{path}
+# #{msg.to_json}
+# MSG
+#
+#
+#     @context.settings.redis.publish(path, send_msg)
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=request_ems?id=<%=ems_case.id%>">
+<%
+
+else
+
+%>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/rocker/assets/js/jquery.min.js"></script>
+<link href="/rocker/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="/rocker/assets/css/bootstrap-extended.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ 
+
+	<link href="/miot/css/ems.css" rel="stylesheet">
+
+
+	<link href="/rocker/assets/css/icons.css" rel="stylesheet">
+</head>
+<style>
+.box{
+	background-color: rgb(255,255,255);
+	border-radius: 8px;
+	padding:10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+}
+.box_h{
+	background-color: rgb(255,255,255);
+	padding:10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+	border-bottom: 1px solid #A4CAFF;
+}
+.text_color_ffffff{
+	color: #ffffff;
+}
+.boxbtn{
+	background-color: rgb(223,241,255);
+	border-radius: 8px;
+	width: 100%;
+}
+.boxbtn2{
+	background-color: rgb(52,120,242);
+	border-radius: 8px;
+	width: 100%;
+	height:  50px;
+	border: none; 
+	padding:12px;
+}
+.button-container {
+    display: flex;
+    gap: 10px;
+    }
+.row {
+	display: flex;
+	justify-content: space-between;
+	  }
+
+.btn2 {
+      border: 1px solid #ccc;
+      padding: 1px;
+	  
+      cursor: pointer;
+      transition: background-color 0.3s;
+	  flex: 1;  
+      text-align: center;  
+    }
+
+.btn2.active {
+      background-color: #1E9090;  
+      color: #1E9090;  
+    }
+input {
+	color: #FFFFFF;  
+  }
+
+body{
+	padding:10px;
+	background-color: rgb(240,245,245);
+}
+ 
+.row {
+      display: flex;
+      justify-content: space-between;
+}
+.h_br{
+	height:  5px;
+}
+
+
+</style>
+
+<body>
+
+<div class="wrapper">
+	
+	
+	
+	
+<%
+
+
+location = "#{Setting.get(:aoc_center)}"
+
+locaiton = "#{ems_case.patient_location}" if ems_case.patient_location
+
+
+session_prefix = "#{ems_case.get_meeting_key(Setting.get("aoc_code"))}-PRE"
+
+conf_url = "#{Setting.get('videocall_server')}/\#/#{Setting.get('aoc_code','0000')}-#{ems_case.case_no}"
+
+conf_url = "video?id=#{session_prefix}&case_id=#{ems_case.id}&side=request&type=PRE"
+
+
+%>
+
+<%= inline(this,:'../lib/_map')  %>
+
+		<div class="page-wrapper">
+			<div class="page-content">
+				<div class="row">
+					<div class="box_h">
+						<h6 class="my-1 text-info"><center><%=Setting.get(:default_center_name)%></center></h6>
+					</div>
+				</div>
+				
+<div class="h_br"></div>				
+			
+
+<form action="request_ems?id=<%=ems_case.id%>" method="POST">
+
+
+ <!-- <div class="box">
+  	<div class="d-flex justify-content-between">
+  	<div class="col-9">
+	  	<p class="mb-0 text-secondary">Contact info</p>
+	  	<h6 class="my-1 text-info"><%= ems_case.contact_phone %></h6>
+  	</div>
+    </div>
+  </div> -->
+
+<div class="h_br"></div>	
+
+  <!--  <div class='row'>
+		<div class="col">
+			<div class="card radius-10 border-start border-0 border-3 border-info">
+			<div class="card-body">
+				<div class="d-flex justify-content-between">
+					<div class="col-9">
+						
+						<p class="mb-0 text-secondary">Contact info 1</p>
+						<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
+						<p class="mb-0 font-13"></p>
+						
+					</div>
+					
+					
+					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> 
+
+					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+
+					</div> 
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>  -->
+	
+	<% if ems_case.status=='Completed'%>
+	<div class="card radius-10 border-start border-0 border-3 border-danger">
+	<div class="card-body">
+	<center><h1 class="text-danger">Discharged</h1> </center>
+</div>
+</div>
+	<% else %>
+	<% 
+	command = EMSCommand.where(:case_id=>ems_case.id).first
+	
+	@current_ambulance = nil
+	
+	if command 
+		
+		amb = command.ambulance
+		@current_ambulance  = amb
+	
+		att = Attachment.find amb.image
+
+		content = ""
+        plate_license = ""
+		if att
+ 
+		  content = "<div ><img src='#{att.path}' width='100%'></div>"
+		  plate_license = "#{amb.plate_license}"
+		end
+	
+		%>
+
+ 
+		
+	<div class="box">	
+    <div class='row'>
+		<div class="col">
+		<!--	<p class="mb-0 text-secondary">Contact info</p>
+			<h6 class="my-1 text-info"><%= ems_case.contact_phone %></h6> -->
+			<div >
+				<div class="d-flex justify-content-between">
+					<div class="col-3"><%= content %> </div>
+					<div class="col-1"></div>
+					<div class="col-8"><p class="mb-0 text-secondary">ทะเบียนรถ</p> <p class = "my-1 text-info"> <%= plate_license %> </p> </div>
+					<!-- <span style="float:right" style="col-3"><a  href="<%=conf_url%>" class="btn btn-warning">VideoCall</a></span> -->
+					<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i></div> -->
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class='row'>
+			<div class="col-3" ><p class="mb-0 text-secondary"> ระยะเวลา</p> </div>
+			<div class="col-2">	<h6 class="my-1 text-warning"> <span class="est-duration text-warning">00:00</span></h6> </div>
+			<div class="col-7">  <p>เวลาถึง : <span class="est-text text-warning"><%=%><span></p>  </div>	
+		</div>
+	</div>
+	<% end %>
+	<div class="h_br"></div>	
+
+	 
+	<div class="box">
+	<div class='row'>
+		<div class="col d-flex justify-content-center" >
+		 	<a href="#" id="func-1" class="func func-3 btn2 btn"><i class="fas fa-map-marker-alt"></i> ตำแหน่ง</a> 
+		</div>
+		<div class="col d-flex justify-content-center">
+	 	<a href="#" id="func-2" class="func func-3 take-picture-open btn2 btn"><i class="fas fa-camera"></i> ถ่ายรูป</a> 
+		</div>
+		<div class="col d-flex justify-content-center">
+		 	<a href="#" id="func-3"  class="func func-3 btn2 btn"><i class="fas fa-video"></i> วิดีโอ</a> 
+		</div>
+	</div>
+</div>
+
+
+	<script>
+		
+		$('.func').click(function(){
+			
+			id = $(this).attr('id')
+			
+			$('.func-panel').hide()
+			
+			$('.'+id).show()
+			
+			
+		})
+		
+	</script>
+		
+
+	<!-- <div class="row">
+
+
+		<div class="card-body p-5">
+				<div class="card-title d-flex align-items-center">
+					<div><i class="bx bxs-user me-1 font-22 text-primary"></i>
+					</div>
+					<h5 class="mb-0 text-primary">ข้อมูลเหตุฉุกเฉิน</h5>
+				</div>
+				<hr>
+				<form class="row g-3">
+					<div class="col-md-6">
+						<label for="inputFirstName" class="form-label">First Name</label>
+						<input type="email" class="form-control" id="inputFirstName">
+					</div>
+					<div class="col-md-6">
+						<label for="inputLastName" class="form-label">Last Name</label>
+						<input type="password" class="form-control" id="inputLastName">
+					</div>
+					<div class="col-md-6">
+						<label for="inputEmail" class="form-label">Phone</label>
+						<input type="email" class="form-control" id="inputEmail">
+					</div>
+				<div class="col-md-6">
+					<label for="inputEmail" class="form-label">อาการผู้ป่วย</label>
+					<input type="email" class="form-control" id="inputEmail">
+				</div>
+				</form>
+		</div>
+
+</div> -->
+
+
+
+
+	<!-- <div class="row">
+
+			<div class="col">
+				<div class="card radius-10 border-start border-0 border-3 border-info">
+				<div class="card-body">
+					<div class="d-flex align-items-center">
+						<div>
+							<p class="mb-0 text-secondary">Contact info</p>
+							<h4 class="my-1 text-info"><%= ems_case.contact_phone %></h4>
+							<p class="mb-0 font-13"></p>
+
+						</div>
+						<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class='bx bxs-phone'></i>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div>
+
+	</div> -->
+		
+		<%
+			cls = "border-warning"
+			
+			cls = "border-success" if ems_case.tracking_status=='TRACKING'
+			
+		%>
+		<div class="h_br"></div>	
+				<div class="row func-panel func-1">
+
+					<div class="col">
+						
+						<div >
+
+
+							<div class="box" >
+								<p class="d-flex justify-content-between">พิกัดตำแหน่ง 
+								<input type="text" value="" placeholder="ค้นหาตำแหน่ง" id="record_location" style="color:black">	
+								<span style="float:right"><a  id = "find-me" class="btn btn-outline-success"> อ่านตำแหน่ง</a></span></p>
+								
+							
+							  <!--  <p>1.เลื่อนหมุดสีเเดงในเเผนที่เพื่อระบุตำเเหน่ง</p>
+								<p>2.กดปุ่มด้านล่างเเผนที่เพื่อส่งตำเเหน่ง</p> -->
+								<div id="dashboard-map" style="height: 300px">
+									map
+								</div>
+								<div class="h_br"></div>	
+
+
+							<center>
+							<% if ems_case.patient_location and ems_case.patient_location.index(",") %>
+							 
+							<!--<input type="submit" name="Submit" value="ส่งตำแหน่งอีกครั้ง" class="boxbtn2">-->
+
+							<button type="submit" name="Submit" class="boxbtn2">
+							<p class="text_color_ffffff"><i class="fas fa-location-arrow"></i> ส่งตำแหน่งอีกครั้ง </p>
+						    </button>
+
+							<% else %>
+							 
+							<!--<input type="submit" name="Submit" value="ส่งตำแหน่ง" class="boxbtn2">-->
+
+							<button type="submit" name="Submit" class="boxbtn2">
+							<p class="text_color_ffffff"><i class="fas fa-location-arrow"></i>ส่งตำแหน่ง </p>
+						    </button>
+
+							<% end %>
+									 <p id = "status" style="font-size:0.8em;padding:20px"></p>
+							</center>
+
+						  <input type="hidden" name="location" id="location" value="<%=location%>">
+
+
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			
+				<%
+				
+				imgs = Message.where(:admit_id=>ems_case.admit_id, :type=>'image', :sender=>'NA').sort(:created_at=>-1).all
+				
+					
+				cls = 'border-warning'
+				cls = 'border-success' if imgs.size>0
+					
+				%>
+				<div class="h_br"></div>	
+				<div class="row  func-panel func-2">
+				<div class="col">
+				<div class="card radius-10 border-0 border-3 <%=cls%>">
+				<div class="card-body">
+				<div class="row">
+					<div class="col">
+					<p>
+					รูปถ่าย
+					<!-- <span style=""><center><a   class="take-picture  text-white btn btn-info">ถ่ายภาพ</a><center></span> -->
+					</p>
+					</div>
+				</div>
+				<div class="row g-3">
+
+
+
+
+					<div class="col text-center ">
+
+						<button class="btn btn-primary capture-spinner " style="display:none" type="button" disabled=""> <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+															Loading...</button>
+				 
+					   <video playsinline autoplay ></video>   
+				 
+					</div>
+				</div>
+				<div class="h_br"></div>	
+				<div class="row">
+					<div class="col-12 col-sm-4 text-center">
+					</div>
+					<div class="col-12 col-sm-4 ">
+						<div class="row">
+							<button  type="button" class="take-picture-x  col btn btn-lg btn-success px-5 boxbtn2" style="display:none;margin-bottom:10px">
+								<i  ></i>ถ่ายภาพ</button>
+
+						</div>
+					</div>
+				</div>
+				<div class="row">
+				<div class="col">
+
+					<%
+
+					
+					%>
+
+
+					    <div class="canvas" >
+
+
+
+					    </div>
+						<hr/>
+						<div class="sent-img">
+						<% for img in imgs %>
+
+						<%
+						if img
+							url = "../Message/content?id=#{img.id}"
+
+						%>
+						<img src="<%=url%>" width="140">
+						<%
+						end
+						%>
+
+
+						<% end %>
+						</div>
+						<div class="col-12 ">
+							<div class="row">
+								<button  type="button" class="capture-close col btn btn-lg  px-5"  style="display:none" ><i class=""></i>ปิด</button>
+							</div>
+						</div>
+
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				
+				
+				<div class="h_br"></div>				
+				<div class="row  func-panel func-3">
+				<div class="col">
+				<div class="box">
+				<div class="card-body">
+				<div class="row">
+					<div class="col">
+					<p>
+				  สนทนา
+					<center>
+
+					<span  style="col-3"><a  href="<%=conf_url%>" class="text-white btn-warning boxbtn2">เริ่ม วิดีโอคอล</a></span>
+
+					</center>
+
+					</p>
+					</div>
+				</div>
+				<div class="row g-3">
+
+
+
+
+				</div>
+				</div>
+				</div>
+				</div>
+				</div>
+				
+				
+				<div class="row">
+				<!-- <div class="col-12 col-sm-4 text-center">
+					<div class="row">
+					<button id = "find-me"  type="button" class="col btn btn-lg btn-danger px-5"><i class="bx bx-bookmark mr-1"></i>Share Location</button>
+					</div>
+				</div>
+				<div class="col-12 col-sm-4 text-center">
+					<div class="row">
+					<button  type="button" class=" take-picture col btn btn-lg btn-warning px-5"><i class="bx bx-bookmark mr-1"></i>Take Picture</button>
+					</div>
+				</div> -->
+				<!-- <div class="col-12 col-sm-4  text-center">
+					<div class="row">
+					<button id = "video-conf"  type="button" class="col btn btn-lg btn-success px-5"><i class="bx bx-bookmark mr-1"></i>Video Conf</button>
+					</div>
+				</div> -->
+
+				</div>
+				<div class="h_br"></div>	
+
+
+<% end %>
+
+			</form>
+
+
+
+			</div>
+		</div>
+
+
+<script>
+	latlng = [<%=location%>]
+
+
+
+
+
+	map1 = new EMSMap('dashboard-map',{movable:true});
+	map1.setPosition(latlng[0], latlng[1])
+	map1.setMarkerPosition(latlng[0], latlng[1])
+
+	var image = "<%=url_for("ems/ambu.png")%>";
+	var marker_ambu = null;
+	
+	map1.ready(function(){
+		
+		
+		$('#record_location').keydown(function(e){
+
+			if(e.keyCode == 13) {
+				e.preventDefault()
+
+				address_search(e)
+
+					return false;
+				}
+		});
+		
+		function address_search(e){
+
+
+				var address = $('#record_location').val()
+
+				map1.geocode({'address':address},function(result){
+					
+					// $('#record_address').val(result.formatted_address)
+
+					var pos = result.geometry.location;
+
+					map1.setPosition(pos.lat, pos.lng)
+					// map1.setPosition(latitude,longitude)
+					map1.setMarkerPosition(pos.lat, pos.lng)
+					
+					if(map1.getMap().getZoom()<15)
+					map1.getMap().setZoom(15);
+					// map1.setMarkerPosition(pos.lat(), pos.lng(), false)
+
+
+				})
+
+				e.preventDefault();
+				return false;
+
+		}
+		
+	<% if @current_ambulance %>
+		
+	t = <%=@current_ambulance.last_location.split(',').to_json%>
+	var apos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+ 	 marker_ambu = new google.maps.Marker({position: apos,icon: image,  map: map1.map});
+
+    <% end %>
+	
+	});
+
+	map1.changeMarkerPosition(function(marker){
+
+		var pos = marker.position
+		$('#location').val(""+pos.lat()+","+pos.lng())
+
+		// map1.geocode({'location':pos},function(result){
+	//
+	// 		$('#record_address').val(result.formatted_address)
+	// 		$('#status').html(result.formatted_address)
+	//
+	// 	})
+
+
+
+	}.bind(this))
+
+
+	function geoFindMe() {
+
+	  const status = document.querySelector('#status');
+	  // const mapLink = document.querySelector('#map-link');
+
+	  // mapLink.href = '';
+	  // mapLink.textContent = '';
+
+	  function success(position) {
+	    const latitude  = position.coords.latitude;
+	    const longitude = position.coords.longitude;
+
+	    status.textContent = '';
+	    // mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+   // 	    mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+
+		map1.setPosition(latitude,longitude)
+		map1.setMarkerPosition(latitude,longitude)
+
+
+		$('#location').val(""+latitude+","+longitude)
+
+
+	  }
+
+	  function error() {
+	    status.textContent = 'Unable to retrieve your location';
+	  }
+
+	  if(!navigator.geolocation) {
+	    status.textContent = 'Geolocation is not supported by your browser';
+	  } else {
+	    status.textContent = 'Locating…';
+	    navigator.geolocation.getCurrentPosition(success, error);
+	  }
+
+	}
+
+	document.querySelector('#find-me').addEventListener('click', geoFindMe);
+	var imageCapture;
+
+
+
+
+// document.querySelector('#take-picture').addEventListener('click', takePicture);
+geoFindMe()
+
+</script>
+
+
+
+
+
+
+</div>
+
+
+
+	<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
+<script>
+
+	var picture_status = false;
+
+	// Put variables in global scope to make them available to the browser console.
+	const video = document.querySelector('video');
+	const capture_spinner =  document.querySelector('.capture-spinner');
+	const capture_close =  document.querySelector('.capture-close');
+	const capture_btn =  document.querySelector('.take-picture-x');
+
+	const canvas = window.canvas = document.querySelector('.canvas');
+	canvas.width = 240;
+	canvas.height = 0;
+	video.style.display  = 'none';
+	canvas.style.display = 'none';
+
+	const button = document.querySelector('.take-picture-open');
+
+	function snap(){
+ 		// then capture
+	  var canvasx = document.createElement('canvas');
+      var r = 0.23;
+	  canvasx.width = video.videoWidth*r;
+      canvasx.height = video.videoHeight*r;
+	  var ctx = canvasx.getContext('2d')
+	  ctx.scale(r,r)
+      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+	  canvas.prepend(canvasx)
+
+	  var canvas_img = document.createElement('canvas');
+	  canvas_img.width = video.videoWidth;
+      canvas_img.height = video.videoHeight;
+	  var ctx = canvas_img.getContext('2d')
+      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+
+  		// canvasx.toBlob(function (blob) {
+	//
+	//   			console.log(blob)
+	//
+	//   		}, 'image/jpeg', 0.95)
+
+
+
+	       var img = canvas_img.toDataURL("image/jpeg");
+	       var filename = 'EMS.jpeg';
+	       var formdata = new FormData();
+	       formdata.append("capture", img);
+
+	       $.ajax({
+	           url: 'image_upload?id=<%=params[:id]%>',
+	           type: "POST",
+	           data: formdata,
+	           processData: false,
+	           contentType: false,
+	           success: function (result) {
+	               console.log("Upload complete!");
+	           },
+	           error: function (error) {
+	               console.log("Something went wrong!");
+	           }
+	       });
+
+
+
+
+
+
+	}
+
+	document.querySelector('.take-picture-x ').onclick = function(){
+
+
+		snap()
+
+	}
+
+
+	button.onclick = function() {
+
+	 if(picture_status==false){
+			// init camera
+		capture_spinner.style.display='inline'
+		 
+	     const videoConstraints = {
+	         facingMode: 'environment'
+	       };
+	
+	     const constraints = {
+	       video: videoConstraints
+	     };
+		 
+	 	navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+
+	 }else{
+	 	// snap()
+	 }
+
+
+	};
+
+
+	capture_close.onclick = function() {
+	   picture_status = false;
+
+ 	   video.style.display = 'none';
+	   capture_close.style.display = 'none';
+	    capture_btn.style.display='none'
+	};
+
+	const constraints = {
+	  audio: false,
+	  video: true
+	};
+
+	function handleSuccess(stream) {
+	  window.stream = stream; // make stream available to browser console
+	  video.srcObject = stream;
+	  picture_status = true;
+	  canvas.style.display = 'inline';
+  	  capture_spinner.style.display='none'
+	  capture_close.style.display='inline'
+	  capture_btn.style.display='inline'
+	  video.style.display = 'inline';
+	  video.width = 320;
+
+  		// canvas.width = 240;
+	//  	  	canvas.height = 160;
+	}
+
+	function handleError(error) {
+	  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+	}
+
+
+// var formData = new FormData(),
+//     uploadedImageName = 'selfie.png';
+//
+// canvas.toBlob(function (blob) {
+//     formData.append('user_picture', blob, uploadedImageName);
+//     $.ajax({
+//         data: formData,
+//         type: "POST",
+//         dataType: "JSON",
+//         url: '',
+//         processData: false,
+//         contentType: false,
+//     });
+// });
+
+</script>
+
+
+
+<% if false %>
+<video id="player" controls autoplay></video>
+<button id="capture">Capture</button>
+<canvas id="canvas" width=320 height=240></canvas>
+<script>
+  const player = document.getElementById('player');
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+  const captureButton = document.getElementById('capture');
+
+  const videoConstraints = {
+      facingMode: 'environment'
+    };
+	
+  const constraints = {
+    video: videoConstraints
+  };
+
+  captureButton.addEventListener('click', () => {
+    // Draw the video frame to the canvas.
+    context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  });
+
+  // Attach the video stream to the video element and autoplay.
+  // navigator.mediaDevices.getUserMedia(constraints)
+  navigator.getUserMedia(constraints)
+    .then((stream) => {
+      player.srcObject = stream;
+    });
+</script>
+
+<% end %>
+
+<%=init_map%>
+
+
+<script>
+
+
+
+    function show(msg){
+      $('.msg2').html(msg)
+    }
+
+    var ws = null
+
+    function connect(){
+
+
+
+    ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+    ws.onopen    = function()  { show('websocket opened');
+
+      ws.send('WS.Select name=<%=session.id%>\n["EMS <%="miot/#{@context.settings.name}/z/#{@current_zone.name}/EMT"%>", "Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>"]')
+
+
+    };
+
+
+    ws.onerror = function(){
+
+      // noti_msg('Reconnect in 5 seconds')
+      ws.close()
+      // alert('Reconnect in 5 sec')
+      setTimeout(function () {
+          // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+          connect()
+
+       }, 10000); //will call the function after 2 secs.
+
+
+    }
+
+    ws.onclose   = function()  { show('websocket closed');
+
+   	// setTimeout(function () {
+    //      // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    //      connect()
+    //
+    //   }, 10000); //will call the function after 2 secs.
+
+
+    }
+
+    ws.onmessage = function(m) {
+
+  	  console.log(m.data)
+
+
+  	    $('.msg').html("Network is online : "+(m.timeStamp/1000)+ " s" )
+
+
+  		lines = m.data.split("\n")
+
+
+      // when new case
+
+  		if(lines[0].split(" ")[0]=='Zone.Refresh'){
+
+  			window.location.reload();
+
+  		}else
+		
+      if(lines[0].split(" ")[0]=='EMS.Update'){
+
+         obj = JSON.parse(lines[1])
+         console.log(obj)
+
+         if(obj['alert']=="1"||obj['alert']=="0"){
+           console.log(obj)
+
+  		  }
+		
+		
+		   if(obj['est_time']){
+		   	   
+			   t = parseInt(obj['est_time'])
+			   if(t>0){
+			   min = parseInt(t/60);
+			   sec = t%60;
+			   
+			   $('.est-duration').html(""+min+":"+sec)
+			   $('.est-text').html(obj['arrival_at'])
+			   
+			   
+			   
+			  }else{
+			  	 $('.est').html("00:00")
+			  }
+		   }  
+		   <% if @current_ambulance %>
+		   
+		   if(obj['ambu_data']){
+			   if(obj['ambu_data']['<%=@current_ambulance.id%>']){
+			   	console.log(obj['ambu_data']['<%=@current_ambulance.id%>']['last_location'])
+				   t = obj['ambu_data']['<%=@current_ambulance.id%>']['last_location'].split(",")
+				   var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+				   marker_ambu.setPosition(pos)
+				   
+			   }
+			
+		   }
+		   
+		   <% end %>
+		  	   
+		  	   
+
+
+      else
+	
+  	if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+  			update(lines)
+
+
+  	}
+  	else
+	
+  	{
+
+         jQuery.each(obj['ems_data'], function (key, val) {
+
+         // Object.values().forEach(val => {
+
+           // console.log(val)
+           jQuery.each(val['commands'], function (key, cmd) {
+           // Object.values(val['commands']).forEach(cmd => {
+
+             // console.log('EMT noti')
+
+
+             // if(cmd['driver_emt_id']==null){
+  //              if(noti_status==false){
+  //
+  //             // console.log(cmd)
+  //              $('.noti_title').html("Accept Case");
+  //
+  //              $('.noti_msg').html("Case No : "+val['case_record']['case_no']+"<br/>Location : "+val['case_record']['location']+"<br/>Tel : "+val['case_record']['contact_phone']);
+  //
+  //
+  //
+  //              $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_accept"+"&command_id="+cmd['_id'])
+  //              $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=case_denied"+"&command_id="+cmd['_id'])
+  //              // $('#modal_notification').modal('show');
+  //              modal('#modal_notification')
+  //
+  //              noti_status = true;
+  //             }
+  //
+  //
+  //            }
+
+
+           });
+
+           // jQuery.each(val['routes'], function (key, route) {
+ //           // Object.values(val['routes']).forEach(route => {
+ //
+ //
+ //
+ //             if(route['response']==null){
+ //
+ //
+ //               console.log('EMT route')
+ //
+ //
+ //
+ //                 if(noti_status==false){
+ //                console.log('EMT case noti')
+ //                // console.log(cmd)
+ //
+ //                 $('.noti_title').html("Route Update / Transfer");
+ //
+ //                 $('.noti_msg').html("Change Route");
+ //
+ //                 $('.noti_url_accept').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_accept"+"&route_id="+route['_id'])
+ //                 $('.noti_url_denied').val("update_record?id="+val['case_record']["_id"]+"&cmd=route_denied"+"&route_id="+route['_id'])
+ //                 // $('#modal_notification').modal('show');
+ //                 modal('#modal_notification')
+ //
+ //                 noti_status = true;
+ //
+ //
+ //
+ //               }
+           //
+           //   }
+           //
+           //
+           // });
+
+
+
+
+         });
+
+  	   }
+
+      }else
+
+      if(lines[0].split(" ")[0]=='Zone.Message'){
+
+  			// reload_message()
+
+  	}else{}
+	
+	
+
+
+
+    }
+
+  }
+
+
+  $(document).ready(function(){
+    connect()
+
+  })
+
+</script>
+
+</body>
+</html>
+<% end %>

@@ -1,0 +1,149 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<style>
+.data-panel{
+    background:white;
+    min-height:70vh;
+    margin-left:5vw;
+    margin-right:5vw;
+    box-shadow: 0px 3px 6px #00002950;
+
+}
+.step{
+    font-size:3vh;
+}
+#div-patient{
+    height:70vh;
+    max-height:70vh;
+    overflow:auto;
+}
+
+</style>
+<div class="containerx" style="background:none">
+<div class="row">
+<div class="col-12 d-flex ">
+<center>
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"  >
+      <!-- <li class="nav-item">
+        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
+      </li>	 -->
+	  <li class="nav-item">
+	    <a href="./field_hospital" class="nav-link " id="pills-profile-tab"  aria-controls="pills-profile" aria-selected="false">ข้อมูลการตรวจ</a>
+	  </li>
+      <li class="nav-item">
+	    <a class="nav-link  active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">ลงทะเบียนผู้ป่วย</a>
+	  </li>
+
+	</ul>
+</center> 
+</div>
+</div>
+
+<div class="row regis banner-header  justify-content-md-center">
+
+    <div class="col-12"><h3>ลงทะเบียนผู้ป่วย</h3></div>
+    <div class="col-sm-4">
+        HN <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="" placeholder="รหัสผู้ป่วย" style="">
+    </div><!--col-->
+    <div class="col-sm-4">
+        Name <input type="text" class="form-control" id="patient-name" name="patient[name]" value="" placeholder="ชื่อ นามสกุล" style="">
+    </div><!--col-->
+    <div class="col-sm-4">
+        Passcode <input type="text" class="form-control" id="patient-passport" name="patient[passport]" value="" placeholder="วันเดือนปีเกิด ตัวอย่าง 31022564" style="">
+    </div><!--col-->
+    <div class="col-md-6 col-12 pt-4">
+        <div class="row">
+        <div class="col-6"><a href="#" id="btn-add" class="btn btn-secondary disabled" ><i class="fas fa-user-plus"></i> เพิ่มผู้ป่วยใหม่</a></div>
+        <div class="col-6"><a href="#" class="btn btn-info"><i class="fas fa-search"></i> ค้นหา</a></div>
+        </div>
+    </div><!--col-->    
+</div><!--regis-->
+
+
+
+<div class="div-patient bg-panel" id="div-patient">	
+<%=inline(this,:'_register_list')%>	  
+</div><!--div-patient-->
+
+
+</div><!--container-->
+
+<script>
+function add_patient(){
+    hn = $("#patient-hn").val()
+    name = $("#patient-name").val()
+    passport = $("#patient-passport").val()
+    if(hn==''){alert('กรุณากรอกเลข HN')}
+    else if(name==''){alert('กรุณากรอก ชื่อ นามสกุล')}
+    else{
+        $.ajax({
+            url:"register_patient",
+            data:{hn:hn,name:name,passport:passport}
+        }).done(function(data){
+            alert("เพิ่มผู้ป่วยใหม่สำเร็จ")
+            reload_patient()
+        })    
+    }
+}
+function reload_patient(){
+    $.ajax({
+        url:"register_list"
+    }).done(function(data){
+        $("#div-patient").html(data)
+        $(".tr-p").show()
+        $(".form-control").val('')
+        $("#btn-add").removeClass("btn-success").addClass("btn-secondary disabled")
+    })
+}
+
+function filter_hn(t){
+    if(t!=''){
+        $(".tr-p").hide()
+        var count = 0
+        $(".tr-p").each(function(i,v){
+            pdetail = $(v).attr("hn")       
+            if(pdetail.indexOf(t)!==-1){
+                $(this).show()
+                count++
+            }          
+        })
+        if(count==0){
+            $("#btn-add").removeClass("btn-secondary disabled").addClass("btn-success")
+        }else{
+            $("#btn-add").removeClass("btn-success").addClass("btn-secondary disabled")
+        }
+    }else{
+        $(".tr-p").show()
+        $("#btn-add").removeClass("btn-success").addClass("btn-secondary disabled")
+    }
+}
+function filter_p(t){
+    hn = $("#patient-hn").val()
+    if(hn==''){
+        if(t!=''){
+            $(".tr-p").hide()
+            $(".tr-p").each(function(i,v){
+                pdetail = $(v).attr("text")
+                if(pdetail.indexOf(t)!==-1) $(this).show()
+            })
+        }else{
+            $(".tr-p").show()
+        }
+    }
+}
+$(document).ready(function(){
+    $("#patient-hn").keyup(function(){
+        filter_hn($(this).val())
+    })
+    $("#patient-name").keyup(function(){
+        filter_p($(this).val())
+    })
+    $("#btn-add").click(function(){
+        if(!$(this).hasClass("disabled")){
+            add_patient()
+        }
+    })
+
+})
+</script>

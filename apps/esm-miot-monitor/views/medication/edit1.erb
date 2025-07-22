@@ -1,0 +1,54 @@
+<h1><%=name params[:service]%> Edit</h1>
+<% 
+
+   return_url = "index"
+
+   return_url = params[:return] if params[:return]
+	
+  	params[:id] = params[:record][:id] if params[:record] and params[:record][:id]
+
+@record = this.model.find params[:id]
+
+	if request.post?
+	
+	#    params[:record][:status]='Completed' unless   params[:record][:status]
+		
+	if params[:record]
+		if params[:record][:image_1]
+			img = params[:record][:image_1]
+			grid = Mongo::Grid.new(MongoMapper.database)
+			filename = img[:filename]
+			tmp = img[:tempfile]
+			file_id = grid.put(tmp.read,:filename=>filename)
+			path = ""
+			att = Attachment.create :filename=>filename, :file_id =>file_id, :path=>path
+			# path = "/a/#{@context.name}/Attachment/content?id=#{att.id}"
+			# 		att.update_attributes :path=>path
+			
+			
+			params[:record][:image_1] = att.id
+			
+		end
+	 	
+	 @record.update_attributes params[:record]
+		
+		
+		
+	%>
+	<%=redirect_to "../Admit/show?id=#{@record.admit_id}"%>
+	<%	
+	end
+	
+		
+		
+		
+   else 
+%>
+<form action="edit" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="<%=@record.id if @record%>">
+	
+<%= inline(this,:'_form') %>
+<button type="submit" class="btn btn-primary">Submit</button>
+<%=link_to 'Back', return_url ,:class=>'btn'%>
+</form>
+<% end %>

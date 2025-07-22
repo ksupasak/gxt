@@ -1,0 +1,776 @@
+<script>		
+		function GFX() {
+			
+			
+		    var enter = null,
+    		update = null,
+    		exit = null,
+			context = null,
+		    svg = null,
+			render = null,
+			viewport = null,
+			viewportWidth = 0,
+			viewportHeight = 0,
+			xscale=null,
+			yscale=null,
+			colorScale =  d3.scaleOrdinal(d3.schemeCategory10);// d3.scale.category20(),
+			dispatch = d3.dispatch("pageDown","pageUp"),
+			startTime=Date.now(),
+			endTime=null,
+			drag=false,
+			active=false,
+			cmap= null;
+		
+			
+		    function gfx(container) {
+					
+					
+				cmap = {};
+					
+					
+		        function render(resize) {
+					
+					console.log('redner')
+					
+					if (true){
+		            if (true) { 
+		                
+						viewportWidth = parseInt(viewport.style("width"));
+						viewportHeight = parseInt(viewport.style("height"));
+						
+		            }
+				    
+					console.log(active)
+					
+					
+   				 container.each(function() {
+				  
+					 	
+				  
+    				  	var rowSelection = container.selectAll(".row").data(context['components']);
+    				   
+					
+   						w = viewportWidth;
+						h = viewportHeight;
+						
+						// var svg = container.select('svg')
+	// 		   		    .attr("width", w)
+	// 		            .attr("height", h);
+						
+						h1w = 100;
+						h3w = 80;
+						
+						rh = 200;
+						
+						h3x = w-h3w;
+						mx = h1w+20;
+						mw = w-h1w-h3w-40;
+						chartHeight = 150;
+						
+						// console.log(context);
+						
+						
+						// console.log(w)
+					
+     					  //   	              g = rowSelection.enter().append("g")
+   					  //
+   					  //     	              .attr("class", "row")
+   					  // .attr("transform", function(d,i) {
+   					  //     	                         return "translate(0," + ((i * rh)) + ")";
+   					  //     	                });
+					  container.selectAll(".row").remove();
+      	             
+		
+ 			      var g = svg.append("g")
+					    .attr("class", "row")
+      			  	    .attr("transform", "translate(0,0)");
+
+      			  	
+      			  		
+						//# blue bar  
+							
+                	 	g = svg.append("g")
+	            		.attr("class", "row")
+						.attr("transform", "translate(0,0)");
+						
+		   					g.append("rect")
+		   			        .attr("x", h1w)
+							.attr("y", chartHeight)
+		   			        .attr("rx", 3)
+		   			        .attr("ry", 3)
+		   			        .attr("width", w-h1w-h3w)
+		   			        .attr("height", 30)
+		   					.attr("fill",fillcolor)
+		   			        .attr("fill-opacity", 0.10)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+						    .on("mousedown", function() {
+						             var coords = d3.mouse(this);
+									 
+									 xtime = coords[0];
+									 console.log("md "+coords[0]+" = "+ xscale.invert(coords[0]))
+									 if(drag==false){
+										 drag = true;
+										 startTime = xscale.invert(coords[0]-mx);
+										 endTime = null
+									 }
+							})
+							.on("click",function(){
+								
+								// alert('sidfj')
+								
+							})
+						    .on("mouseup", function() {
+						             var coords = d3.mouse(this);
+									 
+									 xtime = coords[0];
+									 console.log("mu "+coords[0]+" = "+ xscale.invert(coords[0]))
+									 if(drag==true){
+										 drag = false;
+										 endTime = xscale.invert(coords[0]-mx);
+										 // endTime = Date.now();
+									
+									 }
+							})
+						    .on("mouseout", function() {
+						             
+										 // drag = false;
+									// console.log('out')
+							})
+							.on("mousemove", function(){
+								
+				             		var coords = d3.mouse(this);
+							 	    // console.log("m "+coords[0]+","+coords[1])
+									 if(drag){endTime = xscale.invert(coords[0]-mx);
+									  
+									console.log(startTime+" "+endTime+" "+drag)
+									if(startTime!=null&&endTime!=null&&xscale!=null){
+									svg.select('.rowx').remove();
+			              	 		g = svg.append("g")
+			            			.attr("class", "rowx")
+									.attr("transform", "translate("+mx+",100)");
+									x1 = xscale(startTime)
+									x2 = xscale(endTime)
+									if(x2>x1){
+				   					h1 = g.append("rect")
+				   			        .attr("x", x1)
+									.attr("y", 0)
+				   			        .attr("rx", 3)
+				   			        .attr("ry", 3)
+				   			        .attr("width", x2-x1 )
+				   			        .attr("height", 30)
+				   					.attr("fill",'#111')
+				   			        .attr("fill-opacity", 0.10)
+				   			        .attr("stroke", "#999999")
+				   			        .attr("stroke-width", "1px")
+										}
+							
+									}}
+						
+									  
+							})
+							
+							
+							// console.log(startTime+" "+endTime+" ")
+							if(startTime!=null&&endTime!=null&&xscale!=null){
+
+			              	 		g = svg.append("g")
+			            			.attr("class", "row")
+							.attr("transform", "translate("+mx+",100)");
+							x1 = xscale(startTime)
+							x2 = xscale(endTime)
+							if(x2>x1){
+		   					h1 = g.append("rect")
+				   			        .attr("x", x1)
+									.attr("y", 0)
+				   			        .attr("rx", 3)
+				   			        .attr("ry", 3)
+				   			        .attr("width", x2-x1 )
+		   					.attr("fill",'#111')
+		   			        .attr("fill-opacity", 0.10)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+
+							}}
+						
+						
+						
+						
+				 	    ch = 180
+						
+					    xscale = d3.scaleTime()
+					        .range([0, mw]);
+				 	    
+					 	yscale = d3.scaleLinear()
+					        .range([chartHeight-10, 10]);
+					    
+						
+						var xAxis = d3.axisBottom(xscale);//.tickFormat(function(d){ return d.x;});
+						var yAxis = d3.axisLeft(yscale);
+						
+
+							
+						r = []
+	
+						for(var ci in context['components']){
+								c = context['components'][ci];
+								r = r.concat(c['records'])
+						}
+						console.log(r)
+						xscale.domain(d3.extent(r, function(d) { return d.time; }));
+							
+							
+							
+						
+						for(var ci in context['components']){
+							
+							sumh = 0 ;
+							
+							
+							c = context['components'][ci];
+							
+							cmap[c['name']] = c
+						
+							
+							
+							type = c['type']
+							
+							var fillcolor = '#cccccc'
+							var cheight = 200
+							
+							if(type=='vs'){
+								
+								fillcolor = '#cccccc'
+								cheight = 150
+								
+							}else if(type=='med'){
+								
+								fillcolor = '#ffaaaa'
+								cheight = 150
+							}
+							
+        	                g = svg.append("g")
+				            	.attr("class", "row")
+								.attr("transform", "translate(0," + ch +")");
+        	                
+							
+							if(c['show']==false)
+							cheight = 30 
+								
+							
+							
+							
+		   					h1 = g.append("rect")
+		   			        .attr("x", h1w)
+		   			        .attr("rx", 0)
+		   			        .attr("ry", 0)
+		   			        .attr("width", w-h1w-h3w)
+		   			        .attr("height", cheight)
+		   					.attr("fill",fillcolor)
+		   			        .attr("fill-opacity", 0.10)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+							.on("click", function() {
+						             var coords = d3.mouse(this);
+									 console.log(""+coords[0]+","+coords[1])
+						             // Normally we go from data to pixels, but here we're doing pixels to data
+						             // var newData= {
+     // 						               x: Math.round( xScale.invert(coords[0])),  // Takes the pixel number to convert to number
+     // 						               y: Math.round( yScale.invert(coords[1]))
+     // 						             };
+									 
+								 
+							});
+							
+		   					g.append("rect")
+		   			        .attr("rx", 0)
+		   			        .attr("ry", 0)
+		   			        .attr("width", h1w)
+		   			        .attr("height", cheight)
+		   					.attr("fill","#777")
+		   			        .attr("fill-opacity", 0.20)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px");
+					
+		   					g.append("rect")
+		   				    .attr("rx", 0)
+		   			        .attr("ry", 0)
+		   			        .attr("width", h3w)
+		   			        .attr("height", cheight)
+		   					.attr("fill","#999999")
+		   			        .attr("fill-opacity", 0.20)
+		   			        .attr("stroke", "#aaa")
+		   			        .attr("stroke-width", "1px")
+		    				.attr("transform", "translate("+h3x+",0)")
+							
+							
+		   					g.append("rect")
+		   			        .attr("rx", 3)
+		   			        .attr("ry", 3)
+		   			        .attr("width", h1w)
+		   			        .attr("height", 30)
+		   					.attr("fill",'#fff')
+		   			        .attr("fill-opacity", 0.50)
+		   			        .attr("stroke", "#999999")
+		   			        .attr("stroke-width", "1px")
+		// 					.on('click',function(){
+// 									alert('dofjkdf')
+// 								// if(c['toggle']==true)
+// 							// 		c['toggle'] = false;
+// 							// 	else
+// 							// 		c['toggle'] = true;
+//
+// 								render();
+// //
+// 							})
+							
+							g.append("text")
+							.attr("transform", "translate(10,"+20+")")
+							.attr('ci',ci)
+							.text('# '+c['name']+" ")
+					
+							.on('click',function(){
+									
+									ci = parseInt(d3.select(this).attr('ci'))
+									
+									
+									c = context['components'][ci]
+									
+									
+								if(c['show']==true)
+									c['show'] = false;
+								else
+									c['show'] = true;
+
+								render();
+//
+							})
+							
+							
+							if(c['show']==true){
+								
+						    var rh = cheight/c['params'].length;
+							header = 20;
+							vmargin=10;
+							rowh = (cheight-2*vmargin-header)/c['params'].length
+							texth = 15/2;
+							y = vmargin+texth+header+rowh/2;
+							
+							
+							if(type=='vs'||type=='med'){
+								
+								
+								
+								for(var pi in c['params']){
+									p = c['params'][pi]
+									
+									g.append("text")
+									.attr("transform", "translate(30,"+(y+pi*rowh)+")")
+									.text(p)
+									.attr('stroke',colorScale(pi))
+									
+									g.append("line")
+									.attr("x1", 0)
+									.attr("y1", header+vmargin+(pi)*rowh)
+									.attr("x2", w)
+									.attr("y2", header+vmargin+(pi)*rowh)
+						            .attr("stroke", "#ccc")
+						            .attr("stroke-width", "1px")
+									.attr("fill-opacity", 0.25)
+									
+								}
+								
+									g.append("line")
+									.attr("x1", 0)
+									.attr("y1", cheight-vmargin)
+									.attr("x2", w)
+									.attr("y2", cheight-vmargin)
+						            .attr("stroke", "#ccc")
+						            .attr("stroke-width", "1px")
+									.attr("fill-opacity", 0.25)
+								
+								
+							}
+							
+							
+							// ===================================== VS Render chart
+					
+							
+							if(type=='vs'){
+				
+		
+								svg.selectAll('.vs').remove();
+		
+								var data = c['records'];
+						   			 
+								for (var pi  in c['params']) { 
+								
+									 p = c['params'][pi]
+								
+									n = 24;
+									sn = c['records'].length/n;
+									d = c['records']
+									dx = []
+								
+									if(c['records'].length>n){
+										
+										var arr = new Array(n);
+										var arrc = new Array(n);
+										var arrt = new Array(n);
+										
+										arr.fill(0);
+										arrc.fill(0);
+										arrt.fill(0);
+										
+										for(var ri in d){
+											
+											ii = Math.round(ri/sn);
+										
+											arr[ii]+=d[ri][p];
+											arrt[ii]+=d[ri].time;
+											arrc[ii]+=1;
+											
+										}
+										
+										
+										
+										Array.from(arr).forEach((x, i) => {
+											count = arrc[i];
+											dx.push({v:Math.round(x/count),time:arrt[i]/count});
+										});
+										
+									
+									}else{
+										
+										for(var ri in d){
+												
+											dx.push({v:d[ri][p],time:d[ri].time});			
+										
+										}
+									}
+									
+								
+								for(var ri in dx){
+								
+								g.append("text")
+								.attr("class", "vs")
+								.attr("transform", "translate("+(xscale(dx[ri].time)+mx)+","+(y+pi*rowh)+")")
+								.text(dx[ri].v)
+								.attr('text-anchor','middle')
+								.attr('stroke',colorScale(pi))
+								
+								}
+							
+								if(d.length>0){
+										
+								g.append("text")
+								.attr("class", "vs")
+								.attr("transform", "translate("+(mx+mw+60)+","+(y+pi*rowh)+")")
+								.text(d[d.length-1][p]+" ")
+								.attr('text-anchor','middle')
+								.attr('stroke',colorScale(pi))
+								}
+								
+							}
+						   
+						   
+						   // draw chart
+							
+							
+							
+						   
+         	                g = svg.append("g")
+ 				            	.attr("class", "vs")
+ 								.attr("transform", "translate("+mx+"," + 0 +")");
+     	                    	 g.append("g")
+					             .attr("class", "x axis")
+					             .attr("transform", "translate(0," + 150 + ")")
+								 .attr("stroke","#aaa")
+					             .call(xAxis);
+									 
+							for (var pi  in c['params']) { 
+								
+								 p = c['params'][pi]
+								
+  						        yscale.domain(d3.extent(data, function(d) { return d[p]; }));
+
+								
+								var line = d3.line()
+						         .x(function(d) { return xscale(d.time); })
+						         .y(function(d) { return yscale(d[p]); })
+								 // .curve(d3.curveCatmullRom.alpha(0.5))
+							 
+	         	                g = svg.append("g")
+	 				            	.attr("class", "row")
+	 								.attr("transform", "translate("+mx+"," + 0 +")");
+        	                		
+		
+							   g = g.append("g")
+						       	 	 g.append("path")
+						             .datum(data)
+						             .attr("class", "line")
+									 .attr("d", line)
+			   
+		    						 .attr("stroke", colorScale(pi))
+								     .attr("stroke-width", 2)
+									 .attr("fill", "none");
+							 
+									 
+								}	 
+
+								   
+								   
+							}
+							
+							// ===================================== VS Render chart
+							
+							
+							
+							if(type=='med'){
+								
+								for(var pi in c['params']){
+									p = c['params'][pi]
+									
+									g.append("text")
+									.attr("transform", "translate(30,"+(y+pi*rowh)+")")
+									.text(p)
+									.attr('stroke',colorScale(pi))
+									
+									g.append("line")
+									.attr("x1", 0)
+									.attr("y1", header+vmargin+(pi)*rowh)
+									.attr("x2", w)
+									.attr("y2", header+vmargin+(pi)*rowh)
+						            .attr("stroke", "#ccc")
+						            .attr("stroke-width", "1px")
+									.attr("fill-opacity", 0.25)
+									
+									for(var ri in c['records']){
+									   
+									   r = c['records'][ri]
+									 
+									   if(r[p]!=null){
+										   
+				   					    g.append("rect")
+										.attr("x",xscale(r.time)+mx)
+										.attr("y",(y+pi*rowh-20))
+				                        .attr("rx", 3)
+				                        .attr("ry", 3)
+				                        .attr("width", xscale(r.stop_time)-xscale(r.time))
+				                        .attr("height", "24")
+										.attr("fill",colorScale(pi))
+				                        .attr("fill-opacity", 0.25)
+				                        .attr("stroke", "#999999")
+				                        .attr("stroke-width", "2px");
+									
+									
+									g.append("text")
+									.attr("transform", "translate("+(xscale(r.time)+mx+20)+","+(y+pi*rowh-5)+")")
+									.text("R="+r[p]['r']+"ml/mins, V="+r[p]['v'])
+									.style("font-size", "12px")
+									// .attr('text-anchor','middle')
+									.attr('stroke',colorScale(pi))
+									}
+								}
+			   					  
+									
+								}
+								
+								
+								
+								
+								
+							}
+							
+							}
+							
+							sumh = cheight;
+							
+							ch += sumh;
+							
+						}	
+						
+			
+					  
+					  
+					  
+				
+   				   	                 //
+    	                 // var rowUpdateSelection = container.selectAll(".row:not(.transitioning)");       // do not position .transitioning elements
+    	                 // rowUpdateSelection.call(update);
+    	                 // rowUpdateSelection.each(function(d, i) {
+    	                 //     d3.select(this).attr("transform", function(d) {
+    	                 //         return "translate(0," + ((i * 50)) + ")";
+    	                 //     });
+    	                 // });
+    	                 //
+				  
+				  
+   				  });
+				 
+				 
+	  		// g.append("rect")
+//  			        .attr("x", 100)
+// 				.attr("y", 100)
+//  			        .attr("rx", 3)
+//  			        .attr("ry", 3)
+//  			        .attr("width", 150)
+//  			        .attr("height", 130)
+//  					.attr("fill",'red')
+//  			        .attr("fill-opacity", 0.10)
+//  			        .attr("stroke", "#999999")
+//  			        .attr("stroke-width", "1px")
+// 	  			.on("click", function(){
+// 	  				alert('odijvvfd')
+// 	  			})
+// 				.on("mousemove", function(){
+// 					console.log('df')
+// 				})
+//
+				 
+		        }
+					
+					
+					
+			}
+					 
+				  gfx.render = render;     	 	
+		                                                  // call render on scrolling event
+       		      render(true);     
+					
+					
+		    }
+			
+		    // gfx.render = function(resize) {
+    // 			           console.log('resixe')                                    // placeholder function that is overridden at runtime
+    // 		    };
+			
+			
+	 
+			
+			gfx.tick = function(data){
+			
+				if(data['update']){
+					
+					for(var id in data['update'] ){
+						
+						i = data['update'][id];
+						
+						if(c = cmap[i['name']]){
+							for(var rd in i['append']){
+								r = i['append'][rd]
+								cmap[i['name']]['records'].push(r);
+								// console.log(cmap[i['name']]['records'])
+								// cmap[i['name']]['records'].shift();
+							}
+							
+							
+							// cmap[i['name']]['records'].push()
+							gfx.render(true)
+							
+							
+							
+						}
+							
+						
+						
+						
+						
+					}
+					
+					
+					
+					
+					
+				}
+				
+				
+				
+				
+			}
+			
+			
+			
+             enter  = function(rowSelection) {
+                 rowSelection.append("rect")
+                     .attr("rx", 3)
+                     .attr("ry", 3)
+                     .attr("width", "250")
+                     .attr("height", "24")
+                     .attr("fill-opacity", 0.25)
+                     .attr("stroke", "#999999")
+                     .attr("stroke-width", "2px");
+                 rowSelection.append("text")
+                     .attr("transform", "translate(10,15)");
+             };
+             update = function(rowSelection) {
+                 rowSelection.select("rect")
+                     .attr("fill", function(d) {
+                         return colorScale(d.id);
+                     });
+                 rowSelection.select("text")
+                     .text(function (d,i) {
+                         return (i + 1) + ". " + d;
+                     });
+             };
+
+             exit = function(rowSelection) {
+             };
+		
+			
+
+		    gfx.data = function(_) {
+		        if (!arguments.length) return context;
+		        context = _;
+		        return gfx;
+		    };
+
+		    gfx.active = function(_) {
+		        if (!arguments.length) return context;
+		        active = _;
+		        return gfx;
+		    };
+			
+		    gfx.startTime = function(_) {
+		        if (!arguments.length) return context;
+		        startTime = _;
+		        return gfx;
+		    };
+			
+		
+		 	gfx.resize = function(e){
+				// width = document.body.clientWidth;
+				width = $('.viewport').width();
+				$('.viewport').css('width',width);
+				// gfx.render(true)
+
+		 	}
+			
+		    gfx.endTime = function(_) {
+		        if (!arguments.length) return context;
+		        endTime = _;
+		        return gfx;
+		    };
+			
+		    gfx.svg = function(_) {
+		        if (!arguments.length) return svg;
+		        svg = _;
+		        return gfx;
+		    };
+
+		    gfx.viewport = function(_) {
+		        if (!arguments.length) return viewport;
+		        viewport = _;
+		        return gfx;
+		    };
+			
+		    // d3.rebind(gfx, dispatch, "on");
+			
+
+		    return gfx;
+			
+		}
+		
+</script>
+
+

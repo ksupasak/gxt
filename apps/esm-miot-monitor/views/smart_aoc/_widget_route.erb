@@ -1,0 +1,60 @@
+
+<style>
+	.route-active{
+		background:#ffc107;
+		color:black;
+	}
+	.row-route {
+		line-height:4em;
+	}
+</style>
+
+<div class="station  ">
+					<div class="row  secondary-nav" >
+					<div class="col-3  ph dvr_sp">
+						<span class="label">Speed(km/h)</span>
+						<div class="value">-</div>
+					</div>
+					<!-- <div class="col-3 ph  dvr_hx">
+						<span class="label">Direction</span>
+						<div class="value">-</div>
+					</div> -->
+						
+					<div class="col-3 ph act_distance">
+							<span class="label">Distance(km)</span>
+							<div class="value">-</div>
+					</div>	
+
+					<div class="col-3 ph act_duration">
+							<span class="label">Duration(mins)</span>
+							<div class="value">-</div>
+					</div>
+						
+					<div class="col-3 ph act_arrival">
+							<span class="label">Arrival</span>
+							<div class="value">-</div>
+					</div>
+					
+		
+				
+				</div>
+</div>
+
+<div id="widget-route" >
+	
+</div>
+
+<script>
+	
+	function widget_route_update(admit_id){
+		
+		$.ajax({
+		  url: "widget_route_partial?admit_id="+admit_id
+		}).done(function(data) {
+		  $('#widget-route').html(data);
+		});
+		
+	}
+	
+	
+</script>

@@ -1,0 +1,239 @@
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_header')%>
+<%
+
+    hospitals = SHHospital.where(:cluster_id=>@current_cluster.id).all
+    networks = SHNetwork.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id} }).all
+
+    uhoss = SHUserHospital.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id} }).order(:hospital_id=>1).all
+    unets = SHUserNetwork.where(:network_id=>{'$in'=>networks.collect{|i| i.id} }).order(:network_id=>1).all
+    uall = uhoss+unets
+    num_dr = uall.collect{|i| i.id if i.provider_type=='doctor'}.compact.size
+    num_nurse = uall.collect{|i| i.id if i.provider_type=='nurse'}.compact.size
+    num_off = uall.collect{|i| i.id if i.provider_type=='officer'}.compact.size
+	
+	prelations = SHRelation.where(:hospital_id=>{'$in'=>hospitals.collect{|i| i.id}}).all
+	
+	prelations.collect!{|i| i if Patient.find(i.patient_id) }
+	
+	
+	
+	
+%>
+
+<div class="container" style="background:none">
+<br/>
+<div class="row dashboard">
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Hospital</div>
+            <div class="col"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="hospital" class="svg-inline--fa fa-hospital fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M448 492v20H0v-20c0-6.627 5.373-12 12-12h20V120c0-13.255 10.745-24 24-24h88V24c0-13.255 10.745-24 24-24h112c13.255 0 24 10.745 24 24v72h88c13.255 0 24 10.745 24 24v360h20c6.627 0 12 5.373 12 12zM308 192h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12zm-168 64h40c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12zm104 128h-40c-6.627 0-12 5.373-12 12v84h64v-84c0-6.627-5.373-12-12-12zm64-96h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12zm-116 12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12v-40zM182 96h26v26a6 6 0 0 0 6 6h20a6 6 0 0 0 6-6V96h26a6 6 0 0 0 6-6V70a6 6 0 0 0-6-6h-26V38a6 6 0 0 0-6-6h-20a6 6 0 0 0-6 6v26h-26a6 6 0 0 0-6 6v20a6 6 0 0 0 6 6z"></path></svg></div>
+            <div class="col dash-num"><%=hospitals.size%></div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Network</div>
+            <div class="col"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="clinic-medical" class="svg-inline--fa fa-clinic-medical fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M288 115L69.47 307.71c-1.62 1.46-3.69 2.14-5.47 3.35V496a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V311.1c-1.7-1.16-3.72-1.82-5.26-3.2zm96 261a8 8 0 0 1-8 8h-56v56a8 8 0 0 1-8 8h-48a8 8 0 0 1-8-8v-56h-56a8 8 0 0 1-8-8v-48a8 8 0 0 1 8-8h56v-56a8 8 0 0 1 8-8h48a8 8 0 0 1 8 8v56h56a8 8 0 0 1 8 8zm186.69-139.72l-255.94-226a39.85 39.85 0 0 0-53.45 0l-256 226a16 16 0 0 0-1.21 22.6L25.5 282.7a16 16 0 0 0 22.6 1.21L277.42 81.63a16 16 0 0 1 21.17 0L527.91 283.9a16 16 0 0 0 22.6-1.21l21.4-23.82a16 16 0 0 0-1.22-22.59z"></path></svg></div>
+            <div class="col dash-num"><%=networks.size%></div>
+        </div>        
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Doctor</div>
+            <div class="col"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-md" class="svg-inline--fa fa-user-md fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zM104 424c0 13.3 10.7 24 24 24s24-10.7 24-24-10.7-24-24-24-24 10.7-24 24zm216-135.4v49c36.5 7.4 64 39.8 64 78.4v41.7c0 7.6-5.4 14.2-12.9 15.7l-32.2 6.4c-4.3.9-8.5-1.9-9.4-6.3l-3.1-15.7c-.9-4.3 1.9-8.6 6.3-9.4l19.3-3.9V416c0-62.8-96-65.1-96 1.9v26.7l19.3 3.9c4.3.9 7.1 5.1 6.3 9.4l-3.1 15.7c-.9 4.3-5.1 7.1-9.4 6.3l-31.2-4.2c-7.9-1.1-13.8-7.8-13.8-15.9V416c0-38.6 27.5-70.9 64-78.4v-45.2c-2.2.7-4.4 1.1-6.6 1.9-18 6.3-37.3 9.8-57.4 9.8s-39.4-3.5-57.4-9.8c-7.4-2.6-14.9-4.2-22.6-5.2v81.6c23.1 6.9 40 28.1 40 53.4 0 30.9-25.1 56-56 56s-56-25.1-56-56c0-25.3 16.9-46.5 40-53.4v-80.4C48.5 301 0 355.8 0 422.4v44.8C0 491.9 20.1 512 44.8 512h358.4c24.7 0 44.8-20.1 44.8-44.8v-44.8c0-72-56.8-130.3-128-133.8z"></path></svg></div>
+            <div class="col dash-num"><%=num_dr%></div>
+        </div>        
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Nurse</div>
+            <div class="col"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-nurse" class="svg-inline--fa fa-user-nurse fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M319.41,320,224,415.39,128.59,320C57.1,323.1,0,381.6,0,453.79A58.21,58.21,0,0,0,58.21,512H389.79A58.21,58.21,0,0,0,448,453.79C448,381.6,390.9,323.1,319.41,320ZM224,304A128,128,0,0,0,352,176V65.82a32,32,0,0,0-20.76-30L246.47,4.07a64,64,0,0,0-44.94,0L116.76,35.86A32,32,0,0,0,96,65.82V176A128,128,0,0,0,224,304ZM184,71.67a5,5,0,0,1,5-5h21.67V45a5,5,0,0,1,5-5h16.66a5,5,0,0,1,5,5V66.67H259a5,5,0,0,1,5,5V88.33a5,5,0,0,1-5,5H237.33V115a5,5,0,0,1-5,5H215.67a5,5,0,0,1-5-5V93.33H189a5,5,0,0,1-5-5ZM144,160H304v16a80,80,0,0,1-160,0Z"></path></svg></div>
+            <div class="col dash-num"><%=num_nurse%></div>
+        </div>        
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Official</div>
+            <div class="col"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" class="svg-inline--fa fa-user fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg></div>
+            <div class="col dash-num"><%=num_off%></div>
+        </div>        
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="row dash-panel">
+            <div class="col-12 mb-2">Patient</div>
+            <div class="col-6"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-injured" class="svg-inline--fa fa-user-injured fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M277.37 11.98C261.08 4.47 243.11 0 224 0c-53.69 0-99.5 33.13-118.51 80h81.19l90.69-68.02zM342.51 80c-7.9-19.47-20.67-36.2-36.49-49.52L239.99 80h102.52zM224 256c70.69 0 128-57.31 128-128 0-5.48-.95-10.7-1.61-16H97.61c-.67 5.3-1.61 10.52-1.61 16 0 70.69 57.31 128 128 128zM80 299.7V512h128.26l-98.45-221.52A132.835 132.835 0 0 0 80 299.7zM0 464c0 26.51 21.49 48 48 48V320.24C18.88 344.89 0 381.26 0 422.4V464zm256-48h-55.38l42.67 96H256c26.47 0 48-21.53 48-48s-21.53-48-48-48zm57.6-128h-16.71c-22.24 10.18-46.88 16-72.89 16s-50.65-5.82-72.89-16h-7.37l42.67 96H256c44.11 0 80 35.89 80 80 0 18.08-6.26 34.59-16.41 48H400c26.51 0 48-21.49 48-48v-41.6c0-74.23-60.17-134.4-134.4-134.4z"></path></svg></div>
+            <div class="col-6 dash-num"><%=prelations.size%></div>
+        </div>        
+    </div>
+</div>
+</div>
+<div class="containerx" style="background:none">
+<div class="row mt-3" style="border:0px solid">
+
+<div class="col">
+<!-- <div><%=@access_title%></div> -->
+</div>
+<div class="col  d-flex justify-content-center"> 
+</div></div>
+<div class="col d-flex justify-content-center">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+		
+		
+  	  <!-- <li class="nav-item">
+  	    <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">Dashboard</a>
+  	  </li> -->
+		
+	  <li class="nav-item">
+	    <a class="nav-link  active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+	  </li>
+	</ul>
+</div>
+
+
+<div class="row">
+
+<div class="col">
+	
+	<div class="tab-content" id="pills-tabContent">
+	  
+	  <div class="tab-pane fade " id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
+	
+	<%=inline(this,:'_cluster_dashboard')%>
+	  
+	  
+	  </div>
+	  
+	  <div class="tab-pane fade show active " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+		  
+<h3>Hospital User</h3>
+		  
+	  	<%
+	  		
+		if true #@current_hospital 
+			
+			list = uhoss
+			
+	  	%>
+			
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+		
+		out[0] = row.hospital.name if row.hospital
+		
+		
+		out[1] = row.provider.name if row.provider
+		
+		
+		out[-2] = row.provider.phone if row.provider
+	
+		out[-1] = row.user.login if row.user
+		
+		out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%=link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
+		
+		<br/>
+		<br/>
+		
+		<h3>Network User</h3>
+		
+	  	<%
+	  		
+		if true #@current_hospital 
+			
+			list = unets
+			
+	  	%>
+			
+		<%= tabular :data=>list, :model=>%w{hospital network provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล'}, :ext_model=>%w{action} do |row,out|
+		
+		
+		out[0] = row.network.hospital.name if row.network and row.network.hospital
+		
+		out[1] = row.network.name if row.network
+		
+		out[2] = row.provider.name if row.provider
+		
+	
+		out[-1] = row.user.login if row.user
+		
+		out<<link_to("แสดง", "../SHUserNetwork/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%=link_to("เพิ่ม", "hn_provider_manage?hospital_id=#{@current_hospital.id.to_s if @current_hospital}", :class=>'btn btn-success')%>
+		
+		<%#=link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
+		
+		
+	  </div>  <!-- End Doctor Section-->
+	  
+	  
+	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  	<%=inline(this,:'_patient_record')%>
+		<!--
+	  	<%
+	  		
+		if true #@current_hospital 
+			
+			list = SHRelation.all
+			 
+	  	%>
+		<h3>Patient</h3>
+		<%= tabular :data=>list, :model=>%w{hn cid name}, :ext_model=>%w{action} do |row,out|
+		
+		patient = Patient.find row.patient_id
+		admit_id = nil
+		if patient
+		
+		
+		out[0] = (patient.hn and patient.hn!="" )? patient.hn : '-'
+		
+		out[1] = (patient.public_id and patient.public_id!="")? patient.public_id : '-'
+		
+		out[2] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		
+		admit = Admit.where(:patient_id=>patient.id).last
+		admit_id = admit.id if admit
+		
+		end
+		
+		out<<link_to("แสดง", "show?id=#{admit_id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+		out
+		end
+		 %>
+		
+	  </div>
+	  	
+		
+		
+		<% end %>
+		-->
+	</div>
+</div>	
+</div>
+</div>	
+
+</div>
+</div>
+
+
+

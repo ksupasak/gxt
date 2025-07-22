@@ -1,0 +1,53 @@
+Count : <%=this.model.count%>
+<table class="table table-striped">
+<% 
+	
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j[0] %></th>
+	<% end %>
+	<th></th>
+	</tr>
+</thead>
+<tbody>
+<%	
+	for i in this.model.where({}).sort(:created_at=>-1).limit(30).all 
+%>
+<tr>
+	<% for j in keys %>
+	<td>
+	<%# j[0]%>
+	<% if j[0]  == 'admit_id' %>
+		<%
+			
+		admit = Admit.find(i[j[0]])
+		
+		patient = admit.patient	if admit
+		%>
+		<%= patient.hn if patient%>
+	
+	<% elsif j[0]  == 'station_id' %>
+		<%
+			
+		station = Station.find(i[j[0]])
+		
+		%>
+		<%= station.name if station%>
+	<% else %>
+		<%=i[j[0]] %>
+	<% end %>
+	<% end %>
+	</td>
+	<td>
+	<%=link_to 'HL7',"hl7?id=#{i.id}",:class=>'btn btn-default' %>
+	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default' %>
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>

@@ -1,0 +1,7 @@
+<%
+	
+report = SHCaseReport.find params[:record_id]
+report.destroy
+	
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=params[:admit_id]%>">

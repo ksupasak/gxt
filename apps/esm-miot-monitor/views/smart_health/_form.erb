@@ -1,0 +1,644 @@
+<%
+		
+admit = Admit.find params[:admit_id]
+patient = Patient.find admit.patient_id
+
+sdate = Time.now
+sdate = Time.strptime(params[:date],'%d/%m/%Y') if params[:date]
+
+
+report = nil
+# report = SHCaseReport.where(:admit_id=>admit.id,:date=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).first
+
+report = SHCaseReport.find params[:record_id] if params[:record_id]
+unless report
+	report = SHCaseReport.new :admit_id=>admit.id, :date=>sdate.beginning_of_day		
+end
+
+
+
+last = DataRecord.where(:admit_id=>admit.id,:stamp=>{'$gte'=>sdate.beginning_of_day,'$lte'=>sdate.end_of_day}).last
+
+	
+%>
+<style>
+	.param-value{
+		font-size:2em;
+		text-align:center;
+		width:100%;
+		
+	}
+	.param-value2{
+		font-size:0.8em;
+		text-align:center;
+		width:100%;
+		white-space:wrap;
+		color: #42B7AB;
+	}
+	
+</style>
+
+
+	            <!--vital sign-->
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Vital Sign</p>
+	            <div class="row justify-content-center mb-2 station">
+	                <div class="col-sm-6 col-md-3 mb-2 ">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p class="pl-1">Blood Pressure</p>
+								<center>
+							<span class="bp param-value" ><%=last.bp if last%></span>
+						</center>
+	                    </a>
+	                </div>
+	                <div class="col-sm-6 col-md-3 mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p class="pl-1">Pulse / SpO2</p>
+							<center>
+							<span class="pr param-value" ><%=last.pr if last%></span> / <span class="spo2 param-value" ><%=last.spo2 if last%></span>
+						</center>
+	                    </a>
+	                </div>
+	                <div class="col-sm-6 col-md-3 mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p class="pl-1">Body Temp</p>
+									<center>
+								<span class="temp param-value" ><%=last.temp if last%></span>
+							</center>
+	                    </a>
+	                </div>
+	                <div class="col-sm-6 col-md-3 mb-2">
+	                    <a href="#" class="btn vital-card text-left">
+	                        <p class="pl-1">Respiratory Rate</p>
+									<center>
+								<span class="rr param-value" ><%=last.rr if last%></span>
+							</center>
+	                    </a>
+	                </div>
+	            </div>
+	            <!--end of vital sign-->
+	            <!--neuro sign-->
+            <p class="font-weight-bold mt-3" style="color: #42B7AB;">Physical</p>
+            <div class="row justify-content-between mb-2">
+                <div class="col-sm-6 col-md-3 mb-2">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Weight</p>
+						<center>
+							<span class="bp param-value" ><%=last.weight if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Height</p>
+						<center>
+							<span class="pr param-value" ><%=last.height if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2 ">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">BMI</p>
+						<center>
+							<span class="temp param-value" ><%=last.bmi if last%></span>
+						</center>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-md-3 mb-2 ">
+                    <a href="#" class="btn vital-card text-left">
+                        <p class="pl-1">Glucose</p>
+						<center>
+							<span class="rr param-value" ><%=last.glucose if last%></span>
+						</center>
+                    </a>
+                </div>
+            </div>
+			<input type="hidden" name="record_id" value="<%=report.id%>">
+			<hr class="hr-trauma">
+			<div class="row no-gutters mt-3">
+				<div class="col-sm d-flex align-items-center justify-content-center">
+					<h5 class="">สิทธิการรักษา</h5>
+				</div>
+				<div class="col-sm">
+					<div class="card m-3"
+						style="color: #dcdcdc; background-color: #054366; ">
+						<ul class="list-group list-group-flush parameter" field="privilege" >
+							<input type="hidden" name="report[privilege]" value="<%=report.privilege%>" id="report_privilege">
+							<li class="list-group-item ">ไม่มี</li>
+							<li class="list-group-item ">เบิกได้ข้าราชการ</li>
+							<li class="list-group-item ">บัตรทอง</li>
+							<li class="list-group-item ">ประกันสังคม</li>
+							<li class="list-group-item ">ท.99</li>
+							<li class="list-group-item ">รัฐวิสาหกิจ</li>
+							<li class="list-group-item ">แรงงานต่างด้าว</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<hr class="hr-trauma">
+			<div class="row no-gutters mt-3">
+				<div class="col-sm d-flex align-items-center justify-content-center">
+					<h5 class="">การปฏิบัติ</h5>
+				</div>
+				<div class="col-sm">
+					<div class="card m-3"
+						style="color: #dcdcdc; background-color: #054366; ">
+						<ul class="list-group list-group-flush parameter" field="appoint">
+							<input type="hidden" name="report[appoint]" value="<%=report.appoint%>" id="report_appoint">
+							<li class="list-group-item">นัดมา พบแพทย์/ฟังผลเลือด</li>
+							<li class="list-group-item">นัดมา รับยาเดิม</li>
+							<li class="list-group-item">อื่นๆ</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<hr class="hr-trauma">
+			<div class="row no-gutters mt-3">
+				<div class="col-12 d-flex align-items-center justify-content-center">
+					<h5 class="">วินิจฉัยโรค</h5>
+				</div>
+				<div class="col-12">
+					<div class=" m-3">
+						<!--<ul class="list-group list-group-flush parameter" field="diag">
+							<input type="hidden" name="report[diag]" value="<%=report.diag%>" id="report_diag">
+							<li class="list-group-item">I10 ความดันโลหิตสูง</li>
+							<li class="list-group-item">N18 ไตวาย</li>
+							<li class="list-group-item">I259 หัวใจขาดเลือดเรื้อรัง</li>
+							<li class="list-group-item">K30 โรคกระเพาะอาหาร</li>
+							<li class="list-group-item">E785 ไขมันในเลือดสูง</li>
+							<li class="list-group-item">R731 น้ำตาลภาวะอดอาหารสูง</li>
+							<li class="list-group-item">I693 ผลจากโรคหลอดเลือดสมอง</li>
+							<li class="list-group-item">M6269 กล้ามเนื้ออักเสบ</li>
+							<li class="list-group-item">E11 เบาหวานไม่พึ่งอินซูลิน</li>
+						</ul>-->
+						<div class="row mul parameter" field="diag">
+							<input type="hidden" name="report[diag]" value="<%=report.diag%>" id="report_diag">
+							<div class="col-md-6 mul-item" value="I10">I10 ความดันโลหิตสูง</div>
+							<div class="col-md-6 mul-item" value="N18">N18 ไตวาย</div>
+							<div class="col-md-6 mul-item" value="I259">I259 หัวใจขาดเลือดเรื้อรัง</div>
+							<div class="col-md-6 mul-item" value="K30">K30 โรคกระเพาะอาหาร</div>
+							<div class="col-md-6 mul-item" value="E785">E785 ไขมันในเลือดสูง</div>
+							<div class="col-md-6 mul-item" value="R731">R731 น้ำตาลภาวะอดอาหารสูง</div>
+							<div class="col-md-6 mul-item" value="I693">I693 ผลจากโรคหลอดเลือดสมอง</div>
+							<div class="col-md-6 mul-item" value="M6269">M6269 กล้ามเนื้ออักเสบ</div>
+							<div class="col-md-6 mul-item" value="E11">E11 เบาหวานไม่พึ่งอินซูลิน</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<hr class="hr-trauma">-->
+			<div class="row no-gutters mt-3 diag-N18">
+				<div class="col-sm d-flex align-items-center justify-content-center">
+					<h5 class="">ไตวายระยะ</h5>
+				</div>
+				<div class="col-sm">
+					<div class="card m-3"
+						style="color: #dcdcdc; background-color: #054366; ">
+						<ul class="list-group list-group-flush parameter" field="n18">
+							<input type="hidden" name="report[n18]" value="<%=report.n18%>" id="report_n18">
+							<li class="list-group-item">3a</li>
+							<li class="list-group-item">3b</li>
+							<li class="list-group-item">4</li>
+							<li class="list-group-item">5</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--<hr class="hr-trauma">-->
+			<div class="row no-gutters mt-3 diag-E11">
+				<div class="col-sm d-flex align-items-center justify-content-center">
+					<h5 class="">เบาหวานไม่พึ่งอินซูลิน ภาวะแทรกซ้อน</h5>
+				</div>
+				<div class="col-sm">
+					<div class="card m-3"
+						style="color: #dcdcdc; background-color: #054366; ">
+						<ul class="list-group list-group-flush parameter" field="e11">
+							<input type="hidden" name="report[e11]" value="<%=report.e11%>" id="report_e11">
+							<li class="list-group-item">2.ไต</li>
+							<li class="list-group-item">3.ตา</li>
+							<li class="list-group-item">4.เส้นประสาท</li>
+							<li class="list-group-item">5.หลอดเลือด</li>
+							<li class="list-group-item">7.หลายอย่าง</li>
+							<li class="list-group-item">8.อื่นๆ</li>
+							<li class="list-group-item">9.ไม่มี</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--Tab-->
+			<div class="card patient-info">
+				<div class="card-header">
+					<nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+						<a class="flex-sm-fill text-sm-center nav-link active" id="pills-bp-tab" data-toggle="pill"
+							href="#pills-bp" role="tab" aria-controls="pills-bp" aria-selected="true">ความดันโลหิต</a>
+						<a class="flex-sm-fill text-sm-center nav-link" id="pills-glu-tab" data-toggle="pill"
+							href="#pills-glu" role="tab" aria-controls="pills-glu"
+							aria-selected="false">น้ำตาลในเลือด</a>
+						<a class="flex-sm-fill text-sm-center nav-link" id="pills-fat-tab" data-toggle="pill"
+							href="#pills-fat" role="tab" aria-controls="pills-fat"
+							aria-selected="false">ไขมันในเลือด</a>
+						<a class="flex-sm-fill text-sm-center nav-link" id="pills-egfr-tab" data-toggle="pill"
+							href="#pills-egfr" role="tab" aria-controls="pills-egfr"
+							aria-selected="false">การทำงานไต</a>
+						<a class="flex-sm-fill text-sm-center nav-link" id="pills-body-tab" data-toggle="pill"
+							href="#pills-body" role="tab" aria-controls="pills-body"
+							aria-selected="false">ตรวจร่างกาย</a>
+				</div>
+
+				<div class="tab-content report" id="pills-tabContent">
+					<div class="tab-pane fade show active" id="pills-bp" role="tabpanel"
+						aria-labelledby="pills-bp-tab" style="width: 100%;">
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">เป้าหมาย</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="bp_target">
+										<input type="hidden" name="report[bp_target]" value="<%=report.bp_target%>" id="report_bp_target">
+										<li class="list-group-item">Non CKD</li>
+										<li class="list-group-item">CKD3+</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การควบคุม</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="bp_control">
+										<input type="hidden" name="report[bp_control]" value="<%=report.bp_control%>" id="report_bp_control">
+										<li class="list-group-item">คุมได้</li>
+										<li class="list-group-item">คุมไม่ได้</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การให้คำแนะนำ</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="bp_fix">
+										<input type="hidden" name="report[bp_fix]" value="<%=report.bp_fix%>" id="report_bp_fix">
+										<li class="list-group-item">ปรับยา</li>
+										<li class="list-group-item">ปรับพฤติกรรม</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+					</div><!--pills-bp-->
+
+					<div class="tab-pane fade" id="pills-glu" role="tabpanel"
+						aria-labelledby="v-pills-glu-tab" style="width: 100%;">
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">เป้าหมาย</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="glucose_target">
+										<input type="hidden" name="report[glucose_target]" value="<%=report.glucose_target%>" id="report_glucose_target">
+										<li class="list-group-item">ไม่ได้ตรวจ</li>
+										<li class="list-group-item">< 65 ปี ไม่มีโรคร่วม</li>
+										<li class="list-group-item">< 65 ปี</li>
+										<li class="list-group-item">> 65 ปี</li>
+										<li class="list-group-item">CVD,Stroke,CKD3+</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การควบคุม</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="glucose_control">
+										<input type="hidden" name="report[glucose_control]" value="<%=report.glucose_control%>" id="report_glucose_control">
+										<li class="list-group-item">คุมได้</li>
+										<li class="list-group-item">คุมไม่ได้</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การให้คำแนะนำ</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="glucose_fix">
+										<input type="hidden" name="report[glucose_fix]" value="<%=report.glucose_fix%>" id="report_glucose_fix">
+										<li class="list-group-item">ปรับยา</li>
+										<li class="list-group-item">ปรับพฤติกรรม</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+					</div><!--pills-glu-->
+
+					<div class="tab-pane fade" id="pills-fat" role="tabpanel"
+						aria-labelledby="v-pills-fat-tab" style="width: 100%;">
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">เป้าหมาย</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="fat_target">
+										<input type="hidden" name="report[fat_target]" value="<%=report.fat_target%>" id="report_fat_target">
+										<li class="list-group-item">ไม่ได้ตรวจ</li>
+										<li class="list-group-item">> 21 ปี</li>
+										<li class="list-group-item">DM, CKD3+,High risk</li>
+										<li class="list-group-item">Old MI, Stroke</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การควบคุม</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="fat_control">
+										<input type="hidden" name="report[fat_control]" value="<%=report.fat_control%>" id="report_fat_control">
+										<li class="list-group-item">คุมได้</li>
+										<li class="list-group-item">คุมไม่ได้</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การให้คำแนะนำ</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="fat_fix">
+										<input type="hidden" name="report[fat_fix]" value="<%=report.fat_fix%>" id="report_fat_fix">
+										<li class="list-group-item">ปรับยา</li>
+										<li class="list-group-item">ปรับพฤติกรรม</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+					</div><!--pills-fat-->
+
+					<div class="tab-pane fade" id="pills-egfr" role="tabpanel"
+						aria-labelledby="v-pills-egfr-tab" style="width: 100%;">
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">การให้คำแนะนำ</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="egfr_fix">
+										<input type="hidden" name="report[egfr_fix]" value="<%=report.egfr_fix%>" id="report_egfr_fix">
+										<li class="list-group-item">งดยาสมุนไพร ยาพื้นเมือง, จํากัดเกลือ < 1 ชช/วัน</li>
+										<li class="list-group-item">งดกินยาแก้ปวด NSAIDs</li>
+										<li class="list-group-item">ตรวจฟัน Ca PO4</li>
+										<li class="list-group-item">CKD4 แจ้งข้อมูลการฟอกไต หากไตทํางานแย่ลง</li>
+									</ul>
+								</div>
+							</div>
+						</div>				
+					</div><!--pills-egfr-->
+
+					<div class="tab-pane fade" id="pills-body" role="tabpanel"
+						aria-labelledby="v-pills-body-tab" style="width: 100%;">
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">HEENT</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="heent">
+										<input type="hidden" name="report[heent]" value="<%=report.heent%>" id="report_heent">
+										<li class="list-group-item">not pale</li>
+										<li class="list-group-item">no blurred vision</li>
+									</ul>
+								</div>
+							</div>
+						</div>		
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">Heart</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="heart">
+										<input type="hidden" name="report[heart]" value="<%=report.heart%>" id="report_heart">
+										<li class="list-group-item">regular rhythm, normal S1S2, no murmur Lung</li>
+										<li class="list-group-item">Clear,equal BS</li>
+									</ul>
+								</div>
+							</div>
+						</div>		
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">Ext</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="ext">
+										<input type="hidden" name="report[ext]" value="<%=report.ext%>" id="report_ext">
+										<li class="list-group-item">no skin ulcer</li>
+										<li class="list-group-item">no pitting edema</li>
+										<li class="list-group-item">no ecchymosis/petechiae</li>
+									</ul>
+								</div>
+							</div>
+						</div>		
+						<hr class="hr-trauma">
+						<div class="row no-gutters mt-3 ">
+							<div class="col-sm d-flex align-items-center justify-content-center">
+								<h5 class="">Neuro</h5>
+							</div>
+							<div class="col-sm">
+								<div class="card m-3"
+									style="color: #dcdcdc; background-color: #054366; ">
+									<ul class="list-group list-group-flush parameter" field="neuro">
+										<input type="hidden" name="report[neuro]" value="<%=report.neuro%>" id="report_neuro">
+										<li class="list-group-item">no paresthesia</li>
+										<li class="list-group-item">no weakness</li>
+									</ul>
+								</div>
+							</div>
+						</div>		
+					</div><!--pills-body-->
+						
+				</div>
+					
+			</div>
+
+			<hr class="hr-trauma">
+			<div class="row no-gutters mt-3">
+				<div class="col-12 d-flex align-items-center justify-content-center">
+					<h5 class="">ยากลับบ้าน</h5>
+				</div>
+				<div class="col-12">
+					<!--<div class="card m-3"
+						style="color: #dcdcdc; background-color: #054366; ">
+						<ul class="list-group list-group-flush parameter" field="med">
+							<input type="hidden" name="report[med]" value="<%=report.med%>" id="report_med">
+							<li class="list-group-item">Amlodipine(5)</li>
+							<li class="list-group-item">Metformin(500)</li>
+							<li class="list-group-item">Atenolol(50)</li>
+							<li class="list-group-item">Glipizide(5)</li>
+							<li class="list-group-item">Enalapril[ ]5[ ]20</li>
+							<li class="list-group-item">Simvastatin(20)</li>
+							<li class="list-group-item">Losartan(50)</li>
+							<li class="list-group-item">ASA(81)</li>
+							<li class="list-group-item">HCTZ(25)</li>
+						</ul>
+					</div>-->
+					<div class="m-3">
+						<div class="row mul parameter" field="diag">
+							<input type="hidden" name="report[med]" value="<%=report.med%>" id="report_med">
+							<div class="col-md-6 mul-item">Amlodipine(5)</div>
+							<div class="col-md-6 mul-item">Metformin(500)</div>
+							<div class="col-md-6 mul-item">Atenolol(50)</div>
+							<div class="col-md-6 mul-item">Glipizide(5)</div>
+							<div class="col-md-6 mul-item">Enalapril(5)</div>
+							<div class="col-md-6 mul-item">Enalapril(20)</div>
+							<div class="col-md-6 mul-item">Simvastatin(20)</div>
+							<div class="col-md-6 mul-item">Losartan(50)</div>
+							<div class="col-md-6 mul-item">ASA(81)</div>
+							<div class="col-md-6 mul-item">HCTZ(25)</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+				<script>
+				
+					$('.btn-triage').click(function(event){
+						$('.btn-triage').removeClass('active')
+						$('#report_level').val($(this).attr("id"))
+						$(this).addClass('active')
+						event.preventDefault()
+						
+					})
+					
+				</script>
+				
+				<script>
+					$(".diag-N18").hide()
+					$(".diag-E11").hide()
+
+					$(".parameter").each(function(){
+	
+
+
+					$(this).find('.list-group-item').click(function(event){
+	
+						p =  $(this).parent()
+						f =  p.attr("field")
+	
+						input = p.find('input')
+
+					
+	
+					if(input.val()==''){
+		
+						val = $(this).html().trim()
+	
+						input.val(val)
+		
+						p.find(".list-group-item").removeClass('selected')
+	
+			
+						p.find(".list-group-item").each(function(){
+							v = $(this).html().trim()
+							input = $(this).parent().find('input')
+							if(v!=input.val()){
+							$(this).slideUp();
+							}
+						});
+	
+						$(this).addClass('selected')
+	
+					}else{
+							input.val('')
+							$(this).parent().find('.list-group-item').removeClass('inactive')
+							$(this).parent().find('.list-group-item').slideDown();
+						}
+						if(f=='diag'){
+							//alert(input.val())
+							$(".diag-N18").hide()
+							$(".diag-E11").hide()
+							$(".diag-"+input.val()).show()
+						}
+	
+					});
+	
+					val = $(this).find('input').val()
+					if(val!=""){
+						$(this).find(".list-group-item").each(function(){
+							v = $(this).html().trim()
+							input = $(this).parent().find('input')
+							if(v!=input.val()){
+								$(this).slideUp();
+							}else{
+								$(this).addClass('selected')
+							}
+						});
+
+						$(this).find(".mul-item").each(function(i,v){
+							item = $(v).attr('value')
+							if(!item) item=$(v).html()
+							if(val.indexOf(item)!=-1){
+								$(v).addClass('mul-sel');
+							}
+						});
+						
+					}
+
+					$(this).find(".mul-item").click(function(){
+						($(this).hasClass("mul-sel"))?$(this).removeClass("mul-sel"):$(this).addClass("mul-sel")
+						p = $(this).parent()
+						f = p.find("input[type=hidden]")
+						mul = ''
+						p.find(".mul-sel").each(function(i,v){
+							item = $(v).attr('value')
+							if(!item) item=$(v).html()
+							mul+=','+item
+						})
+						f.val(mul.substring(1))
+					})
+
+						
+					}) // parameter
+
+					
+
+				</script>

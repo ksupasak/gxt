@@ -1,0 +1,602 @@
+<h1>Trauma KPI</h1>
+
+<script>
+
+$(document).ready(function(){
+})
+</script>
+
+<%= inline(this,:'_lib')  %>
+
+
+<form id="data" >
+<% fieldset(:record) do |f| %>
+
+
+
+<div class="row">
+<div class="col-6">
+<div class="row">
+<div class="col-3">
+      <label>Start Date:</label>
+  <input type="date" name="start_date"  class="form-control" value="<%=Time.now.beginning_of_year.strftime("%Y-%m-%d")%>">
+  </div>
+
+  <div class="col-3">
+  <label>End Date:</label>
+  <input type="date" name="end_date"   class="form-control" value="<%=Time.now.strftime("%Y-%m-%d")%>">
+  </div>
+
+ <div class="col-3">
+  <label>เวร:</label>
+  <%= f.select(:shift, [['',''],['เช้า','เช้า'],['บ่าย','บ่าย'],['ดึก','ดึก']], :class=>'form-select') %>
+  </div>
+
+
+ <div class="col-3">
+  <label>Triage:</label>
+    <%= f.select(:scene_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :class=>' form-select') %>
+</div>
+ <div class="col-3">
+  <label>Trauma:</label>
+<%= f.select(:patient_type, [['',''], ['non-trauma','Non-Trauma'],['trauma','Trauma']], :class=>' form-select') %>
+  </div>
+  <div class="col-3">
+    <label><br/><br/></label>
+
+  <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</div>
+</div>
+  
+<div class="col-6">
+<div class="row">
+ <div class="col-3">
+  <label>Filter:</label>
+  <input type="text" id="filter" name="filter"   value=""  class="form-control">
+  </div>
+</div>
+</div>
+</div>
+<% end %>
+
+</form>
+<script>
+  $(document).ready(function(){
+    $('#data').submit();
+  })
+</script>
+<div id="results"></div>
+
+<div class="row">
+
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Total Cases</p>
+									<h4 class="my-1 text-info" id="number_of_cases">-</h4>
+									<p class="mb-0 font-13">- days</p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Dispatch Time</p>
+									<h4 class="my-1 text-info" id="dispatch_time">-</h4>
+									<p class="mb-0 font-13">Dispatch time <1m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Activate Time</p>
+									<h4 class="my-1 text-info" id="activate_time">-</h4>
+									<p class="mb-0 font-13">Activate time <2m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+ <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Response Time</p>
+									<h4 class="my-1 text-info" id="response_time">-</h4>
+									<p class="mb-0 font-13">Response time <8m (RED)</p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Scene Time</p>
+									<h4 class="my-1 text-info" id="scene_time">-</h4>
+									<p class="mb-0 font-13">Scene time 0-10m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-info">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Scene Time</p>
+									<h4 class="my-1 text-info" id="scene_time_over_10m">-</h4>
+									<p class="mb-0 font-13">Scene time >10m </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_5km">-</h4>
+									<p class="mb-0 font-13">Distance < 5 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+   <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_10km">-</h4>
+									<p class="mb-0 font-13">Distance < 10 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+     <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-success">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Average Time</p>
+									<h4 class="my-1 text-success" id="average_time_over_10km">-</h4>
+									<p class="mb-0 font-13">Distance > 10 Km </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+       <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-warning">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Over Triage</p>
+									<h4 class="my-1 text-warning" id="over_triage">-</h4>
+									<p class="mb-0 font-13">Over Triage </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+       <div class="col-2">
+					 <div class="card radius-10 border-start border-0 border-3 border-warning">
+						<div class="card-body">
+							<div class="d-flex align-items-center">
+								<div>
+									<p class="mb-0 text-secondary">Under Triage</p>
+									<h4 class="my-1 text-warning" id="under_triage">-</h4>
+									<p class="mb-0 font-13">Under Triage </p>
+								</div>
+								<!--<div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto"><i class="bx bxs-cart"></i>
+								</div>-->
+							</div>
+						</div>
+					 </div>
+	</div>
+
+
+</div>
+
+<div class="card">
+<div class="card-body">
+<div class="row">
+    
+    <div class="col-md-4">
+        <div class="header">
+            <h3>Init CBD Color</h3>
+        </div>
+        <div id="chart_init_cbd_color" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="header">
+            <h3>Case Type</h3>
+        </div>
+         <div id="chart_case_type" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="header">
+            <h3>Patient Type</h3>
+        </div>
+         <div id="chart_patient_type" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+       <div class="col-md-4">
+        <div class="header">
+            <h3>Operation Result</h3>
+        </div>
+        <div id="chart_operation_result" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="header">
+            <h3>Case Shift</h3>
+        </div>
+        
+         <div id="chart_shift" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+
+       <div class="col-md-4">
+        <div class="header">
+            <h3>CBD Code</h3>
+        </div>
+        
+         <div id="chart_cbd_code" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+
+  <div class="col-md-4">
+        <div class="header">
+            <h3>Ambulance</h3>
+        </div>
+        
+         <div id="chart_ambulance" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+ <div class="col-md-4">
+        <div class="header">
+            <h3>Response Time</h3>
+        </div>
+        
+         <div id="chart_response_time" style="width:300px;height:300px">
+            <svg  width="400" height="300"></svg>
+        </div>
+    </div>
+
+        <div id="google_map"></div>
+
+
+</div>
+</div>
+</div>
+    
+
+</div>
+
+</div>
+<script>
+
+
+ 
+ 
+    core = init_report('trauma_data');
+    
+    
+    width = 300;
+    height = 300;
+    radius = Math.min(width, height) / 2;
+    
+    function callback(name, col, value){
+        console.log("filter "+name+" "+col+" "+value)
+
+        filter = ""+col+" "+value
+        $('#filter').val(filter)
+        process();
+    }
+    function data_callback(data){
+        console.log('data_callback')
+        console.log(data)
+        update_map(data['positions'])
+
+    }
+    
+    core.setOptions({callback:callback, data_callback:data_callback})
+    
+    core.showBar("chart_init_cbd_color", "init_cbd_color", {'fill':'pattern'})
+    core.showDonut("chart_case_type", "case_type", {'fill':'orange'})
+    core.showBar("chart_patient_type", "patient_type", {'fill':'orange'})
+    core.showDonut("chart_operation_result", "operation_result", {'fill':'orange'})
+    core.showDonut("chart_shift", "shift", {'fill':'orange'})
+    core.showBar("chart_cbd_code", "cbd_code", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
+    core.showBar("chart_ambulance", "ambulance", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
+    core.showBar("chart_response_time", "response_time_group", {'fill':'orange', 'limit':5 , 'sort': 1,'fill':'pattern'})
+    filter = ""
+    
+    function process(){
+    console.log('process')     
+  
+        const formData = {
+            start_date: $('input[name="start_date"]').val(),
+            end_date: $('input[name="end_date"]').val(),
+            shift: $('#record_shift').val(),
+            scene_cbd_color: $('#record_scene_cbd_color').val(),
+            patient_type: $('#record_patient_type').val(),
+            filter: filter
+        };
+            console.log(formData)          
+ 
+       core.process(formData, after_process)
+
+        
+    }
+
+    function after_process(res){
+        console.log(res)
+
+        console.log(res['number_of_cases'])
+       $('#number_of_cases').html(res['number_of_cases'])
+
+       $('#dispatch_time').html(res['dispatch_time'])
+       $('#activate_time').html(res['activate_time'])
+       $('#response_time').html(res['response_time'])
+       $('#scene_time').html(res['scene_time'])
+       $('#scene_time_over_10m').html(res['scene_time_over_10m'])
+       $('#average_time_5km').html(res['average_time_5km'])
+       $('#average_time_10km').html(res['average_time_10km'])
+       $('#average_time_over_10km').html(res['average_time_over_10km'])
+       $('#over_triage').html(res['over_triage'])
+       $('#under_triage').html(res['under_triage'])
+
+
+    }
+    
+    $('#data').on('submit', function (e) {
+       
+        e.preventDefault();
+      
+        process();
+    
+    });
+    
+          
+
+</script>
+
+
+
+
+
+<%
+
+google_api_key = Setting.get('google_api_key')
+
+%>
+
+ <script src="https://maps.googleapis.com/maps/api/js?key=<%=google_api_key%>&libraries=visualization"></script>
+    <style>
+      #google_map {
+        height: 60vh;
+        width: 100%;
+      }
+    </style>
+
+
+    <script>
+      let map, heatmap;
+      
+      markers = []
+
+      function update_map(locations){
+
+        markers.forEach((marker) => {
+          marker.setMap(null)
+        });
+
+        hlist = []
+
+
+         locations.forEach((loc) => {
+          const distance = getDistanceInKm(center, loc);
+          hmap = new google.maps.LatLng(loc.lat, loc.lng)
+          hlist.push(hmap)
+          // Choose color based on distance
+          let color;
+          if (distance < 5) color = "green";
+          else if (distance < 15) color = "orange";
+          else color = "red";
+
+          const marker = new google.maps.Marker({
+            position: { lat: loc.lat, lng: loc.lng },
+            map: map,
+            label: loc.label,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 8,
+              fillColor: color,
+              fillOpacity: 1,
+              strokeColor: "white",
+              strokeWeight: 1,
+            },
+          });
+
+       
+
+          markers.push(marker)
+
+          // Optional: Info window with distance
+          const info = new google.maps.InfoWindow({
+            content: `${loc.label}: ${distance.toFixed(2)} km from center`,
+          });
+          marker.addListener("click", () => {
+            info.open(map, marker);
+          });
+        });
+         
+         if(heatmap){
+          heatmap.setMap(null)
+         }
+
+         heatmap = new google.maps.visualization.HeatmapLayer({
+          data: hlist,
+          map: map,
+          radius: 30
+        });
+      }
+
+      function initMap() {
+        console.log('initMap 2')
+        map = new google.maps.Map(document.getElementById("google_map"), {
+          zoom: 13,
+          center: center,
+          mapTypeId: "roadmap",
+        });
+
+        
+        
+                const distances = [
+          { radius: 5000, color: '#ff0000' },  // 1 km - red
+          { radius: 10000, color: '#ffa500' },  // 3 km - orange
+          // { radius: 15000, color: '#ffff00' },  // 5 km - yellow
+          // { radius: 20000, color: '#00ff00' },  // 7 km - green
+          // { radius: 25000, color: '#0000ff' }, // 10 km - blue
+        ];
+
+        distances.forEach((zone) => {
+          new google.maps.Circle({
+            strokeColor: zone.color,
+            strokeOpacity: 0.4,
+            strokeWeight: 1,
+            fillColor: zone.color,
+            fillOpacity: 0.15,
+            map: map,
+            center: center,
+            radius: zone.radius,
+          });
+        });
+        
+        
+         const locations = [
+          { lat: 13.740, lng: 100.525, label: "A" },
+          { lat: 13.720, lng: 100.530, label: "B" },
+          { lat: 13.700, lng: 100.540, label: "C" },
+          { lat: 13.750, lng: 100.500, label: "D" },
+          { lat: 13.800, lng: 100.600, label: "E" },
+        ];
+
+     
+        // update_map(locations)
+        
+      }
+      
+        // Haversine formula to calculate distance between two lat/lng points
+      function getDistanceInKm(p1, p2) {
+        const R = 6371; // Earth's radius in km
+        const dLat = deg2rad(p2.lat - p1.lat);
+        const dLng = deg2rad(p2.lng - p1.lng);
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(deg2rad(p1.lat)) *
+            Math.cos(deg2rad(p2.lat)) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+      }
+
+      function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+      }
+
+
+      // Example points (latitude, longitude)
+      function getPoints() {
+        return [
+          new google.maps.LatLng(13.736717, 100.523186),
+          new google.maps.LatLng(13.735000, 100.523000),
+          new google.maps.LatLng(13.737000, 100.522000),
+          new google.maps.LatLng(13.736000, 100.524500),
+          // Add more data here
+        ];
+      }
+
+
+<%  center = Setting.get('aoc_center') 
+    tc = center.split(',').collect{|i| i.to_f}
+%>
+
+              const center = { lat: <%=tc[0]%>, lng: <%=tc[1]%> }; // your main point
+
+
+      
+
+      window.onload = initMap;
+    // console.log('initMap')
+    initMap()
+    </script>
+

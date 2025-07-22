@@ -1,0 +1,579 @@
+
+	<style>
+		.station {
+/*			font-size:0.8em;*/
+		}
+	.station .label{
+		font-size:0.8em;
+
+	}
+	.station .value{
+		font-size:1.5em;
+		margin-top:0px;
+		padding-top:0px;
+		text-align:center;
+	}
+	.station .pr{color:#00d3d7;
+
+	}
+
+	.station .hr{color:#01bf02;
+
+	}
+
+	.station .bp{color:#5990b7;;
+
+	}
+
+	.station .cvp{color:#b76666;;
+
+	}
+
+	.station .spo2{color:#00b3b7;
+
+	}
+
+	.station .temp{color:#2F50E2;
+
+	}
+	.station .co2{color:yellow;
+
+	}
+
+	.station .rr{color:#b7851d;
+
+	}
+	.station .col-6{
+			border:1px solid #333;
+			border-radius: 5px;
+	}
+	.station .col-3{
+			border:1px solid #333;
+			border-radius: 5px;
+	}
+	.station .cc{
+		color:#bcaf06;
+
+	}
+	.station .uc{
+		color:#f937e2;
+
+	}
+	w{
+		color:red;
+	}
+	body{
+		background:black;
+		padding:0px;
+		color:gray;
+	}
+	.navbar{
+		display:none;
+	}
+	main{
+		m
+	}
+	
+	input{
+		border:1px solid;
+	}
+	</style>
+<%
+	
+ambu = Ambulance.find params[:id]
+	
+	
+admit = Admit.where(:status=>'Admitted', :ambulance_id=>ambu.id).first
+
+station = Station.find ambu.station_id
+
+
+
+	
+%>
+
+
+
+	<% if true %>
+	
+	
+	
+	<%
+	
+	patient = nil
+	patient = Patient.find admit.patient_id if admit
+	if admit
+	%>
+	<!-- <div class='clear'></div>
+	<div class="row hidden">
+		<div class="col-12 ">
+		<div class="alert alert-success ">
+		Case No : <v><%#admit.an%></v> HN : <v><%patient.hn%> </v> <br/>
+		Name : <v><%=patient.first_name%> <%=patient.last_name%></v> CID : <v><%=patient.public_id%></v><br/>
+		Age : <v><%=patient.age%></v> Sex : <v><%=patient.gender%></v><br/>
+
+		Contact : <v><%=patient.contact_name%> @ <a href="tel:<%=patient.contact_phone%>"><%=patient.contact_phone%></a></v>
+
+		</div>
+
+		<div class="alert alert-warning">
+		<%=admit.note%>
+		</div>
+
+		</div>
+	</div>
+	<div class="row  ">
+	<div class="col-2"> -->
+		
+		
+  	<%# link_to 'Call', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-warning'%>
+	
+	
+	<!-- </div> -->
+
+
+	<%
+	
+
+  		
+	last_log = AdmitLog.where(:admit_id=>admit.id, :status=>'PENDING').sort(:sort_order=>1).first
+	station = Station.find admit.station_id
+
+	
+  	%>
+  	
+	
+	<!-- <div class="col-4" style="padding:5px">
+		<p>
+	<%=last_log.name if last_log%>
+  		</p>
+	</div> -->
+	
+	<!-- <div class="col-3" style="padding:5px">
+	<v>+<%= ((Time.now - admit.created_at)/60).to_i%>m</v>
+  	</div>
+
+	<div class="col-3 text-right">
+	  	<%= link_to 'Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-success' if last_log%>
+	</div>
+	</div> -->
+	<% end %>
+	<div class="row">
+		<div class="col-12">
+			
+		Patient : <% if admit %><v><%=patient.first_name%> <%=patient.last_name%></v><% else %>
+		-
+		<% end %>
+		<div class="station" id="<%=station.name%>" style="">
+			
+			<div class="row">
+						<div class="col-3  col-lg-3 col-sm-3 pr">
+							<span class="label">PR</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-6  col-lg-3 col-sm-3 bp">
+							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
+							<div class="value">-</div>
+						</div>
+			
+						
+							
+							<div class="col-3  col-lg-3  col-sm-3 rr">
+								<span class="label">RR</span>
+								<div class="value">-</div>
+							</div>
+			
+						<div class="col-3  col-lg-3 col-sm-3 spo2">
+							<span class="label">SpO2</span>
+							<div class="value">-</div>
+						</div>
+							<div class="col-3  col-lg-3 col-sm-3 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>	
+							
+							
+									<div class="col-3  col-lg-3 col-sm-3 temp">
+										<span class="label">Temp</span>
+										<div class="value">-</div>
+									</div>
+									<div class="col-3  col-lg-3 col-sm-3 co2">
+										<span class="label">CO2</span>
+										<div class="value">-</div>
+									</div>
+			    <div class="col-12">
+					<span class="label">Wave</span>
+				 <div id="wave-data"></div>
+				</div>
+			    
+				<div class="col-12">
+					<!-- <a href="#" src="https://pcm-life.com/web2/#<%=ambu.name%>" id="assistant" class='btn'><span class="label">Assistant #<%=ambu.name%></span></a> -->
+					
+					
+					
+	
+					<% if true or admit.ambulance  
+		
+		
+					host = 'prod.vidyo.io'
+
+
+					display_name = "userDemo#{rand(999)}"
+					cmd = "node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --appID #{Setting.get :vidyo_app_id} --userName #{display_name} --expiresInSecs 3000"
+					out = `#{cmd}`
+					puts cmd
+					puts out
+					out = out.split("\n")
+					puts out.inspect
+		
+					puts 
+					token = out[-1]
+					@token = token
+
+					resource_id = ambu.name
+	
+	
+					%>
+					<%# link_to "Call CC","discharge?id=#{admit.id}",:class=>'btn hn btn-warning'  %>
+				     <a target="_blank" href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' class="btn">Vidyo</a>
+	
+					<% end %>
+					
+					<a href="https://pcm-life.com/web2/#<%=ambu.name%>" class='btn'><span class="label">OpenViu</span></a>
+					
+				 <div id="">
+				 	<%#link_to 'Button', "javascript:alert('ok')", :class=>'btn btn-success'%>
+				 </div>
+				</div>
+		
+				
+				<div class="col-6  " style="display:none">
+					<span class="label">Note</span>
+				<div class="" style="border:0px solid #ccc">
+			
+				<form action="nurse_note_create?admit_id=<%=admit.id if admit%>&mode=glasses" class="model-remote" method="post" enctype="multipart/form-data" >
+				<input name="note" style="width:100%;background:black;color:gray"></input>
+		
+		   	  	<input type="submit" class="btn "  name="Submit" value="Submit" style="padding:5px"/>
+		
+				</form>
+		
+				</div>
+						
+			</div>
+			
+			
+		</div>
+		</div>
+
+		
+		
+	</div>
+	</div>
+
+	<% if admit %>
+	<div class="row " style="display:none">
+		<div class="col-12">
+			 History : 
+			<%
+				
+				notes = NurseRecord.where(:admit_id=>admit.id, :start_time=>{'$ne'=>nil}).sort(:start_time=>-1).all
+				
+			%>
+			
+			<table class='table'>
+				<tbody>
+					<% for i in notes %>
+					<tr>
+						<td>
+							<%=i.start_time.strftime("%H:%M")%> <v>+<%=(Time.now-i.start_time).to_i/60%>m</v>
+						</th>
+						<td>
+							<v><%=i.description%></v>
+						</td>
+						
+					</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<%end %>
+	<%end %>
+
+<!-- <hr/>
+<center>  <%=link_to 'Back', "index",:class=>'nav-link' %></center> -->
+<style>
+	.tab-pane{
+		padding-top:10px;
+	}
+	v{
+		color:blue;
+	}
+	#toolbarRight{display:none;}
+	#optionsVisibilityButton{display:none;}
+</style>
+
+<script>
+	
+<%
+	if true 
+		
+	record = station #Station.find admit.station_id
+	
+		if true 
+%>
+			
+		
+			
+			
+	$(document).ready(function(){
+		
+				<%=inline(this,:'../sas/_ecg.js')%>
+		
+		function show(text){
+			console.log(text)
+		}
+		
+		$('#toolbarCenter').removeClass('col-6');
+		$('#toolbarCenter').addClass('col-10');
+		// $('#renderer').css('height','320px');
+		$('.resourceId').val("<%=ambu.name%>")
+		$('.displayName').val("Mobile")
+	
+  	  var ws       = new WebSocket('wss://' + window.location.host + "<%="/#{params[:gxt]}/Home/index"%>");
+	
+	 var wave_data = {};
+	
+  	  var plot_pos = {};
+	  
+	  
+	  showWave('wave-data',wave_data, 'default' );
+		  
+	  
+	
+     ws.onopen    = function()  { show('websocket opened'); 
+	
+  	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{params[:gxt]}/z/#{record.zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+  	  };
+     ws.onclose   = function()  { show('websocket closed'); 
+		
+  	 	setTimeout(function () {
+  	 		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+  	 		    }, 2000); //will call the function after 2 secs.
+	 		
+
+     }
+     ws.onmessage = function(m) { 
+	
+  		active = $('.active-station').size()
+			
+  		<% if params[:debug] %>	
+  		show(''+m.data)
+  		<% end %>
+		
+		
+  		lines = m.data.split("\n")
+		
+  		// console.log(lines[0].split(" ")[0])
+  		if(lines[0].split(" ")[0]=='Alert'){
+  			data = JSON.parse(lines[1])
+			
+  			// alert(data['alert'])
+			
+  			$('#'+data['station']).addClass('bp_alert_2');
+  			$('#'+data['station']+' .msg').html(data['alert']);
+			
+  			// play sound
+  			ion.sound.play("bell_ring");
+			
+  		}else
+  		if(lines[0].split(" ")[0]=='Data.Image'){
+		
+  			lines.shift()
+  			img = lines.join("")
+  			// alert('image '+m.data.length)
+			
+  			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+  		}
+  		else
+  		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+	
+  		data = JSON.parse(lines[1])
+  			// 
+  			// if(data['list'].length!=active)
+  			// window.location.href = "index"; 
+			
+  		$('#timer').html(data['time'])
+  		for(var id in data['list']){
+			i = data['list'][id]
+			
+			if(i=='<%=station.name%>')
+			
+			
+  			if($('#'+i).length > 0){ 
+  			obj = data['data'][i]
+				if(obj){
+			console.log(data)
+				
+  		  if(obj['wave']){	
+			  
+  			     // wave_data.push(obj['wave']);
+  		   		// wave_data = wave_data.concat(obj['wave']);
+  				
+  				// console.log(wave_data);
+  				// wave_data = obj['wave'];
+  		   }
+		   
+  		   if(obj['leads']){
+		   	
+  			   // for(var j=0;j<14;j++){
+		   //   				jid = ''+j
+		   //   			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
+		   //
+		   //   			   console.log(lead_data[jid].length)
+		   //
+		   //   			   }
+			
+			
+			if(wave_data['default']==null){
+				wave_data['default'] = []
+			}
+		
+			wave_data['default'] = 	wave_data['default'].concat(obj['leads'][2])
+			
+  		   }
+		    			
+			
+  			 // console.log(obj)
+  			$('#'+i+' .hn').html(obj['ref'])
+			
+  			if($('#'+i+' .bp').html()!=obj['bp']){
+  				$('#'+i).addClass('bp_alert');
+  				$('#'+i).removeClass('bp_alert_2');
+  				$('#'+i+' .msg').html("-");
+  			}else{
+  				$('#'+i).removeClass('bp_alert');
+  				// $('#'+i).removeClass('bp_alert_2');
+  				// $('#'+i+' .msg').html("-");
+  			}
+			
+  			$('#'+i+' .bp .value').html(obj['bp'])
+			
+  			$('#'+i+' .temp .value').html(obj['temp'])
+			
+  			$('#'+i+' .pr .value').html(obj['pr'])
+  			$('#'+i+' .hr .value').html(obj['hr'])
+			
+			$('#'+i+' .co2 .value').html(obj['co2'])
+			
+  			$('#'+i+' .rr .value').html(obj['rr'])
+  			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			
+			
+  			$('#'+i+' .score .value').html(obj['score'])
+			
+  			bp = obj['bp'].split('/')
+			
+  			hr = parseInt(obj['hr'])
+  			pr = parseInt(obj['pr'])
+  			spo2 = parseInt(obj['spo2'])
+  			rr = parseInt(obj['rr'])
+  			temp = parseInt(obj['temp'])
+			
+			
+  			if(isNaN(hr))hr=0;
+  			if(isNaN(pr))pr=0;
+  			if(isNaN(spo2))spo2=0;
+  			if(isNaN(rr))rr=0;
+			
+  			if(isNaN(temp))rr=0;
+			
+			
+  		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+			
+  			// gfx.tick({update:[{name:'vitalsign',append:vs}]});
+			
+			}
+			
+			
+  			}else{
+  					setTimeout(function () {
+  				       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+  				    }, 2000); //will call the function after 2 secs.
+				
+  			}
+			
+  		}
+  		 }
+  	 };
+	
+	<% end %>
+	<% end %>
+	 
+	
+	
+	
+	})
+</script>
+	<iframe id="iframe" src="" width="300" height="480" style="display:none;border:1px solid gray;margin-top:10px" >
+	</iframe>
+	<a href="" id="back"  style="display:none;">Back</a>
+	
+	
+
+	
+	
+	
+	<script>
+		
+		$('#back').click(function(event){
+			$('#iframe').css("display","none")
+			$('#back').css("display","none")
+			$('#iframe').attr('src',"");
+			$('#iframe').removeAttr('status');
+			javascript:window.scrollTo(0, 0);
+			 event.preventDefault()
+		});
+		
+		
+		$('#assistant2').click(function(event){
+			if($('#iframe').attr('status')!='on'){
+				$('#iframe').attr('src','https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=@token%>' );
+				$('#iframe').css("display","table")
+				$('#back').css("display","table")
+			    $("html, body").animate({ scrollTop: $(document).height() }, 600);
+			
+				$('#iframe').attr('status','on');
+			}else{
+				$('#iframe').css("display","none")
+				$('#back').css("display","none")
+				$('#iframe').attr('src',"");
+				$('#iframe').removeAttr('status');
+			}
+			 event.preventDefault()
+		});
+		
+		
+		
+		$('#assistant').click(function(event){
+			if($('#iframe').attr('status')!='on'){
+				$('#iframe').attr('src',"https://pcm-life.com/web2/#<%=ambu.name%>");
+				$('#iframe').css("display","table")
+				$('#back').css("display","table")
+			    $("html, body").animate({ scrollTop: $(document).height() }, 600);
+			
+				$('#iframe').attr('status','on');
+			}else{
+				$('#iframe').css("display","none")
+				$('#back').css("display","none")
+				$('#iframe').attr('src',"");
+				$('#iframe').removeAttr('status');
+			}
+			 event.preventDefault()
+		})
+	</script>

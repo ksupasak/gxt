@@ -1,0 +1,27 @@
+
+<%
+
+  if request.post?
+
+
+  att = Attachment.store @context.settings.name, params[:file][:filename], params[:file][:tempfile], params[:file][:type]
+
+%>
+
+
+<%=params.to_json%>
+
+<% end %>
+<h1> Test Upload </h1>
+
+<!-- <form id="form" enctype="multipart/form-data" action="test_upload" method="post">
+           <div class="input-group">
+               <label for="files">Select files</label>
+               <input id="file" type="file"  />
+           </div>
+           <button class="btn btn-success " type="submit">Upload</button>
+</form> -->
+<form action="test_upload" method="POST" enctype="multipart/form-data">
+           <input type="file" name="file">
+           <input type="submit" value="Upload image">
+       </form>

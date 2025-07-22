@@ -1,0 +1,74 @@
+<link href="<%=url_for 'css/module.css'%>" rel="stylesheet">
+<style>
+body{
+    color:white;
+    background:#1E1E1E ;    
+    background-image: url('<%=url_for 'img/svg/bg_pcm.svg' %>');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+</style>
+<script>
+$('#main-container').removeClass('container')
+</script>
+<div class="row h-100">
+<div class="col-sm-8 d-center">
+<div class="row">
+    <div class="col-6 d-center" style="padding-top:50px;padding-bottom:50px;">
+        <img src="<%=url_for 'img/svg/pcm_logo.svg' %>" />
+    </div>
+    </div>
+    <div class="d-menu">
+        <div class="row">    
+            <div class="col-4 menu-item">
+                <center>
+                <a href="../Home/index">
+                <img src="<%=url_for 'img/svg/ipd-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">IPD</div>
+                </center>
+            </div>           
+            <div class="col-4 menu-item">
+                <center>
+                <a href="../Opd/index">
+                <img src="<%=url_for 'img/svg/opd-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">OPD</div>
+                </center>
+            </div>
+            <div class="col-4 menu-item">
+                <center>
+                    <a href="../Sas/index">
+                <img src="<%=url_for 'img/svg/aoc-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">AOC</div>
+                </center>
+            </div>
+            <div class="col-4 menu-item">
+                <center>
+                <a href="../Home/index">
+                <img src="<%=url_for 'img/svg/er-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">ER</div>
+                </center>
+            </div>
+            <div class="col-4 menu-item">
+                <center>
+                <img src="<%=url_for 'img/svg/tele-icon.svg' %>" class="pcm-icon">
+                <div class="menu-label">TeleHealth</div>
+                </center>
+            </div>
+            <div class="col-4 menu-item">
+                <center>
+                <a href="../Setting/index">
+                <img src="<%=url_for 'img/svg/setting-icon.svg' %>" class="pcm-icon">
+                </a>
+                <div class="menu-label">Setting</div>
+                </center>
+            </div>                
+        <div>
+        
+    </div>
+</div>
+</div>

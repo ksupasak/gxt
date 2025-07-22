@@ -1,0 +1,56 @@
+<h1><%=name params[:service]%> Edit</h1>
+<%
+
+   return_url = "index"
+
+   return_url = params[:return] if params[:return]
+
+
+@record = this.model.find params[:id]
+
+	if request.post?
+
+	if params[:record]
+
+    %w{ file_id }.each do |i|
+
+      ix = i.to_sym
+
+		if params[:record][ix]
+
+			img = params[:record][ix]
+
+			filename = img[:filename]
+			tmp = img[:tempfile]
+      type = img[:type]
+
+      att = Attachment.store @context.settings.name, filename, tmp, type
+
+			params[:record][ix] = att.id
+
+		end
+
+    end
+
+	 @record.update_attributes params[:record]
+
+
+
+	%>
+	<%=redirect_to "show?id=#{@record.id}"%>
+	<%
+	end
+
+
+
+
+   else
+%>
+<form action="edit" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="<%=@record.id if @record%>">
+
+<%= inline(this,:'_form') %>
+<button type="submit" class="btn btn-primary">Submit</button>
+<%=link_to 'Back', return_url ,:class=>'btn'%>
+</form>
+<% end %>

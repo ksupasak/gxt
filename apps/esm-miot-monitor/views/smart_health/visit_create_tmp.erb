@@ -1,0 +1,100 @@
+<%=inline(this,:'_init')%>
+
+<script src="<%=url_for('js/13a3acd719.js')%>" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+
+<%
+	
+	@current_zone = Zone.find session[:current_zone]
+
+	hospital = SHHospital.first
+	uh = SHUserHospital.where(:user_id=>session[:identity]).first
+	if uh
+		hospital = SHHospital.find uh.hospital_id
+	end
+	mnet = Hash[SHNetwork.all.collect{|i| [i.id,i.name]}]
+	hosname = Setting.get :default_center_name
+	hosname = hospital.name if hospital
+	
+%>
+<% if request.post? %>
+<%=params.inspect%>
+
+<% else %>
+<div class="containerx" style="background:none">
+
+<div class="row" style="border:0px solid;">
+
+	<div class="col" style="background-color:#none;margin-left:0px;margin-right:0px;border-radius:0px;">
+	
+		<div class="row banner-header" style="">
+
+			<div class="col">
+				<div>
+					<span class="banner-title"><%=link_to @access_title, "index" %></span>
+					<br/>
+					Smart Health &gt นัดหมาย
+			    </div>
+			</div>
+
+			<div class="col  d-flex justify-content-end">
+				<div> <%=@current_provider.name if @current_provider%></div>
+			</div>
+
+		</div>
+
+	</div >
+
+
+</div >
+
+
+<div class="row" style="border:0px solid;">
+	
+	<div class="container">
+	
+	<form action="visit_create" method="post">
+	
+	<div class="row">
+		
+		<div class="col">
+			ผู้ป่วย
+		</div>
+	</div>
+	<div class="row">
+		
+		<div class="col">
+			HN : <%=%>
+		</div>
+		
+		<div class="col">
+			B
+		</div>
+		
+		<div class="col">
+			C
+		</div>
+		
+		<div class="col">
+			D
+		</div>
+	</div>
+		
+		
+	<input type="submit" value="Submit" class="btn btn-info"/>	
+	
+	
+	</form>
+	
+	</div>
+	
+	
+</div>
+
+</div >
+
+
+<br/>
+<%=inline(this,:'_banner')%>
+<% end %>

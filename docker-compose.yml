@@ -1,0 +1,90 @@
+version: '3'
+services:
+  # db:
+  #   image: mysql
+  #   build: ./seed
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: minadadmin
+  redis:
+    image: redis
+    command: redis-server --requirepass minadadmin
+    restart: always
+    # ports:
+    #   - "6379:6379"
+  mongo:
+    image: mongo:4.2
+    ports:
+      - "27017:27017"
+    restart: always
+    volumes:
+      - ./db/mongo:/data/db
+      - ./db/seed:/dump
+  gxt_server:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec thin start --ssl --port 1792 --ssl-key-file private.key  --ssl-cert-file  server.crt  "
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1792:1792"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      # REDIS_PASS: minadadmin
+      DEFAULT_APP: miot
+  gxt_service:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/service.pid && bundle exec ruby server.rb service"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1793:1793"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      REDIS_PASS: minadadmin
+      DEFAULT_APP: miot
+
+  gxt_ptt:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/ptt.pid && bundle exec ruby server.rb ptt"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1795:1795"
+    depends_on:
+      # - db
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      REDIS_PASS: minadadmin
+      DEFAULT_APP: miot    
+  gxt_gps:
+    restart: always
+    build: .
+    command: bash -c "rm -f tmp/pids/gps.pid && bundle exec ruby server.rb gps"
+    volumes:
+      - .:/docker_gxt
+    ports:
+      - "1794:1794"
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      MONGO_HOST: mongo
+      REDIS_HOST: redis
+      DEFAULT_APP: miot

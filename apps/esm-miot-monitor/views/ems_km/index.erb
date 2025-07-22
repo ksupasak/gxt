@@ -1,0 +1,79 @@
+
+<div class="card">
+<div class="card-body">
+
+<div class="row">
+<div class="col-9"><h1>Knowledge Management</h1></div>
+<div class="col-3">
+<a href="<%=get_path 'import'%>" target="_blank" class="btn btn-light">Import XLSX</a>
+<a href="<%=get_path 'translate'%>" target="_blank" class="btn btn-light">Translate to EN</a>	
+<a href="_flow_import_json" target="_blank" class="btn btn-light">Import JSON</a>
+<a href="_flow_json?id=all" target="_blank" class="btn btn-light">JSON All</a>
+</div>
+</div>
+<%
+  flows = EMSKWorkflow.order(:order=>1).all()
+%>
+<div class="col-12 col-lg-12 col-xl-12">
+    <div class="card-body p-0">
+      <label for="searchName" class="form-label">ค้นหาอาการ</label>
+      <input class="form-control" list="datalistOptions" id="searchName" placeholder="Type to search...">
+      <datalist id="datalistOptions">
+      <%  for f in flows %>
+        <option value="<%=f.name%>"></option>
+      <%  end %>
+        </datalist>
+
+    </div>
+  <form action="<%= get_path 'flow_create'%>" method="post" data-remote='true' data-remote-update="kworkflow_panel">
+
+    <br>
+    <div id="kworkflow_list">
+    <%
+        for f in flows
+    %>
+    <div class="card radius-10 border shadow-none dfname" fname="<%=f.name%>">
+      <div class="card-body">
+        <div class="row d-flex align-items-center">
+          <div class="col-10">
+            <p class="mb-0 "><%=f.name%></p>
+          </div>
+          <div class="col align-self-end">
+            <a href="./flow_show?id=<%=f.id%>" class="btn btn-light">edit</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%  end%>
+    </div><!--kworkflow_list-->
+
+    <div class="input-group"> 
+		<textarea id="record_name" name="record[name]" class="form-control" aria-label="With textarea" spellcheck="false"></textarea><grammarly-extension data-grammarly-shadow-root="true" style="position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension><grammarly-extension data-grammarly-shadow-root="true" style="mix-blend-mode: darken; position: absolute; top: 0px; left: 0px; pointer-events: none; z-index: 3;" class="cGcvT"></grammarly-extension>
+        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">บันทึก</button>
+    </div>
+
+  </form>
+</div>
+
+
+<div class="col-12 col-lg-4 col-xl-4">
+</div>
+<div id="kworkflow_panel">
+  result
+</div>
+
+</div>
+</div>
+<script>
+$("#searchName").keyup(function(){
+  s = $(this).val().toLowerCase()
+  $(".dfname").each(function(i,v){
+    if($(v).attr("fname").toLowerCase().indexOf(s)==-1){ 
+      $(v).hide()
+    }else{
+      $(v).show()
+    }
+    if(s=='') $(v).show()
+  })
+})
+</script>

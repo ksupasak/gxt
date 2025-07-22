@@ -1,0 +1,16 @@
+<h1><%=name params[:service]%> Show It's mine</h1>
+<%
+   record =  this.model.find params[:id]
+if record  
+
+	keys = this.model.keys.collect{|i| i[0] unless i[0][0]=='_'}.compact
+	
+	for i in keys
+%>
+<div class="field">
+<label><%=i.humanize%></label>
+<%= record[i] %>
+</div><% end %>
+<% end %><hr/>
+<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
+<%=link_to 'Back', 'index',:class=>'btn'%>

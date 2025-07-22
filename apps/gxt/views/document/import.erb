@@ -1,0 +1,53 @@
+<%
+
+
+
+%>
+
+
+<%
+
+   #@document = get_document(this.document_name)
+
+   #fields = @document.fields
+
+   # fields.collect!{|i| i.column_name unless Document.visual_types.index(i.field_type) }.compact!
+   # fields << 'created_at'
+   # fields << 'updated_at'
+
+
+
+   if !request.post?
+
+%><pre>record_id    <%# fields.join("\t")%></pre>
+<% else
+require 'csv'
+
+model = this.model
+
+csv = CSV.parse(params[:file][:tempfile].read.bytes.pack("c*").force_encoding("UTF-8"), :headers => true)
+list = nil
+record_id = false
+%>
+<table>
+<%
+csv.each do |row|
+ list = row.to_hash.keys unless list
+ tmp = {}
+
+ t = row.to_hash
+ if t['record_id']
+ record_id = true
+ end
+ for i in list
+    tmp[i] = t[i]
+ end
+ r = model.create tmp
+%><tr><td><%= t['record_id'] %></td><td><%= r.id %></td></tr>
+<%
+end
+%>
+<% unless record_id %>
+<meta http-equiv="REFRESH" content="0;url=index">
+<% end %>
+<% end %>

@@ -1,0 +1,46 @@
+<%
+    nowdate = Time.now
+    patients = Patient.all
+
+    records = DataRecord.where(:created_at=>{'$gte'=>nowdate.beginning_of_day,'$lt'=>nowdate.end_of_day}).sort(:created_at=>'desc').all
+    admits = Admit.all
+    m_admit_p = Hash[admits.collect{|i| [i.id,i.patient_id]}]
+    m_p_name = Hash[patients.collect{|i| [i.id,i.first_name]}]
+    m_p_hn = Hash[patients.collect{|i| [i.id,i.hn]}]
+
+%>
+<%#=records.inspect%>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Time</th>
+<th>Patient</th>
+<th>BP</th>
+<th>O2:PR</th>
+<th>Temp</th>
+</tr>
+</thead>
+<tbody>
+<% for r in records%>
+<%
+    p = Patient.find m_admit_p[r.admit_id]
+    als = p.admits.last.records.get_current_status(p.admits)[:alerts]
+    c_warn = 'badge badge-pill badge-warning'
+    c_danger = 'badge badge-pill badge-danger'
+    c_spo2 = ''
+    c_bp = ''
+    c_temp = ''
+    c_spo2 = c_warn if r.spo2<95
+    # c_bp = c_warn if r.bp<95
+    c_temp = c_warn if r.temp>=38 or r.temp<=35
+%>
+<tr>
+<td><%#=als.inspect%><%=r.stamp.strftime('%H:%M')%></td>
+<td><%=m_p_hn[m_admit_p[r.admit_id]]%> <%=m_p_name[m_admit_p[r.admit_id]]%></td>                
+<td><span class="<%=c_bp%>"><%=r.bp%></span></td>
+<td><span class="<%=c_spo2%>"><%=r.spo2%> : <%=r.pr%></span></td>
+<td><span class="<%=c_temp%>"><%=r.temp%></span></td>
+</tr>
+<% end %>
+</tbody>
+</table>

@@ -1,0 +1,151 @@
+<%
+
+	shop_name = "Untitled"
+	
+	shop_name_value = Setting.where(:name=>'shop_name').first
+	if shop_name_value
+		shop_name = shop_name_value.value
+	end
+
+%><style>
+.line-queue{
+	line-height:2em;
+	font-size:2em;
+}
+.processing{
+	height:300px;
+	font-size:2em;
+	background-color:#90e8c3;
+}
+</style>
+<div class="row">
+  <div class="col-sm-12 head">
+	<%= shop_name %>
+	</div>
+	
+</div>
+<div class="row">
+  <div class="col-sm-2" >
+<div class="row" style="background-color:#ccc;text-align:center;font-size:1.2em">
+รายการออเดอร์
+</div>
+	<% for i in Order.where(:status=>'Pending').all %>
+  	<div class="row">
+	<div class="col-sm-12  line-queue" >
+		<%=link_to  i.queue_number, "processing?device_id=#{params[:device_id]}&id=#{i.id}",:class=>"btn btn-default",:style=>"width:100%;font-size:1.1em"%>
+	</div >
+	</div>
+	<% end %>
+  
+  </div>
+  <div class="col-sm-10 " ><br/>
+  <div class="row">
+	
+	<%
+		device = Device.find params[:device_id]
+		
+		orders = Order.where(:status=>'Processing', :station=>device.name).all
+	
+	%>.
+	
+	<% orders.each_with_index do |i,index| 
+		
+		items = OrderItem.where(:order_id=>i.id).all
+		
+	%>
+	<div class="col-sm-4 processing" >
+		<%=index+1%>. Q<%=i.queue_number%><br/>
+		<ul>
+		<% for j in items 
+			p = Product.find j.product_id
+		%>
+		<li><%=p.name %> :  <%=j.quantity%></li>
+		<% end %>
+		</ul>
+		<%=link_to 'Finish', "complete?device_id=#{params[:device_id]}&id=#{i.id}",:class=>'btn btn-danger' %>
+	</div>
+	<% end %>
+  </div>
+  </div>
+
+
+
+</div>
+
+
+
+<div class="row">
+
+<hr/>
+####### DEBUG #######		
+<form id="form" action='#' >
+<label for='user'>Send Command:</label>
+<input id="user" name='user' value='' />
+<input type='submit' value="GO!" />
+</form>
+		
+<div id="msgs"></div>
+</div>
+<%
+	mproduct = {}
+	for i in Product.all
+		mproduct[i.id] = i
+	end
+%>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		
+	
+		    setInterval(function(){ 
+				d = new Date();
+				// alert('dijf')
+				$('#timer').html(d.toLocaleTimeString())
+				
+			}, 1000);
+		
+		var mproduct = <%= mproduct.to_json %>
+		
+		
+		
+		
+
+		var show = function(el){
+	        return function(msg){ el.innerHTML = msg  }
+	      }(document.getElementById('msgs'));
+
+
+		  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+
+
+
+	      ws.onopen    = function()  { show('websocket opened'); };
+	      ws.onclose   = function()  { show('websocket closed'); 
+
+		 	setTimeout(function () {
+		 			       window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+		 			    }, 2000); //will call the function after 2 secs.
+
+
+	      }
+	      ws.onmessage = function(m) {
+			show(''+m.data)
+			if(m.data=='update'){
+				window.location.reload(true);
+			}
+			if(m.data=='order.new'){
+				window.location.reload(true);
+			}
+			
+			
+		
+		  }
+		
+		$('#form').submit(function(){
+			
+			ws.send($('#user').val())
+			return false;
+		})
+		
+		
+	});
+</script>

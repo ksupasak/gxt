@@ -1,0 +1,233 @@
+
+<% require_relative "lib" %>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Trauma</center>
+</div>
+
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+
+<div class="card-body">
+
+
+<div class="row">
+<div class="col-7">
+
+<div class="row">
+<div class="col-12">
+<label class="form-label">Trauma Type <span class="mandatory">*</span></label>
+<%
+  list = <<LIST
+1|Accident
+2|Burn
+3|Electrical
+NA|Unknown
+99|Other
+LIST
+
+%>
+<%= check_string this, 'type', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 %>
+</div>
+
+<div class="col-12">
+<label class="form-label">Trauma Level <span class="mandatory">*</span></label>
+<%
+  list = <<LIST
+1|1
+2|2
+3|3
+NA|Unknown
+LIST
+
+%>
+<%= radio_string this, 'level', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>12 %>
+</div>
+
+<div class="col-12">
+<label class="form-label">Cardiac Arrest <span class="mandatory">*</span></label>
+<%
+  list = <<LIST
+YES|Yes
+NO|No
+LIST
+
+%>
+<%= radio_string this, 'cardiac_arrest', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>12 %>
+</div>
+
+<div class="col-12">
+<label class="form-label">Mechanism <span class="mandatory">*</span></label>
+<%
+  list = <<LIST
+1|Fall
+2|Vehicle accident
+3|Fire
+99|Other
+NA|Unknown
+LIST
+
+%>
+<%= check_string this, 'mechanism', :value=>list.split("\n"),:pair=>true,:col_item=>'col-4', :col=>12 %>
+</div>
+
+<div class="col-6">
+
+<%= time_string this, 'contact_patient_at', :col=>12 %>
+</div>
+
+<div class="col-6">
+<%= time_string this, 'move_patient_at', :col=>12 %>
+</div>
+
+<hr/>
+
+<div class="col-12">
+<label class="form-label">Trauma Management <span class="mandatory">*</span></label>
+  <%
+  list = <<LIST
+1|eXanguination
+2|Direct pressure 
+3|Pressure dressing
+4|Tourniquet
+5|Airway
+6|Breathing
+7|Three-side dressing
+8|Needle decompression
+9|Circulation
+10|External bleeding
+11|Internal bleeding
+12|on IV
+13|Crushinjury
+14|Activate ER/ G trauma
+99|Other
+LIST
+
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 %>
+<script> 
+$(document).ready(function(){
+$('#<%=record_id.to_s%> .data-management').change(function(){
+  console.log("change" + $(this).val())  
+  if($(this).val().indexOf('2')!=-1){
+    $('.management-2').show();
+  }else{
+    $('.management-2').hide();
+  }
+  if($(this).val().indexOf('3')!=-1){
+    $('.management-3').show();
+  }else{
+    $('.management-3').hide();
+  }
+  if($(this).val().indexOf('7')!=-1){
+    $('.management-7').show();
+  }else{
+    $('.management-7').hide();
+  }
+  if($(this).val().indexOf('8')!=-1){
+    $('.management-8').show();
+  }else{
+    $('.management-8').hide();
+  }
+  if($(this).val().indexOf('99')!=-1){
+    $('.management-99').show();
+  }else{
+    $('.management-99').hide();
+  }
+  if($(this).val().indexOf('14')!=-1){
+    $('.management-14').show();
+  }else{
+    $('.management-14').hide();
+  }
+  })
+  $('#<%=record_id.to_s%> .data-management').trigger('change');
+
+});
+
+</script>
+
+</div>
+<div class="col-12 management-99" style="display:none;">
+<%= text_string this, 'management_other', :col=>12 %>
+</div>
+<div class="col-12"><br/></div>
+<div class="col-12">
+<%
+  list = <<LIST
+1|Head/Face
+2|Chest
+3|Abdomen
+4|Pelvic
+5|Femur
+6|Extremity
+99|Other
+LIST
+
+%>
+<label class="form-label">Position <span class="mandatory">*</span></label>
+<%= check_string this, 'position', :value=>list.split("\n"),:pair=>true,:col_item=>'col-3', :col=>12 %>
+</div>
+<div class="col-12"><br/></div>
+</div>
+</div>
+<div class="col-5">
+<div class="row">
+
+<div class="col-12 management-2" style="display:none;">
+<label class="form-label">Direct pressure at<span class="mandatory">*</span></label>
+<div class="row">
+<%= text_string this, 'direct_pressure_at', :col=>6 %>
+<%= time_string this, 'direct_pressure_time', :col=>6, :label=>'' %>
+</div>
+</div>
+
+<div class="col-12 management-3" style="display:none;">
+<label class="form-label">Pressure dressing at<span class="mandatory">*</span></label>
+<div class="row">
+<%= text_string this, 'pressure_dressing_at', :col=>6 %>
+<%= time_string this, 'pressure_dressing_time', :col=>6, :label=>'' %>
+</div>
+</div>
+
+<div class="col-12 management-7" style="display:none;">
+<label class="form-label">Three-side dressing_at<span class="mandatory">*</span></label>
+<%= check_string this, 'three_side_dressing_at', :value=>%w{Rt. Lt.}, :col=>12 %>
+</div>
+
+<div class="col-12 management-8" style="display:none;">
+<label class="form-label">Needle decompression<span class="mandatory">*</span></label>
+<%
+  list = <<LIST
+1|Rt.
+12|2nd intercostal space midclavicular line
+14|4th-5th intercostal space mid axillary line
+2|Lt.
+22|2nd intercostal space midclavicular line
+24|4th-5th intercostal space mid axillary line
+LIST
+
+%>
+<%= check_string this, 'needle_decompression_at', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>12 %>
+</div>
+
+<div class="col-12 management-14" style="display:none;">
+<label class="form-label">Activate ER/G trauma time<span class="mandatory">*</span></label>
+<%= time_string this, 'activate_er_trauma_time', :col=>6 , :label=>''%>
+</div>
+
+</div>
+</div>
+
+
+</div>
+
+  </div><!--row-->
+
+
+</div><!--card body-->
+</div><!--card-->
+

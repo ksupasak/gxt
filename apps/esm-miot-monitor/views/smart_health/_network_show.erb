@@ -1,0 +1,31 @@
+<%=inline(this,:'_init')%>
+<%
+
+list = SHUserNetwork.where(:network_id=>params[:id]).all
+
+%>
+<div class="user-network-list">	
+รายชื่อผู้ใช้งาน
+	<%= tabular :data=>list, :model=>%w{network_id user_id provider_id }, :label=>{'network_id'=>'โรงพยาบาล','user_id'=>'ผู้ใช้','provider_id'=>'ชื่อ-สกุล','role'=>'สิทธิผู้ใช้'}, :ext_model=>%w{role action} do |row,out|
+	u = User.find(row.user_id)
+    n = SHNetwork.find(row.network_id)
+    p = Provider.find(row.provider_id)
+    r = ''
+    role = nil
+    role = Role.find(u.role_id) if u and u.role_id
+    r = role.name if role
+	out[1] = u.login if u
+	
+	out[0] = n.name if n
+	
+	# un = SHUserNetwork.where(:network_id=>row.id).first
+	out[-1] = p.name if p
+	out << r
+	out<<link_to("แก้ไข", "hn_provider_manage?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-info')
+	# out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un.id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger')
+	
+	out
+	end
+	 %>
+	  	
+</div>

@@ -1,0 +1,71 @@
+<%
+
+
+  document = EMRDocument.where(:name=>params[:document]).first
+  ems_case = EMSCase.find params[:case_id]
+
+  if request.post?
+
+
+  document.update_attributes :schema=>params[:schema]
+
+
+    record = EMRRecord.create :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
+
+
+
+%>
+ <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+<% else %>
+<%
+
+
+
+    record = EMRRecord.new
+
+    values = {}
+	
+	if document.type and document.type=='docuseal_link'
+
+%>
+<% fieldset(:record) do |f| %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form")  %>
+<% end %>
+
+<% else %>
+<form action="<%=get_path 'create'%>" id="form" method="post">
+<input type="hidden" name="case_id" value="<%=ems_case.id%>">
+<input type="hidden" name="document" value="<%=document.name%>">
+<input type="hidden" name="schema" id="schema" value="">
+
+<% fieldset(:record) do |f| %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>"form")  %>
+<% end %>
+<br/>
+<input type="submit" value="Create" class="btn btn-success">
+</form>
+<% end %>
+
+<script>
+
+  $("#form").submit(function(){
+
+    fields = []
+
+    $('.field').each(function(){
+
+        cname =  $(this).attr("name")
+        start =  cname.indexOf('[')
+        column = cname.substring(start+1, cname.length-1)
+
+        f = {'name':column,'type':$(this).attr('field_type')}
+        fields.push(f)
+
+    })
+
+    $('#schema').val(JSON.stringify(fields))
+
+  });
+
+</script>
+<% end %>

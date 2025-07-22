@@ -1,0 +1,47 @@
+<%
+
+	mode = Setting.get :mode
+	
+	
+
+	query = params[:query]
+	
+	patients = Patient.where(:hn=>query).all
+	
+	
+	
+	
+	list = []
+	
+	
+	for i in patients
+		
+		admit = Admit.where(:patient_id=>i.id, :status=>'Admitted').first
+		list << admit if admit
+		
+	if list.size == 0 
+		
+		admit = Admit.where(:patient_id=>i.id).last
+		list << admit if admit
+		
+	end
+	
+	end
+	
+	# find admit
+	admit = nil
+	
+	if list.size > 0 
+		admit = list[-1]
+	end	
+	target = "../Home/index"
+	
+	if admit
+		target = "../Admit/show?id=#{admit.id}"
+	elsif query.size>0
+		target = "../Admit/create?hn=#{query}"
+	end	
+		
+%>
+<%=redirect_to target%>
+

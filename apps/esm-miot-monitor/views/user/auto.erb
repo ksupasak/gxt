@@ -1,0 +1,53 @@
+<%
+	
+	
+	
+	user_login = User.where(:login=>params[:device_id]).first
+	
+
+		
+		if user_login
+			user_login.login_perform
+			session[:identity] = user_login.id  if user_login
+			
+			if session[:identity]
+				session[:current_solution] = @context.settings.name
+			end
+	
+	
+			path = '../Home/index'
+	 
+	
+			unless session[:return_to]
+	
+			if user_login and user_login.role 
+				if  user_login.role.zone
+					session[:current_zone] = user_login.role.zone_id
+				elsif first = Zone.where(:default=>true).first
+					session[:current_zone] = first.id
+				elsif first = Zone.first
+					session[:current_zone] = first.id	
+				end
+			end
+	
+			else
+		
+			path = session[:return_to] if session[:return_to]
+	
+			end
+
+			session.delete :return_to
+	
+	
+	
+			%>
+			
+			<META HTTP-EQUIV="Refresh" CONTENT="0;URL=<%='../Home/index'%>">
+				
+				
+			<%
+		else
+%>
+Not allow <%=params.inspect %>
+<META HTTP-EQUIV="Refresh" CONTENT="5;URL=login">
+<% end %>

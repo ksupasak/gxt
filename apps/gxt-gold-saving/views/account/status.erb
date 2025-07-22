@@ -1,0 +1,15 @@
+<h1><%=name params[:service]%> ปิดบัญชี</h1>
+<% 
+return_url = "javascript:history.back();"
+
+return_url = params[:return] if params[:return]
+
+
+	record =  this.model.find params[:id]
+		
+   record.status = params[:status]
+   record.save		
+		
+%>
+		
+<%=redirect_to "show?id=#{record.id}"%>

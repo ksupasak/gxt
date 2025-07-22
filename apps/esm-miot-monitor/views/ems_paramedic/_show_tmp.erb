@@ -1,0 +1,1177 @@
+<script src="<%=url_for('hls/hls.js')%>"></script>
+
+<%
+
+ems_case = EMSCase.find params[:id]
+
+admit = ems_case.admit
+
+@current_zone = admit.zone
+
+station = admit.station
+
+googlemap = false
+
+videostream = true
+
+
+ambu = admit.ambulance
+
+unless ambu
+
+ 	ems_command = EMSCommand.where(:case_id=>ems_case.id).first
+
+	ambu = ems_command.ambulance if ems_command
+
+end
+
+
+
+%>
+
+<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3" style="border:0px solid red">
+
+
+
+	<% if true %>
+					<div class="breadcrumb-title pe-3">Assessment & Management </div>
+					<div class="ps-3">
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0 p-0">
+								<!-- <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i><strong></strong></a>
+								</li>
+								<li class="breadcrumb-item active" aria-current="page"></li> -->
+							</ol>
+						</nav>
+					</div>
+					<!-- <div class="ms-auto">
+				    <div class="btn-group" role="group" aria-label="First group">
+				      <button type="button" class="btn btn-secondary btn_lang" lang="th">TH</button>
+				      <button type="button" class="btn btn-outline-secondary btn_lang" lang="en">EN</button>
+				    </div>
+					</div> -->
+					<div class="ms-auto">
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">Actions</button>
+							<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">	<span class="visually-hidden">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+								<a class="dropdown-item video_call" href="javascript:;">Video call</a>
+								
+								<!-- <a class="dropdown-item" href="javascript:;">Another action</a>
+								<a class="dropdown-item" href="javascript:;">Something else here</a>
+								<div class="dropdown-divider"></div>	<a class="dropdown-item" href="javascript:;">Separated link</a> -->
+							</div>
+						</div>
+					</div>
+				</div>
+<% end %>
+</div>
+<style>
+	.station .label{
+		font-size:0.6em;
+
+	}
+	.station .value{
+		font-size:4em;
+		text-align:center;
+
+	}
+
+	.station .alert-msg .value{
+		font-size:1em;
+		text-align:center;
+
+	}
+	/*.station .col-sm-3{
+		border:1px solid #333;border-radius: 4px;
+		min-height:4em;
+
+	}*/
+	.station .pr{color:#00b3b7;
+
+	}
+
+	.station .hr{color:#01bf02;
+
+	}
+
+	.station .bp{color:#5990b7;;
+
+	}
+
+	.station .spo2{color:#00b3b7;
+
+	}
+
+	.station .co2{color:#BBB234;
+
+	}
+
+	.station .temp{color:#2F50E2;
+
+	}
+
+	.station .rr{color:#b7851d;
+
+	}
+
+	.station .col-6{
+			border:1px solid #333;
+			border-radius: 5px;
+	}
+
+	.station .cc{
+		color:#bcaf06;
+
+	}
+	.station .uc{
+		color:#f937e2;
+
+	}
+
+	.station .score{
+		color:black;
+
+	}
+	.station .alert-msg{
+		color:black;
+
+	}
+
+
+	.station-top .value{
+		font-size:2em;
+	}
+
+
+	.btn-pcm{
+	  color:#E1E1E1;
+	  background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+	  0% no-repeat padding-box;
+	}
+	.btn-pcm2{
+	  color:#E1E1E1;
+	  background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
+	  0% no-repeat padding-box;
+	}
+
+	.vs-val {
+		border:1px solid #ccc;margin:5px;border-radius: 4px;
+	}
+
+		        .viewport {
+		            top: 0px;
+		            left: 0px;
+		            overflow-y: auto;
+		            right: 0px;
+		            height: 800px;
+/*					width: 600px;*/
+					font-size:0.8em;
+					padding:0px;
+
+/*		            background-color: #21272c;*/
+		            background-color: #fff;
+
+		            border: 0px solid #000;
+		           border-radius: 4px;
+		/*            box-shadow: inset 1px 1px 6px 2px rgba(0,0,0, .25);*/
+		        }
+				svg text {
+				    -webkit-user-select: none;
+				       -moz-user-select: none;
+				        -ms-user-select: none;
+				            user-select: none;
+				}
+				svg text::selection {
+				    background: none;
+				}
+		        .info-svg {
+		            fill: #2968AA;
+		            overflow: visible;
+		        }
+				.gxt-box{
+					border:0px solid #265d5c;
+					min-height:300px;
+					color:#ccc;
+					margin-bottom:1em
+				}
+/*				h5{
+					border :1px solid #265d5c;padding:10px;
+/*		            border: 0px solid #000;*/
+		           border-radius: 4px;
+				}*/
+		</style>
+
+
+
+
+<%
+
+		station_id = "StationID"
+		station_id = station.name if station
+	flowsheet = true
+
+%>
+
+
+
+
+
+<!-- Patient Identity End -->
+
+<!-- Flow Sheet -->
+<div class="card" style="border:0px solid blue">
+
+
+<div class="card-body">
+
+<div id="panel" class="row" style="border:0px solid blue;background:#fff;">
+
+
+<div id="menu3" class="col-12 order-1 col-sm-12  order-sm-1 col-lg-12 order-lg-1  " style="">
+
+		<div class="row">
+
+		<div class="col-9"  >
+
+
+		<div class="row " style="my-2">
+
+			<div class="col-12 video_call-panel "  style="display:none;border:0px solid;height:400px">
+					<%= inline(this,:'_openvidu') %>
+			</div>
+		
+			<script>
+				var video_start = false;
+				$('.video_call').click(function(){
+					// alert("<%=ems_case.case_no%>")
+					if(video_start == false){
+
+						$('.video_call-panel').css("display", "block")
+						video_start = true
+						videoCall("<%=ems_case.case_no%>")
+						$('.video_call').html("Close")
+					}else{
+						$('.video_call').html("Video")
+						$('.video_call-panel').css("display", "none")
+						video_start = false
+					}
+				})
+			</script>
+
+			<div  id="<%=station_id%>" class="<%=station_id%> col-12 station station-top " style="border-right:0px solid #f00;display:block;">
+			
+				<div class="row d-flex justify-content-begin" style="padding:0px" >
+					
+				           <div class="vs-val col-4  col-lg-2 col-sm-2 bp">
+				           <span class="label">BP</span>
+				           <div class="value">-</div>
+				           </div>
+
+        	   			   <div class="vs-val col-2  col-lg-1 col-sm-1 pr">
+								<span class="label">PR</span>
+								<div class="value">-</div>
+							</div>
+							<div class="vs-val col-2  col-lg-1 col-sm-1 spo2">
+								<span class="label">SpO2</span>
+								<div class="value">-</div>
+							</div>
+							<div class="vs-val col-2  col-lg-1 col-sm-1 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>
+								<div class="vs-val col-2  col-lg-1 col-sm-1 temp">
+									<span class="label">Temp</span>
+									<div class="value">-</div>
+							</div>
+							<div class="vs-val col-2  col-lg-1  col-sm-1 rr">
+									<span class="label">RR</span>
+									<div class="value">-</div>
+							</div>
+
+							<div class="vs-val col-2 col-lg-1 col-sm-1 co2">
+				    			<span class="label">CO<sub>2</sub></span>
+								<div class="value">-</div>
+							</div>
+
+							<div class="vs-val col-2 col-lg-1  col-sm-1 score">
+								<span class="label">Score</span>
+								<div class="value">&nbsp;</div>
+							</div>
+
+							<div class="vs-val col-2 col-lg-2  col-sm-1 alert-msg" >
+								<span class="label">MSG</span>
+								<div class="value" style="overflow:hidden;height:30px;font-size:0.8em">
+									&nbsp;
+								</div>
+							</div>
+
+					</div>
+
+			</div>
+
+
+
+			<% if true %>
+
+
+			<div class="card">
+										<div class="card-body">
+											<ul class="nav nav-tabs nav-primary" id="nav-tabs" role="tablist">
+												<li class="nav-item" role="presentation">
+													<a class="nav-link active" data-bs-toggle="tab" href="#primaryhome" role="tab" aria-selected="false">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Flowsheet</div>
+														</div>
+													</a>
+												</li>
+												<!-- <li class="nav-item" role="presentation">
+													<a class="nav-link " data-bs-toggle="tab" href="#primaryprofile" role="tab" aria-selected="true">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Assessment</div>
+														</div>
+													</a>
+												</li> -->
+												<li class="nav-item" role="presentation">
+													<a class="nav-link" data-bs-toggle="tab" href="#primarycontact" role="tab" aria-selected="false">
+														<div class="d-flex align-items-center">
+															<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+															</div>
+															<div class="tab-title">Summary</div>
+														</div>
+													</a>
+												</li>
+											</ul>
+											<div class="tab-content py-3 " id="tab-content">
+												<div class="tab-pane fade active show" id="primaryhome" role="tabpanel">
+
+			<% if ems_case.paramedic_status=='STARTED'  %>											
+													
+			<div class="col-12 viewport" style="<%='display:none' unless flowsheet%> ;border:0px solid ">
+			<%= inline(this,:'_flowsheet')  %>
+			</div>
+			
+			
+			
+			
+			<% else %>
+			
+			
+			<% end %>
+			
+			<div class="row">
+
+			<div class="col-12">
+			<%
+				
+		    records = admit.records
+				last_bp = "-"
+				new_list =[]
+				for m in records
+
+					if last_bp!=m.bp
+						new_list << m
+						last_bp = m.bp
+					end
+				end
+				records = new_list
+				
+				
+				
+			%>	
+				
+				
+			<strong>
+			Vitals Summary ( from <%=records[0].stamp.strftime("%D %H:%M") if records[0]%> to <%=records[-1].stamp.strftime("%H:%M") if records[-1]%> : <%=records.size %> records)
+			</strong>
+			<%
+			  n = 10
+
+			  (records.size/n.to_f).ceil.times do |t|
+
+			  list = records[t*n..(t+1)*n].compact
+			  plist = {:hr=>"HR (bpm)",:bp=>"NIBP (mmHg)",:rr=>"Resp (rpm)",:co2=>"ETCO2 (mmHg)",:spo2=>"SpO2 (%)",:temp=>"T1 (C)"}
+
+			%>
+
+			<table class="table table-striped " style="font-size:0.8em">
+			<thead>
+			  <tr>
+			    <th>Date Time</th>
+			      <% for ti in list %>
+			        <td><%=ti.stamp.strftime("%H:%M")%>
+			        </td>
+			      <% end %>
+			  </tr>
+			</thead>
+			<tbody>
+			<% for p in plist.keys %>
+			  <tr>
+			    <th><%=plist[p]%></th>
+			    <% for ti in list %>
+			    <td><%=ti[p]%></td>
+			    <% end %>
+			  </tr>
+			<% end %>
+			</tbody>
+			</table>
+			<% end %>
+			</div>
+			</div>
+			
+			
+			<h4>Station</h4>
+				
+			<div class="alert alert-warning">
+			<style>
+			.vs{
+				
+				padding:20px;
+				height:40px;
+				width:90px;
+				float:left;
+				text-align:center;
+				padding:0px;
+				padding-top:10px;
+			}	
+			</style>
+
+			<form action="<%= get_path 'create'%>" id="connect-form" method="post" data-remote='true' data-remote-update="paramedic_panel" style="color:black">
+
+				
+					
+				<input type="hidden" name="id" value="<%=ems_case.id%>">
+				<input type="hidden" name="admit_id" value="<%=admit.id%>">
+				<input type="hidden" name="admit[station_id]" id="station_id" value="">
+				
+			
+				
+				<% if ems_case.paramedic_status==nil or ems_case.paramedic_status=='FINISHED' %>
+				<input type="hidden" name="admit[status]" value="STARTED">
+				
+			
+				<div>
+					<label>Select Device :</label>
+					
+					<% for station in Station.where(:zone_id=>@current_zone.id).sort(:code=>1).all() %>
+						
+					<div class="card">
+						<div class="card-body">
+							<div class="row d-flex justify-content-between ">
+							
+							<div class="col-2">
+								<center>
+								<% if station.type and station.type!="" %>
+								<img src="/esm-miot-monitor/ems/monitors/<%=station.type%>.png" height="80"><br/>
+								<% end %>
+								<%=station.name%>
+							</center>
+							</div> 
+							<div class="col-2">
+							
+							
+							
+							</div>
+							
+							<div class="col-4 <%=station.name%> station " style="border:0px solid;font-size:0.25em;">
+								<div class="vs vs-val  pr "><span class="value">-</span></div>
+								<div class="vs vs-val spo2"><span class="value">-</span></div>
+								<div class="vs vs-val bp"><span class="value">-</span></div>
+								<div class="vs vs-val temp"><span class="value">-</span></div>
+								<div class="vs vs-val co2"><span class="value">-</span></div>
+								
+								<div class="vs vs-val rr"><span class="value">-</span></div>
+							</div> 
+							
+						
+							
+							
+							<div class="col-4 d-flex justify-content-end">
+								<a href="#"  class="btn btn-success connect-btn " sid="<%=station.id%>" style=" vertical-align: middle;" >Connect</a>
+							</div>
+								
+							</div>
+						</div>
+					
+					</div>
+					
+					
+					
+					<% end %>
+					
+				
+					
+				</div>
+				
+				<% elsif ems_case.paramedic_status=='STARTED'
+				
+				station = Station.find admit.station_id
+				%>
+				<input type="hidden" name="admit[status]" value="FINISHED">
+				
+				
+				<div class="card">
+					<div class="card-body">
+						<div class="row d-flex justify-content-between">
+						
+						<div class="col-4"><%=station.name%></div> 
+						
+						<div class="col-4 d-flex justify-content-end">
+							<a href="#"  class="btn btn-danger connect-btn" sid="<%=station.id%>" >Disconnect</a>
+							
+							</div>
+						</div>
+					</div>
+				
+				</div>
+				
+				
+				
+				
+				<% end %>
+
+
+
+				<script>
+					$('.connect-btn').click(function(e){
+						sid = $(this).attr('sid')
+						$('#station_id').val(sid)
+						// e.preventDefault()
+						$('#connect-form').submit()
+						e.preventDefault()
+					})
+				</script>
+			
+
+			</form>
+			
+		</div>
+
+												</div>
+
+
+
+												<div class="tab-pane fade text-panel" id="primarycontact" role="tabpanel">
+
+
+												</div>
+
+
+												<script>
+													$(document).ready(function(){
+														update_text();
+													})
+
+												</script>
+											</div>
+										</div>
+									</div>
+
+
+			<% end %>
+
+
+
+			
+
+
+
+
+
+	    </div>
+
+
+	</div>
+
+		<div class="col-3 " style="border:0px solid;" >
+
+		<%= inline(this,:'_message_page') %>
+
+		<script>
+
+
+
+		reload_message("<%=ems_case.id%>","<%=admit.id%>")
+
+
+		</script>
+
+
+		</div>
+
+
+<hr/>
+
+
+<div id="paramedic_panel">
+
+</div>
+
+
+
+
+		<script type="text/javascript">
+
+ var gfx = null;
+
+
+
+
+		$(document).ready(function(){
+
+			if(gfx==null){
+
+ 			 var lead_data = {};
+		  	 var wave_data = [];
+
+
+			var data = [100,200,100,200];
+
+			var settings = {version:'1.0'};
+
+		    var components = [];
+
+			var events = [];
+
+			// vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],records:null};
+
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','co2'],
+			groups:[{params:['pr','hr'],range:[0,200],range_auto:true,show:true},
+					{params:['bp_sys','bp_dia'],range:[0,200],range_auto:false,show:true},
+					{params:['spo2','temp'],range:[0,100],range_auto:false,show:true},
+					{params:['co2','rr'],range:[0,100],range_auto:false,show:true}
+				],records:null};
+
+			records = [];
+
+
+
+
+			now = Date.now();
+
+
+			<%
+			if admit
+
+
+           now =  Time.now()
+           min10 = now-600
+
+
+			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
+
+			senses = Sense.collection.find({:admit_id=>admit.id,:start_time=>{'$gt'=>min10}},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
+
+
+
+
+
+			list =[]
+			now = Time.now
+
+			if true
+
+			senses.each_with_index do |i,ii|
+
+				o = ActiveSupport::JSON.decode(i['vs'])
+
+				if o
+					o.each do |j|
+						if j['bp']
+							bp = j['bp'].split("/")
+							list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0, co2:j['co2']?j['co2']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+						end
+					end
+
+				end
+
+			end
+
+
+			end
+
+			%>
+
+
+			<% end %>
+
+			records = <%= list.to_json.html_safe %>
+
+			for(var ii in records){
+
+					records[ii]['time'] = Date.parse(records[ii]['time'] )
+
+			}
+
+
+
+			vs['records'] = records;
+
+			<%
+
+				meds = admit.medication_records
+				med_map = {}
+				for i in meds
+
+					k = i.name
+
+					med_map[k] = [] unless med_map[k]
+					med_map[k] << i
+
+				end
+
+
+			%>
+
+
+
+			// med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl','0.9%NSS'],records:null};
+
+			med = {name:'medication',type:'med',show:true,params:<%=med_map.keys.to_json.html_safe%>,records:null};
+
+			records = [];
+			<% for i in meds
+
+				stop_time = nil
+				stop_time = i.stop_time if i.stop_time
+			%>
+
+			start_time = new Date(<%=i.start_time.localtime.to_json%>)
+			stop_time = null
+			<% if i.stop_time %>
+			stop_time = new Date(<%=i.stop_time.localtime.to_json%>)
+			<% end %>
+
+
+			records.push({time:start_time,tclass:'<%=i.id%>',stop_time: stop_time,'<%=i.name %>':{r:'<%=i.rate%>',v:'<%=i.volume%>'}});
+
+			<% end %>
+
+			// records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
+		// 	records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
+
+			med['records'] = records;
+
+
+			event = {name:'events',type:'event',show:true,records:events};
+
+
+			components.push(vs);
+			components.push(med);
+			components.push(event);
+
+
+
+			settings['components'] = components
+
+			console.log(settings);
+
+
+			 var viewport = d3.select(".viewport").append("svg")
+    		 .attr("class", "info-svg")
+
+	     var g = viewport.append("g")
+		 .attr("transform", "translate(0,0)");
+
+		 <% if ems_case.paramedic_status=='STARTED' %>
+		 
+		 gfx = GFX()
+		 .svg(g)
+		 .startTime(Date.now())
+		 .endTime(Date.now())
+		 .viewport(d3.select(".viewport"));
+		 gfx.data(settings);
+		 d3.select("svg").call(gfx);
+
+		 window.addEventListener("resize", gfx.resize);
+
+		 gfx.resize()
+		 
+		 <% end %>
+		 
+
+         update_message()
+	// var show = function(el){
+	//      	return function(msg){ el.innerHTML = msg  }
+	//     }
+
+	function show(text){
+		// console.log(text)
+		$('.msg').html(text)
+	}
+
+
+
+	  var ws       = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+	  var plot_pos = {};
+
+
+
+  function update_message_page(){
+
+
+  	$.ajax({
+  	  url: "<%=get_path "dispatch"%>?id=<%=params[:id]%>",
+  	  context: document.body
+  	}).done(function(data) {
+
+		$('#dispath-panel').html(data)
+
+  	});
+
+
+  }
+
+
+
+   function update_message(){
+
+  
+   
+  
+   	$.ajax({
+   	  url: "<%=get_path "message_data"%>?id=<%=admit.id%>",
+   	  context: document.body
+   	}).done(function(data) {
+   	 	data = JSON.parse(data)
+
+ <% if ems_case.paramedic_status=='STARTED' %>
+
+		while(events.length > 0) {
+		    events.pop();
+		}
+
+		for(var i in data){
+			obj = data[i];
+			events.push({time:Date.parse(obj[0]),tclass:obj[3]['_id'],stop_time: Date.parse(obj[0])+15, name:obj[1], description: obj[2] })
+		}
+		// alert(events.length)
+
+		gfx.tick2({update:[{name:'events',list:events}]});
+
+<% end %>
+
+   	});
+
+
+   }
+
+	   <%
+   jix = {}
+
+
+   lxi = %w{31-1 25-22 6-1   1-2 1-3 1-4 1-34 1-36 1-37 1-40 1-43 1-45 1-46 1-48  95-54 95-55 95-57}
+
+   lx = %w{31-1 25-22 6-1   1-2 1-36 1-43 1-46   1-3 1-34 1-37 1-40  1-4 1-35 1-45 1-48    95-54 95-55 95-57}
+
+   for i in lx
+
+	   jix[i] = lxi.index(i)  if lxi.index(i)
+
+   end
+
+
+
+   %>
+   		var lx = <%=lx.to_json.html_safe%>
+   		var jix = <%=jix.to_json.html_safe%>
+		console.log(jix)
+
+
+
+   	function update_emr(){
+
+
+
+
+	  	$.ajax({
+	  	  url: "<%=get_path "emr_partial"%>?id=<%=params[:id]%>",
+	  	  context: document.body
+
+	  	}).done(function(data) {
+
+			$('.emr-tab').remove()
+
+			$('body').append(data)
+
+	  	});
+
+
+
+	}
+
+	update_emr();
+
+
+   	function paramedic_process(lines){
+
+        <% if ems_case.status!='Completed' %>
+
+
+		// lines = m.data.split("\n")
+
+		// console.log(lines[0].split(" ")[0])
+		if(lines[0].split(" ")[0]=='Alert'){
+			data = JSON.parse(lines[1])
+
+			// alert(data['alert'])
+
+			$('#'+data['station']).addClass('bp_alert_2');
+			$('#'+data['station']+' .msg').html(data['alert']);
+
+			// play sound
+			ion.sound.play("bell_ring");
+
+		}else
+		if(lines[0].split(" ")[0]=='Data.Image'){
+
+			lines.shift()
+			img = lines.join("")
+			// alert('image '+m.data.length)
+
+			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+
+
+		}
+		else
+		if(lines[0].split(" ")[0]=='Zone.Message'){
+
+
+		  reload_message("<%=ems_case.id%>","<%=admit.id%>")
+      	  update_message();
+		  update_message_page();
+
+		  if(data!="NULL"){
+			   console.log("EMR test")
+			  data = JSON.parse(lines[1])
+			  if(data['type']=='emr')
+				  update_emr();
+		  }
+
+
+		  // update_message_page();
+
+		}
+		else
+		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+
+
+		data = JSON.parse(lines[1])
+			//
+			// if(data['list'].length!=active)
+			// window.location.href = "index";
+
+
+
+		$('#timer').html(data['time'])
+
+		for(var id in data['list']){
+			i = data['list'][id]
+			// console.log("update : " + i)
+			if(true){
+			obj = data['data'][i]
+
+
+
+			 // console.log(obj)
+			$('.'+i+' .hn').html(obj['ref'])
+
+			if($('.'+i+' .bp').html()!=obj['bp']){
+				$('.'+i).addClass('bp_alert');
+				$('.'+i).removeClass('bp_alert_2');
+				$('.'+i+' .msg').html("-");
+			}else{
+				$('.'+i).removeClass('bp_alert');
+				// $('#'+i).removeClass('bp_alert_2');
+				// $('#'+i+' .msg').html("-");
+			}
+			console.log(obj['pr'])
+			$('.'+i+' .bp .value').html(obj['bp'])
+
+			$('.'+i+' .temp .value').html(obj['temp'])
+
+			$('.'+i+' .pr .value').html(obj['pr'])
+			$('.'+i+' .hr .value').html(obj['hr'])
+
+
+
+			$('.'+i+' .rr .value').html(obj['rr'])
+			$('.'+i+' .spo2 .value').html(obj['spo2'])
+			$('.'+i+' .co2 .value').html(obj['co2'])
+
+
+			$('.'+i+' .score .value').html(obj['score'])
+
+			$('.'+i+' .alert-msg .value').html(obj['msg'])
+
+
+
+
+			<% if googlemap %>
+			if(obj['lat']!=''){
+
+			lat = parseFloat(obj['lat'])
+			lng = parseFloat(obj['lng'])
+
+			setPosition(lat,lng)
+
+			}
+			<% end %>
+			
+			
+<% if ems_case.paramedic_status=='STARTED' and ems_case.admit.station_id  %>
+			
+			if('<%=ems_case.admit.station_id%>'==obj['station_id']){
+				
+			
+			
+			bp = obj['bp'].split('/')
+			hr = parseInt(obj['hr'])
+			pr = parseInt(obj['pr'])
+			spo2 = parseInt(obj['spo2'])
+			co2 = parseInt(obj['co2'])
+			rr = parseInt(obj['rr'])
+			temp = parseInt(obj['temp'])
+
+
+			if(isNaN(hr))hr=0;
+			if(isNaN(pr))pr=0;
+			if(isNaN(spo2))spo2=0;
+			if(isNaN(rr))rr=0;
+			if(isNaN(co2))co2=0;
+
+			if(isNaN(temp))rr=0;
+
+			// console.log('ok')
+
+		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,co2:co2,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+
+			gfx.tick({update:[{name:'vitalsign',append:vs}]});
+			
+			}
+<% end %>
+
+
+
+			}else{
+					setTimeout(function () {
+				       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+				    }, 2000); //will call the function after 2 secs.
+
+			}
+
+		}
+		 }
+
+		 <% end %>
+
+   	}
+
+
+
+
+
+
+   	current_process = paramedic_process
+
+
+
+
+
+   ws.onmessage = function(m) {
+
+
+	  }
+
+
+	 };
+
+
+
+
+
+	$('.ctl').each(function(){
+
+		obj = $(this)
+
+		obj.click(function(){
+			o = $(this)
+			 ws.send(o.attr('id'));
+		})
+
+	})
+
+
+
+<%= inline(this,:'_ecg.js') %>
+
+
+
+
+   // var wave_data = [];
+
+<% 16.times do |i|  %>
+
+  //  presetWave('wave-<%=i%>')
+  //
+  //  i = "<%=i%>"
+  //
+  //  lead_data[i] = [];
+  // // genData(lead_data[i])
+  //
+  // showWave('wave-<%=i%>',lead_data,i);
+
+<% end %>
+
+
+  <% if params[:score] == '1' %>
+  $('#menu2-link').click();
+  <% else %>
+  $('#menu1-link').click();
+  <% end %>
+   
+    <% if ems_case.paramedic_status=='STARTED' %>
+   
+  $('#menu3-link').click(function(){
+  	gfx.active(true);
+    width = document.body.clientWidth;
+      // $('.viewport').css('width',width);
+  	gfx.render(true);
+  });
+
+
+	gfx.active(true);
+    width = document.body.clientWidth;
+    // $('.viewport').css('width',width);
+	gfx.render(true);
+
+<% end %>
+
+	});
+
+
+	// init bunch of sounds
+	ion.sound({
+	    sounds: [
+	        {name: "bell_ring"}
+	    ],
+
+	    // main config
+	    path: "<%=url_for 'sounds/'%>",
+	    preload: true,
+	    multiplay: true,
+	    volume: 0.9
+	});
+
+
+
+
+
+</script>
+	<%= inline(this,:'../home/_scoring') %>

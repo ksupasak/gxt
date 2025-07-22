@@ -1,0 +1,287 @@
+<%
+
+    record = ERCase.find(params[:id])
+    admit = EsmMiotMonitor::Admit.find(record.admit_id)
+    patient = EsmMiotMonitor::Patient.find(admit.patient_id)
+ 
+
+ if request.post?
+    updated = false
+    params[:order_items].each_pair do |key, item|
+
+        order_item = EsmMiotMonitor::OrderItem.find(key)
+        if item[:status] != item[:previous_status]
+        previous_status = item[:previous_status]
+        item.delete(:previous_status)
+        order_item.update_attributes(item)
+        log = order_item.status_logs.create(
+          created_user_id: @current_user.id,
+          previous_status: previous_status,
+          new_status: item[:status],
+          note: item[:note]
+        )
+        updated |= true
+        
+        end
+    end
+    if updated
+        ERCase.notify @context, :zone_id=>admit.zone_id
+    end
+
+    %>
+    <meta http-equiv="refresh" content="0; url=show?id=<%= record.id %>" />
+    <%
+ else    
+
+
+%>
+
+
+<form action="orders" method="POST">
+<input type="hidden" name="id" value="<%= record.id %>">
+<div class="card">
+  <div class="card-body">
+  <h4>Orders</h4>
+    <div class="table-responsive">
+      <table class="table table-hover" id="ordersTable">
+        <thead>
+          <tr>
+            <th>Order No.</th>
+            <th>รายการ</th>
+            <th>จำนวน</th>
+            <th>หน่วย</th>
+            <th>ความถี่</th>
+            <th>คำแนะนำ</th>
+            <th>สถานะ</th>
+            <th>อัพเดทเมื่อ</th>
+            <th>ผู้สั่ง</th>
+            <th>ระยะเวลา</th>
+            <th>ดูประวัติ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Order.where(:admit_id=>admit.id).sort(created_at: :desc).each do |order| %>
+            <% order.order_items.each do |item| %>
+              <tr class="status-row" data-status="<%= item.status %>">
+                <td><%= order.order_number %></td>
+                <td><%= item.product.name %></td>
+                <td><%= item.quantity %></td>
+                <td><%= item.product.unit %></td>
+                <td><%= item.frequency %></td>
+                <td><%= item.instruction %></td>
+                <td><input type="hidden" name="order_items[<%= item.id %>][previous_status]" value="<%= item.status %>">
+                  <select name="order_items[<%= item.id %>][status]" class="form-select form-select-sm status-select" 
+                          data-item-id="<%= item.id %>"
+                          data-previous-value="<%= item.status %>">
+                    <% ['new', 'pending', 'processing', 'waiting', 'completed', 'cancel'].each do |status| %>
+                      <option value="<%= status %>" 
+                              <%= 'selected' if item.status == status %>>
+                        <%= status.capitalize %>
+                      </option>
+                    <% end %>
+                  </select>
+                </td>
+                <td class="updated-at">
+                  <%= item.updated_at&.strftime("%d/%m/%Y %H:%M") %>
+                </td>
+                <td>
+               
+                </td>
+                <td>
+                 <%
+                    last_log = item.status_logs.order(created_at: :desc).first
+                %>
+                  <%= (Time.now - last_log.created_at).to_i/60 %> m
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-info view-history" 
+                          data-item-id="<%= item.id %>">
+                    <i class="fas fa-history"></i>
+                  </button>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="card-footer">
+    <button type="submit" class="btn btn-primary">บันทึก</button>
+</div>
+</form>
+<% end %>
+
+<!-- เพิ่ม Modal สำหรับแสดงประวัติ -->
+<div class="modal fade" id="historyModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ประวัติการเปลี่ยนสถานะ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="timelineContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ปรับสไตล์สำหรับแถวตามสถานะ */
+
+
+/* ปรับ select ให้เข้ากับแถว */
+.status-select {
+  font-weight: 500;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.status-row[data-status="new"] .status-select { color: #2196F3; }
+.status-row[data-status="pending"] .status-select { color: #FF9800; }
+.status-row[data-status="processing"] .status-select { color: #9C27B0; }
+.status-row[data-status="waiting"] .status-select { color: #795548; }
+.status-row[data-status="completed"] .status-select { color: #4CAF50; }
+.status-row[data-status="cancel"] .status-select { color: #F44336; }
+
+/* Animation เมื่ออัพเดท */
+@keyframes highlight {
+  0% { background-color: #fff3cd; }
+  100% { background-color: transparent; }
+}
+
+.highlight {
+  animation: highlight 1s ease-out;
+}
+
+/* Loading spinner */
+.loading::after {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.5em;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* เพิ่ม style สำหรับ timeline */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline-item {
+  padding: 15px 0;
+  border-left: 2px solid #ddd;
+  margin-left: 20px;
+  position: relative;
+}
+
+.timeline-date {
+  font-size: 0.9em;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.timeline-content {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 4px;
+  margin-left: 20px;
+}
+
+.timeline-item::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  position: absolute;
+  left: -7px;
+  top: 20px;
+}
+
+.status-change {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.duration {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.changed-by {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.note {
+  margin-top: 5px;
+  font-style: italic;
+  color: #666;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+ 
+  function updateSelectStyle(select) {
+    const row = select.closest('tr');
+    row.dataset.status = select.value;
+  }
+  
+  function showToast(message, type = 'info') {
+    // สร้าง toast notification ถ้าต้องการ
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // เพิ่ม function สำหรับดูประวัติ
+  document.querySelectorAll('.view-history').forEach(button => {
+    button.addEventListener('click', async function() {
+      const itemId = this.dataset.itemId;
+      
+      try {
+        const response = await fetch(`../OrderItemStatusLog/history?id=${itemId}`);
+        const html = await response.text();
+        
+        document.getElementById('timelineContent').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('historyModal')).show();
+      } catch (error) {
+        console.error('Error:', error);
+        showToast('ไม่สามารถโหลดประวัติได้', 'error');
+      }
+    });
+  });
+
+  function formatDuration(seconds) {
+    if (!seconds) return '';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    let result = [];
+    if (hours > 0) result.push(`${hours} ชั่วโมง`);
+    if (minutes > 0) result.push(`${minutes} นาที`);
+    
+    return result.join(' ');
+  }
+});
+</script>

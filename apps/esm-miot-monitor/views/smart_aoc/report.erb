@@ -1,0 +1,75 @@
+<%
+
+
+map = {}
+map[:title] = 'แบบบันทึกการปฏิบัติงานบริการการแพทย์ฉุกเฉินระดับสูง'
+map[:first_name] = 'ชื่อ'
+map[:last_name] = 'นามสกุล'
+map[:age] = 'อายุ'
+map[:gender] = 'เพศ'
+map[:nationality] = 'สัญชาติ'
+map[:citizen_id] = 'เลขบัตรประชาชน'
+
+if params[:lang] == 'en'
+
+map[:title] = 'Advanced Life Support Information Form'
+map[:first_name] = 'First name'
+map[:last_name] = 'Last name'
+map[:age] = 'Age'
+map[:gender] = 'Gender'
+map[:nationality] = 'Nationality'
+map[:citizen_id] = 'Citizen_id'
+
+
+
+end 
+
+    admit = Admit.find params[:admit_id]
+    # patient = admit.patient
+
+    records = admit.records
+
+		
+    patient = Patient.find admit.patient_id
+
+    report = AocCaseReport.where(:admit_id=>admit.id).first
+
+    last = DataRecord.where(:admit_id=>admit.id).last
+
+%>
+
+<link href="<%=url_for('css/er_dark.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/er.css?=22')%>" rel="stylesheet">
+<link href="https://unpkg.com/pattern.css" rel="stylesheet">
+<style>
+.fdata{
+  text-decoration:underline;
+  width:100%;
+}
+.fsel{
+  border-radius:5px;
+  padding:5px;
+  margin-right:5px;
+  text-align:center;
+}
+.fselected{
+  background:#2437C6;
+}
+
+@media print {
+  .print-newpage{
+    clear: both;
+    page-break-after: always;
+  }
+}
+</style>
+<div class="container summary-container chk_flow">
+<!--<div class="print-newpage">&nbsp;</div>-->
+</div>
+
+<div class="container summary-container chk_gps">
+<div class="print-newpage">&nbsp;</div>
+<%= inline(this,:'report/_route_report') %>
+</div>
+
+    

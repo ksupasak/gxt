@@ -1,0 +1,208 @@
+
+<%
+   record =  this.model.find params[:id]
+   branch = Branch.find(record.branch_id)
+
+if record  
+%>
+
+<div class="row ">
+<div class="col-md-3 col-md-offset-9">
+		<h1>No. <%=record.code%></h1>
+		<img src="/barcode?code=<%=record.code%>">
+</div>
+<div class="row ">
+<center>
+<h3>
+<%=Setting.get :company_name %>
+</h3>
+<h3>
+<%=Setting.get :company_name_en %>
+</h3>
+<h3>
+สาขา <%=branch.name %>
+</h3>
+<h4>
+Tel. <%=branch.tel %>
+</h4>
+</center>
+<br/>
+<div class="col-md-4 col-md-offset-4">
+(ลูกค้าต้องออมเงินให้ครบภายในระยะเวลา 6 เดือน นับจากวันที่เปิดบัญชี หากชำระไม่ครบในระยะที่กำหนด ไม่สามารถเปลี่ยนเป็นเงินสดกลับคืนได้)
+</div>
+
+</div>
+
+<br/>
+
+<br/>
+<br/>
+
+<div class="row">
+	
+	 <div class="col-md-10 col-md-offset-1">
+<div class="row">
+	<%
+		if record.member_id
+
+			member= Member.find record.member_id
+			if member 
+	%>
+	<div class="col-md-6">
+	  	<div class="alert alert-info">
+			<h4>รหัสสมาชิก : <span class=""><%= member.code %></span>  </h4>
+			<h4>ชื่อ : <span class=""><%=member.name%></span>  </h4>
+			<h4>ชื่อ-นามสกุล : <span class=""><%=member.first_name%> <%=member.last_name%></span>  </h4>
+			<h4>โทร : <span class=""><%=member.tel%></span>  </h4>
+
+		</div>
+
+	  </div>
+
+	<% end %>
+	<% end %>
+	<%
+	    status = 'warning'
+	    status = 'success' if record.status=='COMPLETED'
+	%>
+	<div class="col-md-6">
+		<div class="alert alert-<%=status%>">
+			<h4>รหัส : <span class=""><%=record.code%></span>  </h4>
+			<h4>ราคาทอง: <span class=""><%=record.gold_price%></span>  </h4>
+			<h4>น.น. : <span class=""><%=record.weight%></span>  </h4>
+			<h4>ยอดรวม : <span class=""><%=record.total_amount%></span>  </h4>
+
+		</div>
+
+	</div>
+	
+	
+	</div>
+	</div>
+</div>
+	<div class="row">
+	
+	
+  <div class="col-md-10 col-md-offset-1">
+		<div class="row">
+
+	  <h4> รายการชำระเงิน </h4>
+
+	  <%
+
+		transactions = Transaction.where(:account_id=> record.id).all
+		# accounts = Account.all
+
+	  %>
+	<table class="table">
+		<thead>
+			<tr><th>ครั้งที่</th><th>ว/ด/ป</th><th>จำนวนเงิน</th><th>คงเหลือ</th><th>พนักงานที่รับเงิน</th>
+			</tr>
+		</thead>
+	   <%
+		    closable = false
+		    
+			balance = 0
+			
+	 		transactions.each_with_index do |i,index| 
+		
+			balance += i.amount if i.amount
+		 %>
+		<tr>
+			<td><%=index+1%></td>
+			<td><%=i.created_at.strftime("%d/%m/%Y")%></td>
+			<td><%=i.amount%></td>
+			<td><%=record.total_amount - balance%></td>
+			<td><%=i.sale%></td>
+			<td><%=i.code%></td>
+
+			</tr>
+	   <% end %>
+	
+	<%
+		closable = true if  record.total_amount - balance <= 0 
+		record.update_attributes :balance=> record.total_amount - balance
+	%>
+	</table>
+	<br/>
+	<hr/>
+	<br/>
+   <div class="row">
+	<div class="col-md-1">
+	  <h4> ณ วันที่  </h4>
+	</div>
+	<div class="col-md-2">
+	  <h4><%= Time.now.strftime("%d/%m/%Y") %></h4> 
+	</div>
+	<div class="col-md-2">
+	   <h4>ชำระรวม</h4>  
+	</div>
+	<div class="col-md-2">
+	  <h4><%= record.total_amount - record.balance%>  บาท</h4>
+	</div>
+	<% if record.status=="COMPLETED" %>
+	<div class="col-md-2">
+	   <h4>สถานะ</h4>  
+	</div>
+	<div class="col-md-2">
+	   <h4 style="color:green" class="alert alert-success">ปิดบัญชี</h4>  
+	</div>
+	<% else %>
+	<div class="col-md-2">
+	   <h4>ยอดเงินคงเหลือ</h4>  
+	</div>
+	<div class="col-md-2">
+	  <h4><%= record.balance%>  บาท</h4>
+	</div>
+	<% end %>
+	</div>
+<%
+# key :code, String
+# key :amount, Float
+# key :payment_type, String
+# key :status, String
+# key :sale, String
+# key :sale_id, ObjectId
+# key :account_id, ObjectId
+
+
+  if  record.status!='COMPLETED'
+
+%>
+    <form action="../Transaction/create"  class="form-inline" method="post" >
+	<div class="form-group">
+	<input type="hidden" value="<%=record.id%>" name="record[account_id]" class=" form-control" placeholder="">
+		
+	<input type="hidden" value="COMPLETED" name="record[status]" class=" form-control" placeholder="">
+	<input type="hidden" value="CASH" name="record[payment_type]" class=" form-control" placeholder="CASH">
+	<input type="hidden" value="<%=settings.current_user%>" name="record[sale]" class=" form-control" placeholder="พนักงานที่รับเงิน">
+	<input type="hidden" value="<%=session[:identity]%>" name="record[sale_id]" class=" form-control" placeholder="จำนวนเงิน">
+
+	<input type="text" value="" name="record[amount]" class=" form-control" placeholder="จำนวนเงิน" <%='disabled' if closable %>>
+		
+	<button type="submit" class="btn btn-success" <%='disabled' if closable %>>ชำระเงิน</button>
+	</div>
+	
+	</form>
+	
+	<% end %>
+
+
+	</div>
+
+
+  </div>
+
+ 
+
+</div>
+
+
+<% end %><hr/>
+<% unless record.status=='COMPLETED' %>
+<% end %>
+<%#link_to 'Back', '../Home/index',:class=>'btn'%>
+<script>
+window.print();
+window.onfocus=function(){ window.close();}
+</script>

@@ -1,0 +1,25 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+
+<% if @current_role == 'hospital' or @current_role =='smarthealth_admin'%>
+<%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'hospital_operator' or @current_role == 'network_operator' %>
+<%=inline(this,:'_index_operator')%>
+<% elsif @current_role == 'patient'  %>
+<%=inline(this,:'_index_patient')%>
+<% elsif @current_role == 'admin'  %>
+<%=inline(this,:'_index_admin')%>
+<% elsif @current_role == 'cluster_admin'  %>
+<%=inline(this,:'_index_cluster')%>
+<% elsif @current_role == 'hospital_admin'  %>
+<%=inline(this,:'_index_hospital_admin')%>
+<% elsif @current_role == 'network_admin'  %>
+<%=inline(this,:'_index_network_admin')%>
+<% elsif @current_role == 'network'  %>
+<%=inline(this,:'_index_hospital')%>
+<% elsif @current_role == 'hospital_terminal'  %>
+<%=inline(this,:'_index_terminal')%>
+<% elsif @current_role == 'field_hospital'  %>
+<%=inline(this,:'_index_field_hospital')%>
+<% end %>

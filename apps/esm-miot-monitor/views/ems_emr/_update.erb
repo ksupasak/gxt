@@ -1,0 +1,81 @@
+<%
+
+
+  document = EMRDocument.where(:name=>params[:document]).first
+  ems_case = EMSCase.find params[:case_id]
+  record = EMRRecord.find params[:id]
+
+  if request.post?
+
+
+  document.update_attributes :schema=>params[:schema]
+
+
+    record.update_attributes :stamp=>Time.now, :document_id=>document.id, :case_id=>ems_case.id, :admit_id=>ems_case.admit_id, :data=>params[:record]
+
+
+%>
+Update ... <META HTTP-EQUIV="Refresh" CONTENT="1;URL=../EMS/show?id=<%=ems_case.id%>">
+<% else %>
+<%
+
+
+
+
+
+    values = record.data
+
+%>
+<form action="<%=get_path 'update'%>" id="<%=record.id%>" method="post">
+<input type="hidden" name="case_id" value="<%=ems_case.id%>">
+<input type="hidden" name="id" value="<%=record.id%>">
+<input type="hidden" name="document" value="<%=document.name%>">
+<input type="hidden" name="schema" id="schema" value="">
+
+<% fieldset(:record) do |f| %>
+<%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :ems_case=> ems_case, :record_id=>record.id)  %>
+<% end %>
+<br/>
+<div class="row">
+<div class="col-lg-6">
+<input type="submit" value="Update" class="btn btn-success">
+</div>
+<div class="col-lg-6">
+<a href="../EmsEMR/destroy?id=<%=record.id%>" onclick="return confirmDelete();" id="delete-<%=record.id%>" class="delete-btn btn btn-danger " style="float:right">Delete</a> 
+
+<script>
+  function confirmDelete() {
+    return confirm("Are you sure you want to delete this item?");
+  }
+</script>
+</div>
+</div>
+
+
+</form>
+<% end %>
+
+<script>
+
+  $("#<%=record.id%>").submit(function(e){
+
+    fields = []
+    // e.preventDefault()
+    $('.field').each(function(){
+
+        cname =  $(this).attr("name")
+        // alert(cname)
+        start =  cname.indexOf('[')
+
+        column = cname.substring(start+1, cname.length-1)
+
+        f = {'name':column,'type':$(this).attr('field_type')}
+        fields.push(f)
+
+    })
+    // alert(JSON.stringify(fields))
+    $('#schema').val(JSON.stringify(fields))
+    // return false;
+  });
+
+</script>

@@ -1,0 +1,913 @@
+<%= inline(this,:'../home/_monitor') %>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<script>
+ 
+</script>
+<style>
+	li.menu{
+		padding:5px;
+	}
+	.top-panel{
+		height:200px;
+		border:0px solid #222;
+	}
+	.main-panel{
+		min-height:300px;
+		border:1px solid #444;
+	}
+	
+	.msg-header{
+		line-height:1.5em; font-size:0.6em
+		background-color: rgb(19, 38, 58);
+		background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+	    0% no-repeat padding-box;
+	}
+	
+	.widget{
+		background:#222;
+		border:1px solid #666;
+		border-radius: 4px;
+		
+	}
+	
+	.header{
+		line-height:3em;
+/*		background-color: rgb(19, 38, 58);*/
+		background-color: rgb(04, 17, 46);
+		
+/*		background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%*/
+	    0% no-repeat padding-box;
+	}
+	
+	.header2{
+		line-height:3em;
+/*		background-color: rgb(19, 38, 58);*/
+		background-color: rgb(04, 17, 46);
+		
+		background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+	    0% no-repeat padding-box;
+	}
+	.conference{
+/*		height:500px;*/
+		/*height:45vh;*/
+		background-color: black;
+	}
+	.geo-map{
+/*		height:500px;*/
+		/*height:45vh;*/
+/*			background:#aaa;*/
+	}
+
+	.selected{
+	  border:2px solid #3147FF;
+	  border-radius: 4px;
+	  padding:5px;
+	}
+	.panel-admit{
+	  background:#01174F;
+/*	  background:#414701;*/
+	}
+	
+	a.completed{
+		color:gray;
+	}
+
+	.value{
+	/*	color: #C2C2C2;*/
+/*		width:50px;*/
+		
+	}
+	.ph{
+/*		height:3em;*/
+	}
+	
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.panel-body::-webkit-scrollbar {
+	  display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.panel-body {
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+	}
+	
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	body::-webkit-scrollbar {
+	  display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	body {
+	  -ms-overflow-style: none;  /* IE and Edge */
+	  scrollbar-width: none;  /* Firefox */
+	}
+	
+	.disable{
+		background:gray;
+		opacity:0.7;
+		border:0px;
+	}
+	
+	
+	.toolbarButton{
+		width:30px;
+	}
+	
+	.xwidget {
+		margin-bottom:10px;
+	}
+	
+	
+	pre{
+		color:#6c6c6c;
+	}
+	
+	
+	
+	.track{
+		border:1px solid #333;
+		border-radius: 4px;
+		text-align:center; 
+		 
+	}
+	
+	.track .value{
+		font-size:1.5em;
+		line-height:4em;
+	}
+	
+</style>
+
+<%
+	
+			ambulances = Ambulance.all
+	
+ 
+				
+			
+					begin
+ 					  @current_zone = Zone.first
+					  @current_zone = Zone.find session[:current_zone] if session[:current_zone]
+					  @current_zone = nil if @current_zone and @current_zone.mode!='aoc'
+					   unless @current_zone
+					  	 @current_zone = Zone.where(:mode=>'aoc').first
+				  	  	 session[:current_zone] = @current_zone.id
+					  end
+					  # @current_zone = Zone.where(:name=>'Ambu').first
+					  
+					  
+					  admits = []
+					  admits = @current_zone.admits.where(:status=>'Admitted').all if @current_zone
+					 # admits =  Admit.where(:status=>'Admitted').all
+
+
+					  stations = Station.find(ambulances.collect{|i| i.station_id})
+					rescue Exception=>e 
+					end
+
+				%>
+
+
+<style>
+	.aoc-heading{
+		font-size:1.5em;
+		
+	}
+	.aoc-line{
+		border-bottom:1px var(--primary-blue);
+	}
+	
+</style>
+			
+	<%
+	
+		admits_completed = @current_zone.admits.where(:status=>'Admitted', :ambulance_id=>nil).sort(:created_at.desc).all if @current_zone
+		
+	%>
+	<% admits_completed.each do |admit| 
+	
+	  code =  admit.patient.to_s
+	  code = admit.an  if admit.an
+	  code = admit.case_no if admit.case_no
+	
+	
+	%>
+	<% end %>
+	
+	<script>
+		$(document).ready(function(){
+				$('nav').remove()
+				$('body').css("padding-top",'0px')
+				$('.select-map').hide()
+			// $('#main-container').css('padding-left','0px')
+		
+		})
+
+		
+	</script>
+	
+<div class="container-fluid">
+<div class="row">
+	
+
+	<div class="col-2 order-3 col-md-3 col-lg-3 col-xl-2  d-none d-sm-none  d-md-block">
+	
+	<div class="col-12 header context-header ">
+		<div class="row"  style="line-height:100px">
+			<!-- <div class="col-3" class="display: flex;  justify-content: start;">
+			Activities
+			</div> -->
+			<div class="col-9" class="display: flex;  justify-content: end;" style="border:0px solid;text-align:right;font-size:4em">
+			<span class="timer"></span>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+		
+	
+	<div class="col-12 main-panel" style="height:1040px">
+		<%= inline(this,:'_dashboard_activity_page') %>
+		<footer class="ml-4 mr-3 pt-3 footer col-3 col-md-2 col-xl-2 d-flex flex-column " style="float:right; background: #151C26; width:310px; position:fixed; bottom:0; right:0; ">
+			<div class="d-flex justify-content-between footer-nav">
+				<span>Today Case</span>
+				<span style="color: #42B7AB">3</span>
+			</div>
+			<div class="d-flex justify-content-between footer-nav">
+				<span>Today Complete</span>
+				<span style="color: #42B7AB">3</span>
+			</div>
+			<hr style="border-top: 1px solid #C2C2C2;"/>
+			<div style="font-size:0.8em;color:#999">
+				<div style="float:right" class="timer">
+					00:00
+				</div>
+					E.S.M.Solution Co.,Ltd. and Aliance
+			</div>
+				<a href="tel:+66865443352" style="display:none">0865443352</a>
+					<%= inline(this,:'../home/_scoring') %>
+				<i style="color:#666"></i>
+				<br/>
+			</footer>
+		
+	</div>
+	</div>
+	
+
+	<div class="col-12 col-md-9 col-lg-9 col-xl-10 order-2 ">
+
+
+		<div class="row aoc-heading navbar-pcm"  style="height:4em">
+	
+			<div class="col-5" style="padding-top:1em">
+			<span class=""> <%= Setting.get :default_center_name %></span>
+			</div>
+			
+			<div class="col-5" style="padding-top:1em">
+			<marquee> <%= Setting.get :system_message %> </marquee>	
+			</div>
+		
+			
+		</div>
+
+
+	
+		<!-- Main nenu -->
+		
+		<!-- Top panel -->
+		<div class="row  context-panel">
+	
+				
+				<div class="xwidget col-6 col-sm-6 col-lg-3 select-map">
+				<%=inline(this,:'_widget_map')%>
+				</div>
+		
+				
+				<div class="xwidget col-12 col-sm-12 col-lg-12">
+				<%=inline(this,:'_widget_all_map')%>
+			
+				</div>
+				
+				<div class="xwidget col-12 col-sm-12 col-lg-12">
+				<%=inline(this,:'_widget_all_ambulance')%>
+			
+				</div>
+				
+		</div>
+		
+		<!-- Context -->
+		<div class="row">
+			
+		</div>
+		
+		
+	</div>
+	
+	
+	
+	
+	
+<div class="modal fade" id="admit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="color:black">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      
+    </div>
+  </div>
+</div>
+	
+					<script type="text/javascript">
+	    
+						function strftime(sFormat, date) {
+						  if (!(date instanceof Date)) date = new Date();
+						  var nDay = date.getDay(),
+						    nDate = date.getDate(),
+						    nMonth = date.getMonth(),
+						    nYear = date.getFullYear(),
+						    nHour = date.getHours(),
+						    aDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+						    aMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+						    aDayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
+						    isLeapYear = function() {
+						      if ((nYear&3)!==0) return false;
+						      return nYear%100!==0 || nYear%400===0;
+						    },
+						    getThursday = function() {
+						      var target = new Date(date);
+						      target.setDate(nDate - ((nDay+6)%7) + 3);
+						      return target;
+						    },
+						    zeroPad = function(nNum, nPad) {
+						      return ('' + (Math.pow(10, nPad) + nNum)).slice(1);
+						    };
+						  return sFormat.replace(/%[a-z]/gi, function(sMatch) {
+						    return {
+						      '%a': aDays[nDay].slice(0,3),
+						      '%A': aDays[nDay],
+						      '%b': aMonths[nMonth].slice(0,3),
+						      '%B': aMonths[nMonth],
+						      '%c': date.toUTCString(),
+						      '%C': Math.floor(nYear/100),
+						      '%d': zeroPad(nDate, 2),
+						      '%e': nDate,
+						      '%F': date.toISOString().slice(0,10),
+						      '%G': getThursday().getFullYear(),
+						      '%g': ('' + getThursday().getFullYear()).slice(2),
+						      '%H': zeroPad(nHour, 2),
+						      '%I': zeroPad((nHour+11)%12 + 1, 2),
+						      '%j': zeroPad(aDayCount[nMonth] + nDate + ((nMonth>1 && isLeapYear()) ? 1 : 0), 3),
+						      '%k': '' + nHour,
+						      '%l': (nHour+11)%12 + 1,
+						      '%m': zeroPad(nMonth + 1, 2),
+						      '%M': zeroPad(date.getMinutes(), 2),
+						      '%p': (nHour<12) ? 'AM' : 'PM',
+						      '%P': (nHour<12) ? 'am' : 'pm',
+						      '%s': Math.round(date.getTime()/1000),
+						      '%S': zeroPad(date.getSeconds(), 2),
+						      '%u': nDay || 7,
+						      '%V': (function() {
+						              var target = getThursday(),
+						                n1stThu = target.valueOf();
+						              target.setMonth(0, 1);
+						              var nJan1 = target.getDay();
+						              if (nJan1!==4) target.setMonth(0, 1 + ((4-nJan1)+7)%7);
+						              return zeroPad(1 + Math.ceil((n1stThu-target)/604800000), 2);
+						            })(),
+						      '%w': '' + nDay,
+						      '%x': date.toLocaleDateString(),
+						      '%X': date.toLocaleTimeString(),
+						      '%y': ('' + nYear).slice(2),
+						      '%Y': nYear,
+						      '%z': date.toTimeString().replace(/.+GMT([+-]\d+).+/, '$1'),
+						      '%Z': date.toTimeString().replace(/.+\((.+?)\)$/, '$1')
+						    }[sMatch] || sMatch;
+						  });
+						}
+				
+				
+						$(document).ready(function(){
+					
+							var selected_ambu = null;
+							var selected_station_id = null;
+							var selected_station_name = null;
+							var selected_admit_id = null;
+					
+							$(".sel-ambu").hide()
+
+							$('.chart_btn').click(function(){
+						
+								window.open('admit?id='+selected_admit_id)
+						
+							})
+					
+							$('.discharge_btn').click(function(){
+						
+								window.location = '../Admit/discharge?id='+selected_admit_id
+						
+							})
+					
+							$('.summary_btn').click(function(){
+						
+								window.open('../Admit/summary?id='+selected_admit_id)
+						
+							})
+					
+					
+							$('.call_btn').click(function(){
+						
+								// $('#call-'+selected_ambu).click()
+						
+								$('.callEnd').click();
+								setTimeout(function(){ 
+
+										$('#resourceId').val(selected_station_name)
+										$('.callStart').click();
+
+									}, 1500);
+									event.preventDefault()
+						
+							})
+					
+					
+					
+					
+							$('.note_btn').click(function(event){	
+					
+								event.preventDefault();
+								$.get( "nurse_note_create?admit_id="+selected_admit_id,function(data,status){
+								  $('.modal-content').html(data);
+								});
+		
+						  	  	$('#admit-modal').modal({
+						  	    	backdrop: 'static',
+						  	    	keyboard: false
+						  	 	})
+	
+							})
+					
+					
+							$('#btn_chart').click((event)=>{
+								// alert('ok ' + selected_admit_id)
+								window.open('admit?id='+selected_admit_id, '_blank');
+								event.preventDefault()
+							})
+				
+				
+							$('#btn_route').click((event)=>{window.location.href='report?admit_id='+selected_admit_id})
+						
+				
+					<% for i in ambulances 
+				
+				
+							begin	
+							resource_id = i.name
+				
+							admit = nil
+							admit = Admit.where(:ambulance_id=>i.id, :status=>'Admitted').first
+				
+							patient = nil
+							patient = admit.patient if admit
+				
+							station_id = 'station_id'
+				
+							if admit
+					
+								station = admit.station
+				
+							else
+								station = i.station
+							end
+				
+							if station
+								station_id= station.name
+							end
+				
+							%>
+					
+					
+					
+							$('#call-<%=i.id%>').click(function(event){
+								$('.callEnd').click();
+								setTimeout(function(){ 
+
+										$('#resourceId').val("<%=i.name%>")
+										$('.callStart').click();
+
+									}, 1500);
+									event.preventDefault()
+							})
+					
+				
+					
+				
+							$('.select-<%=i.id%>').click(function(event){
+
+								// $(".all-ambu").hide()
+						
+							    admit_id = $(this) 
+						
+						 
+								$(".sel-ambu").hide()
+					
+								
+								// $('#btn_chart').click((event)=>{
+			// 						window.open('../Admit/show?id='+admit_id.attr('caseid'), '_blank');
+			// 						event.preventDefault()
+			// 					})
+						
+								$('#btn_call').click(()=>{
+							
+									$('.callEnd').click();
+									setTimeout(function(){ 
+
+											$('#resourceId').val("<%=i.name%>")
+											$('.callStart').click();
+
+										}, 1500);
+										event.preventDefault()
+							
+								})
+						
+						
+						
+								if(admit_id.attr('caseid')!=''){
+									$('#btn_sum').click(()=>{window.location.href='summary?admit_id='+admit_id.attr('caseid')})
+								} else{
+									$('#btn_sum').click(()=>{window.location.href='create_form?admit_id=<%=admit.id if admit%>'})
+								}
+						
+								$('.station .value').html('-')
+								$(".ambu-row").removeClass('selected');
+								$(".ambu-<%=i.id%>").addClass('selected');
+						
+						
+								if(selected_station_name!=null){
+									$('.context-panel').removeClass('station-'+selected_station_name)
+									$('.context-header').removeClass('station-'+selected_station_name)
+						
+								}
+						
+								if(selected_admit_id!=admit_id.attr('caseid')){
+							
+									$(".sel-ambu").slideDown()
+								}else{
+									// $(".sel-ambu").slideUp()
+								}
+						
+								selected_ambu = "<%=i.id%>"
+								selected_station_name = "<%=station_id%>"
+								selected_admit_id = null
+								<% if admit %>
+								selected_admit_id = "<%=admit.id%>"
+						
+								$('.context').removeClass('disable')
+						
+								<% else %>
+								$('.context').addClass('disable')
+						
+								<% end %>
+								selected_station_id = null
+								<% if station %>
+								selected_station_id = "<%=station.id%>"
+								<% end %>
+						
+								$('.context-panel').addClass('station-<%=station_id%>')
+								$('.context-header').addClass('station-<%=station_id%>')
+
+								<% if station %>
+								reload_message("<%=station.id%>")
+								<% end %>
+								if(selected_admit_id){
+					   	
+								widget_patient_update(selected_admit_id)
+							   }
+					
+								$('#resourceId').val("<%=i.name%>")
+					
+								//show_wave_data['0'] = [];
+								show_wave_data['1'] = [];
+								show_wave_data['2'] = [];
+								show_wave_data['3'] = [];
+								show_wave_data['4'] = [];
+								show_wave_data['5'] = [];
+					
+					
+								$('#wave-0').html("")
+								$('#wave-1').html("")
+								$('#wave-2').html("")
+								$('#wave-3').html("")
+								$('#wave-4').html("")
+								$('#wave-5').html("")
+					
+					
+								var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+								prefix = full+"/<%=@context.settings.name%>"
+								admit_path = prefix+"/Station/show?id=<%=station_id%>"
+								<% if admit %>	
+								admit_path = prefix+"/Admit/show?id=<%=admit.id%>"
+								<% end %>
+						
+								<% if i.device_no and i.device_no !="" %>
+						
+								// dvr_path = "https://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&jsession=3883c38b-c306-4f48-a837-7c9a8dcda3f0"
+								dvr_path = "https://103.76.181.125/808gps/open/player/video.html?lang=en&devIdno=<%=i.device_no%>&account=admin&password=admin"
+								tele_path =  prefix+"/Sas/tele?resourceId=<%=i.name%>"
+					
+						       $('iframe').attr( "src", dvr_path);
+					
+								<% end %>
+					   
+								console.log("#select view1|"+admit_path+" view2|"+dvr_path+" view3|"+tele_path)
+						
+							 /////////////////////////////////////////////////// Widget Route
+					   
+							   if(selected_admit_id){
+							   	widget_route_update(selected_admit_id)
+								// widget_patient_update(selected_admit_id)
+							   }
+							   resetPath();
+					   
+							 ///////////////////////////////////////////////////   
+					
+								// $('.callEnd').click();
+			// 					setTimeout(function(){
+			//
+			// 							$('#resourceId').val("<%=i.name%>")
+			// 					        $('.callStart').click();
+			//
+			// 						}, 1500);
+			//
+								event.preventDefault()
+
+							})
+
+						<% rescue Exception=>e
+						end%>	
+				
+						<% end %>	
+				
+				
+						<%=inline(this,:'_ecg.js')%>
+   
+
+				     // var wave_data = [];
+		 
+					 var show_wave_data = {};
+		 
+					 var wave_data = {};
+
+				<% 5.times do |i|
+		
+					  %>
+	   
+				   i = "<%=i+1%>"
+	   
+				   show_wave_data[i] = [];
+
+				  showWave('wave-<%=i+1%>',show_wave_data, i );
+	
+			    <% end %>
+
+			<% if stations %>
+					<% for i in stations.collect{|i| i.name}.sort %>
+		   
+					   i = "<%=i%>"
+		   
+					   wave_data[i] = [];
+			
+					  showWave('wave-<%=i%>',wave_data,i);
+		
+				    <% end %>
+			<% end %>	
+   
+			   	 <%=inline(this,:'_websocket.js')%>
+					  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+				  var ws  = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+	
+	
+			      ws.onopen    = function()  { show('websocket opened'); 
+					<%begin%>
+				  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+					<%rescue Exception=>e
+					end%>
+				  };
+    
+	
+				  ws.onclose   = function()  { show('websocket closed'); 
+		
+				 	setTimeout(function () {
+				       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+				    }, 2000); //will call the function after 2 secs.
+	
+
+			      }
+	  
+			      ws.onmessage = function(m) { 
+			  
+			  
+				console.log("package="+m.data.length)	
+			  
+					  <% if params[:debug] %>
+					show(''+m.data)
+					  <% end %>
+		
+					lines = m.data.split("\n")
+		
+					// console.log(lines[0].split(" ")[0])
+					if(lines[0].split(" ")[0]=='Alert'){
+						data = JSON.parse(lines[1])
+		
+						$('#'+data['station']).addClass('bp_alert_2');
+						$('#'+data['station']+' .msg').html(data['alert']);
+			
+						// play sound it is work
+						ion.sound.play("bell_ring");
+			
+					}else
+			
+					if(lines[0].split(" ")[0]=='Zone.Message'){
+			
+						// if(selected_station_id!=null)
+						reload_message()
+
+		
+					}
+					else
+					if(lines[0].split(" ")[0]=='Data.Image'){
+		
+						lines.shift()
+						img = lines.join("")
+						// alert('image '+m.data.length)
+			
+						$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+					}
+					else
+					if(lines[0].split(" ")[0]=='ZoneUpdate'){
+
+					data = JSON.parse(lines[1])
+	
+					time = strftime("%H:%M:%S",new Date())
+					$('.timer').html(time)
+				
+				
+						console.log(selected_ambu)	
+				
+				
+					if(selected_ambu&&data['ambu_data']){
+				
+						ambu = data['ambu_data'][selected_ambu]
+						if( data['admit_data']&&ambu['admit_id']){
+						admit = data['admit_data'][ambu['admit_id']]
+						if(admit){
+					
+							$('.selection .ambu-name .value').html(ambu['name'])
+							$('.selection .patient-name .value').html(admit['patient']['first_name']+" "+admit['patient']['last_name'])
+						}
+						}
+			
+				
+					}	
+					// console.log("yy"+data['list'].length)
+			
+			
+					locations = []
+			
+
+					for(var id in data['list']){
+						i = data['list'][id]
+			
+			
+						  obj = data['data'][i]
+				 
+				
+						 // console.log(obj)
+						if(obj){
+						  obj['title'] = i
+						  locations.push([i, parseFloat(obj['lat']),parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']])
+				
+						  if(true){	
+
+							    // wave_data.push(obj['wave']);
+						   		// wave_data = wave_data.concat(obj['wave']);
+								// for(var j=0;j<obj['leads'].length;j++){
+								// 	wave_data[i].push(obj['wave'][j]);
+								// }
+								// console.log(wave_data)
+								// console.log(i)
+								if(wave_data[i]==null){
+									wave_data[i] = []
+								}
+					
+								wave_data[i] = 	wave_data[i].concat(obj['leads'][2])
+							   	 // console.log(wave_data[i])
+				   				// console.log("v"+i+" "+wave_data[i].length);
+								// wave_data = obj['wave'];
+						 	   console.log(wave_data[i].length)
+							
+			
+						if(selected_ambu&&data['ambu_data']&&data['ambu_data'][selected_ambu]['name']==i){
+		
+						
+								widget_map_setLocation(obj, parseFloat(obj['lat']), parseFloat(obj['lng']), obj['dvr_sp'], obj['dvr_hx'] ,obj['dvr_ol']);
+					
+								show_wave_data['1'] = 	show_wave_data['1'].concat(obj['leads'][1])	
+								show_wave_data['2'] = 	show_wave_data['2'].concat(obj['leads'][2])	
+								show_wave_data['3'] = 	show_wave_data['3'].concat(obj['leads'][3])	
+								show_wave_data['4'] = 	show_wave_data['4'].concat(obj['leads'][4])
+								show_wave_data['5'] = 	show_wave_data['5'].concat(obj['leads'][5])	
+						
+						
+								 // console.log('x '+show_wave_data['1'].length)
+							// }
+				
+						}
+			
+		    			
+							// console.log("xxx "+i)
+		// 				 	console.log(obj)
+				
+				
+							$('.station-'+i+' .hn').html(obj['ref'])
+			
+							if($('.station-'+i+' .bp').html()!=obj['bp']){
+								$('.station-'+i).addClass('bp_alert');
+								$('.station-'+i).removeClass('bp_alert_2');
+								$('.station-'+i+' .msg').html("-");
+							}else{
+								$('.station-'+i).removeClass('bp_alert');
+								// $('#'+i).removeClass('bp_alert_2');
+								// $('#'+i+' .msg').html("-");
+							}
+			
+							$('.station-'+i+' .bp .value').html(obj['bp'])
+			
+							$('.station-'+i+' .temp .value').html(obj['temp'])
+			
+							$('.station-'+i+' .hr .value').html(obj['hr'])
+							$('.station-'+i+' .pr .value').html(obj['pr'])
+							$('.station-'+i+' .rr .value').html(obj['rr'])
+							$('.station-'+i+' .spo2 .value').html(obj['spo2'])
+			
+			
+							$('.station-'+i+' .score .value').html(obj['score'])
+					
+					
+							$('.station-'+i+' .dvr_sp .value').html(obj['dvr_sp'])
+							$('.station-'+i+' .dvr_hx .value').html(obj['dvr_hx'])
+							$('.station-'+i+' .dvr_ol .value').html(obj['dvr_ol'])
+					
+
+			
+						    sos = parseInt(obj['score']);
+							color = 'none'
+				
+							if(sos<2)color='#262'
+							if(sos<4&&sos>=2)color='#662'
+							if(sos>=4)color='#622'
+				
+				
+				
+							$('.note-panel-'+i).css('background',color);
+			
+					  }
+			
+					}
+			
+					}
+			
+						// console.log(locations)
+					
+							///////////////////////////////////////////////////// All map
+			
+							widget_all_map_update(locations)
+					
+							//////////////////////////////////////////////////////////////
+			
+					}
+			
+			
+			
+			
+			
+			
+				 };
+
+reload_message()
+	
+				})
+   
+
+
+			   </script>
+	
+
+	
+</div>
+
+</div>
+	
+<div id="msgs" style="font-size:0.8em"></div>

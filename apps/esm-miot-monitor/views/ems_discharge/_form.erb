@@ -1,0 +1,397 @@
+
+<%
+
+  record = ems_case
+  list_patient_reimbursement = ['','UC/UHC:(บัตรทอง)', 'SSS:(สิทธิประกันสังคม)','CSMBS:(สวัสดิการข้าราชการ)','PCF:(พระราชบัญญัติคุ้มครองผู้ประสบภัยจากรถ)','WCF:(กองทุนเงินทดแทน)','SOE Welfare:(สวัสดิการรัฐวิสาหกิจ)','LAO Welfare:(สิทธิข้าราชการท้องถิ่น)','PHI:(สิทธิประกันสุขภาพเอกชน)', 'อื่นๆ'] 
+
+
+%>
+<div class="row g-3">
+
+
+<div class="col-4">
+<label class="form-label" for="operation_result">ผลปฏิบัติการ</label>
+<%= f.select(:operation_result, [['found','พบเหตุ'],['not_found','ไม่พบเหตุ']], :value=>record.operation_result, :class=>' form-select ') %>
+</div>
+
+<div class="col-4">
+<label class="form-label" for="operation_hospital">สถานที่เกิดเหตุ</label>
+<%= f.select(:operation_hospital, [['out_hospital','นอกโรงพยาบาล'],['in_hospital','ในโรงพยาบาล']], :value=>record.operation_hospital, :class=>' form-select') %>
+</div>
+
+<div class="col-4">
+<label class="form-label " for="discharge_stamp">เวลา</label>
+<input class="form-control" type="text" name="record[discharge_stamp]" id="" value="<%=record.discharge_stamp%>">
+</div>
+
+
+<div class="clear"></div>
+
+<div class="col-3">
+<label class="form-label" for="init_cbd_color">CBD by 1669</label>
+<%= f.select(:init_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :value=>record.init_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="dispatch_cbd_color">CBD by EMD</label>
+<%= f.select(:dispatch_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :value=>record.dispatch_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="scene_cbd_color">Scene Triage</label>
+<%= f.select(:scene_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :value=>record.scene_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-3">
+<label class="form-label" for="screen_cbd_color">ER Triage</label>
+<%= f.select(:screen_cbd_color, [['',''],['red','แดง'],['yellow','เหลือง'],['green','เขียว'],['white','ขาว'],['black','ดำ']], :value=>record.screen_cbd_color, :class=>' form-select') %>
+</div>
+
+<div class="col-12">
+<label class="form-label" for="triage_note">Triage Note</label>
+<input class="form-control" type="text" name="record[triage_note]" id="" value="<%=record.triage_note%>" placeholder="ระบุสาเหตุการทำการตรวจรักษา">
+</div>
+
+
+<div class="clear"></div>
+<div class="col-8">
+<label class="form-label " for="init_cbd_color">กรณีไม่พบเหตุ</label>
+<input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_reason%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="operation_cancel_at">แจ้งยกเลิกเวลา</label>
+<input class="form-control" type="text" name="record[operation_cancel_at]" id="" value="<%=record.operation_cancel_at%>">
+</div>
+<div class="clear"></div>
+
+
+<div class="col-4">
+<label class="form-label" for="patient_type">ประเภทผู้ป่วย</label>
+<%= f.select(:patient_type, [['trauma','Trauma'],['non-trauma','Non-Trauma']], :value=>record.patient_type, :class=>' form-select') %>
+</div>
+
+<div class="clear"></div>
+<div class="col-8">
+<label class="form-label " for="diagnosis">Diagnosis</label>
+<input class="form-control monitor-input" type="text" name="record[diagnosis]" id="" value="<%=record.diagnosis%>">
+</div>
+
+<!--
+<div class="col-4">
+<label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
+<input class="form-control" type="text" name="record[patient_reimbursement]" id="" value="<%=record.patient_reimbursement%>">
+</div>
+--> <!-- อันเก่า -->
+<div class="col-4">
+<label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
+<%= f.select(:patient_reimbursement, list_patient_reimbursement , :value=>record.patient_reimbursement, :class=>' form-select') %> 
+</div>  <!-- อันใหม่ -->
+
+<div class="col-12">
+  <input class="form-check-input" type="checkbox" name="record[bls_onscene]" id="bls_onscene">
+  <label class="form-check-label" for="bls_onscene">BLS ถึงที่เกิดเหตุก่อน</label>
+</div>
+
+
+<!-- <div class="col-4">
+  <input class="form-check-input" type="checkbox" name="record[bls_cpr]" id="bls_cpr">
+  <label class="form-check-label" for="bls_cpr">CPR</label>
+</div> -->
+
+
+<div class="col-4">
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" name="record[bls_request]" id="bls_request">
+		<label class="form-check-label" for="bls_request">ร้องขอแหล่งสนับสนุน</label>
+	</div>
+</div>
+
+<div class="col-8">
+<!-- <label class="form-label " for="bls_operation">ทีมสนับสนุนผู้ปฏิบัติงานแบบใด</label> -->
+<%= f.select(:bls_operation, ['','BLS', 'จว.โครงการ','ตำรวจ','พลเมืองดี', 'อื่นๆ'], :value=>record.bls_operation, :class=>' form-select') %>
+
+
+</div>
+
+<div class="col-4">
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" name="record[special_request]" id="special_request">
+		<label class="form-check-label" for="special_request">Activated specialist</label>
+	</div>
+</div>
+
+<div class="col-8">
+<!-- <label class="form-label " for="special_type">Type of specialist team</label> -->
+<%= f.select(:special_type, ['','ECMO Team','Neuro','G-Trauma', 'Cardio', 'PED/GYN'], :value=>record.special_type, :class=>' form-select') %>
+
+</div>
+
+
+<hr/>
+
+<div class="col-12">
+<div class="row d-flex justify-content-between">
+<div class="col-6">
+<strong>
+  <label class="form-label " for="screening_vital">Vital Sign : Initial </label>
+</strong>
+</div>
+
+<div class="col-3">
+Time
+  <input class="form-control" type="text" name="record[init_vs_stamp]" id="" value="<%=record.init_vs_stamp%>">
+
+</div>
+
+</div>
+<%
+
+
+
+%>
+
+
+<div class="row">
+
+  <div class="col-3">
+  <label class="form-label " for="init_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[init_sbp]" id="" value="<%=record.init_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[init_dbp]" id="" value="<%=record.init_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_hr">HR</label>
+  <input class="form-control" type="text" name="record[init_hr]" id="" value="<%=record.init_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_rr">RR</label>
+  <input class="form-control" type="text" name="record[init_rr]" id="" value="<%=record.init_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[init_spo2]" id="" value="<%=record.init_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[init_gcs]" id="" value="<%=record.init_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_temp">BT</label>
+  <input class="form-control" type="text" name="record[init_temp]" id="" value="<%=record.init_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="init_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[init_dtx]" id="" value="<%=record.init_dtx%>">
+  </div>
+</div>
+</div>
+
+<hr/>
+
+<div class="col-12">
+  <div class="col-12">
+  <div class="row d-flex justify-content-between">
+  <div class="col-6">
+  <strong>
+    <label class="form-label " for="screening_vital">Vital Sign : Repeat </label>
+  </strong>
+  </div>
+
+  <div class="col-3">
+	  Time
+    <input class="form-control" type="text" name="record[repeat_vs_stamp]" id="" value="<%=record.repeat_vs_stamp%>">
+
+  </div>
+
+  </div>
+  </div>
+<div class="row">
+
+  <div class="col-3">
+  <label class="form-label " for="repeat_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[repeat_sbp]" id="" value="<%=record.repeat_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[repeat_dbp]" id="" value="<%=record.repeat_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_hr">HR</label>
+  <input class="form-control" type="text" name="record[repeat_hr]" id="" value="<%=record.repeat_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_rr">RR</label>
+  <input class="form-control" type="text" name="record[repeat_rr]" id="" value="<%=record.repeat_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[repeat_spo2]" id="" value="<%=record.repeat_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[repeat_gcs]" id="" value="<%=record.repeat_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_temp">BT</label>
+  <input class="form-control" type="text" name="record[repeat_temp]" id="" value="<%=record.repeat_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="repeat_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[repeat_dtx]" id="" value="<%=record.repeat_dtx%>">
+  </div>
+</div>
+</div>
+
+
+<hr/>
+
+<div class="col-12">
+  <div class="row d-flex justify-content-between">
+  <div class="col-6">
+  <strong>
+    <label class="form-label " for="screening_vital">Vital Sign : ED </label>
+  </strong>
+  </div>
+
+  <div class="col-3">
+Time
+    <input class="form-control" type="text" name="record[screen_vs_stamp]" id="" value="<%=record.screen_vs_stamp%>">
+
+  </div>
+
+  </div>
+<div class="row ">
+
+  <div class="col-3">
+  <label class="form-label " for="screen_sbp">SBP</label>
+  <input class="form-control" type="text" name="record[screen_sbp]" id="" value="<%=record.screen_sbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_dbp">DBP</label>
+  <input class="form-control" type="text" name="record[screen_dbp]" id="" value="<%=record.screen_dbp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_hr">HR</label>
+  <input class="form-control" type="text" name="record[screen_hr]" id="" value="<%=record.screen_hr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_rr">RR</label>
+  <input class="form-control" type="text" name="record[screen_rr]" id="" value="<%=record.screen_rr%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_spo2">SPO2</label>
+  <input class="form-control" type="text" name="record[screen_spo2]" id="" value="<%=record.screen_spo2%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_gcs">GCS</label>
+  <input class="form-control" type="text" name="record[screen_gcs]" id="" value="<%=record.screen_gcs%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_temp">BT</label>
+  <input class="form-control" type="text" name="record[screen_temp]" id="" value="<%=record.screen_temp%>">
+  </div>
+  <div class="col-3">
+  <label class="form-label " for="screen_dtx">DTX</label>
+  <input class="form-control" type="text" name="record[screen_dtx]" id="" value="<%=record.screen_dtx%>">
+  </div>
+</div>
+
+</div>
+<hr/>
+<strong><label class="form-label " for="">Transfer</label>
+</strong>
+<div class="col-8">
+<label class="form-label " for="transfer_hospital">โรงพยาบาลปลายทาง</label>
+<input class="form-control" type="text" name="record[transfer_hospital]" id="" value="<%=record.transfer_hospital%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="transfer_hn">Transfer HN</label>
+<input class="form-control" type="text" name="record[transfer_hn]" id="" value="<%=record.transfer_hn%>">
+</div>
+
+<hr/>
+<strong>
+<label class="form-label " for="">Evaluation</label>
+</strong>
+
+<div class="col-4">
+<label class="form-label " for="dispatch_time">Dispatch Time (minutes)</label>
+<input class="form-control" type="text" name="record[dispatch_time]" id="" value="<%=record.dispatch_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="activation_time">Activation Time (minutes)</label>
+<input class="form-control" type="text" name="record[activation_time]" id="" value="<%=record.activation_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="response_time">Response Time (minutes)</label>
+<input class="form-control" type="text" name="record[response_time]" id="" value="<%=record.response_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="onscene_time">On Scene Time (minutes)</label>
+<input class="form-control" type="text" name="record[onscene_time]" id="" value="<%=record.onscene_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="transfer_time">Transfer Time (minutes)</label>
+<input class="form-control" type="text" name="record[transfer_time]" id="" value="<%=record.transfer_time%>">
+</div>
+<div class="col-4">
+<label class="form-label " for="transfer_time">Total Time (minutes)</label>
+<input class="form-control" type="text" name="record[total_time]" id="" value="<%=record.total_time%>">
+</div>
+
+<div class="col-6">
+<label class="form-label " for="over_activate_time_reason">สาเหตุ Activate Time มากกว่า 2 นาที ? </label>
+<input class="form-control" type="text" name="record[over_activate_time_reason]" id="" value="<%=record.over_activate_time_reason%>">
+</div>
+
+<div class="col-6">
+<label class="form-label " for="over_response_time_reason">สาเหตุ   Response Time มากกว่า 8 นาที</label>
+<input class="form-control" type="text" name="record[over_response_time_reason]" id="" value="<%=record.over_response_time_reason%>">
+</div>
+
+<div class="col-6">
+<label class="form-label " for="over_time_managment">วิธีการรับมืออย่างไรเมื่อ AT และ RT มากกว่ากำหนด</label>
+<input class="form-control" type="text" name="record[over_time_managment]" id="" value="<%=record.over_time_managment%>">
+</div>
+
+
+
+<div class="col-12 text-panel">
+
+
+</div>
+
+<div class="col-4">
+<label class="form-label " for="dispatch_time">External Mission Number</label>
+<input class="form-control" type="text" name="record[ext_case_no]" id="" value="<%=record.ext_case_no%>">
+</div>
+
+</div>
+
+
+
+<script>
+
+  function update_text(){
+
+    $.ajax({
+      url: "<%="../EMS/summary_text"%>?id=<%=record.id%>&mode=inner",
+      context: document.body
+    }).done(function(data) {
+
+      $( '.text-panel' ).html(data);
+
+
+    });
+
+  }
+  update_text();
+
+  $( '.monitor-input' ).on('change', function() {
+    update_text();
+  });
+</script>

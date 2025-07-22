@@ -1,0 +1,79 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+
+<div class="card">
+
+  <div class="card-header bg-primary text-white">
+  <center>Intubation</center>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+
+<div class="col-12 ">
+
+  <style>
+    .field-item{
+        margin-bottom:20px
+        ;border:0px solid
+     }
+    </style>
+
+
+  <label class="form-label">Indication<span class="mandatory">*</span></label>
+  <%= radio_string this, 'indication',   :value=>%w{airway_protection ventilation_failure oxygenation_failure crash_airway} %>
+
+  <label class="form-label">Patient Body Weight<span class="mandatory">*</span></label>
+  <%= text_string this, 'weight', :label=>'', :col=>4%>
+  <%
+  heaven = <<HEAVEN
+No difficult to intubate
+Hypoxemia
+Extremmmme of serializeAnatomic Challenge
+Vomit/Blood/Fluid
+Exsanguination
+Neck limit motion
+HEAVEN
+  heaven = heaven.strip.split("\n")
+  %>
+
+  <label class="form-label">HEAVEN (difficult to intubate)<span class="mandatory">*</span></label>
+  <%= check_string this, 'heaven',   :value=>heaven, :label=>"" ,:col_item=>'col-6'%>
+  <%
+  heaven = <<MOANS
+No difficult to ventilate
+Mask seal
+Obesity/Obstruction
+Age > 55 yr
+No teeth
+Siff lungs or c-spine
+MOANS
+  heaven = heaven.strip.split("\n")
+  %>
+  <label class="form-label">MOANS (difficult to ventilation)<span class="mandatory">*</span></label>
+  <%= check_string this, 'moans',   :value=>heaven, :label=>"" ,:col_item=>'col-6'%>
+
+
+  <label class="form-label">Method<span class="mandatory">*</span></label>
+  <%= select_string this, 'method',   :value=>%w{non_sedative sedative rsi}, :labels=>['Non-sedative', 'Sedative', 'RSI'] %>
+
+  <label class="form-label">Induction agent</label>
+  <%= check_string this, 'induction_agent',   :value=>%w{etomidate ketamine propofol midazolam fentanyl diazepam}, :label=>"" %>
+
+  <label class="form-label">Paralytic drug</label>
+  <%= radio_string this, 'paralytic_drug',   :value=>%w{succinylcholine rocuronium} %>
+
+  <label class="form-label">Position of intubation<span class="mandatory">*</span></label>
+  <%= radio_string this, 'position',   :value=>%w{stand sit ground other} %>
+
+
+  </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+	<link href="<%=url_for('css/main.css?=22')%>" rel="stylesheet">
+   
+ 	<script src="/vendor/d3/d3.min.cus.js"></script>
+
+    <title>PTZ</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="" rel="stylesheet">
+	<script src="/vendor/jquery-1.9.1.min.js"></script>
+    <script>
+	$(window).bind(
+	  'touchmove',
+	   function(e) {
+	    e.preventDefault();
+	  }
+	);
+	</script>
+	
+  </head>
+
+  <body style="">
+
+    <main role="main" class="" style="border:0px solid red;">
+
+   <%=yield :content%>
+
+    </main>
+
+  </body>
+</html>
+

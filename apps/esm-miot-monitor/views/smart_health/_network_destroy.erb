@@ -1,0 +1,28 @@
+<%
+	
+	network = SHNetwork.find params[:id]
+	
+	users = SHUserNetwork.where(:network_id=>network.id).all
+	for i in users
+		
+		user = User.find i.user_id 
+		
+		user.destroy if user
+		
+		if i.provider_id
+		
+		provider = Provider.find i.provider_id
+		
+		provider.destroy if provider 
+		
+		end
+		
+		i.destroy
+	
+	end
+	
+	network.destroy 
+	
+%>
+
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=index?tab=network">

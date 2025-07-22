@@ -1,0 +1,14 @@
+<div class="row" id="r#{record.id}">
+<div class="col-sm-12" >	
+<%= index+1%>.	
+<label> Time : </label> <value><%=record.stamp %></value>
+<label>BP : </label> <value><%=record.bp_sys%>/<%=record.bp_dia%></value>
+<label>PR : </label> <value><%=record.pr%></value>
+<label>RR : </label> <value><%=record.rr%></value>
+<label>SpO<sub>2</sub> : </label> <value><%=record.spo2%></value>
+<label>RR : </label> <value><%=record.temp%></value>
+
+<%=link_to "Edit", "../DataRecord/edit?id=#{record.id}", :class=>'btn btn-default'%>
+<%=link_to "Del", "../DataRecord/destroy?id=#{record.id}", :class=>'btn btn-default'%>
+</div>
+</div> 

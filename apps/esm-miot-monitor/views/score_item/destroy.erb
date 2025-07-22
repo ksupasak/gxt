@@ -1,0 +1,12 @@
+<%
+	
+	
+	
+	record = this.model.find(params[:id])
+	score_id = record.score_id
+	record.destroy
+	
+	
+
+%>
+<%=redirect_to "../Score/show?id=#{score_id}"%>

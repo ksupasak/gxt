@@ -1,0 +1,133 @@
+<% if request.post?
+
+
+  params[:ids].each_with_index do |i,j|
+
+    med = this.model.find(i)
+    if med
+      m = {:group=>params[:group][j], :sort_order=>params[:sort_order][j], :code=>params[:code][j], :name=>params[:name][j]}
+      data = {}
+      data[:med] = params[:name][j]
+      data[:unit] = params[:unit][j]
+      data[:consume] = params[:consume][j]
+      data[:volume] = params[:volume][j]
+      data[:volume_formula] = params[:volume_formula][j] if params[:volume_formula][j]!=""
+      data[:routes] = params[:routes][j]
+      
+      begin
+      data[:dose] = JSON.parse(params[:dose][j]) if params[:dose][j]!=""
+     rescue Exception=>e
+
+      end
+
+      m[:data] = data.to_json
+
+      med.update_attributes m
+
+    end
+
+
+
+  end
+
+
+
+
+%>
+
+<%# params.inspect %>
+<meta http-equiv="Refresh" content="0; url='med'" />
+<% else %>
+
+
+<form action="med" method="post">
+
+<h1><%='Medication'%></h1>
+
+
+<table class="table table-striped">
+<%
+
+	# keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+
+  keys = %w{group sort_order code name consume volume unit volume_formula routes dose }
+  styles = {}
+  styles['group'] = "width:80px"
+  styles['sort_order'] = "width:50px"
+  styles['code'] = "width:120px"
+  styles['consume'] = "width:180px"
+  styles['name'] = "width:200px"
+  styles['volume'] = "width:50px"
+  styles['unit'] = "width:50px"
+  styles['routes'] = "width:120px"
+  styles['dose'] = "width:80px"
+  styles['volume_formula'] = "width:250px"
+
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j %></th>
+	<% end %>
+	<th></th>
+	</tr>
+</thead>
+<tbody>
+<%
+	for i in this.model.where({:type=>'med'}).sort(:group=>1, :sort_order=>1).all
+
+  m = i.attributes
+  data = JSON.parse i.data
+  m.merge! data
+
+%>
+<tr>
+	<% for j in keys
+
+
+
+  %>
+<td style='<%=styles[j]%>'>
+  <% if j =='consume' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+  
+  <% elsif j =='volume' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+
+  <% elsif j =='unit' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+
+  <% elsif j =='volume_formula' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+  
+  <% elsif j =='routes' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+
+  <% elsif j =='dose' %>
+  <input name="<%=j%>[]" value='<%=m[j] %>' type="text" style='<%=styles[j]%>'>
+  <% else %>
+<input name="<%=j%>[]" value="<%=i[j] %>" type="text" style='<%=styles[j]%>'>
+  <% end %>
+  <% end %>
+<td>
+	<td>
+  <input name="ids[]" value="<%=i.id%>" type="hidden">
+	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default' %>
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<input type='submit' value='Submit' class='btn btn-primary'/>
+</form%>
+<br/><br/>
+
+<a href="create" class="btn btn-success">Create</a>
+
+<hr/>
+
+
+<a href="med_migration" class="">Migration</a>
+<% end %>

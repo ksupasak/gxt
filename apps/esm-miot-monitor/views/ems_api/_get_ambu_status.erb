@@ -1,0 +1,42 @@
+<%
+
+results = {}
+
+results[:code] = "200 OK"
+results[:data] = "OK"
+
+
+if params[:name] 
+
+    ambu = Ambulance.where(:name=>params[:name]).first
+
+    if ambu
+
+       command = EMSCommand.where(:ambulance_id=>ambu.id).last
+
+       if command
+
+        log = AdmitLog.where(:ems_command_id=>command.id, :status=>'PENDING').sort(:sort_order=>1).first
+
+        res = {}
+        res[:ambulance] = ambu
+        res[:log] = log
+
+        results[:data] = res
+
+        results[:code] = "200 OK"
+
+       else
+
+        results[:data] = "No command"
+
+       end
+
+   end
+
+else
+
+end
+
+
+%><%=results.to_json%>

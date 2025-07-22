@@ -1,0 +1,284 @@
+<%
+
+er_case = EsmMiotMonitor::ERCase.find(params[:id])
+admit = EsmMiotMonitor::Admit.find(er_case.admit_id)
+patient = EsmMiotMonitor::Patient.find(admit.patient_id)
+
+if request.post?
+    room_id = params[:room_id]
+    room = Room.find(room_id)
+    bed = Bed.find(params[:bed_id])
+    admit.update_attributes :room_id => room_id, :bed_id => params[:bed_id]
+    bed_name = bed.name
+    er_case.update_attributes :status=>'Admitted', :round_period => room.round_period, :room_id => room_id, :bed_id => params[:bed_id], :bed_name => bed_name
+    
+    
+    
+    ERCase.notify @context, :zone_id=>admit.zone_id
+
+
+ %>
+    <meta http-equiv="refresh" content="0;url=show?id=<%= er_case.id %>" />
+<%
+
+else
+
+%>
+ <form id="adt-form" action="adt?id=<%= er_case.id %>" method="post">
+
+<div class="card">
+       
+    <div class="card-body">
+        <h5 class="card-title">ADT</h5>
+        <p class="card-text">
+            <%= patient.name %>
+        </p>
+    
+
+            <!-- Room Tabs: เพิ่ม namespace ให้กับ tab -->
+            <ul class="nav nav-tabs mb-3" id="adtRoomTabs" role="tablist">
+                <% Room.all.each_with_index do |room, index| 
+                    count = ERCase.where(:room_id=>room.id, :status=>'Admitted').count
+                %>
+                    <li class="nav-item" role="presentation" style="background-color: <%= room.bg_color if room %>">
+                        <button class="nav-link <%= 'active' if index == 0 %>" 
+                                id="adt-room-tab-<%= room.id %>" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#adt-room-content-<%= room.id %>" 
+                                type="button" 
+                                role="tab"
+                                aria-controls="adt-room-content-<%= room.id %>"
+                                aria-selected="<%= index == 0 ? 'true' : 'false' %>">
+                            <%= room.name %>
+                            <span class="badge bg-info ms-2">
+                                <%= count %> / <%= room.beds.count %>
+                            </span>
+                        </button>
+                    </li>
+                <% end %>
+            </ul>
+
+            <!-- Room Content: ปรับปรุง ID และ aria attributes -->
+            <div class="tab-content" id="adtRoomTabContent">
+                <% Room.all.each_with_index do |room, index| %>
+                    <div class="tab-pane fade <%= 'show active' if index == 0 %>" 
+                         id="adt-room-content-<%= room.id %>" 
+                         role="tabpanel"
+                         aria-labelledby="adt-room-tab-<%= room.id %>"
+                         
+                          style="background-color: <%= room.bg_color if room %>"
+                         >
+                        
+                        <div class="row g-3" style="padding:20px">
+                            <% room.beds.each do |bed| %>
+                                <div class="col-md-3">
+                                    <%
+                                        # ตรวจสอบว่าเตียงว่างหรือไม่
+                                        er_case = ERCase.where(bed_id: bed.id, status: 'Admitted').first
+
+                                        is_occupied = false
+                                        
+                                        if er_case.present?
+                                            #er_case = EsmMiotMonitor::ERCase.where(admit_id: current_admit.id, :status=>'Admitted').first
+                                            current_admit = Admit.find(er_case.admit_id)
+                                            is_occupied = true
+                                        else
+                                            is_occupied = false 
+                                        end
+                                        
+                                        
+                                        # ตรวจสอบว่าเป็นเตียงที่เลือกอยู่หรือไม่
+                                        is_selected = admit.bed_id == bed.id
+                                    %>
+                                    <% if er_case.present? %>
+                                    <a href="show?id=<%= er_case.id %>">
+                                    <% else %>
+                                    <a href="create?bed_id=<%= bed.id %>">
+                                    <% end %>
+                                    <div class="card h-100 <%= 'border-success' if is_selected %>">
+                                        <div class="card-body">
+                                            <h6 class="card-title d-flex justify-content-between align-items-center">
+                                                <%= bed.name %>
+                                                <% if is_occupied %>
+                                                    <span class="badge bg-danger">ไม่ว่าง</span>
+                                                <% else %>
+                                                    <span class="badge bg-success">ว่าง</span>
+                                                <% end %>
+                                            </h6>
+                                            
+                                            <% if is_occupied #&& !is_selected %>
+                                                <p class="card-text small">
+                                                    <%= current_admit.patient.name 
+                                                        patient = er_case.patient
+                                                        patient = current_admit.patient unless patient
+                                                    %><br>
+                                                    <small class="text-muted">
+                                                        <%= er_case.case_no %><br/>
+                                                        <%= er_case.patient.to_s %><br/>
+                                                        <%= current_admit.admit_stamp.strftime("%d/%m/%Y %H:%M") %>
+                                                    </small>
+                                                </p>
+                                            <% end %>
+                                            
+                                            <div class="text-center mt-2">
+                                                <% if is_occupied %>
+                                                
+                                                <% else %>
+                                                    <button type="button" 
+                                                            class="btn btn-sm <%= is_selected ? 'btn-success' : 'btn-outline-primary' %> adt-select-bed"
+                                                            data-room-id="<%= room.id %>"
+                                                            data-bed-id="<%= bed.id %>"
+                                                            <%= 'disabled' if is_selected %>>
+                                                        <%= is_selected ? 'เตียงปัจจุบัน' : 'เลือกเตียง' %>
+                                                    </button>
+                                                <% end %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                            <% end %>
+                        </div>
+
+                    </div>
+                <% end %>
+            </div>
+
+            <!-- Hidden inputs -->
+            <input type="hidden" name="room_id" id="adt-selected-room">
+            <input type="hidden" name="bed_id" id="adt-selected-bed">
+
+     
+
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary" id="adt-submit-button" disabled>
+            ยืนยันการย้ายเตียง
+        </button>
+    </div>
+    
+</div>
+   </form>
+<style>
+.nav-tabs .nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #0d6efd;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.badge {
+    transition: all 0.3s ease;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+.card-body {
+    position: relative;
+}
+</style>
+
+<script>
+const AdtManager = {
+    init() {
+        this.submitButton = document.getElementById('adt-submit-button');
+        this.selectedRoomInput = document.getElementById('adt-selected-room');
+        this.selectedBedInput = document.getElementById('adt-selected-bed');
+        this.initializeTabs();
+        this.bindEvents();
+    },
+
+    initializeTabs() {
+        // สร้าง Tab instances แยกกัน
+        const roomTabs = document.querySelectorAll('#adtRoomTabs button[data-bs-toggle="tab"]');
+        roomTabs.forEach(tab => {
+            new bootstrap.Tab(tab);
+        });
+
+        // จัดการ event สำหรับ tab
+        roomTabs.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', (e) => {
+                // ล้างการเลือกเตียงเมื่อเปลี่ยน tab
+                this.clearBedSelection();
+                
+                // อัพเดท URL hash เพื่อจำ tab ที่เลือก
+                const roomId = e.target.getAttribute('data-bs-target').replace('#adt-room-content-', '');
+                history.replaceState(null, null, `#room-${roomId}`);
+            });
+        });
+
+        // เปิด tab ตาม URL hash เมื่อโหลดหน้า
+        const hash = window.location.hash;
+        if (hash) {
+            const roomId = hash.replace('#room-', '');
+            const tab = document.querySelector(`#adt-room-tab-${roomId}`);
+            if (tab) {
+                new bootstrap.Tab(tab).show();
+            }
+        }
+    },
+
+    clearBedSelection() {
+        document.querySelectorAll('.adt-select-bed').forEach(btn => {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-primary');
+            btn.textContent = 'เลือกเตียง';
+        });
+        this.selectedRoomInput.value = '';
+        this.selectedBedInput.value = '';
+        this.submitButton.disabled = true;
+    },
+
+    bindEvents() {
+        document.querySelectorAll('.adt-select-bed').forEach(button => {
+            button.addEventListener('click', (e) => this.handleBedSelection(e));
+        });
+
+        // เพิ่ม event listener สำหรับการ submit
+        const form = document.getElementById('adt-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                if (!this.selectedRoomInput.value || !this.selectedBedInput.value) {
+                    e.preventDefault();
+                    alert('กรุณาเลือกเตียง');
+                }
+            });
+        }
+    },
+
+    handleBedSelection(e) {
+        const button = e.currentTarget;
+        e.preventDefault();
+        this.clearBedSelection();
+        
+        // เลือกปุ่มปัจจุบัน
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-success');
+        button.textContent = 'เตียงที่เลือก';
+        
+        // อัพเดทค่าที่เลือก
+        this.selectedRoomInput.value = button.dataset.roomId;
+        this.selectedBedInput.value = button.dataset.bedId;
+        
+        // เปิดปุ่ม submit
+        this.submitButton.disabled = false;
+    }
+};
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => AdtManager.init());
+} else {
+    AdtManager.init();
+}
+</script>
+<% end %>

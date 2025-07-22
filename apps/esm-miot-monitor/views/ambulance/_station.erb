@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+	<link href="<%=url_for('css/main.css?=22')%>" rel="stylesheet">
+    <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
+    <script src="/vendor/d3/d3.min.cus.js"></script>
+    <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
+	<link href="/open-iconic/font/css/open-iconic-foundation.css" rel="stylesheet">
+    <link href="" rel="stylesheet">
+	<script src="/vendor/jquery-1.9.1.min.js"></script>
+    <title>Smart Ambulance Service</title>
+<style>
+body{
+	background:#000;
+	color:#111;
+	padding:0px;
+}
+.card{
+	color:black;
+}
+.container-color{
+	box-shadow: 0px 0px 15px #111;
+	border-radius:5px;	
+	color:#fff;
+}
+.info-svg{
+	margin-top:0px;
+	height:800px;
+	width:100%;
+}
+.nav-link{
+	background:#2e3338;
+}
+
+.main{
+	background:black;
+}
+</style>
+  </head>
+
+
+<body>
+<%
+
+
+	ambulance = Ambulance.find(params[:id])
+	station = ambulance.station
+
+
+
+
+%>
+
+
+<main role="main" class="main" style="border:0px solid red;">
+<div id="main-container" class="container-color" style="padding-left:15px;adding-right:15px;">
+
+<div class="row">
+<div class="col-12" style="height:480px;overflow:scroll">
+	
+		<ul class="nav nav-tabs">
+  		  <li class="nav-item nav-itemx">
+  		    <a class="nav-link  " data-toggle="tab" id="menu1-link" href="#menu1">Dashboard</a>
+  		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link active" data-toggle="tab" id="menu2-link" href="#menu2">Monitor</a>
+		  </li>
+	
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" id="menu3-link" href="#menu3">Flow Sheet</a>
+		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" href="#menu4">Status</a>
+		  </li>
+		  <li class="nav-item nav-itemx">
+		    <a class="nav-link" data-toggle="tab" href="#menu5">DVR</a>
+		  </li>
+	  <li class="nav-item nav-itemx">
+	    <a class="nav-link" data-toggle="tab" href="#menu5">Setting</a>
+	  </li>
+		  
+		</ul>
+
+
+		<div class="tab-content">
+		 
+		  <div id="menu1" class="tab-pane ">
+		    
+			Station : <%=ambulance.name%>
+			Monitor : <%=station.name%>
+			
+				<div class="station station-<%=station.name%>">
+				
+		  		<div class="col-lg-12 order-lg-1order-1">
+		  			<div class="row">
+						<div class="col-9">
+							<div class="row">
+		  						<div class="col-6  col-lg-3 col-sm-3 pr">
+		  							<span class="label">PR</span>
+		  							<div class="value">-</div>
+		  						</div>
+		  						<div class="col-6  col-lg-3 col-sm-3 spo2">
+		  							<span class="label">SpO2</span>
+		  							<div class="value">-</div>
+		  						</div>
+		  						<div class="col-6  col-lg-3 col-sm-3 bp">
+		  							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
+		  							<div class="value">-</div>
+		  						</div>
+			
+	  							
+								
+								
+		  							<div class="col-6  col-lg-3 col-sm-3 hr">
+		  								<span class="label">HR</span>
+		  								<div class="value">-</div>
+		  							</div>
+							
+		  							<div class="col-6  col-lg-3  col-sm-3 rr">
+		  								<span class="label">RR</span>
+		  								<div class="value">-</div>
+		  							</div>
+							
+							
+		  						<div class="col-6  col-lg-3 col-sm-3 temp">
+		  						<span class="label">Temp</span>
+		  						<div class="value">-</div>
+		  						</div>
+	  					
+	  				
+		  						<div class="col-6 col-lg-3  col-sm-3 score">
+		  							<span class="label">Sc</span>
+		  							<div class="value"></div>
+		  						</div>
+							</div>
+						</div>
+						
+						
+		  			</div>
+		  		</div>
+			</div>
+			
+			   
+		 </div>
+		 
+		  <div id="menu2" class="tab-pane fade active show">
+			  
+			  
+			<div class="station station-<%=station.name%>">
+				
+	  		<div class="col-lg-12 order-lg-1order-1">
+	  			<div class="row">
+					<div class="col-9">
+						<div class="row">
+	  						<div class="col-6  col-lg-4 col-sm-4 pr">
+	  							<span class="label">PR</span>
+	  							<div class="value">-</div>
+	  						</div>
+	  						<div class="col-6  col-lg-4 col-sm-4 spo2">
+	  							<span class="label">SpO2</span>
+	  							<div class="value">-</div>
+	  						</div>
+	  						<div class="col-6  col-lg-4 col-sm-4 bp">
+	  							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
+	  							<div class="value">-</div>
+	  						</div>
+			
+	  							
+								
+								
+	  							<div class="col-6  col-lg-4 col-sm-4 hr">
+	  								<span class="label">HR</span>
+	  								<div class="value">-</div>
+	  							</div>
+							
+	  							<div class="col-6  col-lg-4  col-sm-4 rr">
+	  								<span class="label">RR</span>
+	  								<div class="value">-</div>
+	  							</div>
+							
+							
+	  						<div class="col-6  col-lg-4 col-sm-4 temp">
+	  						<span class="label">Temp</span>
+	  						<div class="value">-</div>
+	  						</div>
+	  					
+						</div>
+					</div>
+					<div class="col-3">
+						<div class="row">
+  						<div class="col-12 col-lg-12  col-sm-12 score" style="font-size:1.2em">
+  							<span class="label">Sc</span>
+  							<div class="value"  style="font-size:3em">-</div>
+  						</div>
+					</div>
+					</div>
+						
+	  			</div>
+	  		</div>
+		</div> 
+	
+		 </div>
+		 
+		  <div id="menu3" class="tab-pane fade  ">
+			  
+		<div class="viewport" style="width:100%;min-width:800px;height:800px;border:0px solid white;background:#fff">
+			
+		</div>
+		 
+		 
+		 
+		 
+		 
+		 
+		 </div>
+		 
+		  <div id="menu4" class="tab-pane fade ">
+		    	4Consequat occaecat ullamco amet non eiusmod nostrud dolore irure incididunt est duis anim sunt officia. Fugiat velit proident aliquip nisi incididunt nostrud exercitation proident est nisi. Irure magna elit commodo anim ex veniam culpa eiusmod id nostrud sit cupidatat in veniam ad. Eiusmod consequat eu adipisicing minim anim aliquip cupidatat culpa excepteur quis. Occaecat sit eu exercitation irure Lorem incididunt nostrud.
+			  
+		 </div>
+		 
+		  <div id="menu5" class="tab-pane fade ">
+		<div style="width:100%;height:360px;overflow:hidden;font-size:0.5em">
+			<iframe id="frame"  style="margin-left:-20px;margin-top:-20px;width:115%;height:360px"></iframe>
+		</div>
+		<script>
+		    $(window).load(function(){
+		     $('iframe').load(function() {
+				
+		       });
+		       $('#loading').show();
+		       $('iframe').attr( "src", "http://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=819112150&account=admin&password=admin");
+
+		     });
+		</script>
+			  
+		 </div>
+		 
+		 
+		  <div id="menu6" class="tab-pane fade ">
+		    	6Consequat occaecat ullamco amet non eiusmod nostrud dolore irure incididunt est duis anim sunt officia. Fugiat velit proident aliquip nisi incididunt nostrud exercitation proident est nisi. Irure magna elit commodo anim ex veniam culpa eiusmod id nostrud sit cupidatat in veniam ad. Eiusmod consequat eu adipisicing minim anim aliquip cupidatat culpa excepteur quis. Occaecat sit eu exercitation irure Lorem incididunt nostrud.
+			  
+		 </div>
+		 
+		 
+		</div>
+	
+</div>
+</div>
+
+<div class="row">
+<i style="color:#999">  <div id="msgs" style="font-size:0.8em"></div></i>
+</div>
+
+
+<%= inline(this,:'../lib/_monitor') %>
+
+<%= inline(this,:'../lib/_flowsheet') %>
+
+<%= inline(this,:'../lib/_websocket') %>
+
+<script>
+	$(document).ready(function(){
+		$('#menu3-link').click(function(){
+		  	gfx.active(true);
+			width = document.body.clientWidth;
+			$('.viewport').css('width',width-30);
+		  	gfx.render(true);
+		})
+		
+	})
+</script>
+
+
+</div>
+</main>
+
+
+    <script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
+	<script>
+		$('#main-container').removeClass('container')
+	</script>
+	
+	
+		
+</body>
+		 
+</html>

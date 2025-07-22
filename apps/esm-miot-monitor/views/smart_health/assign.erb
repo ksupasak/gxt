@@ -1,0 +1,27 @@
+<%= params.inspect %>
+<%
+
+# SHVisit.all.each do |i|
+#
+# 	i.update_attributes :status=>'Pending'
+#
+# end
+
+if request.post? and params[:visit]
+	
+	params[:visit].each_pair do |k,v| 
+			
+		visit = SHVisit.find(k)
+		
+		if visit and v[:officer_id]!=""
+		
+			visit.update_attributes :dispatched_at => Time.now, :dispatched_user=>@current_user.id, :officer_id=>v[:officer_id], :status=>'Accepted'
+			
+		end
+		
+	end
+	
+	
+end 	
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=index">

@@ -1,0 +1,129 @@
+<%  @default_media_server = 'http://192.168.1.6:8080'%>
+<%
+
+	content_path = "#{Setting.get_value('content_server')}/content"
+
+	session = Session.find params[:id]
+
+	list = Video.where(:session_id=>session.id).all
+	
+	
+	name = 'out.mp4'
+
+  	#name = params[:path] if params[:path]
+	name = list[0].path if list.size> 0
+	name = params[:path] if params[:path]  
+
+
+%>
+
+<div class="row" >
+	<div class="col-sm-2">
+			<div class="row"  style="font-size:0.8em;background:#eee;border-radius: 5px;padding:10px">
+		<div class="row" >
+				<div class="col-sm-5">
+				HN :
+				</div>
+				<div class="col-sm-7">
+				<%= session.key %>
+				</div>
+		</div>
+		<div class="row" >
+				<div class="col-sm-5">
+				Date :
+				</div>
+				<div class="col-sm-7">
+				<%= session.datetime.strftime("%d-%m-%Y") %>
+				</div>
+		</div>
+		<div class="row" >
+				<div class="col-sm-5">
+				Proc :
+				</div>
+				<div class="col-sm-7">
+				<%= session.op %>
+				</div>
+		</div>
+			<div class="row" >
+					<div class="col-sm-5">
+					Favorite :
+					</div>
+					<div class="col-sm-7">
+					<%= session.favorite %>
+					</div>
+			</div>
+		<div class="row" >
+				<div class="col-sm-5">
+				Note :
+				</div>
+				<div class="col-sm-7">
+				<%= session.note %>
+				</div>
+		</div>
+		</div>
+		<div class="clear"></div><br/>
+		
+		<div class="row"  style="font-size:0.8em;background:#eee;border-radius: 5px;padding:10px">
+		
+		<%
+		
+			video =  Video.where(:session_id=>session.id, :path=>name ).first
+			if video
+		%>
+			<div class="row" >
+					<div class="col-sm-5">
+					Name :
+					</div>
+					<div class="col-sm-7">
+					<%= video.name %>
+					</div>
+			</div>
+			<div class="row" >
+					<div class="col-sm-5">
+					Time :
+					</div>
+					<div class="col-sm-7">
+					<%= video.datetime.strftime("%d-%m-%Y %H:%M") %>
+					</div>
+			</div>
+					<div class="row" >
+							<div class="col-sm-5">
+							Size :
+							</div>
+							<div class="col-sm-7">
+							<%= format("%.2f",video.raw_size.to_f / 1024/1024) %> MB
+							</div>
+					</div>
+		<div class="row" >
+		<div class="col-sm-12">	
+		<center>
+		<a target="_blank" download="<%=video.name%>" href="<%=File.join(content_path,video.path)%>" class="btn btn-small btn-success">Download</a>
+		</div>
+		</center>
+		</div>
+		<% end %>
+		</div>
+	
+	</div>
+	<div class="col-sm-10">
+		<div id='player'>
+		<video width="100%"  src="<%=content_path%>/<%=name%>/index.m3u8" controls autoplay>
+		<source src="<%=content_path%>/<%=name%>/index.webm" type="video/webm">    
+		</video>
+		</div>
+		<div class="row" >
+		<% for i in list.sort{|a,b| a.name<=>b.name} %>
+		
+		<div class="col-sm-2" style="font-size:0.8em">
+		<a href="show?id=<%=params[:id]%>&path=<%=i.path%>" ><img src='<%= File.join(content_path, i.path.gsub("mp4", "jpg")) %>' width="160">
+			<%= i.name%>
+			<%= format("%.2f",i.raw_size.to_f / 1024/1024) %> MB 
+			<%= i.datetime.strftime("%d-%m-%Y")%>
+			</a>
+		</div>
+
+		<% end %>
+		</div>
+	</div>
+	
+</div>

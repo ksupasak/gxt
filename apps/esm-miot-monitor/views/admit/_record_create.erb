@@ -1,0 +1,66 @@
+<%
+
+admit = Admit.find(params[:admit_id])
+
+
+
+if request.post?
+
+
+	record = admit.records.create params[:record]
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+%><%= inline(this,:'_record_partial') %><br/>
+
+<% else %>
+
+<form action="record_create?admit_id=<%=params[:admit_id]%>" class="model-remote" method="post" enctype="multipart/form-data" >
+
+<div class="modal-header">
+    <h4 class="modal-title" id="">Data Record</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+<%= inline(this,:'_record_form') %>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <input type="submit" class="btn btn-primary"  name="Submit" value="Submit"/>
+  </div>
+</div>
+
+</form>
+<script>
+
+		$(".model-remote").submit(function(e) {
+
+	    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var url = form.attr('action');
+
+	    $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: form.serialize(), // serializes the form's elements.
+	           success: function(data)
+	           {
+	               $('#record-partial').html(data)// show response from the php script.
+				   $('#admit-modal').modal('toggle');
+	           }
+	    });
+
+	});
+
+
+</script>
+<% end %>

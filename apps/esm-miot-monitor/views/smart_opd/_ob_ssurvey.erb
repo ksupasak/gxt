@@ -1,0 +1,19 @@
+<% require_relative 'lib'%>
+
+<%
+  @record = record
+%>
+<div class="col-12">
+<div class="card-title d-flex align-items-center">
+			<h5 class="mb-0 text-primary">Airway :</h5>
+</div>
+
+<%= check_string this, 'airway_assessment' %>
+<div class="row">
+<div class="col-2">
+</div>
+<div class="col-10">
+<%= radio_string this, 'airway', :value=>%w{airway_patient airway_compromise}, :col=>12 %>
+</div>
+</div>
+</div>

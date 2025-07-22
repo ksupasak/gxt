@@ -1,0 +1,405 @@
+
+<% require_relative 'lib'%>
+<%
+
+
+
+  if record.empty?
+
+    case_record = EMSCase.find(params[:case_id])
+
+    if case_record
+    
+      c = case_record
+
+    record = {
+      'sc_sbp' => c.init_sbp,
+      'sc_dbp' => c.init_dbp,
+      'sc_pr' => c.init_hr,
+      'sc_rr' => c.init_rr,
+      'sc_o2sat' => c.init_spo2,
+      'sc_temp' => c.init_temp,
+      'sc_dtx' => c.init_dtx,
+      'sc_gcs' => c.init_gcs,
+      'er_sbp' => c.screen_sbp,
+      'er_dbp' => c.screen_dbp,
+      'er_pr' => c.screen_hr,
+      'er_rr' => c.screen_rr,
+      'er_o2sat' => c.screen_spo2, 
+      'er_temp' => c.screen_temp,
+      'er_dtx' => c.screen_dtx,
+      'er_gcs' => c.screen_gcs,
+
+     
+    }
+     end
+  end
+
+  @record = record
+  @record_id = record_id
+
+%>
+<style>
+.mandatory{color:red;font-weight:bold;}
+</style>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Sepsis</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+<%
+  list = <<LIST
+1|Look very sick/unwell/unconscious/drowning/confuse
+2|History of infection
+3|Have device relate infection
+4|History drug resistance
+5|Temperature high
+6|Major trauma
+7|Age>65 yr.
+8|History drug allergy
+LIST
+%>
+<%= check_string this, 'characteristic', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 , :label=>'Characteristic <span class="mandatory">*</span>'%>
+
+<%= time_string this, 'alert_sepsis_time', :col=>4 , :label=>'Alert sepsis time'%>
+
+<div class="row">
+
+<div class="col-12">
+<div class="row">
+<div class="col-12">
+<h5 class=" d-flex justify-content-between">Scoring at scene 
+
+<div class="col-2">
+<%= text_string this, 'sc_score', :col=>12 , :label=>''%>
+</div>
+</h5>
+<hr/>
+</div>
+</div>
+
+
+<div class="row">
+
+<%= text_string this, 'sc_sbp', :col=>3, :label=>'SBP'%>
+<%= text_string this, 'sc_dbp', :col=>3, :label=>'DBP'%>
+<%= text_string this, 'sc_pr', :col=>3, :label=>'Heart Rate'%>
+<%= text_string this, 'sc_rr', :col=>3, :label=>'Resp Rate'%>
+
+</div>
+<div class="row">
+<%= text_string this, 'sc_o2sat', :col=>3, :label=>'O2Sat'%>
+<%= text_string this, 'sc_gcs', :col=>3, :label=>'GCS'%>
+<%= text_string this, 'sc_temp', :col=>3, :label=>'Body Temp (C)'%>
+<%= text_string this, 'sc_dtx', :col=>3, :label=>'DTX (mg%)'%>
+</div>
+<div class="row">
+<%= select_string this, 'sc_loc', :col=>4, :label=>'Level of Consciousness', :value=>%w{A V P U}%>
+<%= select_string this, 'sc_oxygen', :col=>3, :label=>'Supplemental Oxygen', :value=>%w{Yes No}%>
+
+</div>
+</div>
+
+<div class="col-12">
+<div class="row">
+<h5 class=" d-flex justify-content-between">Scoring at ER
+<div class="col-2"> 
+<%= text_string this, 'er_score', :col=>12 , :label=>''%>
+</div>
+</h5>
+<hr/>
+<%= text_string this, 'er_sbp', :col=>3, :label=>'SBP'%>
+<%= text_string this, 'er_dbp', :col=>3, :label=>'DBP'%>
+<%= text_string this, 'er_pr', :col=>3, :label=>'Heart Rate'%>
+<%= text_string this, 'er_rr', :col=>3, :label=>'Resp Rate'%>
+
+</div>
+<div class="row">
+<%= text_string this, 'er_o2sat', :col=>3, :label=>'O2Sat'%>
+<%= text_string this, 'er_gcs', :col=>3, :label=>'GCS'%>
+<%= text_string this, 'er_temp', :col=>3, :label=>'Body Temp (C)'%>
+<%= text_string this, 'er_dtx', :col=>3, :label=>'DTX (mg%)'%>
+</div>
+<div class="row">
+<%= select_string this, 'er_loc', :col=>4, :label=>'Level of Consciousness', :value=>%w{A V P U}%>
+<%= select_string this, 'er_oxygen', :col=>3, :label=>'Supplemental Oxygen', :value=>%w{Yes No}%>
+
+</div>
+</div>
+</div>
+
+<script>
+
+function get_score({
+  rr,
+  o2Sat,
+  oxygen,
+  temp,
+  sbp,
+  hr,
+  loc
+}) {
+  const scores = {
+    rr: null,
+    o2Sat: null,
+    oxygen: null,
+    temp: null,
+    sbp: null,
+    hr: null,
+    loc: null
+  };
+
+  // RR (Respiratory Rate)
+  if (rr !== null && rr !== "" && rr !== undefined) {
+    if (rr <= 8) scores.rr = 3;
+    else if (rr >= 9 && rr <= 11) scores.rr = 1;
+    else if (rr >= 21 && rr <= 24) scores.rr = 2;
+    else if (rr >= 25) scores.rr = 3;
+    else if (rr >= 12 && rr <= 20) scores.rr = 0;
+  }
+
+  // O2 Saturation
+  if (o2Sat !== null && o2Sat !== "" && o2Sat !== undefined) {
+    if (o2Sat <= 91) scores.o2Sat = 3;
+    else if (o2Sat >= 92 && o2Sat <= 93) scores.o2Sat = 2;
+    else if (o2Sat >= 94 && o2Sat <= 95) scores.o2Sat = 1;
+    else if (o2Sat >= 96) scores.o2Sat = 0;
+  }
+
+  // Supplemental Oxygen
+  if (oxygen !== null && oxygen !== "" && oxygen !== undefined) {
+    scores.oxygen = oxygen ? 2 : 0;
+  }
+
+  // Temperature
+  if (temp !== null && temp !== "" && temp !== undefined) {
+    if (temp <= 35) scores.temp = 3;
+    else if (temp >= 35.1 && temp <= 36) scores.temp = 1;
+    else if (temp >= 36.1 && temp <= 38) scores.temp = 0;
+    else if (temp >= 38.1 && temp <= 39) scores.temp = 1;
+    else if (temp >= 39.1) scores.temp = 2;
+  }
+
+  // SBP
+  if (sbp !== null && sbp !== "" && sbp !== undefined) {
+    if (sbp <= 90) scores.sbp = 3;
+    else if (sbp >= 91 && sbp <= 100) scores.sbp = 2;
+    else if (sbp >= 101 && sbp <= 110) scores.sbp = 1;
+    else if (sbp >= 111 && sbp <= 219) scores.sbp = 0;
+    else if (sbp >= 220) scores.sbp = 3;
+  }
+
+  // Heart Rate
+  if (hr !== null && hr !== "" && hr !== undefined) {
+    if (hr <= 40) scores.hr = 3;
+    else if (hr >= 41 && hr <= 50) scores.hr = 1;
+    else if (hr >= 51 && hr <= 90) scores.hr = 0;
+    else if (hr >= 91 && hr <= 110) scores.hr = 1;
+    else if (hr >= 111 && hr <= 130) scores.hr = 2;
+    else if (hr >= 131) scores.hr = 3;
+  }
+
+  // Consciousness
+  if (loc !== null && loc !== "" && loc !== undefined) {
+    scores.loc = ['V', 'P', 'U'].includes(loc.toUpperCase()) ? 3 : 0;
+  }
+
+  // Compute total from non-null scores
+  scores.total = Object.values(scores)
+    .filter(val => typeof val === 'number')
+    .reduce((sum, val) => sum + val, 0);
+
+  return scores;
+}
+
+  function format_score(score){
+    if(score == 3){
+      return '<span class="text-danger">+3</span>'
+    }else if(score == 2){
+      return '<span class="text-warning">+2</span>'
+    }else if(score == 1){
+      return '<span class="text-success">+1</span>'
+    }else if(score == 0){
+      return ''
+    }
+  }
+
+  function update_score(){ 
+   var sc_raw = {
+    rr: parseInt($('#sc_rr_').val()),
+    o2Sat: parseInt($('#sc_o2sat_').val()),
+    temp: parseFloat($('#sc_temp_').val()),
+    sbp: parseInt($('#sc_sbp_').val()),
+    hr: parseInt($('#sc_pr_').val()),
+    oxygen:$('#sc_oxygen_').val() == 'Yes' ? true : false,
+    loc: $('#sc_loc_').val(),
+   }
+   console.log(sc_raw)
+   const sc_scores = get_score(sc_raw)
+   console.log(sc_scores)
+
+   $('.sc_sbp_ext').html(format_score(sc_scores.sbp))
+   $('.sc_pr_ext').html(format_score(sc_scores.hr))
+   $('.sc_rr_ext').html(format_score(sc_scores.rr))
+   $('.sc_o2sat_ext').html(format_score(sc_scores.o2Sat))
+   $('.sc_temp_ext').html(format_score(sc_scores.temp))
+   $('.sc_loc_ext').html(format_score(sc_scores.loc))
+   $('.sc_oxygen_ext').html(format_score(sc_scores.oxygen))
+
+   $('#sc_score_').val(sc_scores.total)
+
+
+    var er_raw = {
+    rr: parseInt($('#er_rr_').val()),
+    o2Sat: parseInt($('#er_o2sat_').val()),
+  
+    temp: parseFloat($('#er_temp_').val()),
+    sbp: parseInt($('#er_sbp_').val()),
+    hr: parseInt($('#er_pr_').val()),
+    oxygen:$('#er_oxygen_').val() == 'Yes' ? true : false,
+    loc: $('#er_loc_').val(),
+   }
+   console.log(er_raw)
+   const er_scores = get_score(er_raw)
+
+   $('.er_sbp_ext').html(format_score(er_scores.sbp))
+   $('.er_pr_ext').html(format_score(er_scores.hr))
+   $('.er_rr_ext').html(format_score(er_scores.rr))
+   $('.er_o2sat_ext').html(format_score(er_scores.o2Sat))
+   $('.er_temp_ext').html(format_score(er_scores.temp))
+   $('.er_loc_ext').html(format_score(er_scores.loc))
+   $('.er_oxygen_ext').html(format_score(er_scores.oxygen))
+
+   $('#er_score_').val(er_scores.total)
+   
+
+ }
+
+  $(document).ready(function() {
+    $('.form-control').on('change', function(){
+     console.log("edit")
+     update_score() 
+    })
+
+    update_score();
+  })
+
+</script>
+
+
+
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>NEWS</center>
+</div>
+<div class="card-body">
+<table width="100%" class="table table-borderd" style="font-size:0.8em">
+
+<tr>
+<td>Score</td>
+<td class="text-center">3</td>
+<td class="text-center">2</td>
+<td class="text-center">1</td>
+<td class="text-center">0</td>
+<td class="text-center">1</td>
+<td class="text-center">2</td>
+<td class="text-center">3</td>
+</tr>
+<tr>
+<td>RR(BPM)</td>
+<td class="text-center"><=8</td>
+<td class="text-center"></td>
+<td class="text-center">9-11</td>
+<td class="text-center">12-20</td>
+<td class="text-center"></td>
+<td class="text-center">21-24</td>
+<td class="text-center">>=25</td>
+</tr>
+<tr>
+<td>O2Sat(%%)</td>
+<td class="text-center"><=91</td>
+<td class="text-center">92-93</td>
+<td class="text-center">94-95</td>
+<td class="text-center">>=96</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+</tr>
+<tr>
+<td>Supplement Oxygen</td>
+<td class="text-center"></td>
+<td class="text-center">Yes</td>
+<td class="text-center"></td>
+<td class="text-center">No</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+</tr>
+<tr>
+<td>Temperature(C)</td>
+<td class="text-center"><=35</td>
+<td class="text-center"></td>
+<td class="text-center">35.1-36</td>
+<td class="text-center">36.1-38</td>
+<td class="text-center">38.1-39</td>
+<td class="text-center">>=39.1</td>
+<td class="text-center"></td>
+</tr>
+<tr>
+<td>SBP(mmHg)</td>
+<td class="text-center"><=90</td>
+<td class="text-center">91-100</td>
+<td class="text-center">101-110</td>
+<td class="text-center">111-219</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center">>=220</td>
+</tr>
+<tr>
+<td>HR(BPM)</td>
+<td class="text-center"><=40</td>
+<td class="text-center"></td>
+<td class="text-center">41-50</td>
+<td class="text-center">50-90</td>
+<td class="text-center">91-110</td>
+<td class="text-center">111-130</td>
+<td class="text-center">>=131</td>
+</tr>
+<tr>
+<td>Level of Consciousness</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center">A</td>
+<td class="text-center"></td>
+<td class="text-center"></td>
+<td class="text-center">V,P or U</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+
+
+
+
+<%= check_string this, 'fluid_resuscitation',:col_item=>'col-4', :col=>12,   :value=>%w{NSS RLS Acetar อื่นๆ}, :label=>'Fluid resuscitation(rate/Total IV เติมลงอื่นๆ) <span class="mandatory">*</span>' %>
+<%= text_string this, 'fluid_resuscitation_other', :col=>3, :label=>''%>
+<br/>
+<%= time_string this, 'septic_time', :col=>3 , :label=>'Septic W/U time'%>
+<%= time_string this, 'lactate_time', :col=>3 , :label=>'Lactate time'%>
+<%= time_string this, 'antibiotic_time', :col=>3, :label=>'Antibiotic time'%>
+
+</div>
+
+<div class="col-12"><br/></div>
+
+
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

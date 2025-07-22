@@ -1,0 +1,36 @@
+<%
+
+  @current_zone = Zone.find session[:current_zone]
+
+  unless @current_zone
+
+      @current_zone = Zone.where(:mode=>'ems').first
+      if @current_zone
+        session[:current_zone] = @current_zone.id
+      end
+  end
+
+  @current_ambulance = nil
+
+  if session[:current_ambu]
+    @current_ambulance = Ambulance.find(session[:current_ambu])
+  end
+  
+  
+  @current_provider = nil
+
+  if session[:current_provider]
+    @current_provider = Provider.find(session[:current_provider])
+  end
+  
+  
+  @current_case = nil
+
+
+
+  if @current_ambulance and @current_case = EMSCase.where(:ambulance_id=>@current_ambulance.id, :status=>'New', :case_type=>'EMS',:request_at=>{'$gte'=>Time.now-76800}).first
+
+
+  end
+
+%>

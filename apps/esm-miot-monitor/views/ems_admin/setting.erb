@@ -1,0 +1,172 @@
+<%
+	
+groups = []
+
+
+g = {:name=>'General'}
+items = %w{
+	default_center_name
+	aoc_center
+	aoc_code
+	ui_theme
+	ui_nav_color
+	default_login
+}
+g[:items] = items
+groups << g
+
+
+g = {:name=>'SMS Features'}
+items = %w{
+	sms_agent
+	sms_api_key
+	sms_secret_key
+	sms_sender
+	sms_msg
+}
+g[:items] = items
+groups << g
+
+g = {:name=>'VideoCalling Features'}
+items = %w{
+	videocall_agent
+	videocall_server
+	videocall_password
+}
+g[:items] = items
+groups << g
+
+
+g = {:name=>'Google Features'}
+items = %w{
+	google_api_key
+	google_drive_secret_path
+	google_drive_sheet_name	
+	google_kml
+}
+g[:items] = items
+groups << g
+
+
+g = {:name=>'Map Features'}
+items = %w{
+	map_server
+	geocode_server
+	route_server
+}
+g[:items] = items
+groups << g
+
+g = {:name=>'LINE Features'}
+items = %w{
+	line_channel_token
+	line_outgoing_webhook
+	line_group_id
+	line_first_alert
+	line_dispatch_alert
+}
+g[:items] = items
+groups << g
+
+g = {:name=>'Extend Features'}
+items = %w{
+	his_gateway
+	his_bearer
+	cms_url
+	cms_user_password
+	docuseal_host
+	docuseal_token
+	asr_url
+}
+g[:items] = items
+groups << g
+	
+g = {:name=>'Platform Features'}
+items = %w{
+	host_url
+	license_code
+	license_package
+	license_issue
+	api_token
+}
+g[:items] = items
+groups << g
+
+g = {:name=>'AI Features'}
+items = %w{
+	chatgpt_api_key
+}
+
+
+g[:items] = items
+groups << g
+		
+list = {}
+
+settings = Setting.all
+for s in settings
+		
+	list[s.name] = s
+		
+end
+	
+	
+%>
+<%# settings.inspect  %>
+<form action="<%= get_path 'update'%>" method="post" >
+
+<h1>Settings</h1>
+<hr/>
+
+	<div class="row">
+		
+			<% for g in groups %>
+			<div class="col-12 col-lg-6 col-xl-6">
+				
+				
+					
+					<div class="card  ">
+					
+					
+						<div class="card-header bg-primary bbg-gradient text-white">
+
+							<div class="">
+								<h6 class="mb-0 text-white">
+
+									<span class="t" t="case_info"><%=g[:name]%></span>  :
+
+								</h6>
+							</div>
+					
+
+						</div>
+
+						<div class="card-body">
+						<div class="row">
+						<% for i in g[:items] 
+						
+								
+							s = list[i]
+							value = ''
+							value = s.value if s 	
+						
+						%>
+						<div class="col-6">
+						<p class="px-3 ">
+							<span class="t" t="record_contact_phone"><%= i.humanize %></span>
+						</p><input name='setting[<%=i%>]' value="<%= value %>"  id="record_contact_phone" class="form-control mb-3 " type="text" placeholder="" aria-label="default input example">
+						</div>
+						<% end %>
+						</div>
+						
+						</div>
+					
+					</div>
+					
+				
+					
+			</div>
+				<% end %>
+	</div>
+	<input type='submit' value="Update" class="btn btn-info" >
+</form>

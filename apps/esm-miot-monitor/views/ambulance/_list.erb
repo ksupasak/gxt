@@ -1,0 +1,65 @@
+<%
+
+  zone = Zone.find(session[:current_zone])
+
+%>
+<table class="table table-striped">
+<%
+
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j[0] %></th>
+	<% end %>
+	<th></th>
+	</tr>
+</thead>
+<tbody>
+<%
+	for i in this.model.where(:zone_id=>zone.id)
+%>
+<tr>
+	<% for j in keys
+
+    content = nil
+
+    case j[0]
+    when 'zone_id'
+      content = i.zone.name
+    when 'station_id'
+      content = i.station.name if i.station
+  	  
+	  att = Attachment.find i.image
+	  if att
+		 
+		  content = "<img src='#{att.path}' width='200'><br/><center>#{content}</center>"
+		  
+	  end
+	  
+	  
+	else
+      content = i[j[0]]
+    end
+
+
+
+
+
+
+
+  %>
+
+  	<td><%=content%></td>
+
+  	<% end %>
+	<td>
+	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default' %>
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>

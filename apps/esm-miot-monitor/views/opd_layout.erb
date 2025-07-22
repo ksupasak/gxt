@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+	<link href="<%=url_for('css/main.css?=22')%>" rel="stylesheet">
+    <script src="<%=url_for('js/ion.sound.min.js')%>"></script>
+    <script src="/vendor/d3/d3.min.cus.js"></script>
+
+    <title>Medical IOT Solution</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%=url_for 'css/bootstrap.min.css'%>" rel="stylesheet">
+	<link href="/open-iconic/font/css/open-iconic-foundation.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="" rel="stylesheet">
+	<script src="/vendor/jquery-1.9.1.min.js"></script>
+<style>
+body{
+	background:#fff;
+	color:#111;
+	padding-top:0px;
+}
+.card{
+	color:black;
+}
+/*.container{
+	background:#fff;
+	box-shadow: 0px 0px 15px #111;
+	border-radius:5px;
+/*	min-height:800px;*/
+}*/
+</style>
+  </head>
+
+  <body>
+
+   
+    <!-- <main role="main" class="main" style="border:0px solid red;"> -->
+   <div id="main-container" class=" container "  style="padding-left:15px;padding-right:15px;max-width:100%">
+	   
+  <div class="row">
+   <div class="col-12">
+   <%=yield :content%>
+   </div>
+  </div>
+  
+  	</div>
+    <!-- </main>-->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    -->
+    <script src="<%=url_for 'js/bootstrap.min.js'%>"></script>
+<script>
+		 $('#search').focus();
+</script>
+  </body>
+</html>
+

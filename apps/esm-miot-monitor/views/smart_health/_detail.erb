@@ -1,0 +1,33 @@
+<%
+	
+
+%>
+<% if params[:ctype]=='note' %>
+<% elsif params[:ctype]=='visit'%>
+<iframe src="visit_partial?admit_id=<%=params[:admit_id]%>&id=<%=params[:id]%>" width="100%" height="450">
+</iframe>
+<% elsif params[:ctype]=='case_record'%>
+<iframe src="summary_partial?admit_id=<%=params[:admit_id]%>&record_id=<%=params[:id]%>" width="100%" height="800">
+</iframe>
+<% elsif params[:ctype]=='vitalsign'%>
+<iframe src="connect?admit_id=<%=params[:admit_id]%>&id=<%=params[:id]%>" width="100%" height="800">
+</iframe>
+<% elsif params[:ctype]=='conference'%>
+<% if params[:admit_id]%>
+<iframe src="tele_create?admit_id=<%=params[:admit_id]%>" width="100%" height="800">
+</iframe>
+<% else %>
+ <iframe src="tele_create?sender=<%=params[:sender]%>&receiver=<%=params[:receiver]%>" width="100%" height="800">
+</iframe>
+<%# inline(this,:'_tele_create')%>
+
+<% end %>
+<% elsif params[:ctype]=='image'
+
+url = "../Message/content?id=#{params[:id]}"
+%>
+<img src="<%=url%>" style="  width: 100%;height: auto;"/>
+<% end %>
+
+
+

@@ -1,0 +1,18 @@
+<%
+	
+	
+require 'pusher'
+
+channels_client = Pusher::Client.new(
+  app_id: '890952',
+  key: 'eea8307ec90fb2e792cc',
+  secret: '870f8c568d2487fec4f7',
+  cluster: 'ap1',
+  encrypted: true
+)
+
+channels_client.trigger('my-channel', 'my-event', {
+  message: 'hello world '+Time.now.to_s
+})
+	
+%>

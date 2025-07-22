@@ -1,0 +1,96 @@
+<h1><%=name params[:service]%> Show</h1>
+<%
+   record =  this.model.find params[:id]
+if record  
+%>
+<div class="row">
+<div class="col-lg-6">
+	Name : <%=record.name%>
+</div>
+<div class="col-lg-6">
+Version : <%=record.version%>
+</div>
+</div>
+
+<div class="row">
+	<div class="col-lg-12">
+	Description :
+<pre>
+<%=record.description%>
+</pre>
+	</div>
+
+</div>
+
+<div class="row">
+<div class="col-lg-12">	
+	<div class="accordion" id="accordionExample">
+		
+	<% 
+	
+
+		items = record.items.order('sort_order').all
+		
+		for i in items
+			
+			conds  = i.conditions.sort!{|a,b| a.sort_order = 0 unless a.sort_order 
+				b.sort_order=0 unless b.sort_order 
+				a.sort_order<=>b.sort_order }
+	%>	
+		
+	  <div class="card">
+	    <div class="card-header" id="heading-<%=i.id%>">
+	      <h5 class="mb-0">
+	        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-<%=i.id%>" aria-expanded="true" aria-controls="collapse-<%=i.id%>">
+	          <%=i.title%> 
+	        </button>
+			<%= link_to "Edit","../ScoreItem/edit?id=#{i.id}",:class=>'btn',:style=>'float:right' %>
+	
+			<%= link_to "+ Condition","../ScoreCondition/create?record[score_item_id]=#{i.id}",:class=>'btn',:style=>'float:right' %>
+	      </h5>
+	    </div>
+
+	    <div id="collapse-<%=i.id%>" class="collapse " aria-labelledby="heading-<%=i.id%>" data-parent="#accordionExample">
+	      <div class="card-body">
+	     
+			<table class="table">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Minimum</th>
+					<th>Maximum</th>
+					<th>Option</th>
+					<th>Score</th>
+					<th>Alert</th>
+				</tr>
+			</thead>
+			<tbody>
+			<% for j in conds%>
+			<tr><td><%=j.sort_order%></td>
+				<td><%=j.min%></td><td><%=j.max%></td><td><%=j.option%></td><td><%=j.score%></td><td><%=j.alert_msg%></td>
+				<td><%=link_to 'Edit',"../ScoreCondition/edit?id=#{j.id}" %></td>
+			</tr>
+			<% end %>
+			</tbody>
+			</table>
+	      </div>
+	    </div>
+	  </div>
+	
+	
+	<% end %>
+	
+	<%= link_to "+ Criteria","../ScoreItem/create?record[score_id]=#{record.id}",:class=>'btn' %>
+ 
+
+
+	</div>
+	
+</div>	
+</div>
+
+
+<% end %><hr/>
+<%=link_to 'Edit', "edit?id=#{params[:id]}",:class=>'btn btn-info'%>
+<%=link_to 'Duplicate', "edit?id=#{params[:id]}",:class=>'btn'%>
+<%=link_to 'Back', 'index',:class=>'btn'%>

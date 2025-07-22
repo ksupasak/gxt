@@ -1,0 +1,81 @@
+<h1>MSG</h1>
+
+
+<%
+    
+    
+    @current_zone = Zone.first
+
+
+    if request.post?
+
+        msg = SystemMessage.create :name=>'user_msg', :content=>params[:content], :start_at=>Time.now, :stop_at=> Time.now + 60 
+      # msg.destory
+%>
+<meta http-equiv="refresh" content="0; url=index_msg" />
+
+<%= params.to_json%>
+<% end %>
+<form action="index_msg" method="POST">
+
+<input type="text" value="" name="content">
+<input type="submit" value="Submit">
+</form>
+
+
+
+<script>
+
+
+ function show(msg){
+	 console.log(msg)
+  
+ }
+
+
+  tag = 'wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index";
+
+
+  var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+
+  var active_dispatch = 'Active' ;
+
+
+
+
+  ws.onopen    = function()  { 
+    
+    show('websocket opened');
+
+
+  	// ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","ZoneMessage zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+  	ws.send('WS.Select name=<%=session.id%>\n["Zone.Message zone_id=*"]')
+
+
+  };
+
+
+  ws.onclose   = function()  { show('websocket closed');
+
+ 	setTimeout(function () {
+       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    }, 2000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) {
+
+    console.log(m)
+
+
+
+
+
+  }
+
+
+
+</script>

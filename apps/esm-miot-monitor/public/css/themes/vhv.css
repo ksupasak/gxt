@@ -1,0 +1,27 @@
+
+
+.login-logo{
+
+	/* background-image: url('../../img/sammho-login.png'); */
+	background-image: url('../../img/health/logo_telehealth.png');
+	width:200px;
+    background-repeat: repeat;
+    background-size: cover;
+	
+}
+
+.login-header{
+	display:none;
+}
+
+.logo-img{
+    height:200px;
+}
+
+
+.body-login{
+	background: transparent linear-gradient(274deg, #18A79DBF 0%, #00598B 55%, #1C7CD5 100%) 0% 0% no-repeat padding-box;
+	        height:100vh;
+	        font-family: "IBMPlex","Sarabun", sans-serif;
+	  
+}

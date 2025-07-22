@@ -1,0 +1,111 @@
+<%
+
+	record = EMSCase.find params[:id]
+
+
+
+if request.post?
+
+
+
+if params[:record]
+
+	p = params[:record]
+
+	patient_id = nil
+	patient = Patient.find p[:patient_id] if p[:patient_id]
+
+
+	patient_id = patient.id if patient
+
+	# if location change then notify
+
+	if p[:latlng] != record.latlng
+		puts 'relocation_target'
+		record.relocation_target p[:latlng]
+
+	end
+
+	if p[:patient_hn] != ""
+	
+		
+		admit = record.admit
+		
+		patient = admit.patient
+		
+		
+		new_patient = Patient.where(:hn=>p[:patient_hn]).first
+		
+		unless new_patient
+			
+		 	patient = Patient.create :hn=>p[:patient_hn], :name=>p[:patient_name], :public_id=>p[:patient_cid], :age=>p[:patient_age], :gender=>p[:patient_gender], :dob=>p[:patient_birth_date], :zone_id=>record.zone_id
+			admit.update_attributes :patient_id=>patient.id
+			
+			
+		end
+		
+	
+	
+	end
+	
+	puts
+	puts patient.inspect 
+	puts 
+	
+	
+	if patient
+		
+	   patient.update_attributes :hn=>p[:patient_hn], :name=>p[:patient_name], :public_id=>p[:patient_cid], :age=>p[:patient_age], :gender=>p[:patient_gender], :dob=>p[:patient_birth_date], :zone_id=>record.zone_id
+		
+		
+	end
+	
+	
+	init_cbd_code = EMSCode.find p[:init_cbd_code]
+	if init_cbd_code
+		p[:init_cbd_color] = init_cbd_code.color
+	end
+	
+	# puts
+	# puts "#{p[:date]}T#{p[:request_at]}"
+	# puts
+	# puts
+	p[:request_at] = "#{p[:date]}T#{p[:request_at]}"
+
+	if p[:schedule_from] and p[:schedule_from] !=""
+	
+	 	p[:schedule_from] = Time.parse("#{p[:schedule_from]} #{p[:schedule_from_time]}").to_json
+	 	p[:schedule_to] = Time.parse("#{p[:schedule_to]} #{p[:schedule_to_time]}").to_json
+
+		
+		
+	end
+    p.delete :schedule_from_time
+	p.delete :schedule_to_time 
+	
+	record.update_attributes p
+	
+	
+	record.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
+	
+
+path = "miot/#{@context.settings.name}/z/#{record.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+end
+
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=show?id=<%=record.id%>">Updated <%=Time.now%>
+<% end %>
+
+
+
+	<!-- Modal -->
+						

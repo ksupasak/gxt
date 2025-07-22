@@ -1,0 +1,792 @@
+<%# this.model.fields.sort.collect{|i| i.name}.join(" ")%>
+<%# this.model.keys['date'].type%>
+<!--
+<%
+	
+	@record.admit_id = params[:admit_id] if params[:admit_id]
+	
+	default_center_name = Setting.get(:default_center_name)
+	
+	@record.center_name = default_center_name unless @record.center_name 
+	
+	
+%>
+
+
+<%
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	for i in keys
+%>
+<% if i[0] =='admit_id' %>
+	
+    <div class="form-group">
+
+      <input type="hidden" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
+    </div>
+	
+	
+	<% elsif i[0] =='result' %>
+	
+	    <div class="form-group">
+
+	      <input type="checkbox" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="1"  <%='checked="checked"' if @record[i[0]] == '1' %> placeholder="<%=i[0]%>"> ไม่พบเหตุ
+		  
+	      <input type="checkbox" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="2" <%='checked="checked"' if @record[i[0]] == '2' %> placeholder="<%=i[0]%>"> พบเหตุ
+		  
+		  
+	    </div>
+	
+	
+<% else %>
+  <div class="form-group">
+    <label for="product-name"><%=i[0].humanize%></label>
+    <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
+  </div>
+<% end %>
+
+<% end %>
+-->
+<%
+		
+admit = Admit.find params[:admit_id]
+patient = Patient.find admit.patient_id
+
+report = ERCaseReport.where(:admit_id=>admit.id).first
+
+last = DataRecord.where(:admit_id=>admit.id).last
+
+	
+%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<style>
+@font-face {
+  font-family: IBMPlex;
+  src: url("<%=url_for('css/IBMPlexSansThai-Regular.ttf?=22')%>");
+}
+
+
+.active{background:#000;}
+
+.sidenav {
+  background-image: linear-gradient(#C2C2C2, #C2C2C2);
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  width: 20vw;
+  position: fixed;
+  z-index: 1;
+  top: 20px;
+  left: 10px;
+  /* background: #eee; */
+  overflow-x: hidden;
+  margin: 10vh 0;
+}
+
+.sidenav a {
+  /* padding: 6px 8px 6px 16px; */
+  text-decoration: none;
+  font-size: 2vh;
+  color: #fff;
+  display: block;
+  text-align:center;
+  margin-top:4vh;
+
+}
+.c-bg{
+  background-image : url('data:image/svg+xml,<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="#C2C2C2" /></svg>');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  padding:1vh;
+}
+
+.sidenav a:hover {
+  color: #064579;
+}
+
+.main {
+  margin-left: 10vw; /* Same width as the sidebar + left position in px */
+  font-size: 2vh; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+  font-family: "IBMPlex", sans-serif;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+<script>
+sel_sec=(id)=>{
+  $(".active").removeClass('active')
+  $("#sec-"+id).addClass('active')
+}
+$(document).ready(function(){
+  $('#sec-1').addClass("active");
+  
+    $("#sec-1").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-1").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-2").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-2").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-3").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-3").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-4").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-4").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-5").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-5").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-6").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-6").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-7").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-7").offset().top-112
+        }, 1000);
+    return false;
+    });
+        $("#sec-8").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-8").offset().top-112
+        }, 1000);
+    return false;
+    });
+
+  $("#sec-9").click(function() {
+        $('html, body').animate({
+            scrollTop:  $("#section-9").offset().top-112
+        }, 1000);
+    return false;
+    });
+
+
+
+$(function() {
+    // var oTop = $('#section-9').offset().top - window.innerHeight;
+     $(window).scroll(function () {
+        // get the element that you want check scrolling on it
+        var off = $("#section-2").offset().top; 
+        var top = $(window).scrollTop() ;
+        console.log(off+' t:'+top+' s:'+$(window).scrollTop()+' h:'+$(window).height())
+        if ( top <= $("#section-1").offset().top  ) {
+          sel_sec('1')
+        }else if ( top > $("#section-1").offset().top  &&  top <=$("#section-2").offset().top) {
+            sel_sec('2')
+        }else if ( top > $("#section-2").offset().top  &&  top <=$("#section-3").offset().top) {
+            sel_sec('3')
+        }else if ( top > $("#section-3").offset().top  &&  top <=$("#section-4").offset().top) {
+            sel_sec('4')
+        }else if ( top > $("#section-4").offset().top  &&  top <=$("#section-5").offset().top) {
+            sel_sec('5')
+        }else if ( top > $("#section-5").offset().top  &&  top <=$("#section-6").offset().top) {
+            sel_sec('6')
+        }else if ( top > $("#section-6").offset().top  &&  top <=$("#section-7").offset().top) {
+            sel_sec('7')
+        }else if ( top > $("#section-7").offset().top  &&  top <=$("#section-8").offset().top) {
+            sel_sec('8')
+        }else if ( top > $("#section-8").offset().top  &&  top <=$("#section-9").offset().top) {
+            sel_sec('9')
+        }
+    });
+});
+$(".sidenav a").hover(function(){
+  $('[data-toggle="popover"]').popover('hide')
+  $(this).popover('show')
+})
+$(".sidenav a").mouseout(function(){
+  $('[data-toggle="popover"]').popover('hide')
+})
+
+})
+
+</script>
+<div class="row">
+<div id="crnav" class="col-2 sidenav">
+    <a id="sec-1" href="#section-1" data-container="body" data-toggle="popover" data-placement="bottom" data-content="ข้อมูลทั่วไป" style="margin-top:0px"><div class="c-bg">1</div></a>
+    <a id="sec-2" href="#section-2" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-html="true" data-content="<center>อาการนำสำคัญ<br>ของผู้ป่วยฉุกเฉิน<br>ที่ได้จากการรับแจ้ง</center>"><div class="c-bg">2</div></a>
+    <a id="sec-3" href="#section-3" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>อาการ/<br>เหตุการณ์/<br>รายละเอียดอื่นๆ</center>"><div class="c-bg">3</div></a>
+    <a id="sec-4" href="#section-4" data-container="body" data-toggle="popover" data-placement="bottom" data-content="การให้รหัสความรุนแรง"><div class="c-bg">4</div></a>
+    <a id="sec-5" href="#section-5" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>การสั่งการ<br>(โดยการเห็นชอบ<br>ของหัวหน้าศูนย์ฯ)</center>"><div class="c-bg">5</div></a>
+    <a id="sec-6" href="#section-6" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="<center>การให้รหัสความรุนแรง<br> ณ จุดเกิดเหตุ <br>RC(Response Code)</center>"><div class="c-bg">6</div></a>
+    <a id="sec-7" href="#section-7" data-container="body" data-toggle="popover" data-placement="bottom" data-content="การปฏิบัติการ"><div class="c-bg">7</div></a>
+    <a id="sec-8" href="#section-8" data-container="body" data-toggle="popover" data-placement="bottom" data-content="ข้อมูลผู้ป่วย"><div class="c-bg">8</div></a>
+    <a id="sec-9" href="#section-9" data-container="body" data-toggle="popover" data-placement="bottom" data-content="เพิ่มเติม" style="margin-bottom:0px"><div class="c-bg">9</div> </a>
+
+</div>
+<div class="col-10 main">
+  <section id="section-1">
+    <h1>1 ข้อมูลทั่วไป</h1>
+    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis, blanditiis expedita? Earum eligendi pariatur quaerat quos expedita ab quibusdam ratione veniam in, mollitia fuga repudiandae?</p>
+  </section>
+  <section id="section-2">
+    <h1>2 อาการนำสำคัญของผู้ป่วยฉุกเฉินที่ได้จากการรับแจ้ง</h1>
+    <p>Ratione nulla nam, ipsa dignissimos corrupti veniam nostrum, laudantium asperiores sequi numquam placeat velit voluptate in praesentium non labore unde incidunt laborum maxime quae magni.</p>
+  </section>
+  <section id="section-3">
+    <h1>3 อาการ/เหตุการณ์/รายละเอียดอื่นๆ</h1>
+    <p>Soluta quibusdam ad nostrum vel voluptate delectus sequi dolores quia quaerat officia corrupti, aperiam fugit facere debitis repudiandae praesentium sapiente inventore repellendus, nemo commodi alias!</p>
+  </section>
+  <section id="section-4">
+    <h1>4 การให้รหัสความรุนแรง</h1>
+        <div class="row justify-content-between mb-2" style="border:0px solid">
+					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
+					
+            <div class="col-sm  mb-2 ">
+                <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.level=='red' %> " id="red">
+                    <p>แดง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-yellow <%='active' if report.level=='yellow' %> " id="yellow">
+                    <p>เหลือง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-green  <%='active' if report.level=='green' %> " id="green">
+                    <p>เขียว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-white  <%='active' if report.level=='white' %> " id="white">
+                    <p>ขาว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-black  <%='active' if report.level=='black' %> " id="black">
+                    <p>ดำ</p>
+                </a>
+            </div>
+        </div>
+  </section>
+  <section id="section-5">
+    <h1>5 การสั่งการ(โดยการเห็นชอบของหัวหน้าศูนย์ฯ)</h1>
+    <p>Officia ipsum fugit iure eaque quisquam error tempore earum enim illum, delectus officiis incidunt corrupti aliquid nam quas perspiciatis eveniet doloremque quod labore? Doloremque, ipsum?</p>
+  </section>
+  <section id="section-6">
+    <h1>6 การให้รหัสความรุนแรง ณ จุดเกิดเหตุ RC(Response Code)</h1>
+        <div class="row justify-content-between mb-2" style="border:0px solid">
+					<input type="hidden" name="report[level]" value="<%=report.level%>" id="report_level">
+					
+            <div class="col-sm  mb-2 ">
+                <a href="#" class="btn btn-triage btn-triage-red <%='active' if report.level=='red' %> " id="red">
+                    <p>แดง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-yellow <%='active' if report.level=='yellow' %> " id="yellow">
+                    <p>เหลือง</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-green  <%='active' if report.level=='green' %> " id="green">
+                    <p>เขียว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-white  <%='active' if report.level=='white' %> " id="white">
+                    <p>ขาว</p>
+                </a>
+            </div>
+            <div class="col-sm  mb-2">
+                <a href="#" class="btn btn-triage btn-triage-black  <%='active' if report.level=='black' %> " id="black">
+                    <p>ดำ</p>
+                </a>
+            </div>
+        </div>
+  </section>
+  <section id="section-7">
+    <h1>7 การปฏิบัติการ</h1>
+    <p>Cum asperiores temporibus itaque consequatur quod inventore, quia quis explicabo dicta esse minus voluptatem reiciendis eveniet animi, necessitatibus illum dolorem doloremque repellat placeat, dolores eaque.</p>
+  </section>
+  <section id="section-8">
+    <h1>8 ข้อมูลผู้ป่วย</h1>
+	            <!--trauma choice-->
+	            <div class="card patient-info">
+	                <div class="card-header">
+	                    <nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+	                        <a class="flex-sm-fill text-sm-center nav-link active" id="pills-trauma-tab" data-toggle="pill"
+	                            href="#pills-trauma" role="tab" aria-controls="pills-trauma" aria-selected="true">Trauma</a>
+	                        <a class="flex-sm-fill text-sm-center nav-link" id="pills-nontrauma-tab" data-toggle="pill"
+	                            href="#pills-nontrauma" role="tab" aria-controls="pills-nontrauma"
+	                            aria-selected="false">Non-Trauma</a>
+	                </div>
+
+	                <div class="tab-content report" id="pills-tabContent">
+	                        <div class="tab-pane fade show active" id="pills-trauma" role="tabpanel"
+	                            aria-labelledby="pills-trauma-tab" style="width: 100%;">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">ความรู้สึกตัว</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+											<ul class="list-group list-group-flush parameter" field="trauma_concious">
+												<input type="hidden" name="report[trauma_concious]" value="<%=report.trauma_concious%>" id="report_trauma_concious">
+												<li class="list-group-item  " >รู้สึกตัวดี</li>
+	                                            <li class="list-group-item  ">ซึม</li>
+	                                            <li class="list-group-item  ">หมดสติปลุกตื่น</li>
+	                                            <li class="list-group-item  ">หมดสติปลุกไม่ตื่น</li>
+	                                            <li class="list-group-item  ">เอะอะโวยวาย</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+								<style>
+									.report .selected{
+										background:#103a59;
+									}
+									.report .inactive{
+										display:none;
+									}
+									
+								</style>
+						
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">บาดแผล</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_wound" >
+												<input type="hidden" name="report[trauma_wound]" value="<%=report.trauma_wound%>" id="report_trauma_wound">
+												<li class="list-group-item ">No</li>
+	                                            <li class="list-group-item ">Cut/Laceration</li>
+	                                            <li class="list-group-item ">Abrasion</li>
+	                                            <li class="list-group-item ">Contusion</li>
+	                                            <li class="list-group-item ">Burn</li>
+	                                            <li class="list-group-item ">Stab Wound</li>
+	                                            <li class="list-group-item ">Amputate</li>
+	                                            <li class="list-group-item ">Gun Shot</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">กระดูกผิดรูป</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_bone">
+												<input type="hidden" name="report[trauma_bone]" value="<%=report.trauma_bone%>" id="report_trauma_bone">
+												
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Closed</li>
+	                                            <li class="list-group-item">Opened</li>
+	                                            <li class="list-group-item">Dislocate</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">การเสียเลือด</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_blood">
+												<input type="hidden" name="report[trauma_blood]" value="<%=report.trauma_blood%>" id="report_trauma_blood">
+												
+	                                            <li class="list-group-item">No</li>
+	                                            <li class="list-group-item">Cut/Laceration</li>
+	                                            <li class="list-group-item">Abrasion</li>
+	                                            <li class="list-group-item">Contusion</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3 mb-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">อวัยวะ</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="trauma_organ">
+												<input type="hidden" name="report[trauma_organ]" value="<%=report.trauma_organ%>" id="report_trauma_organ">
+												
+	                                            <li class="list-group-item">Head/Neck</li>
+	                                            <li class="list-group-item">Face</li>
+	                                            <li class="list-group-item">Spine/Back</li>
+	                                            <li class="list-group-item">Chest/Clavicle</li>
+	                                            <li class="list-group-item">Abdomen</li>
+	                                            <li class="list-group-item">Pelvis</li>
+	                                            <li class="list-group-item">Extremities</li>
+	                                            <li class="list-group-item">External Body Surface</li>
+	                                            <li class="list-group-item">Multiple Injury Back</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+                        
+
+	                        <div class="tab-pane fade" id="pills-nontrauma" role="tabpanel"
+	                            aria-labelledby="v-pills-nontrauma-tab" style="width: 100%;">
+
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">อายุรกรรม</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #093A54; ">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_med">
+												<input type="hidden" name="report[non_trauma_med]" value="<%=report.non_trauma_med%>" id="report_non_trauma_med">
+	                                            <li class="list-group-item">Dyspnea</li>
+	                                            <li class="list-group-item">High Fever</li>
+	                                            <li class="list-group-item">Ulteration of Conscious</li>
+	                                            <li class="list-group-item">Seizure</li>
+	                                            <li class="list-group-item">Chest Pain</li>
+	                                            <li class="list-group-item">Poisoning</li>
+	                                            <li class="list-group-item">Digestive</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">สูติ-นรีเวชฯ</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_gyne">
+												<input type="hidden" name="report[non_trauma_gyne]" value="<%=report.non_trauma_gyne%>" id="report_non_trauma_gyne">
+	                                            <li class="list-group-item">Labour pain child birth</li>
+	                                            <li class="list-group-item">Bleeding per Vagina</li>
+	                                            <li class="list-group-item">High risk preg</li>
+	                                            <li class="list-group-item">Rape</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">กุมารฯ</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_pediatric">
+												<input type="hidden" name="report[non_trauma_pediatric]" value="<%=report.non_trauma_pediatric%>" id="report_non_trauma_pediatric">
+	                                            <li class="list-group-item">Convulsion</li>
+	                                            <li class="list-group-item">High Fever</li>
+	                                            <li class="list-group-item">Dyspnea</li>
+	                                            <li class="list-group-item">Digestive</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">ศัลยกรรม</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_surgery">
+												<input type="hidden" name="report[non_trauma_surgery]" value="<%=report.non_trauma_surgery%>" id="report_non_trauma_surgery">
+	                                            <li class="list-group-item">Ac. abdominal pain</li>
+	                                            <li class="list-group-item">GI Bleeding</li>
+	                                            <li class="list-group-item">Other (ระบุ)</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <hr class="hr-trauma">
+	                            <div class="row no-gutters mt-3">
+	                                <div class="col-sm d-flex align-items-center justify-content-center">
+	                                    <h5 class="">อื่นๆ</h5>
+
+	                                </div>
+	                                <div class="col-sm">
+	                                    <div class="card m-3"
+	                                        style="color: #dcdcdc; background-color: #054366; ">
+	                                        <ul class="list-group list-group-flush parameter" field="non_trauma_etc">
+												<input type="hidden" name="report[non_trauma_etc]" value="<%=report.non_trauma_etc%>" id="report_non_trauma_etc">
+	                                            <li class="list-group-item">Eye</li>
+	                                            <li class="list-group-item">ENT</li>
+	                                            <li class="list-group-item">Ortho</li>
+	                                            <li class="list-group-item">Psychological problem</li>
+	                                        </ul>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>                  
+
+
+	                </div>
+
+
+	            </div>
+
+	            <!--Treatment choice-->
+	            <div class="card patient-info">
+	                <div class="card-header">
+	                    <nav class="nav nav-pills flex-column flex-sm-row" id="pills-tab" role="tablist">
+	                        <a class="flex-sm-fill text-sm-center nav-link active" id="pills-treatment-tab" data-toggle="pill"
+	                            href="#pills-treatment" role="tab" aria-controls="pills-treatment" aria-selected="true">Treatment</a>
+	                </div>
+
+	                <div class="tab-content report" id="pills-tabContent">
+						<div class="tab-pane fade show active" id="pills-treatment" role="tabpanel"
+							aria-labelledby="pills-treatment-tab" style="width: 100%;">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">ทางเดินหายใจ/ การหายใจ</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3 "  style="color: #dcdcdc; background-color: #093A54; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_breath">
+											<input type="hidden" name="report[treatment_breath]" value="<%=report.treatment_breath%>" id="report_treatment_breath">
+											<li class="list-group-item ">No</li>
+											<li class="list-group-item ">Clear airway</li>
+											<li class="list-group-item ">Suction</li>
+											<li class="list-group-item ">O2 canular/mask</li>
+											<li class="list-group-item ">Ambu bag</li>
+											<li class="list-group-item ">ET</li>
+											<li class="list-group-item ">Amputate</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<style>
+								.report .selected{
+									background:#103a59;
+								}
+								.report .inactive{
+									display:none;
+								}
+								
+							</style>
+					
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">บาดแผล/ห้ามเลือด</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_wound" >
+											<input type="hidden" name="report[treatment_wound]" value="<%=report.treatment_wound%>" id="report_treatment_wound">
+											<li class="list-group-item ">No</li>
+											<li class="list-group-item ">Pressure Dressing</li>
+											<li class="list-group-item ">Dressing</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การให้สารน้ำ</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_liquid">
+											<input type="hidden" name="report[treatment_liquid]" value="<%=report.treatment_liquid%>" id="report_treatment_liquid">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">NSS</li>
+											<li class="list-group-item">RLS</li>
+											<li class="list-group-item">5%DN/2</li>
+											<li class="list-group-item">on locked</li>
+											<li class="list-group-item">Others</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การดามกระดูก</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_bone">
+											<input type="hidden" name="report[treatment_bone]" value="<%=report.treatment_bone%>" id="report_treatment_bone">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">เผือกลม/ไม้ดาม/ sling</li>
+											<li class="list-group-item">Collar With  Long Spinal Board</li>
+											<li class="list-group-item">KED</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<hr class="hr-trauma">
+							<div class="row no-gutters mt-3 mb-3">
+								<div class="col-sm d-flex align-items-center justify-content-center">
+									<h5 class="">การทำ CPR</h5>
+
+								</div>
+								<div class="col-sm">
+									<div class="card m-3"
+										style="color: #dcdcdc; background-color: #054366; ">
+										<ul class="list-group list-group-flush parameter" field="treatment_cpr">
+											<input type="hidden" name="report[treatment_cpr]" value="<%=report.treatment_cpr%>" id="report_treatment_cpr">
+											
+											<li class="list-group-item">No</li>
+											<li class="list-group-item">Yes</li>
+											<li class="list-group-item">AED/Defib</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+	            <p class="font-weight-bold mt-3" style="color: #42B7AB;">ยา (วิธีใช้ และขนาด ให้ระบุ)</p>
+				<textarea class="chief-complaint" name="report[medicine]"><%=report.medicine%></textarea>
+
+				<div class="card patient-info">
+					<div class="row no-gutters mt-3">
+						<div class="col-sm d-flex align-items-center justify-content-center">
+							<h5 class="" style="color: #42B7AB;">ผลการดูแลรักษาขั้นต้น</h5>
+
+						</div>
+						<div class="col-sm">
+							<div class="card m-3"
+								style="color: #dcdcdc; background-color: #054366; ">
+								<ul class="list-group list-group-flush parameter" field="primary_result">
+									<input type="hidden" name="report[primary_result]" value="<%=report.primary_result%>" id="report_primary_result">
+									
+									<li class="list-group-item">ไม่มีการรักษา</li>
+									<li class="list-group-item">ทุเลา</li>
+									<li class="list-group-item">คงเดิม</li>
+									<li class="list-group-item">ทรุดหนัก</li>
+									<li class="list-group-item">เสียชีวิต ณ จุดเกิดเหตุ</li>
+									<li class="list-group-item">เสียชีวิต ขณะนำส่ง</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<script>
+				
+					$('.btn-triage').click(function(event){
+						$('.btn-triage').removeClass('active')
+						$('#report_level').val($(this).attr("id"))
+						$(this).addClass('active')
+						event.preventDefault()
+						
+					})
+					
+				</script>
+				
+				<script>
+
+					$(".parameter").each(function(){
+	
+
+
+					$(this).find('.list-group-item').click(function(event){
+	
+						p =  $(this).parent()
+						f =  p.attr("field")
+	
+						input = p.find('input')
+	
+					if(input.val()==''){
+		
+						val = $(this).html().trim()
+	
+						input.val(val)
+		
+						p.find(".list-group-item").removeClass('selected')
+	
+			
+						p.find(".list-group-item").each(function(){
+							v = $(this).html().trim()
+							input = $(this).parent().find('input')
+							if(v!=input.val()){
+							$(this).slideUp();
+							}
+						});
+	
+						$(this).addClass('selected')
+	
+					}else{
+							input.val('')
+							$(this).parent().find('.list-group-item').removeClass('inactive')
+							$(this).parent().find('.list-group-item').slideDown();
+						}
+	
+					});
+	
+					val = $(this).find('input').val()
+					if(val!=""){
+					$(this).find(".list-group-item").each(function(){
+						v = $(this).html().trim()
+						input = $(this).parent().find('input')
+						if(v!=input.val()){
+							$(this).slideUp();
+						}
+					});
+					}
+	
+					})
+
+
+					
+
+        </script>
+  </section>
+  <!--<section id="section-9">
+    <h1>9 เพิ่มเติม เฉพาะ อาการนำสำคัญของผู้ป่วยฉุกเฉินที่ได้จากการรับแจ้ง เป็นรหัส 25 อุบัติเหตุยานยนต์ รายละเอียดการกรอกข้อมูลโปรดดูในโปรแกรม</h1>
+    <p>Rem iste iure blanditiis excepturi esse nisi corrupti sequi, illo, laborum quo quis quaerat assumenda perspiciatis quod fuga vel laudantium doloribus architecto tempora omnis earum!</p>
+  </section>-->
+</div>
+</div>

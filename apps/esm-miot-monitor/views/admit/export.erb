@@ -1,0 +1,27 @@
+<%
+	
+result = 'Not Configure'
+	
+if export = Setting.get('admit_export')
+	
+  admit = Admit.find params[:id]
+
+
+  require 'uri'
+  require 'net/http'
+
+  # uri = URI("http://localhost:9300/export?admit_id=#{admit.id}")
+  # res = Net::HTTP.get_response(uri)
+  # puts res.body if res.is_a?(Net::HTTPSuccess)
+  name = @context.settings.name
+
+  uri = URI("#{export}?admit_id=#{admit.id}")
+  res = Net::HTTP.post_form(uri, 'hn' => admit.patient.hn, 'admit_id'=> admit.id, 'solution'=>name)
+  result =  res.body  if res.is_a?(Net::HTTPSuccess)
+  
+  admit.update_attributes :export_status=>'PROCESSING'
+
+
+end
+
+%><%= result %><meta http-equiv="Refresh" content="0; url='index'" />

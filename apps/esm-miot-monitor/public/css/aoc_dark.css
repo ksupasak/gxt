@@ -1,0 +1,23 @@
+/* variables */
+:root {
+    --primary-nav: #151C26;
+    --secondary-nav: #17222F;
+    
+    --primary-bg: #000;
+    --secondary-bg: #13171D;
+    
+    --primary-blue: #2437C6;
+    --active-blue: #3147FF;
+    --secondary-blue: #36465E;
+    --dark-blue: #01174F;
+    
+    --dark-border: #2A2F47;
+    
+    --primary-font: #DADADB;
+    --secondary-font: #C2C2C2;
+    --dark-font: #686E71;
+    
+    --time-green: #42B7AB;
+    --alert-yellow: #FFC107;
+    --alert-red: #FF5D5D;
+  }

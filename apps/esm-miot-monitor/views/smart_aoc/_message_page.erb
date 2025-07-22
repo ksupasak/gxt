@@ -1,0 +1,379 @@
+			<style>
+				.chat
+				{
+				    list-style: none;
+				    margin: 0;
+				    padding: 0;
+				}
+
+				.chat li
+				{
+				    margin-bottom: 10px;
+				    padding-bottom: 5px;
+				    border-bottom: 1px dotted #B3A9A9;
+					min-height:80px;
+				}
+
+				.chat li.left .chat-body
+				{
+				    margin-left: 60px;
+					margin-top:-50px;
+				}
+
+				.chat li.right .chat-body
+				{
+				    margin-right: 60px;
+				}
+
+
+				.chat li .chat-body p
+				{
+				    margin: 0;
+				    color: #999999;
+				}
+
+				.panel .slidedown .glyphicon, .chat .glyphicon
+				{
+				    margin-right: 5px;
+				}
+
+				.panel-body
+				{
+				    overflow-y: scroll;
+				    height: 1024px;
+				}
+
+				::-webkit-scrollbar-track
+				{
+				    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+				    background-color: #F5F5F5;
+				}
+
+				::-webkit-scrollbar
+				{
+				    width: 12px;
+				    background-color: #F5F5F5;
+				}
+
+				::-webkit-scrollbar-thumb
+				{
+				    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+				    background-color: #555;
+				}
+				.element-tab {
+					height:650px;
+					overflow:scroll;
+				}
+				</style>
+				
+<style>
+	.autocomplete {
+	  /*the container must be positioned relative:*/
+	  position: relative;
+	  display: inline-block;
+	}
+	input {
+	  border: 1px solid transparent;
+	  background-color: #f1f1f1;
+/*	  padding: 10px;*/
+	  font-size: 16px;
+	}
+	input[type=text] {
+	  background-color: #f1f1f1;
+	  width: 100%;
+	}
+	input[type=submit] {
+	  background-color: DodgerBlue;
+	  color: #fff;
+	}
+	.autocomplete-items {
+	  position: absolute;
+	  border: 1px solid #d4d4d4;
+	  border-bottom: none;
+	  border-top: none;
+	  z-index: 99;
+	  /*position the autocomplete items to be the same width as the container:*/
+	  top: 100%;
+	  left: 0;
+	  right: 0;
+	}
+	.autocomplete-items div {
+	  padding: 10px;
+	  cursor: pointer;
+	  background-color: #fff; 
+	  border-bottom: 1px solid #d4d4d4; 
+	}
+	.autocomplete-items div:hover {
+	  /*when hovering an item:*/
+	  background-color: #e9e9e9; 
+	}
+	.autocomplete-active {
+	  /*when navigating through the items using the arrow keys:*/
+	  background-color: DodgerBlue !important; 
+	  color: #ffffff; 
+	}
+	</style>
+
+
+
+<form action="nurse_note_create" class="note-message" method="post" enctype="multipart/form-data" >
+<div class="row" style="margin-top:10px;border:0px solid">
+	<div class="col-12">
+		<div class="row">
+		<div class="autocomplete col-8" >
+ 		   <input name="record[description]" id="form-autocomplete" type="text" id="note-value" class="secondary-blue" style="padding:5px; border:1px solid #ddd;border-radius: 4px;"/>
+	    </div>
+		<input type="submit" value='เพิ่มบันทึก' class=' btn btn-pcm context disable col-3' style="" />
+		</div>
+	</div>
+</div>
+
+
+<div class="row" style="margin-top:10px;border:0px solid">
+
+<div class="col-12">
+
+<div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" id="msg-dashboard"  class="msg-btn btn btn-secondary btn-success context">Dashboard</button>
+</div>
+
+
+<div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" id="msg-note" class="msg-btn btn btn-secondary btn-pcm context">Note</button>
+  <select id="score_id" style="width:70px;padding:20px;background:#ccc;height:2.5em">
+    <option value="">-</option>
+	<% 
+    for s in Score.all %>
+    <option <%#'selected="selected"' if s.id==score_id %> value="<%=s.id%>"><%=s.name%></option>
+   <% end %>
+  </select>
+  <button type="button"  id="nurse_note_add" class="btn btn-secondary">+</button>
+</div>
+
+<div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button" id="msg-medication" class="msg-btn btn btn-secondary btn-pcm context">Med</button>
+  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
+</div>
+
+<!-- <div class="btn-group" role="group" aria-label="Basic example">
+  <button type="button"   id="msg-track" class="msg-btn btn btn-secondary btn-pcm context">Track</button>
+  <button type="button"  id="medication_add" class="btn btn-secondary">+</button>
+</div> -->
+
+
+
+</div>
+</div>
+
+<script>
+	var command = ["Ultra Sound","US", "Vital Sign", "VS", "CPR", "NEWS", "SOS"];
+
+	
+	
+	function autocomplete(inp, arr) {
+	  /*the autocomplete function takes two arguments,
+	  the text field element and an array of possible autocompleted values:*/
+	  var currentFocus;
+	  /*execute a function when someone writes in the text field:*/
+	  inp.addEventListener("input", function(e) {
+	      var a, b, i, val = this.value;
+	      /*close any already open lists of autocompleted values*/
+	      closeAllLists();
+	      if (!val) { return false;}
+	      currentFocus = -1;
+	      /*create a DIV element that will contain the items (values):*/
+	      a = document.createElement("DIV");
+	      a.setAttribute("id", this.id + "autocomplete-list");
+	      a.setAttribute("class", "autocomplete-items");
+	      /*append the DIV element as a child of the autocomplete container:*/
+	      this.parentNode.appendChild(a);
+	      /*for each item in the array...*/
+	      for (i = 0; i < arr.length; i++) {
+	        /*check if the item starts with the same letters as the text field value:*/
+	        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+	          /*create a DIV element for each matching element:*/
+	          b = document.createElement("DIV");
+	          /*make the matching letters bold:*/
+	          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+	          b.innerHTML += arr[i].substr(val.length);
+	          /*insert a input field that will hold the current array item's value:*/
+	          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+	          /*execute a function when someone clicks on the item value (DIV element):*/
+	              b.addEventListener("click", function(e) {
+	              /*insert the value for the autocomplete text field:*/
+	              inp.value = this.getElementsByTagName("input")[0].value;
+	              /*close the list of autocompleted values,
+	              (or any other open lists of autocompleted values:*/
+	              closeAllLists();
+	          });
+	          a.appendChild(b);
+	        }
+	      }
+	  });
+	  /*execute a function presses a key on the keyboard:*/
+	  inp.addEventListener("keydown", function(e) {
+	      var x = document.getElementById(this.id + "autocomplete-list");
+	      if (x) x = x.getElementsByTagName("div");
+	      if (e.keyCode == 40) {
+	        /*If the arrow DOWN key is pressed,
+	        increase the currentFocus variable:*/
+	        currentFocus++;
+	        /*and and make the current item more visible:*/
+	        addActive(x);
+	      } else if (e.keyCode == 38) { //up
+	        /*If the arrow UP key is pressed,
+	        decrease the currentFocus variable:*/
+	        currentFocus--;
+	        /*and and make the current item more visible:*/
+	        addActive(x);
+	      } else if (e.keyCode == 13) {
+	        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+	        e.preventDefault();
+	        if (currentFocus > -1) {
+	          /*and simulate a click on the "active" item:*/
+	          if (x) x[currentFocus].click();
+	        }
+	      }
+	  });
+	  function addActive(x) {
+	    /*a function to classify an item as "active":*/
+	    if (!x) return false;
+	    /*start by removing the "active" class on all items:*/
+	    removeActive(x);
+	    if (currentFocus >= x.length) currentFocus = 0;
+	    if (currentFocus < 0) currentFocus = (x.length - 1);
+	    /*add class "autocomplete-active":*/
+	    x[currentFocus].classList.add("autocomplete-active");
+	  }
+	  function removeActive(x) {
+	    /*a function to remove the "active" class from all autocomplete items:*/
+	    for (var i = 0; i < x.length; i++) {
+	      x[i].classList.remove("autocomplete-active");
+	    }
+	  }
+	  function closeAllLists(elmnt) {
+	    /*close all autocomplete lists in the document,
+	    except the one passed as an argument:*/
+	    var x = document.getElementsByClassName("autocomplete-items");
+	    for (var i = 0; i < x.length; i++) {
+	      if (elmnt != x[i] && elmnt != inp) {
+	      x[i].parentNode.removeChild(x[i]);
+	    }
+	  }
+	}
+	/*execute a function when someone clicks in the document:*/
+	document.addEventListener("click", function (e) {
+	    closeAllLists(e.target);
+	});
+	}
+	
+	
+	autocomplete(document.getElementById("form-autocomplete"), command);
+	
+</script>
+
+
+
+
+
+
+</form>
+
+
+
+<script>
+
+	
+</script>
+	
+
+<div class="" style="padding-top:10px">
+
+<div class="element-tab msg-dashboard-tab"  style="overflow:auto">
+<div class="message-partial ">
+</div>	
+</div>
+
+<div class="element-tab msg-note-tab" id="msg-note" style="display:none">
+<%= inline(this,:'_nurse_note_page') %>
+</div>
+
+<div class="element-tab msg-medication-tab" style="display:none" >
+<%= inline(this,:'_medication_page') %>
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+$('.msg-btn').click(function(){
+	
+	$('.element-tab').hide();
+	
+	id = $(this).attr('id')
+	// alert(id)
+	$('.'+id+'-tab').slideDown();
+	
+})
+
+
+
+var message_admit_id = null;
+
+
+
+	$(".note-message").submit(function(e) {
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    
+    var form = $(this);
+	
+	var url = form.attr('action')+"?admit_id="+ message_admit_id;
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               // $('#nurse_note-partial').html(data)// show response from the php script.
+			   // $('#admit-modal').modal('toggle');
+			   $('#form-autocomplete').val("");
+           }
+    });
+	
+	$('#note-value').val('')
+
+});
+	
+	
+
+	function reload_message(admit_id){
+		
+
+		
+	message_admit_id = admit_id
+	
+	reload_nurse_note(admit_id)
+	reload_medication(admit_id)
+		
+		
+	$.ajax({
+	  url: "<%= get_path "message_partial" %>?admit_id="+message_admit_id,
+	  context: document.body
+	}).done(function(data) {
+	  $( '.message-partial' ).html(data);
+	});
+	
+	}
+	
+	// $('#medication_add').click(create_medication);
+	
+	// reload_message();
+	
+	
+</script>

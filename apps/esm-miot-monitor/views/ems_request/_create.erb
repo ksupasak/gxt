@@ -1,0 +1,335 @@
+
+<% if request.post?
+
+
+
+if params[:record]
+
+	p = params[:record]
+
+	patient_id = nil
+	
+	patient = Patient.find p[:patient_id] if p[:patient_id]
+
+	if p[:patient_hn] and p[:patient_hn].size>0
+		patient = Patient.where(:hn=>p[:patient_hn]).first unless patient
+	end
+
+
+	if patient
+
+		p[:patient_name] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		p[:patient_gender] = "#{patient.gender}"
+		p[:patient_age] = "#{patient.age}"
+
+		p[:patient_cid] = "#{patient.public_id}"
+		p[:patient_phone] = "#{patient.contact_phone}"
+		p[:patient_underlying] = p[:patient_underlying]+" #{patient.underlying}"
+
+
+	end
+
+    # key :patient_name, String
+    # key :patient_info, String
+    # key :patient_gender, String
+    # key :patient_age, String
+    #  key :patient_cid, String
+  # key :patient_hn, String
+  # key :patient_phone, String
+  #
+  # key :patient_underlying, String
+	unless patient
+
+		patient = Patient.create :name=>p[:patient_name], :hn=>p[:patient_hn], :public_id=>p[:patient_cid], :contact_name=>p[:contact_name], :contact_phone=>p[:patient_phone],:zone_id=>session[:current_zone]
+
+	end
+
+	patient_id = patient.id if patient
+
+
+	admit = Admit.create :zone_id=>session[:current_zone], :patient_id=> patient_id, :status=>'Admitted', :admit_stamp=>Time.now, :record_status=>'Stop'
+
+	p[:admit_id] = admit.id
+	p[:zone_id] = session[:current_zone]
+	p[:patient_id] = patient_id
+	p[:status] = "New" if p[:status]=='' or p[:status] == nil
+
+	
+
+	type = 'EMS'
+	type = 'REF' if p[:case_type] == 'Refer'
+	type = 'SER' if p[:case_type] == 'Service'
+	
+	counter_key = Time.now.strftime("#{type}-%y%m")
+
+	counter = EMSCaseCounter.where(:key=>counter_key).first
+	counter = EMSCaseCounter.create(:key=>counter_key, :count=>0) unless counter
+
+	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
+	
+	counter.update_attributes(:count=>counter.count+1)
+	
+	
+	
+
+	p[:case_no] = case_no
+
+    p[:user_id] = @current_user.id if @current_user
+
+	p[:request_at] = Time.now if  p[:case_type] == 'EMS'
+	
+	init_cbd_code = EMSCode.find p[:init_cbd_code]
+	if init_cbd_code
+		p[:init_cbd_color] = init_cbd_code.color
+	end
+	
+	if p[:schedule_from] and  p[:schedule_from] !=""
+	
+	 	p[:schedule_from] = Time.parse("#{p[:schedule_from]} #{p[:schedule_from_time]}").to_json
+	 	p[:schedule_to] = Time.parse("#{p[:schedule_to]} #{p[:schedule_to_time]}").to_json
+
+		
+		
+	end
+	
+    p.delete :schedule_from_time
+	p.delete :schedule_to_time 
+	
+	
+	record = EMSCase.create p
+
+	record.relocation_target p[:latlng]	if p[:latlng]
+
+
+	counter.update(:count=>counter.count+1)
+
+  if false and line_noti = Setting.get('line_group_id') and @current_user.status=='Active' and (record.status == 'New' or record.status =='Open')
+
+	#   message = record.noti_message
+	#   result =  EMSConnect.line_noti :message=>message
+
+	end
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Refresh'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}/IOT"
+msg = <<MSG
+#{'EMS.Update'} #{path}
+#{{'alert'=>'0'}.to_json}
+MSG
+
+@context.settings.redis.publish(path, msg)	
+
+
+
+end
+
+
+
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>&page=command">
+
+
+<% else %>
+
+<%
+	
+	default_latlng = Setting.get("aoc_center")
+	
+	schedule_from = nil
+	schedule_to = nil
+	case_type = 'EMS'
+	status = 'New'
+	date = Time.now
+	
+	if params[:start] 
+		case_type = 'Refer'
+		schedule_from = DateTime.parse(params[:start]+"+07:00")
+		schedule_to =DateTime.parse(params[:end]+"+07:00")
+		status = 'Schedule'
+		
+		status = params[:status] if params[:status]
+		
+		date = nil
+			
+	end
+	
+
+	
+	@ems_case = EMSCase.new :status=>status, :case_type=>case_type, :schedule_from=>schedule_from, :schedule_to=>schedule_to, :chief_complain=>'',:contact_name=>'ไม่ระบุ',:contact_phone=>'',:patient_name=>'ไม่ระบุ', :latlng=>default_latlng, :patient_nationality=>'ไทย', :date=>date, :request_at=>date , :emd_event_note=>'-'
+	
+	
+	@ems_case.location = params[:location] if params[:location]
+	@ems_case.latlng = params[:latlng] if params[:latlng]
+	now = Time.now
+	@ems_case.start_at = now
+
+	
+
+%>
+
+
+
+
+<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="reqeust-panel">
+<% fieldset(:record) do |f| %>
+
+<%= inline(this,:'_form', :this=>this, :f=>f, :record=>@ems_case, :mode=>'create')  %>
+
+<% end %>
+<input type="submit" name="create" value="Create" class="btn btn-success">
+<% if Setting.get('chatgpt_api_key')  and Setting.get('chatgpt_api_key')!="" %>
+<a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#ai_paste_modal">AI Paste</a>
+<% end %>
+
+
+</form>
+
+<div id="reqeust-panel">
+
+</div>
+<% end %>
+<script>
+	$('#record_contact_phone').focus()
+	refresh_remote()
+</script>
+<div class="modal fade" id="ai_paste_modal" tabindex="-1" aria-labelledby="ai_paste_modal_label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+		<h5 class="modal-title" id="ai_paste_modal_label">AI Paste</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	  </div>
+	  <div class="modal-body">
+	    <center>
+		<div class="spinner-border text-primary" role="status" style="display: none;">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+		</center>
+		<textarea name="ai_paste" id="ai_paste" class="form-control" rows="10"></textarea>
+	  </div>
+	  <div class="modal-footer">
+		<input type="submit" name="ai_paste" value="AI Paste" class="btn btn-info" onclick="submit_ai_paste()">
+	  </div>
+	</div>
+  </div>
+</div>
+<script>
+	$('#ai_paste_modal').on('shown.bs.modal', function () {
+		$('#ai_paste').focus()
+		
+	})
+
+    function show_loading() {
+		$('.spinner-border').show()
+	
+	}
+	
+	submit_ai_paste = function() {
+		value = $('#ai_paste').val()
+		if(value.length > 0){
+		
+
+			show_loading()
+
+			$.ajax({
+				url: '../EmsRequest/gpt_extract',
+				type: 'POST',
+				data: {pasted_text: value},
+				success: function(response) {
+					// alert(response)
+
+// {
+// "stamp": "30-06-2025 20:54",
+// "severity": "5แดง2",
+// "dispatch_code": "D0001",
+// "location": "อาคารเพลินจิตทาวเวอร์, 898 Thanon Phloen Chit, Khwaeng Lumphini, Pathum Wan, Krung Thep Maha Nakhon 10330, Thailand",
+// "gps": "13.743417,100.5448178",
+// "chief_complain": "จุกแน่นใต้ลิ้นปี่ หายใจไม่สะดวก",
+// "event": "ผู้ป่วย M 66",
+// "contact_phone": "0949529544",
+// "contact_name": "นายสุรพล หิรัญชัย"
+// }
+					obj = JSON.parse(response)
+
+					if(obj.contact_phone){
+						$('#record_contact_phone').val(obj.contact_phone)
+						$('#record_contact_phone').css('background-color', 'yellow')
+					}
+
+					if(obj.contact_name){
+						$('#record_contact_name').val(obj.contact_name)
+						$('#record_contact_name').css('background-color', 'yellow')
+					}
+					if(obj.chief_complain){
+						$('#record_chief_complain').val(obj.chief_complain)
+						$('#record_chief_complain').css('background-color', 'yellow')
+					}
+
+					if(obj.location){
+						$('#record_location').val(obj.location)
+						$('#record_location').css('background-color', 'yellow')
+					}
+
+					if(obj.gps){
+						$('#record_latlng').val(obj.gps)	
+						$('#record_latlng').css('background-color', 'yellow')
+					}
+
+					if(obj.chief_complaint){
+						$('#record_chief_complaint').val(obj.chief_complaint)
+						$('#record_chief_complaint').css('background-color', 'yellow')
+					}
+
+					if(obj.event){
+						$('#record_emd_event_note').val(obj.event)	
+						$('#record_emd_event_note').css('background-color', 'yellow')
+					}
+
+					if(obj.gender){
+						$('#patient-gender').val(obj.gender)
+						$('#patient-gender').css('background-color', 'yellow')
+					}
+
+					if(obj.age){
+						$('#patient-age').val(obj.age)	
+						$('#patient-age').css('background-color', 'yellow')
+					}
+
+					if(obj.cbd_code_id){
+						$('#record_init_cbd_code').val(obj.cbd_code_id)
+						$('#record_init_cbd_code').css('background-color', 'yellow')
+					}
+					lat = parseFloat(obj.gps.split(',')[0])
+					lng = parseFloat(obj.gps.split(',')[1])
+					map1.setPosition(lat, lng)
+					map1.setMarkerPosition(lat, lng, false)
+
+				   
+							
+
+					$('#ai_paste_modal').modal('hide')
+					$('#ai_paste').val('')
+					$('#ai_paste').focus()
+					$('#ai_paste').submit()
+				}
+			});
+
+			// $('#ai_paste_modal').modal('hide')
+			// $('#ai_paste').val('')
+			// $('#ai_paste').focus()
+			// $('#ai_paste').submit()
+		}
+		
+	}
+	$('#ai_paste_modal').on('hidden.bs.modal', function () {
+		// submit_ai_paste()
+	})
+</script>

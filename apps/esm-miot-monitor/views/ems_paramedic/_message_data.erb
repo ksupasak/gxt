@@ -1,0 +1,72 @@
+<%
+
+admit = Admit.find params[:id]
+	
+station = admit.station
+
+zone = admit.zone
+# admit = Admit.where(:station_id=>station.id, :status=>'Admitted').first
+
+
+
+console = []
+
+
+
+if admit 
+
+nurse_records = admit.nurse_records
+
+for m in nurse_records
+
+	console << [m.start_time, :nurse, m.description , m]
+	
+end
+
+
+
+for m in admit.medication_records
+
+	console << [m.start_time, :med, m.name, m]
+	
+	console << [m.stop_time, :med, m.name, m] if m.stop_time
+	
+end
+
+records = DataRecord.where(:admit_id=>admit.id, :stamp=>{'$gte'=>(Time.now-600)}).all
+
+for m in records
+
+	console << [m.created_at, :record,"#{ m.bp_sys}/#{ m.bp_dia}", m]
+	
+end
+
+records = admit.logs.where(:status=>'COMPLETED').all
+for m in records
+
+	console << [m.stamp, :log, m.name,m]
+	
+end
+
+
+# msgs = Message.where(:recipient=>"#{zone.name}|#{station.name}").limit(5).sort(:created_at=>-1).all.reverse
+
+# msgs = admit.messages.where(:recipient=>"#{station.name}.#{zone.name.downcase}.#{@context.settings.name}").limit(10).sort(:created_at=>-1).all.reverse
+msgs = admit.messages.desc(:created_at).all :limit=>10
+
+
+for m in msgs
+
+	console << [m.created_at, :msg, m.type, m]
+	
+end
+
+end
+
+console.collect!{|i| i if i[0]}.compact!
+
+
+console.sort!{|a,b| b[0]<=>a[0] }
+	
+	
+%><%=console.to_json%>

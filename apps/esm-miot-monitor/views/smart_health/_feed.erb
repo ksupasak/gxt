@@ -1,0 +1,51 @@
+<script>
+	
+	
+	function feed_refresh(){
+		<% if params[:admit_id]%>
+		$.ajax({
+		  url: "message_partial?admit_id=<%=params[:admit_id]%>",
+		  context: document.body
+		}).done(function(data) {
+			$('.message-panel').html(data);
+			$(".message-panel").scrollTop($(".message-panel")[0].scrollHeight);
+			
+		});
+	   <% end %>
+
+		$.ajax({
+		  url: "feed_refresh",
+		  context: document.body
+		}).done(function(feed) {
+		  $( '.feed' ).html( feed );
+		});
+
+	}
+	
+	setInterval(function(){ 
+	
+	feed_refresh()
+		
+	 }, 5000);
+</script>
+ 
+<div class="modal fade" id="notiModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Video Chat Request</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="feed" style=""></div>	
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-info">Accept</button> -->
+      </div>
+    </div>
+  </div>
+</div>	 
+	 

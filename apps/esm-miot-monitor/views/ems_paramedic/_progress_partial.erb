@@ -1,0 +1,251 @@
+
+<%
+   
+    ems_case = EMSCase.find params[:id]
+	@ems_case = ems_case
+	@admit = ems_case.admit
+	notes = EMSProgressNote.where(:case_id=>params[:id]).sort(:time=>1).all
+	
+	
+%>
+<div class="row">
+<div class="col-12 d-flex justify-content-between">
+<div class="col-12 d-flex justify-content-end">Time : <%=Time.now%></div>
+</div>
+</div>
+<div id="sortable-container" class="d-flex flex-column">
+		
+<% for i in notes 
+
+	item_id = ""
+	code = ""
+	ref_id = ""
+	if i.item_id
+		item_id = i.item_id 
+		assess = EMSAssessment.find item_id
+		code = assess.code
+		ref_id = i.ref_id
+	end
+%>
+<div class="card sortable-item " id="<%=i.id%>" time="<%=i.time%>">
+	<div class="card-body">
+
+		
+		<div class="row d-flex justify-content-between ">
+		<div class="col-2">
+		<a href="#" class="progress_time" rid="l<%=i.id%>" id="l<%=i.id%>_time"><b><%=i.time.strftime("%H:%M") if i.time %></b></a>
+		<span class="progress_ctrl l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
+		<input type="text" class="progress_time_txt" name="" value="<%=i.time.strftime("%H:%M:%S") if i.time%>" rid="<%=i.id%>" >
+		</span>
+
+		<br/>
+		<%=i.name if i.type=='emr'%>
+		
+		<%="MED" if i.type=='med'%>
+		
+		</div>
+		<div class="col-8">
+		
+		<a href="#" class="progress_item  w-100 " rid="l<%=i.id%>" code="<%=code%>" item="<%=item_id%>" id="l<%=i.id%>_item" ref_id="<%=ref_id%>">
+		<%=i.text %><%='empty!' if i.text=='' or i.text==nil%>
+		</a>
+		<span class="progress_ctrl l<%=i.id%>_ctl" id="l<%=i.id%>_txt" style="display:none">
+		<input type="text" class="progress_item_txt" name="" value="<%=i.text%>" rid="<%=i.id%>" >
+		</span>
+
+		</div>
+		<div class="col-1 col-sm-2 d-flex justify-content-end" style="">
+		<a href="#" class="btn-del btn btn-sm btn-outline-danger" pid="<%=i.id%>" >Del</a>
+		</div>
+		</div>
+
+
+	</div>
+</div>
+<% end %>
+</div>
+
+
+      <%# inline(this,:'dispatch/_emr', :local=>{:ems_case=>ems_case, :emr_name=>'cpr_record', :item=>'cpr_record'}) %>
+      
+
+<script>
+
+
+
+    $(function() {
+
+	$('.progress_item').click(function(e){
+		
+      cmd = $(this).attr('code')
+	  item = $(this).attr('item')
+	  ref_id = $(this).attr('ref_id')
+
+	  rid = $(this).attr('rid')
+	 
+      if(item==''){
+		
+		$('.'+rid+'_ctl').show()
+		// $('#'+rid+'_txt').show()
+		$('#'+rid+'_txt .progress_item_txt').focus()
+
+	  }else{
+
+      	dispatch_command(cmd, item, ref_id)
+
+	  }
+
+      e.preventDefault();
+
+    })
+
+	$('.progress_time').click(function(e){
+		
+      cmd = $(this).attr('code')
+	  ref_id = $(this).attr('ref_id')
+	  rid = $(this).attr('rid')
+	   
+
+	   $('.'+rid+'_ctl').show()
+    
+
+      e.preventDefault();
+
+    })
+
+   $('.progress_time_txt').change(function(e){
+	
+		//  rid = $(this).attr('rid')
+		//  txt = $(this).val()
+
+		//  $('.'+rid+'_ctl').each(function(){
+		// 	$(this).hide()
+		//  })
+
+	     rid = $(this).attr('rid')
+		 txt = $(this).val()
+
+		 $('#l'+rid+'_time').html(txt)
+		//  $('.l'+rid+"_ctrl").hide()
+
+		$('#'+rid+' .progress_ctrl').hide()
+	
+		 $.ajax({
+	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&time='+txt,
+	 			context: document.body
+	 		}).done(function(data) {
+
+			update_progress(); 
+
+
+
+
+	 		});
+		
+	});
+
+	$('.progress_item_txt').change(function(e){
+		
+		 rid = $(this).attr('rid')
+		 txt = $(this).val()
+	
+		 $('#l'+rid+'_item').html(txt)
+		//  $('.l'+rid+"_ctrl").hide()
+
+		$('#'+rid+' .progress_ctrl').hide()
+		
+		 $.ajax({
+	 			url: "<%="../EMSParamedic/progress_update?cmd=TXT"%>&pid="+rid+'&txt='+txt,
+	 			context: document.body
+	 		}).done(function(data) {
+
+	 			// if (typeof update_progress_list === "function") {
+  				// 	update_progress_list(); 
+				// } 
+
+	 		});
+		
+	});
+		
+		$('.btn-del').click(function(e){
+			
+			pid = $(this).attr('pid')
+
+			$('#'+pid).animate({
+				opacity: 0
+			}, 500, function() {
+				$(this).remove();
+
+ 			$.ajax({
+	 			url: "<%="../EMSParamedic/progress_update?cmd=DEL"%>&pid="+pid,
+	 			context: document.body
+	 		}).done(function(data) {
+	 			// update_progress(); 
+	 		});
+				
+			});
+
+	
+
+
+			e.preventDefault();
+			
+		})
+		
+         $("#sortable-container").sortable({
+            //  placeholder: "sortable-placeholder",
+			  placeholder: "<li>Drop Here!</li>",
+             update: function(event, ui) {
+                 console.log("Item moved:", ui.item.index());
+				 // alert(ui.item.attr('id'))
+				 first_time = null;
+				 last_time = null;
+				 found = false;
+				 
+				 $('.sortable-item').each(function(){
+				 	it = $(this)
+					console.log(it.attr("id"))
+					 
+ 					if(found==true&&first_time!=null&&last_time==null){
+ 						last_time = it.attr("time")
+						console.log(it.attr("id")+" last")
+						
+ 					}
+					if(it.attr("id")==ui.item.attr("id")){
+							
+						found = true;
+							console.log(it.attr("id")+" found")
+						
+					}
+					if(found==false){
+						first_time = it.attr("time")
+						console.log(it.attr("id")+" fist")
+					}
+						
+					
+							
+				 })
+				 if(first_time&&last_time){
+			
+					  url =  "<%="../EMSParamedic/progress_update"%>?id="+ems_case_id+"&first_time="+escape(first_time)+"&last_time="+escape(last_time)+"&pid="+ui.item.attr("id")
+					//   alert(url)
+			 		$.ajax({
+			 			url: url,
+			 			context: document.body
+			 		}).done(function(data) {
+
+			 			$( '#progress-x' ).html(data);
+
+
+			 		});
+					 
+				 }
+					 
+				 
+				 
+                 // Optionally, you can do something when an item is moved
+             }
+         });
+         $("#sortable-container").disableSelection();
+     });
+</script>

@@ -1,0 +1,88 @@
+<%=inline(this,:'_init')%>
+<%
+	list = []
+	from_time = Time.now - 20 *60
+	confs = SHConference.where(:schedule=>{'$gte'=>from_time},:sender_user_id=>{'$ne'=>@current_user.id},:status=>{'$in'=>['New','Accepted']}).all
+	
+	for i in confs
+		if i.receiver_user_id==@current_user.id or i.receiver_role.index(@current_role)
+		
+			list << i
+		
+		end
+		
+	end
+	
+	if @current_hospital
+	for i in confs
+		if  i.receiver_role and i.receiver_role.index(@current_role) && i.group_id == @current_hospital.id
+			list << i
+		end
+	end
+	end
+	if @current_network
+		for i in confs
+			if i.receiver_role and  i.receiver_role.index(@current_role) && i.group_id == @current_network.id
+				list << i
+			end
+		end
+	
+	end
+	
+	finish_confs = SHConference.where(:schedule=>{'$gte'=>from_time},:sender_user_id=>{'$ne'=>@current_user.id},:status=>{'$in'=>['Finished','Rejected','Cancelled']}).all
+	
+	
+	
+%>
+<% for i in list %>
+<li>
+	<%= i.title %> (<%=(Time.now - i.schedule).to_i %> sec)
+	<%=link_to "Accept", "tele_update?cid=#{i.id}&cmd=accept", :class=>'btn btn-info' %> 
+	<%=link_to "Reject", "tele_update?cid=#{i.id}&cmd=reject", :class=>'btn btn-warning' %>
+</li>
+<% end %>
+<script>
+console.log("<%=Time.now%>")
+	<% if list.size > 0 %>
+	if(typeof make_call ==='function'){
+		
+		
+		if(called==false){
+			<%
+			c = list[0]
+			%>
+			make_call('<%=c.resource_id %>')
+			called=true;
+			
+			$.ajax({
+			  url: "tele_update?cid=<%=c.id%>&cmd=accept",
+			  context: document.body
+			}).done(function(data) {
+			
+			
+			});
+		}
+		
+		
+		
+		
+	}else{
+
+	 $("#notiModal").modal()
+		}	
+<% end %>
+		
+		<%
+		if finish_confs.size>0
+		%>
+		if(typeof make_call ==='function'){
+			if(cid=='<%=finish_confs[0].resource_id%>')
+				end_call(cid)
+			
+		}
+		<% end %>
+		
+
+</script>
+	
+	

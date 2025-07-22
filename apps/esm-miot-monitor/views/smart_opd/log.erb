@@ -1,0 +1,252 @@
+<% 
+records = DataRecord.where({}).order(:created_at=>-1).limit(10).all #.sort{|a,b| b.created_at<=>a.created_at}
+%>
+
+<style>
+
+	:root {
+	    --bg-body: #00243E;
+	    --bg-nav: #002748;
+	    --bg-second-nav: #003357;
+	    --bg-content: #000C2A;
+	    --text-main:#E5E5E5;
+	    --text-second:  #88B1DA;
+	    --text-orange: #FFA200;
+	    --text-blue: #00B3FD;
+	    --text-yellow: #D2C406;
+	    --text-green: #32CE0B;
+	    --btn-blue: #034B87;
+	  }
+	  
+	body{
+		background: var(--bg-body);
+/*		background: transparent linear-gradient(180deg, #000  0%, #13171D 100%) 0%
+		0% no-repeat padding-box;*/
+		height:100vh;
+	}
+	
+	.top-header{
+		background:#0a1320;
+		font-size:4vh;
+/*		box-shadow: 0px 0px 15px #1A3388;*/
+		color:var( --text-second);
+	}
+</style>
+<br/>
+<br/>
+<link href="<%=url_for 'css/opd.css'%>" rel="stylesheet">
+
+<svg width="0" height="0">
+    <defs>
+        <g id="t-up">
+        <polygon points="10,0 0,10 10,10" class="triangle" />
+        </g>
+        <g id="t-down">
+        <polygon points="0,0 10,0 10,10" class="triangle" />
+        </g>        
+    </defs>
+    <style>
+    .triangle{fill:#51A451;}
+    .symbol{height:20px;width:20px;}
+	.my-1{
+		font-size:2em}
+    </style>
+</svg>
+<h1 class="btn-result-cancle"><img src='<%= url_for('img/OPD_logo.png')%>'  height='50'>&nbsp;&nbsp;&nbsp;Data Logs</h1>
+<%
+all_records = DataRecord.where({}).all
+num_all=all_records.size
+num_1=0
+num_2=num_all
+num_3=0
+for i in records 
+    weight = '-'
+    height = '-'
+    bmi = '-'	
+    begin	
+        data = JSON.parse(i.data)
+        weight = data['weight'].strip
+        height = data['height'].strip
+        bmi = data['bmi'].strip		
+        patient_type = data['patient_type'].strip	
+        num_3+=1 if patient_type=='wheelchair'
+    rescue Exception=>e
+    end
+    num_1 += 1 if i.send_status==true
+end
+
+num_2 = num_all - num_3
+num_2 = 0 if num_2<0
+%>
+<div class="row" style="font-size:2em">
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div class="col-8">
+						<p class="mb-0 text-secondary">All</p>
+						<h4 class="my-1"><%=num_all%></h4>
+					</div>
+					<div class="col-4 text-primary ms-auto font-35"><i class="bx bx-pulse"></i><img src='<%= url_for('smart-opd/pulse.png')%>'  height='50'>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div class="col-8">
+						<p class="mb-0 text-secondary">Sync</p>
+						<h4 class="my-1"><%=num_1%></h4>
+					</div>
+					<div class="col-4 text-primary ms-auto font-35"><i class="bx bx-error-circle"></i><img src='<%= url_for('smart-opd/sync.png')%>'  height='50'>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div class="col-8">
+						<p class="mb-0 text-secondary">Station</p>
+						<h4 class="my-1"><%=num_2%></h4>
+					</div>
+					<div class="col-4 text-primary ms-auto font-35"><i class="bx bx-walk"></i><img src='<%= url_for('smart-opd/walking.png')%>'  height='50'>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->   
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+					<div class="col-8">
+						<p class="mb-0 text-secondary">Wheel Chair</p>
+						<h4 class="my-1"><%=num_3%></h4>
+					</div>
+					<div class="col-4 text-primary ms-auto font-35"><i class="bx bx-handicap"></i><img src='<%= url_for('smart-opd/wheelchair.png')%>'  height='50'>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div><!--col-lg-3-->       
+</div>
+<br/>
+
+<div class="row-fluid">
+    <div class="d-log">
+    <table class="table table-sm">
+    <thead>
+        <tr class="table-primary">
+            <th>Date</th>
+            <th>Device ID</th>
+		    <th>HN</th>
+            <th>Patient Name</th>
+			
+			<th>Type</th>
+			
+            <th>Weight</th>
+            <th>Height</th>
+            <th>BMI</th>
+			
+			
+            <th>BP</th>
+            <th>PR</th>
+            <th>Spo2</th>
+			
+            <th>RR</th>
+			
+            <th>Scoring type</th>
+            <th>Scoring</th>
+            <th>Sent</th>
+			
+        </tr>
+    </thead>
+    <tbody>
+        <% for i in records 
+        weight = '-'
+        height = '-'
+        bmi = '-'	
+		begin	
+            data = JSON.parse(i.data)
+            weight = data['weight'].strip
+            height = data['height'].strip
+            bmi = data['bmi'].strip		
+        rescue Exception=>e
+        end
+		admit = Admit.find i.admit_id
+        patient = Patient.find admit.patient_id if admit
+        score = 0
+        badge = 'badge-success'
+        begin
+            score = i.score.to_i 
+        rescue Exception=>e
+        end
+        badge = 'badge-warning' if score>1
+        badge = 'badge-danger' if score>3
+		if patient
+		%>
+		
+        <tr>
+             <td><%=link_to i.stamp.localtime.strftime('%d/%m/%Y %H:%M'), "test_send?id=#{i.id}"%></td>
+			 <td><%=data['device_id'] if data and data['device_id']%></td>
+             <td><%=link_to patient.hn, "result?hn=#{patient.hn}" %></td>
+	     	 <td><%=patient.first_name%> <%=patient.last_name%></td>
+			<td><%=i.patient_type%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
+			<td><%=weight%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
+            <td><%=height%>
+            <!--<svg class="symbol">
+                <use xlink:href="#t-down" />
+            </svg>-->
+			</td>
+              <td><%= bmi %></td>
+			<td><%= i.bp %></td>
+            <td><%= i.pr %></td>
+            <td><%= i.spo2 %></td>
+            <td><%= i.rr %></td>
+			
+          
+			<td><%= i.score_name %></td>
+			  
+            <td><span class="badge badge-pill badge-score <%=badge%>"><%=i.score%></span></td>   
+            <td><%=i.send_status%></td>   
+			
+        </tr>
+        <%
+        
+        %>
+		<% end %><% end %>
+        <!-- <tr>
+            <td>19/04/2020</td>
+            <td>66.9 </td>
+            <td>120/80</td>
+            <td>NEWS</td>
+            <td><span class="badge badge-pill badge-warning badge-score">4</span></td>
+        </tr> -->
+    </tbody>
+    </table>
+    </div>
+</div>
+<%= link_to '<< Home', 'index' , :class=>' btn btn-result-cancle' %>
+
+<%=link_to "Admin >>", "admin" , :class=>' btn btn-result-cancle ', :style=>"float:right"%>
+<meta http-equiv="refresh" content="30">  
+
+<style>
+	.d-log{
+		height:auto;
+	}
+</style>

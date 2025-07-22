@@ -1,0 +1,543 @@
+
+<%
+	# patient = Patient.new
+	
+	# @record.patient = patient
+	
+	@record.admit_stamp = Time.now 
+	
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	
+	keys.collect!{|i| i if i[0]!='discharge_stamp' }.compact!
+	
+	
+	cols = %w{ }
+	
+	hn = ''
+	
+	hn = params[:hn] if params[:hn]
+	
+	patient_name = ''
+	patient_first_name = ''
+	patient_last_name = ''
+	
+	
+	if p = @record.patient
+		hn = p.hn
+		patient_name = p.name
+		patient_first_name = p.first_name
+		patient_last_name = p.last_name
+		
+	end
+	
+	@current_zone = nil
+	
+	if session[:current_zone]
+		
+		@current_zone = Zone.find session[:current_zone] 
+		
+		
+	end
+	
+
+%>
+
+<div class="form-group">
+ <label for="product-name">Patient</label>
+<div class="row">
+	
+	<div class="col-6">
+	<center><image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120"></center>
+	</div>
+
+
+<div class="col-6 ">
+<div class="row">
+<div class="col-12 col-sm-3">
+  <input type="text" class="form-control" id="patient-hn" name="patient[hn]" value="<%=hn%>" placeholder="HN" style="">
+</div>
+
+<div class="col-12 col-sm-4">
+  <input type="text" class="form-control" id="patient-first_name" name="patient[first_name]" value="<%=patient_first_name%>" placeholder="First Name" style="">
+</div>
+
+<div class="col-12 col-sm-4">
+<input type="text" class="form-control" id="patient-last_name" name="patient[last_name]" value="<%=patient_last_name%>" placeholder="Last Name" style="">
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+
+<div class="form-group">
+
+<div class="row">
+
+
+<%
+	
+name = 'station_id'
+
+if @current_zone 
+stations = @current_zone.stations.all	
+else
+stations = Station.all	
+end
+stations_map = stations.clone
+stations_map.collect!{|i| 
+	
+	[i.serial_number, i.id, i.zone_id]
+}
+
+%>
+
+<div class="col-6 col-sm-3">
+<label for="product-name">Station SN</label>
+
+<input type="text" id="station-sn" name="station_sn" class="form-control" value="" style="background-color:#23a488">
+<script>
+var map = <%=stations_map.to_json.html_safe%>
+
+$(document).ready(function(){
+	
+$('#station-sn').focus()
+$('#station-sn').keypress(function(event) {
+    if (event.keyCode == 13) {
+	    sn = $(this).val()
+	    event.preventDefault();
+		$('#station-sn').val(sn.trim())
+		for(var ix in map){
+			i = map[ix];
+			
+			if(i[0]==sn){
+				
+				$('#record-station_id').val(i[1])
+				$('#record-zone_id').val(i[2])
+				
+				
+			}
+			
+		}
+		
+		
+    }
+});
+
+})
+</script>
+
+</div>
+
+<div class="col-6 col-sm-3">
+<label for="product-name">Station</label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in stations.collect{|k| [k.id,"#{k} @ #{k.name} "]} %>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+
+<%
+	
+name = 'zone_id'
+
+zone_id = Zone.first.id
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id	
+
+options = Zone.where(:id=>zone_id).collect{|i| [i.name,i.id]}
+
+
+	
+%>
+<div class="col-6 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
+<%
+	
+name = 'score_id'
+
+options = Score.all.collect{|i| [i.name,i.id]}
+@record[name] = options[0][1] if options.size>0
+%>
+<div class="col-6 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+ <option></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if @record[name]==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+<%
+	
+name = 'provider_id'
+
+options = Provider.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-6 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
+<%
+	
+name = 'diagnosis_id'
+options = Diagnosis.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-12 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+<%
+	
+name = 'procedure_id'
+options = Procedure.all.collect{|i| [i.name,i.id]}
+
+zone_id = @current_zone if @current_zone
+zone_id = @record.zone_id if @record.zone_id
+
+
+	
+	
+%>
+<div class="col-12 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+
+
+<%
+	
+if @current_zone.mode == 'aoc'
+	
+	
+name = 'ambulance_id'
+
+options = Ambulance.all.collect{|i| [i.name,i.id]}
+
+ambulance_id = @record.ambulance_id 
+
+	
+%>
+<div class="col-12 col-sm-3">
+<label for="product-name"><%=name.humanize%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<option value=""></option>
+<% for j in options %>
+  <option value="<%=j[1]%>" <%="selected" if zone_id==j[1] %>><%=j[0]%></option>
+<% end %>
+</select>
+</div>
+<% end %>
+
+
+
+
+
+
+</div>
+
+
+<%
+	
+name = 'status'
+options = [['Admitted','Admitted'],['Discharged','Discharged'],['Cancelled','Cancelled']]
+	
+%>
+<div class="form-group">
+
+<div class="row">
+
+<div class="col-3">
+<label for="product-name">Status</label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in options%>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0] %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+
+
+<%
+	
+name = 'period'
+options = [['15','15 mins'],['5','5 mins'],['1','1 min']]
+selected = false
+
+
+	
+%>
+
+<div class="col-3">
+<label for="product-name">Monitor Period <%=@record[name].inspect%></label>
+
+<select id="record-<%=name%>" name="record[<%=name%>]" class="form-control" value="<%=@record[name]%>">
+
+<% for j in options
+	selected = false
+	selected = true if @record[name]==j[0].to_i
+%>
+  <option value="<%=j[0]%>" <%="selected" if @record[name]==j[0].to_i %>><%=j[1]%></option>
+<% end %>
+</select>
+</div>
+<%
+	
+name = 'an'
+	
+%>
+<div class="col-3">
+<label for="product-name">Admission Number (AN)</label>
+<div>
+
+    <input type="text" class="form-control" id="record-an" name="record[an]" value="<%=@record.an%>" placeholder="AN" style="">
+	
+</div>	
+</div>
+
+<%
+	
+name = 'admit_stamp'
+	
+%>
+<div class="col-3">
+<label for="product-name"><%=name.humanize%></label>
+<div>
+	<%=@record.admit_stamp%>
+</div>	
+</div>
+
+
+
+
+<%
+	
+name = 'weight'
+	
+%>
+<div class="col-3">
+<label for="product-name">Weight (kg)</label>
+<div>
+
+    <input type="text" class="form-control" id="record-weight" name="record[weight]" value="<%=@record.weight%>" placeholder="KG" style="">
+	
+</div>	
+</div>
+
+
+<%
+	
+name = 'height'
+	
+%>
+<div class="col-3">
+<label for="product-name">Height (cm)</label>
+<div>
+
+    <input type="text" class="form-control" id="record-height" name="record[height]" value="<%=@record.height%>" placeholder="CM" style="">
+	
+</div>	
+</div>
+
+<%
+	
+name = 'bmi'
+	
+%>
+<div class="col-3">
+<label for="product-name">BMI</label>
+<div>
+
+    <input type="text" class="form-control" id="record-bmi" name="record[bmi]" value="<%=@record.bmi%>" placeholder="" style="">
+	
+</div>	
+</div>
+<script>
+	function update_bmi(){
+		
+		weight = $('#record-weight').val()
+		height = $('#record-height').val()
+		if(parseFloat(weight)>0&&parseFloat(height)){
+			h = parseFloat(height)/100
+			bmi = parseFloat(weight)/h/h
+		 	$('#record-bmi').val(bmi.toFixed(2))
+		}
+	
+		
+		
+		
+	}
+	$('#record-height').change(function(){
+		update_bmi()
+	})
+	$('#record-weight').change(function(){
+		update_bmi()
+	})
+</script>
+
+<%
+	
+name = 'glucose'
+	
+%>
+<div class="col-3">
+<label for="product-name">Glucose mmol/L</label>
+<div>
+
+    <input type="text" class="form-control" id="record-glucose" name="record[glucose]" value="<%=@record.glucose%>" placeholder="mmol/L" style="">
+	
+</div>	
+</div>
+
+</div>
+</div>
+
+
+<%
+	
+	stations = Station.all
+	
+	
+	for i in keys
+		
+%>
+<%		
+	if i[0]=='patient_id'	
+%>
+
+<%		
+	elsif i[0]=='score_id'
+%>
+<%		
+	elsif i[0]=='zone_id'
+%>
+
+<%		
+	elsif i[0]=='current_score'	
+	
+%>
+<%		
+	elsif i[0]=='provider_id'	
+	
+%>
+<%		
+	elsif i[0]=='procedure_id'	
+	
+%>
+<%		
+	elsif i[0]=='diagnosis_id'	
+	
+%>
+
+<%		
+	elsif i[0]=='status'	
+%>
+
+<%		
+	elsif i[0]=='created_at' or i[0]=='updated_at' or i[0]==''	
+%>
+<%		
+	elsif i[0]=='admit_stamp'
+%>
+
+<%		
+	elsif i[0]=='station_id'	
+%>
+
+
+
+<% else 
+
+	if false or i[0] =='note'
+%>	
+  <div class="form-group">
+    <label for="product-name"><%=i[0].humanize%></label>
+    <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value="<%=@record[i[0]]%>" placeholder="<%=i[0]%>">
+  </div>
+<% end %>
+  
+  
+<% end %>
+
+
+<% end %>
+<%if Setting.get('admit_export') %>
+  <div class="form-group">
+    <label for="product-name">Export Status</label>
+    <input type="text" class="form-control" id="record-export_status" name="record[export_status]" value="<%=@record['export_status']%>" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="product-name">Export Log</label>
+    <input type="text" class="form-control" id="record-export_log%>" name="record[export_log]" value="<%=Rack::Utils.escape_html(@record.export_log)%>" placeholder="">
+  </div>
+		  
+<% end %>

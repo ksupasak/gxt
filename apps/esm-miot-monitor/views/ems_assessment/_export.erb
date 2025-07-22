@@ -1,0 +1,13 @@
+<%
+    require "csv"
+
+    records = this.model.all
+    headers = records.first.attributes.keys
+    csv_data = CSV.generate do |csv|
+        csv << headers
+        records.each do |record|
+            csv << headers.map { |header| record.send(header) }
+        end
+    end
+
+%><%=csv_data%>

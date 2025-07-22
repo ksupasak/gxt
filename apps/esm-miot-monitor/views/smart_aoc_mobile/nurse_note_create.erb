@@ -1,0 +1,28 @@
+<%
+note = params[:note]
+if params[:medication_id] and params[:medication_id]!=''
+note = "#{params[:medname]} #{params[:volume]} #{params[:unit_type]} #{params[:route]}"
+MedicationRecord.create :admit_id=>params[:admit_id], :medication_id=>params[:medication_id], :name=>params[:medname], :volume=>params[:volume], :unit_type=>params[:unit_type], :route=>params[:route], :status=>'OFF', :start_time=> Time.now
+
+else
+
+NurseRecord.create :admit_id=>params[:admit_id], :description=>note, :start_time=> Time.now
+
+end
+admit = Admit.find params[:admit_id]
+
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+unless params[:mode]
+%>
+<meta http-equiv="Refresh" content="0; url=show?id=<%=admit.ambulance_id%>" />
+<%else%>
+<meta http-equiv="Refresh" content="0; url=glasses?id=<%=admit.ambulance_id%>" />
+<%end%>
+

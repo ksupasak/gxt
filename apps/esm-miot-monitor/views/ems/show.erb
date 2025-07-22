@@ -1,0 +1,772 @@
+
+
+<%
+
+	record = EMSCase.find params[:id]
+	session[:case_id] = record.id
+
+%>
+<%= inline(this,:'_init')  %>
+<%= inline(this,:'_style')  %>
+<%= inline(this,:'../lib/_map')  %>
+<%
+
+
+code = EMSCode.find record.init_cbd_code
+
+
+
+cls = "primary"
+
+cls = record.init_code.get_class if code
+
+%>
+
+<style>
+	.v{
+		color:blue;
+	}
+	.marker-position {
+	    bottom: -40px;
+	    left: 0;
+	    position: relative;
+	}
+	</style>
+
+<div class="row row-cols-1 row-cols-md-3 row-cols-xl-3">
+	<div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+	
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
+		<div class="card-body">
+			<div class="d-flex align-items-center">
+				<div class="row" >
+
+
+					<div class="row">
+
+						<div class="col-12 col-xl-7">
+							<h4 class="my-1 text-<%=cls%>">
+
+								<%=record.case_no%>
+
+							</h4>
+
+						</div>
+
+						<div class="col-12 col-xl-5">
+							<h4 class="my-1 text-info " >
+
+							 <%=link_to record.contact_phone, "tel:#{record.contact_phone}"%>
+
+							</h4>
+						</div>
+
+					</div>
+
+
+					<div class="row">
+
+						<div class="col-7">
+							ผู้แจ้ง : <span class="contact_name"><%=record.contact_name%></span>
+						</div>
+
+					<div class="col-5">
+						<label class="phone">สถานที่<label> : <span class="contact_name v"><%=record.location%></span>
+					</div>
+
+
+					</div>
+
+
+
+					<div class="row">
+
+						<div class="col-12">
+							<label class="phone">อาการนำ<label> : <span class="cheif_complain v"><%=record.chief_complain%></span>
+						</div>
+
+
+
+					</div>
+
+
+
+					<!-- <p class="mb-0 text-secondary">
+
+
+					ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%>
+
+
+
+					</p>
+					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p> -->
+					<!-- <p class="mb-0 font-13" style="width:400px;overflow:hidden">Address : <%=record.address  %> </p> -->
+
+				</div>
+
+
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div> -->
+			</div>
+		</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-md-6 col-lg-4">
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%>">
+		<div class="card-body">
+			<div class="d-flex align-items-center">
+					<div class="row">
+
+				<div class="row">
+
+					<div class="col-7">
+						<h4 class="my-1 ">
+
+							ผู้ป่วย <%=record.patient_gender%> <%=record.patient_age%>
+
+						</h4>
+
+					</div>
+
+					<div class="col-5">
+						<h4 class="my-1 text-<%=cls%>">
+							<%=record.init_code.name.split(" ")[0] if record.init_code %>
+
+						</h4>
+					</div>
+
+				</div>
+
+
+
+				<div class="row">
+
+					<div class="col-7">
+						ผู้ป่วย : <span class=":init_cbd_code v"><%=record.patient_name%></span>
+					</div>
+
+					<div class="col-5">
+						CID : <span class=":init_cbd_code v"><%=record.patient_cid%></span>
+					</div>
+
+
+
+				</div>
+
+
+				<div class="row">
+
+
+
+					<div class="col-7">
+						<label class="phone">โรคประจำตัว<label> : <span class="cheif_complain v"><%=record.patient_underlying%></span>
+					</div>
+
+				<div class="col-5">
+					<label class="phone">HN : <label> <span class="contact_name v"><%=record.patient_hn%></span>
+				</div>
+
+
+				</div>
+
+
+			</div>
+				<!-- <div>
+					<h4 class="my-1 text-primary "><%=record.init_code.name.split(" ")[0] if record.init_code %></h4>
+					<p class="mb-0 text-secondary">ผู้ป่วย : <%=record.patient_name%> อาการ : <%= record.chief_complain%></p>
+					<p class="mb-0 font-13" style="width:200px;overflow:hidden">Location : <%=record.location  %> </p>
+
+
+				</div> -->
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-bloody text-white ms-auto"><i class='bx bxs-group'></i>
+				</div> -->
+			</div>
+		</div>
+		</div>
+	</div>
+
+	<%
+
+	# station = record.admit.station
+	#
+	#
+	# station_id = "StationID"
+	# station_id = station.name if station
+
+	%>
+	<div class="col-12 col-md-12 col-lg-4 h-100">
+		<div class="card radius-10 border-start border-0 border-3 border-<%=cls%> " >
+		<div class="card-body" style="border:0px solid">
+
+			<div class="" style="border:0px solid">
+
+
+				<div class="row">
+
+					<div class="col-6" style="">
+
+						<%
+
+								command = EMSCommand.where(:case_id=>record.id).first
+								ambu = nil
+								ambu = record.ambulance if  record.ambulance_id
+								ambu = command.ambulance if command
+
+						%>
+
+						<div class="row">
+						<div class="col-12">
+
+							<h5 class="my-1 ">
+								<% if ambu%>
+								<%=ambu.name%> (<%=ambu.plate_license%>)
+								<% end %>
+							</h5>
+
+						</div>
+						</div>
+
+
+
+
+						<div class="row">
+						<div class="col-12">
+							    <%
+
+								user = User.find record.user_id
+
+							    %>
+								EMD : <%=  record.user.login if record.user%>, 
+								Channel : <%=record.channel.name if record.channel%><br/>
+								GPS : <%=format("%0.1f",record.gps_distance/1000) if record.gps_distance%> km <%=format("%0.1f",record.gps_duration/60) if record.gps_duration	%> min
+
+
+						</div>
+						</div>
+
+						<div class="row">
+						<div class="col-12">
+
+						<%
+
+
+							command = EMSCommand.where(:case_id=>record.id).first
+
+							if command
+
+								# ambu = command.ambulance
+								route = AocCaseRoute.where(:ems_command_id=>command.id, :status=>'STARTED').first
+
+						%>
+								Route : <%=route%>
+
+						<% end %>
+
+						</div>
+						</div>
+
+
+
+					</div>
+
+				<div class="col-6 d-flex justify-content-end " style="">
+				
+				<div class="row  ">
+				
+				
+				<%  if @current_role=='admin' or @current_role=='developer' %>
+				<div class=" widgets-icons-2  <%=' bg-gradient-blooker ' if record.tracking_status != 'SENT' %>text-white ms-auto" style="margin:5px">
+					<a href="request_ems?id=<%="#{record.id}"%>" target="_blank">
+						<i class='bx bx-message-detail text-white '></i>
+					</a>
+				</div>
+				
+				<% end %>
+
+
+				<% if true
+
+					cls = 'bg-gradient-bloody'
+					cls = '' if record.tracking_status=='SENT'
+					cls = 'bg-gradient-blooker' if record.tracking_status=='ACCESSED'
+					cls = 'bg-gradient-ohhappiness' if record.tracking_status=='TRACKING'
+
+
+				%>
+
+
+				<div class="widgets-icons-2  <%= cls %> text-white ms-auto" style="margin:5px">
+					<a href="send_sms?id=<%=record.id%>" >
+						<i class='bx bx-send text-white '></i>
+					</a>
+				</div>
+
+				<% end %>
+
+
+				<div class="widgets-icons-2   bg-gradient-scooter text-white ms-auto" style="margin:5px">
+					<!-- <a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd" target="_blank" >
+						<i class='bx bx-webcam text-white '></i>
+					</a> -->
+						
+					<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectMeeting">Vertically Centered</button> -->
+						
+					<a href="video?id=<%=record.case_no%>&case_id=<%=record.id%>&side=emd"  data-bs-toggle="modal" data-bs-target="#connectMeeting"  >
+						<i class='bx bx-webcam text-white '></i>
+					</a>
+					
+				</div>
+
+				<div class="widgets-icons-2  <%=' bg-gradient-ohhappiness ' if true %>text-white ms-auto" style="margin:5px">
+						<a href="monitor?id=<%=record.id%>" target="_blank" >
+							<i class='bx bx-home-heart text-white '></i>
+						</a>
+				</div>
+				
+			</div>
+
+			</div>
+			</div>
+				<!-- <div class="widgets-icons-2 rounded-circle bg-gradient-scooter text-white ms-auto">
+					<i class='bx bxs-phone'></i>
+				</div> -->
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class="">
+<div class="">
+
+<div class="d-block d-lg-none" style="background:white;">
+
+	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
+		<button type="button" tab="request" class="col-4 qlink tab-request btn btn-outline-primary">Request</button>
+		<button type="button" tab="command" class="col-4 qlink tab-command btn btn-outline-primary">Command</button>
+		<button type="button" tab="prearrival" class="col-4 qlink tab-prearrival btn btn-outline-primary">PreArrival</button>
+ 	 </div>
+
+
+ 	<div class="btn-group col-12" role="group" aria-label="First group" style="margin-bottom:10px">
+
+		<button type="button" tab="paramedic"  class="col-4 qlink tab-paramedic btn btn-outline-primary">Management</button>
+		<button type="button" tab="emr"  class="col-4 qlink tab-emr btn btn-outline-primary">EMR</button>
+		<button type="button"  tab="discharge"  class="col-4  qlink tab-discharge btn btn-outline-primary">Discharge</button>
+
+	</div>
+
+	<script>
+	 		$('.qlink').click(function(){
+
+				v = $(this).attr("tab")
+				$('#tab-'+v).click()
+
+			})
+		</script>
+</div>
+
+	<div class="ems_case"></div>
+
+	<!-- <ul id="nav-tab-main" class="nav nav-tabs nav-primary" role="tablist">
+		<li class="nav-item" role="presentation">
+			<a class="nav-link  requestcontent" data-bs-toggle="tab" href="#requestcontent" role="tab" aria-selected="true">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-home font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Request</div>
+				</div>
+			</a>
+		</li>
+		<li class="nav-item" role="presentation">
+			<a class="nav-link prearrivalcontent" data-bs-toggle="tab"   href="#prearrivalcontent" role="tab" aria-selected="false">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-user-pin font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Pre arrival</div>
+				</div>
+			</a>
+		</li>
+		<li class="nav-item" role="presentation" >
+			<a class="nav-link commandcontent" data-bs-toggle="tab"     href="#commandcontent" role="tab" aria-selected="false">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Command</div>
+				</div>
+			</a>
+		</li>
+
+		 <li class="nav-item" role="presentation">
+			<a class="nav-link operationcontent" data-bs-toggle="tab" href="#operationcontent" role="tab" aria-selected="false">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Operation</div>
+				</div>
+			</a>
+		</li>
+
+		<li class="nav-item" role="presentation">
+			<a class="nav-link" data-bs-toggle="tab" href="#paramediccontent" role="tab" aria-selected="false">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Paramedic</div>
+				</div>
+			</a>
+		</li>
+
+		<li class="nav-item" role="presentation">
+			<a class="nav-link" data-bs-toggle="tab" href="#dischargecontent" role="tab" aria-selected="false">
+				<div class="d-flex align-items-center">
+					<div class="tab-icon"><i class="bx bx-microphone font-18 me-1"></i>
+					</div>
+					<div class="tab-title">Discharge</div>
+				</div>
+			</a>
+		</li>
+
+
+	</ul> -->
+	<div class="tab-contentx " >
+
+
+		<div class="tab-pane fade " id="dashboardcontent" role="tabpanel">
+
+		<!-- <p  class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-ambulance"></i>&nbsp;&nbsp;Request</h4>
+		<hr/>
+		</p> -->
+
+			<p>
+				<div class="dashboard"> dasbhoard</div>
+				<script>
+					// function reload_request_content(){
+					// $.ajax({
+					//   url: "../EmsRequest/show?id=<%=params[:id]%>",
+					//   context: document.body
+					// }).done(function(html) {
+					//
+					//   $( '.request' ).html(html);
+					// });
+					//
+					// }
+					// reload_request_content();
+					//
+				</script>
+			</p>
+		</div>
+
+
+		<div class="tab-pane fade " id="requestcontent" role="tabpanel">
+
+		<!-- <p  class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-ambulance"></i>&nbsp;&nbsp;Request</h4>
+		<hr/>
+		</p> -->
+
+			<p>
+				<div class="request"></div>
+				<script>
+					// function reload_request_content(){
+					// $.ajax({
+					//   url: "../EmsRequest/show?id=<%=params[:id]%>",
+					//   context: document.body
+					// }).done(function(html) {
+					//
+					//   $( '.request' ).html(html);
+					// });
+					//
+					// }
+					// reload_request_content();
+					//
+				</script>
+			</p>
+		</div>
+
+		<div class="tab-pane fade" id="prearrivalcontent" role="tabpanel">
+
+		<!-- <p  class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-agenda"></i>&nbsp;&nbsp;Pre Arrival</h4>
+		<hr/>
+		</p> -->
+
+
+		<p>
+		<div class="prearrival"></div>
+		</p>
+
+		<script>
+
+			// $.ajax({
+			// 		    url: "../EmsPrearrival/show?case_id=<%=params[:id]%>",
+			//   context: document.body
+			// }).done(function(html) {
+			//
+			//   $( '.prearrival' ).html(html);
+			// });
+			//
+
+		</script>
+
+
+
+		</div>
+
+
+		<div class="tab-pane fade" id="commandcontent" role="tabpanel" style="margin:0px">
+
+		<!-- <p class="tab-header">
+		<h4 class="text-primary"><i class="lni lni-bullhorn"></i>&nbsp;&nbsp;Command</h4>
+		<hr/>
+		</p> -->
+		<p>
+
+
+			<div id="command"></div>
+		
+
+
+
+		</p>
+
+
+		</div>
+
+		<div class="tab-pane fade" id="operationcontent" role="tabpanel">
+
+
+		<p>
+
+			<div class="operation"></div>
+			<script>
+
+				// $.ajax({
+				// 			    url: "../EmsOperation/show?id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.operation' ).html(html);
+				// });
+
+
+			</script>
+		</p>
+
+
+		</div>
+
+		<div class="tab-pane fade" id="paramediccontent" role="tabpanel">
+
+
+		<p>
+			<div class="paramedic"></div>
+			<script>
+
+				// $.ajax({
+				// 			    url: "../EmsParamedic/show?id=<%=params[:id]%>",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.paramedic' ).html(html);
+				// });
+
+
+			</script>
+
+		</p>
+
+
+		</div>
+
+		<div class="tab-pane fade" id="dischargecontent" role="tabpanel">
+
+
+		<p>
+
+			<div class="discharge"></div>
+			<script>
+				//
+				// $.ajax({
+				// 			    url: "../EmsDischarge/show",
+				//   context: document.body
+				// }).done(function(html) {
+				//
+				//   $( '.discharge' ).html(html);
+				// });
+				//
+				//
+			</script>
+		</p>
+
+
+		</div>
+
+
+
+
+
+
+	</div>
+</div>
+</div>
+<script>
+
+		$('.nav-link').each(function(){
+
+			obj = $(this)
+			// if(obj.attr('data-bs-toggle')=='tab'){
+				$(this).click(function(e){
+
+					obj = $(this)
+					sessionStorage.setItem("last_tab", obj.attr('href'));
+				})
+			// }
+
+		})
+
+		$(document).ready(function(){
+			<% unless params[:page] %>
+			tab =  sessionStorage.getItem("last_tab")
+
+			if(tab != null&&tab.length>0){
+
+			}else{
+				// alert('no '+sessionStorage.getItem("last_tab"))
+				tab = 'dashboard'
+				sessionStorage.setItem("last_tab", tab)
+
+			}
+ 		// $('.tab-dashboard').click()
+			<% else %>
+
+		 $('.nav-tabs a[href="<%=params[:page]%>"]').tab('show');
+
+			<% end %>
+
+
+
+
+		})
+
+
+
+</script>
+
+<%=init_map%>
+
+
+	<% if true %><div class="msg" style="font-size:0.8em;height:200px;margin:100px">
+
+		<center>
+
+
+			<div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status"> <span class="">Loading...</span>
+								</div>
+		</center>
+	</div><% end %>
+<script>
+
+
+  tag = 'wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index";
+
+
+  var ws  = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
+
+
+  ws.onopen    = function()  { show('websocket opened');
+
+  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{@context.settings.name}/z/#{@current_zone.name}"%>","ZoneUpdate zone_id=*","EMSUpdate event_id=*", "Alert station_id=*","Data.Image station_id=*"]')
+
+
+  };
+
+
+  ws.onclose   = function()  { show('websocket closed');
+
+ 	setTimeout(function () {
+       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+    }, 2000); //will call the function after 2 secs.
+
+
+  }
+
+  ws.onmessage = function(m) {
+
+
+
+		lines = m.data.split("\n")
+
+		if(lines[0].split(" ")[0]=='Zone.Message'){
+	
+			// update_message();
+
+		}
+	
+		if( typeof process_message === 'function'){
+			process_message(lines)
+		}
+	    
+
+
+  }
+
+	
+
+
+</script>
+
+
+	<!-- Button trigger modal -->
+	<!-- Modal -->
+	<div class="modal fade" id="connectMeeting" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Meeting</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+				
+				<%
+					
+			        session_prefix = "#{record.get_meeting_key(Setting.get("aoc_code"))}"
+						
+					
+				%>
+				<a href="video?id=<%=session_prefix%>-PRE&case_id=<%=record.id%>&side=emd&type=PRE" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					PRE : <span>สร้างห้องประชุมติดต่อผู้แจ้งเหตุ</span>
+				</div>
+				</div>
+				</a>
+				
+				<a href="video?id=<%=session_prefix%>-EMS&case_id=<%=record.id%>&side=emd&type=EMS" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					EMS : <span>สร้างห้องประชุมต่อทีมปฏิบัติการ </span>
+				</div>
+				</div>
+				</a>
+				
+				
+				<a href="video?id=<%=session_prefix%>-CON&case_id=<%=record.id%>&side=emd&type=CON" target="_blank" >
+				<div class="card">
+				<div class="card-body">
+					CON : <span>สร้างห้องประชุมอื่น ๆ  </span>
+				</div>
+				</div>
+				</a>
+				
+				
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>

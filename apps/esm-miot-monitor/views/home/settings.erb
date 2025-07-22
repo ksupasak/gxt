@@ -1,0 +1,38 @@
+<%
+	
+	if request.post?
+		content = File.open("services/monitor/conf.rb").read
+		tmp = File.open("services/monitor/conf.rb.tmp",'w')
+		tmp.puts content
+		tmp.close
+		
+		file = File.open("services/monitor/conf.rb",'w')
+		file.puts params['content']
+		file.close
+		
+		if params[:reboot]
+			`reboot`
+		end
+	
+	end
+	content = File.open("services/monitor/conf.rb").read
+    
+%>
+
+<h1>Edit Settings</h1>
+<form action="settings" method="post" >
+<textarea  name="content"  class="form-control" rows="10"><%=content%></textarea>
+<div class="checkbox">
+  <label>
+    <input type="checkbox" name="reboot" value="reboot">
+    Reboot
+  </label>
+</div>
+<button type="submit" class="btn btn-primary">Update</button>
+</form>
+<br/>
+<% if request.post? %>
+<pre>
+<%=params[:content]%>
+</pre>
+<% end %>

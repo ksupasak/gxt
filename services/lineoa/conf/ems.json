@@ -1,0 +1,7 @@
+{"name":"SmartEMS",
+"delegate_url":"https://pcm-life.com/miot/API/lineoa",
+"channel_id":"1656791294",
+"channel_secret":"0a899ace9ad41cae6584be8619f01cd3",
+"channel_token":"8eMkmITZA25j/s5NUz7l1clPf3eEVq0xuXDFrAJWToCKNcWq+y/qRDp2DNOHj79VFqsPwR/rR2jiyvJXmhfnre6JsL82AAQ9rqa96nH5dq4jAGWygDQUO2qH4C+GVnlhB8brpqRX+O16/zVfa1divAdB04t89/1O/w1cDnyilFU=",
+"media":"kafka"
+}

@@ -1,0 +1,38 @@
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
+
+body {
+  padding-top: 4rem;
+  background-color: #000000;
+  color: #C2C2C2;
+  font-family: "Sarabun", sans-serif;
+}
+
+
+.btn-pcm{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  0% no-repeat padding-box;
+}
+.btn-pcm2{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
+  0% no-repeat padding-box;
+}
+.panel-pcm{
+  background:#06202E;
+  border-radius: 1vh;
+  padding: 1vh;
+  margin: 0.4vh;
+}
+.panel-active{
+  border:2px solid #3147FF;
+}
+.panel-normal{
+  border:2px solid #686E71;
+}
+

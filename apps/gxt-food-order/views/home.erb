@@ -1,0 +1,27 @@
+<h1 >Dashboard</h1>
+<%
+	
+	devices = Device.all
+	
+	groups = {}
+	
+	for i in devices
+		groups[i.type] = [] unless 	groups[i.type]
+		groups[i.type] << i
+	end
+
+	groups.each_pair do |k,v|
+%>
+<div class="row">
+<h3><%=k%></h3>
+<hr/>
+<% for i in v 
+   link = "../Home/switch?id=#{i.id}"
+	
+%>
+<div class="col-sm-3">
+<%=link_to i.name.humanize,link,:class=>'img-rounded btn btn-default'%>
+</div>
+<% end %>
+</div>
+<% end %>

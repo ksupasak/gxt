@@ -1,0 +1,12 @@
+<%# this.model.fields.sort.collect{|i| i.name}.join(" ")%>
+<%# this.model.keys['date'].type%>
+<%
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+	for i in keys
+%>
+  <div class="form-group">
+    <label for="product-name"><%=i[0].humanize%></label>
+    <input type="text" class="form-control" id="record-<%=i[0]%>" name="record[<%=i[0]%>]" value='<%=@record[i[0]]%>' placeholder="<%=i[0]%>">
+  </div>
+<% end %>
+<br/>

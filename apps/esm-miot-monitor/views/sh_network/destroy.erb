@@ -1,0 +1,24 @@
+<%
+	
+	network = this.model.find(params[:id])
+	
+	users = SHUserNetwork.where(:network_id=>network.id).all
+	
+	for record in users 
+	
+	if record
+        u = User.find record.user_id
+        pv = Provider.find record.provider_id   
+        u.destroy if u
+        pv.destroy if pv
+    end
+	
+	end
+	
+    network.destroy
+	
+	return_url = '../Home/index'
+	return_url = params[:return] if params[:return] 
+
+%>
+<%=redirect_to return_url%>

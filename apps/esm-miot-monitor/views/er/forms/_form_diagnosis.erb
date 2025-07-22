@@ -1,0 +1,130 @@
+     <div class="row">
+          
+
+                <!-- Medical Information -->
+                <div class="col-md-6">
+                    <h4>Medical Information</h4>
+                    <% textareas = [
+                      { id: 'underlying', name: 'record[patient_underlying]', label: 'Underlying Conditions', value: record['patient_underlying'] },
+                      { id: 'diagnosis', name: 'record[diagnosis]', label: 'Diagnosis', value: record['diagnosis'] },
+                      { id: 'dx_remark', name: 'record[remark]', label: 'Remark', value: record['remark'] }
+                    ] %>
+
+                    <% textareas.each do |textarea| %>
+                      <div class="mb-3">
+                        <label class="form-label"><%= textarea[:label] %></label>
+                        <div class="input-group voice-input-group">
+                          <textarea class="form-control" 
+                                    name="<%= textarea[:name] %>" 
+                                    id="<%= textarea[:id] %>Text"><%= textarea[:value] %></textarea>
+                          <button class="btn btn-outline-secondary start-recording" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-microphone"></i>
+                          </button>
+                          <button class="btn btn-outline-danger stop-recording d-none" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-stop"></i>
+                          </button>
+                          <button class="btn btn-outline-warning clear-text" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                        <div id="<%= textarea[:id] %>LiveTranscript" class="form-text text-primary"></div>
+                        <small class="text-muted" id="<%= textarea[:id] %>Status"></small>
+                      </div>
+                    <% end %>
+
+                  
+
+               
+
+                </div>
+                
+      
+                <div class="col-md-6">
+                    <h4>Patient Measurements</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Weight (kg)</label>
+                        <input type="number" step="0.01" class="form-control" name="record[patient_weight]" value="<%= record['patient_weight'] %>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Height (cm)</label>
+                        <input type="number" step="0.1" class="form-control" name="record[patient_height]" value="<%= record['patient_height'] %>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">BMI</label>
+                        <input type="text" class="form-control" name="record[patient_bmi]" value="<%= record['patient_bmi'] %>">
+                    </div>
+                    <script>
+                        function calculateBMI() {
+                            const weight = parseFloat(document.querySelector('input[name="record[patient_weight]"]').value);
+                            const height = parseFloat(document.querySelector('input[name="record[patient_height]"]').value);
+                       
+                            if (!isNaN(weight) && !isNaN(height)) {
+                                 
+                                h = height / 100;
+                                const bmi = (weight / (h * h)).toFixed(2);    
+                     
+                                document.querySelector('input[name="record[patient_bmi]"]').value = bmi;
+                            } else {
+                                document.querySelector('input[name="record[patient_bmi]"]').value = '';
+                            }
+                        }
+                        document.querySelector('input[name="record[patient_weight]"]').addEventListener('input', calculateBMI);
+                        document.querySelector('input[name="record[patient_height]"]').addEventListener('input', calculateBMI);
+                    </script>
+
+                </div>
+
+
+
+
+                <div class="col-md-12">
+                <h4>Staff/Doctor</h4>
+                <div class="mb-3">
+                <div class="row">
+                        <div class="mb-3 col-md-3">
+                        <label class="form-label">Staffv</label>
+                        <select class="form-select" name="record[provider_id]">
+                            <option value="">-</option>
+                            <% Provider.where(:role=>'staff').all.each do |provider| %>
+                                <option value="<%= provider.id %>" <%= 'selected' if record['provider_id'] == provider.id %>><%= provider.name %></option>
+                            <% end %>
+                        </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                        <label class="form-label" >Resident</label>
+                        <select class="form-select" name="record[resident_id]">
+                            <option value="">-</option>
+                            <% Provider.where(:role=>'resident').all.each do |resident| %>
+                                <option value="<%= resident.id %>" <%= 'selected' if record['resident_id'] == resident.id %>><%= resident.name %></option>
+                            <% end %>
+                        </select>
+                        </div>
+                  
+                        <div class="mb-3 col-md-3">
+                        <label class="form-label">Nurse</label>
+                        <select class="form-select" name="record[nurse_id]">
+                            <option value="">-</option>
+                            <% Provider.where(:role=>'nurse').all.each do |nurse| %>
+                                <option value="<%= nurse.id %>" <%= 'selected' if record['nurse_id'] == nurse.id %>><%= nurse.name %></option>
+                            <% end %>
+                        </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                        <label class="form-label">Nurse Assistant</label>
+                        <select class="form-select" name="record[nurse_assistant_id]">
+                            <option value="">-</option>
+                            <% Provider.where(:role=>'nurse_assistant').all.each do |nurse_assistant| %>
+                                <option value="<%= nurse_assistant.id %>" <%= 'selected' if record['nurse_assistant_id'] == nurse_assistant.id %>><%= nurse_assistant.name %></option>
+                            <% end %>
+                        </select>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>

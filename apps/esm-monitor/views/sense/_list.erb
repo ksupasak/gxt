@@ -1,0 +1,30 @@
+<i>Number of records : <%=this.model.count%></i>
+<table class="table table-striped">
+<% 
+	
+	keys = this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j[0] %></th>
+	<% end %>
+	</tr>
+</thead>
+<tbody>
+<%	
+	for i in this.model.all :limit=>1000,:sort=>'created_at desc'
+%>
+<tr>
+	<% for j in keys %>
+		<td><%=i[j[0]] %></td>
+	<% end %>
+	<td>
+	<%=link_to 'Show',"show?id=#{i.id}",:class=>'btn btn-default btn-small' %>
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info  btn-small' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger  btn-small' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>

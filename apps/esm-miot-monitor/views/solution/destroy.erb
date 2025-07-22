@@ -1,0 +1,14 @@
+<%
+	
+	  redis = settings.redis	
+	
+	
+	  if params[:name] 
+		  
+		  redis.srem("esm-miot-monitor",params[:name])
+		  redis.del "GXT|#{params[:name] }"
+		  
+		  
+	  end
+%>
+<META HTTP-EQUIV="Refresh" CONTENT="0;URL=index">

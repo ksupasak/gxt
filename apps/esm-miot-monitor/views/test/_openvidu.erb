@@ -1,0 +1,76 @@
+<%
+
+
+
+
+%>
+
+<html>
+    <head>
+        <script src='/vendor/openvidu/openvidu-webcomponent-2.26.0.js'></script>
+        <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.26.0.css">
+
+<style>
+	:root {
+	  --ov-primary-color: #303030;
+	  --ov-secondary-color: #3e3f3f;
+	  --ov-tertiary-color: #598eff;
+	  --ov-warn-color: #EB5144;
+	  --ov-accent-color: #ffae35;
+	  --ov-light-color: #e6e6e6;
+
+	  --ov-logo-background-color: #3e3f3f;
+
+	  --ov-text-color: #ffffff;
+
+	  --ov-panel-text-color: #1d1d1d;
+	  --ov-panel-background: #ffffff;
+
+	  --ov-buttons-radius: 50%;
+	  --ov-leave-button-radius: 10px;
+	  --ov-video-radius: 5px;
+	  --ov-panel-radius: 5px;
+	}
+	</style>
+
+    </head>
+    <body>
+        <openvidu-webcomponent style=""></openvidu-webcomponent>
+		<ov-videoconference [tokens]="tokens">
+		  <div *ovToolbar style="text-align: center;">
+		    <button (click)="toggleVideo()">Toggle Video</button>
+		    <button (click)="toggleAudio()">Toggle Audio</button>
+		  </div>
+		</ov-videoconference>
+    <script>
+
+
+		window.onload = () => {
+
+			publishVideo = true;
+			publishAudio = true;
+
+		    var webComponent = document.querySelector('openvidu-webcomponent');
+		    webComponent.tokens = 'wss://pcm-life.com:4443?sessionId=SessionA&token=tok_O4GO4gBKe2cX7M7K' ;
+
+
+			function toggleVideo() {
+			  this.publishVideo = !this.publishVideo;
+			  webComponent.publishVideo(this.publishVideo);
+			}
+
+			function toggleAudio() {
+			  this.publishAudio = !this.publishAudio;
+			  webComponent.publishAudio(this.publishAudio);
+			}
+
+		}
+
+
+
+
+	</script>
+
+	</body>
+
+</html>

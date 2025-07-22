@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="97" height="97" viewBox="0 0 97 97">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#c03875"/>
+      <stop offset="1" stop-color="#e99abd"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#c03875"/>
+      <stop offset="1" stop-color="#e38db3"/>
+      <stop offset="1" stop-color="#601c3b"/>
+    </linearGradient>
+  </defs>
+  <g id="vital_sign" data-name="vital sign" transform="translate(-70 -420)">
+    <circle id="Ellipse_395" data-name="Ellipse 395" cx="48.5" cy="48.5" r="48.5" transform="translate(70 420)" fill="url(#linear-gradient)"/>
+    <circle id="Ellipse_393" data-name="Ellipse 393" cx="42.5" cy="42.5" r="42.5" transform="translate(76 426)" fill="#fff"/>
+    <path id="Icon_awesome-heartbeat" data-name="Icon awesome-heartbeat" d="M26.494,19.775,22.381,28a1.323,1.323,0,0,1-2.391-.05L15.282,17.5,12.8,23.432H5.014l15.1,15.431a1.474,1.474,0,0,0,2.126,0L37.349,23.432H28.322Zm12.7-14.058L39,5.511a10.839,10.839,0,0,0-15.506,0L21.182,7.877,18.873,5.519a10.825,10.825,0,0,0-15.506,0l-.2.2a11.361,11.361,0,0,0-.6,15.067h8.473l2.97-7.132a1.326,1.326,0,0,1,2.433-.033l4.815,10.7,4.054-8.1a1.322,1.322,0,0,1,2.366,0l2.284,4.567H39.8a11.361,11.361,0,0,0-.6-15.067Z" transform="translate(96.804 450.245)" fill="url(#linear-gradient-2)"/>
+  </g>
+</svg>

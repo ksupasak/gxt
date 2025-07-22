@@ -1,0 +1,146 @@
+<%
+	if params[:device_id]
+		device = Device.find(params[:device_id])
+	end
+	
+	
+	
+	
+%>
+
+<%
+
+	shop_name = "Untitled"
+	
+	shop_name_value = Setting.where(:name=>'shop_name').first
+	if shop_name_value
+		shop_name = shop_name_value.value
+	end
+
+%>
+
+<%
+	product_noun = "อาหาร"
+
+	product_name_value = Setting.where(:name=>'product').first
+	
+	if product_name_value
+		product_noun = product_name_value.value
+	end
+	
+
+%>
+<h1><%=device.name%> : <%=device.type%></h1>
+<hr/>
+
+<a href="#" id="send_5" class="btn btn-success">5 BTH</a>
+<a href="#" id="send_10" class="btn btn-success">10 BTH</a>
+<a href="#" id="send_20" class="btn btn-success">20 BTH</a>
+<a href="#" id="send_50" class="btn btn-success">50 BTH</a>
+<a href="#" id="send_100" class="btn btn-success">100 BTH</a>
+<a href="#" id="send_500" class="btn btn-success">500 BTH</a>
+<a href="#" id="send_1000" class="btn btn-success">1000 BTH</a>
+
+<hr/>
+
+<br/>
+####### DEBUG #######		
+<form id="form" action='#' >
+<label for='user'>Send Command:</label>
+
+<textarea id="user" name='user'  rows="4" cols="50">
+</textarea>
+<input type='submit' value="GO!" />
+</form>
+<div id="msgs"></div>	
+<script>
+$(document).ready(function(){
+	
+
+	    setInterval(function(){ 
+			d = new Date();
+			// alert('dijf')
+			$('#timer').html(d.toLocaleTimeString())
+			
+		}, 1000);
+	
+	
+	
+	
+	
+
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
+
+
+	  var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+
+
+
+      ws.onopen    = function()  { show('websocket opened'); };
+      ws.onclose   = function()  { show('websocket closed'); 
+
+	 	setTimeout(function () {
+	 			       window.location.reload(true) //will redirect to your blog page (an ex: blog.html)
+	 			    }, 2000); // will call the function after 2 secs.
+
+
+      }
+
+
+      ws.onmessage = function(m) {
+		show(''+m.data)
+		 
+			// force reload  
+			
+			if(m.data=='update'){
+			window.location.reload(true);
+			}
+			
+			// when order update from kitchen or counter
+			
+			if(m.data.indexOf('<%=device.name%>.')!=-1){
+			
+				console.log("msg arrived <%=device.name%> "+m.data)
+			    t = m.data.split("?")
+			    
+				cmd = t[0].split(".")[1]
+				if(cmd=='send'){
+					t2 = t[1].split('&')[0].split("=")[1]
+					
+					alert('Require BTH ='+t2)
+					
+				}else
+				if(cmd=='stop'){
+					alert('Stop')
+				}
+			}
+			
+			
+	  }
+	
+		$('#form').submit(function(){
+
+			ws.send($('#user').val())
+			return false;
+		})
+		
+		
+		<%
+			%w{5 10 20 50 100 500 1000}.each_with_index do |i,index|
+		%>
+		$("#send_<%=i%>").click(function(){
+			
+			ws.send("<%=device.name%>.receive?cash=<%=i%>")
+		
+			
+			false
+		})
+		<% end %>
+		
+		
+		
+	});
+
+</script>

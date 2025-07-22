@@ -1,0 +1,1133 @@
+<%
+
+	ems_case = EMSCase.find params[:case_id]
+	admit = Admit.find ems_case.admit_id
+	commands = ems_case.commands
+
+
+	hospitals = EMSHospital.all()
+
+%>
+
+	<div class="row" >
+
+
+	<div class="col-12">
+
+		<div class="row">
+
+		<div class="col-6 order-2">
+
+
+<!-- map -->
+			<div class="card radius-10">
+				<div class="card-header bg-transparent bg-primary bbg-gradient text-white">
+					<div class="">
+
+							เส้นทาง
+							
+						<div class="dropdown ms-auto">
+							<a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown" aria-expanded="true"></a>
+							<ul class="dropdown-menu" data-popper-placement="bottom-start" style="">
+								<li>
+									<a class="dropdown-item" href="javascript:;">Action</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="javascript:;">Another action</a>
+								</li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li>
+									<a class="dropdown-item" href="javascript:;">Something else here</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<style>
+					       /* Set the size of the div element that contains the map */
+					      #dashboard-map {
+					        height: 100px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					      #dashboard-map-2 {
+					        height: 100px;  /* The height is 400 pixels */
+					        width: 100%;  /* The width is the width of the web page */
+					       }
+					    </style>
+
+								<input id="search_hospital" name="" class="form-control" type="text" placeholder="Search name, mri, ct, rt"/>
+						<br/>
+					<div id="dashboard-map-c" style="height: 600px">
+					</div>
+
+
+
+				</div>
+			</div>
+
+	</div>
+
+
+<!-- map -->
+
+
+
+
+	<div class="col-6  order-1">
+
+
+
+		<div class="card">
+			<div class="card-header bg-primary bbg-gradient text-white">
+				ชุดปฏิบัติการ
+			
+			</div>
+			<div class="card-body">
+
+
+
+
+
+
+		<%
+
+
+		for cm in commands
+		%>
+		
+		<form action="<%=get_path "update_tracking" %>" id='tracking' method="POST">
+		
+		<div id="c<%=cm.id%>">
+		<div class="card" style="background:#f7f7ff">
+				<div class="card-header">
+
+				<!-- <a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-warning btn-sm" data-remote="true"  style="float:right;" data-remote-update="command-panel">แยก Case </a> -->
+				<a href="<%=get_path "update?id=#{cm.id}" %>" class="btn btn-info btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command-panel">แก้ไข</a>
+				<a href="<%=get_path "destroy?id=#{cm.id}" %>" class="btn btn-danger btn-sm" data-remote="true"  style="float:right;margin-right:5px" data-remote-update="command-panel">ลบ</a>
+
+				</div>
+
+				<div class="card-body">
+
+
+				<div class="row">
+
+				<div class="col-lg-6">
+
+					<div class="row">
+												
+						<div class="col-12 mb-3">
+
+												<p class="mb-3">
+												คำสั่งการ :
+											    </p>
+
+												<div class="input-group">
+												<textarea name="record[chief_complain]" id="record_chief_complain" class="form-control" style="height:80px">
+<%=cm.init_command%>
+												</textarea>
+												</div>
+				    </div>
+
+						<div class="col-12">
+
+
+												<p class="mb-3">
+												รถพยาบาล : 
+											    </p>
+												<div class="input-group">
+												<div class="form-control" style="">
+													<%=cm.ambulance.name%>
+													<br/>
+													<%=cm.ambulance.last_location%>
+													<br/>
+													<span id="ambu-status-<%=cm.id%>"></span>
+												
+													
+												</div>
+												
+												</div>
+												<br/>
+												
+												<p class="mb-3">
+												GPS Distance (km) / Duration (min)
+											    </p>
+												<div class="row">
+													
+												
+												<div class=" col-6">
+												<div class="input-group">
+												<input type="text" name="gps_distance" id="gps_distance" value="<%=format("%0.3f",ems_case.gps_distance/1000) if ems_case.gps_distance%>" class="form-control"/>
+												</div>
+												</div>
+													
+												<div class=" col-6">
+												<div class="input-group">
+												<input type="text" name="gps_duration" id="gps_duration" value="<%=format("%0.3f",ems_case.gps_duration/60) if ems_case.gps_duration%>" class="form-control" />
+												</div>
+												</div>
+												
+												
+											
+											</div>
+						</div></div>
+						<br/>
+					
+							<div class="col-12">
+						
+					   			<div class="row">
+					   			<div class="col-6">
+
+
+					   				<p class="">
+					   				นำส่งโรงพยาบาล :
+					   					</p>
+					   				<div class="form-control">
+					   					<%=ems_case.transfer_hospital%>
+					   				</div>
+					   			 </div>
+			 
+			 
+					    			<div class="col-6">
+
+
+					    				<p class="">
+					    				Transfer HN :
+					    					</p>
+					    				<div class="form-control">
+					    					<%=ems_case.transfer_hn%>
+					    				</div>
+					    			 </div>
+					    </div> </div>
+
+				
+			</div>
+			
+			<div class="col-lg-6">
+				
+				<div class="col-12">
+
+				<p class="">
+				เจ้าหน้าที่ :
+			    </p>
+				<div class="form-control">
+
+
+					<% for j in cm.providers
+
+						name = j.name
+						code = "-"
+						provider = nil
+						provider = j.provider
+						name = provider.get_name if provider
+						code = provider.code if provider
+						
+					%>
+
+						<div class="chip chip-md">
+							<img src="/rocker/assets/images/avatars/avatar-0.png" alt="Contact Person">
+							<%=code%> : <%=name%>
+						</div><br/>
+
+					<% end %>
+				</div>
+				<br/>
+		
+			<div class="row">
+			<div class=" col-6">
+			<p class="">
+			EMD :
+			</p>
+			<div class="input-group">
+			<input type="text" name="command[emd_code]" id="" value="<%=cm.emd_code%>" class="form-control" />
+			</div>
+			</div>
+			
+			<div class=" col-6">
+			<p class="">
+			EMT (Driver) :
+			</p>
+			<div class="input-group">
+			<input type="text" name="command[emt_driver_code]" id="" value="<%=cm.emt_driver_code%>" class="form-control" />
+			</div>
+			</div>
+			
+			<% if false %>
+			<div class=" col-4">
+			<p class="">
+			EMT 2 :
+			</p>
+			<div class="input-group">
+			<input type="text" name="command[emt_partner_code]" id="" value="<%=cm.emt_partner_code%>" class="form-control" />
+			</div>
+			</div>
+			<% end %>
+			</div>
+			</div>
+<br/>
+<%
+	
+att = Attachment.find cm.ambulance.image
+
+content = ""
+
+if att
+ 
+  content = "<center><img src='#{att.path}' width='100%'> </center>"
+  
+end
+	 
+%>
+<div class="row">
+<div class="col-6">
+<center style="font-size:1.2em">
+<b>
+  <%= cm.ambulance.name %><br/>
+  <%= cm.ambulance.plate_license %><br/>
+</b>
+</center>
+</div>
+<div class="col-6">
+  <%= content %>
+</div>
+</div>
+
+		</div>
+
+				<br/>
+<br/>
+
+				</div>
+				<div class="col-lg-12" style="overflow:scroll">
+
+							
+
+
+								<%
+
+								logs = AdmitLog.where(:ems_command_id=>cm.id, :admit_id=>admit.id).sort(:sort_order=>1).all
+
+								parent_map = {}
+								%>
+								<p class="text-center font-weight-bold"></p>
+								<table class='table form-control' style="width:100%" >
+								<thead>
+									<tr>
+										<th>รายการ</th><th>เวลา</th><th>เลข กม.</th><th>Actions</th><th>ETA</th>
+
+									</tr>
+								</thead>
+									<tbody>
+								<% 
+									stamp = nil
+								
+								for i in logs
+
+									parent_map[i.sort_order] = i
+
+									stamp = i.stamp unless stamp
+
+									last_mile = cm.ambulance.last_mile
+									last_mile = i.mile_meter if i.mile_meter
+
+
+
+								%>
+
+								<tr>
+									<td>
+										<%=i.name %> 
+									</td>
+									<td><% if i.stamp %>
+										<input type="text" name="log[<%=i.id%>]stamp" class="form-control" value="<%=i.stamp.localtime.strftime("%H:%M")%>" style="width:80px">
+										<%#i.stamp.localtime.strftime("%H:%M")%>
+
+										<v class="time-alert">+<%=(i.stamp - stamp).to_i/60 %>m</v>
+										<% end %>
+
+									</td>
+								 
+									<td style="display:none">
+										<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp
+										lap = (i.stamp - p.stamp).to_i/60
+										 %>
+										<w><%= lap %>m</w>
+										<% end %>
+									</td>
+									<td>
+										<% if i.status=='COMPLETED'%>
+										<input type="text" name="log[<%=i.id%>]mile_meter" class="form-control" value="<%=last_mile%>" style="width:100px">
+										<% end %>
+									</td>
+
+									<td>	<%=i.note%>
+										<% if i.status=='PENDING'
+											type = 'btn-success'
+											type = 'btn-warning' if i.type=='ems'
+										%>
+									  	<%= link_to 'Check', "#{get_path "check"}?id=#{cm.id}&admit_log_id=#{i.id}", :class=>"btn btn-sm #{type} check-log" %>
+										<% end%>
+									</td>
+
+									<%
+
+																		#route = AocCaseRoute.where(:arrival_log_id=>i.id).first
+									route = AocCaseRoute.where(:departure_log_id=>i.id).first # unless route
+
+									if route
+
+									%>
+									<td rowspan="2" valign="middle" style="font-size:0.8em">
+
+									   ETA<br/>
+									   <%=format("%0.1f",route.act_duration/60) if route.act_duration%> min <br/> <%=format("%0.1f",route.act_distance/1000.0) if route.act_distance%> km
+									   <br/>
+									 <%=route.status%>
+									</td>
+									<% else %>
+									<td></td>
+									<% end %>
+
+								</tr>
+
+								<% end %>
+									</tbody>
+								</table>
+
+								<input type="submit" name="Update" value="Update" class="btn btn-info btn-sm">
+								
+							
+								<a href="<%="../EMSNoti/send_dispatch?id=#{params[:case_id]}&command_id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-success btn-sm" data-remote="true"  data-remote-update="update-route">
+									Line Notify
+								</a>
+
+								<a href="<%= "update_route?id=#{params[:case_id]}&command_id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
+									Transfer
+								</a>
+
+
+								<a  data-bs-toggle="modal" data-bs-target="#check_ambulance_modal" id="add-path-<%=cm.id%>" class="btn btn-warning btn-sm" >
+									Check Ambulance
+								</a>
+
+
+<script>
+
+	$(document).ready(function(){
+
+		$('#check_ambulance_modal').on('show.bs.modal', function (e) {
+			console.log("show.bs.modal")
+			$.ajax({
+				url: "<%=get_path "check_ambulance?case_id=#{ems_case.id}&id=#{cm.id}" %>",
+				success: function(data) {
+					$('#check_ambulance_modal_body').html(data)
+				}
+			})
+
+		})
+
+	})
+
+</script>
+
+
+					
+
+
+								<br/>
+								<br/>
+
+
+<script>
+
+	// this is the id of the form
+	$("#tracking").submit(function(e) {
+
+	    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+	    var form = $(this);
+	    var actionUrl = form.attr('action');
+    
+	    $.ajax({
+	        type: "POST",
+	        url: actionUrl,
+	        data: form.serialize(), // serializes the form's elements.
+	        success: function(data)
+	        {
+	          refresh_partial()
+	        }
+	    });
+    
+	});
+
+</script>
+
+
+
+
+
+				</div>
+				</div>
+
+
+
+
+
+
+
+
+
+
+
+				</div>
+
+				<p class="p-3 mb-0">
+
+
+			</p>
+			<a href="<%=get_path "create?case_id=#{ems_case.id}" %>" class="btn btn-info" data-remote="true" data-remote-update="command">เพิ่มทีม</a>
+
+		</div>
+</div>	</form>
+		<% end %>
+
+
+		<script>
+
+			$('.check-log').click(function(e){
+
+				target = $(this).attr('href')
+
+				$.ajax({
+			    url: target,
+				  context: document.body
+				}).done(function(html) {
+
+
+					reload_command_content();
+
+				});
+
+				e.preventDefault();
+
+			})
+
+		</script>
+
+
+
+		</div>
+	</div>
+
+
+
+	</div>
+
+</div>
+
+</div>
+
+
+		<div class="col-12 ">
+
+
+			<div class="card transfer-panel" style="display:none">
+
+					<div class="card-header">
+
+					<h6 class="row">
+						<div class="col">
+						Hospital Transfer
+						</div>
+						<div class="col d-flex justify-content-end">
+							right
+						</div>
+					</h6>
+
+					</div>
+
+					<div class="card-body hospital-partial">
+						<div id="update-route">
+							</div>
+						<table class="table">
+							<tr>
+								<th>Name</th>
+								<th>เขต</th>
+								<th>KM</th>
+								<th>CT</th>
+								<th>MRI</th>
+								<th>RT-PA</th>
+								<th>Throm</th>
+
+								</tr>
+						<%
+
+						def self.deg2rad(deg)
+								return deg * (3.1414/180)
+						end
+
+						def self.getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2)
+							r = 6371; # Radius of the earth in km
+							dLat = deg2rad(lat2-lat1);  # deg2rad below
+							dLon = deg2rad(lon2-lon1);
+							a =
+								Math.sin(dLat/2) * Math.sin(dLat/2) +
+								Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+								Math.sin(dLon/2) * Math.sin(dLon/2)
+								;
+							c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							d = r * c; # Distance in km
+							return d;
+						end
+
+						clat,clng = ems_case.latlng.split(",").collect{|i| i.strip.to_f}
+
+						hospitals.collect{|h|
+
+							hlat,hlng = h.latlng.split(",").collect{|i| i.strip.to_f}
+							distance = getDistanceFromLatLonInKm(hlat,hlng,clat,clng)
+							h['distance'] = distance
+
+						}
+
+						hospitals.sort! do |a,b|
+
+
+								a['distance']<=>b['distance']
+
+						end
+
+
+
+
+						for h in hospitals[0..10]
+
+
+						%>
+
+
+
+							<tr class="hospital h<%=h.id%>">
+								<td><a href="javascript:select_hospital('<%=h.id%>')" class="select-hospital" hid="<%=h.id%>"><%=h.name%></a></td>
+								<td><%=h.district%></td>
+								<td id="d<%=h.id%>" ><%=format("%.2f",h['distance'])%></td>
+								<td><%=h.ct_scan%></td>
+								<td><%=h.mri%></td>
+								<td><%=h.rt_pa%></td>
+								<td><%=h.thrombectomy%></td>
+
+							</tr>
+
+
+						<% end %>
+						</table>
+
+						<script>
+							
+							var clat = <%=clat%>
+							var clng = <%=clng%>
+							
+							
+							function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+							  var R = 6371; // Radius of the earth in km
+							  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+							  var dLon = deg2rad(lon2-lon1);
+							  var a =
+							    Math.sin(dLat/2) * Math.sin(dLat/2) +
+							    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+							    Math.sin(dLon/2) * Math.sin(dLon/2)
+							    ;
+							  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+							  var d = R * c; // Distance in km
+							  return d;
+							}
+
+							function deg2rad(deg) {
+							  return deg * (Math.PI/180)
+							}
+								
+								
+								
+							<% for h in hospitals
+								latlng = h.latlng.split(",")
+							%>
+
+								d = getDistanceFromLatLonInKm(<%=latlng[0]%>,<%=latlng[1]%>,clat, clng)
+								// $('#d<%=h.id%>').html(d.toFixed(2))
+
+							<% end%>
+
+						</script>
+							<!-- <div style="height:3000px;background:red">f</div> -->
+					</div>
+
+
+		</div>
+
+
+		<div class="card" style="display:none">
+
+				<div class="card-header">
+
+				<h6 class="row">
+					<div class="col">
+					Event
+					</div>
+					<div class="col d-flex justify-content-end">
+						right
+					</div>
+				</h6>
+
+				</div>
+
+				<div class="card-body message-partial" style="overflow:scroll;">
+						<!-- <div style="height:3000px;background:red">f</div> -->
+				</div>
+
+
+	</div>
+
+
+	</div>
+
+
+
+						<script>
+						
+						
+						var target
+							
+   						 var hospitals = <%=hospitals.to_json%>
+
+   						 var m_hos = {}
+							
+
+						function beforeInit(){
+
+							latlng = [13.69313508354787, 100.69198345629769]
+							<% if Setting.get('aoc_center') %>
+							latlng = [<%=Setting.get('aoc_center') %>]
+							<% end %>
+							<% if ems_case.latlng and ems_case.latlng.index(',') %>
+							latlng = [<%=ems_case.latlng%>]
+							<% end %>
+
+							<% 
+							
+								if comd = EMSCommand.where(:case_id=>ems_case.id).first
+								
+									if route = AocCaseRoute.where(:ems_command_id=>comd.id, :status=>{'$in'=>['SCHEDULED','STARTED']}).sort(:sort_order=>1).first
+									
+										%>
+										latlng = [<%=route.stop_latlng%>]
+										<%
+										
+									end
+									
+								end
+							
+							
+							 %>
+								
+					
+
+
+							mapc = new EMSMap('dashboard-map-c');
+
+							mapc.setPosition(latlng[0], latlng[1])
+							mapc.setMarkerPosition(latlng[0], latlng[1])
+							mapc.changeMarkerPosition(function(marker){
+
+							}.bind(this))
+
+
+
+
+							mapc.ready(function(){
+								// const image = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+								// const image = "<%=url_for('ems/h0.png')%>";
+
+							<% for i in hospitals %>
+
+					 		var posx = new google.maps.LatLng(<%=i.latlng%> )
+							var image = "<%=url_for("ems/h#{i.level}.png")%>";
+							 markerx = new google.maps.Marker({position: posx, map: mapc.map,
+								 icon:image
+							 })
+							 markerx.addListener("click", () => {
+								 select_hospital('<%=i.id%>')
+							 });
+
+							 m_hos['<%=i.id%>'] = markerx;
+
+							<% end %>
+
+
+						});
+
+						  $('#search_hospital').keyup(function(e){
+
+									v = e.which
+
+									key = $(this).val()
+									$('.hospital').hide();
+									if(key.length>0){
+											for(var hi in hospitals){
+													h = hospitals[hi];
+													markerx = m_hos[h['_id']]
+												 	markerx.setVisible(false);
+
+													reg = new RegExp(key,'i');
+													console.log(reg)
+													if(h['name'].match(reg)||h['level'].match(reg)||(key=='mri'&&h['mri']=='YES')||(key=='ct'&&h['ct_scan']=='YES')||(key=='rt'&&h['rt_pa']=='YES')){
+														markerx.setVisible(true);
+														$('.h'+h['_id']).show();
+													}
+
+											}
+									}else{
+
+										for(var hi in hospitals){
+												h = hospitals[hi];
+												$('.hospital').show();
+												markerx = m_hos[h['_id']]
+												markerx.setVisible(true);
+										}
+									 }
+
+
+							})
+
+							
+							<% for cm in commands %>
+
+							mapc.ready(function(){
+
+								<%
+									loc = cm.ambulance.last_location
+									if loc and loc.index(',')
+										loc=loc.split(",").collect{|i| i.to_f}
+								%>
+							 var start = new google.maps.LatLng(<%=loc[0]%>, <%=loc[1]%> )
+							 
+							 console.log("latlng "+ latlng) 
+
+							 if(latlng==""){
+								latlng[0] = <%=loc[0]%>
+								latlng[1] = <%=loc[1]%>  
+							 }
+							 target = new google.maps.LatLng(latlng[0], latlng[1] )
+
+							 console.log("Start "+ start)
+							 console.log("Target "+ target) 
+					
+
+							directionsService = new google.maps.DirectionsService;
+					  	    directionsDisplay = new google.maps.DirectionsRenderer;
+					  		
+							directionsDisplay.setMap(mapc.map);
+
+								mapc.drawPath(directionsService,directionsDisplay, start,target,[],function(rs){
+
+
+									a = $('#send-msg-<%=cm.id%>')
+
+									if(a.attr("href").indexOf("distance")==-1){
+										a.attr("href", a.attr('href')+"&distance="+rs['distance']['text']+"&duration="+rs['duration']['text'])
+									}
+
+									$('#ambu-status-<%=cm.id%>').html(" Distance : "+rs['distance']['text'] + " Time : "+rs['duration']['text'])
+									console.log(rs['distance'])
+									$('#gps_distance').val((rs['distance']['value']/1000.0).toFixed(2))
+									 $('#gps_duration').val((rs['duration']['value']/60.0).toFixed(2))
+
+
+
+								}.bind(this));
+								<% end %>
+
+							}.bind(this));
+
+							<% end %>
+
+
+						
+							
+						   }
+							
+							
+							setMapInitCallback(beforeInit,null);
+							
+							
+						</script>
+
+	<script>
+
+
+
+//
+// 		var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+//
+// 		var ambu_map = {}
+//
+//
+//
+//
+// 			obj = JSON.parse(lines[1])
+// 			console.log(obj)
+//
+// 			// console.log(obj['ambu_data'])
+//
+// 			var keys = Object.keys(obj['ambu_data']);
+//
+// 			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+//
+//
+//
+// 			for(ai in values){
+//
+// 				a = values[ai]
+//
+// 				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
+//
+//
+//
+// 				map_icon = {
+// 				  path: car,
+// 				  scale: 0.9,
+// 				  strokeColor: 'white',
+// 				  strokeWeight: .10,
+// 				  fillOpacity: 1,
+// 				  fillColor: '#303bef',
+// 				  offset: '5%',
+// 				// size: new google.maps.Size(sizeX, sizeY),
+// //         				origin: new google.maps.Point(0, 0),
+// //         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+// 				  // rotation: parseInt(heading[i]),
+// 				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+// 				};
+//
+//
+//
+// 				var t = a['last_location'].split(",")
+// 				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+//
+//         		marker = ambu_map[a['_id']]
+//
+// 				var image = "<%=url_for("ems/ambu.png")%>";
+//
+//
+//
+// 				if(marker==null){
+//
+//
+// 						marker_map = new google.maps.Marker({position: pos,icon: image,  map: local_map});
+// 						ambu_map[a['_id']] = marker_map
+// 							console.log('new')
+//
+//
+// 				}else{
+// 						marker_map = 	ambu_map[a['_id']]
+// 						marker_map.setPosition(pos)
+// 						console.log('set')
+//
+// 				}
+//
+// 				}
+//
+//
+//
+// 				// latlngbounds.extend(pos);
+//
+// 			}
+//
+//
+//
+
+var car = "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z";
+
+
+var ambu_map = {}
+
+
+		var monitoring = true
+
+		function set_monitoring(i) {
+			// alert('Set Monitoring to '+i)
+			monitoring = i
+		}
+
+
+
+		function command_process(lines){
+
+			if(monitoring){
+				if(lines[0].split(" ")[0]=='Zone.Refresh'||lines[0].split(" ")[0]=='Zone.Message'){
+
+					refresh_partial();
+					
+				}
+			
+		
+	
+			if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+			obj = JSON.parse(lines[1])
+		
+			var keys = Object.keys(obj['ambu_data']);
+
+			var values = keys.map(function(v) { return obj['ambu_data'][v]; });
+
+
+
+			for(ai in values){
+
+				a = values[ai]
+
+				if(a['last_location']!=""&&a['last_location'].indexOf(",")){
+
+
+
+				map_icon = {
+				  path: car,
+				  scale: 0.9,
+				  strokeColor: 'white',
+				  strokeWeight: .10,
+				  fillOpacity: 1,
+				  fillColor: '#303bef',
+				  offset: '5%',
+				// size: new google.maps.Size(sizeX, sizeY),
+//         				origin: new google.maps.Point(0, 0),
+//         				anchor: new google.maps.Point(sizeX/2, sizeY/2),
+				  // rotation: parseInt(heading[i]),
+				  anchor: new google.maps.Point(10, 25) // orig 10,50 back of car, 10,0 front of car, 10,25 center of car
+				};
+
+
+
+				var t = a['last_location'].split(",")
+				var pos = new google.maps.LatLng(parseFloat(t[0]), parseFloat(t[1]))
+
+        		marker = ambu_map[a['_id']]
+
+				var image = "<%=url_for("ems/ambu.png")%>";
+
+
+
+				if(marker==null){
+
+
+						marker_map = new google.maps.Marker({position: pos,icon: image,  map: mapc.map, label:{
+							fontSize: '20px',
+							text: a['name'],
+							className: 'marker-position',
+							
+						} });
+						ambu_map[a['_id']] = marker_map
+							console.log('new')
+
+
+				}else{
+						marker_map = 	ambu_map[a['_id']]
+						marker_map.setPosition(pos)
+						console.log('set')
+
+				}
+
+				}
+
+
+
+				// latlngbounds.extend(pos);
+
+			}
+			
+			}
+			
+			// console.log(lines[0].split(" ")[0])
+			// if(lines[0].split(" ")[0]=='Zone.Message'){
+			//
+			// 	reload_message("<%=admit.id%>")
+			//
+			// }
+
+
+		}
+		
+		}
+		
+		
+		
+
+		current_process = command_process
+
+		var message_admit_id= null
+
+		function reload_message(admit_id){
+
+
+
+		message_admit_id = admit_id
+
+		// reload_nurse_note(admit_id)
+		// reload_medication(admit_id)
+
+
+		// $.ajax({
+		//   url: "<%= "../EmsParamedic/message_partial"%>?admit_id="+message_admit_id,
+		//   context: document.body
+		// }).done(function(data) {
+		//   $( '.message-partial' ).html(data);
+	  // 	 // alert($( '.chat' ).height())
+	  // $('.panel-body').scrollTop(100000000)
+		//
+		//
+		// });
+
+		}
+
+		reload_message("<%=admit.id%>")
+
+
+		refresh_remote()
+		
+		$(document).ready(function(){
+			$('.btn-sm').click(function(){
+				set_monitoring(false)
+			})
+		})
+		
+	
+		
+	</script>
+
+
+
+<div class="modal fade" id="check_ambulance_modal" tabindex="-1" aria-hidden="true" style="display: none;">
+						<div class="modal-dialog modal-dialog-centered modal-xl">
+						
+							<div class="modal-content">
+
+								<div class="modal-header bg-primary bbg-gradient text-white">
+									<h5 class="modal-title text-white">Check Ambulance
+
+									</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<form action="<%=get_path "check_ambulance?case_id=#{ems_case.id}&id=#{cm.id}" %>" method="post">
+								<div class="modal-body" id="check_ambulance_modal_body">
+								
+								checking...
+
+								</div>
+								<div class="modal-footer">
+									<a class="btn btn-secondary" data-bs-dismiss="modal">Cancel</a>
+									<input type="submit" value="Update" class="btn btn-info">
+								</div>
+								</form>
+							</div>
+						</div>
+					</div>

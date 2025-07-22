@@ -1,0 +1,42 @@
+<%
+
+admit = Admit.find(params[:admit_id])
+
+records = admit.records.limit(10).sort(:created_at=>-1).all.reverse
+
+%>
+<table class="table table-striped" style="border:0px solid #0c5758">
+<thead>
+	<tr>
+		<th>Time</th><th>BP</th><th>HR</th><th>PR</th><th>SpO2</th><th>RR</th>
+	</tr>
+</thead>
+<tbody>
+	<% for i in records %>
+	<tr>
+
+		<tr>
+			<td>
+				<%
+					stamp = i.stamp.localtime().strftime("%H:%M:%S")
+					stamp = i.stamp.localtime().strftime("%H:%M:%S<br/>%d/%m/%y") if Time.now-i.stamp > 1
+				%>
+			<%=link_to stamp, '#', :id=>"#{i.id}" %></td><td><%=i.bp_sys%>/<%=i.bp_dia%></td><td><%=i.hr%></td><td><%=i.pr%></td>
+			<td><%=i.spo2%></td><td><%=i.rr%></td>
+		</tr>
+	</tr>
+	<% end %>
+
+
+</tbody>
+</table>
+
+			<script>
+				$(document).ready(function(){
+
+				<% for i in records %>
+					$('#<%=i.id%>').click(edit_record)
+				<% end %>
+
+			})
+			</script>

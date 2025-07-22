@@ -1,0 +1,95 @@
+
+.banner-header{
+	font-size:1.2em;
+	color:white;
+	padding:20px;
+	border:0px solid;
+	border-radius:0px 0px 0px 0px;
+	margin-bottom:20px;
+	background: transparent linear-gradient(274deg, #B52E67 0%, #E477B3  55%, #BA2673 100%) 0% 0% no-repeat padding-box;
+	
+/*    background: transparent linear-gradient(321deg, #FDE0F2 0%, #F99BC7 55%, #C03170 100%) 0% 0% no-repeat padding-box;*/
+
+    font-family: "IBMPlex","Sarabun", sans-serif;
+}
+
+
+body{
+	background:#fff8fb;
+/*	background:red;*/
+	
+}
+
+
+.content-header{
+	background:#fff;
+	border-radius: 10px;
+	box-shadow: 0px 3px 6px #00000019;
+}
+
+
+.content-main{
+	background:#fff8fb;
+}
+
+.content-widget{
+	margin-bottom:10px;
+	padding:10px;
+	background:#fff;
+	border-radius: 10px;
+	box-shadow: 0px 3px 6px #00000019;
+}
+
+.med-value{
+	font-size:2em;
+	color: #4da49d;
+}
+
+.body-login{
+	        background: transparent linear-gradient(170deg, #FDE0F2 0%, #F99BC7 75%, #C03170 100%) 0% 0% no-repeat padding-box;
+	        height:100vh;
+	        font-family: "IBMPlex","Sarabun", sans-serif;
+	  
+}
+
+/*.login-logo{
+
+	background-image: none;
+	width:200px;
+    background-repeat: repeat;
+    background-size: cover;
+
+}*/
+
+.login-logo{
+	
+	background-image: url('../../nci/img/nci-logo.png');
+	width:200px;
+	height:240px;
+    background-repeat: repeat;
+    background-size: cover;
+	
+}
+.login-header{
+	display:none;
+}
+
+.logo-img{
+    height:240px;
+}
+
+ .bg-all{
+	 background-image: url('../../img/svg/wave-login-2.svg');
+ }
+ 
+ 
+ .btn-submit {
+   background: transparent linear-gradient(180deg, #de6fb1 0%, #b62f74  100%) 0%
+     0% no-repeat padding-box;
+     width: 150px;
+     height: 50px;
+     box-shadow: 0px 3px 6px #00000029;
+     border-radius: 10px;
+     border-color: var(--btn-green-main);
+     color: white !important;
+   }

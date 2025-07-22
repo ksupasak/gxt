@@ -1,0 +1,7 @@
+<%
+    return_result = true
+    u = params[:u]
+    users= User.where(:login=>u).all
+    return_result = (users.size==0)
+%>
+<%=return_result%>

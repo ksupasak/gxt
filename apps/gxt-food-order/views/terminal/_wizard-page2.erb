@@ -1,0 +1,39 @@
+<div class="page-container" style="margin-top: -350px;  ">
+<div class="rounded" style=" padding:20px;border-radius: 10px;background:white;height:700px;border:0px solid;width:500px;margin-left: auto;margin-right: auto;"><h1>Order create</h1>
+<p>
+	1. สั่งอาหาร / Order<br/>
+	<a href="javascript:goto('page-1')" class="btn  btn-default btn-lg" style="font-size:2em">Eat Here</a></center>
+	<a href="javascript:goto('page-1')" class="btn  btn-default btn-lg" style="font-size:2em">Take Home</a></center>
+</p>	
+	
+
+<p>	
+	2. สำหรับ / Number of PAX<br/>
+	คน
+</p>
+	
+<p>
+	3. การชำระเงิน / Payment method <br/>
+	<a href="javascript:goto('page-1')" class="btn  btn-default btn-lg" style="font-size:2em">Pay by Cash</a></center>
+	<a href="javascript:goto('page-1')" class="btn  btn-default btn-lg" style="font-size:2em">Pay by Credit card</a></center>
+</p>
+<hr/>
+<center>
+	<%
+	
+		device_id = nil
+	    device_id = session[:device_id] if session[:device_id]
+		device_id = params[:device_id] if params[:device_id]
+	
+	%>
+	<a href="../Terminal/index?device_id=<%=device_id%>" class="btn  btn-primary btn-lg" style="font-size:2em">CONTINUE</a></center>
+</div>
+
+<div style="width:100%;padding:20px;background:black;margin-top:20px">
+<center>
+	<a href="javascript:goto('page-1')" class="btn btn-danger" style="">ยกเลิก / Cancel Order</a>
+</center>
+</div>
+</div>
+<script> 
+</script>

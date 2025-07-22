@@ -1,0 +1,77 @@
+<%	
+record = nil
+update = true;
+
+note = EMSProgressNote.find params[:pid]
+record = EMSCase.find note.case_id
+
+if params[:cmd] == "DEL"
+	
+
+	if note.type=='emr'
+
+		emr = EMRRecord.find note.ref_id
+		emr.destroy if emr
+
+	end
+
+	if note.type=='med'
+
+		med = MedicationRecord.find note.ref_id
+		med.destroy if med
+
+	end
+
+
+	note.destroy
+	
+elsif params[:cmd] == "TXT"
+	if params[:txt]
+		note.update_attributes :text=>params[:txt]
+		update = true;
+	elsif params[:time]
+		note.update_attributes :time=>params[:time]
+		update = true;
+	end
+
+
+else
+	
+	first_time = DateTime.parse params[:first_time].split(" ").join(" +")
+	last_time = DateTime.parse params[:last_time].split(" ").join(" +")
+
+
+	puts params[:first_time].split(" ").join(" +")
+	puts params[:last_time].split(" ").join(" +")
+
+	puts first_time.inspect
+	puts last_time.inspect
+	
+	
+	new_time = first_time + (last_time-first_time)/2
+
+	puts new_time.inspect
+
+	note.update_attributes :time=>new_time
+	
+end
+
+if record
+
+admit = record.admit
+path = "miot/#{@context.settings.name}/z/#{admit.zone.name}"
+msg = 'NULL'
+
+send_msg = <<MSG
+#{'Zone.Message'} #{path}
+#{msg.to_json}
+MSG
+@context.settings.redis.publish(path, send_msg)
+
+end
+
+	if update
+%>
+<script>
+</script>
+<% end %>

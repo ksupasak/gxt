@@ -1,0 +1,28 @@
+<%
+	device_name = "NA"
+	if session[:device]
+		device = Device.find(session[:device])
+		device_name = device.name
+	end
+
+	order = Order.find params[:id]
+	
+	order.update_attributes :status=>'Complete', :station=>device_name
+	queue_number = order.queue_number
+	cmd = []
+
+	cmd << "   #{'ร้านอาหารสุขใจ'}     "
+	cmd << "===================="
+	cmd << "Q: #{queue_number}  "
+	cmd << "===================="
+	cmd << ""
+	cmd << "สถานะ : เสร็จสิ้น "
+	cmd << ""
+	cmd << "เวลา : #{Time.now.strftime("%H:%M")} "
+	cmd << "."
+
+	send_all "print\n"+cmd.join("\n")
+	
+   	send_all "order.update?id=#{order.id}&queue=#{order.queue_number}"
+%>
+<%= redirect_to "index?device_id=#{params[:device_id]}" %>

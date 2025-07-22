@@ -1,0 +1,809 @@
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_header')%>
+
+<div class="containerx" style="background:none">
+
+
+
+<div class="row" style="border:0px solid">
+<div class="col d-flex justify-content-center">
+	<ul class="nav nav-pills mb-12" id="pills-tab" role="tablist">
+		
+  	  <li class="nav-item">
+  	    <a class="nav-link " id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-dashboard" aria-selected="true">ระบบจ่ายงาน</a>
+  	  </li>
+	  
+	  <li class="nav-item">
+	    <a class="nav-link " id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link active " id="pills-schedule-tab" data-toggle="pill" href="#pills-schedule" role="tab" aria-controls="pills-schedule" aria-selected="true">ตารางนัดหมาย</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">รายการผู้ป่วย</a>
+	  </li>
+	</ul>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col">
+	
+
+
+	<div class="tab-content" id="pills-tabContent">
+		
+		<div class="tab-pane fade show " id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
+		
+		
+		<%
+			
+		officers = SHUserNetwork.where(:network_id=>@current_network.id, :provider_type=>'officer').all	
+			
+		pending_visits = SHVisit.where(:appoint_type=>'3', :status=>'Pending', :network_id=>@current_network.id).all
+		
+		accepted_visits = SHVisit.where(:appoint_type=>'3', :status=>'Accepted', :network_id=>@current_network.id).sort(:updated_at=>-1).all
+		
+		completed_visits = SHVisit.where(:appoint_type=>'3', :status=>'Completed', :network_id=>@current_network.id).sort(:completed_at=>-1).all
+		
+		providers = []
+		
+		for i in officers 
+		
+			provider = Provider.find(i.provider_id)
+			providers << provider if provider 
+		
+		end
+		
+		
+			
+		%>
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-p">
+	</div>
+	<div class="col"></div>
+</div>
+<style>
+.div-datatable{
+	max-height:30vh;
+	max-width:100%;
+	overflow:auto;
+}
+</style>
+<form action="assign" method="post">
+<div class="row">
+<div class="col"><h4>รอจ่ายงาน - (Pending)</h4>		</div>
+<div class="col"><div class="float-right"><input type="submit" value="จ่ายงาน" class="btn btn-success" ></div></div>
+</div>
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+m_v_cols = {}
+m_v_cols['status'] = 'สถานะงาน'
+m_v_cols['hn'] = 'รหัสผู้ป่วย'
+m_v_cols['patient'] = 'ผู้ป่วย'
+m_v_cols['appointed_at'] = 'วันที่จ่ายงาน'
+m_v_cols['date'] = 'วันที่นัด'
+m_v_cols['hospital_id'] = 'โรงพยาบาล'
+m_v_cols['officer_id'] = 'เจ้าหน้าที่ออกตรวจ'
+m_status = {}
+m_status['Pending']='รอจ่ายงาน'
+m_status['Accepted']='จ่ายงานแล้ว'
+m_status['Completed']='เสร็จสิ้น'
+t_data = pending_visits
+%>
+<div class="div-datatable">
+<table class="table">
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		phn = ''
+		pname = ''
+		if patient
+			a = Admit.where(:patient_id=>patient.id).first
+			if patient
+				phn = patient.hn if patient and patient.hn
+				pname = patient.to_s if patient
+				
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
+		
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
+		end
+		
+		
+
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+		if c=='status'
+		out = "<a href='../SHVisit/destroy?id=#{row.id}&return=../Home/index' class='btn btn-danger btn-sm'>ลบ</a> " 
+		out += "<span class=' badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" 
+		end
+		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		if c=='hospital_id'
+			out = ''
+			temp_hos = SHHospital.find(row.hospital_id)
+			out = temp_hos.name  if temp_hos
+		end
+		
+		out =  "<select class='form-control' name='visit[#{row.id}][officer_id]'>#{options.join}</select>" if c=='officer_id'
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>	
+	
+		
+</form>
+<br/>
+
+<h4>จ่ายงานแล้ว - (Dispatched/Accepted)</h4>
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+t_data = accepted_visits
+%>
+<div class="div-datatable">
+<table class="table">
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		if patient
+			phn = ''
+			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
+			if patient
+				phn = patient.hn if patient and patient.hn
+				pname = patient.to_s if patient
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
+		
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
+		end
+		
+		patient = Patient.find(row.patient_id)
+
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+		
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
+
+		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		
+		pvtemp = Provider.find(row.officer_id)
+		out = pvtemp.name if c=='officer_id' and pvtemp
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>
+		
+<h4>ตรวจเสร็จล่าสุด (Completed)</h4>
+<%
+v_cols = %w{ status hn patient appointed_at date hospital_id officer_id }
+t_data = completed_visits
+%>
+<div class="div-datatable">
+<table class="table" >
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%=m_v_cols[c]%><%#=c.humanize%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		patient = Patient.find(row.patient_id)
+		if patient
+			phn = ''
+			pname = ''
+			a = Admit.where(:patient_id=>patient.id).first
+			if patient
+				phn = patient.hn if  patient.hn
+				pname = patient.to_s 
+			end		
+%>
+<tr class="tr-p" text='<%="#{phn} #{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		options = ['<option value=""></option>']
+		
+		for i in providers
+			options << "<option value='#{i.id}' >#{i.name}</option>"
+		end
+		
+		patient = Patient.find(row.patient_id)
+
+		bclass = "b-wait"
+		case row.status
+			when 'Pending'	
+				bclass = "b-hos"
+			when 'Accepted'
+				bclass = "b-network"	
+			when 'Completed'
+				bclass = "b-officer"
+			end
+			
+			
+		out = "<span class='tr-p badge #{bclass}' text='#{phn} #{pname}'>#{m_status[row.status]}</span>" if c=='status'
+
+		out = phn if c=='hn'
+		out = link_to(phn , "show?id=#{a.id}") if c=='hn'
+		out = pname if c=='patient'
+
+		out = row.appointed_at.strftime('%d/%m/%Y %H:%M') if c=='appointed_at' and row.appointed_at
+		out = row.date.strftime('%d/%m/%Y') if c=='date' and row.date
+		
+		out = SHHospital.find(row.hospital_id).name if c=='hospital_id'
+		
+		pvtemp = Provider.find(row.officer_id)
+		out = pvtemp.name if c=='officer_id' and pvtemp
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	
+		end #if patient
+	end #for row 
+%>
+</tbody>
+</table>
+</div>
+
+	   </div>		
+		
+	  <div class="tab-pane fade show " id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+<div class="row pt-3">
+	<div class="col"></div>
+	<div class="col">
+	ค้นหา <input type='text' id="search-off">
+	</div>
+	<div class="col"><%=link_to("เพิ่มเจ้าหน้าที่", "hn_provider_manage?network_id=#{@current_network.id.to_s}", :class=>'btn btn-success')%></div>
+</div>	  
+	  	<%
+	  		
+		if @current_network 
+			
+			list = SHUserNetwork.where(:network_id=>@current_network.id).all
+			
+	  	%>
+<%
+v_cols = %w{  provider provider_type phone user action}
+m_v_cols = {}
+m_v_cols['provider']='ชื่อ-สกุล'
+m_v_cols['provider_type']='สิทธิ์ใช้งาน'
+m_v_cols['phone']='โทร'
+m_v_cols['user']='รหัสผู้ใช้'
+m_v_cols['action']=''
+t_data = list
+%>
+<table class="table" >
+<thead>
+<tr>
+<% for c in v_cols %>
+<th><%#=c.humanize%><%=m_v_cols[c]%></th>
+<% end %>
+</tr>
+</thead>
+<tbody>
+<%	
+	for row in t_data 
+		pname = row.provider.name if row.provider
+%>
+<tr class="tr-p" text='<%="#{pname}"%>'>
+<% 
+	for c in v_cols 
+		out = row[c.to_sym]
+		out = row.network.name if c=='hospital' and row.network
+		
+		out = row.provider.name if c=='provider' and row.provider
+		
+		
+		out = row.provider.phone if c=='phone' and row.provider
+	
+		out = row.user.login if c=='user' and row.user
+		
+		out = link_to("แก้ไข", "hn_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserNetwork/destroy?id=#{row.id}", :class=>'btn btn-danger') if c=='action' 
+		
+%>
+<td><%=out%></td>
+<% 	end # for c %>
+</tr>
+<% 	end #for row %>
+</tbody>
+</table>			
+
+		
+		
+		<% end %>
+		
+		
+		
+		
+		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_network.id.to_s}", :class=>'btn')%>
+		
+		
+	  </div>  <!-- End Doctor Section-->
+	  
+	  <div class="tab-pane fade show active" id="pills-schedule" role="tabpanel" aria-labelledby="pills-schedule-tab">
+		  
+		  <%
+		  	
+  		# default today patient
+
+  		date = Time.now
+  		date = Time.parse params[:date]  if params[:date] and params[:date]!='all'
+
+  		pdate = date.strftime('%Y-%m-%d')
+  		pdate = params[:date] if params[:date] 
+			
+			
+		  %>
+		  
+	<div class="row" style="border:0px solid;">
+
+	<div class="col">
+		<h3>ตารางนัดหมาย</h3>
+	</div>
+	<div class="col d-flex justify-content-end">
+		
+		<% if @current_network %>
+       <div class=" d-flex justify-content-center btn-submit" >
+		   <a href="visit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มนัด</span>
+           </a>
+       </div>&nbsp;
+       
+	   <!--<div class=" d-flex justify-content-center btn-submit" >
+		   
+		   
+		   
+		   
+           <a href="./admit" class="btn  d-flex align-items-center justify-content-center">
+               <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                   <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                   <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+                 </svg>
+               <span class="pl-2 pb-0">เพิ่มผู้ป่วย</span>
+           </a>
+       </div>&nbsp;-->
+	   <% end %>
+	            <!--<div class=" d-flex justify-content-end btn-submit" >
+	                <a href="calendar" class="btn  d-flex align-items-center justify-content-end">
+	                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-person-plus-fill " fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+	                      </svg>
+	                    <span class="pl-2 pb-0">ตารางนัด</span>
+	                </a>
+	            </div>-->
+	</div>
+
+	</div>					  
+		 <br/>
+<div class="row" style="border:0px solid">
+
+<div class="col-12 col-md-6">
+<!-- <h4>ตารางนัดหมาย</h4> -->
+<div class="schedule-content" style="background-color:white;padding:5px;border-radius: 5px;font-size:0.8em">
+...
+</div>
+
+
+</div> 
+
+<div class="col-12 col-md-6">
+
+
+<div id="calendar" style="font-size:0.8em;background-color:white;padding:5px;border-radius: 5px;"></div>
+
+
+<% 
+
+  netnum = []
+  map = {}
+  
+  
+visits = []
+visits_other = []
+
+if @current_hospital
+	shrelations = SHRelation.where(:hospital_id=>@current_hospital.id).all
+	
+	patient_ids = shrelations.collect{|i| i.patient_id }
+	
+	# for doctor 
+	if @current_user_hospital.provider_type == 'doctor'  
+		
+		patient_ids = shrelations.collect{|i| i.patient_id if i.hospital_doctor_id==@current_provider.id or i.hospital_doctor_2_id==@current_provider.id }.compact 
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']}, :provider_id=>@current_provider.id, :patient_id=>{'$in'=>patient_ids},).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']}, :patient_id=>{'$in'=>patient_ids} ).all
+		
+		
+	elsif @current_user_hospital.provider_type == 'nurse'  
+		
+		
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['1']},:patient_id=>{'$in'=>patient_ids}, ).all
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+
+	
+elsif @current_network
+	
+	
+	shrelations = SHRelation.where(:network_id=>@current_network.id).all
+	
+
+
+	if @current_provider 
+	
+		patient_ids = shrelations.collect{|i| i.patient_id if i.network_doctor_id==@current_provider.id or i.network_nurse_id==@current_provider.id or i.network_officer_id==@current_provider.id }.compact
+	
+		visits = SHVisit.where(:appoint_type=>{'$in'=>['3']}, :officer_id=>@current_provider.id).all
+		
+
+	else
+		
+		patient_ids = shrelations.collect{|i| i.patient_id }
+		
+		
+		visits_other = SHVisit.where(:appoint_type=>{'$in'=>['2','3']},:patient_id=>{'$in'=>patient_ids}).all
+		
+		
+	end
+	
+
+
+end
+  
+  # visits= []
+ #
+ # 	if @current_hospital
+ #
+ # 		visits = SHVisit.where(:hospital_id=>@current_hospital.id, :provider_id=>@current_provider.id).all
+ #
+ # 	elsif @current_network
+ #
+ # 		visits = SHVisit.where(:network_id=>@current_network.id).all
+ #
+ # 	end
+ #
+ 	map = {}
+	
+	cmap = {}
+	
+	
+
+ 	for i in visits + visits_other
+
+ 		status = "W"
+ 		status = "C" if i.status == 'Completed'
+ 		date_key = i.date.strftime("%Y-%m-%d")
+ 		key = "-"
+
+		code = "00000"
+
+ 		if i.appoint_type=='1'
+
+			code = 'hos'
+ 			key = "#{date_key}:hos"
+
+ 		else
+
+
+ 			network = SHNetwork.find(i.network_id)
+
+ 			code = network.code if network and network.code and network.code !=''
+
+ 			key = "#{date_key}:#{code}"
+
+ 		end
+		
+		cmap[code] = 1 
+		
+
+ 		map[key] = {'W'=>[], 'C'=>[]} unless map[key]
+
+ 		map[key][status] << i
+
+ 	end
+
+ 	list = []
+    colors = %w{ #84A7FF #A9DEF9 #CE99FF #E6BEFD #77DDDF #31CAC8}
+
+ 	map.keys.each_with_index do |k,id|
+
+ 		tk = k.split(":")
+ 		code = tk[1]
+ 		type = tk[2]
+		
+		color = colors[cmap.keys.index(code)%6]
+		color = '#015b9e'
+		color = '#21bca3' if code!='hos'
+		
+
+ 		title = "#{code} W:#{map[k]['W'].size} C:#{map[k]['C'].size}"
+ 		date = Date.parse(tk[0])
+ 		list <<    {
+ 			          title: title,
+ 			          url: "\#",
+ 			          start: date,
+					  color: color
+ 			        }
+
+ 	end
+
+ 	netnum = list
+	
+
+%>
+	
+	
+	<script>
+		
+		
+
+    document.addEventListener('DOMContentLoaded', function() {
+	
+		
+      var calendarEl = document.getElementById('calendar');
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true, // display business hours
+        editable: true,
+        selectable: true,
+        events: <%=netnum.to_json.html_safe%>,
+		dateClick: function(info) {
+			$('.schedule-content').fadeOut("fast", function(){
+				
+			    var myKeyVals = {'date':info.dateStr}
+
+			    $.ajax({
+
+			        url: "schedule_partial",
+			        data: myKeyVals ,
+	
+			               success: function (result) {   // Result is not coming here please help
+			                   $('.schedule-content').html(result);
+							   $('.schedule-content').fadeIn();              
+			               },
+			               failure: function (response) {
+           
+			                   console.log(response.responseText);
+			               },
+			               error: function (response) {
+			                   //window.location.reload();
+							   // alert('')
+			                   // window.location.href='index?date='+info.dateStr;
+			               }
+			    });
+				
+				
+				
+			});
+		    
+			
+
+ 
+		  }
+      });
+	  
+	  
+	  
+
+      calendar.render();
+    
+  	
+	
+	});
+	
+	
+	
+
+	
+	
+    var myKeyVals = {'date':'<%=date.strftime('%Y-%m-%d')%>'}
+
+    $.ajax({
+
+        url: "schedule_partial",
+        data: myKeyVals ,
+
+               success: function (result) {   // Result is not coming here please help
+                   $('.schedule-content').html(result);              
+               },
+               failure: function (response) {
+   
+                   console.log(response.responseText);
+               },
+               error: function (response) {
+                   //window.location.reload();
+					//alert('err')
+                   // window.location.href='index?date='+info.dateStr;
+               }
+    });
+	
+
+</script>
+
+
+</div> 
+
+
+</div>
+
+
+	  </div>  <!-- End schedule Section-->
+	  
+	  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  	
+		
+	  	<%
+	  		
+		if @current_network 
+			
+			list = SHRelation.where(:network_id=>@current_network.id).all
+			 
+	  	%>
+		<%=inline(this,:'_patient_record')%>
+	<!--<div class="row p-3">
+		<div class="col"></div>
+		<div class="col">
+		ค้นหา <input type='text' id="search-p2">
+		</div>
+		<div class="col"></div>
+	</div>	
+		<%= tabular :data=>list, :model=>%w{hn name}, :ext_model=>%w{action} do |row,out|
+		
+		patient = Patient.find row.patient_id
+
+		admit = nil
+		
+		phn = ''
+		pname = ''
+		if patient
+			admit = Admit.where(:patient_id=>patient.id).last
+			phn = patient.hn if patient.hn
+			pname = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" 
+		end
+		
+		out[0] = "<span class='tr-p ' text='#{phn} #{pname}'></span>"+phn
+		out[1] = pname
+
+		# out[0] = patient.hn if patient and patient.hn
+		
+		# out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}" if patient
+		
+		out<<link_to("แสดง", "show?id=#{admit.id}", :class=>'btn btn-success') if admit
+		
+		out
+		end
+		 %>
+		-->
+	  </div>
+	  	
+		
+		
+		<% end %>
+
+	</div>
+	
+</div>
+</div>	
+
+</div>
+</div>
+
+<script>
+// function filter_p(s){
+// 	if(s&&s!=''){
+// 		$(".tr-p").closest('tr').hide()
+// 		$(".tr-p").each(function(i,v){
+// 			var t = $(v).attr("text")
+// 			if(t.indexOf(s)!=-1) $(v).closest('tr').show()
+// 		})
+// 	}else{
+// 		$(".tr-p").closest('tr').show()
+// 	}
+// }
+$(document).ready(function(){
+	$("#search-p").keyup(function(){
+		filter_p($(this).val())
+	})
+	$("#search-off").keyup(function(){
+		filter_p($(this).val())
+	})
+	// $("#search-p2").keyup(function(){
+	// 	filter_p($(this).val())
+	// })
+		
+		$('#pills-dashboard-tab').click();	
+})
+</script>

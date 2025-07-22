@@ -1,0 +1,66 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Tranexamic protocol</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">ตำแหน่งที่บาดเจ็บ</h6>
+<%
+  list = <<LIST
+1|Extremity
+2|Trunk (Go to Management)
+LIST
+
+%>
+<%= check_string this, 'position', :value=>list.split("\n"),:pair=>true,:col_item=>'col-6', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Indication of Tranexamic acid </h6>
+<%
+  list = <<LIST
+1|Onset within 3 hours
+2|Age 18 to 90 years old
+3|Internal organ injury
+4|Blunt injury
+5|Active bleeding
+6|Risk of internal hemorrhage : BP < 90 mmHg or > 100 bpm or sign of shock
+LIST
+
+%>
+<%= check_string this, 'indication', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">Management</h6>
+<%
+  list = <<LIST
+1|Controlled oxygen therapy keep O2sat > 95 %
+2|Titration crystalloid solution to maintain
+3|Controlled SBP > 90 mmHG or keep Map 65
+4|Tranexamic acid 1 g in 100 ml drip in 10 min or slowly push in 10 min IV fluid
+5|Group match Massive transfusion
+LIST
+
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

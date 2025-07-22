@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post to Another Server</title>
+</head>
+<body>
+    <h1>Submit Data to Another Server</h1>
+    <form action="https://localhost:3000/d/aTBMJSbGaW5fTN/link" method="POST">
+        <label for="email">Ref:</label>
+		<input type="text" id="ref" name="submitter[ref]" required>
+        <br/><br/>
+        <label for="email">Patient name:</label>
+		<input type="text" id="ref" name="data[patient_name]" required>
+		<br/><br/>
+		<button type="submit">Submit</button>
+    </form>
+	
+	<%=params.inspect %>
+</body>
+</html>

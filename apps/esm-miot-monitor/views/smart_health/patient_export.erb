@@ -1,0 +1,278 @@
+<%=inline(this,:'_init')%>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
+<br/>
+<style>
+.div-patient{
+	max-width:100%;
+	max-height:60vh;
+	overflow:auto;
+}
+</style>
+<%
+    nowdate = Time.now
+
+
+	
+	hospital_id = nil
+	hospital_id = @current_hospital.id if @current_hospital
+	
+	
+	network_id = nil
+	network_id = @current_network.id if @current_network
+	
+	
+	provider_id = nil
+	provider_type = nil
+	
+	networks = nil
+	
+	if @current_hospital
+	
+		sh_user_hospital = SHUserHospital.where(:hospital_id=>@current_hospital.id, :user_id=>@current_user.id).first
+		
+		networks = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+		
+		if sh_user_hospital and sh_user_hospital.provider_id and sh_user_hospital.provider_type and sh_user_hospital.provider_type == 'doctor'
+			
+			provider = Provider.find(sh_user_hospital.provider_id)
+			if provider and provider.name.size>0
+				provider_id = sh_user_hospital.provider_id if 
+				provider_type = 'hospital'
+			end
+			
+		end
+		
+	
+	end
+	
+	if @current_network
+	
+		sh_user_network = SHUserNetwork.where(:network_id=>@current_network.id, :user_id=>@current_user.id).first
+		
+		if sh_user_network and sh_user_network.provider_id and sh_user_network.provider_type and  %w{doctor officer}.index(sh_user_network.provider_type )
+			
+			provider = Provider.find(sh_user_network.provider_id)
+			if provider and provider.name.size>0
+				provider_id = sh_user_network.provider_id if 
+				provider_type = 'network'
+			end
+			
+		end
+		
+	
+	end
+	
+	
+	
+	query = {}
+	
+	if provider_id
+		
+		query[:provider_id] = provider_id
+		query[:provider_type] = provider_type
+	
+		
+	elsif hospital_id
+		
+		query[:hospital_id] = hospital_id
+		
+	elsif network_id
+	
+		query[:network_id] = network_id
+		
+	end
+	
+	
+		pnet = ""
+		
+		
+	%>
+
+<form class="query" >	
+	
+	<div class="row" style="border:0px solid">
+	<div class="col"><h3>Export Data</h3></div>
+	<div class="col">
+	
+	<input type="hidden" name="query[hospital_id]" id="query_hospital_id" value="<%=query[:hospital_id]%>"/>
+	
+	<input type="hidden" name="query[provider_id]" id="query_provider_id" value="<%=query[:provider_id]%>"/>
+	
+	<input type="hidden" name="query[provider_type]" id="query_provider_type" value="<%=query[:provider_type]%>"/>
+	
+	
+	
+	<%if @current_hospital %>
+	เครือข่าย :  
+	<input type="hidden" name="query[hospital_id]" id="query_hospital_id" value="<%=query[:hospital_id]%>"/>
+	<select id="query_network_id" name="query[network_id]"  value="" style="width:200px">
+	<option value="" %>ทั้งหมด</option>
+	<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
+		<option value="<%=j[0]%>" <%=(pnet==j[0].to_s)? "selected" : "" %> ><%=j[1]%></option>
+	<% end %>
+	</select>
+	<% else %>
+	<input type="hidden" name="query[network_id]" id="query_network_id" value="<%=query[:network_id]%>"/>
+	<% end %>
+
+	<br> ผู้ตรวจ : 
+	<input type='text' name="query[offname]" id="query_offname"  placeholder="ชื่อ อสม.">
+		
+	</div>
+
+	<div class="col">
+	แสดง <select type='select' name="query[row]" id="query_row">
+		<option vlaue="20">20</option>
+		<option vlaue="50">50</option>
+		<option vlaue="100">100</option>
+		<option vlaue="0">All</option>
+		</select>
+	เรียง <select type='select' name="query[sort]" id="query_sort">
+		<option value="status">สถานะ</option>
+		<option value="exam">จำนวนออกตรวจ</option>
+		<option value="public_id">CID</option>
+		<option value="hn">HN</option>
+		<option value="patient_name">ชื่อ-นามสกุล</option>
+		<option value="created_at">วันที่ลงทะเบียน</option>
+		</select>
+	</div>
+
+	
+	<div class="col">
+	วันที่ <input type='text' name="query[from]" id="query_from"  placeholder="วันที่เริ่ม">
+	ถึง <input type='text' name="query[to]" id="query_to"  placeholder="วันที่สิ้นสุด">
+	</div>
+	<div class="col">
+	สถานะ <select type='select' name="query[status]" id="query_status">
+		<option value="all">ทั้งหมด</option>
+		<option value="finished">ตรวจแล้ว</option>
+		<option value="wait">รอตรวจ</option>
+		</select>
+	</div>
+	<div class="col">
+	สถานะคนไข้ <select type='select' name="query[pstatus]" id="query_pstatus">
+		<option value="all">ทั้งหมด</option>
+		<option value="normal">ปกติ</option>
+		<option value="abnormal">ผิดปกติ</option>
+		</select>
+	</div>
+	
+	
+	<div class="col">
+	<input type="submit" value='ค้นหา' class="btn btn-success"/>
+	<a href="patient_export" class="btn btn-info" id="btnExport">Download</a>
+	</div>
+
+	</div>	
+	
+	
+</form>
+	
+	<hr/>
+
+<div class="div-patient" id="patient-query">
+	
+</div>
+	
+	<script>
+		
+		$(document).ready(function(){
+			
+		
+		function queryPatient(event){
+
+			query = $('#query_search').val()
+			row = $('#query_row').val()
+			network_id=$('#query_network_id').val()
+			hospital_id=$('#query_hospital_id').val()
+			provider_id=$('#query_provider_id').val()
+			provider_type=$('#query_provider_type').val()
+			from=$('#query_from').val()
+			to=$('#query_to').val()
+			status=$('#query_status').val()
+			pstatus=$('#query_pstatus').val()
+			offname=$('#query_offname').val()
+			
+			sort=$('#query_sort').val()
+			manage = false;
+			<% if @current_hospital %>
+			manage = true;
+			<% end %>
+			
+		    $.get( "patient_export_partial", {manage: manage, query: query, sort: sort,  provider_id: provider_id, provider_type:provider_type, hospital_id:hospital_id, network_id: network_id, row:row, from:from, to:to, status:status, pstatus:pstatus, offname:offname} )
+		    .done(function( data ) {
+				$('#patient-query').html(data);
+			
+		    });
+			
+		}
+		
+		
+		$('.query').submit(function(event){
+			// alert('difj')
+			
+			queryPatient();
+			
+			event.preventDefault();
+			return false;
+		});
+		
+		queryPatient();
+		
+	})
+		
+	</script>
+	
+	
+
+
+
+
+<script>
+function networkshow(id){
+	if(id=='all'){
+		$(".tr-network").show()
+		$(".count").html($(".tr-network").length)
+	}else{
+		$(".tr-network").hide()
+		$("."+id).show()
+		
+		$(".count").html($("."+id).length)
+	}
+}
+function filter_p(s){
+	if(s&&s!=''){
+		$(".tr-p").hide()
+		$(".tr-p").each(function(i,v){
+			var t = $(v).attr("text")
+			if(t.indexOf(s)!=-1) $(v).show()
+		})
+	}else{
+		$(".tr-p").show()
+	}
+}
+$(document).ready(function(){
+
+	$("#search-p2").keyup(function(){
+		filter_p($(this).val())
+	})
+
+	$("#record-network_id").change(function(){
+		networkshow($(this).val())
+		//document.location.href="index?n="+$(this).val()+'&date='+$("#p-date").val()
+	})
+	try{
+		$('#query_from').datepicker({
+			format: "dd/mm/yyyy"
+		});
+		$('#query_to').datepicker({
+			format: "dd/mm/yyyy"
+		});
+	}catch(e){alert(e)}
+})
+
+</script> 
+

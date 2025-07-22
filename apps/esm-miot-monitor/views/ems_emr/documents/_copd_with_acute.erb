@@ -1,0 +1,78 @@
+
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+
+<center>COPD with acute exacerbation</center>
+</div>
+<div class="card-body">
+
+  <div class="row">
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">1. มีประวัติสงสัยว่าผู้ป่วยน่าจะวินิจฉัย COPD AE </h6>
+<%
+  list = <<LIST
+1|โรคประจำตัว COPD
+2|หอบเหนื่อยมากขึ้น ในระยะเวลาอันสั้น ( ระยะเวลาเป็นวันถึงสัปดาห์) 
+3|แน่นหน้าอก หายใจมีเสียงวี๊ด พ่นยาไม่ดีขึ้น
+4|ไอเสมหะมากขึ้น
+LIST
+
+%>
+<%= check_string this, 'history', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">2. มีภาวะUnstableหรือไหม</h6>
+<%
+  list = <<LIST
+1|RR>28bpm.: Yes, No       
+2|O2sat < 90% : Yes, No
+LIST
+
+%>
+<%= check_string this, 'status', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">2.1 Stable</h6>
+<h6 class="mb-0 text-primary"> Management</h6>
+<%
+  list = <<LIST
+1|controlled oxygen therapy ( Mask with bag /nasal cannula) keep O2sat > 90 %
+2|Bronchodilator ( Ventolin or Beradual MDI 4 puff via spacer pre q 15 mins)
+3|Systemic corticosteroid ( Dexamethasone 4 – 8 mg IV 
+4|IV fluid ( isotonic solution)
+LIST
+
+%>
+<%= check_string this, 'management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+<div class="col-12">
+<h6 class="mb-0 text-primary">2.2 Unstable</h6>
+<%
+  list = <<LIST
+1|Acute altered mental status?
+2|Definite airway ( on ETT)
+LIST
+
+%>
+<%= check_string this, 'unstable_management', :value=>list.split("\n"),:pair=>true,:col_item=>'col-12', :col=>10 %>
+</div>
+
+<div class="col-12"><br/></div>
+
+  </div><!--row-->
+</div><!--card body-->
+</div><!--card-->

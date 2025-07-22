@@ -1,0 +1,923 @@
+<%=inline(this,:'_init')%>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+
+    <section>
+        <div class="container">
+                <header class=" d-flex align-items-center title-fill">
+                    <div class="col">
+                        <p class="mb-0"><strong>นัดหมาย</strong></p>
+                        <!-- <small>Patient Admit</small> -->
+                    </div>
+        
+                </header>
+      </div>
+
+<%
+	
+		
+	
+%>	    
+
+ <% if request.post? %>	
+ 
+ <% 
+ 	
+
+ puts params.inspect 
+ puts Patient.count
+ 
+ if params[:patient] 
+ 		
+		params[:patient][:zone_id] = session[:current_zone]
+		
+ #
+ if params[:id] and params[:id]!=''
+
+     admit = Admit.find(params[:id])
+ 	 patient = admit.patient
+ 	 patient.update_attributes params[:patient]
+
+ else
+	 
+	 # patient = Patient.where(:public_id=>params[:patient][:public_id]).first
+	 #
+	 #  	 patient = Patient.create params[:patient]
+
+ end
+ # => 	
+        hos_id = nil
+ 
+ 	    hos_id = @current_hospital.id if @current_hospital
+		
+		hos_id = @current_network.hospital_id if @current_network
+ 
+ 
+ 
+	 	patient_hos = SHRelation.where(:hospital_id=>hos_id).all
+	 	patient_ids = patient_hos.collect{|i| i.patient_id}
+		#clear patient not exist
+		temp_ps=Patient.where(:id=>patient_ids).all.collect{|i| i.id}
+		if temp_ps.size!=patient_hos.size
+			for ph in patient_hos
+				ph.destroy if !temp_ps.index(ph.patient_id)
+			end
+			patient_hos = SHRelation.where(:hospital_id=>hos_id).all
+			patient_ids = patient_hos.collect{|i| i.patient_id}
+		end
+	    
+		cond = []
+		
+
+		cond << {:public_id=>params[:patient][:public_id]} if params[:patient][:public_id] and params[:patient][:public_id]!=""
+	 
+		cond << {:hn=> params[:patient][:hn]} if params[:patient][:hn] and params[:patient][:hn]!=""
+	 
+ 		patient  = Patient.where('$or'=>cond, :_id=>{'$in'=>patient_ids}).first
+		
+		if patient 
+		
+			admit = Admit.where(:patient_id=>patient.id).last
+			
+		else
+		
+		     patient = Patient.create params[:patient]
+		
+		
+			params[:relation][:patient_id] = patient.id
+			params[:relation][:hospital_id] = hos_id
+			
+			relation = SHRelation.create params[:relation]
+			
+		
+		
+			if params[:admit]
+			
+					admit = Admit.create :patient_id=> patient.id, :status=>'NEW', :zone_id=> patient.zone_id, :admit_stamp=>Time.now, :note=> params[:admit][:note]
+				
+			
+			end
+		
+		end	
+		
+		
+		if  patient and admit
+			if params[:vid]
+				visit = SHVisit.find params[:vid]
+				visit.update_attributes :appoint_type=>params[:visit][:appoint_type],:appointed_user=> @current_user.id, :date=> params[:visit][:date],:note=> params[:visit][:note], :provider_id=>params[:provider_id]
+			else
+				
+				
+				
+						
+				visit = SHVisit.create :appoint_type=>params[:visit][:appoint_type],:status=> "Pending",:appointed_user=> @current_user.id, :appointed_at=> Time.now, :patient_id=>patient.id, :date=> params[:visit][:date], :provider_id=>params[:provider_id],:note=> params[:visit][:note]
+				
+				if params[:relation]
+					
+				visit.update_attributes  :hospital_id=>params[:relation][:hospital_id], :network_id=>params[:relation][:network_id]
+					
+				end
+				
+				
+				if @current_network
+						
+					visit.update_attributes :status=>'Accepted', :officer_id=>params[:officer_id], :dispatched_at=>Time.now, :dispatched_user=> @current_user.id, :appoint_type=>'3', :network_id=>@current_network.id, :hospital_id=>hos_id	
+					
+				end
+				
+				
+			end
+		end
+	
+		
+	    # key :provider_id, ObjectId
+    # 	    key :hospital_id, ObjectId
+    # 	    key :network_id, ObjectId
+    # 	    key :officer_id, ObjectId
+		
+		
+			
+ %>
+ 		<%= redirect_to "show?id=#{admit.id}" %>	
+		
+		
+	<% end %>		
+ 	
+ <% else %>	
+
+    <div class="container">
+        <div class="row">
+            <div class="col title-fill ">
+     		   
+		<%
+		
+		found = false
+		
+		if params[:vid] and params[:vid]!=''
+			visit = SHVisit.find params[:vid]
+		end
+		# if params[:admit_id] and params[:admit_id]!=''
+		if params[:id] and params[:id]!=''
+			# admit = Admit.find(params[:admit_id])
+			admit = Admit.find(params[:id])
+			patient = admit.patient
+			found = true if patient
+			relation = SHRelation.where(:patient_id=>patient.id).first
+			visit = SHVisit.new :patient_id=>patient.id, :date=> Time.now if !visit
+			
+		else
+			
+			patient = Patient.new :hn=>params[:hn],:race=>'ไทย',:nation=>'ไทย',:religion=>'พุทธ' 
+			admit = Admit.new :patient_id=>patient.id 
+			relation = SHRelation.new :patient_id=>patient.id 
+			visit = SHVisit.new :patient_id=>patient.id, :date=> Time.now
+			
+		end	
+			
+		
+			
+			
+		%>
+		
+		<% if found %>
+			<style>
+				.form-patient{
+					background:#ddffdd;
+					border:1px solid #ccc;
+				}
+				</style>
+		<% end %>
+		<div class="card admit-form">
+            <div class="card-body d-flex">
+				<form action="" id="patient" method="post"   method="post"  style="width:100%;font-size:16px">
+					
+					
+					
+					<div class="form-group">
+		 				<%# <label for="product-name">Patient</label> %>
+		<div class='row'  style="border:0px solid gray">
+	
+		<div class="col-md-4" > 
+		
+			<div class="row">
+				<div class="col-12" > 
+					<%
+						
+					img = Message.where(:admit_id=>patient.id).sort(:created_at=>-1).first
+					url = nil
+					
+					if img
+					
+						url = "../Message/content?id=#{img.id}" 
+						
+					end
+						
+						
+						
+						
+					%>
+					
+					
+					<center>
+						<% if url%>
+						<div style="width:150px;height:150px;overflow:hidden;border-radius: 50%; ;">
+						<a href="<%=url%>" target="_blank" ><img src="<%=url%>" width="150"  style="overflow:hidden;"></a>
+						</div>
+						<% else %>
+						<image id="patient-image" src="<%=url_for 'img/patient.png' %>" height="120">
+						<% end %></center>
+					<a href="#" class="mt-3 d-flex justify-content-center d-inline p-1 image_capture_btn" >
+					
+						<img src="<%=url_for 'img/ER/photo_camera.svg' %>" alt="upload-photo">
+						
+						<span class="pl-1">ถ่ายภาพ</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		    <script>
+			    $('.image_capture_btn').click(function(){
+					device_interface.image_capture(window.location.origin+"<%=url_for("SmartHealth/patient_upload?patient_id=#{patient.id}")%>", "key")
+			    })
+		    </script>
+
+		<div class="col-md-8 p-3">
+
+		
+			<div class="row" style="background-color:#ffc;padding-bottom:20px">
+				
+		
+				
+
+				<div class="col-md-4">
+				<label for="patient-public_id">เลขประจำตัวประชาชน</label>
+				<input type="text" class="form-control form-patient validate" id="patient-public_id" name="patient[public_id]" value="<%=patient.public_id%>" placeholder="CID" >
+				</div>
+				
+				<div class=" col-md-4">
+		  			<label for="product-name">HN</label>
+		  			<input type="text" class="form-control form-patient  validate" id="patient-hn" name="patient[hn]" value="<%=patient.hn%>" placeholder="HN" >
+					<input type="hidden" name="id" value="<%=params[:id]%>">
+					<input type="hidden" name="relation_id" value="<%=params[:relation_id]%>">
+	            
+				</div>
+				
+				<div class=" col-md-2"><br/>
+	            <a id="btn-search" href="#" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel" style="width:100px">
+	                ค้นหา
+	            </a>
+			</div>
+				<div class=" col-md-2"><br/>
+			
+	            <a id="btn-clean" href="visit" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel " style="width:60px" >
+	                ล้าง
+	            </a> 
+				
+				</div>
+				<script>
+				function clicksearch(){
+					hn = $("#patient-hn").val()
+					cid = $("#patient-public_id").val()
+					$.ajax({
+						url:'visit_search',
+						data:{hn:hn,cid:cid},
+					}).done(function(data){
+						//alert('return :'+data)
+						if(data!=''){
+							v = data.trim()
+							document.location.href="./visit?id="+v
+						}else{
+							alert('Search not found add new patient.')
+						}
+					})
+				}
+				$(document).ready(function(){
+					$("#btn-search").click(function(){
+						clicksearch()
+					})
+				})
+				</script>
+				
+				
+	
+	
+			
+				
+           
+			</div>
+
+			
+
+			
+			
+		<div class="row mt-1">
+			
+		<div class="col-4 col-md-4">
+		<label for="patient-prefix_name">คำนำหน้า</label>
+		<input type="text" class="form-control form-patient " id="patient-prefix_name" name="patient[prefix_name]" value="<%=patient.prefix_name%>" placeholder="นาย นาง นางสาว" style="">
+		</div>
+	
+
+		<div class="col-4 col-md-4">
+		<label for="patient-first_name">ชื่อ</label>
+		<input type="text" class="form-control form-patient  validate" id="patient-first_name" name="patient[first_name]" value="<%=patient.first_name%>" placeholder="ชื่อ" style="">
+		</div>
+
+		<div class="col-4 col-md-4">
+			<label for="patient-last_name">นามสกุล</label>
+			
+		<input type="text" class="form-control  form-patient  validate" id="patient-last_name" name="patient[last_name]" value="<%=patient.last_name%>" placeholder="สกุล" style="">
+		</div>
+		
+		</div><!--row-->
+		
+		
+		<div class="row mt-1">
+			
+		<div class="col-4 col-md-4">
+		<label for="patient-gener">เพศ</label>
+		<select name="patient[gender]" class="form-control form-patient " >
+		<option value="">ไม่ระบุ</option>
+		<option value="M">ชาย</option>
+		<option value="F">หญิง</option>
+		</select>	
+	    <!-- <input type="text" class="form-control" id="patient-gender" name="patient[gender]" value="<%=patient.gender%>" placeholder="M or FM" style=""> -->
+	    
+		</div>
+	
+		<div class="col-8 col-md-4">
+		<label for="patient-dob">วัน/เดือน/ปี เกิด</label>
+		<input type="text" class="form-control form-patient " id="patient-dob" name="patient[dob]" value="<%=patient.dob.strftime('%d/%m/%Y') if patient.dob%>" placeholder="DOB" style="">
+		</div>
+		
+		<div class="col-8 col-md-4">
+		<label for="patient-age">อายุ</label>
+		<input type="text" class="form-control form-patient " id="patient-age" name="patient[age]" value="<%=patient.age%>" placeholder="Age" style="">
+		</div>
+
+		</div><!--row-->
+
+		
+		<div class="row mt-1" style="display:none"> 
+			
+		<div class="col-4 col-md-4">
+		<label for="patient-blood">หมู่เลือด</label>
+	    <input type="text" class="form-control form-patient " id="patient-blood" name="patient[blood]" value="<%=patient.blood%>" placeholder="Blood Group" style="">
+	    </div>
+	
+		<div class="col-4 col-md-4">
+		<label for="patient-status">สถานภาพสมรส</label>
+		<input type="text" class="form-control form-patient "  id="patient-status" name="patient[status]" value="<%=patient.status%>" placeholder="Status" style="">
+		</div>
+		
+		<div class="col-12 col-md-4">
+		<label for="patient-job">อาชีพ</label>
+		<input type="text" class="form-control form-patient " id="patient-job" name="patient[job]" value="<%=patient.job%>" placeholder="Occupation" style="">
+		</div>
+
+		<div class="col-4 col-md-4">
+		<label for="patient-race">เชื้อชาติ</label>
+		<input type="text" class="form-control form-patient " id="patient-race" name="patient[race]" value="<%=patient.race%>" placeholder="Race" style="">
+		</div>
+
+		<div class="col-4 col-md-4">
+		<label for="patient-nation">สัญชาติ</label>
+		<input type="text" class="form-control form-patient " id="patient-nation" name="patient[nation]" value="<%=patient.nation%>" placeholder="Nation" style="">
+		</div>
+
+		<div class="col-4 col-md-4">
+		<label for="patient-religion">ศาสนา</label>
+		<input type="text" class="form-control form-patient " id="patient-religion" name="patient[religion]" value="<%=patient.religion%>" placeholder="Religion" style="">
+		</div>
+
+
+		<div class="col-8 col-md-6">
+		<label for="patient-passport">เลขที่หนังสือเดินทาง</label>
+		<input type="text" class="form-control form-patient " id="patient-passport" name="patient[passport]" value="<%=patient.passport%>" placeholder="Passport" style="">
+		</div>
+
+		<div class="col-12 col-md-12">
+		<label for="patient-addr">ที่อยู่ตามบัตรประชาชน</label>
+		<input type="text" class="form-control form-patient " id="patient-addr" name="patient[addr]" value="<%=patient.addr%>" placeholder="Address" style="">
+		</div>
+
+		<div class="col-12 col-md-12">
+		<label for="patient-addr_present">ที่อยู่จริง <input id="chk-addr" type="checkbox" <%=(patient.addr_present and patient.addr_present!='' and patient.addr_present==patient.addr)? "checked" : "" %>> ตามที่อยู่บัตรประชาชน</label>
+		<input type="text" class="form-control form-patient " id="patient-addr_present" name="patient[addr_present]" value="<%=patient.addr_present%>" placeholder="Pesent Address" style="">
+		</div>
+		<script>
+		
+		</script>
+
+		<div class="col-8 col-md-4">
+		<label for="patient-contact_phone">โทร</label>
+		<input type="text" class="form-control form-patient " id="patient-contact_phone" name="patient[contact_phone]" value="<%=patient.contact_phone%>" placeholder="Tel" style="">
+		</div>
+
+		<div class="col-8 col-md-4">
+		<label for="patient-parent">ผู้ปกครอง/ผู้ติดต่อได้</label>
+		<input type="text" class="form-control form-patient " id="patient-parent" name="patient[parent]" value="<%=patient.parent%>" placeholder="ชื่อ - สกุล" style="">
+		</div>
+
+		<div class="col-8 col-md-4">
+		<label for="patient-contact_name">เบอร์โทรผู้ติดต่อ</label>
+		<input type="text" class="form-control form-patient " id="patient-contact_name" name="patient[contact_name]" value="<%=patient.contact_name%>" placeholder="เบอร์โทร" style="">
+		</div>
+
+		</div><!--row-->
+		<script>
+		$('#patient-dob').datepicker({
+			format: "dd/mm/yyyy"
+		});
+		function dateDiffInYears(dateold, datenew) {
+            var ynew = datenew.getFullYear();
+            var mnew = datenew.getMonth();
+            var dnew = datenew.getDate();
+            var yold = dateold.getFullYear();
+            var mold = dateold.getMonth();
+            var dold = dateold.getDate();
+            var diff = ynew - yold;
+            if (mold > mnew) diff--;
+            else {
+                if (mold == mnew) {
+                    if (dold > dnew) diff--;
+                }
+            }
+            return diff;
+        }
+		$("#patient-dob").change(function(){
+			d = $(this).val()
+			ad = d.split('/')
+			bd = new Date()
+			now = new Date()
+			if(ad.length>2){ bd = new Date(ad[2]+'-'+ad[1]+'-'+ad[0])}
+			$("#patient-age").val(dateDiffInYears(bd,now))
+		})
+		$("#chk-addr").click(function(){
+			$("#patient-addr_present").val($("#patient-addr").val())
+		})
+		
+		</script>
+		
+		<div class="row mt-1"  style="padding-bottom:20px">
+		<div class="col-12 col-md-12">
+		<label for="product-name">หมายเหตุ</label>
+		<input type="text" class="form-control form-patient " id="patient-last_name" name="admit[note]" value="<%=admit.note%>" placeholder="Note" style="">
+		</div>			
+		</div><!--row-->
+		
+		
+		<% if @current_hospital %>
+		<div class="row  mt-1"  style="padding-bottom:20px">
+
+			<div class="col col-md-4">
+	  			<label for="product-name">โรงพยาบาลต้นสังกัด </label>
+				<%
+					hospitals = SHHospital.all
+				%>
+				<select id="record-hospital_id" name="relation[hospital_id]" class="form-control" value="">
+				<% for j in hospitals.collect{|k| [k.id,"#{k.name}", k.id]} %>
+				  <option value="<%=j[0]%>" <%= 'disabled' unless @current_hospital.id==j[0] %> <%="selected" if @current_hospital.id==j[0] %> ><%=j[1]%></option>
+				<% end %>
+				</select>
+			</div>
+		<div class=" col-md-4">
+	  		<label for="product-name">แพทย์ประจำ </label>
+			<%
+	
+				providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'doctor').all.collect{|i| i.provider}
+			%>
+			<select id="record-hospital_doctor_id" name="relation[hospital_doctor_id]" class="form-control" value="">
+			<option value=""></option>
+			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected" if relation.hospital_doctor_id==j[0] %> ><%=j[1]%></option>
+			<% end %>
+			</select>
+		</div>
+		
+		<div class=" col-md-4">
+	  		<label for="product-name">แพทย์รอง</label>
+			<%
+	
+				providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'doctor').all.collect{|i| i.provider}
+			%>
+			<select id="record-hospital_doctor_2_id" name="relation[hospital_doctor_2_id]" class="form-control" value="">
+			  <option value=""></option>
+			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected" if relation.hospital_doctor_2_id==j[0] %> ><%=j[1]%></option>
+			<% end %>
+			</select>
+		</div>
+
+		</div>
+
+		<div class="row " style="padding-bottom:20px">
+			
+		
+			<div class="col col-md-4">
+	  		<label for="product-name">โรงพยาบาลเครือข่าย รพสต</label>
+			<%
+			
+			networks = SHNetwork.all
+			
+			%>
+			<select id="record-network_id" name="relation[network_id]" class="form-control" value="">
+			   <option value="" ></option>
+			<% for j in networks.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected" if relation.network_id==j[0] %> ><%=j[1]%></option>
+			<% end %>
+			</select>
+  		
+			</div>
+		
+		
+		</div>
+		
+		<% end %>
+
+	<div class="row mt-1">
+	
+		<hr/>
+	</div>	
+		
+		<div class="row mt-1">
+			
+		<div class="col-12 col-md-12">
+		
+		<h4>ข้อมูลนัดหมาย</h4>
+	<%
+		if params[:vid] and params[:vid]!=''
+			%><input type="hidden" name="vid" value="<%=params[:vid]%>"><%
+		end		
+	%>	
+		
+	<div class="row mt-1" style="background-color:#ffc;padding-bottom:20px">
+		
+	<div class="col-6 col-md-6">
+		<label for="visit-date">วันที่</label>
+		<input type="text" class="form-control" id="visit-date" name="visit[date]" value="<%=visit.date.strftime('%d/%m/%Y') if visit.date%>" placeholder="วันที่" style="">
+	</div>
+
+	<div class="col-6 col-md-6">
+		<label for="visit-appoint_type">คลินิก</label>
+		<select name="visit[appoint_type]" class="form-control">
+			<option value="1" <%="selected".html_safe if visit.appoint_type=='1'%>>ตรวจที่โรงพยาบาล</option>
+			<option value="3" <%="selected".html_safe if visit.appoint_type=='3'%>>ตรวจที่เยี่ยมบ้าน (อสม)</option>
+		</select>
+	</div>
+
+    
+	
+	</div>	
+
+		
+		<div class="row " style="background-color:#ffc;padding-bottom:20px">
+		
+		<% if @current_hospital %>
+		
+		<div class=" col-md-4">
+	  		<label for="product-name">นัดพบแพทย์ </label>
+			<%
+	
+				providers = SHUserHospital.where(:hospital_id=>@current_hospital.id, :provider_type=>'doctor').all.collect{|i| i.provider}
+			%>
+			<select id="record-hospital_doctor_id" name="provider_id" class="form-control" value="">
+			<option value=""></option>
+			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected".html_safe if visit.provider_id==j[0]%>><%=j[1]%></option>
+			<% end %>
+			</select>
+		</div>
+		
+		<% else %>
+		
+		<div class=" col-md-4">
+	  		<label for="product-name">นัดอสม</label>
+			<%
+				
+				providers = SHUserNetwork.where(:network_id=>@current_network.id, :provider_type=>'officer').all.collect{|i| i.provider}
+			%>
+			<select id="record-hospital_doctor_id" name="officer_id" class="form-control" value="">
+			<option value=""></option>
+			<% for j in providers.collect{|k| [k.id,"#{k.name}", k.id]} %>
+			  <option value="<%=j[0]%>" <%="selected".html_safe if visit.provider_id==j[0]%>><%=j[1]%></option>
+			<% end %>
+			</select>
+		</div>
+		
+		<% end %>
+	   </div>
+	
+	   
+	   
+	   
+	
+	
+		
+		<div class="row " style="background-color:#ffc;padding-bottom:20px">
+		<div class="col-12 col-md-12">
+			<label for="visit-date">ข้อมูลการตรวจ</label>
+			<!-- <input type="text" class="form-control" id="visit-note" name="visit[note]" value="<%=visit.note%>" placeholder="" style=""> -->
+			<textarea name="visit[note]"  id="visit-note"  class="form-control" rows="5"><%=visit.note%></textarea>
+			
+		</div>
+	
+	
+		</div>
+		
+		<!-- <div class="row " style="background-color:#ffc;padding-bottom:20px">
+
+		<div class="col-12 col-md-12">
+
+			<table><tr><td><input type="checkbox" name="visit_order"  id="visit_order"   class="form-control" /></td><td> <label for="visit_order">  สั่งการ รพสต</label></td></tr></table>
+
+		</div>
+
+
+		</div> -->
+
+		
+		
+		</div>
+		
+		</div><!--row-->
+
+		
+		<script>
+			$('#visit-date').datepicker({
+				format: "dd/mm/yyyy"
+			});
+		</script>
+
+
+
+		
+
+			
+	
+		<hr>
+			<div class="row mt-3 "  style="border:0px solid gray">
+
+			<div class="col-4 col-md-4">
+      		<% if visit.status != 'Completed' %>
+		    <input type="submit" value="ยืนยัน" class="btn btn-primary btn-submit d-flex align-items-center justify-content-center" />			  
+			<% end %>
+	 	 	</div>
+	   	   
+		    <div class="col-4 col-md-4 btn-cancel">
+            <a href="../Home/index" class="ml-2 d-flex align-items-center justify-content-center btn btn-outline-cancel">
+                ย้อนกลับ
+            </a>
+		
+			</div>
+			
+		</div>
+		
+		</div> <!--col8-->
+		
+		
+		
+		</div> <!--row-->
+
+			
+		
+			
+		
+
+		</div>
+		</form>
+			</div>
+		</div><!--Card-->
+		
+		</div>
+        
+				
+		    </div>
+	    </div>
+    
+<%  end %>	
+
+		
+<% if false %>		
+    <div class="container">
+        <div class="row">
+			<form action="admit" id="hn-search" method="post"   method="post"  style="width:100%">
+			
+            <div class="col title-fill ">
+            
+                <div class="input-group">
+                    <!-- <input type="text" class="form-control text-center display-hn" autofocus  placeholder="" id="display-hn" aria-label="add-hn" aria-describedby="button-addon2"> -->
+						
+					<input type="hidden" name="hn" value="" class="value-hn">	
+				    <div class="text-center display-hn form-control " style="font-size:1em"  aria-label="add-hn">
+    						
+				    </div>
+					
+					
+                    <div class="input-group-append">
+                      <button class="btn btn-scan text-center btn-opd" type="button" id="button-addon2" style="border: none">
+                        <p class="mb-0">ค้นหา</p>
+                    </button>
+                    </div>
+				
+					
+					
+                  </div>
+            </div>
+			
+				</form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class=" col text-center">
+                <table class="d-flex justify-content-center dial-num">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn" style="padding-top: 7px;">1
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn" style="padding-top: 7px;">2</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">3</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">4</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">5</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">6</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">7</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">8</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">9</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">/</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;">0</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="number">
+                                    <div class="btn-hn"  style="padding-top: 7px;"><img src="<%=url_for 'img/svg/delete.svg'%>" class="nav-img ">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+               
+                <!-- <div class=" text-left">
+          <a href="log.html" class="btn btn-primary btn-report">รายงานการใช้งาน</a>
+        </div>-->
+            </div> 
+
+            </div>
+        </div>
+		
+		    </section>
+			<div id="buffer">
+			</div>
+			
+			<audio id="my-audio" preload="auto">
+			<source src="<%=url_for 'sounds/water_droplet.mp3'%>" type="audio/mpeg">
+			<!-- place fallback here as <audio> supporting browsers will ignore it -->
+			<p>Download<a href="<%=url_for 'sounds/water_droplet.mp3'%>">audiofile.mp3</a></p>
+			</audio>
+
+			<script>
+				function deviceSend(msg){
+		
+				}
+			    function hnPush(s){
+			        v = $(".display-hn").html().trim()
+			        b = s.html().trim()
+			        if(b.indexOf("img")!==-1){
+			            v = v.substr(0,v.length-1)
+			        }else{
+			            v+=b
+			        }
+					$('.value-hn').val(v)
+			        $(".display-hn").html(v)       
+			    }
+	
+				var buffer = 10;
+				var cur_buffer = 0 ;
+	
+				for(var i=0;i<buffer;i++){
+					var myAudio = document.createElement('audio');
+					  myAudio.setAttribute("id","audio-"+i)
+					 if (myAudio.canPlayType('audio/mpeg')) {
+						  myAudio.setAttribute('src','<%=url_for 'sounds/water_droplet.mp3'%>');
+					 }
+					 $('#buffer').append(myAudio);
+		  
+				}
+
+			    $(".number").on("click",function(){
+      				
+					hnPush($(this).find(".btn-hn"))  
+		
+			
+					var myAudio = document.getElementById('audio-'+cur_buffer)
+					myAudio.play();
+					cur_buffer+=1;
+					if(cur_buffer==10)cur_buffer=0;
+		
+			        return false;
+			    })
+
+			    var beep = document.createElement('audio');
+			    if (beep.canPlayType('audio/mpeg')) {
+			        beep.setAttribute('src','<%=url_for 'sounds/Beep_Short.mp3'%>');
+			    }	
+			    $("#beep").on("click",function(){
+			        beep.play();       
+			    })
+	
+				function submit(){
+		
+					$('.btn-opd').html('Loading')
+			        hn = $(".display-hn").html().trim()
+			        // $("#beep").click()
+					 beep.play();   
+					<%
+						device_id = '00000'
+			
+						device_id = params[:device_id] if params[:device_id]
+					%>
+								        setTimeout(function(){
+											
+						  			      $( "#hn-search" ).submit();
+				  
+					//
+					// 	window.location.replace("admit?hn="+hn+"&device_id=<%=device_id%>");
+					//
+					//
+					}, 1000);
+				}
+	
+				$('.btn-opd').click(function(){	
+			      	submit();
+			    })
+	
+				$(document).keypress(function(e){
+		
+				    if( event.which == 13 ) {
+				        submit();
+				     }else{
+			        v = $(".display-hn").html().trim()
+			        v+=String.fromCharCode(e.keyCode)
+        
+			        $(".display-hn").html(v.trim())   
+					 } 
+		
+				})
+		
+	     
+
+			</script>
+<% end %>				

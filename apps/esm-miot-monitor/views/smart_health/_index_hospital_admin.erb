@@ -1,0 +1,308 @@
+<%=inline(this,:'_init')%>
+
+<%=inline(this,:'_header')%>
+
+
+<div class="containerx" style="background:none">
+<div class="row" style="border:0px solid;">
+<div class="col-12 col-md-4  d-flex ">
+
+<div> <!-- ระบบจัดการข้อมูลผู้ดูแลระบบ -->
+</div>
+</div>
+<div class="col-12 col-md-6 d-flex ">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist"  >
+      <!-- <li class="nav-item">
+        <a class="nav-link active" id="pills-dashboard-tab" data-toggle="pill" href="#pills-dashboard" role="tab" aria-controls="pills-home" aria-selected="true">VitalSign</a>
+      </li>	 -->
+	  <li class="nav-item">
+	    <a class="nav-link  <%='active' unless params[:tab]%>" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">เจ้าหน้าที่</a>
+	  </li>
+	  
+
+	  
+	  
+	  <li class="nav-item">
+	    <a class="nav-link <%='active' if params[:tab]=='patient'%>" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">ผู้ป่วย</a>
+	  </li>
+	  
+	  
+	  
+	  <li class="nav-item">
+	    <a class="nav-link  <%='active' if params[:tab]=='network'%>" id="pills-network-tab" data-toggle="pill" href="#pills-network" role="tab" aria-controls="pills-network" aria-selected="true">เครือข่าย</a>
+	  </li>
+	</ul>
+</div>
+</div>
+
+<div class="row">
+
+<div class="col">
+	
+
+
+	<div class="tab-content" id="pills-tabContent">
+
+		
+		
+	  <div class="tab-pane fade show container  <%='active' unless params[:tab]%>" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	  	<%
+	  		
+		if @current_hospital 
+			
+			list = SHUserHospital.where(:hospital_id=>@current_hospital.id).all
+			
+	  	%><br/>
+			<h3>เจ้าหน้าที่ / ผู้ใช้ 
+			<%=link_to("เพิ่มเจ้าหน้าที่", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success', :style=>'float:right')%>
+			</h3>
+		<%= tabular :data=>list, :model=>%w{hospital provider provider_type phone user }, :label=>{'user'=>'รหัสผู้ใช้','provider_type'=>'สิทธิ์ใช้งาน','hospital'=>'โรงพยาบาล','provider'=>'ชื่อ-สกุล','phone'=>'โทร','action'=>''}, :ext_model=>%w{action} do |row,out|
+		
+		out[0] = row.hospital.name if row.hospital
+		
+		
+		out[1] = row.provider.name if row.provider
+		
+		
+		out[-2] = row.provider.phone if row.provider
+	
+		out[-1] = row.user.login if row.user
+		
+		# out<<link_to("แสดง", "../SHUserHospital/show?id=#{row.id}", :class=>'btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
+		out<<link_to("แก้ไข", "ha_provider_manage?id=#{row.id}", :class=>'btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHUserHospital/destroy?id=#{row.id}", :class=>'btn btn-danger destroy')
+		
+		out
+		end
+		 %>
+		
+		
+		<% end %>
+		
+		
+		<%#link_to("เพิ่ม", "ha_provider_manage?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
+		
+		<%#link_to("เพิ่มลงฐานข้อมูล", "../SHUserHospital/create?hospital_id=#{@current_hospital.id.to_s}", :class=>'btn')%>
+		
+		
+	  </div>  <!-- End Doctor Section-->
+	  
+	  
+	  
+		
+	  <div class="tab-pane fade show container  <%='active' if params[:tab]=='network' %>" id="pills-network" role="tabpanel" aria-labelledby="pills-network-tab">
+	  
+  	<%
+  		
+	if @current_hospital 
+		
+	 list = SHNetwork.where(:hospital_id=>@current_hospital.id).all
+		
+  	%>
+
+	<div class="network-list" style="">	
+		<br/>
+		<h3>
+			รพเครือข่าย / รพสต 
+			<%=link_to("เพิ่มรพเครือข่าย", "../SHNetwork/create?hospital_id=#{@current_hospital.id.to_s}", :hospital_id=>@current_hospital.id,:class=>'network-create btn btn-success', :style=>'float:right')%>
+		
+		</h3>
+	<%= tabular :data=>list, :model=>%w{network code user }, :label=>{'user'=>'ผู้ใช้','network'=>'เครือข่าย','code'=>'รหัสเครือข่าย','action'=>''}, :ext_model=>%w{action} do |row,out|
+	
+	out[0] = row.name
+	
+	out[1] = row.code
+	
+	un = SHUserNetwork.where(:network_id=>row.id).first
+	un_id = un.id if un
+	out[-1] = SHUserNetwork.where(:network_id=>row.id).count
+	
+	out<<link_to("แสดง", "../SHNetwork/show?id=#{row.id}", :network_id=>row.id, :class=>'network-show btn btn-success')+"&nbsp;"+link_to("แก้ไข", "ha_provider_manage?id=#{row.id}",:network_id=>row.id,:un_id=>un_id, :class=>'network-edit btn btn-info')+"&nbsp;"+link_to("ลบ", "../SHNetwork/destroy?id=#{row.id}", :network_id=>row.id,  :class=>'network-destroy btn btn-danger destroy')
+	
+	out
+	end
+	 %>
+	  
+	
+	
+	
+</div>
+
+
+
+   <div class="network-panel">
+	   
+   </div>
+
+    <div class="network-ctrl" style="display:none">
+		<center>
+			<br/>
+ 	   <a href="#" class="network-list-show" >Show All Networks</a>
+   </center>
+    </div>
+	<% end %> 
+	<script>
+		
+		$('.network-list-show').click(function(e){
+			
+			$('.network-panel').hide();
+			$('.network-ctrl').hide();
+			$('.network-list').slideDown();
+		
+			e.preventDefault();
+			
+		}) 
+		$('.network-create').click(function(e){
+			let id = $(this).attr('hospital_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_create?hospital_id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		$('.network-show').click(function(e){
+			let id = $(this).attr('network_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_show?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		$('.network-edit').click(function(e){
+			// id = $(this).attr('network_id')
+			let id = $(this).attr('un_id');
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_edit?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+		
+		
+		$('.network-destroy').click(function(e){
+			id = $(this).attr('network_id')
+			
+			$('.network-list').slideUp();
+			$('.network-ctrl').show();
+			
+			$.ajax({
+			  url: "network_destroy?id="+id,
+			  context: document.body
+			}).done(function(data) {
+				$( '.network-panel').html(data);
+				$('.network-panel').show();
+				
+			});
+			e.preventDefault();
+			
+		})
+		
+	</script>
+	
+	
+	
+  </div>
+	  
+	  
+	  <div class="tab-pane fade  <%='show active' if params[:tab]=='patient'%>" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	  	
+		
+	  	<%
+	  		
+		if @current_hospital 
+			
+			list = SHRelation.where(:hospital_id=>@current_hospital.id).all
+			 
+	  	%>
+		<%#inline(this,:'_patient_last_record')%>
+		<%=inline(this,:'_patient_record')%>	 
+		<!--<%= tabular :data=>list, :model=>%w{hn name user}, :ext_model=>%w{action} do |row,out|
+		
+		patient = Patient.find row.patient_id
+		
+		if patient
+		
+			out[0] = patient.hn
+		
+			out[1] = "#{patient.prefix_name}#{patient.first_name} #{patient.last_name}"
+		
+		end
+		
+			user = nil
+		
+			user = User.find row.user_id if row.user_id
+		
+		if user
+			out[-1] = link_to(user.login, "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+		else
+			out[-1] = link_to("ผู้ใช้", "manage_patient_user?id=#{row.id}", :class=>'btn btn-info')
+		end
+			out<<link_to("แสดง", "../SHRelation/show?id=#{row.id}", :class=>'btn btn-success')+'&nbsp;'+link_to("ลบ", "../SHRelation/destroy?id=#{row.id}", :class=>'btn btn-danger')
+		
+			out
+		end
+		 %>
+		 -->
+		<%#=link_to("เพิ่ม", "admit?return=index?tab=patient&hospital_id=#{@current_hospital.id.to_s}", :class=>'btn btn-success')%>
+		
+	  </div>
+	  	
+		
+		
+		<% end %>
+
+	</div>
+	
+</div>
+</div>	
+
+</div>
+</div>
+
+
+<script>
+
+	
+	$(".destroy").unbind( "click" );
+	$('.destroy').click(function(e){
+		
+		if(confirm("ยืนยัน?")){
+			
+			
+		}else{
+			
+			e.preventDefault()
+			
+		}
+			
+	});
+	
+</script>

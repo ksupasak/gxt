@@ -1,0 +1,248 @@
+<%
+	
+admit = nil
+# record = Station.first
+zone = nil
+
+current_station = Station.first
+record = current_station	
+
+%>
+		<script type="text/javascript">
+	    
+		var gfx = null;
+			$(document).ready(function(){
+				
+				
+				
+				
+ 			var lead_data = {};
+		  	var wave_data = [];
+	
+		
+			var data = [100,200,100,200];
+
+			var settings = {version:'1.0'};
+
+		    var components = [];
+	
+			vs = {name:'vitalsign',type:'vs',show:true,params:['hr','pr','spo2','bp_sys','bp_dia','temp','rr'],records:null};
+			
+			records = [];
+	
+			now = Date.now();
+			
+			<%
+			if admit
+			senses = Sense.where(:admit_id=>admit.id).limit(100).sort(:start_time.desc).all.reverse
+		    
+			
+			list =[]
+			
+			for i in senses
+			
+				o = ActiveSupport::JSON.decode(i.data)
+				
+				if o['vs']
+					for j in o['vs']
+						
+						# [{:stamp=>2019-03-07 00:15:36 +0700, :bp=>"119/72", :bp_stamp=>
+						bp = j['bp'].split("/")
+						list.push({time:Time.parse(j['stamp']),:temp=>j['temp']?j['temp']:0,pr:j['pr']!='-'?j['pr']:0, :spo2=>j['spo2']!='-'?j['spo2']:0, hr:j['hr']?j['hr']:0,rr:j['rr']?j['rr']:0,bp_sys:bp[0].to_i,bp_dia:bp[1].to_i});
+					end
+					
+				end
+				
+			end
+			%>
+			
+			
+			<%
+			for j in list 	
+			%>
+			j = <%=j.to_json.html_safe%>
+			records.push({time:Date.parse(j['time']),hr:j['hr'],temp:j['temp'],pr:j['pr'],spo2:j['spo2'],rr:j['rr'],bp_sys:j['bp_sys'],bp_dia:j['bp_dia']});
+			
+			<% end %>
+				<% end %>
+			//records = <%= list.to_json.html_safe %>
+		
+			// records.push({time:now   ,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			// records.push({time:now+100000,hr:120,rr:19,bp_sys:113,bp_dia:100});
+			// records.push({time:now+200000,hr:110,rr:20,bp_sys:163,bp_dia:120});
+			// records.push({time:now+300000,hr:90,rr:20,bp_sys:100,bp_dia:60});
+			// records.push({time:now+400000,hr:99,rr:20,bp_sys:103,bp_dia:90});
+			
+			
+			vs['records'] = records;
+	
+	
+	
+			med = {name:'medication',type:'med',show:true,params:[],records:null};
+			// med = {name:'medication',type:'med',show:true,params:['domicum','fentanyl','0.9%NSS'],records:null};
+			
+			records = [];
+			
+			// records.push({time:now,stop_time:now+20000,domicum:{r:3,v:300}});
+			// records.push({time:now+2000,stop_time:now+30000,fentanyl:{r:3,v:300}});
+			// records.push({time:now+30000,stop_time:now+50000,domicum:{r:3,v:300}});
+
+			med['records'] = records;
+	
+			components.push(vs);
+			components.push(med);
+
+	
+	
+			settings['components'] = components
+	
+			console.log(settings);
+	
+	
+			 var viewport = d3.select(".viewport").append("svg")
+    		 .attr("class", "info-svg")
+
+	     var g = viewport.append("g")
+		    .attr("transform", "translate(0,0)");
+		 gfx = GFX()
+		 .svg(g)
+		 .startTime(Date.now())
+		 .endTime(Date.now()+1000*3600)
+		 .viewport(d3.select(".viewport"));
+		 gfx.data(settings);
+		 d3.select("svg").call(gfx);
+
+		 window.addEventListener("resize", gfx.resize);
+		
+
+	
+   
+	var show = function(el){
+        return function(msg){ el.innerHTML = msg  }
+      }(document.getElementById('msgs'));
+	
+	  var ws       = new WebSocket('ws://' + window.location.host + "<%="/#{params[:gxt]}/Home/index"%>");
+	
+	  var plot_pos = {};
+	
+   ws.onopen    = function()  { show('websocket opened'); 
+	
+	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{params[:gxt]}/z/#{record.zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+	  };
+   ws.onclose   = function()  { show('websocket closed'); 
+		
+	 	setTimeout(function () {
+	 		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+	 		    }, 2000); //will call the function after 2 secs.
+	 		
+
+   }
+   ws.onmessage = function(m) { 
+	   
+	   // console.log(m)
+	   // show(m.data)
+	   
+	   lines = m.data.split("\n")
+	   
+	if(lines[0].split(" ")[0]=='ZoneUpdate'){
+
+	data = JSON.parse(lines[1])
+	   
+	   
+	for(var id in data['list']){
+		i = data['list'][id]
+		
+		
+		  obj = data['data'][i]
+	   
+	   	console.log(obj)
+		
+		$('.station-'+i+' .hn').html(obj['ref'])
+	
+		if($('.station-'+i+' .bp').html()!=obj['bp']){
+			$('.station-'+i).addClass('bp_alert');
+			$('.station-'+i).removeClass('bp_alert_2');
+			$('.station-'+i+' .msg').html("-");
+		}else{
+			$('.station-'+i).removeClass('bp_alert');
+			// $('#'+i).removeClass('bp_alert_2');
+			// $('#'+i+' .msg').html("-");
+		}
+	
+		$('.station-'+i+' .bp .value').html(obj['bp'])
+	
+		$('.station-'+i+' .temp .value').html(obj['temp'])
+	
+		$('.station-'+i+' .hr .value').html(obj['hr'])
+		$('.station-'+i+' .pr .value').html(obj['pr'])
+		$('.station-'+i+' .rr .value').html(obj['rr'])
+		$('.station-'+i+' .spo2 .value').html(obj['spo2'])
+	
+	
+		$('.station-'+i+' .score .value').html(obj['score'])
+	
+	    sos = parseInt(obj['score']);
+		color = 'none'
+		
+		if(sos<2)color='#262'
+		if(sos<4&&sos>=2)color='#662'
+		if(sos>=4)color='#622'
+		
+		
+		
+		
+		
+		
+		
+			bp = obj['bp'].split('/')
+			
+			hr = parseInt(obj['hr'])
+			pr = parseInt(obj['pr'])
+			spo2 = parseInt(obj['spo2'])
+			rr = parseInt(obj['rr'])
+			temp = parseInt(obj['temp'])
+			
+			
+			if(isNaN(hr))hr=0;
+			if(isNaN(pr))pr=0;
+			if(isNaN(spo2))spo2=0;
+			if(isNaN(rr))rr=0;
+			
+			if(isNaN(temp))rr=0;
+			
+			
+		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+			
+			gfx.tick({update:[{name:'vitalsign',append:vs}]});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	 }
+	 
+ }
+	 }}
+	 
+	 );
+	 
+	   
+</script>	   
+	   
+	   
+	   
+	   

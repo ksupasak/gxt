@@ -1,0 +1,38 @@
+
+	
+<% if request.post? 
+
+
+	
+if params[:record]
+
+	p = params[:record]
+	pros = EMSKProcess.where(:kworkflow_id=>p['kworkflow_id']).all
+	morder = pros.collect{|i| i.order}.compact.max
+	p['order'] = 1 
+	p['order'] = morder+1 if morder
+	record = EMSKProcess.create p
+			
+end
+	
+
+
+%>
+<!--<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>">-->
+<% if record%>
+บันทึกสำเร็จ
+
+<script>
+
+$("#record_order").val('')
+$("#record_name").val('')
+$("#record_name_en").val('')
+reloadProcess()
+</script>
+<% end #if record%>
+
+<% end #if request%>
+
+<script>
+	//refresh_remote()
+</script>

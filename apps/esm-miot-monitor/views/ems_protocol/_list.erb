@@ -1,0 +1,71 @@
+<div class="row">
+<div class="col-8 d-flex justify-content-center" style="background:#ccc;padding:20px">
+	<% if params[:id]%>
+	<%
+		
+	record = this.model.find params[:id]
+	
+	att = Attachment.find record.file_id 
+	
+	%>
+	
+	<div id="viewer">
+	<h1><%=record.name%></h1><br/>
+		<embed src="<%=att.path%>" width="800px" height="1200px" />
+	<br/>	
+	<%=link_to 'Edit',"edit?id=#{record.id}",:class=>'btn btn-info' %>
+	
+	</div>
+	
+	<% end %>
+	
+</div>	
+<div class="col-4">
+<table class="table table-striped">
+<%
+
+keys = %w{name group sort_order}.collect{|i| [i,i]}#this.model.keys.collect{|i| i unless i[0][0]=='_'}.compact
+
+%>
+<thead>
+	<tr>
+	<% for j in keys %>
+		<th><%=j[0] %></th>
+	<% end %>
+	<th></th>
+	</tr>
+</thead>
+<tbody>
+<%
+	for i in this.model.where({}).sort(:sort_order=>1, :name=>1).all
+%>
+<tr>
+	<% for j in keys %>
+
+  <% case j[0]
+
+  when 'group_id'  %>
+
+	<td><%=EMSCodeGroup.find(i[j[0]]).code %></td>
+
+  <% else %>
+  	<td><%=i[j[0]] %></td>
+ <% end %>
+
+  <% end %>
+	<td>
+		
+	<%=link_to 'Show',"index?id=#{i.id}",:class=>'btn btn-primary' %>
+	
+	<%=link_to 'Edit',"edit?id=#{i.id}",:class=>'btn btn-info' %>
+	<%=link_to 'Del',"destroy?id=#{i.id}",:class=>'btn btn-danger' %>
+	</td>
+</tr>
+<% end %>
+</tbody>
+</table>
+
+<a href="create" class="btn btn-success">Add Protocol</a>
+</div>
+
+</div>

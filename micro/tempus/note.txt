@@ -1,0 +1,12 @@
+accept = "application/json"
+content-type = "application/json"
+authorization = "ิbearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBRVNLZXkiOiI0cStOc1lyM0Jub1BpbFpHOG1uYzdWbG01aUhxRjZOeW9GOEdhSkVtZnpzPSIsIkFFU1ZlY3RvciI6ImltUXk2QllHVDV5dUprNk5GRFg0aWc9PSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJzbWFydF9lbXNAY2h1bGEuZ28udGgiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEuNDcuODcuMzIiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoiMiIsIklzUEhJSW5jbHVkZWQiOiIxIiwiSXNERUVuYWJsZWQiOiIxIiwiSXNQYXRpZW50RGVJZGVudGlmaWNhdGlvbkVuYWJsZWQiOiIxIiwiSGlzdG9yaWNBY2Nlc3MiOiIwIiwiRGF0YVR5cGUiOiJSZWFsIiwibmJmIjoxNjk0MTY3OTYwLCJleHAiOjE2OTQxNjk3NjAsImlzcyI6Imh0dHA6Ly9jb3JzaXVtc3VpdGUuY29tIiwiYXVkIjoiY29yc2l1bXN1aXRlLmNvbSJ9.wx7Qh2Z_gVyuApDifamlPQdTD2vn2ZUUzQlsByXAC0c"
+accept-encoding = "gzip;q=1.0,deflate;q=0.6,identity;q=0.3"
+user-agent = "Ruby"
+host = "corsium.com.au"
+
+
+{"refreshToken":"f79f387a-c84d-4e06-a015-746cc21181cb"}
+
+
+{"ErrorCode":"001","IsSuccessful":false,"DataType":null,"Data":null,"CRC":"e265"}

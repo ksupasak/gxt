@@ -1,0 +1,110 @@
+<%
+	
+if @current_user
+	
+%>
+<script>
+	$('.navbar').remove()
+	$('body').css('padding','0px')	
+</script>
+<% end %>
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/er_white.css')%>" rel="stylesheet">
+<link href="<%=url_for('css/health.css?=22')%>" rel="stylesheet">
+<%=inline(this,:'_init')%>
+<%=inline(this,:'_feed')%>
+<style>
+.data-panel{
+    background:white;
+    min-height:70vh;
+    margin-left:5vw;
+    margin-right:5vw;
+    box-shadow: 0px 3px 6px #00002950;
+
+}
+.step{
+    font-size:3vh;
+}
+</style>
+<div class="containerx" style="background:none">
+
+<div class="row banner-header justify-content-md-center" style="padding-bottom:20vh">
+    <div class="col-12">
+    <center>
+    <%=link_to @access_title, "index" %>
+    <br>
+    <span style="font-size:0.6em">ระบบบันทึกข้อมูลสุขภาพ</span>
+    </center>
+    </div><!--col-->    
+</div><!--banner-header-->
+
+<div class="row justify-content-md-center" style="margin-top:-20vh">
+    <div class="data-panel col-md-10 col-11 rounded">
+        <input type="hidden" id="hidstep" value="1">
+        <div class="step step1 p-3">
+        <center>
+            1.กรุณาสแกนบาร์โค้ด
+            
+        </center>
+        </div><!--step1-->
+        <div class="step step2 p-3">
+        <center>
+            2.กรุณาวัดความดัน
+        </center>
+        </div><!--step2-->
+        <div class="step step3 p-3">
+        <center>
+            3.กรุณาวัดอุณหภูมิร่างกาย
+        </center>
+        </div><!--step3-->
+        <div class="step step4 p-3">
+        <center>
+            4.กรุณาวัดค่าออกซิเจนในเลือด
+        </center>
+        </div><!--step4-->
+        <div class="step step5 p-3">
+        <center>
+            5.สรุปผลการวัดค่า
+            <br><br>ความดัน
+            <br>อุณหภูมิร่างกาย
+            <br>ออกซิเจนในเลือด
+        </center>
+        </div><!--step5-->     
+        <div class="step step6 p-3">
+        <center>
+            ส่งผลตรวจร่างกายสำเร็จ
+            <br><span style="color:green;font-size:30vh;"><i class="fas fa-check-circle"></i></span>
+        </center>
+        </div><!--step6-->              
+    </div>
+</div>   
+
+<div class="row " style="padding-top:5vh">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4 col-12">
+        <a href="#" class="btn btn-lg btn-primary" id="btn-next">ต่อไป</a>
+    </div>
+</div> 
+</div><!--container-->
+
+<script>
+function nextstep(){
+    s = $("#hidstep").val()
+    try{
+        i = parseInt(s)
+        i++
+        if(i==7) i=1
+        $(".step").hide()
+        $(".step"+i).show()
+        $("#hidstep").val(i)
+    }catch(e){}
+
+}
+$(document).ready(function(){
+    $("#btn-next").click(function(){
+        nextstep()
+    })
+    $(".step").hide()
+    $(".step1").show()
+})
+</script>

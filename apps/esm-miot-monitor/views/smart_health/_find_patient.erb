@@ -1,0 +1,82 @@
+<%
+params[:hn] = params[:hn].strip
+patient = Patient.where(:hn=>params[:hn]).first
+
+puts Patient.all.inspect 
+puts patient.inspect 
+
+unless patient 
+
+
+    ##############################################################  
+
+    his_get_patient_uri = URI("http://#{Setting.get(:gateway,'localhost')}:9292/get_patient_by_hn?hn=#{params[:hn]}")
+    
+    ##############################################################  
+  
+ 
+    
+    robj = {'hn'=>params[:hn]}
+  
+  
+    msg = nil
+  
+    begin
+  
+    content = "{}"    
+  
+  
+    req = Net::HTTP::Get.new(his_get_patient_uri.to_s)
+
+    # setting both OpenTimeout and ReadTimeout
+    res = Net::HTTP.start(his_get_patient_uri.host, his_get_patient_uri.port, :open_timeout => 0.5, :read_timeout => 0.5) {|http|
+
+         http.request(req)
+
+    }
+	
+	
+	content = res.body
+		
+	rx = JSON.parse(content)
+	
+	if rx['status'] == '200 OK'
+		
+		robj.merge! rx['record']
+		
+  
+		patient = Patient.create :hn=>robj['hn'], :first_name=>robj['first_name'], :last_name=>robj['last_name'], :prefix_name=>robj['prefix_name'], :gender=>robj['gender'], :dob=>robj['birth_date']
+	
+	else
+	
+		patient = Patient.where(:hn=>params[:hn]).first 
+		
+		patient = Patient.new :hn=>params[:hn] unless patient 
+	
+	end
+	
+
+	rescue Net::ReadTimeout => exception
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (ReadTimeout)"
+	        msg = "NOT reachable (ReadTimeout)"
+	   #      sleep 10
+	rescue Net::OpenTimeout => exception
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+	        msg = "NOT reachable (OpenTimeout)"
+	       #  sleep 10
+	rescue Exception =>exception        
+	        # STDERR.puts "#{seca_uri.host}:#{seca_uri.port} is NOT reachable (OpenTimeout)"
+	        msg = exception.to_s
+    end
+
+	puts msg
+	
+end
+
+
+patient = Patient.new :hn=>params[:hn] unless patient 
+
+
+@current_zone = Zone.find session[:current_zone]
+puts patient.inspect 
+%><%=patient.to_json%>

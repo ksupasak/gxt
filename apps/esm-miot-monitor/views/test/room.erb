@@ -1,0 +1,29 @@
+<%
+
+	host = 'prod.vidyo.io'
+	
+	ambulances = Ambulance.all
+	
+	display_name = 'demoUser47569'
+	
+	out = `node apps/esm-miot-monitor/lib/vidyo.js --key #{Setting.get :vidyo_key} --app #{Setting.get :vidyo_app_id} --userName Soup2 --expiresInSecs 3000`
+	out = out.split("\n")
+	token = out[-1]
+	
+	
+
+
+%>
+<%=out.inspect %>
+<%
+
+	for i in ambulances 
+		
+		
+		resource_id = i.name
+%>
+
+<a href='https://static.vidyo.io/latest/connector/VidyoConnector.html?host=<%=host%>&autoJoin=1&resourceId=<%=resource_id%>&displayName=<%=display_name%>&token=<%=token%>'>Call <%=i.name%></a>
+<br/>
+
+<% end %>

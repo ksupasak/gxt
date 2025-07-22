@@ -1,0 +1,452 @@
+<%
+
+
+	ems_case = EMSCase.find params[:id]
+
+	patient_status = ""
+	case_note = ""
+	patient_status_cls = ""
+
+
+
+
+
+
+	case_status = EMSCasePatientStatus.where(:case_id=>ems_case.id).last
+    
+	
+	cs = nil
+	cs_att = nil
+	
+    global_items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
+
+		{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
+
+	}
+	
+	
+	if   case_status and cs = EMSPatientStatus.find(case_status.patient_status_id)
+
+
+		cs_att = Attachment.find(cs.img_2)
+
+		patient_status = case_status.title
+		patient_status_cls = 'btn btn-danger'
+
+		patient_status_cls = 'btn' if cs.color=='normal'
+
+		case_note = "<span id='status-at'>#{format("%.1fs",(Time.now-case_status.created_at).to_i/60.0)}</span>"
+
+		status_protocol = EMSPatientStatus.find case_status.patient_status_id
+
+		status_items = EMSPatientStatusItem.where(:patient_status_id=>status_protocol.id).sort(:sort_order=>1).all
+
+
+
+	  # items = EMSAssessment.where(:id=>{'$in'=>status_items.collect{|i| i.assessment_id }}).sort(:sort_order=>1).all + EMSAssessment.where("$or"=>[{:group=>"status"},{:type=>"patient_status"}]).sort(:sort_order=>1).all
+
+   
+
+
+		items = []
+
+		for i in status_items
+
+			item = EMSAssessment.find i.assessment_id
+
+			unless item
+
+			i.destroy
+
+		    else
+
+				its = [item]
+
+				if item.type=='group'
+						iss = EMSAssessment.where(:group=>item.code).all
+						its += iss
+				end
+
+				for item in its
+			
+					nitem = EMSAssessment.new item.attributes
+
+					data = {}
+					data = JSON.parse(nitem.data) if nitem.data and nitem.data!=""
+					data = data.merge(JSON.parse(i.data)).to_json  if i.data and i.data!=""
+
+					nitem.data = data.to_json
+					nitem.position = i.position
+					items << {:i=>nitem,:data=>data, :item=>i, :position=>nitem.position}
+
+				end
+
+		  end
+
+		end
+
+
+
+
+	else
+
+
+	    items = EMSAssessment.where({}).sort(:sort_order=>1).all.collect{|i|
+
+				{:i=>i, :data=>i.data, :item=>i, :position=>i.position }
+
+			}
+
+
+	end
+
+
+
+
+  labels = ['CPR Record', 'EKG','Treatment',  'Med', 'Protocal', 'Status']
+  groups = %w{track ekg proc med emr status}
+  #groups = %w{track assessment proc med emr status}
+
+  sub_groups = {}
+  map = {}
+  gmap = {}
+
+  for it in items
+
+		i =it[:i]
+
+    if i.type=='group'
+        labels << i.name
+        groups << i.code
+        sub_groups[i.code]=true
+    end
+	
+    map[i.group] = [] unless map[i.group]
+    map[i.group] << it
+
+	
+
+  end
+
+
+  
+
+  for it in global_items
+
+	i = it[:i]
+
+    if i.type=='group'
+        labels << i.name
+        groups << i.code
+        sub_groups[i.code]=true
+    end
+	
+    gmap[i.group] = [] unless gmap[i.group]
+    gmap[i.group] << it
+
+	
+
+  end
+
+%>
+<br/>
+
+<div class="row g-2">
+
+<% groups.each_with_index do |g,gi| %>
+<%
+  unless sub_groups[g]
+%>
+<div class="col-12 col-md-6 col-xl-4  mb-3">
+<a href="#" class="dispatch_group btn  btn-sm bg-gradient btn-primary w-100"  data-bs-toggle="modal"  data-bs-target="#dispatch_<%=g%>" name="<%=g%>" > <%=labels[gi]%></a>
+</div>
+<% end %>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="dispatch_<%=g%>" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog  modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%=labels[gi]%> :
+		<span class="<%=patient_status_cls%>"><%=patient_status%></span> <span class="<%=patient_status_cls%>"><%=case_note%></span>
+		</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+				<% if cs_att %>
+				<div class="col">
+						<img src="<%=cs_att.path %>" style="width:100%">
+				</div>
+				<% end %>
+				<div class="col">
+      <div class="row">
+        <% 
+		list = []
+		list = map[g] if map[g]
+		list = gmap[g] unless map[g]
+		
+			
+	    if list
+		
+          for it in list
+
+			i = it[:i]
+		%>
+        <div class="col-12 mt-3">
+    
+		  <a href="#" class="dispatch_item btn bg-gradient btn-primary w-100 <%=it[:position]%>"  code="<%=i.code%>" item="<%=it[:item].id if it[:item]%>"> <%=i.name%></a>
+        </div>
+        <% end %>
+       <% end %>
+       
+
+      </div>
+				<br/>
+	</div>
+
+</div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<% end %>
+
+</div>
+
+<div class="hidden status-placement" style="display:none;">
+<div class="row">
+<a href="#" class="status-img-btn col-8"> <span class="<%=patient_status_cls%> col-12"><%=patient_status%> </span></a>
+<a href="#" class="status-img-btn col-4"> <span class="<%=patient_status_cls%> col-12"> <%=case_note%></span></a>
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="status-img-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">	<%=cs.title if cs%> Guildline	</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+				<%
+					if cs_att
+				%>
+				
+				<img src="<%=cs_att.path %>" style="width:100%">
+
+				<% end %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="free-text" tabindex="-1" aria-hidden="true">
+	<form id="form-free" action="#" method="post">
+  <div class="modal-dialog modal-md modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dispatch-free_text-title" >Free Text</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+				<input type="text" name="name" id="dispatch-free_text" value="" rows="8" cols="80">
+
+
+      </div>
+
+      <div class="modal-footer">
+				<button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+ </form>
+</div>
+
+<script>
+
+</script>
+
+
+
+<script>
+
+
+  var commands = <%=global_items.collect{|i| i[:i]}.to_json%>
+
+
+  
+
+  function dispatch_command(cmd,item,ref_id){
+
+	 
+    found = null;
+    assessment_id = null;
+
+		console.log(""+cmd+" item "+item+" ref="+ref_id);
+
+    for(var ci in commands){
+      c = commands[ci]
+      if(c['code']==cmd){
+        found = c;
+      }
+    }
+
+    if(found!=null){
+
+      console.log(found)
+      assessment_id = found['_id']
+
+		
+
+    }
+	
+    if(found!=null&&found['type']=='group'){
+		
+        $('#dispatch_'+found['code']).modal('show')
+
+    }else
+		if(found!=null&&found['type']=='text'){
+			  $('#free-text').modal('show')
+			   text = $('#dispatch-free_text')
+			
+			   
+			   text.focus();
+			   if(found['data']!=null&&found['data'].length>0){
+			   	
+				   data = JSON.parse(found['data'])
+				   if(data['default']){
+				   	$('#dispatch-free_text-title').html(data['name'])
+					 text.val(data['default'])
+					
+				   }
+				
+			   }else{
+					console.log(found['name'])
+				   text.val(found['name'])
+			   }
+			   
+		}else if(found!=null&&found['type']==''){
+			
+			$('#free-text').modal('show')
+			text = $('#dispatch-free_text')
+			text.focus();
+			text.val(found['name'])
+		}
+
+    else{
+
+      var url = "<%=get_path "dispatch_process" %>?id="+ems_case_id+"&admit_id="+ message_admit_id+"&item="+item+"&ref_id="+ref_id;
+
+      $.ajax({
+             type: "POST",
+             url: url,
+             data: {cmd:cmd, assessment_id: assessment_id }, // serializes the form's elements.
+             success: function(data)
+             {
+
+              $('#dispatch-panel').html(data)
+
+                 // $('#nurse_note-partial').html(data)// show response from the php script.
+           // $('#admit-modal').modal('toggle');
+           // $('#form-autocomplete').val("");
+             }
+      });
+
+    }
+
+
+  }
+
+    $('.dispatch_item').click(function(e){
+
+      cmd = $(this).attr('code')
+	  item = $(this).attr('item')
+		
+      dispatch_command(cmd, item, null)
+      $('.modal').modal('hide');
+
+      e.preventDefault();
+
+    })
+
+		$(document).ready(function(){
+
+				$('.status').html($(".status-placement").html());
+				$('.status-img-btn').click(function(){
+
+					$('#status-img-modal').modal('show');
+				})
+
+		})
+
+		<% if case_status %>
+
+		function update_status_at(){
+
+
+			// Get today's date and time
+			var now = new Date().getTime();
+
+
+			// Find the distance between now and the count down date
+			var distance = now - Date.parse(<%=case_status.created_at.to_json %>);
+
+			// Time calculations for days, hours, minutes and seconds
+			var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+			// Display the result in the element with id="demo"
+			result = ""
+
+			if(days>0) result+=  days + "d "
+			if(hours>0) result+=  hours + "h "
+			if(minutes>0) result+=  minutes + "m "
+			if(hours==0)
+		  result += seconds + "s ";
+
+				$('#status-at').html(result)
+
+
+		}
+
+		if(interval!=null) clearInterval(interval);
+		interval = setInterval(update_status_at, 1000);
+
+		<% end %>
+
+
+
+
+	$("#form-free").submit(function(e) {
+
+		e.preventDefault();
+		text  = $('#dispatch-free_text').val()
+		$('#dispatch-free_text').val("")
+		$('#free-text').modal('hide');
+		dispatch_command(text);
+
+		return false;
+	});
+</script>

@@ -1,0 +1,237 @@
+@import url("https://fonts.googleapis.com/css2?family=Sarabun&display=swap");
+
+body {
+  background-color: #000000;
+  color: #C2C2C2;
+  font-family: "Sarabun", sans-serif;
+}
+
+.navbar-pcm {
+  /* background-color: #06202E; */
+  background: transparent linear-gradient(180deg, #03121a  0%, #06202E 40%, #06202E 100%) 0%
+    0% no-repeat padding-box;
+}
+/* change the brand and text color */
+.navbar-pcm .navbar-brand,
+.navbar-pcm .navbar-text{
+  color: #C2C2C2;
+}
+.navbar-pcm .navbar-toggler-icon{
+  color: #C2C2C2 !important;
+}
+/* change the link color */
+.navbar-pcm .navbar-nav .nav-link {
+  color: #C2C2C2;
+}
+/* change the color of active or hovered links */
+.navbar-pcm .nav-item.active .nav-link,
+.navbar-pcm .nav-item:hover .nav-link {
+  color: #ffffff;
+}
+.navbar-pcm .nav-item.active {
+border-bottom: 2px solid var(--active-blue);
+}
+.btn-pcm{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  0% no-repeat padding-box;
+}
+.btn-pcm2{
+  color:#E1E1E1;
+  background: transparent linear-gradient(180deg, #686E71  0%, #1E1E1E 100%) 0%
+  0% no-repeat padding-box;
+}
+.panel-pcm{
+  background:#06202E;
+  border-radius: 1vh;
+  padding: 1vh;
+  margin: 0.4vh;
+}
+.panel-active{
+  border:2px solid var(--active-blue);
+}
+.panel-normal{
+  border:2px solid #686E71;
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    font-size: 14px;
+  }
+
+  .stepper {
+      font-size: x-small;
+      padding-left: 0px;
+  }
+}
+
+.img-circle {
+  border-radius: 50%;
+}
+
+.footer-nav {
+  /* background-color: var(--secondary-nav) !important; */
+  height: 2rem;
+}
+
+
+/*AOC MOBILE index */
+.m-header {
+  color: var(--primary-font);
+}
+.m-footer {
+  background-color: var(--secondary-nav);
+  height: 4rem;
+  position: fixed;
+}
+
+.ambulance:hover , .tracking:hover , .share:hover {
+  background: var(--primary-blue);
+  color: var(--primary-font);
+}
+
+.m-admit {
+  background-color: var(--secondary-nav);
+  border-radius: 5px;
+  height: 65px;
+  color: var(--secondary-font);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-allocate {
+  background-color: var(--dark-blue);
+  border: 3px solid var(--dark-border);
+  border-radius: 5px;
+  height: 65px;
+  color: var(--secondary-font);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*AOC MOBILE show */
+.m-textarea {
+  background: var(--secondary-nav);
+  color: var(--primary-font);
+}
+
+.m-textarea:focus {
+  background: var(--secondary-nav);
+  color: var(--primary-font);
+}
+
+.ambu-name {
+  color: var(--primary-font);
+}
+
+.alert-patient {
+  color: var(--secondary-font);
+  background-color: var(--dark-blue);
+}
+
+.time-alert {
+  color: var(--time-green);
+}
+
+.primary-nav{
+	background:#151C26;
+} 
+
+.secondary-nav{
+	background:#17222F;
+} 
+
+.primary-bg{
+	background:#000;
+}
+
+
+.secondary-bg{
+	background:#13171D;
+}
+
+.primary-blue{
+	background:#2437C6;
+} 
+
+.secondary-blue{
+	background:#36465E;
+} 
+
+.dark-blue{
+	background:#01174F;
+} 
+
+.dark-border{
+	background:#2A2F47;
+} 
+
+.primary-font{
+	background:#DADADB;
+}
+
+.secondary-font{
+	background:#C2C2C2;
+} 
+
+.dark-font{
+	background:#686E71;
+}
+
+.time-green{
+	background:#42B7AB;
+} 
+.alert-yellow{
+	background:#FFC107;
+} 
+
+.alert-red{
+	background:#FF5D5D;
+}
+
+/*Style for landing*/
+.body-landing {
+  background: rgb(6,32,46);
+  background: linear-gradient(180deg, rgba(6,32,46,1) 0%, rgba(0,73,110,1) 100%);
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  
+}
+
+.landing-logo {
+  width: 450px;
+  height: auto;
+  }
+
+.landing-img {
+  width: auto;
+  height: 250px;
+}
+
+.landing-content {
+  line-height: 1.8;
+}
+
+.landing-title {
+  color: white !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

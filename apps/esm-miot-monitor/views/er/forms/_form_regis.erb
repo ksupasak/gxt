@@ -1,0 +1,612 @@
+<%= inline(this,:'_init')  %>
+            <div class="row">
+                <!-- Case Details -->
+                <div class="col-md-6">
+                    <h4>Case Details</h4>
+                    <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Case No</label>
+                        <input type="text" class="form-control" name="record[case_no]" value="<%= record['case_no'] %>">
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Case Type</label>
+                        <select class="form-select" name="record[case_type]">
+                            <% ['EMS', 'Refer','Walk-in'].each do |option| %>
+                                <option value="<%= option %>" <%= 'selected' if record['case_type'] == option %>><%= option %></option>
+                            <% end %>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-4">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" name="record[department]">
+                            <option value="">-</option>
+                            <% ERDepartment.all.each do |department| %>
+                                <option value="<%= department.name %>" <%= 'selected' if record['department'] == department.name %>><%= department.name %></option>
+                            <% end %>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="mb-3  col-md-6">
+                        <label class="form-label">Patient Type</label>
+                        <select class="form-select" name="record[patient_type]">
+                        <option value="">-</option>
+                        <option value="trauma" <%= 'selected' if record['patient_type'] == 'trauma' %> >Trauma</option>
+                        <option value="non-trauma" <%= 'selected' if record['patient_type'] == 'non-trauma' %> >Non-Trauma</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label class="form-label">Reimbursement</label>
+                        <select class="form-select" name="record[reimbursement_id]">
+                            <option value="">-</option>
+                            <% Reimbursement.all.each do |reimbursement| %>
+                                <option value="<%= reimbursement.id %>" <%= 'selected' if record['reimbursement_id'] == reimbursement.id %>><%= reimbursement.name %></option>
+                            <% end %>
+                        </select>
+                    </div>
+                    </div>
+                    
+                      <% unless record['date'] 
+
+                        record['date'] = Time.now
+                    
+                     end %>
+                    <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="visitDate" class="form-label">วันที่เข้ารับบริการ</label>
+                        <input type="date" 
+                               class="form-control" 
+                               id="visitDate" 
+                               name="visit_date"
+                               value="<%= record.date&.strftime('%Y-%m-%d') || Date.today.strftime('%Y-%m-%d') %>"
+                        >
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label for="visitTime" class="form-label">เวลาที่เข้ารับบริการ</label>
+                        <input type="time" 
+                               class="form-control" 
+                               id="visitTime" 
+                               name="visit_time"
+                               value="<%= record.date&.strftime('%H:%M') || Time.now.strftime('%H:%M') %>"
+                        >
+                    </div>
+                </div>
+                
+
+                  <% textareas = [
+                      { id: 'chiefComplaint', name: 'record[chief_complain]', label: 'Chief Complaint', value: record['chief_complain'] },
+                    ] %>
+
+                    <% textareas.each do |textarea| %>
+                      <div class="mb-3">
+                        <label class="form-label"><%= textarea[:label] %></label>
+                        <div class="input-group voice-input-group">
+                          <textarea class="form-control" 
+                                    name="<%= textarea[:name] %>" 
+                                    id="<%= textarea[:id] %>Text"><%= textarea[:value] %></textarea>
+                          <button class="btn btn-outline-secondary start-recording" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-microphone"></i>
+                          </button>
+                          <button class="btn btn-outline-danger stop-recording d-none" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-stop"></i>
+                          </button>
+                          <button class="btn btn-outline-warning clear-text" 
+                                  type="button" 
+                                  data-target="<%= textarea[:id] %>">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                        <div id="<%= textarea[:id] %>LiveTranscript" class="form-text text-primary"></div>
+                        <small class="text-muted" id="<%= textarea[:id] %>Status"></small>
+                      </div>
+                    <% end %>
+
+                  
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" name="record[status]">
+                            <% ['New','Pending', 'Admitted', 'Discharged', 'Referred'].each do |option| %>
+                                <option value="<%= option %>" <%= 'selected' if record['status'] == option %>><%= option %></option>
+                            <% end %>
+                        </select>
+                    </div>
+               
+                <div class="col-md-4">
+                    <label class="form-label">Referred To</label>
+                    <input type="text" class="form-control" name="record[referred_to]" value="<%= record['referred_to'] %>">
+                </div>
+                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">Monitor</label>
+                        <select class="form-select" name="admit[station_id]">
+                        <option value="">-</option>
+                        <% 
+                            if record['admit_id']
+                                station_id = Admit.find(record['admit_id']).station_id
+                            else
+                                station_id = nil
+                            end
+
+                            Station.where(:zone_id=>@current_zone.id).all.each do |station| 
+                           
+                        %>
+                            <option value="<%= station.id %>" <%= 'selected' if station_id == station.id %>><%= station.name %></option>
+                        <% end %>
+                        </select>
+                  
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">Remark</label>
+                        <div class="input-group voice-input-group">
+                            <textarea class="form-control" 
+                                      name="record[remark]" 
+                                      id="remarkText"><%= record['remark'] %></textarea>
+                            <button class="btn btn-outline-secondary start-recording" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="btn btn-outline-danger stop-recording d-none" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <button class="btn btn-outline-warning clear-text" 
+                                    type="button" 
+                                    data-target="remark">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div id="remarkLiveTranscript" class="form-text text-primary"></div>
+                        <small class="text-muted" id="remarkStatus"></small>
+                    </div>
+                </div>
+
+
+  </div>
+                      <!-- Patient Details -->
+                <div class="col-md-6">
+                    <div class="row">
+                    <h4>Patient Details</h4>
+                    <div class="mb-3 col-6">
+                        <label class="form-label">HN</label>
+                        <input type="text" class="form-control" name="patient[hn]" value="<%= patient['hn'] %>">
+                    </div>
+                    <div class="mb-3 col-6">
+                        <label class="form-label">Public ID</label>
+                        <input type="text" class="form-control" name="patient[public_id]" value="<%= patient['public_id'] %>">
+                    </div>
+                    <div class="mb-3 col-12">
+                        <label class="form-label">Patient Name</label>
+                        <div class="row">
+                        <div class="col-2">
+                        <input type="text" class="form-control " name="patient[prefix_name]" value="<%= patient['prefix_name']%>"  placeholder="prefix" >
+                        </div>
+                        <div class="col-5">
+                        <input type="text" class="form-control " name="patient[first_name]" value="<%= patient['first_name']%>"   placeholder="first_name">
+                        </div>
+                        <div class="col-5">
+                        <input type="text" class="form-control " name="patient[last_name]" value="<%= patient['last_name']%>"   placeholder="last_name" >
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="mb-3 col-4">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" name="patient[gender]">
+                            <% ['Male', 'Female', 'Other'].each do |option| %>
+                                <option value="<%= option %>" <%= 'selected' if record['patient_gender'] == option %>><%= option %></option>
+                            <% end %>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-4">
+                        <label class="form-label">Birth Date</label>
+                        <input type="date" 
+                               class="form-control" 
+                               name="patient[dob]" 
+                               value="<%= patient['dob']&.strftime('%Y-%m-%d') if patient['dob'] %>"
+                               max="<%= Date.today.strftime('%Y-%m-%d') %>"
+                        >
+                    </div>
+                    <div class="mb-3 col-4">
+                        <label class="form-label">Nationality</label>
+                        <input type="text" class="form-control" name="patient[nationality]" value="<%= patient['nationality'] %>">
+                    </div>
+                    </div>
+                              <h4>Contact Details</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Name</label>
+                        <input type="text" class="form-control" name="record[contact_name]" value="<%= record['contact_name'] %>">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Phone</label>
+                        <input type="text" class="form-control" name="record[contact_phone]" value="<%= record['contact_phone'] %>">
+                    </div>
+                </div>
+
+
+            </div>
+
+       
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ตั้งค่าวันที่ปัจจุบัน
+        const today = new Date().toISOString().split('T')[0];
+        const now = new Date().toTimeString().slice(0,5);
+        
+        // ถ้าไม่มีค่าใน input จะใช้ค่าปัจจุบัน
+        if (!document.getElementById('visitDate').value) {
+            document.getElementById('visitDate').value = today;
+        }
+        if (!document.getElementById('visitTime').value) {
+            document.getElementById('visitTime').value = now;
+        }
+
+        if (!('webkitSpeechRecognition' in window)) {
+            document.querySelectorAll('.start-recording').forEach(btn => btn.style.display = 'none');
+            return;
+        }
+
+        // เพิ่มตัวแปรเก็บสถานะการแก้ไขฟอร์ม
+        let formChanged = false;
+        
+        // ฟังก์ชันติดตามการเปลี่ยนแปลงของฟอร์ม
+        function trackFormChanges() {
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    formChanged = true;
+                });
+                input.addEventListener('keyup', () => {
+                    formChanged = true;
+                });
+            });
+        }
+
+        // เพิ่มการแจ้งเตือนเมื่อออกจากหน้า
+        window.addEventListener('beforeunload', (e) => {
+            if (formChanged) {
+                e.preventDefault();
+                e.returnValue = 'คุณมีข้อมูลที่ยังไม่ได้บันทึก ต้องการออกจากหน้านี้หรือไม่?';
+                return e.returnValue;
+            }
+        });
+
+        // เพิ่มการแจ้งเตือนเมื่อเปลี่ยน tab
+        const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+        tabButtons.forEach(button => {
+            button.addEventListener('show.bs.tab', (event) => {
+                if (formChanged) {
+                    if (!confirm('คุณมีข้อมูลที่ยังไม่ได้บันทึก ต้องการเปลี่ยน tab หรือไม่?')) {
+                        event.preventDefault();
+                    }
+                }
+            });
+        });
+
+        // เพิ่มการรีเซ็ตสถานะเมื่อบันทึกฟอร์ม
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', () => {
+                formChanged = false;
+            });
+        }
+
+        // เริ่มติดตามการเปลี่ยนแปลง
+        trackFormChanges();
+
+        class VoiceInput {
+            constructor(targetId) {
+                this.targetId = targetId;
+                this.recognition = new webkitSpeechRecognition();
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = 'th-TH';
+                
+                this.textArea = document.getElementById(`${targetId}Text`);
+                this.startButton = document.querySelector(`.start-recording[data-target="${targetId}"]`);
+                this.stopButton = document.querySelector(`.stop-recording[data-target="${targetId}"]`);
+                this.clearButton = document.querySelector(`.clear-text[data-target="${targetId}"]`);
+                this.liveTranscript = document.getElementById(`${targetId}LiveTranscript`);
+                this.status = document.getElementById(`${targetId}Status`);
+                
+                this.isRecognitionPaused = false;
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                this.recognition.onstart = () => {
+                    this.status.textContent = 'กำลังบันทึกเสียง...';
+                    this.startButton.classList.add('d-none');
+                    this.stopButton.classList.remove('d-none');
+                    this.liveTranscript.textContent = '';
+                };
+
+                this.recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    let finalTranscript = this.textArea.value || '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript = finalTranscript.trim() + ' ' + transcript;
+                            this.liveTranscript.textContent = '';
+                        } else {
+                            interimTranscript = transcript;
+                            this.liveTranscript.textContent = '🎤 ' + interimTranscript;
+                        }
+                    }
+
+                    this.textArea.value = finalTranscript.trim();
+                    formChanged = true;
+                };
+
+                this.recognition.onerror = (event) => {
+                    this.status.textContent = 'เกิดข้อผิดพลาด: ' + event.error;
+                    this.liveTranscript.textContent = '';
+                    this.stopRecording();
+                };
+
+                this.recognition.onend = () => {
+                    this.stopRecording();
+                    this.liveTranscript.textContent = '';
+                };
+
+                this.startButton.addEventListener('click', () => {
+                    try {
+                        this.recognition.start();
+                    } catch (e) {
+                        console.error('Speech recognition error:', e);
+                        this.status.textContent = 'กรุณารีเฟรชหน้าและลองใหม่อีกครั้ง';
+                    }
+                });
+
+                this.stopButton.addEventListener('click', () => this.stopRecording());
+                
+                this.clearButton.addEventListener('click', () => {
+                    this.textArea.value = '';
+                    this.liveTranscript.textContent = '';
+                    formChanged = true;
+                });
+            }
+
+            stopRecording() {
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+                this.status.textContent = 'หยุดบันทึกเสียง';
+                this.startButton.classList.remove('d-none');
+                this.stopButton.classList.add('d-none');
+            }
+        }
+
+        // สร้าง VoiceInput instance สำหรับแต่ละ textarea
+        const voiceInputs = ['chiefComplaint', 'underlying', 'diagnosis', 'remark'].map(
+            id => new VoiceInput(id)
+        );
+
+        // เพิ่มปุ่มบันทึกแบบ floating
+        const saveButton = document.createElement('button');
+        saveButton.className = 'btn btn-primary position-fixed';
+        saveButton.style.cssText = 'bottom: 20px; right: 20px; z-index: 1000; display: none;';
+        saveButton.innerHTML = '<i class="fas fa-save"></i> บันทึก';
+        document.body.appendChild(saveButton);
+
+        // แสดงปุ่มบันทึกเมื่อมีการเปลี่ยนแปลง
+        const observer = new MutationObserver(() => {
+            saveButton.style.display = formChanged ? 'block' : 'none';
+        });
+
+        observer.observe(document.body, {
+            subtree: true,
+            childList: true,
+            characterData: true
+        });
+
+        // เพิ่มฟังก์ชันสำหรับเก็บข้อมูลฟอร์ม
+        function collectFormData() {
+            return {
+                record: {
+                    case_no: document.querySelector('input[name="record[case_no]"]').value,
+                    case_type: document.querySelector('select[name="record[case_type]"]').value,
+                    patient_type: document.querySelector('input[name="record[patient_type]"]').value,
+                    reimbursement_id: document.querySelector('select[name="record[reimbursement_id]"]').value,
+                    date: document.getElementById('visitDate').value + ' ' + document.getElementById('visitTime').value,
+                    status: document.querySelector('select[name="record[status]"]').value,
+                    chief_complain: document.getElementById('chiefComplaintText').value,
+                    patient_underlying: document.getElementById('underlyingText').value,
+                    diagnosis: document.getElementById('diagnosisText').value,
+                    remark: document.getElementById('remarkText').value,
+                    patient_weight: document.querySelector('input[name="record[patient_weight]"]').value,
+                    patient_height: document.querySelector('input[name="record[patient_height]"]').value,
+                    patient_bmi: document.querySelector('input[name="record[patient_bmi]"]').value,
+                    contact_name: document.querySelector('input[name="record[contact_name]"]').value,
+                    contact_phone: document.querySelector('input[name="record[contact_phone]"]').value
+                },
+                patient: {
+                    hn: document.querySelector('input[name="patient[hn]"]').value,
+                    public_id: document.querySelector('input[name="patient[public_id]"]').value,
+                    prefix_name: document.querySelector('input[name="patient[prefix_name]"]').value,
+                    first_name: document.querySelector('input[name="patient[first_name]"]').value,
+                    last_name: document.querySelector('input[name="patient[last_name]"]').value,
+                    gender: document.querySelector('select[name="patient[gender]"]').value,
+                    dob: document.querySelector('input[name="patient[dob]"]').value,
+                    nationality: document.querySelector('input[name="patient[nationality]"]').value
+                }
+            };
+        }
+
+        // แก้ไขปุ่มบันทึกให้ใช้ AJAX
+        saveButton.addEventListener('click', async () => {
+            const formData = collectFormData();
+            try {
+                const response = await fetch('/er_case/<%= record.id %>/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    formChanged = false;
+                    saveButton.style.display = 'none';
+                    
+                    // แสดง Toast notification
+                    showNotification('บันทึกข้อมูลสำเร็จ', 'success');
+                    
+                    // อัพเดตข้อมูลในส่วนแสดงผล
+                    updateDisplayData(formData);
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                showNotification('เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
+            }
+        });
+
+        // ฟังก์ชันแสดง notification
+        function showNotification(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+            
+            const container = document.createElement('div');
+            container.className = 'toast-container position-fixed top-0 end-0 p-3';
+            container.appendChild(toast);
+            document.body.appendChild(container);
+            
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            setTimeout(() => {
+                container.remove();
+            }, 3000);
+        }
+
+        // ฟังก์ชันอัพเดตข้อมูลที่แสดงในหน้า
+        function updateDisplayData(formData) {
+            // อัพเดต Patient Info Section
+            const patientInfoElements = {
+                'hn': formData.patient.hn,
+                'chief_complain': formData.record.chief_complain,
+                'remark': formData.record.remark
+            };
+
+            Object.entries(patientInfoElements).forEach(([key, value]) => {
+                const element = document.querySelector(`[data-field="${key}"]`);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+
+            // บันทึกข้อมูลลง localStorage สำหรับกรณีที่ต้องกู้คืน
+            localStorage.setItem('lastSavedData', JSON.stringify({
+                timestamp: new Date().toISOString(),
+                data: formData
+            }));
+        }
+
+        // เพิ่มการกู้คืนข้อมูลอัตโนมัติ
+        function restoreFormData() {
+            const savedData = localStorage.getItem('lastSavedData');
+            if (savedData) {
+                const { timestamp, data } = JSON.parse(savedData);
+                const saveTime = new Date(timestamp);
+                const now = new Date();
+                const timeDiff = (now - saveTime) / 1000 / 60; // เวลาที่ผ่านไปเป็นนาที
+
+                // ถ้าข้อมูลเก่าไม่เกิน 30 นาที จะถามผู้ใช้ว่าต้องการกู้คืนหรือไม่
+                if (timeDiff <= 30) {
+                    if (confirm('พบข้อมูลที่ยังไม่ได้บันทึก ต้องการกู้คืนข้อมูลหรือไม่?')) {
+                        // กู้คืนข้อมูลในฟอร์ม
+                        Object.entries(data.record).forEach(([key, value]) => {
+                            const input = document.querySelector(`[name="record[${key}]"]`);
+                            if (input) input.value = value;
+                        });
+
+                        Object.entries(data.patient).forEach(([key, value]) => {
+                            const input = document.querySelector(`[name="patient[${key}]"]`);
+                            if (input) input.value = value;
+                        });
+                    }
+                }
+                localStorage.removeItem('lastSavedData');
+            }
+        }
+
+        // เรียกใช้ฟังก์ชันกู้คืนข้อมูลเมื่อโหลดหน้า
+        restoreFormData();
+    });
+</script>
+
+<style>
+/* เพิ่ม CSS สำหรับปุ่มบันทึกแบบ floating */
+.btn-primary.position-fixed {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-primary.position-fixed:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* เพิ่ม CSS สำหรับปุ่มบันทึกเสียง */
+.voice-input-group .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.voice-input-group .btn i {
+    font-size: 1rem;
+}
+
+#remarkLiveTranscript {
+    min-height: 20px;
+    margin-top: 5px;
+}
+
+.voice-input-group .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.voice-input-group .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.voice-input-group .btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: black;
+}
+</style>

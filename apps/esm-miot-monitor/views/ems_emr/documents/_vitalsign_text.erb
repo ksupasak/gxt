@@ -1,0 +1,26 @@
+<% require_relative 'lib'
+  @record = record
+  r = @record.data
+
+  list = %w{ sbp pr o2sat temp rr gcs dtx }
+  rs = []
+   for i in list
+%><%
+    if r["#{i}"] || i=='gcs'
+	
+	v = r[i]
+	
+	if i=='sbp'
+	
+		v = "#{r['sbp']}/#{r['dbp']}"
+		i = 'bp'	
+	elsif i=='gcs'
+    v = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
+  end	
+	
+
+
+	rs << "#{i.upcase} : #{v}" if v != "" && v != "-" && v!= " " && v != "/"
+		
+		
+%><% end %><% end %><%=rs.join(", ")%>

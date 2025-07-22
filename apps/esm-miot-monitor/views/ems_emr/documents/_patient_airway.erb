@@ -1,0 +1,55 @@
+<% require_relative 'lib'%>
+<%
+  @record = record
+%>
+<div class="col-12">
+<div class="card-title d-flex align-items-center">
+			<h5 class="mb-0 text-primary">Airway :</h5>
+</div>
+
+<%= check_string this, 'airway_assessment' %>
+<div class="row">
+<div class="col-2">
+</div>
+<div class="col-10">
+<%= radio_string this, 'airway', :value=>%w{airway_patient airway_compromise}, :col=>12 %>
+</div>
+</div>
+</div>
+
+<div class="col-2">
+  </div>
+<div class="col-10">
+
+<%= radio_string this, 'airway_compromise', :value=>%w{stridor secretion fb bleeding other}, :col=>12 %>
+
+</div>
+
+<div class="col-12">
+<%= check_string this, 'airway_management' %>
+
+<div class="row">
+<div class="col-2">
+</div>
+<div class="col-10">
+
+<%= radio_string this, 'airway_management_type', :value=>%w{suction oral_airway nasal_airway lma}, :col=>12 %>
+
+<div class="row">
+<%= text_string this, 'nasal_airway_no', :col=>3 , :label=>'Nasal Airway No.'%>
+<%= text_string this, 'lma_no', :col=>3 , :label=>'LMA No.'%>
+<div class="clear"></div>
+<%= text_string this, 'ett_no', :col=>3, :label=>'ETT No.'%>
+<%= text_string this, 'ett_depth', :col=>3, :label=>'Depth(cm)' %>
+<%= text_string this, 'ett_glottis_view_grade', :col=>3, :label=>'Glottis view grade' %>
+<%= text_string this, 'ett_attempt', :col=>3 , :label=>'Attempt' %>
+</div>
+
+</div>
+</div>
+
+
+<div class="col-12" style="margin-bottom:20px">
+
+  <%= text_string this, 'airway_special_note', :col=>12, :label=>'Special Note'%>
+</div>

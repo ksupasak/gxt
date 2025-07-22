@@ -1,0 +1,51 @@
+<% if request.post? 
+
+
+	
+if params[:record] and params[:cpid]
+    record = EMSCaseProcess.find params[:cpid]
+	p = params[:record]
+    if record
+        record.update_attributes p
+    else
+	    record = EMSCaseProcess.create p
+	end
+
+	#Action
+	actions = EMSKAction.where(:kprocess_id=>record.kprocess_id,:name=>record.action).all()
+	c = EMSCase.find record.case_id
+	#clear message for this CaseProcess
+	ms = Message.where(:file_id=>record.id).all
+	for m in ms
+		m.destroy
+	end
+	for a in actions
+		if a.type=='1' #Alert message
+			Message.create :type=>'text',:media_type=>'alert',:content=>a.message,:admit_id=>c.admit_id,:file_id=>record.id
+		elsif a.type=='2' #Go to process
+		elsif a.type=='3' #New workflow
+			cws = EMSCaseWorkflow.where(:case_id=>record.case_id,:kworkflow_id=>a.linkto_workflow_id).all()
+			if cws.size == 0 
+				EMSCaseWorkflow.create :case_id=>record.case_id,:kworkflow_id=>a.linkto_workflow_id
+			end
+		elsif a.type=='4' #CPR
+			Message.create :type=>'cpr',:media_type=>'cpr',:content=>a.message,:admit_id=>c.admit_id,:file_id=>record.id
+		end
+	end
+			
+end
+	
+
+
+%>
+<!--<META HTTP-EQUIV="Refresh" CONTENT="0;URL=show?id=<%=record.id%>">-->
+<% if record%>
+บันทึกสำเร็จ
+
+<% end #if record%>
+
+<% end #if request%>
+
+<script>
+	//refresh_remote()
+</script>

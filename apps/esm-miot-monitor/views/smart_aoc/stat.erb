@@ -1,0 +1,208 @@
+
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<style>
+.bg-panel{
+    margin:0.4vw;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><rect fill="black" fill-opacity="0.3" x="0" y="0" width="1000" height="1000"/></svg>');
+} 
+input.date{
+    width:200px !important;
+    background:#093A54;
+	color:var(--text-grey);
+	border: 1px solid #446373;
+}
+
+</style>
+<%
+cause = []
+cause << "ปวดท้อง หลัง เชิงกราน และขาหนีบ"
+cause << "แอนนาฟิแลกซิส ปฏิกิริยาภูมิแก้/แมลงกัด"
+cause << "สัตว์กัด"
+cause << "เลือดออกไม่ใช่จากการบาดเจ็บ"
+cause << "หายใจลำบาก"
+cause << "หัวใจหยุดเต้น"
+cause << "เจ็บแน่นทรวงอก หัวใจ"
+cause << "สำลักอุดทางเดินหายใจ"
+cause << "เบาหวาน"
+cause << "อันตรายจากสภาพแวดล้อม"
+cause << "อื่นๆ(เว้นว่าง)"
+cause << "ปวดศีรษะลำคอ"
+cause << "คลุ้มคลั่ง จิตประสาท อารมณ์"
+cause << "ยาเกินขนาด ได้รับพิษ"
+cause << "มีครรภ คลอด นรี"
+cause << "ชัก"
+cause << "ป่วย อ่อนเพลีย"
+cause << "อัมพาต(หลอดเลือดสมองตีบแตก)"
+cause << "หมดสติ ไม่ตอบสนอง หมดสติชั่ววูบ"
+cause << "เด็ก ทารก (กุมารเวชกรรม)"
+cause << "ถูกทำร้าย บาดเจ็บ"
+cause << "ไฟไหม้ ลวก ความร้อน กระแสไฟฟ้า สารเคมี"
+cause << "จมน้ำ หน้าคว่ำจมน้ำ บาดเจ็บเหตุดำน้ำ บาดเจ็บทางน้ำ"
+cause << "พลัดตกหกล้ม อุบัติเหตุ"
+cause << "อุบัติเหตุยานยนต์"
+
+sum = 0
+val = []
+tm = []
+rs = []
+cause.each_with_index{|v,i|
+    temp = rand(15)
+    val << temp
+    sum += temp
+}
+temprand = sum
+for n in 0..4
+    temp = rand(temprand)
+    tm << temp
+    temprand -= temp
+end
+temprand = sum
+for n in 0..5
+    temp = rand(temprand)
+    rs << temp
+    temprand -= temp
+end
+%>
+<body class=" body-landing">
+<div class="container-fluid ">
+    <div class="row ">
+        <div class="p-4 col-12 bg-panel rounded" style='font-size:2.5vh;white-space:nowrap;'>
+            <div class="row">
+            <div class="col-md"><i class="fas fa-chart-pie"></i> Statistics: </div>
+            <div class="col-md"><i class="far fa-calendar-alt"></i> From <input class="date" type="text" value="01/12/2020"></div>
+            <div class="col-md"><i class="far fa-calendar-alt"></i> To <input class="date" type="text" value="31/12/2020"></div>
+            <div class="col-md"><a href="#" class="btn btn-pcm w-100">Submit</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="p-4 col bg-panel rounded">
+            <div class="row">
+            <div class="col"><i class="fas fa-user-injured"></i> Patients</div> 
+            <div class="col"><a href="patient"><%=sum%></a></div>
+            </div>
+        </div>
+        <div class="p-4 col bg-panel rounded">
+            <div class="row">
+            <div class="col"><i class="fas fa-ambulance"></i> Ambulance </div> 
+            <div class="col">4</div>
+            </div>
+        </div>
+        <div class="p-4 col bg-panel rounded"><i class="fas fa-chart-pie"></i> RC code</div>
+        <div class="p-4 col bg-panel rounded"><i class="fas fa-chart-pie"></i> Trauma/Non-Trauma</div>
+    </div>
+    <div class="row ">
+        <div class="p-4 col bg-panel rounded">
+            เหตุการณ์
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Number</th>
+                <th>Percent(%)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%  
+
+                cause.each_with_index{|v,i|
+            %>
+            <tr>
+                <td><%=v%></td>
+                <td><%=val[i]%></td>
+                <td><%=val[i]*100/sum%></td>
+            </tr>
+            <%}%>
+            <tr><td>รวม</td><td><%=sum%></td><td>100</td></tr>
+            </tbody>
+            </table>
+        </div>
+
+        <div class="p-4 col bg-panel rounded">
+            Treatment
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Number</th>
+                <th>Percent(%)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>ทางเดินหายใจ/การหายใจ</td>
+                <td><%=tm[0]%></td>
+                <td><%=tm[0]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>บาดแผล/ห้ามเลือด</td>
+                <td><%=tm[1]%></td>
+                <td><%=tm[1]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>การให้สารน้ำ</td>
+                <td><%=tm[2]%></td>
+                <td><%=tm[2]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>การดามกระดูก</td>
+                <td><%=tm[3]%></td>
+                <td><%=tm[3]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>การทำ CPR</td>
+                <td><%=tm[4]%></td>
+                <td><%=tm[4]*100/sum%></td>
+            </tr>
+
+            </tbody>
+            </table>
+        </div>
+        <div class="p-4 col bg-panel rounded">
+            ผลการดูแลรักษาขั้นต้น
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Number</th>
+                <th>Percent(%)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>ไม่มีการรักษา</td>
+                <td><%=rs[0]%></td>
+                <td><%=rs[0]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>ทุเลา</td>
+                <td><%=rs[1]%></td>
+                <td><%=rs[1]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>คงเดิม</td>
+                <td><%=rs[2]%></td>
+                <td><%=rs[2]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>ทรุดหนัก</td>
+                <td><%=rs[3]%></td>
+                <td><%=rs[3]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>เสียชีวิต ณ จุดเกิดเหตุ</td>
+                <td><%=rs[4]%></td>
+                <td><%=rs[4]*100/sum%></td>
+            </tr>
+            <tr>
+                <td>เสียชีวิต ขณะนำส่ง</td>
+                <td><%=rs[5]%></td>
+                <td><%=rs[5]*100/sum%></td>
+            </tr>            
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>

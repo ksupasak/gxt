@@ -1,0 +1,765 @@
+<script src="https://kit.fontawesome.com/13a3acd719.js" crossorigin="anonymous"></script>
+<link href="<%=url_for('css/aoc.css?=22')%>" rel="stylesheet">
+<link href="<%=url_for('css/aoc_dark.css?=22')%>" rel="stylesheet">
+<style>
+	.station .label{
+		font-size:0.8em;
+
+	}
+	.station .value{
+		font-size:1.5em;
+		margin-top:0px;
+		padding-top:0px;
+		text-align:center;
+	}
+	.station .pr{color:#00d3d7;
+
+	}
+
+	.station .hr{color:#01bf02;
+
+	}
+
+	.station .bp{color:#5990b7;;
+
+	}
+
+	.station .cvp{color:#b76666;;
+
+	}
+
+	.station .spo2{color:#00b3b7;
+
+	}
+
+	.station .temp{color:#2F50E2;
+
+	}
+
+	.station .rr{color:#b7851d;
+
+	}
+	.station .col-6{
+			border:1px solid #333;
+			border-radius: 5px;
+	}
+
+	.station .cc{
+		color:#bcaf06;
+
+	}
+	.station .uc{
+		color:#f937e2;
+
+	}
+	w{
+		color:red;
+	}
+	.timer{
+		font-size:1.6em;
+	}
+	</style>
+<%
+	
+ambu = Ambulance.find params[:id]
+	
+	
+admit = Admit.where(:status=>'Admitted', :ambulance_id=>ambu.id).first
+station = Station.find ambu.station_id
+
+
+
+	
+%>
+<%=%>
+
+<div class="">
+<ul class="nav nav-pills fixed-bottom  nav-fill m-footer d-flex justify-content-center" style="">
+
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+	<i class="fas fa-ambulance"></i>
+	<br/>
+	<%=ambu.name%>
+	</a>
+  </li>
+  
+  
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+	<i class="far fa-check-circle"></i>
+	<br/>
+	Tracking
+	</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">
+	<i class="fas fa-share-alt"></i>
+	<br/>
+	Share
+	</a>
+  </li>
+  
+  
+  
+<span style="float:right;margin-top:0px"></span>
+
+  
+</ul>
+</div>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  	
+	<% if admit %>
+	
+	
+	
+	<%
+	
+	patient = Patient.find admit.patient_id
+		
+	%>
+	<div class='clear'></div>
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<%=link_to '<i class="fas fa-long-arrow-alt-left"></i>', "index",:class=>'btn btn-outline-primary' %>
+		<h4 class="text-uppercase font-weight-bold mb-0 ambu-name"><i class="fas fa-ambulance"></i> <%=ambu.name%></h4>
+		<%= link_to '<i class="fas fa-phone-alt"></i> <i class="fas fa-hospital-user"></i>', "show3?id=#{params[:id]}",:target=>'_blank', :class=>'btn btn-pcm'%>
+	</div>
+	<div class="row">
+		<div class="col-12 ">
+		<div class="alert alert-patient">
+			<div class="row">
+				<div class="col-12">Case No : <v><%=admit.case_no%></v> </div>
+				<div class="col-8">Name : <v><%=patient.first_name%> <%=patient.last_name%></v> </div>
+				<div class="col-4">CID : <v><%=patient.public_id%></v> </div>
+				<div class="col-4">Age : <v><%=patient.age%></v> </div>
+				<div class="col-4">Gender : <v><%=patient.gender%></v><br/></div>
+				<div class="col-4">HN : <v><%=patient.hn%> </v></div>
+				<div class="col-12">Contact : <a href="tel:<%=patient.contact_phone%>" class="btn btn-pcm"><v><%=patient.contact_name%> </v><i class="fas fa-phone-alt"></i> <%=patient.contact_phone%></a></div>
+				<div class="col-12">Note : <v><%=admit.note%></div>
+			</div>
+		</div>
+		
+		<div class="alert alert-patient">
+			<div class="row">
+				<div class="col-6 p-2 timer"><i class="fas fa-clock"></i> <span id="HH"></span>:<span id="MM"></span>:<span id="SS"></span></div>
+				<div class="col-6 p-2 timer"><v class="time-alert"><i class="fas fa-user-clock"></i> + <span id="admittime"><%= ((Time.now - admit.created_at)/60).to_i%>m</span></v></div>
+			</div>
+		</div>
+		
+		</div>
+	</div>
+	
+	
+
+	<%
+  		
+	last_log = AdmitLog.where(:admit_id=>admit.id, :status=>'PENDING').sort(:sort_order=>1).first
+	station = Station.find admit.station_id
+	med_groups = MedGroup.all
+	meds = Medication.all
+	routes = MedRoute.all
+	units = MedUnit.all
+	doses = MedDose.all
+	
+  	%>
+  	<!--<div class="row d-flex justify-content-between ">
+	
+	<div class="col-4 pl-3  " style="padding:5px">
+		<p>
+	<%=last_log.name if last_log%>
+  		</p>
+	</div>
+	
+	<div class="col-4" style="padding:5px">
+	<v class="time-alert">+<%= ((Time.now - admit.created_at)/60).to_i%>m</v>
+  	</div>
+	
+	<div class="col-3 text-right">
+	  	<%= link_to '<i class="fas fa-map-marker-alt"></i> Check', "check?id=#{params[:id]}&admit_log_id=#{last_log.id}", :class=>'btn btn-pcm' if last_log%>
+	</div>
+	</div>-->
+	<div class="row">
+		<div class="col-3">
+			<div class="btn btn-pcm w-100 p-4" id="med_add">+ <i class="fas fa-briefcase-medical"></i> Med </div>
+		</div>
+
+		<div class="col-4">
+			<div class="btn btn-pcm w-100 p-4" id="treat_add">+ <i class="fas fa-user-injured"></i> Treatment </div>
+		</div>
+
+		<div class="col-5">
+			<div class="btn btn-pcm w-100 p-4" id="check_add">+ <i class="fas fa-map-marker-alt"></i> <%=last_log.name if last_log%> </div>
+		</div>		
+	</div>
+
+	<div class="med_add alert alert-patient">
+		<div class="med_group row">
+			<div class="col-sm-12 p-3">Select Medication Group : </div>
+			<% 	for g in med_groups %> 
+			<div class="col-sm "><div class="btn btn-secondary w-100 p-3 m-1 med-group" group="<%=g.id%>"><%=g.name%></div></div>
+			<%	end %>
+		</div>
+
+		<div class="medication row">
+			<div class="col-sm-12 p-3">Select Medication : </div>
+			<% 	for m in meds %> 
+			<div class="col-sm"><div class="btn btn-secondary w-100 p-3 m-1 med <%=m.medgroup_id%>" i="<%=m.id%>" g="<%=m.medgroup_id%>" v="<%=m.volume%>" u="<%=m.unit_type%>" r="<%=m.route%>"><%=m.name%></div></div>
+			<%	end %>
+		</div>
+
+		<div class="medication_record row">
+			<div class="col-sm-12 p-3">Adjust Medication : </div>
+			<div class="col"><div class="btn btn-pcm2 w-100 p-3 m-1 volume">Volume</div></div>
+			<div class="col"><div class="btn btn-pcm2 w-100 p-3 m-1 unit_type">Unit</div></div>
+			<div class="col"><div class="btn btn-pcm2 w-100 p-3 m-1 route">Route</div></div>
+			<div class="col-sm-12 route_sel ">
+			<div class="w-100 d-flex flex-row-reverse">
+			<% 	for r in routes %> 
+			<div class="btn btn-secondary p-2 m-1 sroute"><%=r.name%></div>
+			<%	end %>
+			</div>
+			</div>
+
+			<div class="col-sm-12 unit_sel ">
+			<div class="w-100 d-flex justify-content-center">
+			<% 	for r in units %> 
+			<div class="btn btn-secondary p-2 m-1 sunit"><%=r.name%></div>
+			<%	end %>
+			</div>
+			</div>
+
+			<div class="col-sm-12 dose_sel">
+			<% 	for r in doses %> 
+			<div class="btn btn-secondary p-2 m-1 sdose"><%=r.name%></div>
+			<%	end %>
+			</div>
+
+			<div class="col-sm-12">
+			<center>
+			<form id="form_med" action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
+				<input type="hidden" name="note" id="note"/>
+				<input type="hidden" name="medication_id" id="medication_id" />
+				<input type="hidden" name="medname" id="medname" />
+				<input type="hidden" name="volume" id="volume" />
+				<input type="hidden" name="unit_type" id="unit_type" />
+				<input type="hidden" name="route" id="route" />
+				<input type="submit" class="btn btn-pcm p-3 m-1 med-submit"  name="Submit" value=" + Submit" />
+				<div class="btn btn-danger p-3 m-1 btn-cancel"> - Cancel </div>
+			</form>
+			</center>
+			</div>
+		</div>
+	</div><!--med_add-->
+
+	<div class="treat_add alert alert-patient">
+		<div class="med_group row">
+			<div class="col-sm-12 p-3">Select Treatment Group : </div>
+			<% 	for g in med_groups %> 
+			<div class="col-sm "><div class="btn btn-secondary w-100 p-3 m-1 med-group" group="<%=g.id%>"><%=g.name%></div></div>
+			<%	end %>
+		</div>
+	</div><!--treat_add-->
+<script>
+$(".med_add").hide()
+$(".treat_add").hide()
+function getTime(){
+	let now = new Date()
+	$("#HH").html(('0' + now.getHours().toString()).slice(-2))
+	$("#MM").html(('0' + now.getMinutes().toString()).slice(-2))
+	$("#SS").html(('0' + now.getSeconds().toString()).slice(-2))
+	setTimeout(getTime,1000)
+}
+var timeadd=new Date(<%=admit.created_at.strftime("%Y,%m,%d,%H,%M,%S")%>)
+function admitTime(){
+	let now = new Date()
+	var diffMs = (now - timeadd); // milliseconds between now & admitTime
+	var diffDays = Math.floor(diffMs / 86400000); // days
+	var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+	var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); 
+	timetext=''
+	if(diffDays>0) timetext += diffDays+'d '
+	if(diffHrs>0) timetext += diffHrs+'h '
+	if(diffMins>0) timetext += diffMins+'m'
+	$("#admittime").html(timetext)
+	setTimeout(admitTime,60000)
+}
+admitTime()
+getTime()
+
+function fillf(n,v){
+	$("#"+n).val(v)
+	$("."+n).html(v)
+}
+
+$(document).ready(function(){
+	$(".med_add").hide()
+
+	$(".medication,.medication_record,.route_sel,.unit_sel,.dose_sel").hide()
+
+	$(".btn-cancel").click(function(){
+		$(".med_add").slideUp()
+	})
+
+	$("#med_add").click(function(){
+		$(".med_add").slideToggle()
+		$(".treat_add").slideUp()
+	})
+	$("#treat_add").click(function(){
+		$(".treat_add").slideToggle()
+		$(".med_add").slideUp()
+	})
+
+	$(".med-group").click(function(){
+		$(".med-group").parent().toggle()
+		$(this).parent().show()
+		$(".med-group").removeClass('btn-pcm2').addClass('btn-secondary')
+		$(this).removeClass('btn-secondary').addClass('btn-pcm2')
+		gid = $(this).attr("group")
+		$(".med").parent().hide()
+		$("."+gid).parent().show()
+		$(".medication").show()
+	})
+	$(".med").click(function(){
+		name = $(this).html()
+		g = $(this).attr("g")
+		$("#medication_id").val($(this).attr("i"))
+		fillf('medname',name)
+		fillf('unit_type',$(this).attr("u"))
+		fillf('volume',$(this).attr("v"))
+		fillf('route',$(this).attr("r"))		
+		$("."+g).parent().toggle()
+		$(this).parent().show()
+		$(this).addClass('btn-pcm2')
+		$(".medication_record").show()
+	})
+
+	$(".volume").click(function(){
+		$(".dose_sel").slideToggle()
+		$(".unit_sel,.route_sel").slideUp()
+	})
+	$(".unit_type").click(function(){
+		$(".unit_sel").slideToggle()
+		$(".dose_sel,.route_sel").slideUp()
+	})
+	$(".route").click(function(){
+		$(".route_sel").slideToggle()
+		$(".unit_sel,.dose_sel").slideUp()
+	})
+
+	$(".sroute").click(function(){
+		fillf('route',$(this).html())
+		$(".route_sel").slideToggle()
+	})
+	$(".sunit").click(function(){
+		fillf('unit_type',$(this).html())
+		$(".unit_sel").slideToggle()
+	})
+	$(".sdose").click(function(){
+		fillf('volume',$(this).html())
+		$(".dose_sel").slideToggle()
+	})
+})
+</script>
+	<div class="row">
+		<div class="col-6">
+		Monitor : 
+		<div class="station" id="<%=station.name%>" style="">
+			
+			<div class="row pl-3 mt-1">
+						<div class="col-6  col-lg-3 col-sm-3 pr">
+							<span class="label">PR</span>
+							<div class="value">-</div>
+						</div>
+						<div class="col-6  col-lg-3 col-sm-3 bp">
+							<span class="label">BP <span style="font-size:0.8em" class="bp-mean"></span></span>
+							<div class="value">-</div>
+						</div>
+			
+						
+							
+							<div class="col-6  col-lg-3  col-sm-3 rr">
+								<span class="label">RR</span>
+								<div class="value">-</div>
+							</div>
+			
+						<div class="col-6  col-lg-3 col-sm-3 spo2">
+							<span class="label">SpO2</span>
+							<div class="value">-</div>
+						</div>
+							<div class="col-6  col-lg-3 col-sm-3 hr">
+								<span class="label">HR</span>
+								<div class="value">-</div>
+							</div>	
+							
+							
+									<div class="col-6  col-lg-3 col-sm-3 temp">
+										<span class="label">Temp</span>
+										<div class="value">-</div>
+									</div>
+			
+				
+						
+			</div>
+			
+			
+		</div>
+		</div>
+		
+		<div class="col-6">
+		Nurse Note : 
+		<div class="mt-1" style="height:185px;">
+			
+		<form action="nurse_note_create?admit_id=<%=admit.id%>" class="model-remote" method="post" enctype="multipart/form-data" >
+		<textarea name="note" style="height:6em;width:100%" class="m-textarea"></textarea>
+		
+   	  	<input type="submit" class="btn-sm btn-pcm"  name="Submit" value=" + Submit"  style="float:right"/>
+            <a href="#" class="btn-sm btn-secondary d-flex align-items-center justify-content-center" style="float:left" id="image_capture_btn">
+            <img src="<%=url_for('img/ER/photo_camera.svg') %>" style="opacity:0.5;width:1.8em;fill:white;" alt="heart" class=" pulse"/>
+        </a>
+	    <script>
+		$('#image_capture_btn').click(function(){
+		device_interface.image_capture(window.location.origin+"<%=url_for("SmartAOCMobile/upload?admit_id=#{admit.id}")%>", "key")
+	    })
+		</script>
+		</form>
+		
+		</div>
+		
+	</div>
+	</div>
+<br/>
+<style>
+.c-bg{
+	background-image : url('data:image/svg+xml,<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="20" fill="#C2C2C2" /></svg>');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding:1vh;
+	color:var(--primary-blue);
+}
+.bgline{
+	background-image: linear-gradient(#C2C2C2, #C2C2C2);
+	background-size: 2px 100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.chatbox{
+	background:black;
+	border-radius:15px;
+}
+.chatarea{
+	background: transparent linear-gradient(180deg, #3147FF  0%, #1A3388 100%) 0%
+  	0% no-repeat padding-box;
+}
+</style>
+	<div class="row ">
+		<div class="col-12">
+		<div class="alert chatarea">
+			 History 
+			<%
+				
+				notes = NurseRecord.where(:admit_id=>admit.id, :start_time=>{'$ne'=>nil}).sort(:start_time=>-1).all
+				
+			%>
+			<% for i in notes %>
+			<div class="row">
+				<div class="col-2 pt-4">
+					<%=i.start_time.strftime("%H:%M")%> 
+					<v class="time-alert">+<%=(Time.now-i.start_time).to_i/60%>m</v>
+				</div>		
+				
+				<div class="col-2 bgline pt-4 pb-4"><center><i class="fas fa-briefcase-medical c-bg"></i></center></div>
+
+				<div class="col p-2 mt-3">
+					<div class="chatbox p-3">
+					<v class="ambu-name"><%=i.description%></v>
+					</div>
+				</div>
+				
+		
+			</div>
+			<% end %>
+		</div>
+		</div>
+	</div>
+	
+	<%end %>
+  </div>
+ 
+  
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+	 
+  	<% if admit %>
+	<% 
+	logs = AdmitLog.where(:admit_id=>admit.id).sort(:sort_order=>1).all
+	parent_map = {}
+	%>
+	<p class="text-center font-weight-bold">Tracking</p>
+	<table class='table'>
+	<thead>
+		<tr>
+			<th>Admit</th>
+			<th><%=admit.created_at.strftime("%H:%M")%>
+			
+		</tr>
+	</thead>
+	<% for i in logs 
+	
+	parent_map[i.sort_order] = i
+		
+	%>
+	<tbody>
+	<tr>
+		<td>
+			<%=i.name%>
+		</td>
+		<td><% if i.stamp %>
+			<%=i.stamp.localtime.strftime("%H:%M")%> <v class="time-alert">+<%=(i.stamp - admit.created_at).to_i/60 %>m</v>
+			<% end %>
+			
+		</td>
+		<td>
+			<% if i.stamp and i.parent and p = parent_map[i.parent] and p.stamp 
+			lap = (i.stamp - p.stamp).to_i/60
+			 %>
+			<w><%= lap %>m</w>
+			<% end %>
+		</td>
+		<td>
+			<%=i.note%>
+		</td>
+		<td>
+			<% if i.status=='PENDING'%>
+		  	<%= link_to 'Check', "check?id=#{params[:id]}&admit_log_id=#{i.id}", :class=>'btn btn-success'%>
+			<% end%>
+		</td>
+		
+		
+	</tr>
+
+	<% end %>
+		</tbody>
+	</table>
+	
+	
+	<% end %>
+	
+  </div>
+
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+	<h4 class="font-weight-bold text-center ">แชร์ไปยังอุปกรณ์อื่น</h4>
+	<div style="background: white;" class="pt-4 pb-3">
+	<center>
+  		<img src=<%="/barcode?code=#{request.url}&type=qr_code&xdim=8"%>/><br/><br/>
+		<%=link_to "Mobile Interface", request.url%>
+	</center> 
+	
+	<br/>
+
+ <center>
+  	<img src=<%="/barcode?code=#{request.url.gsub("show","glasses")}&type=qr_code&xdim=8"%>/><br/><br/>
+	<%=link_to "Smart Glasses Interface", request.url.gsub("show","glasses")%>
+</center>
+	</div>
+
+  </div>
+  
+</div>
+<hr/>
+<center>  <%=link_to 'Back', "index",:class=>'nav-link' %></center>
+
+
+<style>
+	.tab-pane{
+		padding-top:10px;
+	}
+	v{
+		color: var(--alert-yellow);
+	}
+	#toolbarRight{display:none;}
+	#optionsVisibilityButton{display:none;}
+</style>
+
+<script>
+	
+<%
+	if admit 
+		
+	record = Station.find admit.station_id
+	
+		if record 
+%>
+	$(document).ready(function(){
+		
+		function show(text){
+			console.log(text)
+		}
+		
+		$('#toolbarCenter').removeClass('col-6');
+		$('#toolbarCenter').addClass('col-10');
+		// $('#renderer').css('height','320px');
+		$('.resourceId').val("<%=ambu.name%>")
+		$('.displayName').val("Mobile")
+	
+  	  var ws       = new WebSocket('wss://' + window.location.host + "<%="/#{params[:gxt]}/Home/index"%>");
+	
+  	  var plot_pos = {};
+	
+     ws.onopen    = function()  { show('websocket opened'); 
+	
+  	  	ws.send('WS.Select name=<%=session.id%>\n["Zone <%="miot/#{params[:gxt]}/z/#{record.zone.name}"%>","ZoneUpdate zone_id=*","Alert station_id=*","Data.Image station_id=*"]')
+
+  	  };
+     ws.onclose   = function()  { show('websocket closed'); 
+		
+  	 	setTimeout(function () {
+  	 		       // window.location.href = "index"; //will redirect to your blog page (an ex: blog.html)
+  	 		    }, 2000); //will call the function after 2 secs.
+	 		
+
+     }
+     ws.onmessage = function(m) { 
+	
+  		active = $('.active-station').size()
+			
+  		<% if params[:debug] %>	
+  		show(''+m.data)
+  		<% end %>
+		
+		
+  		lines = m.data.split("\n")
+		
+  		// console.log(lines[0].split(" ")[0])
+  		if(lines[0].split(" ")[0]=='Alert'){
+  			data = JSON.parse(lines[1])
+			
+  			// alert(data['alert'])
+			
+  			$('#'+data['station']).addClass('bp_alert_2');
+  			$('#'+data['station']+' .msg').html(data['alert']);
+			
+  			// play sound
+  			ion.sound.play("bell_ring");
+			
+  		}else
+  		if(lines[0].split(" ")[0]=='Data.Image'){
+		
+  			lines.shift()
+  			img = lines.join("")
+  			// alert('image '+m.data.length)
+			
+  			$("#image").attr('src','data:image/jpg;base64,'+ JSON.parse(img))
+			
+			
+  		}
+  		else
+  		if(lines[0].split(" ")[0]=='ZoneUpdate'){
+		
+	
+  		data = JSON.parse(lines[1])
+  			// 
+  			// if(data['list'].length!=active)
+  			// window.location.href = "index"; 
+			
+  		$('#timer').html(data['time'])
+  		for(var id in data['list']){
+  			i = data['list'][id]
+			
+  			if($('#'+i).length > 0){ 
+  			obj = data['data'][i]
+				if(obj){
+			console.log(data)
+				
+  		  if(obj['wave']){	
+			  
+  			    // wave_data.push(obj['wave']);
+  		   		// wave_data = wave_data.concat(obj['wave']);
+  				
+  				// console.log(wave_data);
+  				// wave_data = obj['wave'];
+  		   }
+		   
+  		   if(obj['leads']){
+		   	
+  			   // for(var j=0;j<14;j++){
+		   //   				jid = ''+j
+		   //   			   	lead_data[jid] = 	lead_data[jid].concat(obj['leads'][jid])
+		   //
+		   //   			   console.log(lead_data[jid].length)
+		   //
+		   //   			   }
+			
+  		   }
+		    			
+			
+  			 // console.log(obj)
+  			$('#'+i+' .hn').html(obj['ref'])
+			
+  			if($('#'+i+' .bp').html()!=obj['bp']){
+  				$('#'+i).addClass('bp_alert');
+  				$('#'+i).removeClass('bp_alert_2');
+  				$('#'+i+' .msg').html("-");
+  			}else{
+  				$('#'+i).removeClass('bp_alert');
+  				// $('#'+i).removeClass('bp_alert_2');
+  				// $('#'+i+' .msg').html("-");
+  			}
+			
+  			$('#'+i+' .bp .value').html(obj['bp'])
+			
+  			$('#'+i+' .temp .value').html(obj['temp'])
+			
+  			$('#'+i+' .pr .value').html(obj['pr'])
+  			$('#'+i+' .hr .value').html(obj['hr'])
+			
+			
+			
+  			$('#'+i+' .rr .value').html(obj['rr'])
+  			$('#'+i+' .spo2 .value').html(obj['spo2'])
+			
+			
+  			$('#'+i+' .score .value').html(obj['score'])
+			
+  			bp = obj['bp'].split('/')
+			
+  			hr = parseInt(obj['hr'])
+  			pr = parseInt(obj['pr'])
+  			spo2 = parseInt(obj['spo2'])
+  			rr = parseInt(obj['rr'])
+  			temp = parseInt(obj['temp'])
+			
+			
+  			if(isNaN(hr))hr=0;
+  			if(isNaN(pr))pr=0;
+  			if(isNaN(spo2))spo2=0;
+  			if(isNaN(rr))rr=0;
+			
+  			if(isNaN(temp))rr=0;
+			
+			
+  		    vs = [{time:Date.now(),hr:hr,pr:pr,spo2:spo2,temp:temp,rr:rr,bp_sys:parseInt(bp[0]),bp_dia:parseInt(bp[1])}];
+			
+  			// gfx.tick({update:[{name:'vitalsign',append:vs}]});
+			
+			}
+			
+			
+  			}else{
+  					setTimeout(function () {
+  				       // window.location.href = "show?id=<%=params[:id]%>"; //will redirect to your blog page (an ex: blog.html)
+  				    }, 2000); //will call the function after 2 secs.
+				
+  			}
+			
+  		}
+  		 }
+  	 };
+	
+	<% end %>
+	<% end %>
+	 
+	
+	
+	
+	})
+</script>
