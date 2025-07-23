@@ -1,0 +1,15 @@
+<% require_relative 'lib'
+  @record = record
+  r = @record.data
+
+  list = %w{ temperature flow fi_o2  }
+  rs = []
+   for i in list
+%><%
+    if r["#{i}"]
+	
+	v = r[i]
+	
+	rs << "#{i.humanize} : #{v}" if v != "" && v != "-" && v!= " " && v != "/"
+		
+%><% end %><% end %><%=rs.join(", ")%>

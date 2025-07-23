@@ -171,11 +171,13 @@
 Sound
 </div>
 <div class="col-10">
-<%= radio_string this, 'breath_lung_clear',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Lung clear', :col=>12 %>
-<%= radio_string this, 'breath_wheezing',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Wheezing', :col=>12 %>
-<%= radio_string this, 'breath_rhonchi',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Rhonchi', :col=>12 %>
-<%= radio_string this, 'breath_crepitation',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Crepitation', :col=>12 %>
-<%= radio_string this, 'breath_descrease',:value=>%w{Rt Lt Equal_both_lung}, :label=>'Decrease breath sound', :col=>12 %>
+<%= radio_string this, 'breath_lung_clear',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Lung clear', :col=>12 %>
+<%= radio_string this, 'breath_wheezing',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Wheezing', :col=>12 %>
+<%= radio_string this, 'breath_rhonchi',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Rhonchi', :col=>12 %>
+<%= radio_string this, 'breath_crepitation',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Crepitation', :col=>12 %>
+<%= radio_string this, 'breath_descrease',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Decrease breath sound', :col=>12 %>
+<%= radio_string this, 'breath_poor_air',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Decrease breath sound', :col=>12 %>
+
 </div>
 </div>
 <div class="row">
@@ -205,6 +207,17 @@ Percussion
 <%= radio_string this, 'percussion_hypo',:value=>%w{Rt Lt }, :label=>'Hyporesonance', :col=>12 %>
 </div>
 </div>
+
+
+<div class="row">
+<div class="col-2">
+Trachea
+</div>
+<div class="col-10">
+<%= radio_string this, 'trachea',:value=>%w{in_midline shift_to_lt shift_to_rt}.collect(){|i| i.humanize}, :label=>'Trachea', :col=>12 %>
+</div>
+</div>
+
 <div style="height: 10px"></div>
 <div class="row">
 <div class="col-2">
@@ -322,10 +335,10 @@ Wound
 <%= text_string this, 'mm_rtlbe', :col=>3, :label=>'mm RTLBE'%>
 <div class="clear"></div>
 <%= text_string this, 'pupil_rt', :col=>3, :label=>'Rt(mm)'%>
-<%= radio_string this, 'pupil_rt_rtl',:value=>%w{RTL NRTL Slightly Fxed Blind Cataract}, :col=>9 %>
+<%= radio_string this, 'pupil_rt_rtl',:value=>%w{RTL NRTL Slightly Fixed Blind Cataract}, :col=>9 %>
 <div class="clear"></div>
 <%= text_string this, 'pupil_lt', :col=>3, :label=>'Lt(mm)'%>
-<%= radio_string this, 'pupil_lt_rtl',:value=>%w{RTL RRTL Slightly Fxed Blind Cataract}, :col=>9 %>
+<%= radio_string this, 'pupil_lt_rtl',:value=>%w{RTL NRTL Slightly Fixed Blind Cataract}, :col=>9 %>
 </div>
 </div>
 <div class="row">
@@ -406,7 +419,10 @@ Wound
 <div class="row">
 <div class="col-2">
 </div>
-<%= check_string this, 'exposure_list', :value=>%w{Deformity Contusion Abration Penetration Burns Tenderness Laceration Swelling Pitting_edema }, :col=>10, :col_item=>"col-12" %>
+<%
+%w{Deformity Contusion Abration Penetration Burns Tenderness Laceration Swelling Pitting_edema }
+%>
+<%= check_string this, 'exposure_list', :value=>%w{deformity no_deformity no_dislocation no_wound no_skin_lesion no_pitting_edema pitting_edema}.collect(){|i| i.humanize}, :col=>10, :col_item=>"col-12" %>
 </div>
 <div class="row">
 <div class="col-2">

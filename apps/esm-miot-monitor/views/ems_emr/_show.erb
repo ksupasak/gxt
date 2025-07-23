@@ -76,7 +76,35 @@
 <div class="row">
 <div class="col-lg-8">
 <div id="emr-panel">
+
+
 </div>
+
+<div id="emr-list">
+<div class="card">
+<div class="card-header bg-primary text-white">
+EMR List
+</div>
+<div class="card-body">
+<div class="row">
+				<% for doc in documents %>
+		<div class="col-4" >
+		<div class="card radius-10  ">
+			<a href="<%=get_path 'create'%>?document=<%=doc.name%>&case_id=<%=params[:id]%>" class="  emr-create-btn">
+
+			<div class="card-body " style="text-align:left">
+				+ <%=doc.title%>
+			</div>
+			
+			</a>
+		</div>
+		</div>
+		<% end %>
+		</div>
+</div>
+</div>
+</div>
+
 </div>
 
 <div class="col-lg-4">

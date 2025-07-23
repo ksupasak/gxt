@@ -1,7 +1,14 @@
 FROM ruby:3.1.3-buster
 RUN apt-get update -qq && apt-get install -y imagemagick
 RUN apt-get install -y build-essential 
-RUN apt-get install -y nodejs
+
+RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && sed -i '/security.debian.org/d' /etc/apt/sources.list \
+ && apt-get update -qq \
+ && apt-get install -y curl \
+ && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+ && apt-get install -y nodejs
+ 
 RUN mkdir /docker_gxt
 WORKDIR /docker_gxt
 COPY Gemfile /docker_gxt/Gemfile

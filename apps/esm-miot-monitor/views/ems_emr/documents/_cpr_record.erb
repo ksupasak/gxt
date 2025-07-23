@@ -52,12 +52,21 @@
 
 			<div class="col-5">EKG</div>
 				<div class="col-7">
-				<%= radio_string this, "ekg", :value=>%w{Asystole PEA VF Pulseless_VT}, :col=>12, :display=>'block' %>
+				<%= radio_string this, "ekg", :value=>%w{Asystole PEA VF Pulseless_VT }, :col=>12, :display=>'block' %>
 				</div>
-			</div>
+	</div>
 
 		
 		<br/>
+
+
+	<div class="row">
+		      <div class="col-5">Defibrillation</div>
+				<div class="col-7">
+				<%= check_string this, "defibrillator", :value=>["200 J."], :label=>"", :col=>12, :display=>'block' %>
+				</div>
+
+
 
 	<div class="row">
 		<div class="col-5">Patient Type</div>
