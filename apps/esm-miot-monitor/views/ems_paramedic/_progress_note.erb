@@ -27,10 +27,11 @@ list..
 
 <div class="cpr-cmd-x d-flex " style="">
 	<%
-		if item = EMSAssessment.where(:code=>'primary').first #and EMSProgressNote.where(:case_id=>params[:id], :item_id=>item.id).first == nil
+		if item = EMSAssessment.where(:code=>'first').first #and EMSProgressNote.where(:case_id=>params[:id], :item_id=>item.id).first == nil
 		item_id = item.id if item
 	%>
-	<a href="#" class=" dispatch_item_x btn bg-gradient w-10 " code="First medical contact" item="">+ 1<sup>st</sup> Med Contact</a>
+	
+	<a href="#" class=" dispatch_item_x btn bg-gradient w-10 " code="first" item="<%=item_id%>">+ 1<sup>st</sup> Med Contact</a>
 	<% end %>
 	<%
 		if item = EMSAssessment.where(:code=>'primary').first #and EMSProgressNote.where(:case_id=>params[:id], :item_id=>item.id).first == nil
@@ -47,17 +48,20 @@ list..
     <% end %>	
 
 	<%
-		if item = EMSAssessment.where(:code=>'vs').first
+		if item = EMSAssessment.where(:code=>'vitalsign').first
 		item_id = item.id if item
 	%>
+
+
 	<a href="#" class=" dispatch_item_x btn bg-gradient w-10 " code="vitalsign" item="<%=item_id%>">+ Vitalsign</a>
     <% end %>	
 
 	<%
-		if item = EMSAssessment.where(:code=>'emr_cpr').first
+		if item = EMSAssessment.where(:code=>'cpr_record').first
 		item_id = item.id if item
 	%>
-	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="cpr_data" item="<%=item_id%>">+ CPR Data</a>
+
+	<a href="#" class="cpr-cmd dispatch_item_x btn bg-gradient w-10 " code="cpr_record" item="<%=item_id%>">+ CPR Record</a>
 	<% end %>
 
 </div>

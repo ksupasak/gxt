@@ -32,6 +32,10 @@
 		
 		med.push("2% Lidocaine : "+r['alidocaine_vol']+" ml " )
 	end
+
+	if r['defibrillator']=='yes'
+		med.push("Defibrillator : "+r['defibrillator_vol']+"" )
+	end
 	
 	if r['dw']=='yes' and r['dw_vol']
 		route = ''
@@ -42,4 +46,10 @@
 	if r['other']=='yes' and r['other_vol']
 		med.push(r['other_vol'])
 	end
-%><%=r['lap']%>. EKG : <%=r['ekg']%>, <%=med.join(", ")%>, ETCO2 : <%=r['co2']%> <%=r['note']%><% end %>
+	if r['co2'] != ""
+		med.push("ETCO2 : #{r['co2']}")
+	end
+	if r['defibrillator']
+		med.push("Shock : #{r['defibrillator']}")
+	end
+%><%=r['lap']%>. EKG : <%=r['ekg']%>, <%=med.join(", ")%> <%=r['note']%><% end %>

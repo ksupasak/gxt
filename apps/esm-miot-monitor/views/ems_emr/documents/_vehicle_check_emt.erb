@@ -1,0 +1,213 @@
+
+<% require_relative 'lib' %>
+<%
+  @record = record
+
+  @record['date'] = Time.now.strftime("%d/%m/%Y")
+
+  @record['time'] = Time.now.strftime("%H:%M:%S")
+
+  ambu_list = Ambulance.where({}).sort(:name=>1).all.collect{|a| "#{a.id.to_s}|#{a.name}"}
+
+  emt_list = Provider.where({:role=>'emt'}).sort(:code=>1).all.collect{|a| "}#{a.id.to_s}|#{a.code} #{a.name}"}
+
+
+%>
+<div class="card">
+<div class="card-header bg-primary text-white">
+<center>Vehicle Check</center>
+</div>
+
+<div class="card-body">
+  <div class="row">
+
+  <%= date_string this, 'date', :col=>6%>  <%= time_string this, 'time', :label=>"เวลา", :col=>6%>
+  <%= select_string this, 'shift', :value=>%w{เช้า บ่าย ดึก}, :label=>"เวร" ,:col=>6%>
+  <%= select_string this, 'ambulance_id', :value=>ambu_list, :label=>"รถพยาบาล" ,:col=>6, :pair=>true%>
+  <%= select_string this, 'emt', :value=>emt_list, :label=>"เจ้าหน้าที่" ,:col=>6, :pair=>true%>
+
+<hr/>
+
+ <%
+
+list = <<ITEM
+อุปกรณ์กระเป๋า Airway&Breathing [ปรอทวัดไข้]
+อุปกรณ์กระเป๋า Airway&Breathing [ไฟฉาย]
+อุปกรณ์กระเป๋า Airway&Breathing [Pulse oximeter (mobile)]
+อุปกรณ์กระเป๋า Airway&Breathing [กระดาษ EKG (สำรอง)]
+อุปกรณ์ใส่ท่อช่วยหายใจ [Guidescope]
+อุปกรณ์ใส่ท่อช่วยหายใจ [Guide]
+อุปกรณ์ใส่ท่อช่วยหายใจ [Stethoscope]
+อุปกรณ์การดาม [Long spinal board]
+อุปกรณ์การดาม [Belt 3 เส้น]
+อุปกรณ์การดาม [Head immobilization]
+อุปกรณ์การดาม [KED]
+อุปกรณ์การดาม [Vacuum splint และที่สูบ]
+อุปกรณ์ยกเคลื่อนย้าย [Stair chair]
+อุปกรณ์ยกเคลื่อนย้าย [Stretcher]
+อุปกรณ์ยกเคลื่อนย้าย [เตียงไฟฟ้า และ battery]
+Monitor/Defibrillator [Defibrillator (zoll/Tempus)]
+Monitor/Defibrillator [Battery]
+Monitor/Defibrillator [กระดาษ EKG ในเครื่อง]
+Monitor/Defibrillator [SpO2]
+Monitor/Defibrillator [EtCO2]
+Monitor/Defibrillator [Cuff วัดความดัน เด็ก และผู้ใหญ่]
+Monitor/Defibrillator [สาย chest lead EKG]
+Monitor/Defibrillator [แท่นวาง]
+Autopulse [Autopulse (เครื่อง)]
+Autopulse [Battery 2 อัน]
+Autopulse [การทดสอบเครื่อง]
+Suction [เครื่อง Suction]
+Suction [Suction connector tube]
+Suction [Battery]
+Self-inflating bag/Ambu bag Pediatric [Ambu]
+Self-inflating bag/Ambu bag Pediatric [reservoir]
+Self-inflating bag/Ambu bag Pediatric [face mask]
+Self-inflating bag/Ambu bag Pediatric [HEPA filter]
+Self-inflatting bag/Ambu bag Adult [Ambu]
+Self-inflatting bag/Ambu bag Adult [reservoir]
+Self-inflatting bag/Ambu bag Adult [face mask]
+Self-inflatting bag/Ambu bag Adult [HEPA filter]
+อุปกรณ์อื่นๆ [เสาน้ำเกลือ]
+อุปกรณ์อื่นๆ [ถังดับเพลิง]
+อุปกรณ์อื่นๆ [เครื่องฟอกอากาศ]
+อุปกรณ์อื่นๆ [ชั้นวางติด Stretcher]
+อุปกรณ์อื่นๆ [เครื่อง Infusion pump]
+อุปกรณ์ระบบ SMA [กล้อง mobile]
+อุปกรณ์ระบบ SMA [โทรศัพท์มือถือ]
+อุปกรณ์ระบบ SMA [Smart card reader (เครื่องอ่านบัตร)]
+Oxygen tank เล็ก [ปริมาณ]
+Oxygen tank no.1 (ปริมาณ)
+Oxygen tank no.2 (ปริมาณ)
+กล้อง Telemedicine (%battery)
+IPOC (%battery)
+กล้อง mobile ของระบบ SMA (%battery)
+โทรศัพท์มือถือของระบบ SMA (%battery)
+Set คลอด (วันหมดอายุ)
+ระบบรถ Ambulance [Battery]
+ระบบรถ Ambulance [ระบบแอร์]
+ระบบรถ Ambulance [ระบบไฟ]
+ระบบรถ Ambulance [ความสะอาดภายในและรอบคัน]
+ระบบรถ Ambulance [สภาพยาง]
+ระดับน้ำมันเชื้อเพลิง
+เลขไมล์
+อุปกรณ์คงค้าง(รับเวร)
+ความเสียหายรอบรถ(รอยชน/รอยบุบ/รอยถลอกหรือรอยอื่นๆ)
+เหตุลที่ไม่พร้อมใช้งาน(ระบบชื่ออุปกรณ์และเหตุผล)
+ITEM
+
+  groups = []
+  topics = {}
+
+  list.split("\n").each do |line|
+    groups << line.split("[")[0].strip
+  end
+
+  list.split("\n").each do |line|
+    group = line.split("[")[0].strip
+    if line.split("[")[1]
+      topic = line.split("[")[1][0..-2]
+      topics[group] = [] unless topics[group]
+      topics[group] << topic
+    end
+  end
+
+
+  groups.uniq!
+
+choice = <<CHOICE
+อุปกรณ์กระเป๋า Airway&Breathing|พร้อมใช้,ไม่พร้อมใช้|airway_breathing_bag_status
+อุปกรณ์ใส่ท่อช่วยหายใจ|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|intubation_equipment_status
+อุปกรณ์การดาม|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|splint_equipment_status
+อุปกรณ์ยกเคลื่อนย้าย|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|lifting_transport_equipment_status
+Monitor/Defibrillator|พร้อมใช้,ไม่พร้อมใช้|monitor_defibrillator_status
+Autopulse|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|autopulse_status
+Suction|พร้อมใช้,ไม่พร้อมใช้|suction_status
+Self-inflating bag/Ambu bag Pediatric|พร้อมใช้,ไม่พร้อมใช้|ambu_bag_pediatric_status
+Self-inflatting bag/Ambu bag Adult|พร้อมใช้,ไม่พร้อมใช้|ambu_bag_adult_status
+อุปกรณ์อื่นๆ|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|other_equipment_status
+อุปกรณ์ระบบ SMA|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|sma_system_equipment_status
+Oxygen tank เล็ก|เขียว 4,เขียว 3,เหลือง 2,แดง 1|oxygen_tank_small_level
+Oxygen tank no.1 (ปริมาณ)|TEXT|oxygen_tank_1_quantity
+Oxygen tank no.2 (ปริมาณ)|TEXT|oxygen_tank_2_quantity
+กล้อง Telemedicine (%battery)|TEXT|telemedicine_camera_battery
+IPOC (%battery)|TEXT|ipoc_battery
+กล้อง mobile ของระบบ SMA (%battery)|TEXT|sma_mobile_camera_battery
+โทรศัพท์มือถือของระบบ SMA (%battery)|TEXT|sma_phone_battery
+Set คลอด (วันหมดอายุ)|DATE_SELECT|birth_kit_expiry_date
+ระบบรถ Ambulance|พร้อมใช้,ไม่พร้อมใช้|ambulance_system_status
+ระดับน้ำมันเชื้อเพลิง|TEXT|fuel_level
+เลขไมล์|TEXT|mileage
+อุปกรณ์คงค้าง(รับเวร)|TEXT|equipment_remaining
+ความเสียหายรอบรถ(รอยชน/รอยบุบ/รอยถลอกหรือรอยอื่นๆ)|TEXT|vehicle_damage_notes
+เหตุลที่ไม่พร้อมใช้งาน(ระบบชื่ออุปกรณ์และเหตุผล)|TEXT|unavailable_reason_details
+CHOICE
+
+mapk = {}
+mapc = {}
+
+choice.split("\n").each do |line|
+  mapc[line.split("|")[0]] = line.split("|")[1].split(",")
+  mapk[line.split("|")[0]] = line.split("|")[2]
+  
+end
+
+
+ %>
+
+  <% for group in groups %>
+ <div class="row">
+ <div class="col-12 alert alert-info">
+ <b><%="#{group}"%></b>
+ 
+ </div>
+  <% if mapc[group] 
+  
+    key = mapk[group]
+
+  %>
+  <% if mapc[group].include?("TEXT") %>
+   <%= text_string this, key, :label=>nil ,:col=>12%>  <br/>  <br/>  <br/>
+  <% elsif mapc[group].include?("DATE_SELECT") %>
+  <%= date_string this, key, :label=>nil ,:col=>12%>  <br/>  <br/>  <br/>
+  <% else %>
+  <table class="table table-bordered">
+  <tr>
+  <td>
+
+  </td>
+  <% for value in mapc[group] %>
+  <td style="text-align: center;">
+  <%= value %>
+  </td>
+  <% end %>
+  </tr>
+  <% for topic in topics[group] %>
+  <tr>
+  <td>
+  <%= topic %> <%# @record["#{key}_#{topic}"] %>
+  <%# radio_string this, "#{key}_#{topic}", :value=>mapc[group], :label=>topic ,:col=>12%>  
+  </td>
+  <% mapc[group].each_with_index do |value, index| %>
+  <td style="text-align: center;">
+  <input type="radio" class="field" name="record[<%="#{key}_#{topic}"%>]" value="<%=index%>" <%="checked='checked'" if @record["#{key}_#{topic}"] == index.to_s%>/>
+  </td>
+  <% end %>
+  </tr>
+  <% end %>
+  </table>
+  
+ 
+
+
+    <% end %>
+  
+  <% end %>
+  </div>
+  <br/>
+  <% end %>
+  </div><!--row-->
+</div><!--card body-->
+</div>
+
+</div>

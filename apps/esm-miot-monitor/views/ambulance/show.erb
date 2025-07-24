@@ -63,7 +63,7 @@ v{
 $('#check').click(function(){
 $('#check_modal').modal('show');
 $.ajax({
-	url: '../EmsEMR/ex_create?document=vehicle_check&return_url=../Ambulance/show?id=<%=record.id%>',
+	url: '../EmsEMR/ex_create?document=vehicle_check_emt&return_url=../Ambulance/show?id=<%=record.id%>',
 	method: 'get',
 	success: function(data){
 		$('#check_modal_body').html(data);
