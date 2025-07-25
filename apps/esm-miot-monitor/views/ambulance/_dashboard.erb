@@ -11,7 +11,7 @@
 
 	for i in this.model.where(:zone_id=>zone.id)
 %>
-<div class="col-6 p-sm-1">
+<div class="col-12 col-md-3  p-sm-1">
 <div class="card p-4">
 <div class="row">
 <div class="col-12">
@@ -31,7 +31,7 @@
 	  att = Attachment.find i.image
 	  if att
 		 
-		  content = "<img src='#{att.path}' width='100%' ><br/><center>#{content}</center>"
+		  content = "<br/><img src='#{att.path}'   style='max-height: 200px; max-width: 200px' ><br/><br/><center>#{content}</center>"
 		  
 	  end
 	  

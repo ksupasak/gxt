@@ -291,7 +291,7 @@ end
 </center>
 </div>
 <div class="col-6">
-  <%= content %>
+  <%# content %>
 </div>
 </div>
 
@@ -404,7 +404,7 @@ end
 									Line Notify
 								</a>
 
-								<a href="<%= "update_route?id=#{params[:case_id]}&command_id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
+								<a href="<%= "../EMSCommand/update_route?id=#{params[:case_id]}&command_id=#{cm.id}" %>" id="add-path-<%=cm.id%>" class="btn btn-primary btn-sm" data-remote="true"  data-remote-update="update-route">
 									Transfer
 								</a>
 

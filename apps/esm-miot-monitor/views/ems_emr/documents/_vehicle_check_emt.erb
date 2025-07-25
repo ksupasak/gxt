@@ -10,12 +10,12 @@
   ambu_list = Ambulance.where({}).sort(:name=>1).all.collect{|a| "#{a.id.to_s}|#{a.name}"}
 
   emt_list = Provider.where({:role=>'emt'}).sort(:code=>1).all.collect{|a| "}#{a.id.to_s}|#{a.code} #{a.name}"}
-
+ @record['ambulance_id'] = params[:data]['ambulance_id'] if params[:data]
 
 %>
 <div class="card">
 <div class="card-header bg-primary text-white">
-<center>Vehicle Check</center>
+<center>Vehicle Check EMT</center>
 </div>
 
 <div class="card-body">

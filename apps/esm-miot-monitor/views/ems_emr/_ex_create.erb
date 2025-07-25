@@ -28,6 +28,11 @@
 	
 	if document.type and document.type=='docuseal_link'
 
+  if params[:data]
+    values = params[:data]
+  end
+
+
 %>
 <% fieldset(:record) do |f| %>
 <%= inline(this,'documents/_'+document.name, :this=>this, :f=>f, :record=>values, :record_id=>"form")  %>
@@ -44,6 +49,7 @@
 <% end %>
 <br/>
 <input type="submit" value="Create" class="btn btn-success">
+<%=link_to 'Back', params[:return_url],:class=>'btn btn-secondary'%>
 </form>
 <% end %>
 
