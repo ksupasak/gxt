@@ -67,7 +67,7 @@ if params[:record]
 
 	case_no = "#{counter_key}-#{format('%04d',counter.count+1)}"
 	
-	counter.update_attributes(:count=>counter.count+1)
+	counter.update_attributes(:count=>counter.count)
 	
 	
 	
