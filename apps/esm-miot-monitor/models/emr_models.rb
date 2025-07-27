@@ -15,7 +15,8 @@ class EMRDocument < GXTModel
   key :type, String # docuseal_link
   key :template_id, String # docuseal_link
   key :link, String 
-  
+  include Mongoid::Timestamps
+
 
 end
 
@@ -29,6 +30,8 @@ class EMRRecord < GXTModel
   key :data, Hash
   key :stamp, DateTime
   key :submission_id, String
+  include Mongoid::Timestamps
+
 
 end
 

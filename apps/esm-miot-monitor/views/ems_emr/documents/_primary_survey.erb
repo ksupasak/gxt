@@ -175,8 +175,8 @@ Sound
 <%= radio_string this, 'breath_wheezing',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Wheezing', :col=>12 %>
 <%= radio_string this, 'breath_rhonchi',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Rhonchi', :col=>12 %>
 <%= radio_string this, 'breath_crepitation',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Crepitation', :col=>12 %>
+<%= radio_string this, 'breath_poor_air',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Poor air', :col=>12 %>
 <%= radio_string this, 'breath_descrease',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Decrease breath sound', :col=>12 %>
-<%= radio_string this, 'breath_poor_air',:value=>['Rt','Lt', 'Equal both lung'], :label=>'Decrease breath sound', :col=>12 %>
 
 </div>
 </div>
@@ -435,8 +435,9 @@ Wound
 
 </div>
 </div>
-
+<div style="height: 10px"></div>
 <hr/>
+<br/>
 <div class="col-12">
 <div class="card-title d-flex align-items-center">
 			<h5 class="mb-0 text-primary">Vital Sign:</h5>
@@ -449,15 +450,19 @@ Wound
 
 <%= text_string this, 'vs_sbp', :col=>3, :label=>'SBP'%>
 <%= text_string this, 'vs_dbp', :col=>3, :label=>'DBP'%>
-<%= text_string this, 'vs_map', :col=>3, :label=>'MAP'%>
-<%= text_string this, 'vs_rr', :col=>3, :label=>'Resp Rate'%>
+<%= text_string this, 'vs_map', :col=>2, :label=>'MAP'%>
+<%= text_string this, 'vs_pr', :col=>2, :label=>'PR'%>
+<%= text_string this, 'vs_o2sat', :col=>2, :label=>'O2Sat'%>
+
 
 </div>
 <div class="row">
-<%= text_string this, 'vs_pr', :col=>3, :label=>'Heart Rate'%>
-<%= text_string this, 'vs_o2sat', :col=>3, :label=>'O2Sat'%>
-<%= text_string this, 'vs_temp', :col=>3, :label=>'Body Temp (C)'%>
-<%= text_string this, 'vs_dtx', :col=>3, :label=>'DTX (mg%)'%>
+
+<%= text_string this, 'vs_rr', :col=>3, :label=>'Resp Rate'%>
+<%= text_string this, 'vs_temp', :col=>3, :label=>'BT(C)'%>
+<%= text_string this, 'vs_dtx', :col=>3, :label=>'DTX(mg%)'%>
+<%= text_string this, 'vs_co2', :col=>3, :label=>'ETCO<sub>2</sub>'%>
+
 </div>
 </div>
 </div>

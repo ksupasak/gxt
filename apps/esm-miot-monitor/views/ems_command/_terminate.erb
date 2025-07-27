@@ -1,0 +1,129 @@
+
+<%
+
+ems_case  = EMSCase.find params[:id]
+ems_command = EMSCommand.find params[:command_id]
+
+
+if request.post?
+
+
+
+if params[:record]
+
+	p = params[:record]
+
+	ems_case.update_attributes p
+
+
+
+  last = AdmitLog.where(:ems_command_id=>ems_command.id, :status=>'COMPLETED').sort(:sort_order=>-1).first
+  term = AdmitLog.create(:ems_command_id=>ems_command.id,:admit_id=>last.admit_id,:name=>'ยกเลิก',  :status=>'COMPLETED', :type=>'terminate', :stamp=>Time.now, :sort_order=>last.sort_order+0.01)
+
+  t1 = AdmitLog.where(:ems_command_id=>ems_command.id, :code=>'contact_at',  :type=>'ems').first
+  t2 = AdmitLog.where(:ems_command_id=>ems_command.id, :code=>'packing_at',  :type=>'ems').first
+
+  t1.update_attributes :status=>'CANCELLED' if t1.status=='PENDING'
+  t2.update_attributes :status=>'CANCELLED' if t2.status=='PENDING'
+
+  a1 = AdmitLog.where(:ems_command_id=>ems_command.id, :code=>'response_at').first
+  a1.update_attributes :status=>'CANCELLED' if a1.status=='PENDING'
+
+
+	#t1 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'พบผู้ป่วย', :code=>'contact_at', :status=>'PENDING', :note=>'', :sort_order=>3.10, :type=>'ems'
+	#t2 = AdmitLog.create  :ems_command_id=>record.id,:admit_id=>admit.id,:name=>'เคลื่อนย้าย', :code=>'packing_at', :status=>'PENDING', :note=>'', :sort_order=>3.20, :type=>'ems'
+
+
+end
+
+
+
+%>
+Update ... <%=Time.now%>
+<META HTTP-EQUIV="Refresh" CONTENT="1;URL=show?id=<%=ems_case.id%>">
+
+
+<% else %>
+
+<%
+
+  record = ems_case
+
+	# init_command = "เหตุ : #{ems_case.patient_info} อาการ : #{ems_case.chief_complain} รหัส : #{ems_case.init_code.name}"
+	# ems_command.init_command = init_command
+
+%>
+
+<form action="<%= get_path 'terminate' %>" method="post" data-remote='true' data-remote-update="reqeust-panel">
+<% fieldset(:record) do |f| %>
+
+<input type="hidden" name="id" value="<%=ems_case.id%>">
+<input type="hidden" name="command_id" value="<%=ems_command.id%>">
+
+
+<div class="card ">
+<div class="card-header bg-danger bbg-gradient text-white">
+
+	Terminate Information
+
+	</div>
+<div class="card-body">
+
+<%# inline(this,:'_form', :this=>this, :f=>f, :record=>ems_command, :ems_case=> ems_case)  %>
+<%
+
+  hospitals = EMSHospital.where({}).sort(:created_at=>1).all()
+
+%>
+
+<div class="row">
+
+<div class="col-4">
+<label class="form-label" for="operation_result">ผลปฏิบัติการ</label>
+<%= f.select(:operation_result, [['found','พบเหตุ'],['not_found','ไม่พบเหตุ']], :value=>record.operation_result, :class=>' form-select ') %>
+</div>
+
+<div class="col-4">
+<label class="form-label" for="operation_hospital">สถานที่เกิดเหตุ</label>
+<%= f.select(:operation_hospital, [['out_hospital','นอกโรงพยาบาล'],['in_hospital','ในโรงพยาบาล']], :value=>record.operation_hospital, :class=>' form-select') %>
+</div>
+
+
+<div class="clear"></div>
+<div class="col-8">
+<label class="form-label " for="init_cbd_color">กรณีไม่พบเหตุ</label>
+<input class="form-control" type="text" name="record[operation_cancel_reason]" id="" value="<%=record.operation_cancel_reason%>">
+</div>
+
+<div class="col-4">
+<label class="form-label " for="operation_cancel_at">แจ้งยกเลิกเวลา</label>
+<input class="form-control" type="text" name="record[operation_cancel_at]" id="" value="<%=record.operation_cancel_at%>">
+</div>
+<div class="clear"></div>
+
+
+
+</div>
+
+
+</div>
+</div>
+<% end %>
+<input type="submit" name="create" value="Submit" class="btn btn-danger btn-sm">
+
+<a href="<%=get_path "show?case_id=#{ems_case.id}" %>" class="btn btn-secondary-outline btn-sm" data-remote="true" data-remote-update="command">Cancel</a>
+
+
+</form>
+
+<div id="reqeust-panel">
+
+</div>
+<% end %>
+
+<script>
+console.log('terminate')
+
+	refresh_remote()
+  $('.terminate-panel').show()
+</script>

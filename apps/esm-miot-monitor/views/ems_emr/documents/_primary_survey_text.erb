@@ -90,8 +90,10 @@ R : <%=r['response'].classify %>
 %>
 E : <%= r['exposure_list'].split("|").join(", ")  %> <%= r['exposure_special_note'] if r['exposure_special_note'] %>
 <% end %>
+
+<% elsif query=='2' %>
 <%
-list = %w{ sbp pr o2sat temp rr dtx }
+list = %w{ sbp pr o2sat temp rr dtx co2 }
   rs = []
   test = []
    for j in list
@@ -112,7 +114,9 @@ list = %w{ sbp pr o2sat temp rr dtx }
    rs << "#{j.upcase} : #{v} "
   end  
 	
-%><% end %><% end %>First vital sign : <%=rs.join(", ")%><% elsif query=='2' %>
+%><% end %><% end %>
+[<%=@record.created_at.strftime("%H:%M")%>] : <%=rs.join(", ")%>
+<% elsif query=='3' %>
 <%
   list = %w{sign_and_symptom allergies  medication  past_history last_oral_intake event }
   for i in list

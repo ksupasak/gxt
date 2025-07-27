@@ -7,7 +7,15 @@
 
 		<div class="row">
 
+<%
+		
+		ambulance_list = Ambulance.where({:zone_id=>ems_case.zone_id}).sort(:name=>1).all()
+	   ch_map = {}
+	   for ambu in ambulance_list
+		ch_map[ambu.id] = EMSChannel.where({:name=>ambu.msg_channel}).first.id
+	   end
 
+%>
 			<div class="col-12 col-lg-12 col-xl-4">
 				<div class="card">
 					<p class="p-3 mb-0">
@@ -26,15 +34,34 @@
 
 					</p><%= f.select(:ambulance_id, Ambulance.where({:zone_id=>ems_case.zone_id}).sort(:name=>1).all().collect{|i| [i.id,"#{i.name} : #{i.plate_license}"] }, :value=>record.ambulance_id,:class=>'form-select mb-3 mx-3 w-auto') %>
 
-
-
-
 					<p class="px-3">
 
+					<%
+
+					 channel_id = ems_case.channel_id
+					 channel_id = record.channel_id if record.channel_id
+					%>
+  
 					Communication Team<span style="float:right"></span>
 
-					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id,i.name]}, :value=>record.channel_id,:class=>'form-select mb-3 mx-3 w-auto') %>
+					</p><%= f.select(:channel_id, EMSChannel.where({}).sort(:created_at=>1).all().collect{|i| [i.id.to_s,i.name]}, :value=>channel_id.to_s,:class=>'form-select mb-3 mx-3 w-auto') %>
+<script>
 
+var ch_map = <%=ch_map.to_json%>
+
+$('#record_ambulance_id').change(function(){
+	
+	v = $(this).val()
+	console.log(v)
+	ch = $(this).find(":selected")
+	ch_id = ch_map[v]	
+	
+	$('#record_channel_id').val(ch_id)
+		
+})
+
+	
+</script>
 
 
 

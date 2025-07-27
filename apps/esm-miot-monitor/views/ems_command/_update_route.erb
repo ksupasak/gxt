@@ -74,8 +74,8 @@ Update ... <%=Time.now%>
 <form action="<%= get_path 'update_route' %>" method="post" data-remote='true' data-remote-update="reqeust-panel">
 <% fieldset(:record) do |f| %>
 
-<input type="hidden" name="case_id" value="<%=ems_case.id%>">
-<input type="hidden" name="id" value="<%=ems_command.id%>">
+<input type="hidden" name="id" value="<%=ems_case.id%>">
+<input type="hidden" name="command_id" value="<%=ems_command.id%>">
 
 
 <div class="card ">
