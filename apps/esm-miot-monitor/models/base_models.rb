@@ -1279,6 +1279,26 @@ class Counter < GXTModel
 
 end
 
+class Menu < GXTModel
+  include Mongoid::Document
+
+  key :name, String
+  key :title, String
+  key :url, String
+  key :icon, String
+  key :parent_id, ObjectId
+
+  belongs_to :parent, :class_name=>'Menu', :optional=>true
+
+  has_many :children, :class_name=>'Menu', :foreign_key=>'parent_id'
+
+  include Mongoid::Timestamps
+
+  timestamps!
+
+
+end
+
 class Post < GXTModel
   include Mongoid::Document
 
@@ -1481,7 +1501,9 @@ class MessageController < GXTDocument
 end
 
 
+class MenuController < GXTDocument
 
+end
 
 class ScoreController < GXTDocument
 

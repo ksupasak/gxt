@@ -491,7 +491,22 @@ post '/:service/:operation' do
   process_request
 end
 
-
+ get '/:gxt/:service/:operation/*' do
+  process_request
+ end
+ 
+ post '/:gxt/:service/:operation/*' do
+   process_request
+ end
+ 
+ 
+ get '/:service/:operation' do
+   process_request
+ end
+ 
+ post '/:service/:operation' do
+   process_request
+ end
 
 
 get '/barcode' do

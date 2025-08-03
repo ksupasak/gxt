@@ -1,0 +1,5 @@
+<%
+  qs =  params[:q].split('/')
+%>
+<%= inline(this,:"solutions/#{qs[0]}/_#{qs[1]}_data")  %>
+

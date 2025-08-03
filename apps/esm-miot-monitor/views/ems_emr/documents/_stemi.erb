@@ -18,7 +18,7 @@
            %>
       <%=admit_log_contact.stamp%>
       <%
-         if admit_log_contact
+         if admit_log_contact and admit_log_contact.stamp
           first_medical_contact_time = admit_log_contact.stamp.strftime("%H:%M")
          else
           first_medical_contact_time = nil

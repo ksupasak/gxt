@@ -167,29 +167,17 @@ emd = true if  params[:side]=='emd'
 		 prejoin="false"	
 		></openvidu-webcomponent>
 		</app-root>
-		<ov-videoconference id="ovc" [tokens]="tokens">
+		<ov-videoconference [tokens]="tokens">
 		  <div *ovToolbar style="text-align: center;">
 		    <!-- <button (click)="toggleVideo()">Toggle Video</button>
 		    <button (click)="toggleAudio()">Toggle Audio</button> -->
 		  </div>
 		</ov-videoconference>
 		<script>
-  async function selectBackCamera() {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const backCamera = devices.find(device =>
-      device.kind === "videoinput" && device.label.toLowerCase().includes("back")
-    ) || devices.find(device =>
-      device.kind === "videoinput" && device.label.toLowerCase().includes("environment")
-    );
+		 var webComponent = document.querySelector('openvidu-webcomponent');
+		 webComponent.participantName = 'Bystander';  // your desired name
+         </script>
 
-    if (backCamera) {
-      const ovc = document.getElementById('ovc');
-      ovc.videoSource = backCamera.deviceId;
-    }
-  }
-
-  selectBackCamera();
-</script>
 		
 	</div>
 		
@@ -224,7 +212,10 @@ emd = true if  params[:side]=='emd'
 		    <button (click)="toggleAudio()">Toggle Audio</button> -->
 		  </div>
 		</ov-videoconference>
-		
+			<script>
+		 var webComponent = document.querySelector('openvidu-webcomponent');
+		 webComponent.participantName = 'EMD';  // your desired name
+         </script>
 		
 	</div>
 	
@@ -464,6 +455,10 @@ emd = true if  params[:side]=='emd'
 
 
           var webComponent = document.querySelector('openvidu-webcomponent');
+
+			// webComponent.participantName = 'Bystander';  // your desired name
+
+
           webComponent.tokens = token ; //'wss://pcm-life.com:4443?sessionId=SessionA&token=tok_O4GO4gBKe2cX7M7K' ;
 		  
 		
@@ -472,8 +467,9 @@ emd = true if  params[:side]=='emd'
 		          var session = event.detail;
 				  
 				  function autoJoin() {
-				    $('#join-button').click()
-					getToken("<%=session_id%>")
+
+				    // $('#join-button').click()
+					// getToken("<%=session_id%>")
 				  }
 			
 		

@@ -67,7 +67,19 @@ class Core {
        this.charts.push({name:name, type:'donut', col:col, options:options})
        
   }
-  
+
+    showTable(name, col, options={}){
+       this.dataset.push({name:name, col:col, options:options})
+       options['callback'] = this.callback
+       if(this.options['callback']){
+            options['callback'] = this.options['callback']
+       }
+       options['name'] = name
+       options['col'] = col
+       this.charts.push({name:name, type:'table', col:col, options:options})
+       
+  }
+
   update(response, callback=null){
        
        console.log(response)
@@ -91,7 +103,9 @@ class Core {
            if(chart.type=='donut'){
                showDonut(chart['name']+" svg", results[chart['name']], chart['options'])
            }
-           
+           if(chart.type=='table'){
+               showTable(chart['name']+"", results[chart['name']], chart['options'])
+           }
            
        }   
         if(callback){
@@ -145,6 +159,63 @@ class Core {
     }
     
   
+
+    function showTable(div, data, options={}) {
+console.log(div)
+       const container = document.getElementById(div);
+
+  // Remove any previous table content
+  container.innerHTML = "";
+
+  // Create a table element
+  const table = document.createElement("table");
+  table.style.borderCollapse = "collapse";
+  table.style.width = "100%";
+  table.style.fontFamily = "Arial, sans-serif";
+  table.style.marginTop = "10px";
+
+  // Add table header
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  [options['desc']||"Description", "จำนวน"].forEach(text => {
+    const th = document.createElement("th");
+    th.textContent = text;
+    th.style.border = "1px solid #ccc";
+    th.style.padding = "8px";
+    th.style.backgroundColor = "#f5f5f5";
+    th.style.textAlign = "left";
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Add data rows
+  const tbody = document.createElement("tbody");
+  data.forEach(d => {
+    const row = document.createElement("tr");
+
+    const labelCell = document.createElement("td");
+    labelCell.textContent = d.label;
+    labelCell.style.border = "1px solid #ccc";
+    labelCell.style.padding = "8px";
+
+    const valueCell = document.createElement("td");
+    valueCell.textContent = d.value;
+    valueCell.style.border = "1px solid #ccc";
+    valueCell.style.padding = "8px";
+    valueCell.style.textAlign = "right";
+
+    row.appendChild(labelCell);
+    row.appendChild(valueCell);
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  container.appendChild(table);
+
+}
     
     function showDonut(div, data, options={}){
         $("#"+div+ " g").remove();
@@ -311,4 +382,5 @@ const color_gradient = d3.scaleOrdinal()
     .attr("y", d => y(d.value) - 5);
     }
     
+
 </script>
