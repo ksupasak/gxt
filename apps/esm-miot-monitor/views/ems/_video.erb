@@ -167,13 +167,29 @@ emd = true if  params[:side]=='emd'
 		 prejoin="false"	
 		></openvidu-webcomponent>
 		</app-root>
-		<ov-videoconference [tokens]="tokens">
+		<ov-videoconference id="ovc" [tokens]="tokens">
 		  <div *ovToolbar style="text-align: center;">
 		    <!-- <button (click)="toggleVideo()">Toggle Video</button>
 		    <button (click)="toggleAudio()">Toggle Audio</button> -->
 		  </div>
 		</ov-videoconference>
-		
+		<script>
+  async function selectBackCamera() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const backCamera = devices.find(device =>
+      device.kind === "videoinput" && device.label.toLowerCase().includes("back")
+    ) || devices.find(device =>
+      device.kind === "videoinput" && device.label.toLowerCase().includes("environment")
+    );
+
+    if (backCamera) {
+      const ovc = document.getElementById('ovc');
+      ovc.videoSource = backCamera.deviceId;
+    }
+  }
+
+  selectBackCamera();
+</script>
 		
 	</div>
 		
