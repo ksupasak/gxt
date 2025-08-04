@@ -2067,7 +2067,8 @@ MSG
                                   vl = position_list[i.device_no] 
                                    
                                   last =  ambu_status[i.id.to_s]
-                                  v = nil
+
+                                  v = last
                                   
                                   v = vl[-1] if vl and vl.size > 0 
                                   
