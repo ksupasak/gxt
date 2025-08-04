@@ -2068,9 +2068,13 @@ MSG
                                    
                                   last =  ambu_status[i.id.to_s]
 
+                                  v = nil
+
+                                  if vl and vl.size > 0 
+                                  v = vl[-1] 
+                                  else
                                   v = last
-                                  
-                                  v = vl[-1] if vl and vl.size > 0 
+                                  end
                                   
                         
                                   if ambu_status and v and ( last == nil or  last['ts']!=v['ts'] )
