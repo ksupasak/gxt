@@ -1,5 +1,5 @@
 
-<% require_relative 'lib' %>
+<% require_relative 'lib' %> 
 <%
   @record = record
 
@@ -29,6 +29,7 @@
  <%
 
 list = <<ITEM
+Oropharyngeal airway [OPA no.60 mm - black]
 Oropharyngeal airway [OPA no.70 mm - white]
 Oropharyngeal airway [OPA no.80 mm - green]
 Oropharyngeal airway [OPA no.90 mm - yellow]
@@ -103,8 +104,10 @@ Circulation [10%DN/2 1,000 ml]
 Circulation [10%DW 500 ml]
 Circulation [NSS irrigation 1,000 ml]
 Circulation [Infusion pump+สายชาร์จ]
+Circulation ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 เครื่อง Suction [เครื่อง Suction]
 เครื่อง Suction [Battery]
+เครื่อง Suction ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 Monitor/Defibrillator [เครื่อง Defibrillator (Tempus/Zoll)]
 Monitor/Defibrillator [Battery]
 Monitor/Defibrillator [กระดาษ EKG]
@@ -113,8 +116,10 @@ Monitor/Defibrillator [EtCO2]
 Monitor/Defibrillator [Cuff วัดความดัน เด็ก และผู้ใหญ่]
 Monitor/Defibrillator [สาย chest lead EKG]
 Monitor/Defibrillator [แท่นวาง]
+Monitor/Defibrillator ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 Autopulse [Autopulse (เครื่อง)]
 Autopulse [Battery (2 ก้อน)]
+Autopulse ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 อุปกรณ์การดาม [Long spinal board]
 อุปกรณ์การดาม [belt 3 เส้น]
 อุปกรณ์การดาม [Head immobilization]
@@ -122,31 +127,35 @@ Autopulse [Battery (2 ก้อน)]
 อุปกรณ์การดาม [Vacuum splint และที่สูบ]
 อุปกรณ์การดาม [Scoop]
 อุปกรณ์การดาม [SAM pelvic sling]
+อุปกรณ์การดาม ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 อุปกรณ์ยกเคลื่อนย้าย [Stair chair]
 อุปกรณ์ยกเคลื่อนย้าย [Stretcher]
 อุปกรณ์ยกเคลื่อนย้าย [เตียงไฟฟ้า และ battery]
+อุปกรณ์ยกเคลื่อนย้าย ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 อื่นๆ [ผ้าห่ม]
 อื่นๆ [PPE]
 อื่นๆ [Alcohol gel]
 อื่นๆ [Ventilator/Oxylog+set]
 อื่นๆ [น้ำเปล่า]
+อื่นๆ ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
 Set คลอด (วันหมดอายุ)
-Defibrillator
-เครื่อง suction
-วิทยุสื่อสาร
-Video Laryngoscope wrap
-Stretcher Ferno
-ถังขยะ
-พื้นรถ
-อบ UV ทุกครั้งหลังออกเคส
-Infusion pump
+ความสะอาด [Defibrillator]
+ความสะอาด [เครื่อง suction]
+ความสะอาด [วิทยุสื่อสาร]
+ความสะอาด [Video Laryngoscope wrap]
+ความสะอาด [Stretcher Ferno]
+ความสะอาด [ถังขยะ]
+ความสะอาด [พื้นรถ]
+ความสะอาด [อบ UV ทุกครั้งหลังออกเคส]
+ความสะอาด [Infusion pump]
+ความสะอาด [รอบตัวรถพยาบาล]
 Glucometer [เครื่อง DTX]
 Glucometer [Alcohol pad]
 Glucometer [Strip DTX]
 Glucometer [เข็มเจาะปลายนิ้ว]
-Set IO
-Set IV
-Set NG
+Set IO,IV,NG [Set IO]
+Set IO,IV,NG [Set IV]
+Set IO,IV,NG [Set NG]
 Gauze [Gauze 2x2]
 Gauze [Gauze 4x4]
 Gauze [Top Gauze]
@@ -155,7 +164,7 @@ Elastic bandage (EB) [No.4]
 Elastic bandage (EB) [No.6]
 Conforming bandage [No.3]
 Conforming bandage [No.4]
-Glove sterile
+Glove sterile [Glove sterile]
 Syringe [Syringe 3 ml (5 อัน)]
 Syringe [Syringe 5 ml (5 อัน)]
 Syringe [Syringe 10 ml (5 อัน)]
@@ -171,48 +180,18 @@ Needle (อย่างละ 5) [No.24]
 Needle (อย่างละ 5) [No.25]
 Needle (อย่างละ 5) [No.27]
 Needle (อย่างละ 5) [Blade No.11]
-Transpore
-Microspore
-ซองใส่แลป
-ถุงพลาสติก
-ขวดสำหรับทิ้งเข็ม
-NSS 1,000 ml
-NSS 100 ml
-5%DW 100 ml
-Ammonia
-Chlorhexidine
-Betadine
-Circulation ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
-เครื่อง Suction ไม่พร้อมใช้งานเนื่องจาก
-Monitor/Defibrillator ไม่พร้อมใช้งานเนื่องจาก
-Autopulse ไม่พร้อมใช้งานเนื่องจาก
-Cervical collar ไม่พร้อมใช้งานเนื่องจาก
-อุปกรณ์การดาม ไม่พร้อมใช้งานเนื่องจาก
-อุปกรณ์ยกเคลื่อนย้าย ไม่พร้อมใช้งานเนื่องจาก
-อื่นๆ ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Chest seal vs occlusive dressing]
-Monitor/Defibrillator [Mobile pulse oximeter]
-อื่นๆ [ATK]
-Suction [closed suction no.14]
-Suction [Connection tube]
-รอบตัวรถพยาบาล
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Artery clamp]
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [กรรไกรตัดเฝือก]
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Tourniquet]
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Ped card]
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Tongue depressor]
-อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ [Magill forceps]
-กรรไกร
-อุปกรณ์การดาม [Cervical collar (Pediatric)]
-อุปกรณ์การดาม [Cervical collar (Adult)]
-มีกระเป๋า Circulation อยู่บนรถหรือไม่?
-อื่นๆ [Invasive monitoring (A-line/C-line)]
-Monitor/Defibrillator [cuff BP ผู้ใหญ่]
-Monitor/Defibrillator [cuff BP เด็ก]
-Monitor/Defibrillator [สาย EKG 4 lead]
-Monitor/Defibrillator [สาย EKG 12 lead]
-Monitor/Defibrillator [Pulse Oximeter]
-Monitor/Defibrillator [Mobile Pulse oximeter]
+เวชภัณฑ์ [Transpore]
+เวชภัณฑ์ [Microspore]
+เวชภัณฑ์ [กรรไกร]
+เวชภัณฑ์ [ซองใส่แลป]
+เวชภัณฑ์ [ถุงพลาสติก]
+เวชภัณฑ์ [ขวดสำหรับทิ้งเข็ม]
+เวชภัณฑ์ [NSS 1,000 ml]
+เวชภัณฑ์ [NSS 100 ml]
+เวชภัณฑ์ [5%DW 100 ml]
+เวชภัณฑ์ [Ammonia]
+เวชภัณฑ์ [Chlorhexidine]
+เวชภัณฑ์ [Betadine]
 ITEM
 
   groups = []
@@ -231,35 +210,52 @@ ITEM
     end
   end
 
-
   groups.uniq!
 
+
 choice = <<CHOICE
-อุปกรณ์กระเป๋า Airway&Breathing|พร้อมใช้,ไม่พร้อมใช้|airway_breathing_bag_status
-อุปกรณ์ใส่ท่อช่วยหายใจ|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|intubation_equipment_status
-อุปกรณ์การดาม|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|splint_equipment_status
-อุปกรณ์ยกเคลื่อนย้าย|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|lifting_transport_equipment_status
-Monitor/Defibrillator|พร้อมใช้,ไม่พร้อมใช้|monitor_defibrillator_status
-Autopulse|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|autopulse_status
-Suction|พร้อมใช้,ไม่พร้อมใช้|suction_status
-Self-inflating bag/Ambu bag Pediatric|พร้อมใช้,ไม่พร้อมใช้|ambu_bag_pediatric_status
-Self-inflatting bag/Ambu bag Adult|พร้อมใช้,ไม่พร้อมใช้|ambu_bag_adult_status
-อุปกรณ์อื่นๆ|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|other_equipment_status
-อุปกรณ์ระบบ SMA|มี พร้อมใช้,มี ไม่พร้อมใช้,ไม่มี|sma_system_equipment_status
-Oxygen tank เล็ก|เขียว 4,เขียว 3,เหลือง 2,แดง 1|oxygen_tank_small_level
-Oxygen tank no.1 (ปริมาณ)|TEXT|oxygen_tank_1_quantity
-Oxygen tank no.2 (ปริมาณ)|TEXT|oxygen_tank_2_quantity
-กล้อง Telemedicine (%battery)|TEXT|telemedicine_camera_battery
-IPOC (%battery)|TEXT|ipoc_battery
-กล้อง mobile ของระบบ SMA (%battery)|TEXT|sma_mobile_camera_battery
-โทรศัพท์มือถือของระบบ SMA (%battery)|TEXT|sma_phone_battery
+Oropharyngeal airway|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|oropharyngeal_airway
+Nasopharyngeal airway|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|nasopharyngeal_airway
+Laryngoscope Adult|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|laryngoscope_adult
+Laryngoscope Neonate/Pediatric|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|laryngoscope_neonate_pediatric
+Glidescope/Video Laryngoscope|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|glidescope_video_laryngoscope
+Endotracheal tube|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|endotracheal_tube
+Laryngeal Mask Airway (LMA)|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|lma
+Set stab ETT|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|set_stab_ett
+Suction|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|suction
+Cannula|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|cannula
+Mask with bag|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|mask_with_bag
+Set Nebulizer|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|set_nebulizer
+Self-inflating bag Adult|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|ambu_bag_adult
+Self-inflating bag Neonate|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|ambu_bag_neonate
+อุปกรณ์กระเป๋า Airway & Breathing อื่นๆ|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|airway_bag_others
+อุปกรณ์กระเป๋า Airway&Breathing ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|airway_bag_unavailable_reason
+Circulation|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|circulation
+Circulation ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|circulation_unavailable_reason
+เครื่อง Suction|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|suction_machine
+เครื่อง Suction ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|suction_machine_unavailable_reason
+Monitor/Defibrillator|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|monitor_defibrillator
+Monitor/Defibrillator ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|monitor_defibrillator_unavailable_reason
+Autopulse|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|autopulse
+Autopulse ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|autopulse_unavailable_reason
+อุปกรณ์การดาม|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|splint_equipment
+อุปกรณ์การดาม ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|splint_equipment_unavailable_reason
+อุปกรณ์ยกเคลื่อนย้าย|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|lifting_transport_equipment
+อุปกรณ์ยกเคลื่อนย้าย ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|lifting_transport_equipment_unavailable_reason
+อื่นๆ|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|other_equipment
+อื่นๆ ไม่พร้อมใช้งานเนื่องจาก (ระบุอุปกรณ์และเหตุผล)|TEXT|other_equipment_unavailable_reason
 Set คลอด (วันหมดอายุ)|DATE_SELECT|birth_kit_expiry_date
-ระบบรถ Ambulance|พร้อมใช้,ไม่พร้อมใช้|ambulance_system_status
-ระดับน้ำมันเชื้อเพลิง|TEXT|fuel_level
-เลขไมล์|TEXT|mileage
-อุปกรณ์คงค้าง(รับเวร)|TEXT|equipment_remaining
-ความเสียหายรอบรถ(รอยชน/รอยบุบ/รอยถลอกหรือรอยอื่นๆ)|TEXT|vehicle_damage_notes
-เหตุลที่ไม่พร้อมใช้งาน(ระบบชื่ออุปกรณ์และเหตุผล)|TEXT|unavailable_reason_details
+ความสะอาด|สะอาด,ไม่สะอาด|cleaning
+มีกระเป๋า Circulation อยู่บนรถหรือไม่?|มี,ไม่มี|circulation_bag
+Glucometer|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|glucometer
+Set IO,IV,NG|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|set_tools
+Gauze|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|gauze
+Elastic bandage (EB)|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|elastic_bandage
+Conforming bandage|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|conforming_bandage
+Glove sterile|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|glove_sterile
+Syringe|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|syringe
+Needle (อย่างละ 5)|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|needle
+เวชภัณฑ์|พร้อมใช้,ไม่พร้อมใช้,ไม่มี|medical_supplies
 CHOICE
 
 mapk = {}
@@ -301,6 +297,8 @@ end
   </td>
   <% end %>
   </tr>
+  <% unless  topics[group] %>
+  <% else %>
   <% for topic in topics[group] %>
   <tr>
   <td>
@@ -314,6 +312,7 @@ end
   <% end %>
   </tr>
   <% end %>
+    <% end %>
   </table>
   
  

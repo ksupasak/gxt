@@ -342,6 +342,10 @@ class EMSCase < GXTModel
     
   end
 
+  def at_scene_time
+      return "test"
+  end
+
   def relocation_target latlng
 
       ambu = self.ambulance

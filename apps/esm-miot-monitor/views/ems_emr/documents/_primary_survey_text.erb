@@ -81,7 +81,9 @@ R : <%=r['response'].classify %>
     if r['gcs_e'] and r['gcs_e'] != ""
 
       evm = "E#{r['gcs_e']}V#{r['gcs_v']}M#{r['gcs_m']}"
-      result = "#{evm}, lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
+      result = "#{evm}"
+      result += ", pupil #{r['mm_rtlbe']} mmRTLBE" if r['mm_rtlbe']
+      result += ", lt pupil #{r['pupil_lt']} #{r['pupil_lt_rtl']}, rt pupil #{r['pupil_rt']} #{r['pupil_rt_rtl']}"
 
 %>D : <%= result  %> <% end %>
 <%
