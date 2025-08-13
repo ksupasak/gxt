@@ -807,10 +807,10 @@ MSG
                           puts "PTT Rquest #{name}"
 
 
-                          threads << Thread.new do
+                          thread = Thread.new do
                           
 
-                            
+
                           switch name, 'esm-miot-monitor'
 
                           # t = Thread.new{
