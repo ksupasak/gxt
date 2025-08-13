@@ -804,7 +804,7 @@ MSG
                           name = t[-1]
                           path_name = t[2..-1].join("/")
 
-                          puts "PTT Rquest #{name}"
+                          puts "PTT Request #{name}"
 
 
 
@@ -859,7 +859,10 @@ MSG
                               
                             end
                               
-                              
+                              # Mongoid::Threaded.database_override = "my_app_temp"
+                              switch solution_name, 'esm-miot-monitor'
+
+
                               connection =  Mongo::Client.new Mongoid::Config.clients["default"]['hosts'], :database=>Mongoid::Threaded.database_override
 
                               grid = Mongo::Grid::FSBucket.new(connection.database)
