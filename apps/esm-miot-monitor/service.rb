@@ -807,11 +807,13 @@ MSG
                           puts "PTT Rquest #{name}"
 
 
+
                           thread = Thread.new do
                           
+                          solution_name = name
 
 
-                          switch name, 'esm-miot-monitor'
+                          switch solution_name, 'esm-miot-monitor'
 
                           # t = Thread.new{
 
@@ -825,7 +827,7 @@ MSG
 
                             obj = json['data']
                             # puts obj.inspect
-                            redis.publish("ptt/#{name}/z/#{ptt_channel}", message)
+                            redis.publish("ptt/#{solution_name}/z/#{ptt_channel}", message)
                             redis.publish("ptt/out/#{path_name}/#{ptt_channel}", message)
 
                               
