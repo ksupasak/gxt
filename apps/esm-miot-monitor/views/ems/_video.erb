@@ -115,9 +115,19 @@ emd = true if  params[:side]=='emd'
 			<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
 		<link href="/rocker/assets/css/app.css" rel="stylesheet">
 		<link href="/rocker/assets/css/icons.css" rel="stylesheet">
+       
+	   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<% if Setting.get('videocall_agent')=='OPENVIDU3' %>
+		<script src='/vendor/openvidu/openvidu-webcomponent-v2compatibility-3.3.0.js'></script>
+        <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-v2compatibility-3.3.0.css">
+		<% else %>
         <script src='/vendor/openvidu/openvidu-webcomponent-2.28.0.js'></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/vendor/openvidu/openvidu-webcomponent-2.28.0.css">
+		<% end %>
+		
+
+
 	    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <style>
 	:root {
