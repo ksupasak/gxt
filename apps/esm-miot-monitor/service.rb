@@ -793,6 +793,8 @@ MSG
 
                 begin
 
+                  threads = []
+
 
                   redis.pubsub.psubscribe("ptt/in/*") do |channel, message|
 
@@ -804,6 +806,11 @@ MSG
 
                           puts "PTT Rquest #{name}"
 
+
+                          threads << Thread.new do
+                          
+
+                            
                           switch name, 'esm-miot-monitor'
 
                           # t = Thread.new{
@@ -962,7 +969,7 @@ MSG
                   end
 
 
-
+                end
 
 
                end
