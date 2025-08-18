@@ -1,227 +1,1051 @@
+<input type="hidden" name="document" value="report_green">
 <% require_relative 'lib'%>
 <%
   @record = record
-
-  if record['heent_note'] == nil
-	record['heent_note'] = 'not pale conjunctiva'
-  end
-
-  if record['chest_note'] == nil
-	record['chest_note'] = 'Equal chest movement'
-  end
-
-  if record['cvs_note'] == nil
-	record['cvs_note'] = 'Normal S1S2, no murmur'
-  end
-
-  if record['abdomen_note'] == nil
-	record['abdomen_note'] = 'Soft, no tenderness, no guarding'
-  end
-
-  if record['extremity_note'] == nil
-	record['extremity_note'] = 'no pitting edema, no skin lesion'
-  end
-
-  if record['neurological_note'] == nil
-	record['neurological_note'] = 'Motor power gr. all extremity'
-  end
+  # กำหนดค่า default ให้ field ต่างๆ ถ้าไม่มีค่า
+  record['heent_note'] ||= 'not pale conjunctiva'
+  record['chest_note'] ||= 'Equal chest movement'
+  record['cvs_note'] ||= 'Normal S1S2, no murmur'
+  record['abdomen_note'] ||= 'Soft, no tenderness, no guarding'
+  record['extremity_note'] ||= 'no pitting edema, no skin lesion'
+  record['neurological_note'] ||= 'Motor power gr. all extremity'
 %>
+
+<!-- form tag removed: now using parent form from _update.erb -->
+<!-- หากมีปัญหา document ไม่ตรง ตรวจสอบว่า EMRDocument.name ในฐานข้อมูลต้องเป็น 'report_green' -->
+<!-- JavaScript to calculate response time based on time inputs -->
+<script>
+function parseTimeToSec(t) {
+  if (!t) return null;
+  const [h, m] = t.split(":");
+  return parseInt(h,10)*3600 + parseInt(m,10)*60;
+}
+function updateResponseTime() {
+  const alert = document.getElementById('time_alert');
+  const command = document.getElementById('time_command');
+  const leave = document.getElementById('time_leave_base');
+  const arrive = document.getElementById('time_arrive_scene');
+  const getVal = el => el && el.value ? el.value : null;
+  const v1 = getVal(alert), v2 = getVal(command), v3 = getVal(leave), v4 = getVal(arrive);
+  if (v1 && v4) {
+    const sec1 = parseTimeToSec(v1);
+    const sec4 = parseTimeToSec(v4);
+    let diff = sec4-sec1;
+    if (diff < 0) diff += 24*3600;
+    const min = Math.floor(diff/60);
+    const sec = diff%60;
+    document.getElementById('response_min').value = min;
+    document.getElementById('response_sec').value = sec;
+  }
+}
+['time_alert','time_command','time_leave_base','time_arrive_scene'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', updateResponseTime);
+});
+</script>
+
+<!-- JavaScript to enforce sequential time input -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const timeFields = [
+    'time_alert',
+    'time_command',
+    'time_leave_base',
+    'time_arrive_scene',
+    'time_leave_scene',
+    'time_arrive_hospital',
+    'time_arrive_base'
+  ];
+  function timeToSec(t) {
+    if (!t) return null;
+    const [h, m] = t.split(":");
+    return parseInt(h,10)*60 + parseInt(m,10);
+  }
+  function setMinForAll() {
+    for (let i = 1; i < timeFields.length; i++) {
+      const prev = document.getElementById(timeFields[i-1]);
+      const curr = document.getElementById(timeFields[i]);
+      if (prev && curr) {
+        if (prev.value) {
+          curr.min = prev.value;
+        } else {
+          curr.min = '';
+        }
+      }
+    }
+  }
+  function validateAndFixAll() {
+    for (let i = 1; i < timeFields.length; i++) {
+      const prev = document.getElementById(timeFields[i-1]);
+      const curr = document.getElementById(timeFields[i]);
+      if (prev && curr && curr.value && prev.value && timeToSec(curr.value) < timeToSec(prev.value)) {
+        curr.value = '';
+      }
+    }
+  }
+  for (let i = 1; i < timeFields.length; i++) {
+    const curr = document.getElementById(timeFields[i]);
+    if (curr) curr.disabled = true;
+  }
+  for (let i = 1; i < timeFields.length; i++) {
+    const prev = document.getElementById(timeFields[i-1]);
+    const curr = document.getElementById(timeFields[i]);
+    if (prev && curr) {
+      function updateMinAndEnable() {
+        if (prev.value) {
+          curr.disabled = false;
+          curr.min = prev.value;
+        } else {
+          curr.disabled = true;
+          curr.value = '';
+          curr.min = '';
+        }
+        if (curr.value && prev.value && timeToSec(curr.value) < timeToSec(prev.value)) {
+          curr.value = '';
+        }
+        curr.blur();
+      }
+      prev.addEventListener('input', updateMinAndEnable);
+      prev.addEventListener('change', updateMinAndEnable);
+      curr.addEventListener('input', function() {
+        if (curr.value && prev.value && timeToSec(curr.value) < timeToSec(prev.value)) {
+          curr.value = '';
+        }
+      });
+      curr.addEventListener('change', function() {
+        if (curr.value && prev.value && timeToSec(curr.value) < timeToSec(prev.value)) {
+          alert('เวลาต้องมากกว่าหรือเท่ากับช่องก่อนหน้า');
+          curr.value = '';
+        }
+      });
+      curr.addEventListener('paste', function(e) {
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        if (prev.value && timeToSec(paste) < timeToSec(prev.value)) {
+          e.preventDefault();
+        }
+      });
+    }
+  }
+  setMinForAll();
+  validateAndFixAll();
+});
+</script>
+
 <div class="card">
+  <div class="card-header bg-success text-white">
+    <div class="row" style="margin: 16px; padding-left: 14px; padding-right: 14px; padding-top: 8px;">
+      <div class="col-12">
+        <div class="text-white">สำนักงานระบบบริการการแพทย์ฉุกเฉิน</div>
+        <div class="text-white">แบบบันทึกการปฏิบัติงานหน่วยปฏิบัติการการแพทย์ฉุกเฉิน</div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="green_status_1" name="record[green_status]" <%='checked' if record['green_status']=='trauma' %> value="trauma" class="form-check-input field" field_type="radio_string">
+          <label class="form-check-label" for="green_status_1">ระดับสูง</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input type="radio" id="green_status_2" name="record[green_status]" <%='checked' if record['green_status']=='non-trauma' %> value="non-trauma" class="form-check-input field" field_type="radio_string">
+          <label class="form-check-label" for="green_status_2">เฉพาะทาง</label>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="card-header bg-primary text-white">
+  <!-- ส่วนที่ 1 -->
 
-<center>
-<div class="text-white">Report Green</div>
-</center>
+  <div class="row mb-3" style="margin: 16px; padding-left: 14px; padding-right: 14px; padding-top: 8px;">
+    <div class="col-12 col-md-6 mb-3">
+      <h5 class="mb-2" style="padding-left: 4px;">๑.หน่วยบริการ</h5>
+      <input type="text" class="form-control field" style="min-width:0;max-width:100%;" name="record[unit_name]" value="<%= record['unit_name'] %>" field_type="text_string">
+    </div>
+    <div class="col-12 col-md-6 mb-3">
+      <label class="form-label">ปฏิบัติการที่</label>
+      <input type="text" class="form-control field" style="min-width:0;max-width:100%;" name="record[operation_no]" value="<%= record['operation_no'] %>" field_type="text_string">
+    </div>
+  </div>
+
+  <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+    <div class="row mb-3">
+      <div class="col-12 col-md-3 mb-3">
+        <label class="form-label">พื้นที่โซน</label>
+        <input type="text" class="form-control field" style="min-width:0;max-width:100%;" name="record[zone]" value="<%= record['zone'] %>" field_type="text_string">
+      </div>
+      <div class="col-12 col-md-3 mb-3">
+        <label class="form-label">สน.</label>
+        <input type="text" class="form-control field" style="min-width:0;max-width:100%;" name="record[station]" value="<%= record['station'] %>" field_type="text_string">
+      </div>
+      <div class="col-12 col-md-3 mb-3">
+        <label class="form-label">เลขที่ปฏิบัติการ</label>
+        <input type="text" class="form-control field" style="min-width:0;max-width:100%;" name="record[operation_id]" value="<%= record['operation_id'] %>" field_type="text_string">
+      </div>
+      <div class="col-12 col-md-3 mb-3">
+        <label class="form-label">วันที่</label>
+        <input type="date" class="form-control field" field_type="date_string" style="min-width:0;max-width:100%;" name="record[operation_date]" value="<%= record['operation_date'] %>">
+      </div>
+    </div>
+
+    <h5 class="mt-4 mb-3">เจ้าหน้าที่ปฏิบัติการ</h5>
+
+    <!-- หัวหน้าทีม -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">๑. หัวหน้าทีม</label>
+        <input type="text" class="form-control field" name="record[chief_name]" value="<%= record['chief_name'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">ตำแหน่ง</label>
+        <select class="form-select field" name="record[chief_position]" field_type="select_string">
+          <option value="แพทย์" <%= 'selected' if record['chief_position'] == 'แพทย์' %>>แพทย์</option>
+          <option value="ENP" <%= 'selected' if record['chief_position'] == 'ENP' %>>ENP</option>
+          <option value="นฉพ" <%= 'selected' if record['chief_position'] == 'นฉพ' %>>นฉพ</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">รหัส</label>
+        <input type="text" class="form-control field" name="record[chief_code]" value="<%= record['chief_code'] %>" field_type="text_string">
+      </div>
+    </div>
+
+    <!-- 2 และ 3 -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">๒.</label>
+        <input type="text" class="form-control field" name="record[staff2_name]" value="<%= record['staff2_name'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">รหัส</label>
+        <input type="text" class="form-control field" name="record[staff2_code]" value="<%= record['staff2_code'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">๓.</label>
+        <input type="text" class="form-control field" name="record[staff3_name]" value="<%= record['staff3_name'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">รหัส</label>
+        <input type="text" class="form-control field" name="record[staff3_code]" value="<%= record['staff3_code'] %>" field_type="text_string">
+      </div>
+    </div>
+
+    <!-- 4 และ 5 -->
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label class="form-label">๔.</label>
+        <input type="text" class="form-control field" name="record[staff4_name]" value="<%= record['staff4_name'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">รหัส</label>
+        <input type="text" class="form-control field" name="record[staff4_code]" value="<%= record['staff4_code'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">๕.</label>
+        <input type="text" class="form-control field" name="record[staff5_name]" value="<%= record['staff5_name'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">รหัส</label>
+        <input type="text" class="form-control field" name="record[staff5_code]" value="<%= record['staff5_code'] %>" field_type="text_string">
+      </div>
+    </div>
+
+    <!-- ผลปฏิบัติการ -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">ผลปฏิบัติการ</label>
+        <div class="form-check">
+          <input class="form-check-input field" type="radio" name="record[operation_result]" id="found" value="found" <%= 'checked' if record['operation_result'] == 'found' %> field_type="radio_string">
+          <label class="form-check-label" for="found">พบเหตุ</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input field" type="radio" name="record[operation_result]" id="notfound" value="notfound" <%= 'checked' if record['operation_result'] == 'notfound' %> field_type="radio_string">
+          <label class="form-check-label" for="notfound">ไม่พบเหตุ</label>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">พื้นที่ปฏิบัติการ</label>
+        <div class="form-check">
+          <input class="form-check-input field" type="radio" name="record[operation_area]" id="inarea" value="inarea" <%= 'checked' if record['operation_area'] == 'inarea' %> field_type="radio_string">
+          <label class="form-check-label" for="inarea">ในพื้นที่</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input field" type="radio" name="record[operation_area]" id="outarea" value="outarea" <%= 'checked' if record['operation_area'] == 'outarea' %> field_type="radio_string">
+          <label class="form-check-label" for="outarea">นอกพื้นที่</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- สถานที่และเหตุการณ์ -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">สถานที่เกิดเหตุ</label>
+        <input type="text" class="form-control field" name="record[incident_place]" value="<%= record['incident_place'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">เหตุการณ์ (รหัสความรุนแรง ณ จุดเกิดเหตุ : RC)</label>
+        <input type="text" class="form-control field" name="record[incident_event]" value="<%= record['incident_event'] %>" field_type="text_string">
+      </div>
+    </div>
+  </div>
+
+<!-- ส่วนที่ 2 -->
+
+
+<body class="p-4">
+
+  <h5 class="mb-3" style="padding-left: 12px;">๒. ข้อมูลเวลา</h5>
+    <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+
+      <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+      <!-- แถวที่ 1 -->
+      <thead class="table-light">
+        <tr>
+          <th> </th>
+          <th>รับแจ้ง</th>
+          <th>สั่งการ</th>
+          <th>ออกจากฐาน</th>
+          <th>ถึงที่เกิดเหตุ</th>
+          <th>ออกจากที่เกิดเหตุ</th>
+          <th>ถึง ร.พ.</th>
+          <th>ถึงฐาน</th>
+        </tr>
+      </thead>
+
+      <!-- แถวที่ 2 -->
+      <tr>
+        <td class="text-start">เวลา (น.)</td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_alert" name="record[time_alert]" value="<%= record['time_alert'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_command" name="record[time_command]" value="<%= record['time_command'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_leave_base" name="record[time_leave_base]" value="<%= record['time_leave_base'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_arrive_scene" name="record[time_arrive_scene]" value="<%= record['time_arrive_scene'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_leave_scene" name="record[time_leave_scene]" value="<%= record['time_leave_scene'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_arrive_hospital" name="record[time_arrive_hospital]" value="<%= record['time_arrive_hospital'] %>">
+        </td>
+
+        <td>
+          <input type="time" class="form-control field" field_type="time_string" id="time_arrive_base" name="record[time_arrive_base]" value="<%= record['time_arrive_base'] %>">
+        </td>
+      </tr>
+
+      <!-- แถวที่ 3 + 4 (ระยะเวลา) -->
+      <tr>
+        <td rowspan="2" class="text-start align-middle">ระยะเวลา (นาที)</td>
+        <td colspan="4" rowspan="2" class="text-start">
+          response time:<br>
+          <div class="row g-1">
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="text_string" id="response_min" name="record[response_min]" placeholder="นาที" value="<%= record['response_min'] %>" readonly>
+            </div>
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="text_string" id="response_sec" name="record[response_sec]" placeholder="วินาที" value="<%= record['response_sec'] %>" readonly>
+            </div>
+          </div>
+        </td>
+        <td colspan="2" class="text-start">
+          <div class="row g-1">
+            <label>ออกจากที่เกิดเหตุ - ถึง ร.พ.</label>
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="number_string" name="record[scene_to_hosp_min]" placeholder="นาที" value="<%= record['scene_to_hosp_min'] %>">
+            </div>
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="number_string" name="record[scene_to_hosp_sec]" placeholder="วินาที" value="<%= record['scene_to_hosp_sec'] %>">
+            </div>
+          </div>
+        </td>
+        <td style="background-color: #f2f2f2;"></td>
+      </tr>
+      <tr>
+        <td colspan="1" style="background-color: #f2f2f2;"></td>
+        <td colspan="2" class="text-start">
+          <div class="row g-1">
+            <label>ถึง ร.พ. - ถึงฐาน</label>
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="number_string" name="record[hosp_to_base_min]" placeholder="นาที" value="<%= record['hosp_to_base_min'] %>">
+            </div>
+            <div class="col-6">
+              <input type="number" class="form-control field" field_type="number_string" name="record[hosp_to_base_sec]" placeholder="วินาที" value="<%= record['hosp_to_base_sec'] %>">
+            </div>
+          </div>
+        </td>
+      </tr>
+
+      <!-- แถวที่ 5 (เลข กม.) -->
+      <tr>
+        <td class="text-start">เลข กม.</td>
+        <td colspan="3"><input type="text" class="form-control field" name="record[km_alert_to_leave]" placeholder="รับแจ้ง - ออกจากฐาน" value="<%= record['km_alert_to_leave'] %>" field_type="text_string"></td>
+        <td colspan="2"><input type="text" class="form-control field" name="record[km_scene_to_leave]" placeholder="ถึงที่เกิดเหตุ - ออกจากที่เกิดเหตุ" value="<%= record['km_scene_to_leave'] %>" field_type="text_string"></td>
+        <td colspan="1"><input type="text" class="form-control field" name="record[km_arrive_hosp]" placeholder="ถึงที่ ร.พ." value="<%= record['km_arrive_hosp'] %>" field_type="text_string"></td>
+        <td colspan="1"><input type="text" class="form-control field" name="record[km_arrive_base]" placeholder="ถึงฐาน" value="<%= record['km_arrive_base'] %>" field_type="text_string"></td>
+      </tr>
+
+      <!-- แถวที่ 6 + 7 (ระยะทาง) -->
+      <tr>
+        <td rowspan="2" class="text-start align-middle">ระยะทาง</td>
+        <td colspan="4" rowspan="2" class="text-start">
+          รวมระยะทาง:<br>
+          <input type="number" class="form-control field" field_type="number_string" name="record[total_km]" placeholder="กม." value="<%= record['total_km'] %>">
+        </td>
+        <td colspan="2" class="text-start">
+          ระยะไป ร.พ.:<br>
+          <input type="number" class="form-control field" field_type="number_string" name="record[to_hosp_km]" placeholder="กม." value="<%= record['to_hosp_km'] %>">
+        </td>
+        <td style="background-color: #f2f2f2;"></td>
+
+      </tr>
+
+      <tr>
+    <td colspan="1" style="background-color: #f2f2f2;"></td>
+        <td colspan="2" class="text-start">
+          ระยะทางกลับ:<br>
+          <input type="number" class="form-control field" field_type="number_string" name="record[back_km]" placeholder="กม." value="<%= record['back_km'] %>">
+        </td>
+      </tr>
+
+    </table>
+  </div>
+  </div>
+
+</body>
+
+<!-- ส่วนที่ 3 -->
+
+<body class="p-4">
+  <h5 class="mb-3" style="padding-left: 12px;">๓.ข้อมูลผู้ป่วย</h5>
+
+  <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+  <!-- ข้อมูลส่วนตัว -->
+  <table class="table table-bordered align-middle">
+    <tr>
+      <td colspan="2">ชื่อผู้ป่วย: <input type="text" name="record[patient_name]" class="form-control field d-inline w-50" value="<%= record['patient_name'] %>" field_type="text_string">
+      อายุ: <input type="number" name="record[patient_age]" class="form-control field d-inline w-25" value="<%= record['patient_age'] %>" field_type="number_string"> ปี</td>
+      <td>
+        เพศ:
+        <div class="form-check form-check-inline">
+          <input class="form-check-input field" type="radio" name="record[gender]" id="male" value="male" <%= 'checked' if record['gender'] == 'male' %> field_type="radio_string">
+          <label class="form-check-label" for="male">ชาย</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input field" type="radio" name="record[gender]" id="female" value="female" <%= 'checked' if record['gender'] == 'female' %> field_type="radio_string">
+          <label class="form-check-label" for="female">หญิง</label>
+        </div>
+      </td>
+    </tr>
+  <tr>
+    <td colspan="2">
+    <div class="row mb-2">
+      <div class="col-md-4 mb-2">
+      <input type="hidden" name="record[nationality][]" value="0">
+      <input class="form-check-input field me-2" type="checkbox" field_type="checkbox_boolean" name="record[nationality][]" value="thai" <%= 'checked' if Array(record['nationality']).include?('thai') %>>
+         คนไทย<br>
+        <label class="form-label mb-1 mt-2">เลขบัตรประชาชน</label>
+        <input type="text" name="record[citizen_id]" class="form-control field w-100" value="<%= record['citizen_id'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-4 mb-2 mt-2">
+      <input class="form-check-input field me-2" type="checkbox" field_type="checkbox_boolean" name="record[nationality][]" value="migrant" <%= 'checked' if Array(record['nationality']).include?('migrant') %>>
+        แรงงานต่างด้าว<br>
+        <input class="form-check-input field me-2" type="checkbox" field_type="checkbox_boolean" name="record[nationality][]" value="foreigner" <%= 'checked' if Array(record['nationality']).include?('foreigner') %>>
+        ชาวต่างชาติประเทศ<br>
+        <input type="text" name="record[foreigner_country]" class="form-control field w-100 mt-1" value="<%= record['foreigner_country'] %>" field_type="text_string">
+      </div>
+      <div class="col-md-4 mt-2">
+      <br>
+        <label class="form-label mb-1">เลขที่หนังสือเดินทาง</label>
+        <input type="text" name="record[passport_no]" class="form-control field w-100" value="<%= record['passport_no'] %>" field_type="text_string">
+      </div>
+    </div>
+    
+    <td colspan="4" rowspan="1">
+        ประกันอื่นๆ:
+        <input type="hidden" name="record[insurance][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[insurance][]" value="life" <%= 'checked' if Array(record['insurance']).include?('life') %>> ประกันชีวิต</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[insurance][]" value="car" <%= 'checked' if Array(record['insurance']).include?('car') %>> ผู้ประสบภัยจากรถ</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[insurance][]" value="travel" <%= 'checked' if Array(record['insurance']).include?('travel') %>> ประกันท่องเที่ยว ประเทศ
+    <input type="text" name="record[insurance_travel_country]" class="form-control field d-inline w-25" value="<%= record['insurance_travel_country'] %>" field_type="text_string"></div>
+    <div>เลขทะเบียนรถ: <input type="text" name="record[car_license]" class="form-control field d-inline w-25" value="<%= record['car_license'] %>" field_type="text_string"></div></br>
+    <div>จังหวัด: <input type="text" name="record[province]" class="form-control field d-inline w-25" value="<%= record['province'] %>" field_type="text_string"></div>
+    </div>
+      </td>
+
+    <tr>
+
+      <td colspan="4">
+        สิทธิการรักษา:
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_none]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_none]" value="1" <%= 'checked' if record['right_none'] == '1' %>> ไม่มีหลักประกัน</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_gold]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_gold]" value="1" <%= 'checked' if record['right_gold'] == '1' %>> บัตรทอง</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_gov]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_gov]" value="1" <%= 'checked' if record['right_gov'] == '1' %>> ข้าราชการ</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_social]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_social]" value="1" <%= 'checked' if record['right_social'] == '1' %>> ประกันสังคม</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_other]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_other]" value="1" <%= 'checked' if record['right_other'] == '1' %>> ประกันอื่นๆ</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_migrant]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_migrant]" value="1" <%= 'checked' if record['right_migrant'] == '1' %>> แรงงานต่างด้าว</div>
+        <div class="form-check form-check-inline"><input type="hidden" name="record[right_foreigner]" value="0"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[right_foreigner]" value="1" <%= 'checked' if record['right_foreigner'] == '1' %>> ชาวต่างชาติไม่มีประกัน</div>
+      </td>
+
+  </tr>
+
+  </table>
+
+
+  <!-- Vital Signs Table -->
+  <div class="table-responsive" style="overflow-x:auto;">
+    <table class="table table-bordered text-center align-middle" style="min-width:900px;">
+      <thead class="table-success">
+        <tr>
+          <th rowspan="2" colspan="1">Time</th>
+          <th rowspan="1" colspan="4">Vital Signs</th>
+          <th rowspan="1" colspan="3">Neuro Signs</th>
+          <th rowspan="1" colspan="4">Pupils</th>
+          <th rowspan="2" colspan="1">O2 Sat</th>
+          <th rowspan="2" colspan="1">DTX</th>
+        </tr>
+        <tr>
+          <th>T</th>
+          <th>BP</th>
+          <th>PR</th>
+          <th>RR</th>
+          <th>E</th>
+          <th>V</th>
+          <th>M</th>
+          <th>Rt</th>
+          <th>RTL</th>
+          <th>Lt</th>
+          <th>RTL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="time" name="record[vital_time1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_time1'] %>" field_type="time_string"></td>
+          <td><input type="text" name="record[vital_t1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_t1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_bp1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_bp1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_pr1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_pr1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_rr1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_rr1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_e1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_e1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_v1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_v1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_m1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_m1'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_rt1]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_rt1'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn1][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y1" name="record[vital_yn1][]" value="Y" <%= 'checked' if Array(record['vital_yn1']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y1">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n1" name="record[vital_yn1][]" value="N" <%= 'checked' if Array(record['vital_yn1']).include?('N') %>>
+      <label class="form-check-label" for="yn_n1">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl1]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl1'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn2][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y2" name="record[vital_yn2][]" value="Y" <%= 'checked' if Array(record['vital_yn2']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y2">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n2" name="record[vital_yn2][]" value="N" <%= 'checked' if Array(record['vital_yn2']).include?('N') %>>
+      <label class="form-check-label" for="yn_n2">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_lt1]" style="min-width:80px;max-width:100%;" value="<%= record['vital_lt1'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl2]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl2'] %>" field_type="text_string"></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td><input type="time" class="form-control field" field_type="time_string" style="min-width:80px;max-width:100%;" name="record[vital_time2]" value="<%= record['vital_time2'] %>"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_t2]" value="<%= record['vital_t2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_bp2]" value="<%= record['vital_bp2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_pr2]" value="<%= record['vital_pr2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_rr2]" value="<%= record['vital_rr2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_e2]" value="<%= record['vital_e2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_v2]" value="<%= record['vital_v2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_m2]" value="<%= record['vital_m2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_rt2]" value="<%= record['vital_rt2'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn3][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y3" name="record[vital_yn3][]" value="Y" <%= 'checked' if Array(record['vital_yn3']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y3">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n3" name="record[vital_yn3][]" value="N" <%= 'checked' if Array(record['vital_yn3']).include?('N') %>>
+      <label class="form-check-label" for="yn_n3">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl3]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl3'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn4][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y4" name="record[vital_yn4][]" value="Y" <%= 'checked' if Array(record['vital_yn4']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y4">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n4" name="record[vital_yn4][]" value="N" <%= 'checked' if Array(record['vital_yn4']).include?('N') %>>
+      <label class="form-check-label" for="yn_n4">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_lt2]" style="min-width:80px;max-width:100%;" value="<%= record['vital_lt2'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl4]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl4'] %>" field_type="text_string"></td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <td><input type="time" class="form-control field" field_type="time_string" style="min-width:80px;max-width:100%;" name="record[vital_time3]" value="<%= record['vital_time3'] %>"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_t3]" value="<%= record['vital_t3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_bp3]" value="<%= record['vital_bp3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_pr3]" value="<%= record['vital_pr3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_rr3]" value="<%= record['vital_rr3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_e3]" value="<%= record['vital_e3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" style="min-width:80px;max-width:100%;" name="record[vital_v3]" value="<%= record['vital_v3'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_m3]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_m3'] %>" field_type="text_string"></td>
+          <td><input type="text" name="record[vital_rt3]" class="form-control field" style="min-width:80px;max-width:100%;" value="<%= record['vital_rt3'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn5][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y5" name="record[vital_yn5][]" value="Y" <%= 'checked' if Array(record['vital_yn5']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y5">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n5" name="record[vital_yn5][]" value="N" <%= 'checked' if Array(record['vital_yn5']).include?('N') %>>
+      <label class="form-check-label" for="yn_n5">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl5]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl5'] %>" field_type="text_string"></td>
+<td>
+  <div class="d-flex justify-content-center align-items-center gap-2 flex-nowrap">
+    <input type="hidden" name="record[vital_yn6][]" value="0">
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_y6" name="record[vital_yn6][]" value="Y" <%= 'checked' if Array(record['vital_yn6']).include?('Y') %>>
+      <label class="form-check-label" for="yn_y6">Y</label>
+    </div>
+    <div class="form-check form-check-inline mb-0">
+      <input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" id="yn_n6" name="record[vital_yn6][]" value="N" <%= 'checked' if Array(record['vital_yn6']).include?('N') %>>
+      <label class="form-check-label" for="yn_n6">N</label>
+    </div>
+  </div>
+</td>
+          <td><input type="text" class="form-control field" name="record[vital_lt3]" style="min-width:80px;max-width:100%;" value="<%= record['vital_lt3'] %>" field_type="text_string"></td>
+          <td><input type="text" class="form-control field" name="record[vital_rtl6]" style="min-width:80px;max-width:100%;" value="<%= record['vital_rtl6'] %>" field_type="text_string"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- อาการบาดเจ็บ / Non Trauma -->
+  <table class="table table-bordered align-middle">
+    <tbody>
+      <tr class="table-success"><td colspan="2">การบาดเจ็บ (Trauma)</td></tr>
+      <tr>
+        <td>บาดแผล</td>
+        <td>
+          <input type="hidden" name="record[trauma_wound][]" value="0">
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="no" <%= 'checked' if Array(record['trauma_wound']).include?('no') %>> No</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="cut" <%= 'checked' if Array(record['trauma_wound']).include?('cut') %>> Cut/Laceration</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="abrasion" <%= 'checked' if Array(record['trauma_wound']).include?('abrasion') %>> Abrasion</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="contusion" <%= 'checked' if Array(record['trauma_wound']).include?('contusion') %>> Contusion</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="burn" <%= 'checked' if Array(record['trauma_wound']).include?('burn') %>> Burn</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="stab" <%= 'checked' if Array(record['trauma_wound']).include?('stab') %>> Stab W.</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="amputate" <%= 'checked' if Array(record['trauma_wound']).include?('amputate') %>> Amputate</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_wound][]" value="gsw" <%= 'checked' if Array(record['trauma_wound']).include?('gsw') %>> GSW</div>
+        </td>
+      </tr>
+      <tr>
+        <td>กระดูกผิดรูป</td>
+        <td>
+          <input type="hidden" name="record[trauma_bone][]" value="0">
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bone][]" value="no" <%= 'checked' if Array(record['trauma_bone']).include?('no') %>> No</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bone][]" value="closed" <%= 'checked' if Array(record['trauma_bone']).include?('closed') %>> Closed Fx.</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bone][]" value="opened" <%= 'checked' if Array(record['trauma_bone']).include?('opened') %>> Opened Fx.</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bone][]" value="dislocate" <%= 'checked' if Array(record['trauma_bone']).include?('dislocate') %>> Dislocate</div>
+        </td>
+      </tr>
+      <tr>
+        <td>การเสียเลือด</td>
+        <td>
+          <input type="hidden" name="record[trauma_bleed][]" value="0">
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bleed][]" value="no" <%= 'checked' if Array(record['trauma_bleed']).include?('no') %>> No</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bleed][]" value="ext_stopped" <%= 'checked' if Array(record['trauma_bleed']).include?('ext_stopped') %>> Ext/Stopped</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bleed][]" value="ext_active" <%= 'checked' if Array(record['trauma_bleed']).include?('ext_active') %>> Ext/Active</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_bleed][]" value="int_haemorrhage" <%= 'checked' if Array(record['trauma_bleed']).include?('int_haemorrhage') %>> Int. haemorrhage</div>
+        </td>
+      </tr>
+    <tr>
+        <td>อวัยวะ</td>
+        <td>
+          <input type="hidden" name="record[trauma_org][]" value="0">
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="head_neck" <%= 'checked' if Array(record['trauma_org']).include?('head_neck') %>> Head/Neck</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="face" <%= 'checked' if Array(record['trauma_org']).include?('face') %>> Face</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="spine" <%= 'checked' if Array(record['trauma_org']).include?('spine') %>> Spine</div>
+          <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="chest_clavicle" <%= 'checked' if Array(record['trauma_org']).include?('chest_clavicle') %>> Chest/Clavicle</div>
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="abdomen" <%= 'checked' if Array(record['trauma_org']).include?('abdomen') %>> Abdomen</div>
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="extremities" <%= 'checked' if Array(record['trauma_org']).include?('extremities') %>> Extremities</div>
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="external" <%= 'checked' if Array(record['trauma_org']).include?('external') %>> External</div>
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="multiple" <%= 'checked' if Array(record['trauma_org']).include?('multiple') %>> Multiple Injury</div>
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[trauma_org][]" value="pelvis" <%= 'checked' if Array(record['trauma_org']).include?('pelvis') %>> Pelvis</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-bordered align-middle">
+    <tbody>
+      <tr class="table-success"><td colspan="2">Non Trauma</td></tr>
+      <tr>
+        <td>อายุรกรรม</td>
+        <td>
+        <input type="hidden" name="record[nontrauma_med][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="dyspnea" <%= 'checked' if Array(record['nontrauma_med']).include?('dyspnea') %>> Dyspnea</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="high_fever" <%= 'checked' if Array(record['nontrauma_med']).include?('high_fever') %>> High Fever</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="unconscious" <%= 'checked' if Array(record['nontrauma_med']).include?('unconscious') %>> Unconscious/Stupor</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="seizure" <%= 'checked' if Array(record['nontrauma_med']).include?('seizure') %>> Seizure</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="chest_pain" <%= 'checked' if Array(record['nontrauma_med']).include?('chest_pain') %>> Chest Pain</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="poisoning" <%= 'checked' if Array(record['nontrauma_med']).include?('poisoning') %>> Poisoning</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="digestive" <%= 'checked' if Array(record['nontrauma_med']).include?('digestive') %>> Digestive</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_med][]" value="others" <%= 'checked' if Array(record['nontrauma_med']).include?('others') %>> Others
+        <input type="text" name="record[nontrauma_med_others_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_med_others_text'] %>" field_type="text_string">
+        </div>
+        </td>
+      </tr>
+      <tr>
+        <td>สูติ-นรีเวช</td>
+        <td>
+        <input type="hidden" name="record[nontrauma_ob][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ob][]" value="labour_pain" <%= 'checked' if Array(record['nontrauma_ob']).include?('labour_pain') %>> Labour Pain</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ob][]" value="bleeding" <%= 'checked' if Array(record['nontrauma_ob']).include?('bleeding') %>> Bleeding per Vagina</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ob][]" value="high_risk" <%= 'checked' if Array(record['nontrauma_ob']).include?('high_risk') %>> High risk preg</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ob][]" value="rape" <%= 'checked' if Array(record['nontrauma_ob']).include?('rape') %>> Rape</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ob][]" value="others" <%= 'checked' if Array(record['nontrauma_ob']).include?('others') %>> Others
+        <input type="text" name="record[nontrauma_ob_others_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_ob_others_text'] %>" field_type="text_string">
+        </div>
+        </td>
+      </tr>
+    <tr>
+        <td>กุมาร</td>
+        <td>
+        <input type="hidden" name="record[nontrauma_ped][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ped][]" value="convulsion" <%= 'checked' if Array(record['nontrauma_ped']).include?('convulsion') %>> Convulsion</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ped][]" value="high_fever" <%= 'checked' if Array(record['nontrauma_ped']).include?('high_fever') %>> High Fever</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ped][]" value="dyspnea" <%= 'checked' if Array(record['nontrauma_ped']).include?('dyspnea') %>> Dyspnea</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ped][]" value="digestive" <%= 'checked' if Array(record['nontrauma_ped']).include?('digestive') %>> Digestive</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_ped][]" value="others" <%= 'checked' if Array(record['nontrauma_ped']).include?('others') %>> Others
+        <input type="text" name="record[nontrauma_ped_others_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_ped_others_text'] %>" field_type="text_string">
+        </div>
+        </td>
+      </tr>
+    <tr>
+        <td>ศัลยกรรม</td>
+        <td>
+        <input type="hidden" name="record[nontrauma_surg][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_surg][]" value="acute_abd" <%= 'checked' if Array(record['nontrauma_surg']).include?('acute_abd') %>> Acute Abdominal Pain</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_surg][]" value="ugi_bleed" <%= 'checked' if Array(record['nontrauma_surg']).include?('ugi_bleed') %>> UGI Bleeding</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_surg][]" value="others" <%= 'checked' if Array(record['nontrauma_surg']).include?('others') %>> Others
+        <input type="text" name="record[nontrauma_surg_others_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_surg_others_text'] %>" field_type="text_string">
+        </div>
+        </td>
+      </tr>
+    <tr>
+        <td>อื่นๆ</td>
+        <td>
+        <input type="hidden" name="record[nontrauma_other][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_other][]" value="eyes" <%= 'checked' if Array(record['nontrauma_other']).include?('eyes') %>> Eyes
+        <input type="text" name="record[nontrauma_other_eyes_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_other_eyes_text'] %>" field_type="text_string"> 
+        </div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_other][]" value="ent" <%= 'checked' if Array(record['nontrauma_other']).include?('ent') %>> ENT
+        <input type="text" name="record[nontrauma_other_ent_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_other_ent_text'] %>" field_type="text_string"> 
+        </div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[nontrauma_other][]" value="others" <%= 'checked' if Array(record['nontrauma_other']).include?('others') %>> Others
+        <input type="text" name="record[nontrauma_other_others_text]" class="form-control field d-inline w-50" value="<%= record['nontrauma_other_others_text'] %>" field_type="text_string">
+        </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Treatment -->
+  <table class="table table-bordered align-middle">
+    <tr class="table-success"><td colspan="2">การรักษา (Treatment)</td></tr>
+    <tr>
+      <td>การเดินหายใจ/การหายใจ</td>
+      <td>
+        <input type="hidden" name="record[treat_airway][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="no" <%= 'checked' if Array(record['treat_airway']).include?('no') %>> No</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="clear_airway" <%= 'checked' if Array(record['treat_airway']).include?('clear_airway') %>> Clear Airway</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="oral_airway" <%= 'checked' if Array(record['treat_airway']).include?('oral_airway') %>> Oral Airway</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="o2" <%= 'checked' if Array(record['treat_airway']).include?('o2') %>> O2 canula/mask</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="ambu" <%= 'checked' if Array(record['treat_airway']).include?('ambu') %>> Ambu bag</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="et" <%= 'checked' if Array(record['treat_airway']).include?('et') %>> ET</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="pocket_mask" <%= 'checked' if Array(record['treat_airway']).include?('pocket_mask') %>> Pocket Mask</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_airway][]" value="suction" <%= 'checked' if Array(record['treat_airway']).include?('suction') %>> Suction</div>
+      </td>
+    </tr>
+      <tr>
+      <td>บาดแผล/ห้ามเลือด</td>
+      <td>
+        <input type="hidden" name="record[treat_bleed][]" value="0">
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_bleed][]" value="no" <%= 'checked' if Array(record['treat_bleed']).include?('no') %>> No</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_bleed][]" value="pressure" <%= 'checked' if Array(record['treat_bleed']).include?('pressure') %>> Pressure Dressing</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_bleed][]" value="dressing" <%= 'checked' if Array(record['treat_bleed']).include?('dressing') %>> Dressing</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_bleed][]" value="uterine" <%= 'checked' if Array(record['treat_bleed']).include?('uterine') %>> คลึงมดลูก</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_bleed][]" value="others" <%= 'checked' if Array(record['treat_bleed']).include?('others') %>> อื่นๆ
+    <input type="text" name="record[treat_bleed_others_text]" class="form-control field d-inline w-50" value="<%= record['treat_bleed_others_text'] %>" field_type="text_string">
+    </div>
+
+      </td>
+    </tr>
+    <tr>
+      <td>การให้สารน้ำ</td>
+      <td>
+      <input type="hidden" name="record[treat_fluid][]" value="0">
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_fluid][]" value="no" <%= 'checked' if Array(record['treat_fluid']).include?('no') %>> No</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_fluid][]" value="nss" <%= 'checked' if Array(record['treat_fluid']).include?('nss') %>> NSS</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_fluid][]" value="d10" <%= 'checked' if Array(record['treat_fluid']).include?('d10') %>> 10%D/N/2</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_fluid][]" value="rls" <%= 'checked' if Array(record['treat_fluid']).include?('rls') %>> RLS</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_fluid][]" value="others" <%= 'checked' if Array(record['treat_fluid']).include?('others') %>> Others
+    <input type="text" name="record[treat_fluid_others_text]" class="form-control field d-inline w-50" value="<%= record['treat_fluid_others_text'] %>" field_type="text_string">
+    rate: <input type="text" name="record[treat_fluid_rate]" class="form-control field d-inline w-25" value="<%= record['treat_fluid_rate'] %>" field_type="text_string">
+    </div>
+      </td>
+    </tr>
+  <tr>
+    <td>การดามกระดูก</td>
+    <td>
+    <input type="hidden" name="record[treat_splint][]" value="0">
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_splint][]" value="no" <%= 'checked' if Array(record['treat_splint']).include?('no') %>> No</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_splint][]" value="cast" <%= 'checked' if Array(record['treat_splint']).include?('cast') %>> เผือกลม/ไม้ดาม</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_splint][]" value="collar" <%= 'checked' if Array(record['treat_splint']).include?('collar') %>> Collar with long spinal board</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_splint][]" value="ked" <%= 'checked' if Array(record['treat_splint']).include?('ked') %>> KED</div>
+    <tr>
+      <td>การทำ CPR</td>
+      <td>
+      <input type="hidden" name="record[treat_cpr][]" value="0">
+      <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_cpr][]" value="no" <%= 'checked' if Array(record['treat_cpr']).include?('no') %>> No</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_cpr][]" value="yes" <%= 'checked' if Array(record['treat_cpr']).include?('yes') %>> Yes</div>
+        <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[treat_cpr][]" value="aed" <%= 'checked' if Array(record['treat_cpr']).include?('aed') %>> AED / DF</div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="mb-3">
+    <label class="form-label">ยา (วิธีใช้และขนาดให้ระบุ):</label>
+        <input type="text" name="record[incident_event]" class="form-control field" value="<%= record['incident_event'] %>" field_type="text_string">
+  </div>
+
+  <div>
+    <label class="form-label">ผลการดูแลรักษาขั้นต้น:</label><br>
+    <input type="hidden" name="record[summary][]" value="0">
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="none" <%= 'checked' if Array(record['summary']).include?('none') %>> ไม่มีการรักษา</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="better" <%= 'checked' if Array(record['summary']).include?('better') %>> ทุเลา</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="same" <%= 'checked' if Array(record['summary']).include?('same') %>> คงเดิม</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="worse" <%= 'checked' if Array(record['summary']).include?('worse') %>> ทรุดหนัก</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="dead_scene" <%= 'checked' if Array(record['summary']).include?('dead_scene') %>> เสียชีวิต ณ จุดเกิดเหตุ</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[summary][]" value="dead_transfer" <%= 'checked' if Array(record['summary']).include?('dead_transfer') %>> เสียชีวิตระหว่างนำส่ง</div>
+  </div>
+
+  <div>
+    <label class="form-label">ระดับการคัดแยก ณ จุดเกิดเหตุ</label><br>
+    <input type="hidden" name="record[triage][]" value="0">
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[triage][]" value="red" <%= 'checked' if Array(record['triage']).include?('red') %>>แดง (วิกฤติ)</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[triage][]" value="yellow" <%= 'checked' if Array(record['triage']).include?('yellow') %>>เหลือง(เร่งด่วน)</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[triage][]" value="green" <%= 'checked' if Array(record['triage']).include?('green') %>>เขียว(ไม่รุนแรง)</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[triage][]" value="white" <%= 'checked' if Array(record['triage']).include?('white') %>>ขาว(ทั่วไป)</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[triage][]" value="black" <%= 'checked' if Array(record['triage']).include?('black') %>>ดำ(รับบริการสาธรณสุขอื่นๆ)</div>
+  </div>
 </div>
 
-<div class="card-body">
+</body>
 
-<div class="row">
+<!-- ส่วนที่ 4 -->
+<body class="p-4">
+  <h5 class="mb-3" style="padding-left: 12px;">๔.เกณฑ์การตัดสินใจส่งโรงพยาบาล(โดยหัวหน้าหน่วยและผ่านการเห็นชอบของศูนย์)</h5>
 
+  <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+  <!-- ข้อมูลส่วนตัว -->
+  <table class="table table-bordered align-middle">
+  <tbody>
+  <tr>
+   <td>นำส่งห้องฉุกเฉินพยาบาล
+     <input type="text" class="form-control field d-inline w-50" name="record[refer_hospital]" value="<%= record['refer_hospital'] %>" field_type="text_string"> 
+     </td>
+     <td> 
+     <input type="hidden" name="record[refer_hospital_type][]" value="0">
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_hospital_type][]" value="gov" <%= 'checked' if Array(record['refer_hospital_type']).include?('gov') %>>ร.พ. รัฐ</div>
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_hospital_type][]" value="private" <%= 'checked' if Array(record['refer_hospital_type']).include?('private') %>>ร.พ. เอกชน</div>
+   </td>
+   </tr>
+  <tr>
+   <td colspan="2">เหตุผล
+     <input type="hidden" name="record[refer_reason][]" value="0">
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_reason][]" value="suitable" <%= 'checked' if Array(record['refer_reason']).include?('suitable') %>>เหมาะสม/สามารถรักษาได้</div>
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_reason][]" value="near" <%= 'checked' if Array(record['refer_reason']).include?('near') %>>อยู่ใกล้</div>
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_reason][]" value="insured" <%= 'checked' if Array(record['refer_reason']).include?('insured') %>>มีหลักประกัน</div>
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_reason][]" value="old_patient" <%= 'checked' if Array(record['refer_reason']).include?('old_patient') %>>เป็นผู้ป่วยเก่า</div>
+     <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[refer_reason][]" value="wish" <%= 'checked' if Array(record['refer_reason']).include?('wish') %>>เป็นความประสงค์(เลือกได้มากกว่า ๑ ข้อ)</div>
+   </td>
+   </tr>
+<tr>
+   <td>
+   ผู้สรุปรายงาน
+     <input type="text" class="form-control field d-inline w-50" name="record[summary_name]" value="<%= record['summary_name'] %>" field_type="text_string"> 
+     </td>
+     <td>รหัส:<input type="text" class="form-control field d-inline w-50" name="record[summary_code]" value="<%= record['summary_code'] %>" field_type="text_string"></br>(ในระบบ Bangkok EMS)
+     </td>
+</tr>
+  </tbody>  
+  </table>
+  </div>
+</body>
 
-<div class="clear"></div>
+<!-- ส่วนที่ 5 -->
+  <body class="p-4">
+  <h5 class="mb-3" style="padding-left: 12px;">๕.การประเมินผลการรนำส่ง (โดยแพทย์ พยาบาล ประจำโรงพยาบาลที่รับดูแลต่อ)</h5>
 
-<div class="card-title d-flex align-items-center">
-			<!-- <div>
-        <i class="bx bxs-user me-1 font-22 text-primary"></i>
-			</div> -->
-			<h5 class="mb-0 text-primary">Physical Exam :</h5>
-</div>
+  <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+  <table class="table table-bordered align-middle">
+  <tbody>
 
-<div class="row">
+<tr colspan="6">
+  <td style="width:40%;">
+    HN:<input type="text" class="form-control field d-inline w-75" name="record[followup_hn]" value="<%= record['followup_hn'] %>" field_type="text_string">
+  </td>
+  <td style="width:60%;">
+    การวินิจฉัย:<input type="text" class="form-control field d-inline w-75" name="record[followup_diag]" value="<%= record['followup_diag'] %>" field_type="text_string">
+  </td>
+</tr>
 
+<tr>
+  <td colspan="6">
+    <label class="form-label">ระดับการคัดกรอง (ER Triage):</label><br>
+    <input type="hidden" name="record[er_triage][]" value="">
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_triage][]" value="red" <%= 'checked' if Array(record['er_triage']).include?('red') %>> แดง(วิกฤติ) L1,L2</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_triage][]" value="yellow" <%= 'checked' if Array(record['er_triage']).include?('yellow') %>> เหลือง(เร่งด่วน) L3</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_triage][]" value="green" <%= 'checked' if Array(record['er_triage']).include?('green') %>> เขียว(ไม่รุนแรง) L4</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_triage][]" value="white" <%= 'checked' if Array(record['er_triage']).include?('white') %>> ขาว(ทั่วไป) L5</div>
+    <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_triage][]" value="black" <%= 'checked' if Array(record['er_triage']).include?('black') %>> ดำ(รับบริการสาธรณสุขอื่นๆ)</div>
+    </td>
+  </tr>
 
-<!-- <div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">GA : </label>
-<textarea name="record[ga_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['ga_note']%>
-</textarea>
-</div>
+<tr>
+  <td colspan="6">
+  <label class="form-label">ทางเดินหายใจ:</label><br>
+  <input type="hidden" name="record[er_airway][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_airway][]" value="not_needed" <%= 'checked' if Array(record['er_airway']).include?('not_needed') %>> ไม่จำเป็น</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_airway][]" value="not_done" <%= 'checked' if Array(record['er_airway']).include?('not_done') %>> ไม่ได้ทำ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_airway][]" value="done_ok" <%= 'checked' if Array(record['er_airway']).include?('done_ok') %>> ทำและเหมาะสม</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_airway][]" value="done_not_ok" <%= 'checked' if Array(record['er_airway']).include?('done_not_ok') %>> ทำแต่ไม่เหมาะสมระบุ</div>
+  <input type="text" class="form-control field d-inline w-25" name="record[er_airway_note]" value="<%= record['er_airway_note'] %>" field_type="text_string">
+    </td>
+</tr>
+<tr>
+  <td colspan="6">
+  <label class="form-label">การห้ามเลือด:</label><br>
+  <input type="hidden" name="record[er_bleed][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_bleed][]" value="not_needed" <%= 'checked' if Array(record['er_bleed']).include?('not_needed') %>> ไม่จำเป็น</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_bleed][]" value="not_done" <%= 'checked' if Array(record['er_bleed']).include?('not_done') %>> ไม่ได้ทำ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_bleed][]" value="done_ok" <%= 'checked' if Array(record['er_bleed']).include?('done_ok') %>> ทำและเหมาะสม</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_bleed][]" value="done_not_ok" <%= 'checked' if Array(record['er_bleed']).include?('done_not_ok') %>> ทำแต่ไม่เหมาะสมระบุ</div>
+  <input type="text" class="form-control field d-inline w-25" name="record[er_bleed_note]" value="<%= record['er_bleed_note'] %>" field_type="text_string">
+    </td>
+</tr>
+<tr>
+  <td colspan="6">
+  <label class="form-label">การให้สารน้ำ:</label><br>
+  <input type="hidden" name="record[er_fluid][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_fluid][]" value="not_needed" <%= 'checked' if Array(record['er_fluid']).include?('not_needed') %>> ไม่จำเป็น</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_fluid][]" value="not_done" <%= 'checked' if Array(record['er_fluid']).include?('not_done') %>> ไม่ได้ทำ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_fluid][]" value="done_ok" <%= 'checked' if Array(record['er_fluid']).include?('done_ok') %>> ทำและเหมาะสม</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_fluid][]" value="done_not_ok" <%= 'checked' if Array(record['er_fluid']).include?('done_not_ok') %>> ทำแต่ไม่เหมาะสมระบุ</div>
+  <input type="text" class="form-control field d-inline w-25" name="record[er_fluid_note]" value="<%= record['er_fluid_note'] %>" field_type="text_string">
+    </td>
+</tr>
+<tr>
+  <td colspan="6">
+  <label class="form-label">การดามกระดูก:</label><br>
+  <input type="hidden" name="record[er_splint][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_splint][]" value="not_needed" <%= 'checked' if Array(record['er_splint']).include?('not_needed') %>> ไม่จำเป็น</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_splint][]" value="not_done" <%= 'checked' if Array(record['er_splint']).include?('not_done') %>> ไม่ได้ทำ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_splint][]" value="done_ok" <%= 'checked' if Array(record['er_splint']).include?('done_ok') %>> ทำและเหมาะสม</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_splint][]" value="done_not_ok" <%= 'checked' if Array(record['er_splint']).include?('done_not_ok') %>> ทำแต่ไม่เหมาะสมระบุ</div>
+  <input type="text" class="form-control field d-inline w-25" name="record[er_splint_note]" value="<%= record['er_splint_note'] %>" field_type="text_string">
+    </td>
+</tr>
+<tr>
+  <td colspan="6">
+  <label class="form-label">ชื่อผู้ประเมิน:</label>
+  <input type="text" class="form-control field d-inline w-25" name="record[er_eval_name]" value="<%= record['er_eval_name'] %>" field_type="text_string"><br>
+  <label class="form-label">ตำแหน่ง:</label>
+  <input type="hidden" name="record[er_eval_position][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_eval_position][]" value="doctor" <%= 'checked' if Array(record['er_eval_position']).include?('doctor') %>> แพทย์</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_eval_position][]" value="nurse" <%= 'checked' if Array(record['er_eval_position']).include?('nurse') %>> พยาบาล</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[er_eval_position][]" value="other" <%= 'checked' if Array(record['er_eval_position']).include?('other') %>> อื่นๆ</div>
+  <input margin="4" type="text" class="form-control field d-inline w-25" name="record[er_eval_other_text]" value="<%= record['er_eval_other_text'] %>" field_type="text_string">
+    </td>
+</tr>
 
-</div> -->
+  </tbody>
+  </table>
+  </div>
+  </body>
 
+  <!-- ส่วนที่ 6 -->
 
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">HEENT : </label>
-<textarea name="record[heent_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['heent_note']%>
-</textarea>
-</div>
-</div>
+  <body class="p-4">
+  <h5 class="mb-3" style="padding-left: 12px;">๖. ผ่านการรักษาที่/ในโรงพยาบาล (ติดตามภายหลังเมื่อผู้ป่วยออกจากโรงพยาบาลแล้วทุกวันสิ้นเดือน)</h5>
 
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Chest : </label>
-<textarea name="record[chest_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['chest_note']%>
-</textarea>
-</div>
-</div>
+  <div class="card mt-4 mb-4" style="margin: 16px; padding: 16px 24px; border: 2px solid #15ca20; border-radius: 16px;">
+  <table class="table table-bordered align-middle">
+  <tbody>
 
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">CVS : </label>
-<textarea name="record[cvs_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['cvs_note']%>
-</textarea>
-</div>
-</div>
+<tr>
+  <td>
+    <label class="form-label">Admit:</label>
+  <input type="hidden" name="record[followup_admit][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_admit][]" value="yes" <%= 'checked' if Array(record['followup_admit']).include?('yes') %>>Yes</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_admit][]" value="no" <%= 'checked' if Array(record['followup_admit']).include?('no') %>>No</div><br>
+  <input type="hidden" name="record[followup_status][]" value="">
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="duration" <%= 'checked' if Array(record['followup_status']).include?('duration') %>>ระยะเวลาการรักษาที่/ในโรงพยาบาล:</div>
+  <input type="text" class="form-control field d-inline w-25" name="record[followup_duration_days]" value="<%= record['followup_duration_days'] %>" field_type="text_string"> วัน<br>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="better" <%= 'checked' if Array(record['followup_status']).include?('better') %>>ทุเลา</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="continue" <%= 'checked' if Array(record['followup_status']).include?('continue') %>>รักษาต่อที่อื่นต่อ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="dead_hosp" <%= 'checked' if Array(record['followup_status']).include?('dead_hosp') %>>เสียชีวิตในโรงพยาบาล</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="over_month" <%= 'checked' if Array(record['followup_status']).include?('over_month') %>>รักษาเกินวันสิ้นเดือน</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="refuse" <%= 'checked' if Array(record['followup_status']).include?('refuse') %>>ปฏิเสธการรักษา/หนีกลับ</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="dead_home" <%= 'checked' if Array(record['followup_status']).include?('dead_home') %>>กลับไปตายบ้าน</div>
+  <div class="form-check form-check-inline"><input class="form-check-input field" type="checkbox" field_type="checkbox_boolean" name="record[followup_status][]" value="unknown" <%= 'checked' if Array(record['followup_status']).include?('unknown') %>>ตามแล้วไม่ทราบผล</div><br>
+  <label class="form-label">ลงชื่อผู้ติดตาม:</label>
+  <input type="text" class="form-control field d-inline w-25" name="record[followup_name]" value="<%= record['followup_name'] %>" field_type="text_string">
+  <label class="form-label">วันที่ติดตาม:</label>
+  <input type="date" class="form-control field d-inline w-25" name="record[followup_date]" value="<%= record['followup_date'] %>" field_type="date_string">
 
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Abdomen : </label>
-<textarea name="record[abdomen_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['abdomen_note']%>
-</textarea>
-</div>
-</div>
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Extremity : </label>
-<textarea name="record[extremity_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['extremity_note']%>
-</textarea>
-</div>
-</div>
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Neurological : </label>
-<textarea name="record[neurological_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['neurological_note']%>
-</textarea>
-</div>
-</div>
-
-<hr/>
-
-	<div class="col-12">
-	
-		<div class="card-title d-flex align-items-center">
-		<h5 class="mb-0 text-primary">ซักประวัติ :</h5>
-		</div>
-
-		<div class="row">
-		<div class="col-2">
-		</div>
-			<div class="col-10">
-			<%= text_string this, 'sign_and_symptom', :col=>12, :label=>'Sign and symptom' %>
-			<%= text_string this, 'allergies', :col=>12, :label=>'Allergies'  %>
-			<%= text_string this, 'medication', :col=>12, :label=>'Medication'  %>
-				<!-- <div class="row">
-				<%= text_string this, 'sbp', :col=>3 %>
-				<%= text_string this, 'dbp', :col=>3 %>
-				<%= text_string this, 'pr', :col=>3 %>
-				<%= text_string this, 'rr', :col=>3 %>
-				<%= text_string this, 'spo2', :col=>3 %>
-				<%= text_string this, 'gcs', :col=>3 %>
-				<%= text_string this, 'bt', :col=>3 %>
-				<%= text_string this, 'dtx', :col=>3 %>
-				</div> -->
-			</div>
-		</div>
-		</div>
-
-	</div>
-<!--
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Allergies : </label>
-<textarea name="record[allergies_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['allergies_note']%>
-</textarea>
-</div>
-</div>
-
-
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Medication : </label>
-<textarea name="record[medication_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['medication_note']%>
-</textarea>
-</div>
-</div> -->
-
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Past History/Patient illness : </label>
-<textarea name="record[history_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['history_note']%>
-</textarea>
-</div>
-</div>
-
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Last Oral Intake : </label>
-<textarea name="record[intake_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['intake_note']%>
-</textarea>
-</div>
-</div>
-
-<div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Event : </label>
-<textarea name="record[event]" type="text"  class="field form-control" field_type="text_area" rows="10">
-<%=record['event']%>
-</textarea>
-</div>
-</div>
-
-<!-- <div class="row">
-<div class="col-2"></div>
-<div class="col-10" style="margin-bottom:20px">
-<label for="trauma_1">Event : </label>
-<textarea name="record[event_note]" type="text"  class="field form-control" field_type="text_area" >
-<%=record['event_note']%>
-</textarea>
-</div>
-</div> -->
+  </tbody>
+  </table>
+  </div>
+  </body>
 
 
+<!-- end -->
 
 
-</div>
-
-</div>
+  </div>
 </div>
