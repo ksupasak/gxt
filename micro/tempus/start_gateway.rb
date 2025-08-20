@@ -124,6 +124,10 @@ def run(opts)
     
     EventMachine.add_periodic_timer(4) {
     
+       ws = web_app.settings.ws
+
+       ws.ping
+  
       if lives.keys.size>0 
         
         
@@ -144,7 +148,7 @@ def run(opts)
         
             fout.puts vitals.to_json
             
-            GXTWS.send ws, v, vitals, mark_dup
+            ws.send v, vitals, mark_dup
             
             
             
@@ -167,11 +171,11 @@ def run(opts)
             if twelve_leads_id and File.exists?(File.join("sent","#{twelve_leads_id}.jpg"))==false
             
               gw.download_twelve_leads k, twelve_leads_id, File.join("data","#{twelve_leads_id}.jpg")
-              GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.jpg")
+              ws.send_image v, File.join("data","#{twelve_leads_id}.jpg")
               FileUtils.mv(File.join("data","#{twelve_leads_id}.jpg"), File.join("sent","#{twelve_leads_id}.jpg"))
 
               gw.download_twelve_leads k, twelve_leads_id, File.join("data","#{twelve_leads_id}.xml"), 'aECG'
-              GXTWS.send_image ws, v, File.join("data","#{twelve_leads_id}.xml")
+              # ws.send_file v, File.join("data","#{twelve_leads_id}.xml")
               FileUtils.mv(File.join("data","#{twelve_leads_id}.xml"), File.join("sent","#{twelve_leads_id}.xml"))
 
 
@@ -233,18 +237,24 @@ def connect_tempus_gw
   
    opts = {}
   
+
+  # opts[:ws_host] = 'localhost:1792'
+  # opts[:ws_solution] = 'miot'
+
   ws_host = opts[:ws_host] || 'pcm-life.com'
+
   ws_solution = opts[:ws_solution] || 'cu'
 
+  puts 'Connecting to WS'
   ws = GXTWS::connect ws_solution, ws_host
   
-  GXTWS::bind_event ws
+ 
   
   set :ws, ws
   
   
 end
-
+ 
 # Our simple hello-world app
 class HelloApp < Sinatra::Base
   

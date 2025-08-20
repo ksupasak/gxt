@@ -251,10 +251,17 @@ module Tempus
       data = get_data "/Api/Organizations", nil
      
       first_org = data[0]
-      @organization_id =   first_org['OrganizationId']
-      @organization_name = first_org['Name']
+      if first_org
+        @organization_id =   first_org['OrganizationId']
+        @organization_name = first_org['Name']
       
-      return @organization_id
+      
+        return @organization_id
+      else
+        return nil
+      end
+      
+      
       
     end
     

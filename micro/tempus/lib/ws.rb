@@ -5,18 +5,42 @@ require "active_support/core_ext/date/calculations"
 require 'json'
 require 'base64'
 
-module GXTWS
+class GXTWS
+
+  @solution = nil
+  @host = nil
+  @connect_url = nil
+  @ws = nil
+
+  def initialize solution, host, url
+    @solution = solution
+    @host = host
+    @connect_url = url
+    puts "Connecting to #{@connect_url}"
+  end
+
+  def reconnect()
+    @ws = WebSocket::Client::Simple.connect @connect_url
+    bind_event @ws
+  end
+
 
 def self.connect solution, host
+  solution = solution
+  host = host
   connect_url = "wss://#{host}/ws/#{solution}/Home/index"
-  puts connect_url
-  WebSocket::Client::Simple.connect connect_url
+  
+  gxt_ws = self.new solution, host, connect_url
+  gxt_ws.reconnect()
+  return gxt_ws
+
 end
 
 
-def self.bind_event ws
+def bind_event ws
 
 ws.on :message do |msg|
+ 
   puts msg.data
   lines = msg.data.split("\n")
   if lines[0]=='print'
@@ -26,12 +50,18 @@ ws.on :message do |msg|
 end
 
 ws.on :open do
-  ws.send 'hello!!!'
+  puts 'Connected to WS'
 end
 
 ws.on :close do |e|
+  puts 'Disconnected from WS'
   p e
-  exit 1
+  puts 'will retry connect ..'
+   sleep 5
+   puts 'retry connect ..'
+   reconnect()
+   puts 'retry connect ..'
+  
 end
 
 ws.on :error do |e|
@@ -39,14 +69,13 @@ ws.on :error do |e|
    puts 'will retry connect ..'
    sleep 1
    puts 'retry connect ..'
-   ws = connect()
-   bind_event ws
+   reconnect()
    puts 'retry connect ..'
 end
 
 end
 
-def self.send_image ws, v, file_path
+def send_image  v, file_path
   
   file = File.open(file_path).read
   enc = Base64.encode64(file)
@@ -68,14 +97,16 @@ IMG.Send sender_id=corsim receiver_id=#{name}
 MSG
                    puts msg
                    # puts "send #{Time.now} #{msg}"
-        ws.send(msg)
+        @ws.send(msg)
   
   
 end
 
+def ping
+  @ws.send 'PING'
+end
 
-
-def self.send ws, v, data, mark_dup
+def send v, data, mark_dup
   
   puts 'in send'
   puts data.to_json
@@ -148,7 +179,7 @@ Data.Sensing device_id=#{name}
 MSG
                    # puts msg
                    # puts "send #{Time.now} #{msg}"
-                ws.send(msg)
+                @ws.send(msg)
   
                 puts msg
                
@@ -158,9 +189,6 @@ MSG
      
              end
              
-              
-
-
 
              end
 
