@@ -362,7 +362,14 @@ end
 
             data.merge!(device_data['vs']) 
             data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
-        
+            data['spo2'] = data['SpO2'] if data['SpO2']
+            data['temp'] = data['Tskin'] if data['Tskin']
+            data['bp_sys'] = data['NIBP-S'] if data['NIBP-S']
+            data['bp_dia'] = data['NIBP-D'] if data['NIBP-D']
+            data['bp_mean'] = data['NIBP-M'] if data['NIBP-M']
+            data['co2'] = data['EtCO2'] if data['EtCO2']
+            data['rr'] = data['RR/CO2'] if data['RR/CO2']
+       
         end
 
 
