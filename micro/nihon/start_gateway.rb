@@ -344,7 +344,7 @@ end
     #  data[:dvr_ol] = 1
 
     #  end
-
+    sent =[ ]
     devices.each_pair do |bed_name, device_data|
         
         puts bed_name +"==============================================="
@@ -363,8 +363,7 @@ end
             end
             data[:leads] = m
             data[:wlabel] = device_data['wlabel']
-            devices[bed_name]['leads'] = Array.new(32){|i| []}
-        
+            sent << bed_name
         end
         data[:msg] = "MSG:#{Time.now.strftime("%H:%M:%S")}"
 
@@ -381,6 +380,12 @@ MSG
 
         end
         
+    end
+
+    for i in sent 
+
+        devices[i]['leads'] = Array.new(32){|i| []}
+    
     end
 
 
