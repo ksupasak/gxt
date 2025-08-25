@@ -350,7 +350,7 @@ end
         puts bed_name
         puts device_data.inspect
         
-        continue unless device_data['vs']
+        if  device_data['vs']
 
         data = device_data['vs'].clone
 
@@ -374,6 +374,8 @@ Data.Sensing device_id=#{bed_name}
 MSG
             # puts msg
         ws.send(msg)
+
+        end
         
     end
 
