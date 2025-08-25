@@ -161,7 +161,6 @@ begin
 
 
 
-
    if data[0]=="{"
 
         json = JSON.parse(data)
@@ -180,6 +179,7 @@ begin
             end
 
 
+            puts  devices[bed_name].inspect
             
             devices[bed_name] = {} unless devices[bed_name]
             devices[bed_name]['stamp'] = stamp.to_i
@@ -197,6 +197,9 @@ begin
         bed_name = data[0..11]
 
         puts "bed_name: #{bed_name}"
+
+
+        puts  devices[bed_name].inspect
         
         # two byte to integer
         page_no = data[12..13].unpack1('S')
@@ -382,11 +385,11 @@ MSG
         
     end
 
-    for i in sent 
+    # for i in sent 
 
-        devices[i]['leads'] = nil
+    #     devices[i]['leads'] = nil
     
-    end
+    # end
 
 
 
