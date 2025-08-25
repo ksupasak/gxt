@@ -21,6 +21,7 @@ class GXTWS
 
   def reconnect()
     @ws = WebSocket::Client::Simple.connect @connect_url
+    puts @ws.inspect
     bind_event @ws
   end
 

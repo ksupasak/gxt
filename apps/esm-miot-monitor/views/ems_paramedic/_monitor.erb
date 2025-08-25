@@ -212,7 +212,7 @@ end
 
 		station_id = "StationID"
 		station_id = station.name if station
-	flowsheet = false
+	    flowsheet = false
 
 %>
 
@@ -348,7 +348,6 @@ end
 		</div>
 
 
-<hr/>
 
 
 
@@ -561,12 +560,12 @@ end
 							<div class="row" style="background:black">
 							<%
 
-			 				18.times do |w| %>
+			 				24.times do |w| %>
 
 							<div class="col-12 col-sm-3">
 								<div class="row">
 		 							<div class="col-4" style="color:white">
-		 								<%=labels[w]%>
+		 								<%=labels[w]%> <span id="wave-<%=w%>-note" style="color:white"></span>
 		 							</div>
 
 			 						<div id="wave-<%=w%>" class="col-lg-12" style="background:#111;border:1px solid #333">
@@ -675,15 +674,11 @@ result
 			now = Date.now();
 
 			<%
+
 			if admit
 
 
-			# senses = Sense.where(:admit_id=>admit.id).limit(3600).sort(:start_time.desc).all.reverse
-
 			senses = Sense.collection.find({:admit_id=>admit.id},{ vs: 1, start_time: 1, _id: 1 }).limit(600).sort(:start_time=>-1).to_a.reverse
-
-
-
 
 
 			list =[]
@@ -838,7 +833,7 @@ result
 
 
 
-	  var ws       = new WebSocket('wss://' + window.location.host + "/<%=@context.settings.name%>/Home/index");
+	  var ws       = new WebSocket('wss://' + window.location.host + "/ws/<%=@context.settings.name%>/Home/index");
 
 	  var plot_pos = {};
 
@@ -965,7 +960,7 @@ result
 			// if(data['list'].length!=active)
 			// window.location.href = "index";
 
-
+		// console.log(data)
 
 		$('#timer').html(data['time'])
 
@@ -976,32 +971,24 @@ result
 			obj = data['data'][i]
 
 
-		  // if(obj['wave']){
-	  //
-	  // 			    // wave_data.push(obj['wave']);
-	  // 		   		// wave_data = wave_data.concat(obj['wave']);
-	  // 				for(var j=0;j<obj['wave'].length;j++){
-	  // 					wave_data.push(obj['wave'][j]);
-	  // 				}
-	  // 				// console.log(wave_data);
-	  // 				// wave_data = obj['wave'];
-	  // 		   }
 
-						   if(obj['leads']){
+				if(obj['leads']){
 
-							   for(var j=0;j<16;j++){
+					for(var j=0;j<16;j++){
 
-				jid = ''+j
-				ji = lx[j];
-				jii = jix[ji];
+						jid = ''+j
+						ji = lx[j];
+						jii = jix[ji];
 
-				if(obj['leads'][jii]){
-							   		lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
+						if(obj['leads'][jii]){
+							// lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
+							// lead_data[jid].push(obj['leads'][jii])
+							Array.prototype.push.apply(lead_data[jid], obj['leads'][jii])
+						}
+
+					}
+
 				}
-
-							   }
-
-						   }
 
 
 			//  // console.log(obj)
@@ -1150,9 +1137,8 @@ result
    i = "<%=i%>"
 
    lead_data[i] = [];
-  // genData(lead_data[i])
 
-  showWave('wave-<%=i%>',lead_data,i);
+   showWave('wave-<%=i%>',lead_data,i);
 
 <% end %>
 
