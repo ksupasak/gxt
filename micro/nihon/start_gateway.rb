@@ -239,7 +239,7 @@ begin
           value1 = (data[start+2..start+2].bytes[0] & 0b10000000) >> 7
           value2 = (data[start+3..start+3].bytes[0]& 0b10000000) >> 7
           cw = wlabel.size 
-          wlabel[wave_id] = cw
+          wlabel[wave_id] = cw unless wlabel[wave_id]
 
 
           # f1 = (value & 0b10000000) >> 7
