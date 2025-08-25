@@ -349,6 +349,9 @@ end
         
         puts bed_name
         puts device_data.inspect
+        
+        continue unless device_data['vs']
+
         data = device_data['vs'].clone
 
         data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
