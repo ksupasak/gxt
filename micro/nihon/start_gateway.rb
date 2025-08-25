@@ -374,7 +374,7 @@ end
             end
             data[:leads] = m
             data[:wlabel] = device_data['wlabel']
-           
+            sent << bed_name
         end
 
         data[:msg] = "MSG:#{Time.now.strftime("%H:%M:%S")}"
@@ -394,11 +394,11 @@ MSG
         
     end
 
-    # for i in sent 
+    for i in sent 
 
-    #     devices[i]['leads'] = nil
+        devices[i].delete 'leads'
     
-    # end
+    end
 
 
 
