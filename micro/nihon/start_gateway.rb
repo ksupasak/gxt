@@ -357,11 +357,13 @@ end
         data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
 
         m = {}
-        device_data['leads'].each_with_index do |lead, idx|
+        if device_data['leads']
+            device_data['leads'].each_with_index do |lead, idx|
             m[idx] = lead
+            end
+            data[:leads] = m
+            data[:wlabel] = device_data['wlabel']
         end
-        data[:leads] = m
-        data[:wlabel] = device_data['wlabel']
         data[:msg] = "MSG:#{Time.now.strftime("%H:%M:%S")}"
 
         device_data['leads'] = Array.new(32){|i| []}
