@@ -983,7 +983,10 @@ result
 						if(obj['leads'][jii]){
 							// lead_data[jid] = lead_data[jid].concat(obj['leads'][jii])
 							// lead_data[jid].push(obj['leads'][jii])
-							Array.prototype.push.apply(lead_data[jid], obj['leads'][jii])
+							if(lead_data[jid].length<obj['leads'][jii].length*10){
+								Array.prototype.push.apply(lead_data[jid], obj['leads'][jii])
+							}
+
 						}
 
 					}
