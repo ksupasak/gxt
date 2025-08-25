@@ -369,6 +369,8 @@ end
             data['bp_mean'] = data['NIBP-M'] if data['NIBP-M']
             data['co2'] = data['EtCO2'] if data['EtCO2']
             data['rr'] = data['RR/CO2'] if data['RR/CO2']
+
+          
        
         end
 
