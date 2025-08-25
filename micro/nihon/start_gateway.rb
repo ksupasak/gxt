@@ -376,7 +376,7 @@ end
 Data.Sensing device_id=#{bed_name}
 #{{'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'data'=>data}.to_json}
 MSG
-            # puts msg
+            puts msg
         ws.send(msg)
 
         end
