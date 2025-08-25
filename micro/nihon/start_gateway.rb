@@ -273,7 +273,7 @@ begin
           
           start += size*2 + 4
 
-          puts leads.inspect
+        #   puts leads.inspect
 
 
         end
@@ -346,6 +346,8 @@ end
     #  end
 
     devices.each_pair do |bed_name, device_data|
+        
+        puts bed_name
 
         data = device_data['vs'].clone
 
