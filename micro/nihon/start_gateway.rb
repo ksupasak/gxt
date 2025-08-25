@@ -384,7 +384,7 @@ MSG
 
     for i in sent 
 
-        devices[i]['leads'] = Array.new(32){|i| []}
+        devices[i]['leads'] = nil
     
     end
 
