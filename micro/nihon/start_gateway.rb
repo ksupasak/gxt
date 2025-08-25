@@ -33,6 +33,8 @@ solution = ARGV[3] if ARGV[3]
 
 gps = true
 
+devices = {}
+
 gps = false if ARGV[4] == 'gps_dvr'
 
 
@@ -95,8 +97,6 @@ EventMachine.run {
 map = {}
 
 leads = Array.new(32){|i| []}
-
-devices = {}
 
 
 keys = {}
@@ -347,7 +347,7 @@ end
 
     devices.each_pair do |bed_name, device_data|
         
-        puts bed_name
+        puts bed_name +"==============================================="
         puts device_data.inspect
         
         if  device_data['vs']
