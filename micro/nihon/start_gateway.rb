@@ -158,13 +158,13 @@ begin
    bed_id = ''
    vs = {}
 
-
+  puts 'new data'
 
 
    if data[0]=="{"
 
         json = JSON.parse(data)
-
+        puts 'vs data'
         puts json.inspect
 
         if json['VS'] and json['information']
@@ -196,10 +196,10 @@ begin
 
         bed_name = data[0..11]
 
+
+        puts 'wave data'
         puts "bed_name: #{bed_name}"
 
-
-        puts  devices[bed_name].inspect
         
         # two byte to integer
         page_no = data[12..13].unpack1('S')
@@ -348,26 +348,35 @@ end
 
     #  end
     sent =[ ]
+
     devices.each_pair do |bed_name, device_data|
         
         puts bed_name +"==============================================="
         puts device_data.inspect
         
-        if  device_data['vs']
+       
 
-        data = device_data['vs'].clone
+        data = {}
+        
+        if device_data['vs']
 
-        data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
+            data.merge!(device_data['vs']) 
+            data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
+        
+        end
 
-        m = {}
+
+
         if device_data['leads']
+            m = {}
             device_data['leads'].each_with_index do |lead, idx|
             m[idx] = lead
             end
             data[:leads] = m
             data[:wlabel] = device_data['wlabel']
-            sent << bed_name
+           
         end
+
         data[:msg] = "MSG:#{Time.now.strftime("%H:%M:%S")}"
 
         
@@ -381,7 +390,7 @@ MSG
             puts msg
         ws.send(msg)
 
-        end
+        
         
     end
 
