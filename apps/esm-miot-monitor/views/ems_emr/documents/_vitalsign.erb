@@ -62,11 +62,31 @@
 <% if record.empty? %>
 <script>
 	
-	$('.station .pr .value').each(function(){$('.modal-body .pr_cls').val($(this).html())})
-	$('.station .hr .value').each(function(){$('.modal-body .hr_cls').val($(this).html())})
-	$('.station .rr .value').each(function(){$('.modal-body .rr_cls').val($(this).html())})
-	$('.station .temp .value').each(function(){$('.modal-body .temp_cls').val($(this).html())})
-	$('.station .spo2 .value').each(function(){$('.modal-body .o2sat_cls').val($(this).html())})
+	// $('.station .pr .value').each(function(){$('.modal-body .pr_cls').val($(this).html())})
+	// $('.station .hr .value').each(function(){$('.modal-body .hr_cls').val($(this).html())})
+	// $('.station .rr .value').each(function(){$('.modal-body .rr_cls').val($(this).html())})
+	// $('.station .temp .value').each(function(){$('.modal-body .temp_cls').val($(this).html())})
+	// $('.station .spo2 .value').each(function(){$('.modal-body .o2sat_cls').val($(this).html())})
+	// $('.station .bp .value').each(function(){
+		
+	// 	bp = $(this).html()
+	// 	t = bp.split("/")
+		
+	// 	if(t.length>1){
+			
+	// 		sbp = t[0]
+	// 		dbp = t[1]
+		
+	// 		$('.modal-body .sbp_cls').val(sbp)
+	// 		$('.modal-body .dbp_cls').val(dbp)
+	// 	}
+
+	// })	
+	$('.station .pr .value').each(function(){$('.form-pr_cls').val($(this).html())})
+	$('.station .hr .value').each(function(){$('.form-hr_cls').val($(this).html())})
+	$('.station .rr .value').each(function(){$('.form-rr_cls').val($(this).html())})
+	$('.station .temp .value').each(function(){$('.form-temp_cls').val($(this).html())})
+	$('.station .spo2 .value').each(function(){$('.form-o2sat_cls').val($(this).html())})
 	$('.station .bp .value').each(function(){
 		
 		bp = $(this).html()
@@ -77,12 +97,11 @@
 			sbp = t[0]
 			dbp = t[1]
 		
-			$('.modal-body .sbp_cls').val(sbp)
-			$('.modal-body .dbp_cls').val(dbp)
+			$('.form-sbp_cls').val(sbp)
+			$('.form-dbp_cls').val(dbp)
 		}
 
 	})	
-		
 	
 </script>	
 <% end %>
