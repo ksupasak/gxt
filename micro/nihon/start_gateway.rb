@@ -348,7 +348,7 @@ end
     devices.each_pair do |bed_name, device_data|
         
         puts bed_name
-
+        puts device_data.inspect
         data = device_data['vs'].clone
 
         data['pr'] = data['SpO2/PR'] if data['SpO2/PR']
