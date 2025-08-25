@@ -363,10 +363,12 @@ end
             end
             data[:leads] = m
             data[:wlabel] = device_data['wlabel']
+            devices[bed_name]['leads'] = Array.new(32){|i| []}
+        
         end
         data[:msg] = "MSG:#{Time.now.strftime("%H:%M:%S")}"
 
-        device_data['leads'] = Array.new(32){|i| []}
+        
         stamp = Time.now.to_i if device_data['stamp'].nil?
         stamp = device_data['stamp'] if device_data['stamp']
 
