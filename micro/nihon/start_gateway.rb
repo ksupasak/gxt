@@ -218,8 +218,8 @@ begin
 
         start = 56
 
-        puts data[56..56+40].bytes.map { |byte| "%02x" % byte }.join(",")
-        puts data[56..56+40].bytes.map { |byte| byte.chr}.join(",")
+        # puts data[56..56+40].bytes.map { |byte| "%02x" % byte }.join(",")
+        # puts data[56..56+40].bytes.map { |byte| byte.chr}.join(",")
 
         devices[bed_name] = {} unless devices[bed_name]
         devices[bed_name]['wlabel'] = {} unless devices[bed_name]['wlabel']
@@ -250,8 +250,8 @@ begin
           # f2 = (value & 0b01000000) >> 7
           # tag = "#{f1}#{f2}"
           tag = "#{value1}#{value2}"
-         print " "
-           puts tag
+        #  print " "
+          #  puts tag
           if tag == '00'
             size = 32
           elsif tag == '01'
@@ -261,7 +261,7 @@ begin
           elsif tag == '11'
             size = 128
           end
-          puts " #{size}"
+          # puts " #{size}"
           # start += size*2 + 4
           # bytes.each_slice(2).map { |hi, lo| (hi << 8) | lo }
           puts "wave_id: #{wave_id} #{wlabel[wave_id]}"
@@ -352,7 +352,7 @@ end
     devices.each_pair do |bed_name, device_data|
         
         puts bed_name +"==============================================="
-        puts device_data.inspect
+        # puts device_data.inspect
         
        
 
@@ -401,7 +401,7 @@ end
 Data.Sensing device_id=#{bed_name}
 #{{'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'data'=>data}.to_json}
 MSG
-            puts msg
+            # puts msg
         ws.send(msg)
 
         
