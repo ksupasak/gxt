@@ -382,7 +382,9 @@ end
             m[idx] = lead
             end
             data[:leads] = m
-            data[:wlabel] = device_data['wlabel']
+            b = device_data['wlabel'].map{|a,b| [b,a]}.to_h
+            c = b.keys.map{|a| b[a]}
+            data[:wlabel] = c
             sent << bed_name
         end
 

@@ -283,6 +283,9 @@ MSG
 
      data[:msg] = "ALERT:#{Time.now.strftime("%H:%M:%S")}"
 
+
+     data[:wlabel] = ['X','Y']
+
      # puts data.inspect
 
 
