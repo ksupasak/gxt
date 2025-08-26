@@ -392,6 +392,8 @@ end
         stamp = Time.now.to_i if device_data['stamp'].nil?
         stamp = device_data['stamp'] if device_data['stamp']
 
+        bed_name = bed_name.split("-"").join("_")
+
         msg = <<MSG
 Data.Sensing device_id=#{bed_name}
 #{{'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'data'=>data}.to_json}
