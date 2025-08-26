@@ -194,11 +194,11 @@ begin
 
    else
 
-        bed_name = data[0..11]
+        bed_name = data[0..11].strip
 
 
         puts 'wave data'
-        puts "bed_name: #{bed_name}"
+        puts "bed_name: #{bed_name.inspect}"
 
         
         # two byte to integer
