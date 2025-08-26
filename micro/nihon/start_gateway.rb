@@ -367,6 +367,7 @@ end
             data['bp_sys'] = data['NIBP-S'] if data['NIBP-S']
             data['bp_dia'] = data['NIBP-D'] if data['NIBP-D']
             data['bp_mean'] = data['NIBP-M'] if data['NIBP-M']
+            data['bp'] = "#{data['NIBP-S']}/#{data['NIBP-D']}" if data['NIBP-S'] && data['NIBP-D']
             data['co2'] = data['EtCO2'] if data['EtCO2']
             data['rr'] = data['RR/CO2'] if data['RR/CO2']
 
