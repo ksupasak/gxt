@@ -278,7 +278,7 @@ end
 
 	#map["diagnosis"] = records.collect{|i| " - เวลา #{i.created_at.strftime("%H:%M") } น. : #{i.title}" }.join("\n")
   %>
-  <%= record.diagnosis %>
+
   <%
 	map["diagnosis"] = record.diagnosis
 	#######################
@@ -308,9 +308,7 @@ if command
 end
 
 
-%>
-<%= map.inspect %>
-<%
+
 
 	lines = template_text.split("\n")
 
