@@ -2,6 +2,8 @@ require 'net/http'
 require 'json'
 require 'websocket-client-simple'
 require 'eventmachine'
+require "zlib"
+require "base64"
 # require 'em-http-server'
 
 
@@ -165,7 +167,7 @@ begin
 
         json = JSON.parse(data)
         puts 'vs data'
-        puts json.inspect
+        # puts json.inspect
 
         if json['VS'] and json['information']
 
@@ -210,11 +212,11 @@ begin
         bed_id = data[44..44+11]
 
 
-        puts data[0..24].bytes.map { |byte| "%02x" % byte }.join
-        puts "page_no: #{page_no}"
-        puts "total_pack: #{total_pack}  #{data[12].to_i} #{data[13].to_i}"
-        puts "num_wave: #{num_wave}"
-        puts "bed_id: #{bed_id}"
+        # puts data[0..24].bytes.map { |byte| "%02x" % byte }.join
+        # puts "page_no: #{page_no}"
+        # puts "total_pack: #{total_pack}  #{data[12].to_i} #{data[13].to_i}"
+        # puts "num_wave: #{num_wave}"
+        # puts "bed_id: #{bed_id}"
 
         start = 56
 
@@ -397,11 +399,20 @@ end
 
         bed_name = bed_name.split("-").join("_")
 
+#         msg = <<MSG
+# Data.Sensing device_id=#{bed_name}
+# #{{'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'encode'=>'marshalzip', 'data'=>data}.to_json}
+#  MSG
+
+        content = {'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'data'=>data}
+        encode = Zlib::Deflate.deflate(Marshal.dump(content))
+        blob = Base64.encode64(encode)
+
         msg = <<MSG
-Data.Sensing device_id=#{bed_name}
-#{{'station'=>bed_name, 'stamp' => stamp, 'ref' => '-', 'data'=>data}.to_json}
+Data.Sensing device_id=#{bed_name} encode=marshalzip
+#{blob}
 MSG
-            # puts msg
+            
         ws.send(msg)
 
         
@@ -419,6 +430,8 @@ MSG
 
 
   end
+
+
 
 
 

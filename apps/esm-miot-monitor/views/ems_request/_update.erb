@@ -82,11 +82,16 @@ if params[:record]
 	end
     p.delete :schedule_from_time
 	p.delete :schedule_to_time 
+
+	if record.latlng != p[:latlng] or record.contact_phone != p[:contact_phone]
+		record.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
+	end
+	
+
 	
 	record.update_attributes p
 	
 	
-	record.send_push_noti "EMS-Update", "Request is updated", "ems_case", ""
 	
 
 path = "miot/#{@context.settings.name}/z/#{record.zone.name}"

@@ -32,6 +32,10 @@
 
 		admit_log.update_attributes :stamp=>Time.now, :mile_meter=>mile_meter, :status=>"COMPLETED"
 
+
+  
+
+
 		to_route = AocCaseRoute.where(:departure_log_id=>admit_log.id).first
 
 		if to_route

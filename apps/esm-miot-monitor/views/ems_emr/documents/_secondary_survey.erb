@@ -25,6 +25,25 @@
   if record['neurological_note'] == nil
 	record['neurological_note'] = 'Motor power gr. all extremity'
   end
+
+
+
+
+
+    case_record = EMSCase.find(params[:case_id])
+
+    if case_record
+ 
+		if record['event'] == nil
+		record['event'] = case_record.emd_event_note
+		end
+		if record['history_note'] == nil
+		record['history_note'] = case_record.patient_underlying
+		end
+	
+    end
+
+
 %>
 <div class="card">
 

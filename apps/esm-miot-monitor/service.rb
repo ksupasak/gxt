@@ -1423,8 +1423,13 @@ MSG
 
        when 'Data.Sensing', 'VTS.Send'
 
-
-             pdata =  ActiveSupport::JSON.decode(body)
+             if headers[-1]=='encode=marshalzip'
+              pdata = Base64.decode64(body)
+              pdata = Marshal.load(Zlib::Inflate.inflate(pdata))
+             else
+              pdata = ActiveSupport::JSON.decode(body)
+             end
+            
              
              puts Time.now.to_s
              puts pdata.inspect 
@@ -1449,8 +1454,10 @@ MSG
              ref = pdata['ref'] if pdata['ref']
 
              data = "{}"
-             data = pdata['data'] if pdata['data']
 
+         
+             data = pdata['data'] if pdata['data']
+           
 
 
              station_id = nil

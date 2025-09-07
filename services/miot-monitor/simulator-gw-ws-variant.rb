@@ -4,7 +4,8 @@ require 'json'
 require 'websocket-client-simple'
 require 'eventmachine'
 # require 'em-http-server'
-
+require "zlib"
+require "base64"
 
 def connect solution, host, port
   connect_url = "wss://#{host}:#{port}/ws/#{solution}/Home/index"
@@ -207,7 +208,7 @@ MSG
 
 
   # timer method
-  EM.add_periodic_timer(60) do
+  EM.add_periodic_timer(30) do
     
 
      now = Time.now
@@ -239,9 +240,10 @@ MSG
 
      data[:bp_stamp] = bp_stamp.strftime("%H%M%S")
 
+     content = {'station'=>name, 'stamp' => stamp, 'ref' => ref,'data'=>data}
 msg = <<MSG
-Data.Sensing device_id=#{name}
-#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+Data.Sensing device_id=#{name} encode=marshalzip
+#{Base64.encode64(Zlib::Deflate.deflate(Marshal.dump(content)))}
 MSG
     # puts msg
      ws.send(msg)
@@ -284,15 +286,23 @@ MSG
      data[:msg] = "ALERT:#{Time.now.strftime("%H:%M:%S")}"
 
 
-     data[:wlabel] = ['X','Y']
+    #  data[:wlabel] = ['X','Y']
 
+     
      # puts data.inspect
+     content = {'station'=>name, 'stamp' => stamp, 'ref' => ref,'data'=>data}
+
+     puts content.to_json.size
+     encode = Zlib::Deflate.deflate(Marshal.dump(content))
+     blob = Base64.encode64(encode)
 
 
-
+    #  pz = Base64.encode64(Zlib::Deflate.deflate(Marshal.dump(content)))
+   
+     puts blob.size
 msg = <<MSG
-Data.Sensing device_id=#{name}
-#{{'station'=>name, 'stamp' => stamp, 'ref' => ref, 'data'=>data}.to_json}
+Data.Sensing device_id=#{name} encode=marshalzip
+#{blob}
 MSG
     # puts msg
      ws.send(msg)

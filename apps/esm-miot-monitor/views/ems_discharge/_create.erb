@@ -185,7 +185,7 @@ end
 %>
 
 
-<form action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
+<form  id="discharge_form" action="<%= get_path 'create'%>" method="post" data-remote='true' data-remote-update="discharge_panel">
 <input type="hidden" name="id" value="<%=ems_case.id%>">
 
 <div class="row">

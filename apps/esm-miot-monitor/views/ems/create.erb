@@ -38,9 +38,13 @@
 
 <script>
   $(document).ready(function() {
+
+	var notify = "";
+
     $('#popupModal').fadeIn();
 
     $('#yesBtn').click(function() {
+		notify = "&notify=true";
       $.ajax({
         url: 'notify',  // replace with your endpoint
         type: 'POST',
@@ -48,6 +52,8 @@
         contentType: 'application/json',
         success: function(response) {
           console.log('Team notified:', response);
+		  	  loadCreate();
+
         },
         error: function(err) {
           console.error('Error notifying team:', err);
@@ -58,8 +64,31 @@
 
     $('#noBtn').click(function() {
       $('#popupModal').fadeOut();
+	  loadCreate();
     });
-  });
+
+    function loadCreate() {
+		<%
+					p = "?"
+					plist = []
+					plist << "location=#{params[:location]}&latlng=#{params[:latlng]}&zoom=#{params[:zoom]}" if params[:location]
+					plist << "start=#{params[:start]}&end=#{params[:end]}}" if params[:start]
+					plist << "status=#{params[:status]}" if params[:status]
+					p += plist.join("&")
+
+					
+					%>
+					$.ajax({
+					  url: "../EmsRequest/create<%=p%>"+notify,
+					  context: document.body
+					}).done(function(html) {
+
+					  $( '.request' ).html(html);
+					});
+	}
+
+	  });
+  		
 </script>
 <% end %>
 <%
@@ -118,28 +147,7 @@ MSG
 				<%# inline(this,:'../ems_request/_show')  %>
 
 				<div class="request"></div>
-				<script>
-					<%
-					p = "?"
-					plist = []
-					plist << "location=#{params[:location]}&latlng=#{params[:latlng]}&zoom=#{params[:zoom]}" if params[:location]
-					plist << "start=#{params[:start]}&end=#{params[:end]}}" if params[:start]
-					plist << "status=#{params[:status]}" if params[:status]
-					p += plist.join("&")
-
-					
-					%>
-					$.ajax({
-					  url: "../EmsRequest/create<%=p%>",
-					  context: document.body
-					}).done(function(html) {
-
-					  $( '.request' ).html(html);
-					});
-
-
-				</script>
-
+			
 			</p>
 		</div>
 

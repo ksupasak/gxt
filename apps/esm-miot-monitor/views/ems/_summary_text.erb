@@ -1,7 +1,15 @@
- 
+
 <%
 
 record = EMSCase.find params[:id]
+
+if params[:record] and params[:pre_record] == 'true'
+    params[:record].delete :summary
+	record.assign_attributes params[:record]
+
+end
+
+
 ems_case = record
 admit = record.admit
 patient = admit.patient
@@ -131,8 +139,13 @@ for i in notes
 
 end
 
-	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา #{ems_case.request_at.strftime('%H:%M')} น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี สถานที่เกิดเหตุ #{location}
-CC : #{ems_case.chief_complain}    
+
+
+
+	template_text = %(รับแจ้งจากศูนย์เอรวัณ เวลา #{ems_case.request_at.strftime('%H:%M')} น. ขอรับผู้ป่วยเพศ #{sex} #{age} ปี 
+CC : #{ems_case.chief_complain}
+สถานที่เกิดเหตุ #{location}    
+
 
 แรกรับ at scene :  #{ems_case.at_scene_time}
 
@@ -151,8 +164,9 @@ Treatment :
 Diagnosis : 
 @diagnosis
 
+@command
 
-ฉพ. Name........................Dispatcher note // Approved by ฉพ. Name........................Provider  Note
+Note :
 )
 
 if record.case_type == 'Refer'
@@ -162,7 +176,7 @@ if record.case_type == 'Refer'
 Progress note :
 @progress_note
 
-Diagnosis : 
+Diagnosis :  
 @diagnosis
 
 
@@ -253,7 +267,7 @@ end
 if ems_case.transfer_hospital == nil
 		map["transfer"] = "รพ.ปลายทาง : "
 else
-		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital} HN:#{ems_case.transfer_hn}"
+		map["transfer"] = "รพ.ปลายทาง : #{ems_case.transfer_hospital} "
 end
 
 
@@ -263,16 +277,47 @@ end
 	records = EMSCasePatientStatus.where(:case_id=>record.id).all
 
 	#map["diagnosis"] = records.collect{|i| " - เวลา #{i.created_at.strftime("%H:%M") } น. : #{i.title}" }.join("\n")
-
+  %>
+  <%= record.diagnosis %>
+  <%
 	map["diagnosis"] = record.diagnosis
 	#######################
 
+
+
+command = EMSCommand.where(:case_id=>record.id).sort(:created_at=>1).first
+if command
+
+	emd_code = command.emd_code
+	emd_approval_code = command.emd_approval_code
+
+	emd_provider = Provider.where(:code=>emd_code).first
+	emd_approval_provider = Provider.where(:code=>emd_approval_code).first
+    emd_name = "-"
+    emd_approval_name = "-"
+	emd_name = emd_provider.get_name if emd_provider
+	emd_approval_name = emd_approval_provider.get_name if emd_approval_provider
+    %>
+	<%# emd_provider.to_json%>
+	<%
+
+	map["command"] = "ฉพ. Name : #{emd_name} Dispatcher Note // Approved by ฉพ. Name...#{emd_approval_name} Provider  Note"
+
+
+
+end
+
+
+%>
+<%= map.inspect %>
+<%
 
 	lines = template_text.split("\n")
 
   lines.collect! do |i|
 
 		res = i
+	
 
 		if i[0]=='@'
 			res = ''
@@ -312,7 +357,7 @@ end
   summary = record.summary if record.summary and record.summary!=""
 	
   %>
-
+<%#map.inspect%>
 
 <div id="printout" style="border:0px solid gray;  ">
 <h4>Summary</h4>

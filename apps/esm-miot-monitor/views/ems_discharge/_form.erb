@@ -74,9 +74,54 @@
 <div class="clear"></div>
 <div class="col-8">
 <label class="form-label " for="diagnosis">Diagnosis</label>
-<input class="form-control monitor-input" type="text" name="record[diagnosis]" id="" value="<%=record.diagnosis%>">
+<input class="form-control monitor-input" type="text" name="record[diagnosis]" id="diagnosis" value="<%=record.diagnosis%>">
 </div>
+<script>
+$(document).ready(function() {
 
+
+
+// To plain object (merges repeated keys into arrays)
+function formDataToObject(fd) {
+  const obj = {};
+  for (const [k, v] of fd.entries()) {
+    if (k in obj) {
+      if (!Array.isArray(obj[k])) obj[k] = [obj[k]];
+      obj[k].push(v);
+    } else {
+      obj[k] = v;
+    }
+  }
+  return obj;
+}
+  function partial_update(){
+ 
+    // query all input and make ajax request to update the diagnosis
+
+   const form = document.querySelector("#discharge_form");
+   const fd = new FormData(form);
+
+    $.ajax({
+      url: "<%="../EMS/summary_text"%>?id=<%=record.id%>&mode=inner&pre_record=true",
+      data: formDataToObject(fd),
+      context: document.body
+    }).done(function(xx) {
+     
+
+      $( '.text-panel' ).html(xx);
+
+
+    });
+
+
+  }
+
+
+  $('#diagnosis').on('change', partial_update);
+  
+});
+
+</script>
 <!--
 <div class="col-4">
 <label class="form-label " for="patient_reimbursement">สิทธิการรักษา</label>
@@ -130,8 +175,8 @@
 <div style="display:none">
 <hr/>
 
-<div class="col-12">
-<div class="row d-flex justify-content-between">
+<div class="col-12 hidden">
+<div class="row d-flex justify-content-between ">
 <div class="col-6">
 <strong>
   <label class="form-label " for="screening_vital">Vital Sign : Initial </label>
@@ -152,7 +197,7 @@ Time
 %>
 
 
-<div class="row">
+<div class="row ">
 
   <div class="col-3">
   <label class="form-label " for="init_sbp">SBP</label>

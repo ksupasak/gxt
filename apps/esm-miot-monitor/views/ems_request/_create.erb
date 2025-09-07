@@ -100,13 +100,14 @@ if params[:record]
 
 	record.relocation_target p[:latlng]	if p[:latlng]
 
+	#record.send_push_noti "EMS-NewCase", "New Case", "ems_case", ""
+
 
 	counter.update(:count=>counter.count+1)
 
   if false and line_noti = Setting.get('line_group_id') and @current_user.status=='Active' and (record.status == 'New' or record.status =='Open')
 
-	#   message = record.noti_message
-	#   result =  EMSConnect.line_noti :message=>message
+
 
 	end
 

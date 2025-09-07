@@ -343,7 +343,15 @@ class EMSCase < GXTModel
   end
 
   def at_scene_time
-      return "test"
+      
+      command = EMSCommand.where(:case_id=>self.id).first
+      
+      contact_at_log = AdmitLog.where(:ems_command_id=>command.id, :code=>'contact_at').first
+
+      return contact_at_log.stamp.strftime("%H:%M:%S") if contact_at_log
+
+      return nil
+
   end
 
   def relocation_target latlng
@@ -718,6 +726,7 @@ class EMSCommand < GXTModel
   key :transfer_hospital, String
   key :transfer_hospital_id, ObjectId
   key :emd_code, String
+  key :emd_approval_code, String
   key :driver_name, String
   key :emt_driver_code, String
   key :emt_partner_code, String
