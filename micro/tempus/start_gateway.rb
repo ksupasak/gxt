@@ -238,8 +238,8 @@ def connect_tempus_gw
    opts = {}
   
 
-   opts[:ws_host] = 'localhost:1792'
-   opts[:ws_solution] = 'miot'
+  # opts[:ws_host] = 'localhost:1792'
+  # opts[:ws_solution] = 'miot'
 
   ws_host = opts[:ws_host] || 'pcm-life.com'
 
