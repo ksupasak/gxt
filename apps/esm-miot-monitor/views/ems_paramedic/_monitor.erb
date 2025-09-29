@@ -357,68 +357,32 @@ end
 	<div  class="col-4 order-1 ">
 					<div class="row">
 
-					<div class="col">
-						<center>
-						<video controls preload="none"  autoplay style="100%" height="288" data-setup="{}">
-							<source id="dvr" src="http://103.76.181.125:6604/hls/1_80030753_0_1.m3u8?JSESSIONID=45fa0acc3e264fa8bb53da71f8739961" type="application/x-mpegURL">
-						</video>
-					</center>
-					</div>
+					
 
-					<script>
-					<%
-						dvr_path = nil
-						 if station %>
-						var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-						prefix = full+"/<%=@context.settings.name%>"
-						admit_path = prefix+"/Station/show?id=<%=station_id%>"
-						<% if admit %>
-						admit_path = prefix+"/Admit/show?id=<%=admit.id%>"
-						<% end %>
-
-						<% if ambu.device_no and ambu.device_no !="" %>
-
-						// dvr_path = "http://103.76.181.125:8080/808gps/open/player/video.html?lang=en&devIdno=<%=ambu.device_no%>&account=admin&password=minadadmin"
-						// dvr_path = "https://103.76.181.125/808gps/open/player/video.html?lang=en&devIdno=<%=ambu.device_no%>&account=admin&password=minadadmin"
-						dvr_path = "http://dvr.pcm-life.com:8080/808gps/open/player/video.html?lang=en&devIdno=<%=ambu.device_no%>&account=admin&password=minadadmin"
-
-						tele_path =  prefix+"/Sas/tele?resourceId=<%=ambu.name%>"
-
-
-						json = `curl "http://103.76.181.125:8080/StandardApiAction_login.action?account=admin&password=minadadmin"`
-
-						obj = JSON.parse json
-
-						jsession = obj['jsession']
-
-						dvr_path = "http://103.76.181.125:6604/hls/1_#{ambu.device_no}_0_1.m3u8?JSESSIONID=#{jsession}"
-
-				        $('#dvr').attr( "src", dvr_path);
-
-						<% end %>
-
-						console.log("#select view1|"+admit_path+" view2|"+dvr_path+" view3|"+tele_path)
-
-					<% end %>
-					</script>
-
+				
 					<span class="text-primary"></span>
 					</div>
 					<div class="row">
 
-						<% if videostream and station and station.stream_url %>
+						<% if videostream  
+						
+						stream_url = "https://hls.pcm-life.com/live/test.m3u8"
+						stream_url = ambu.stream_url if ambu and ambu.stream_url
+
+
+						%>
 							<div class="col-12 my-2">
-								<% if station.stream_url.index('m3u8')%>
+								<% if stream_url.index('m3u8')%>
 								 <video id="video" width="100%" controls autoplay="true"></video>
 								<script>
 								  var video = document.getElementById('video');
-								  var videoSrc = '<%=station.stream_url%>';
+								  var videoSrc = '<%=stream_url%>';
 								  if (Hls.isSupported()) {
 								    var hls = new Hls();
 								    hls.loadSource(videoSrc);
 								    hls.attachMedia(video);
 								    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-								    //   video.play();
+								      video.play();
 								    });
 								  }
 
@@ -430,7 +394,7 @@ end
 								  }
 								</script>
 								<% else %>
-									<center><img src="<%= station.stream_url%>" height="300"></center>
+									<center><img src="<%= stream_url%>" height="300"></center>
 								<% end %>
 							</div>
 							<% end %>

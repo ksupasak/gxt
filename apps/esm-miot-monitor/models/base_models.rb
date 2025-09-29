@@ -899,6 +899,7 @@ class Ambulance  < GXTModel
   key :msg_channel, String
   
   key :image, ObjectId
+  key :stream_url, String
 
 
   include Mongoid::Timestamps
