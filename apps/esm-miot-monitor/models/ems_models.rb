@@ -348,7 +348,7 @@ class EMSCase < GXTModel
       
       contact_at_log = AdmitLog.where(:ems_command_id=>command.id, :code=>'contact_at').first
 
-      return contact_at_log.stamp.strftime("%H:%M:%S") if contact_at_log
+      return contact_at_log.stamp.strftime("%H:%M:%S") if contact_at_log and contact_at_log.stamp
 
       return nil
 
